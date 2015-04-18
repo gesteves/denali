@@ -11,14 +11,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150418225717) do
+ActiveRecord::Schema.define(version: 20150418232427) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
     t.integer  "photo_quality", default: 90
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.string   "domain"
   end
+
+  add_index "blogs", ["domain"], name: "index_blogs_on_domain"
 
   create_table "entries", force: :cascade do |t|
     t.string   "title"
@@ -29,7 +32,6 @@ ActiveRecord::Schema.define(version: 20150418225717) do
     t.integer  "user_id"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
-    t.datetime "published_on"
     t.datetime "published_at"
   end
 
