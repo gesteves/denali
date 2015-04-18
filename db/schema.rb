@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150418162001) do
+ActiveRecord::Schema.define(version: 20150418225717) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -19,6 +19,32 @@ ActiveRecord::Schema.define(version: 20150418162001) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
   end
+
+  create_table "entries", force: :cascade do |t|
+    t.string   "title"
+    t.text     "body"
+    t.string   "slug"
+    t.string   "status"
+    t.integer  "blog_id"
+    t.integer  "user_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.datetime "published_on"
+    t.datetime "published_at"
+  end
+
+  add_index "entries", ["blog_id"], name: "index_entries_on_blog_id"
+  add_index "entries", ["user_id"], name: "index_entries_on_user_id"
+
+  create_table "photos", force: :cascade do |t|
+    t.text     "caption"
+    t.integer  "position"
+    t.integer  "entry_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"
 
   create_table "users", force: :cascade do |t|
     t.string   "provider"
