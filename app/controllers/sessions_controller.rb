@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
       flash[:notice] = "Welcome, #{auth_hash['info']['name']}."
       user = User.from_omniauth(env['omniauth.auth'])
       session[:user_id] = user.id
-      redirect_to '/'
+      redirect_to admin_settings_path
     else
       redirect_to signin_path, alert: 'There was a problem logging you in.'
     end

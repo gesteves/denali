@@ -5,6 +5,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user, :logged_in?, :logged_out?
 
+  before_filter :get_blog
+
   def require_login
     redirect_to signin_url unless current_user
   end
@@ -19,5 +21,9 @@ class ApplicationController < ActionController::Base
 
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
+  end
+
+  def get_blog
+    @blog = Blog.find_by(domain: 'www.allencompassingtrip.com')
   end
 end

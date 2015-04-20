@@ -1,0 +1,22 @@
+<h1>Settings</h1>
+
+<%= form_for(@blog, url: admin_settings_update_path) do |f| %>
+  <% if @blog.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@blog.errors.count, "error") %> prohibited this admin_blog from being saved:</h2>
+
+      <ul>
+      <% @blog.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= f.text_field :name %>
+    <%= f.number_field :photo_quality %>
+    <%= f.submit %>
+  </div>
+<% end %>
+
