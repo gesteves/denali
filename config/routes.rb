@@ -14,6 +14,7 @@ Rails.application.routes.draw do
     end
   end
 
+  get '/admin'                   => 'admin#index'
   get '/auth/:provider/callback' => 'sessions#create'
   get '/auth/failure'            => 'sessions#failure'
   get '/signin'                  => 'sessions#new',     :as => :signin
