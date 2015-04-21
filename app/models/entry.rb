@@ -8,4 +8,12 @@ class Entry < ActiveRecord::Base
   scope :published, -> { where(published: true).order('published_at DESC') }
   scope :queued, -> { where(queued: true).order('created_at ASC') }
   scope :drafted, -> { where(draft: true).order('updated_at ASC') }
+
+  def publish
+    self.published = true
+    self.draft = false
+    self.queued = false
+    self.published_at = Time.now
+    self.save!
+  end
 end

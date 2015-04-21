@@ -15,6 +15,10 @@
 
   <%= f.text_area :body %>
 
+  <% if include_status_option %>
+    <%= select_tag(:status, options_for_select(['queued', 'draft', 'published'])) %>
+  <% end %>
+
   <div class="actions">
     <%= f.submit %>
   </div>

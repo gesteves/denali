@@ -27,10 +27,26 @@ class Admin::EntriesController < ApplicationController
 
   # POST /admin/entries
   def create
-    @entry = Entry.new(entry_params)
+    @entry = Entry.new(params[:entry])
+    case params[:status]
+    when 'published'
+      @entry.published = true
+      @entry.draft = false
+      @entry.queued = false
+      @entry.published_at = Time.now
+    when 'queued'
+      @entry.published = false
+      @entry.draft = false
+      @entry.queued = true
+    else
+      @entry.published = false
+      @entry.draft = true
+      @entry.queued = false
+    end
     respond_to do |format|
       if @entry.save
-        format.html { redirect_to admin_entries_path, notice: 'Entry was successfully created.' }
+        puts @entry.inspect
+        format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
       else
         format.html { render :new }
       end
@@ -40,8 +56,8 @@ class Admin::EntriesController < ApplicationController
   # PATCH/PUT /admin/entries/1
   def update
     respond_to do |format|
-      if @entry.update(entry_params)
-        format.html { redirect_to admin_entries_path, notice: 'Entry was successfully updated.' }
+      if @entry.update(params[:entry])
+        format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully updated.' }
       else
         format.html { render :edit }
       end
@@ -52,7 +68,7 @@ class Admin::EntriesController < ApplicationController
   def destroy
     @entry.destroy
     respond_to do |format|
-      format.html { redirect_to admin_entries_path, notice: 'Entry was successfully destroyed.' }
+      format.html { redirect_to request.referrer || admin_entries_path, notice: 'Entry was successfully destroyed.' }
     end
   end
 
@@ -62,8 +78,13 @@ class Admin::EntriesController < ApplicationController
       @entry = Entry.find(params[:id])
     end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def entry_params
-      params.require(:entry).permit(:title, :body)
+    def get_redirect_url(entry)
+      if entry.published
+        admin_entries_path
+      elsif entry.queued
+        queued_admin_entries_path
+      else
+        drafts_admin_entries_path
+      end
     end
 end

@@ -8,18 +8,11 @@ class Admin::BlogsController < AdminController
   # PATCH/PUT /admin/blogs/1.json
   def update
     respond_to do |format|
-      if @blog.update(blog_params)
+      if @blog.update(params[:blog])
         format.html { redirect_to admin_settings_path, notice: 'Blog was successfully updated.' }
       else
         format.html { render :edit }
       end
     end
   end
-
-  private
-
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def blog_params
-      params.require(:blog).permit(:name, :photo_quality)
-    end
 end
