@@ -28,7 +28,6 @@ class Admin::EntriesController < ApplicationController
   # POST /admin/entries
   def create
     @entry = Entry.new(entry_params)
-
     respond_to do |format|
       if @entry.save
         format.html { redirect_to admin_entries_path, notice: 'Entry was successfully created.' }

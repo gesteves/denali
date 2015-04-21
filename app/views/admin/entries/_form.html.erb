@@ -1,0 +1,21 @@
+<%= form_for(@entry, url: url) do |f| %>
+  <% if @entry.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@entry.errors.count, "error") %> prohibited this admin_entry from being saved:</h2>
+
+      <ul>
+      <% @entry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= f.text_field :title %>
+
+  <%= f.text_area :body %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

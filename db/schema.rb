@@ -29,10 +29,10 @@ ActiveRecord::Schema.define(version: 20150421210451) do
     t.string   "slug"
     t.integer  "blog_id"
     t.integer  "user_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
     t.datetime "published_at"
-    t.boolean  "published"
+    t.boolean  "published",    default: true
     t.boolean  "queued"
     t.boolean  "draft"
   end
