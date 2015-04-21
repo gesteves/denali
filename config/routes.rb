@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     resources :entries, only: [:index, :new, :create, :edit, :update, :destroy] do
       member do
         get 'preview'
+        patch 'publish'
       end
       collection do
         get 'queued'

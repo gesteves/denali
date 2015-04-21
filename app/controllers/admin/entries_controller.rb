@@ -1,5 +1,5 @@
 class Admin::EntriesController < ApplicationController
-  before_action :set_entry, only: [:show, :edit, :update, :destroy]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish]
 
   # GET /admin/entries
   def index
@@ -25,6 +25,23 @@ class Admin::EntriesController < ApplicationController
   def edit
   end
 
+  # PATCH /admin/entries/1/publish
+  def publish
+    @entry.published = true
+    @entry.draft = false
+    @entry.queued = false
+    @entry.published_at = Time.now
+    if @entry.save
+      respond_to do |format|
+        format.html { redirect_to admin_entries_path, notice: 'Entry was successfully published.' }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to request.referrer, notice: 'Entry couldn\'t be published.' }
+      end
+    end
+  end
+
   # POST /admin/entries
   def create
     @entry = Entry.new(params[:entry])
@@ -45,7 +62,6 @@ class Admin::EntriesController < ApplicationController
     end
     respond_to do |format|
       if @entry.save
-        puts @entry.inspect
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
       else
         format.html { render :new }
