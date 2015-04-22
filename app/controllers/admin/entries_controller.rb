@@ -45,21 +45,6 @@ class Admin::EntriesController < ApplicationController
   # POST /admin/entries
   def create
     @entry = Entry.new(params[:entry])
-    case params[:status]
-    when 'published'
-      @entry.published = true
-      @entry.draft = false
-      @entry.queued = false
-      @entry.published_at = Time.now
-    when 'queued'
-      @entry.published = false
-      @entry.draft = false
-      @entry.queued = true
-    else
-      @entry.published = false
-      @entry.draft = true
-      @entry.queued = false
-    end
     respond_to do |format|
       if @entry.save
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
@@ -95,9 +80,9 @@ class Admin::EntriesController < ApplicationController
     end
 
     def get_redirect_url(entry)
-      if entry.published
+      if entry.is_published?
         admin_entries_path
-      elsif entry.queued
+      elsif entry.is_queued?
         queued_admin_entries_path
       else
         drafts_admin_entries_path

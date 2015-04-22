@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150421210451) do
+ActiveRecord::Schema.define(version: 20150419152455) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -27,14 +27,12 @@ ActiveRecord::Schema.define(version: 20150421210451) do
     t.string   "title"
     t.text     "body"
     t.string   "slug"
+    t.string   "status"
     t.integer  "blog_id"
     t.integer  "user_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
     t.datetime "published_at"
-    t.boolean  "published",    default: true
-    t.boolean  "queued"
-    t.boolean  "draft"
   end
 
   add_index "entries", ["blog_id"], name: "index_entries_on_blog_id"
@@ -44,8 +42,12 @@ ActiveRecord::Schema.define(version: 20150421210451) do
     t.text     "caption"
     t.integer  "position"
     t.integer  "entry_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
   end
 
   add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"

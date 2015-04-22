@@ -1,4 +1,4 @@
-<%= form_for(@entry, url: url) do |f| %>
+<%= form_for([:admin, @entry]) do |f| %>
   <% if @entry.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@entry.errors.count, "error") %> prohibited this admin_entry from being saved:</h2>
@@ -16,7 +16,7 @@
   <%= f.text_area :body %>
 
   <% if include_status_option %>
-    <%= select_tag(:status, options_for_select(['queued', 'draft', 'published'])) %>
+    <%= f.select :status, options_for_select(['queued', 'draft', 'published']) %>
   <% end %>
 
   <div class="actions">
