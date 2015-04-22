@@ -3,9 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  helper_method :current_user, :logged_in?, :logged_out?
-
-  before_filter :get_blog
+  helper_method :current_user, :logged_in?, :logged_out?, :photoblog
 
   def require_login
     redirect_to signin_url unless current_user
@@ -23,7 +21,7 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
-  def get_blog
+  def photoblog
     @blog = Blog.find_by(domain: 'www.allencompassingtrip.com')
   end
 end

@@ -45,6 +45,8 @@ class Admin::EntriesController < ApplicationController
   # POST /admin/entries
   def create
     @entry = Entry.new(params[:entry])
+    @entry.user = current_user
+    @entry.blog = photoblog
     respond_to do |format|
       if @entry.save
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
