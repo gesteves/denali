@@ -10,6 +10,7 @@ class Entry < ActiveRecord::Base
   scope :published, -> { where(status: 'published').order('updated_at ASC') }
 
   before_save :set_published_date
+  before_save :set_entry_slug
 
   def is_queued?
     self.status == 'queued'
@@ -28,6 +29,14 @@ class Entry < ActiveRecord::Base
   def set_published_date
     if self.is_published? && self.published_at.nil?
       self.published_at = Time.now
+    end
+  end
+
+  def set_entry_slug
+    if self.slug.blank?
+      self.slug = self.title.parameterize
+    else
+      self.slug = self.slug.parameterize
     end
   end
 end
