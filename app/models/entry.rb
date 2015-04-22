@@ -27,6 +27,14 @@ class Entry < ActiveRecord::Base
   def publish
     self.status = 'published'
     self.published_at = Time.now
+    self.save
+  end
+
+  def queue
+    unless status == 'published'
+      self.status = 'queued'
+      self.save
+    end
   end
 
   private

@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       member do
         get 'preview'
         patch 'publish'
+        patch 'queue'
       end
       collection do
         get 'queued'

@@ -4,7 +4,7 @@ class CreateEntries < ActiveRecord::Migration
       t.string :title
       t.text :body
       t.string :slug
-      t.string :status
+      t.string :status, default: 'draft'
       t.references :blog, index: true, foreign_key: true
       t.references :user, index: true, foreign_key: true
 
