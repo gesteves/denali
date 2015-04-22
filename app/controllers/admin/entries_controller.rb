@@ -27,10 +27,7 @@ class Admin::EntriesController < ApplicationController
 
   # PATCH /admin/entries/1/publish
   def publish
-    @entry.published = true
-    @entry.draft = false
-    @entry.queued = false
-    @entry.published_at = Time.now
+    @entry.publish
     if @entry.save
       respond_to do |format|
         format.html { redirect_to admin_entries_path, notice: 'Entry was successfully published.' }

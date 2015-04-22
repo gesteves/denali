@@ -24,6 +24,11 @@ class Entry < ActiveRecord::Base
     self.status == 'published'
   end
 
+  def publish
+    self.status = 'published'
+    self.published_at = Time.now
+  end
+
   private
 
   def set_published_date
