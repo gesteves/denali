@@ -9,7 +9,7 @@ class Entry < ActiveRecord::Base
   scope :queued,    -> { where(status: 'queued').order('created_at ASC') }
   scope :published, -> { where(status: 'published').order('updated_at ASC') }
 
-  before_save :set_published_date
+  before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
 
   def is_queued?
@@ -26,7 +26,6 @@ class Entry < ActiveRecord::Base
 
   def publish
     self.status = 'published'
-    self.published_at = Time.now
     self.save
   end
 
