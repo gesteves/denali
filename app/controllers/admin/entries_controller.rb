@@ -1,5 +1,5 @@
 class Admin::EntriesController < ApplicationController
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft]
 
   # GET /admin/entries
   def index
@@ -42,11 +42,24 @@ class Admin::EntriesController < ApplicationController
   def queue
     if @entry.queue
       respond_to do |format|
-        format.html { redirect_to queued_admin_entries_path, notice: 'Entry was successfully queued.' }
+        format.html { redirect_to request.referrer, notice: 'Entry was successfully queued.' }
       end
     else
       respond_to do |format|
-        format.html { redirect_to request.referrer, notice: 'Entry couldn\'t be published.' }
+        format.html { redirect_to request.referrer, notice: 'Entry couldn\'t be queued.' }
+      end
+    end
+  end
+
+  # PATCH /admin/entries/1/draft
+  def draft
+    if @entry.draft
+      respond_to do |format|
+        format.html { redirect_to request.referrer, notice: 'Entry was successfully saved to drafts.' }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to request.referrer, notice: 'Entry couldn\'t be saved to drafts.' }
       end
     end
   end

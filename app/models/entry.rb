@@ -37,6 +37,13 @@ class Entry < ActiveRecord::Base
     end
   end
 
+  def draft
+    unless status == 'published'
+      self.status = 'draft'
+      self.save
+    end
+  end
+
   private
 
   def set_published_date
