@@ -66,7 +66,7 @@ class Admin::EntriesController < ApplicationController
 
   # POST /admin/entries
   def create
-    @entry = Entry.new(params[:entry])
+    @entry = Entry.new(entry_params)
     @entry.user = current_user
     @entry.blog = photoblog
     respond_to do |format|
@@ -81,7 +81,7 @@ class Admin::EntriesController < ApplicationController
   # PATCH/PUT /admin/entries/1
   def update
     respond_to do |format|
-      if @entry.update(params[:entry])
+      if @entry.update(entry_params)
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully updated.' }
       else
         format.html { render :edit }
@@ -101,6 +101,10 @@ class Admin::EntriesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
       @entry = Entry.find(params[:id])
+    end
+
+    def entry_params
+      params.require(:entry).permit(:title, :body, :slug, :status)
     end
 
     def get_redirect_url(entry)
