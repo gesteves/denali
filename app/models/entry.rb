@@ -5,9 +5,9 @@ class Entry < ActiveRecord::Base
 
   validates :title, :body, presence: true
 
-  scope :drafted,   -> { where(status: 'draft').order('published_at DESC') }
+  scope :drafted,   -> { where(status: 'draft').order('updated_at DESC') }
   scope :queued,    -> { where(status: 'queued').order('created_at ASC') }
-  scope :published, -> { where(status: 'published').order('updated_at ASC') }
+  scope :published, -> { where(status: 'published').order('published_at DESC') }
 
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
