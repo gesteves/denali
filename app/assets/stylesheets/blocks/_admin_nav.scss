@@ -1,0 +1,49 @@
+.admin-nav {
+  align-content: center;
+  border-bottom: 1px solid $color-border;
+  display: flex;
+  flex-flow: row nowrap;
+  font-size: 12px;
+  line-height: 2;
+  margin: 4px 0 24px;
+  padding: 0 10px;
+  text-transform: uppercase;
+
+  @at-root #{&}__group {
+    align-content: center;
+    display: flex;
+    flex-flow: row nowrap;
+    flex-grow: 1;
+  }
+
+  @at-root #{&}__link {
+    display: block;
+    padding: 0 10px;
+
+    &:link,
+    &:visited {
+      color: $color-gray-medium;
+    }
+
+    &:hover,
+    &:active {
+      color: $color-links;
+      text-decoration: none;
+    }
+  }
+
+  @at-root #{&}__link--is-active {
+    border-bottom: 2px solid;
+    font-weight: 600;
+
+    &:link,
+    &:visited {
+      color: $color-text;
+    }
+
+    &:hover,
+    &:active {
+      color: $color-links;
+    }
+  }
+}

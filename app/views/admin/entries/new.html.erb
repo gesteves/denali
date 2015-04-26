@@ -1,4 +1,6 @@
-<h1>New Admin Entry</h1>
+<% content_for :nav do %>
+  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'new' } %>
+<% end %>
 
 <%= render partial: 'form', locals: { include_status_option: true } %>
 

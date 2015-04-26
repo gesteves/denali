@@ -1,4 +1,6 @@
-<h1>Settings</h1>
+<% content_for :nav do %>
+  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'settings' } %>
+<% end %>
 
 <%= form_for(@blog, url: admin_settings_update_path) do |f| %>
   <% if @blog.errors.any? %>

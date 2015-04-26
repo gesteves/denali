@@ -1,29 +1,34 @@
-class Admin::EntriesController < ApplicationController
+class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft]
 
   # GET /admin/entries
   def index
     @entries = Entry.published
+    @page_title = 'Published'
   end
 
   # GET /admin/entries/queued
   def queued
     @entries = Entry.queued
+    @page_title = 'Queued'
   end
 
   # GET /admin/entries/drafts
   def drafts
     @entries = Entry.drafted
+    @page_title = 'Drafts'
   end
 
   # GET /admin/entries/new
   def new
     @entry = Entry.new
     @entry.photos.build
+    @page_title = 'New entry'
   end
 
   # GET /admin/entries/1/edit
   def edit
+    @page_title = "Editing “#{@entry.title}”"
   end
 
   # PATCH /admin/entries/1/publish

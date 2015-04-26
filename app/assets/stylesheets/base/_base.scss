@@ -1,0 +1,20 @@
+* {
+  box-sizing: border-box;
+}
+
+
+a:link,
+a:visited {
+  color: $color-links;
+  text-decoration: none;
+}
+
+a:hover,
+a:active {
+  color: $color-links;
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+}

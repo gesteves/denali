@@ -1,6 +1,6 @@
-<p id="notice"><%= notice %></p>
-
-<h1>Listing Draft Entries</h1>
+<% content_for :nav do %>
+  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'drafts' } %>
+<% end %>
 
 <table>
   <thead>

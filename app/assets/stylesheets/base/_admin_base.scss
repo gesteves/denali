@@ -1,0 +1,25 @@
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color: $color-text;
+  font-family: 'proxima-nova', sans-serif;
+  font-size: 62.5%;
+}
+
+a:link,
+a:visited {
+  color: $color-links;
+  text-decoration: none;
+}
+
+a:hover,
+a:active {
+  color: $color-links;
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+}

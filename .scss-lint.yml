@@ -104,7 +104,7 @@ linters:
 
   SelectorFormat:
     enabled: true
-    convention: BEM
+    convention: hyphenated_lowercase
 
   Shorthand:
     enabled: true

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= @page_title.nil? ? '' : "#{@page_title} &middot; ".html_safe %><%= photoblog.name %></title>
+  <%= stylesheet_link_tag 'admin', media: 'all' %>
+  <%= csrf_meta_tags %>
+  <script src="//use.typekit.net/zwv6nvu.js"></script>
+  <script>try{Typekit.load();}catch(e){}</script>
+</head>
+<body>
+
+<% if content_for? :nav %>
+  <%= yield :nav %>
+<% else %>
+  <%= render partial: 'partials/admin/content_header', locals: { active_nav: 'drafts' } %>
+<% end %>
+
+<% flash.each do |name, message| -%>
+  <div class="flash flash--<%= name %>">
+    <%= message %>
+  </div>
+<% end %>
+
+<div class="admin-content">
+  <%= yield %>
+</div>
+
+<%= javascript_include_tag 'admin' %>
+</body>
+</html>
