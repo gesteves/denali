@@ -12,7 +12,7 @@
 <% if content_for? :nav %>
   <%= yield :nav %>
 <% else %>
-  <%= render partial: 'partials/admin/content_header', locals: { active_nav: 'drafts' } %>
+  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'none' } %>
 <% end %>
 
 <% flash.each do |name, message| -%>
