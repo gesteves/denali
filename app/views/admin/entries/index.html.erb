@@ -13,6 +13,11 @@
     <% @entries.each do |entry| %>
       <tr>
         <td><%= entry.title %></td>
+        <td>
+        <% entry.photos.each do |p| %>
+          <%= image_tag p.url(500) %>
+        <% end %>
+        </td>
         <td><%= link_to 'Edit', edit_admin_entry_path(entry) %></td>
         <td><%= link_to 'Destroy', admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
