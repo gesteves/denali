@@ -55,9 +55,6 @@ GEM
       climate_control (>= 0.0.3, < 1.0)
     columnize (0.9.0)
     debug_inspector (0.0.2)
-    dotenv (2.0.1)
-    dotenv-rails (2.0.1)
-      dotenv (= 2.0.1)
     erubis (2.7.0)
     execjs (2.5.2)
     faraday (0.9.1)
@@ -186,7 +183,6 @@ DEPENDENCIES
   acts_as_list
   aws-sdk
   byebug
-  dotenv-rails
   foreman
   jbuilder (~> 2.0)
   jquery-rails
