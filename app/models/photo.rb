@@ -1,5 +1,5 @@
 class Photo < ActiveRecord::Base
-  belongs_to :entry, touch: true
+  belongs_to :entry, touch: true, counter_cache: true
   has_attached_file :image,
     storage: :s3,
     s3_credentials: { access_key_id: Rails.application.secrets.aws_access_key_id,

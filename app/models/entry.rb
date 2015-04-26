@@ -8,6 +8,8 @@ class Entry < ActiveRecord::Base
   scope :drafted,   -> { where(status: 'draft').order('updated_at DESC') }
   scope :queued,    -> { where(status: 'queued').order('created_at ASC') }
   scope :published, -> { where(status: 'published').order('published_at DESC') }
+  scope :text_entries, -> { where('photos_count = 0') }
+  scope :photo_entries, -> { where('photos_count > 0') }
 
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
