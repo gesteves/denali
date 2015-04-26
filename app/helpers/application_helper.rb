@@ -2,6 +2,7 @@ module ApplicationHelper
 
   def responsive_image_tag(photo, widths = [], sizes = '', default_width = 1280, image_options = {}, html_options = {})
     image_options.reverse_merge! square: false, quality: 90
+    html_options.reverse_merge! alt: photo.caption || photo.entry.title
     html_options[:sizes] = sizes unless sizes == ''
     srcset = []
     if image_options[:square]
