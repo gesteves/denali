@@ -16,6 +16,18 @@ class Entry < ActiveRecord::Base
 
   accepts_nested_attributes_for :photos, allow_destroy: true
 
+  def is_photo?
+    self.photos_count > 0
+  end
+
+  def is_photoset?
+    self.photos_count > 1
+  end
+
+  def is_text?
+    self.photos_count == 0
+  end
+
   def is_queued?
     self.status == 'queued'
   end
