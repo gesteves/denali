@@ -15,7 +15,7 @@
         <td><%= entry.title %></td>
         <td>
         <% entry.photos.each do |p| %>
-          <%= image_tag p.url(500) %>
+          <%= responsive_image_tag p, [1500, 1000, 500], '500px', 1000 %>
         <% end %>
         </td>
         <td><%= link_to 'Edit', edit_admin_entry_path(entry) %></td>
