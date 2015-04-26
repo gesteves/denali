@@ -1,0 +1,15 @@
+{
+  "name": "denali",
+  "version": "0.0.0",
+  "dependencies": {
+    "grunt": "~0.4.5"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-scss-lint": "^0.3.6"
+  },
+  "engines": {
+    "node": ">= 0.12"
+  }
+}

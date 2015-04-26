@@ -25,6 +25,7 @@ gem 'acts_as_list'
 # gem 'capistrano-rails', group: :development
 
 group :development, :test do
+  gem 'scss-lint'
   gem 'foreman'
   gem 'byebug'
   gem 'web-console', '~> 2.0'
