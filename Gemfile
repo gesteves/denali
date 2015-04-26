@@ -23,6 +23,7 @@ gem 'omniauth-google-oauth2'
 gem 'dotenv-rails'
 gem 'acts_as_list'
 gem 'aws-sdk'
+gem 'paperclip', '~> 4.2'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'

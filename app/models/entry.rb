@@ -12,6 +12,8 @@ class Entry < ActiveRecord::Base
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
 
+  accepts_nested_attributes_for :photos, allow_destroy: true
+
   def is_queued?
     self.status == 'queued'
   end

@@ -19,6 +19,7 @@ class Admin::EntriesController < ApplicationController
   # GET /admin/entries/new
   def new
     @entry = Entry.new
+    @entry.photos.build
   end
 
   # GET /admin/entries/1/edit
@@ -104,7 +105,7 @@ class Admin::EntriesController < ApplicationController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status)
+      params.require(:entry).permit(:title, :body, :slug, :status, photos_attributes: [:source_url, :source_file])
     end
 
     def get_redirect_url(entry)
