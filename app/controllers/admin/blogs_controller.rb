@@ -2,6 +2,8 @@ class Admin::BlogsController < AdminController
 
   # GET /admin/blogs/1/edit
   def edit
+    @blog = photoblog
+    @page_title = 'Blog settings'
   end
 
   # PATCH/PUT /admin/blogs/1
