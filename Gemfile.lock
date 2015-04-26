@@ -39,6 +39,9 @@ GEM
     acts_as_list (0.6.0)
       activerecord (>= 3.0)
     arel (6.0.0)
+    autoprefixer-rails (5.1.11)
+      execjs
+      json
     aws-sdk (1.5.8)
       httparty (~> 0.7)
       json (~> 1.4)
@@ -181,6 +184,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_list
+  autoprefixer-rails
   aws-sdk
   byebug
   foreman
