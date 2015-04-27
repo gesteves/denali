@@ -1,0 +1,7 @@
+<li class="admin-entry-list__entry">
+  <% if entry.is_photo? %>
+    <%= responsive_image_tag entry.photos.first, [300, 600, 900], "300px", 600, { square: true, quality: photoblog.photo_quality }, {class: "admin-entry-list__thumb" } %>
+  <% else %>
+    <div class="admin-entry-list__thumb--placeholder"></div>
+  <% end %>
+</li>
