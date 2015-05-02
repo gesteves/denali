@@ -90,7 +90,7 @@ linters:
 
   PropertySpelling:
     enabled: true
-    extra_properties: []
+    extra_properties: [backdrop-filter]
 
   QualifyingElement:
     enabled: true
