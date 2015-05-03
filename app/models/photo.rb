@@ -21,8 +21,10 @@ class Photo < ActiveRecord::Base
     self.image.url
   end
 
-  def url(width, height = 0, quality = 90)
-    ApplicationController.helpers.thumbor_url self.original_url, width: width, height: height, smart: true, filters: ["quality(#{quality})", 'no_upscale()']
+  def url(width, height = 0, quality = 90, upscale = false)
+    filters = ["quality(#{quality})"]
+    filters << 'no_upscale()' unless upscale
+    ApplicationController.helpers.thumbor_url self.original_url, width: width, height: height, smart: true, filters: filters
   end
 
   private
