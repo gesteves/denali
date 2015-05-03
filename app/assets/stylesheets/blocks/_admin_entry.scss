@@ -1,0 +1,9 @@
+.admin-entry {
+  background-color: #FFF;
+  margin: 24px 0;
+
+  @at-root #{&}__thumb {
+    display: inline-block;
+    font-size: 0;
+  }
+}

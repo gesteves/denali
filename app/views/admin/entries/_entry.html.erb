@@ -1,7 +1,9 @@
-<li class="admin-entry-list__entry">
-  <% if entry.is_photo? %>
-    <%= responsive_image_tag entry.photos.first, [300, 600, 900], "300px", 600, { square: true, quality: photoblog.photo_quality }, {class: "admin-entry-list__thumb" } %>
-  <% else %>
-    <div class="admin-entry-list__thumb--placeholder"></div>
+<li class="admin-entry">
+  <% entry.photos.each_with_index do |p, i| %>
+    <% if i == 0 %>
+      <%= responsive_image_tag p, [600, 1200], "(min-width: 600px) 600px, calc(100vw - 40px)", { square: true, default_width: 1200, quality: photoblog.photo_quality }, { class: "admin-entry__thumb" } %>
+    <% else %>
+      <%= responsive_image_tag p, [300, 600], "(min-width: 600px) 300px, calc(50vw - 40px)", { square: true, default_width: 600, quality: photoblog.photo_quality }, { class: "admin-entry__thumb" } %>
+    <% end %>
   <% end %>
 </li>
