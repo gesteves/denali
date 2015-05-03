@@ -1,7 +1,7 @@
 module ApplicationHelper
 
-  def responsive_image_tag(photo, widths = [], sizes = '', default_width = 1280, image_options = {}, html_options = {})
-    image_options.reverse_merge! square: false, quality: 90
+  def responsive_image_tag(photo, widths = [], sizes = '100vw', image_options = {}, html_options = {})
+    image_options.reverse_merge! square: false, quality: 90, default_width: 1280, default_height: 0
     html_options.reverse_merge! alt: photo.caption || photo.entry.title
     html_options[:sizes] = sizes unless sizes == ''
     srcset = []
@@ -10,13 +10,13 @@ module ApplicationHelper
         srcset << "#{photo.url(w, w, image_options[:quality])} #{w}w"
       end
       html_options[:srcset] = srcset.join(', ')
-      src = photo.url(default_width, default_width, image_options[:quality])
+      src = photo.url(image_options[:default_width], image_options[:default_width], image_options[:quality])
     else
       widths.each do |w|
-        srcset << "#{photo.url(w, 0, image_options[:quality])} #{w}w"
+        srcset << "#{photo.url(w, image_options[:default_height], image_options[:quality])} #{w}w"
       end
       html_options[:srcset] = srcset.join(', ')
-      src = photo.url(default_width, 0, image_options[:quality])
+      src = photo.url(image_options[:default_width], image_options[:default_height], image_options[:quality])
     end
     image_tag src, html_options
   end
