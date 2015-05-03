@@ -1,6 +1,6 @@
 <li class="admin-entry">
   <% entry.photos.each do |p| %>
-    <%= responsive_image_tag p, [400, 800, 1200, 1600], "(min-width: 840px) 800px, calc(100vw - 40px)", { default_height: 100, default_width: 800, quality: photoblog.photo_quality, upscale: true }, { class: "admin-entry__thumb" } %>
+    <%= responsive_image_tag p, [400, 800, 1200, 1600], "(min-width: 840px) 800px, calc(100vw - 40px)", { default_height: 200, default_width: 800, quality: photoblog.photo_quality, upscale: true }, { class: "admin-entry__thumb" } %>
   <% end %>
   <div class="admin-entry__content">
     <h2><%= entry.title %></h2>
