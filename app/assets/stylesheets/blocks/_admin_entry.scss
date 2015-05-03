@@ -6,4 +6,64 @@
     display: inline-block;
     font-size: 0;
   }
+
+  @at-root #{&}__content {
+    padding: 0 20px;
+
+    h2 {
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1;
+      margin: 1rem 0;
+    }
+
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.5;
+      margin: 1.5rem 0;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 1.5rem 0;
+    }
+  }
+
+  @at-root #{&}__actions {
+    display: flex;
+    padding: 12px 20px;
+
+    a {
+      font-size: 12px;
+      line-height: 2;
+      margin: 0 10px;
+    }
+
+    a:link,
+    a:visited {
+      color: $color-gray-medium;
+    }
+
+    a:hover,
+    a:active {
+      color: $color-links;
+    }
+
+    a:first-child {
+      margin-left: 0;
+    }
+
+    a:last-child {
+      margin-right: 0;
+    }
+  }
+
+  @at-root #{&}__safe-actions {
+    flex-grow: 1;
+  }
 }
