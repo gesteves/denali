@@ -1,7 +1,7 @@
 <%= form_for([:admin, @entry], html: { multipart: true }) do |f| %>
   <% if @entry.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@entry.errors.count, "error") %> prohibited this admin_entry from being saved:</h2>
+      <h2><%= pluralize(@entry.errors.count, "error") %> prohibited this entry from being saved:</h2>
 
       <ul>
       <% @entry.errors.full_messages.each do |message| %>
@@ -12,11 +12,11 @@
   <% end %>
 
   <%= f.fields_for :photos do |photos_form| %>
-    <p>Image<br/><%= photos_form.text_field :source_url, placeholder: "URL" %> or <%= photos_form.file_field :source_file %></p>
+    <p>Image<br/><%= photos_form.text_field :source_url, placeholder: 'URL', autocomplete: 'off' %> or <%= photos_form.file_field :source_file %></p>
   <% end %>
 
-  <p>Slug<br/><%= f.text_field :slug %></p>
-  <p>Title<br/><%= f.text_field :title %></p>
+  <p>Slug<br/><%= f.text_field :slug, autocomplete: 'off' %></p>
+  <p>Title<br/><%= f.text_field :title, autocomplete: 'off' %></p>
 
   <%= f.text_area :body %>
 
