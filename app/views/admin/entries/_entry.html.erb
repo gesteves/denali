@@ -1,17 +1,20 @@
 <li class="admin-entry">
-  <% entry.photos.each_with_index do |p, i| %>
-    <% if i == 0 %>
-      <%= responsive_image_tag p, [600, 1200], "(min-width: 600px) 600px, calc(100vw - 40px)", { square: true, default_width: 1200, quality: photoblog.photo_quality }, { class: "admin-entry__thumb" } %>
-    <% else %>
-      <%= responsive_image_tag p, [300, 600], "(min-width: 600px) 300px, calc(50vw - 40px)", { square: true, default_width: 600, quality: photoblog.photo_quality }, { class: "admin-entry__thumb" } %>
-    <% end %>
+  <% entry.photos.each do |p| %>
+    <%= responsive_image_tag p, [400, 800, 1200, 1600], "(min-width: 840px) 800px, calc(100vw - 40px)", { default_height: 100, default_width: 800, quality: photoblog.photo_quality, upscale: true }, { class: "admin-entry__thumb" } %>
   <% end %>
   <div class="admin-entry__content">
     <h2><%= entry.title %></h2>
     <%= entry.body unless entry.body.blank? %>
   </div>
-  <div class="admin-entry__actions">
-    <div class="admin-entry__safe-actions">
+  <div class="admin-entry__meta">
+    <div class="admin-entry__timestamp">
+      <% if entry.is_published? %>
+        Published <%= time_ago_in_words(entry.published_at) %> ago
+      <% else %>
+        Last updated <%= time_ago_in_words(entry.updated_at) %> ago
+      <% end %>
+    </div>
+    <div class="admin-entry__actions">
       <%= link_to 'Edit', edit_admin_entry_path(entry) %>
       <% if entry.is_draft? %>
         <%= link_to 'Queue', queue_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to move this entry to the queue?' }  %>
@@ -22,8 +25,7 @@
       <% if entry.is_queued? || entry.is_draft? %>
         <%= link_to 'Publish', publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry?' }  %>
       <% end %>
-    </div>
-    <div class="admin-entry__unsafe-actions">
+      &middot;
       <%= link_to 'Delete', admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you sure you want to delete this entry?' } %>
     </div>
   </div>

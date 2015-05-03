@@ -3,7 +3,7 @@
   margin: 24px 0;
 
   @at-root #{&}__thumb {
-    display: inline-block;
+    display: block;
     font-size: 0;
   }
 
@@ -34,14 +34,15 @@
     }
   }
 
-  @at-root #{&}__actions {
+  @at-root #{&}__meta {
+    color: $color-gray-medium;
     display: flex;
+    font-size: 12px;
+    line-height: 2;
     padding: 12px 20px;
 
     a {
-      font-size: 12px;
-      line-height: 2;
-      margin: 0 10px;
+      margin: 0 5px;
     }
 
     a:link,
@@ -63,7 +64,7 @@
     }
   }
 
-  @at-root #{&}__safe-actions {
+  @at-root #{&}__timestamp {
     flex-grow: 1;
   }
 }
