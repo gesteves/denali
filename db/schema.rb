@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 20150426172243) do
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
     t.datetime "published_at"
-    t.integer  "photos_count", default: 0
+    t.integer  "photos_count"
   end
 
   add_index "entries", ["blog_id"], name: "index_entries_on_blog_id"
