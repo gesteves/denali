@@ -1,0 +1,5 @@
+@mixin flash($color) {
+  background-color: tint($color, 50%);
+  border: 1px solid $color;
+  color: shade($color, 50%);
+}

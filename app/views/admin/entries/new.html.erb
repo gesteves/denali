@@ -2,6 +2,28 @@
   <%= render partial: 'partials/admin/nav', locals: { active_nav: 'new' } %>
 <% end %>
 
-<%= render partial: 'form', locals: { include_status_option: true } %>
+<%= form_for([:admin, @entry], html: { multipart: true, class: 'admin-form' }) do |f| %>
+  <% if @entry.errors.any? %>
+    <div class="flash flash--danger">
+      <h2>Welp, the entry couldn't be saved.</h2>
+      <ul>
+      <% @entry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<%= link_to 'Back', admin_entries_path %>
+  <%= f.fields_for :photos do |photos_form| %>
+    <p><%= photos_form.text_field :source_url, placeholder: 'Photo URL', autocomplete: 'off' %> or <%= photos_form.file_field :source_file %></p>
+  <% end %>
+
+  <%= f.text_field :slug, autocomplete: 'off', placeholder: 'Slug', class: 'admin-form__input admin-form__input--small' %>
+  <%= f.text_field :title, autocomplete: 'off', placeholder: 'Title', class: 'admin-form__input' %>
+
+  <%= f.text_area :body, placeholder: 'Write here…', class: 'admin-form__input admin-form__input--textarea' %>
+
+  <%= f.select :status, options_for_select([['Add to queue', 'queued'], ['Save draft', 'draft'], ['Publish it!', 'published']]), class: 'admin-form__input' %>
+
+  <%= f.submit class: 'button' %>
+<% end %>
