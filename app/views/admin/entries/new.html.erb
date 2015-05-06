@@ -25,7 +25,7 @@
 
   <div class="admin-form__actions">
     <div class="admin-form__buttons">
-      <%= link_to 'Forget it', admin_entries_path, class: 'button button--danger' %>
+      <%= link_to 'Forget it', admin_entries_path, data: { confirm: 'Are you sure you want to discard this?' }, class: 'button button--danger' %>
     </div>
     <div class="admin-form__buttons admin-form__buttons--safe">
       <%= f.select :status, options_for_select([['Add to queue', 'queued'], ['Save draft', 'draft'], ['Publish it!', 'published']]), {}, { class: 'button' } %>
