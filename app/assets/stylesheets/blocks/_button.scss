@@ -22,4 +22,12 @@
   @at-root #{&}--success {
     @include button($color-alert-success);
   }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &:focus {
+    outline-width: 0;
+  }
 }
