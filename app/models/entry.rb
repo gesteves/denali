@@ -3,7 +3,7 @@ class Entry < ActiveRecord::Base
   belongs_to :blog, touch: true
   belongs_to :user
 
-  validates :title, :body, presence: true
+  validates :title, presence: true
 
   scope :drafted,   -> { where(status: 'draft').order('updated_at DESC') }
   scope :queued,    -> { where(status: 'queued').order('created_at ASC') }
