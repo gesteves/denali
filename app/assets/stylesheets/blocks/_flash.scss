@@ -1,6 +1,7 @@
 .flash {
   @include flash($color-alert-default);
   border-radius: 2px;
+  color: #FFF;
   padding: 0 20px;
 
   h2 {

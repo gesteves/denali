@@ -1,5 +1,30 @@
 @mixin flash($color) {
   background-color: tint($color, 50%);
   border: 1px solid $color;
-  color: shade($color, 50%);
+  text-shadow: 0 -1px 0 $color;
+}
+
+@mixin button($color) {
+  background-color: $color;
+  border: 1px solid shade($color, 20%);
+  color: #FFF;
+  text-shadow: 0 -1px 0 shade($color, 20%);
+
+  &:link,
+  &:active {
+    color: #FFF;
+    text-decoration: none;
+  }
+
+  &:hover {
+    background-color: shade($color, 10%);
+    color: #FFF;
+    text-decoration: none;
+  }
+
+  &:active {
+    background-color: shade($color, 15%);
+    color: #FFF;
+    text-decoration: none;
+  }
 }

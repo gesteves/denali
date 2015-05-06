@@ -9,13 +9,13 @@
     width: 100%;
 
     @at-root #{&}--small {
-      font-size: 16px;
-      line-height: 1.5;
-      margin: 1.5rem 0;
+      font-size: 14px;
+      line-height: (24/14);
+      margin: ((24/14) * 1rem) 0;
     }
 
     @at-root #{&}--textarea {
-      height: 50vh;
+      height: 25vh;
     }
 
     &:focus {
@@ -25,5 +25,20 @@
     &::placeholder {
       font-weight: 100;
     }
+  }
+
+  @at-root #{&}__actions {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 24px 0;
+  }
+
+  @at-root #{&}__buttons {
+    display: flex;
+  }
+
+  @at-root #{&}__buttons--safe {
+    flex-grow: 1;
+    justify-content: flex-end;
   }
 }
