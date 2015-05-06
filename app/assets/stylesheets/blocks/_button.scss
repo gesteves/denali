@@ -23,6 +23,10 @@
     @include button($color-alert-success);
   }
 
+  @at-root #{&}--pad-right {
+    padding-right: 20px;
+  }
+
   &:hover {
     cursor: pointer;
   }

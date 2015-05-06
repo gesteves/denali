@@ -41,4 +41,17 @@
     flex-grow: 1;
     justify-content: flex-end;
   }
+
+  @at-root #{&}__select-container {
+    position: relative;
+
+    &:after {
+      color: $color-gray-medium;
+      content: '▼';
+      position: absolute;
+      right: 8px;
+      top: 50%;
+      transform: scaleY(0.8) translateY(-50%);
+    }
+  }
 }
