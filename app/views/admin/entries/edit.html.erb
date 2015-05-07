@@ -22,14 +22,14 @@
     <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'admin-form__label admin-form__label--small admin-form__label--alt' %>
     <%= f.text_field :slug, autocomplete: 'off', placeholder: 'your-optional-custom-url-slug', class: 'admin-form__input admin-form__input--small' %>
   </div>
-  
+
   <%= f.text_field :title, autocomplete: 'off', placeholder: 'Title', class: 'admin-form__input' %>
 
   <%= f.text_area :body, placeholder: 'Write here…', class: 'admin-form__input admin-form__input--textarea' %>
 
   <div class="admin-form__actions">
     <div class="admin-form__buttons">
-      <%= link_to 'Forget it', admin_entries_path, data: { confirm: 'Are you sure you want to discard this?' }, class: 'button button--danger' %>
+      <%= link_to 'Forget it', admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button button--danger' %>
     </div>
     <div class="admin-form__buttons admin-form__buttons--safe">
     <%= f.submit 'Make it so', class: 'button button--success' %>
