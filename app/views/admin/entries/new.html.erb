@@ -18,7 +18,11 @@
     <p><%= photos_form.text_field :source_url, placeholder: 'Photo URL', autocomplete: 'off' %> or <%= photos_form.file_field :source_file %></p>
   <% end %>
 
-  <%= f.text_field :slug, autocomplete: 'off', placeholder: 'Slug', class: 'admin-form__input admin-form__input--small' %>
+  <div class="admin-form__inline">
+    <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'admin-form__label admin-form__label--small admin-form__label--alt' %>
+    <%= f.text_field :slug, autocomplete: 'off', placeholder: 'your-optional-custom-url-slug', class: 'admin-form__input admin-form__input--small' %>
+  </div>
+
   <%= f.text_field :title, autocomplete: 'off', placeholder: 'Title', class: 'admin-form__input' %>
 
   <%= f.text_area :body, placeholder: 'Write here…', class: 'admin-form__input admin-form__input--textarea' %>

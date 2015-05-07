@@ -1,5 +1,38 @@
-<h1>Editing Admin Entry</h1>
+<% content_for :nav do %>
+  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'new' } %>
+<% end %>
 
-<%= render partial: 'form', locals: { include_status_option: false } %>
+<%= form_for([:admin, @entry], html: { multipart: true, class: 'admin-form' }) do |f| %>
+  <% if @entry.errors.any? %>
+    <div class="flash flash--danger">
+      <h2>Welp, the entry couldn't be saved.</h2>
+      <ul>
+      <% @entry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-<%= link_to 'Back', admin_entries_path %>
+  <%= f.fields_for :photos do |photos_form| %>
+    <p><%= photos_form.text_field :source_url, placeholder: 'Photo URL', autocomplete: 'off' %> or <%= photos_form.file_field :source_file %></p>
+  <% end %>
+
+  <div class="admin-form__inline">
+    <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'admin-form__label admin-form__label--small admin-form__label--alt' %>
+    <%= f.text_field :slug, autocomplete: 'off', placeholder: 'your-optional-custom-url-slug', class: 'admin-form__input admin-form__input--small' %>
+  </div>
+  
+  <%= f.text_field :title, autocomplete: 'off', placeholder: 'Title', class: 'admin-form__input' %>
+
+  <%= f.text_area :body, placeholder: 'Write here…', class: 'admin-form__input admin-form__input--textarea' %>
+
+  <div class="admin-form__actions">
+    <div class="admin-form__buttons">
+      <%= link_to 'Forget it', admin_entries_path, data: { confirm: 'Are you sure you want to discard this?' }, class: 'button button--danger' %>
+    </div>
+    <div class="admin-form__buttons admin-form__buttons--safe">
+    <%= f.submit 'Make it so', class: 'button button--success' %>
+    </div>
+  </div>
+<% end %>

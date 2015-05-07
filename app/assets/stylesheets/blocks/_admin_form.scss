@@ -1,17 +1,20 @@
 .admin-form {
+  display: flex;
+  flex-flow: column;
+
   @at-root #{&}__input {
     border: 0;
+    color: $color-text;
     display: block;
+    flex-grow: 1;
     font-family: 'proxima-nova', sans-serif;
     font-size: 24px;
     line-height: 1;
     margin: 1rem 0;
-    width: 100%;
 
     @at-root #{&}--small {
       font-size: 14px;
       line-height: (24/14);
-      margin: ((24/14) * 1rem) 0;
     }
 
     @at-root #{&}--textarea {
@@ -52,6 +55,27 @@
       right: 8px;
       top: 50%;
       transform: scaleY(0.8) translateY(-50%);
+    }
+  }
+
+  @at-root #{&}__inline {
+    align-items: center;
+    display: flex;
+  }
+
+  @at-root #{&}__label {
+    font-family: 'proxima-nova', sans-serif;
+    font-size: 24px;
+    line-height: 1;
+    margin: 1rem 0;
+
+    @at-root #{&}--small {
+      font-size: 14px;
+      line-height: (24/14);
+    }
+
+    @at-root #{&}--alt {
+      color: $color-text-alt;
     }
   }
 }
