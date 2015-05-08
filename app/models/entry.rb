@@ -13,9 +13,8 @@ class Entry < ActiveRecord::Base
 
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
-  after_save :clear_empty_photos
 
-  accepts_nested_attributes_for :photos, allow_destroy: true
+  accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? }
 
   def is_photo?
     self.photos_count > 0
@@ -73,12 +72,6 @@ class Entry < ActiveRecord::Base
       self.slug = self.title.parameterize
     else
       self.slug = self.slug.parameterize
-    end
-  end
-
-  def clear_empty_photos
-    self.photos.each do |p|
-      p.destroy if !p.image.exists?
     end
   end
 end
