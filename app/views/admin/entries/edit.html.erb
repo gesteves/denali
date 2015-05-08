@@ -29,7 +29,13 @@
 
   <div class="admin-form__actions">
     <div class="admin-form__buttons">
-      <%= link_to 'Forget it', admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button button--danger' %>
+      <% if @entry.is_draft? %>
+        <%= link_to 'Forget it', drafts_admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button button--danger' %>
+      <% elsif @entry.is_queued? %>
+        <%= link_to 'Forget it', queued_admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button button--danger' %>
+      <% else %>
+        <%= link_to 'Forget it', admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button button--danger' %>
+      <% end %>
     </div>
     <div class="admin-form__buttons admin-form__buttons--safe">
     <%= f.submit 'Make it so', class: 'button button--success' %>
