@@ -1,7 +1,7 @@
 <nav class="admin-nav">
   <div class="admin-nav__group">
     <a href="<%= root_path %>" class="admin-nav__link">Home</a>
-    <a href="<%= admin_entries_path %>" class="admin-nav__link <%= 'admin-nav__link--is-active' if active_nav == 'published' %>">Published</a>
+    <a href="<%= admin_entries_path %>" class="admin-nav__link <%= 'admin-nav__link--is-active' if active_nav == 'published' %>">Published <%= published_count %></a>
     <a href="<%= queued_admin_entries_path %>" class="admin-nav__link <%= 'admin-nav__link--is-active' if active_nav == 'queued' %>">Queued <%= queued_count %></a>
     <a href="<%= drafts_admin_entries_path %>" class="admin-nav__link <%= 'admin-nav__link--is-active' if active_nav == 'drafts' %>">Drafts <%= drafts_count %></a>
     <a href="<%= new_admin_entry_path %>" class="admin-nav__link <%= 'admin-nav__link--is-active' if active_nav == 'new' %>">Post a new entry</a>
