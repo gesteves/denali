@@ -14,6 +14,14 @@
     </div>
   <% end %>
 
+  <div class="admin-form__inline">
+    <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'admin-form__label--slug' %>
+    <%= f.text_field :slug, autocomplete: 'off', placeholder: 'your-optional-custom-url-slug', class: 'admin-form__input admin-form__input--small' %>
+  </div>
+
+  <%= f.text_field :title, autocomplete: 'off', placeholder: 'Title', class: 'admin-form__input' %>
+  <%= f.text_area :body, placeholder: 'Write the text of your entry here…', class: 'admin-form__input admin-form__input--textarea' %>
+
   <div class="admin-form__photos">
     <%= f.fields_for :photos do |photos_form| %>
     <div class="admin-form__photo">
@@ -34,14 +42,6 @@
     <% end %>
     <%= link_to 'Add photo', '#', class: 'button button--default' %>
   </div>
-
-  <div class="admin-form__inline">
-    <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'admin-form__label--slug' %>
-    <%= f.text_field :slug, autocomplete: 'off', placeholder: 'your-optional-custom-url-slug', class: 'admin-form__input admin-form__input--small' %>
-  </div>
-
-  <%= f.text_field :title, autocomplete: 'off', placeholder: 'Title', class: 'admin-form__input' %>
-  <%= f.text_area :body, placeholder: 'Write the text of your entry here…', class: 'admin-form__input admin-form__input--textarea' %>
 
   <div class="admin-form__actions">
     <div class="admin-form__buttons">

@@ -87,8 +87,9 @@
 
   @at-root #{&}__photos {
     border-bottom: 1px solid $color-border;
-    margin: 0 0 24px;
-    padding-bottom: 24px;
+    border-top: 1px solid $color-border;
+    margin: 24px 0;
+    padding: 24px 0;
   }
 
   @at-root #{&}__photo {
