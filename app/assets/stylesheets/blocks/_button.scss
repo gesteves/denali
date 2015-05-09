@@ -9,6 +9,7 @@
   line-height: 1.5;
   margin: 0 2px;
   padding: 6px 10px;
+  position: relative;
   text-align: center;
 
   @at-root #{&}--default {
@@ -25,6 +26,15 @@
 
   @at-root #{&}--pad-right {
     padding-right: 20px;
+  }
+
+  @at-root #{&}__file {
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
   }
 
   &:hover {

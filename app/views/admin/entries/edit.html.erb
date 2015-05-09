@@ -26,9 +26,14 @@
     <%= f.fields_for :photos do |photos_form| %>
     <div class="admin-form__photo">
       <div class="admin-form__fields admin-form__fields--aligned admin-form__fields--hidden">
-        <%= photos_form.text_field :source_url, placeholder: 'Photo URL', autocomplete: 'off', class: 'admin-form__input admin-form__input--small' %>
+        <%= photos_form.text_field :source_url, placeholder: 'Enter a URL', autocomplete: 'off', class: 'admin-form__input admin-form__input--small' %>
         <span class="admin-form__fields-separator">or</span>
-        <%= photos_form.file_field :source_file %>
+        <%= link_to 'Add from Dropbox', '#', class: 'button button--default' %>
+        <span class="admin-form__fields-separator">or</span>
+        <div class="button button--default">
+          Upload a file
+          <%= photos_form.file_field :source_file, class: 'button__file' %>
+        </div>
       </div>
       <div class="admin-form__fields">
         <%= image_tag photos_form.object.url(600), alt: photos_form.object.caption, class: 'admin-form__photo-thumb' %>
