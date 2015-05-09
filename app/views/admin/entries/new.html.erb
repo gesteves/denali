@@ -12,13 +12,13 @@
 
   <div class="admin-form__actions">
     <div class="admin-form__buttons">
-      <%= link_to 'Forget it', admin_entries_path, data: { confirm: 'Are you sure you want to discard this?' }, class: 'button button--danger' %>
+      <%= link_to 'Cancel', admin_entries_path, data: { confirm: 'Are you sure you want to discard this?' }, class: 'button button--danger' %>
     </div>
     <div class="admin-form__buttons admin-form__buttons--safe">
       <div class="admin-form__select-container">
         <%= f.select :status, options_for_select([['Save draft', 'draft'], ['Add to queue', 'queued'], ['Publish it!', 'published']]), {}, { class: 'button button--pad-right' } %>
       </div>
-    <%= f.submit 'Make it so', class: 'button button--success' %>
+    <%= f.submit 'Save entry', class: 'button button--success' %>
     </div>
   </div>
 <% end %>
