@@ -15,7 +15,7 @@ class Photo < ActiveRecord::Base
 
   attr_accessor :source_file
 
-  before_save :set_image
+  before_create :set_image
 
   def original_url
     self.image.url
