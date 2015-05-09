@@ -12,6 +12,14 @@
     line-height: 1.5;
     margin: 6px 0;
 
+    &:focus {
+      outline-width: 0;
+    }
+
+    &::placeholder {
+      font-weight: 100;
+    }
+
     @at-root #{&}--small {
       font-size: 14px;
       line-height: 1.5;
@@ -28,12 +36,8 @@
       width: 100%;
     }
 
-    &:focus {
-      outline-width: 0;
-    }
-
-    &::placeholder {
-      font-weight: 100;
+    @at-root #{&}--required::placeholder {
+      font-weight: 600;
     }
   }
 

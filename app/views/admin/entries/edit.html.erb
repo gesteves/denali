@@ -3,24 +3,8 @@
 <% end %>
 
 <%= form_for([:admin, @entry], html: { multipart: true, class: 'admin-form' }) do |f| %>
-  <% if @entry.errors.any? %>
-    <div class="flash flash--danger">
-      <h2>Welp, the entry couldn't be saved.</h2>
-      <ul>
-      <% @entry.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="admin-form__inline">
-    <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'admin-form__label--slug' %>
-    <%= f.text_field :slug, autocomplete: 'off', placeholder: 'your-optional-custom-url-slug', class: 'admin-form__input admin-form__input--small' %>
-  </div>
-
-  <%= f.text_field :title, autocomplete: 'off', placeholder: 'Title', class: 'admin-form__input' %>
-  <%= f.text_area :body, placeholder: 'Write the text of your entry here…', class: 'admin-form__input admin-form__input--textarea' %>
+  
+  <%= render partial: 'entry_fields', locals: { f: f } %>
 
   <div class="admin-form__photos">
     <%= f.fields_for :photos do |photos_form| %>
