@@ -1,5 +1,5 @@
 <% content_for :nav do %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'new' } %>
+  <%= render partial: 'partials/admin/nav', locals: { active_nav: nil } %>
 <% end %>
 
 <%= form_for([:admin, @entry], html: { multipart: true, class: 'admin-form' }) do |f| %>
