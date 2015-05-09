@@ -30,6 +30,7 @@
     }
 
     @at-root #{&}--caption {
+      flex-grow: 0;
       font-size: 16px;
       height: 60px;
       margin: 0;
@@ -97,7 +98,9 @@
   }
 
   @at-root #{&}__photo {
+    border-bottom: 1px solid $color-border;
     margin: 0 0 24px;
+    padding: 0 0 24px;
   }
 
   @at-root #{&}__photo-thumb {
@@ -105,8 +108,16 @@
   }
 
   @at-root #{&}__photo-fields {
+    display: flex;
+    flex-flow: column nowrap;
     flex-grow: 1;
     padding-left: 20px;
+  }
+
+  @at-root #{&}__photo-delete {
+    align-self: flex-end;
+    flex: 0 1 auto;
+    margin-top: 24px;
   }
 
 
