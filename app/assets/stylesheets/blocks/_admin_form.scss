@@ -98,9 +98,9 @@
   }
 
   @at-root #{&}__photo {
-    border-bottom: 1px solid $color-border;
+    border: 1px solid $color-border;
     margin: 0 0 24px;
-    padding: 0 0 24px;
+    padding: 24px 20px;
   }
 
   @at-root #{&}__photo-thumb {
