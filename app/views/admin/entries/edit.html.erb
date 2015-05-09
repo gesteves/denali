@@ -14,18 +14,34 @@
     </div>
   <% end %>
 
-  <%= f.fields_for :photos do |photos_form| %>
-    <p><%= photos_form.text_field :source_url, placeholder: 'Photo URL', autocomplete: 'off' %> or <%= photos_form.file_field :source_file %></p>
-  <% end %>
+  <div class="admin-form__photos">
+    <%= f.fields_for :photos do |photos_form| %>
+    <div class="admin-form__photo">
+      <div class="admin-form__fields admin-form__fields--aligned">
+        <%= photos_form.text_field :source_url, placeholder: 'Photo URL', autocomplete: 'off', class: 'admin-form__input admin-form__input--small' %>
+        <span class="admin-form__fields-separator">or</span>
+        <%= photos_form.file_field :source_file %>
+      </div>
+      <div class="admin-form__fields admin-form__fields--hidden">
+        <%= image_tag photos_form.object.url(600), alt: photos_form.object.caption, class: 'admin-form__photo-thumb' %>
+        <div class="admin-form__photo-fields">
+          <%= photos_form.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'admin-form__input admin-form__input--caption' %>
+          <%= photos_form.hidden_field :id %>
+          <%= photos_form.hidden_field :_destroy %>
+        </div>
+      </div>
+    </div>
+    <% end %>
+    <%= link_to 'Add photo', '#', class: 'button button--default' %>
+  </div>
 
   <div class="admin-form__inline">
-    <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'admin-form__label admin-form__label--small admin-form__label--alt' %>
+    <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'admin-form__label--slug' %>
     <%= f.text_field :slug, autocomplete: 'off', placeholder: 'your-optional-custom-url-slug', class: 'admin-form__input admin-form__input--small' %>
   </div>
 
   <%= f.text_field :title, autocomplete: 'off', placeholder: 'Title', class: 'admin-form__input' %>
-
-  <%= f.text_area :body, placeholder: 'Write here…', class: 'admin-form__input admin-form__input--textarea' %>
+  <%= f.text_area :body, placeholder: 'Write the text of your entry here…', class: 'admin-form__input admin-form__input--textarea' %>
 
   <div class="admin-form__actions">
     <div class="admin-form__buttons">

@@ -3,22 +3,29 @@
   flex-flow: column;
 
   @at-root #{&}__input {
-    border: 0;
+    border: 1px solid $color-border;
     color: $color-text;
     display: block;
     flex-grow: 1;
     font-family: 'proxima-nova', sans-serif;
     font-size: 24px;
-    line-height: 1;
-    margin: 1rem 0;
+    line-height: 1.5;
+    margin: 6px 0;
 
     @at-root #{&}--small {
       font-size: 14px;
-      line-height: (24/14);
+      line-height: 1.5;
     }
 
     @at-root #{&}--textarea {
       height: 25vh;
+    }
+
+    @at-root #{&}--caption {
+      font-size: 16px;
+      height: 60px;
+      margin: 0;
+      width: 100%;
     }
 
     &:focus {
@@ -65,17 +72,55 @@
 
   @at-root #{&}__label {
     font-family: 'proxima-nova', sans-serif;
-    font-size: 24px;
-    line-height: 1;
-    margin: 1rem 0;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1.5;
+    margin: 24px 0 0;
 
-    @at-root #{&}--small {
-      font-size: 14px;
-      line-height: (24/14);
-    }
-
-    @at-root #{&}--alt {
+    @at-root #{&}--slug {
       color: $color-text-alt;
+      font-size: 14px;
+      font-weight: normal;
+      margin: 0 2px 0 0;
     }
+  }
+
+  @at-root #{&}__photos {
+    border-bottom: 1px solid $color-border;
+    margin: 0 0 24px;
+    padding-bottom: 24px;
+  }
+
+  @at-root #{&}__photo {
+    margin: 0 0 24px;
+  }
+
+  @at-root #{&}__photo-thumb {
+    width: 300px;
+  }
+
+  @at-root #{&}__photo-fields {
+    flex-grow: 1;
+    padding-left: 20px;
+  }
+
+
+
+  @at-root #{&}__fields {
+    display: flex;
+
+    @at-root #{&}--hidden {
+      display: none;
+    }
+
+    @at-root #{&}--aligned {
+      align-items: center;
+    }
+  }
+
+  @at-root #{&}__fields-separator {
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0 10px;
   }
 }
