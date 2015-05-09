@@ -110,7 +110,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position])
+      params.require(:entry).permit(:title, :body, :slug, :status, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption])
     end
 
     def get_redirect_url(entry)
