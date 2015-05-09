@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="admin-form__fields">
-        <%= image_tag photos_form.object.url(600), alt: photos_form.object.caption, class: 'admin-form__photo-thumb' %>
+        <%= responsive_image_tag photos_form.object, [300, 600, 900], "300px", { default_width: 600, quality: photoblog.photo_quality }, { class: "admin-form__photo-thumb" } %>
         <div class="admin-form__photo-fields">
           <%= photos_form.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'admin-form__input admin-form__input--caption' %>
           <%= link_to 'Delete', '#', class: 'button button--danger admin-form__photo-delete' %>
