@@ -42,6 +42,25 @@ Denali.EntryPhotos = (function ($) {
     }
   };
 
+  var addFromDropbox = function (e) {
+    e.preventDefault();
+    var photo = $(this).parents(opts.photo_container);
+
+    Dropbox.choose({
+      linkType: 'direct',
+      extensions: ['.jpg'],
+      success: function (files) {
+        showThumbnail(photo, files[0].link);
+      }
+    });
+  };
+
+  var showThumbnail = function (photo, url) {
+    photo.find(opts.thumbnail).attr('src', url);
+    photo.find(opts.source_url_field).val(url);
+    photo.find(opts.fields).toggleClass(opts.hidden_class);
+  };
+
   var init = function () {
     if (opts.$photos_container.length === 0) {
       return;
@@ -49,6 +68,7 @@ Denali.EntryPhotos = (function ($) {
 
     opts.$photos_container.on('click', opts.add_button, addPhotoFields);
     opts.$photos_container.on('click', opts.delete_button, deletePhoto);
+    opts.$photos_container.on('click', opts.dropbox_button, addFromDropbox);
   };
 
   return {

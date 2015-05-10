@@ -22,6 +22,7 @@ module.exports = function(grunt) {
           jQuery: true,
           _: true,
           Modernizr: true,
+          Dropbox: true
         },
       }
     },
