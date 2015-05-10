@@ -7,7 +7,8 @@ class Photo < ActiveRecord::Base
                       bucket: Rails.application.secrets.s3_bucket },
     url: ':s3_domain_url',
     path: 'photos/:hash.:extension',
-    hash_secret: Rails.application.secrets.secret_key_base
+    hash_secret: Rails.application.secrets.secret_key_base,
+    use_timestamp: false
 
   acts_as_list scope: :entry
 
@@ -24,7 +25,7 @@ class Photo < ActiveRecord::Base
   def url(width, height = 0, quality = 90, upscale = false)
     filters = ["quality(#{quality})"]
     filters << 'no_upscale()' unless upscale
-    ApplicationController.helpers.thumbor_url self.original_url, width: width, height: height, smart: true, filters: filters
+    ApplicationController.helpers.thumbor_url self.original_url, width: width, height: height, smart: false, filters: filters
   end
 
   private
