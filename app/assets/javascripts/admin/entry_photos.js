@@ -45,19 +45,26 @@ Denali.EntryPhotos = (function ($) {
   var addFromDropbox = function (e) {
     e.preventDefault();
     var photo = $(this).parents(opts.photo_container);
-
+    var source_url = photo.find(opts.source_url_field);
     Dropbox.choose({
       linkType: 'direct',
       extensions: ['.jpg'],
       success: function (files) {
-        showThumbnail(photo, files[0].link);
+        source_url.val(files[0].link).trigger('change');
       }
     });
   };
 
+  var addFromUrl = function () {
+    var source_url = $(this);
+    var photo = source_url.parents(opts.photo_container);
+    if (source_url.val().match(/\.jpe?g$/)) {
+      showThumbnail(photo, $(this).val());
+    }
+  };
+
   var showThumbnail = function (photo, url) {
     photo.find(opts.thumbnail).attr('src', url);
-    photo.find(opts.source_url_field).val(url);
     photo.find(opts.fields).toggleClass(opts.hidden_class);
     updatePositions();
   };
@@ -76,6 +83,7 @@ Denali.EntryPhotos = (function ($) {
     opts.$photos_container.on('click', opts.add_button, addPhotoFields);
     opts.$photos_container.on('click', opts.delete_button, deletePhoto);
     opts.$photos_container.on('click', opts.dropbox_button, addFromDropbox);
+    opts.$photos_container.on('change', opts.source_url_field, addFromUrl);
   };
 
   return {
