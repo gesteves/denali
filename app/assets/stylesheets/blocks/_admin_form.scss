@@ -120,10 +120,9 @@
     margin-top: 24px;
   }
 
-
-
   @at-root #{&}__fields {
     display: flex;
+    position: relative;
 
     @at-root #{&}--hidden {
       display: none;
