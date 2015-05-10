@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       collection do
         get 'queued'
         get 'drafts'
+        get 'photo'
       end
     end
   end

@@ -1,0 +1,24 @@
+<%= fields_for :entry, @entry do |f| %>
+  <%= f.fields_for :photos, child_index: Time.now.to_i do |p| %>
+    <div class="admin-form__photo">
+      <div class="admin-form__fields admin-form__fields--aligned">
+        <%= p.text_field :source_url, placeholder: 'Enter a URL', autocomplete: 'off', class: 'admin-form__input admin-form__input--small' %>
+        <span class="admin-form__fields-separator">or</span>
+        <%= link_to 'Add from Dropbox', '#', class: 'button button--default' %>
+        <span class="admin-form__fields-separator">or</span>
+        <div class="button button--default">
+          Upload a file
+          <%= p.file_field :source_file, class: 'button__file' %>
+        </div>
+      </div>
+      <div class="admin-form__fields admin-form__fields--hidden">
+        <img class="admin-form__photo-thumb" />
+        <div class="admin-form__photo-fields">
+          <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'admin-form__input admin-form__input--caption' %>
+          <%= link_to 'Delete', '#', class: 'button button--danger admin-form__photo-delete' %>
+          <%= p.hidden_field :position %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

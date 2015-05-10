@@ -7,30 +7,22 @@
   <%= render partial: 'entry_fields', locals: { f: f } %>
 
   <div class="admin-form__photos">
-    <%= f.fields_for :photos do |photos_form| %>
-    <div class="admin-form__photo">
-      <div class="admin-form__fields admin-form__fields--aligned admin-form__fields--hidden">
-        <%= photos_form.text_field :source_url, placeholder: 'Enter a URL', autocomplete: 'off', class: 'admin-form__input admin-form__input--small' %>
-        <span class="admin-form__fields-separator">or</span>
-        <%= link_to 'Add from Dropbox', '#', class: 'button button--default' %>
-        <span class="admin-form__fields-separator">or</span>
-        <div class="button button--default">
-          Upload a file
-          <%= photos_form.file_field :source_file, class: 'button__file' %>
+    <ol class="admin-form__photos-list">
+      <%= f.fields_for :photos, child_index: Time.now.to_i do |p| %>
+        <div class="admin-form__photo">
+          <div class="admin-form__fields">
+            <%= responsive_image_tag p.object, [300, 600, 900], "300px", { default_width: 600, quality: photoblog.photo_quality }, { class: "admin-form__photo-thumb" } %>
+            <div class="admin-form__photo-fields">
+              <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'admin-form__input admin-form__input--caption' %>
+              <%= link_to 'Delete', '#', class: 'button button--danger admin-form__photo-delete' %>
+              <%= p.hidden_field :id %>
+              <%= p.hidden_field :position %>
+              <%= p.hidden_field :_destroy %>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="admin-form__fields">
-        <%= responsive_image_tag photos_form.object, [300, 600, 900], "300px", { default_width: 600, quality: photoblog.photo_quality }, { class: "admin-form__photo-thumb" } %>
-        <div class="admin-form__photo-fields">
-          <%= photos_form.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'admin-form__input admin-form__input--caption' %>
-          <%= link_to 'Delete', '#', class: 'button button--danger admin-form__photo-delete' %>
-          <%= photos_form.hidden_field :id %>
-          <%= photos_form.hidden_field :position %>
-          <%= photos_form.hidden_field :_destroy %>
-        </div>
-      </div>
-    </div>
-    <% end %>
+      <% end %>
+    </ol>
     <%= link_to 'Add photo', '#', class: 'button button--default' %>
   </div>
 

@@ -103,6 +103,14 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def photo
+    @entry = Entry.new
+    @entry.photos.build
+    respond_to do |format|
+      format.html { render layout: nil }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
