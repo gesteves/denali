@@ -15,7 +15,7 @@ Denali.EntryPhotos = (function ($) {
     add_button        : '.js-photo-add',
     delete_button     : '.js-photo-delete',
     destroy_field     : '.js-photo-destroy',
-    position_field    : '.js-photo-destroy',
+    position_field    : '.js-photo-position',
     add_photo_endpoint: '/admin/entries/photo',
     photo_container   : '.admin-form__photo'
   };
@@ -59,6 +59,13 @@ Denali.EntryPhotos = (function ($) {
     photo.find(opts.thumbnail).attr('src', url);
     photo.find(opts.source_url_field).val(url);
     photo.find(opts.fields).toggleClass(opts.hidden_class);
+    updatePositions();
+  };
+
+  var updatePositions = function () {
+    $(opts.position_field).each(function (index) {
+      $(this).val(index + 1);
+    });
   };
 
   var init = function () {
