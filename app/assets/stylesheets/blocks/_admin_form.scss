@@ -92,9 +92,8 @@
 
   @at-root #{&}__photos {
     border-bottom: 1px solid $color-border;
-    border-top: 1px solid $color-border;
     margin: 24px 0;
-    padding: 24px 0;
+    padding: 0 0 24px;
   }
 
   @at-root #{&}__photo {
