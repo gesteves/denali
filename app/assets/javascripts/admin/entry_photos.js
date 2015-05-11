@@ -88,41 +88,20 @@ Denali.EntryPhotos = (function ($) {
     var input = $(this);
     var files = input[0].files;
     var photo = input.parents(opts.photo_container);
-    var valid_file = false;
-    var file;
-    for (var i = 0; i < files.length; i++) {
-      file = files[i];
 
-      if (!file.type.match(/\jpe?g$/)) {
-        continue;
-      }
-
-      createFileReaderImages(file);
-      valid_file = true;
-    }
-
-    if (valid_file) {
-      photo.remove();
+    if (files[0].type.match(/\jpe?g$/)) {
+      setUpFileReader(photo, files[0]);
       updatePositions();
     }
   };
 
-  var createFileReaderImages = function (file) {
-    var new_photo,
-        reader;
-    $.ajax(opts.add_photo_endpoint, {
-      dataType: 'html',
-      success: function (data) {
-        new_photo = $(data);
-        opts.$photo_list.append(new_photo);
-        reader = new FileReader();
-        reader.onload = function (e) {
-          showThumbnail(new_photo, e.target.result);
-        };
-        reader.readAsDataURL(file);
-        new_photo.find(opts.source_file_field)[0].file = file;
-      }
-    });
+  var setUpFileReader = function(photo, file) {
+    var reader;
+    reader = new FileReader();
+    reader.onload = function (e) {
+      showThumbnail(photo, e.target.result);
+    };
+    reader.readAsDataURL(file);
   };
 
   var showThumbnail = function (photo, url) {
