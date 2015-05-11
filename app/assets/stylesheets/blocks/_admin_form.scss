@@ -101,14 +101,13 @@
   }
 
   @at-root #{&}__photo {
-    background-color: #FFF;
+    background-color: rgba(255, 255, 255, 0.75);
     border: 1px solid $color-border;
     margin: 0 0 24px;
     padding: 24px 20px;
 
     @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
       -webkit-backdrop-filter: blur(10px);
-      background-color: rgba(255, 255, 255, 0.75);
       backdrop-filter: blur(10px); 
     }
 
