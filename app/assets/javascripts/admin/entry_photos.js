@@ -15,6 +15,7 @@ Denali.EntryPhotos = (function ($) {
     add_button        : '.js-photo-add',
     delete_button     : '.js-photo-delete',
     destroy_field     : '.js-photo-destroy',
+    file_button       : '.js-photo-file-button',
     position_field    : '.js-photo-position',
     add_photo_endpoint: '/admin/entries/photo',
     photo_container   : '.admin-form__photo'
@@ -45,12 +46,29 @@ Denali.EntryPhotos = (function ($) {
   var addFromDropbox = function (e) {
     e.preventDefault();
     var photo = $(this).parents(opts.photo_container);
-    var source_url = photo.find(opts.source_url_field);
     Dropbox.choose({
       linkType: 'direct',
       extensions: ['.jpg'],
+      multiselect: true,
       success: function (files) {
-        source_url.val(files[0].link).trigger('change');
+        for (var i = 0; i < files.length; i++) {
+          createDropboxImages(files[i].link);
+        }
+        photo.remove();
+        updatePositions();
+      }
+    });
+  };
+
+  var createDropboxImages = function (url) {
+    var new_photo,
+        source_url;
+    $.ajax(opts.add_photo_endpoint, {
+      dataType: 'html',
+      success: function (data) {
+        new_photo = $(data);
+        opts.$photo_list.append(new_photo);
+        source_url = new_photo.find(opts.source_url_field).val(url).trigger('change');
       }
     });
   };
@@ -60,19 +78,65 @@ Denali.EntryPhotos = (function ($) {
     var photo = source_url.parents(opts.photo_container);
     if (source_url.val().match(/\.jpe?g$/)) {
       showThumbnail(photo, $(this).val());
+      updatePositions();
     }
+  };
+
+  var addFromFile = function () {
+    var input = $(this);
+    var files = input[0].files;
+    var photo = input.parents(opts.photo_container);
+    var valid_file = false;
+    var file;
+    for (var i = 0; i < files.length; i++) {
+      file = files[i];
+
+      if (!file.type.match(/\jpe?g$/)) {
+        continue;
+      }
+
+      createFileReaderImages(file);
+      valid_file = true;
+    }
+
+    if (valid_file) {
+      photo.remove();
+      updatePositions();
+    }
+  };
+
+  var createFileReaderImages = function (file) {
+    var new_photo,
+        reader;
+    $.ajax(opts.add_photo_endpoint, {
+      dataType: 'html',
+      success: function (data) {
+        new_photo = $(data);
+        opts.$photo_list.append(new_photo);
+        reader = new FileReader();
+        reader.onload = function (e) {
+          showThumbnail(new_photo, e.target.result);
+        };
+        reader.readAsDataURL(file);
+        new_photo.find(opts.source_file_field)[0].file = file;
+      }
+    });
   };
 
   var showThumbnail = function (photo, url) {
     photo.find(opts.thumbnail).attr('src', url);
     photo.find(opts.fields).toggleClass(opts.hidden_class);
-    updatePositions();
   };
 
   var updatePositions = function () {
     $(opts.position_field).each(function (index) {
       $(this).val(index + 1);
     });
+  };
+
+  var triggerFileInput = function (e) {
+    e.preventDefault();
+    $(this).find(opts.source_file_field).trigger('click');
   };
 
   var init = function () {
@@ -83,6 +147,11 @@ Denali.EntryPhotos = (function ($) {
     opts.$photos_container.on('click', opts.add_button, addPhotoFields);
     opts.$photos_container.on('click', opts.delete_button, deletePhoto);
     opts.$photos_container.on('click', opts.dropbox_button, addFromDropbox);
+    opts.$photos_container.on('click', opts.file_button, triggerFileInput);
+    opts.$photos_container.on('click', opts.source_file_field, function (e) {
+      e.stopPropagation();
+    });
+    opts.$photos_container.on('change', opts.source_file_field, addFromFile);
     opts.$photos_container.on('change', opts.source_url_field, addFromUrl);
   };
 
