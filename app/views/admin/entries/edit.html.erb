@@ -8,7 +8,7 @@
 
   <div class="admin-form__photos">
     <ol class="admin-form__photos-list">
-      <%= f.fields_for :photos, child_index: Time.now.to_i do |p| %>
+      <%= f.fields_for :photos do |p| %>
         <div class="admin-form__photo">
           <div class="admin-form__fields">
             <%= responsive_image_tag p.object, [300, 600, 900], "300px", { default_width: 600, quality: photoblog.photo_quality }, { class: "admin-form__photo-thumb" } %>
