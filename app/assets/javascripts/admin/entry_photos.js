@@ -37,9 +37,9 @@ Denali.EntryPhotos = (function ($) {
     var delete_field = photo.find(opts.destroy_field);
     if (delete_field.length === 0) {
       photo.remove();
-    } else {
+    } else if (window.confirm('Are you sure you want to delete this photo?')) {
       delete_field.val('true');
-      photo.hide();
+      photo.slideUp();
     }
   };
 
