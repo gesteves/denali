@@ -71,6 +71,7 @@ Denali.EntryPhotos = (function ($) {
           photo = $(this);
           source_url = photo.find(opts.source_url_field).val(files[i].link).trigger('change');
         });
+        updatePositions();
       }
     });
   };
