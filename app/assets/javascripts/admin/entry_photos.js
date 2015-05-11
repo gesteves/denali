@@ -35,11 +35,15 @@ Denali.EntryPhotos = (function ($) {
     e.preventDefault();
     var photo = $(this).parents(opts.photo_container);
     var delete_field = photo.find(opts.destroy_field);
-    if (delete_field.length === 0) {
-      photo.remove();
-    } else if (window.confirm('Are you sure you want to delete this photo?')) {
-      delete_field.val('true');
-      photo.slideUp();
+    if (photo.find(opts.fields).last().hasClass(opts.hidden_class) || window.confirm('Are you sure you want to delete this photo?')) {
+      if (delete_field.length === 0) {
+        photo.slideUp(function () {
+          $(this).remove();
+        });
+      } else {
+        delete_field.val('true');
+        photo.slideUp();
+      }
     }
   };
 
