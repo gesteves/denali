@@ -1,26 +1,28 @@
-<%= fields_for :entry, @entry do |f| %>
-  <%= f.fields_for :photos, child_index: (Time.now.to_f * 1000 * rand).to_i do |p| %>
-    <div class="admin-form__photo">
-      <div class="admin-form__fields admin-form__fields--aligned">
-        <%= p.text_field :source_url, placeholder: 'Enter a URL', autocomplete: 'off', class: 'admin-form__input admin-form__input--small js-photo-source-url' %>
-        <span class="admin-form__fields-separator">or</span>
-        <%= link_to 'Add from Dropbox', '#', class: 'button button--default js-photo-dropbox' %>
-        <span class="admin-form__fields-separator">or</span>
-        <div class="button button--default js-photo-file-button">
-          Upload a file
-          <%= p.file_field :source_file, multiple: true, class: 'admin-form__input--file js-photo-source-file' %>
+<% @count.to_i.times do |i| %>
+  <%= fields_for :entry, @entry do |f| %>
+    <%= f.fields_for :photos, child_index: "#{(Time.now.to_f * 1000).to_i}#{i}" do |p| %>
+      <div class="admin-form__photo">
+        <div class="admin-form__fields admin-form__fields--aligned">
+          <%= p.text_field :source_url, placeholder: 'Enter a URL', autocomplete: 'off', class: 'admin-form__input admin-form__input--small js-photo-source-url' %>
+          <span class="admin-form__fields-separator">or</span>
+          <%= link_to 'Add from Dropbox', '#', class: 'button button--default js-photo-dropbox' %>
+          <span class="admin-form__fields-separator">or</span>
+          <div class="button button--default js-photo-file-button">
+            Upload a file
+            <%= p.file_field :source_file, multiple: true, class: 'admin-form__input--file js-photo-source-file' %>
+          </div>
+          <span class="admin-form__fields-separator">or</span>
+          <%= link_to 'Cancel', '#', class: 'button button--danger js-photo-delete' %>
         </div>
-        <span class="admin-form__fields-separator">or</span>
-        <%= link_to 'Cancel', '#', class: 'button button--danger js-photo-delete' %>
-      </div>
-      <div class="admin-form__fields admin-form__fields--hidden">
-        <img class="admin-form__photo-thumb js-photo-thumb" />
-        <div class="admin-form__photo-fields">
-          <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'admin-form__input admin-form__input--caption' %>
-          <%= link_to 'Delete', '#', class: 'button button--danger admin-form__photo-delete js-photo-delete' %>
-          <%= p.hidden_field :position, class: 'js-photo-position' %>
+        <div class="admin-form__fields admin-form__fields--hidden">
+          <img class="admin-form__photo-thumb js-photo-thumb" />
+          <div class="admin-form__photo-fields">
+            <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'admin-form__input admin-form__input--caption' %>
+            <%= link_to 'Delete', '#', class: 'button button--danger admin-form__photo-delete js-photo-delete' %>
+            <%= p.hidden_field :position, class: 'js-photo-position' %>
+          </div>
         </div>
       </div>
-    </div>
+    <% end %>
   <% end %>
 <% end %>

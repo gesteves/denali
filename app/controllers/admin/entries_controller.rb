@@ -105,6 +105,7 @@ class Admin::EntriesController < AdminController
 
   def photo
     @entry = Entry.new
+    @count = params[:count] || 1
     @entry.photos.build
     respond_to do |format|
       format.html { render layout: nil }

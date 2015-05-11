@@ -48,27 +48,29 @@ Denali.EntryPhotos = (function ($) {
     var photo = $(this).parents(opts.photo_container);
     Dropbox.choose({
       linkType: 'direct',
-      extensions: ['.jpg'],
+      extensions: ['.jpg', '.jpeg'],
       multiselect: true,
       success: function (files) {
-        for (var i = 0; i < files.length; i++) {
-          createDropboxImages(files[i].link);
-        }
+        createDropboxImages(files);
         photo.remove();
-        updatePositions();
       }
     });
   };
 
-  var createDropboxImages = function (url) {
+  var createDropboxImages = function (files) {
     var new_photo,
+        photo,
         source_url;
-    $.ajax(opts.add_photo_endpoint, {
+    console.log(files.length);
+    $.ajax(opts.add_photo_endpoint + '?count=' + files.length, {
       dataType: 'html',
       success: function (data) {
         new_photo = $(data);
         opts.$photo_list.append(new_photo);
-        source_url = new_photo.find(opts.source_url_field).val(url).trigger('change');
+        new_photo.filter(opts.photo_container).each(function (i) {
+          photo = $(this);
+          source_url = photo.find(opts.source_url_field).val(files[i].link).trigger('change');
+        });
       }
     });
   };
