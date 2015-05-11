@@ -4,14 +4,14 @@
       <div class="admin-form__photo">
         <div class="admin-form__fields admin-form__fields--aligned">
           <%= p.text_field :source_url, placeholder: 'Enter a URL', autocomplete: 'off', class: 'admin-form__input admin-form__input--small js-photo-source-url' %>
-          <span class="admin-form__fields-separator">or</span>
+          <span class="admin-form__fields-separator"></span>
           <%= link_to 'Add from Dropbox', '#', class: 'button button--default js-photo-dropbox' %>
-          <span class="admin-form__fields-separator">or</span>
+          <span class="admin-form__fields-separator"></span>
           <div class="button button--default js-photo-file-button">
             Upload a file
             <%= p.file_field :source_file, class: 'admin-form__input--file js-photo-source-file' %>
           </div>
-          <span class="admin-form__fields-separator">or</span>
+          <span class="admin-form__fields-separator"></span>
           <%= link_to 'Cancel', '#', class: 'button button--danger js-photo-delete' %>
         </div>
         <div class="admin-form__fields admin-form__fields--hidden">
