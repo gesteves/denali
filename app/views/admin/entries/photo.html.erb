@@ -18,7 +18,7 @@
           <img class="admin-form__photo-thumb js-photo-thumb" />
           <div class="admin-form__photo-fields">
             <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'admin-form__input admin-form__input--caption' %>
-            <%= link_to 'Delete', '#', class: 'button button--danger admin-form__photo-delete js-photo-delete' %>
+            <%= link_to 'Remove', '#', class: 'button button--danger admin-form__photo-delete js-photo-delete' %>
             <%= p.hidden_field :position, class: 'js-photo-position' %>
           </div>
         </div>
