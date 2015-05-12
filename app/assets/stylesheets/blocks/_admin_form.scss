@@ -13,8 +13,10 @@
     line-height: 1.5;
     margin: 6px 0;
 
-    &:focus {
+    &:focus,
+    &:required:invalid:focus {
       outline-width: 0;
+      border-color: shade($color-border, 15%);
     }
 
     &:required,
