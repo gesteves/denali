@@ -19,8 +19,7 @@
       outline-width: 0;
     }
 
-    &:required,
-    &:required:invalid {
+    &:required {
       border-color: $color-border;
     }
 

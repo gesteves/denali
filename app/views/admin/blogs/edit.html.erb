@@ -2,11 +2,10 @@
   <%= render partial: 'partials/admin/nav', locals: { active_nav: 'settings' } %>
 <% end %>
 
-<%= form_for(@blog, url: admin_settings_update_path) do |f| %>
+<%= form_for(@blog, url: admin_settings_update_path, html: { class: 'admin-form' }) do |f| %>
   <% if @blog.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@blog.errors.count, "error") %> prohibited this admin_blog from being saved:</h2>
-
+    <div class="flash flash--danger">
+      <h2>Welp, the changes couldn't be saved.</h2>
       <ul>
       <% @blog.errors.full_messages.each do |message| %>
         <li><%= message %></li>
@@ -15,10 +14,21 @@
     </div>
   <% end %>
 
-  <div class="actions">
-    <p>Name: <%= f.text_field :name %></p>
-    <p>Photo quality: <%= f.number_field :photo_quality %></p>
-    <%= f.submit %>
+  <%= f.label :name, 'Blog title', class: 'admin-form__label' %>
+  <%= f.text_field :name, placeholder: 'This blog’s title…', class: 'admin-form__input', required: true, autocomplete: 'off' %>
+  
+  <%= f.label :photo_quality, class: 'admin-form__label' %>
+  <%= f.number_field :photo_quality, min: 1, max: 100, pattern: '\d+', class: 'admin-form__input', required: true %>
+    
+
+  <div class="admin-form__actions">
+    <div class="admin-form__buttons">
+      <%= link_to 'Cancel', admin_entries_path, data: { confirm: 'Are you sure you want to discard this?' }, class: 'button button--danger' %>
+    </div>
+    <div class="admin-form__buttons admin-form__buttons--safe">
+      <%= f.submit 'Save changes', class: 'button button--success' %>
+    </div>
   </div>
+
 <% end %>
 
