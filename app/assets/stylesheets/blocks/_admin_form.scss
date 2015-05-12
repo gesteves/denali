@@ -174,4 +174,11 @@
     line-height: 1.5;
     margin: 0 5px;
   }
+
+  // Because Rails
+  // scss-lint:disable SelectorFormat
+  .field_with_errors {
+    display: flex;
+  }
+  // scss-lint:enable SelectorFormat
 }

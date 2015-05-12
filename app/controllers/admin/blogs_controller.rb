@@ -21,6 +21,6 @@ class Admin::BlogsController < AdminController
   private
 
   def blog_params
-    params.require(:blog).permit(:name, :photo_quality)
+    params.require(:blog).permit(:name, :description, :photo_quality)
   end
 end

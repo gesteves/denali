@@ -16,6 +16,9 @@
 
   <%= f.label :name, 'Blog title', class: 'admin-form__label' %>
   <%= f.text_field :name, placeholder: 'This blog’s title…', class: 'admin-form__input', required: true, autocomplete: 'off' %>
+
+  <%= f.label :description, 'Blog description', class: 'admin-form__label' %>
+  <%= f.text_area :description, placeholder: 'This blog’s description…', required: true, class: 'admin-form__input admin-form__input--textarea' %>
   
   <%= f.label :photo_quality, class: 'admin-form__label' %>
   <%= f.number_field :photo_quality, min: 1, max: 100, pattern: '\d+', class: 'admin-form__input', required: true %>
