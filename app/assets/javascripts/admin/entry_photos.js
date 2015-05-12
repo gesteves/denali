@@ -138,7 +138,7 @@ Denali.EntryPhotos = (function ($) {
       e.stopPropagation();
     });
     opts.$photos_container.on('change', opts.source_file_field, addFromFile);
-    opts.$photos_container.on('keyup', opts.source_url_field, addFromUrl);
+    opts.$photos_container.on('keyup change', opts.source_url_field, addFromUrl);
     opts.$photo_list.on('sortstop', updatePositions);
 
     opts.$photo_list.sortable();
