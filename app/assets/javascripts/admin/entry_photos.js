@@ -73,7 +73,8 @@ Denali.EntryPhotos = (function ($) {
         opts.$photo_list.append(new_photo);
         new_photo.filter(opts.photo_container).each(function (i) {
           photo = $(this);
-          source_url = photo.find(opts.source_url_field).val(files[i].link).trigger('change');
+          source_url = photo.find(opts.source_url_field).val(files[i].link);
+          showThumbnail(photo, files[i].link);
         });
         updatePositions();
       }
@@ -138,7 +139,7 @@ Denali.EntryPhotos = (function ($) {
       e.stopPropagation();
     });
     opts.$photos_container.on('change', opts.source_file_field, addFromFile);
-    opts.$photos_container.on('keyup change', opts.source_url_field, addFromUrl);
+    opts.$photos_container.on('keyup', opts.source_url_field, addFromUrl);
     opts.$photo_list.on('sortstop', updatePositions);
 
     opts.$photo_list.sortable();
