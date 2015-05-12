@@ -1,6 +1,6 @@
 .button {
+  @include button($color-alert-default, $color-text);
   -webkit-appearance: none;
-  border: 1px solid $color-gray-medium;
   border-radius: 2px;
   color: $color-text;
   display: block;
@@ -12,8 +12,8 @@
   position: relative;
   text-align: center;
 
-  @at-root #{&}--default {
-    @include button($color-alert-default);
+  @at-root #{&}--info {
+    @include button($color-alert-info);
   }
 
   @at-root #{&}--danger {

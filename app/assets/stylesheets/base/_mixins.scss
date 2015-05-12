@@ -4,27 +4,27 @@
   text-shadow: 0 -1px 0 $color;
 }
 
-@mixin button($color) {
-  background-color: $color;
-  border: 1px solid shade($color, 20%);
-  color: #FFF;
-  text-shadow: 0 -1px 0 shade($color, 20%);
+@mixin button($background-color, $text-color: #FFF) {
+  background-color: $background-color;
+  border: 1px solid shade($background-color, 10%);
+  color: $text-color;
 
   &:link,
   &:visited {
-    color: #FFF;
+    color: $text-color;
     text-decoration: none;
   }
 
   &:hover {
-    background-color: shade($color, 10%);
-    color: #FFF;
+    box-shadow: inset 0 -3px 0 0 shade($background-color, 10%);
+    color: $text-color;
     text-decoration: none;
   }
 
   &:active {
-    background-color: shade($color, 15%);
-    color: #FFF;
+    background-color: shade($background-color, 5%);
+    box-shadow: inset 0 -2px 0 0 shade($background-color, 10%);
+    color: $text-color;
     text-decoration: none;
   }
 }
