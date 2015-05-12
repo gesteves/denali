@@ -12,6 +12,7 @@
   text-transform: uppercase;
   top: 0;
   width: 100%;
+  z-index: 1;
 
   @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
     -webkit-backdrop-filter: blur(10px);
