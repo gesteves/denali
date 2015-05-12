@@ -1,7 +1,5 @@
 .admin-entry {
   background-color: #FFF;
-  border-radius: 2px;
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
   margin: 24px 0;
 
   @at-root #{&}__thumb {
@@ -10,6 +8,9 @@
   }
 
   @at-root #{&}__content {
+    border: 1px solid $color-border;
+    border-bottom: 0;
+    border-top: 0;
     padding: 12px 20px;
 
     h2 {
@@ -34,9 +35,19 @@
       line-height: 1.5;
       margin: 1.5rem 0;
     }
+
+    @at-root #{&}--text {
+      border-top: 1px solid $color-border;
+      border-top-left-radius: 2px;
+      border-top-right-radius: 2px;
+    }
   }
 
   @at-root #{&}__meta {
+    border: 1px solid $color-border;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-top: 0;
     color: $color-gray-medium;
     display: flex;
     font-size: 12px;
