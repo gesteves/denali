@@ -16,6 +16,19 @@
       outline-width: 0;
     }
 
+    &:required,
+    &:required:invalid {
+      border-color: $color-border;
+    }
+
+    &:required::placeholder {
+      font-weight: 600;
+    }
+
+    &:invalid {
+      border-color: $color-alert-danger;
+    }
+
     &::placeholder {
       font-weight: 100;
     }
@@ -39,10 +52,6 @@
 
     @at-root #{&}--file {
       display: none;
-    }
-
-    @at-root #{&}--required::placeholder {
-      font-weight: 600;
     }
   }
 
