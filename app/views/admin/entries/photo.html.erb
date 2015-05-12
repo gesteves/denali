@@ -3,7 +3,7 @@
     <%= f.fields_for :photos, child_index: "#{(Time.now.to_f * 1000).to_i}#{i}" do |p| %>
       <div class="admin-form__photo">
         <div class="admin-form__fields admin-form__fields--aligned">
-          <%= p.url_field :source_url, placeholder: 'Paste a URL', autocomplete: 'off', class: 'admin-form__input admin-form__input--small js-photo-source-url' %>
+          <%= p.url_field :source_url, placeholder: 'Paste a URL', autocomplete: 'off', class: 'admin-form__input admin-form__input--url js-photo-source-url' %>
           <span class="admin-form__fields-separator"></span>
           <% unless Rails.application.secrets.dropbox_key.nil? %>
             <%= link_to 'Add from Dropbox', '#', class: 'button js-photo-dropbox' %>

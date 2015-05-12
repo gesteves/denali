@@ -4,6 +4,7 @@
 
   @at-root #{&}__input {
     border: 1px solid $color-border;
+    border-radius: 2px;
     color: $color-text;
     display: block;
     flex-grow: 1;
@@ -52,6 +53,13 @@
 
     @at-root #{&}--file {
       display: none;
+    }
+
+    @at-root #{&}--url {
+      font-size: 14px;
+      line-height: (24/14);
+      margin: 0;
+      padding: 6px 2px;
     }
   }
 
