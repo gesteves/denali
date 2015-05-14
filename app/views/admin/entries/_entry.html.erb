@@ -4,7 +4,7 @@
   <% end %>
   <div class="admin-entry__content <% if entry.is_text? %>admin-entry__content--text<% end %>">
     <h2><%= entry.title %></h2>
-    <%= entry.body unless entry.body.blank? %>
+    <%= raw(entry.html_body) unless entry.html_body.blank? %>
   </div>
   <div class="admin-entry__meta">
     <div class="admin-entry__timestamp">

@@ -20,6 +20,8 @@ gem 'autoprefixer-rails'
 gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'acts_as_list'
+gem 'redcarpet'
+gem 'sanitize'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

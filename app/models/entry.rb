@@ -1,4 +1,6 @@
 class Entry < ActiveRecord::Base
+  include Formattable
+
   has_many :photos, -> { order 'position ASC' }, dependent: :destroy
   belongs_to :blog, touch: true
   belongs_to :user
@@ -12,7 +14,7 @@ class Entry < ActiveRecord::Base
   scope :photo_entries, -> { where('photos_count > 0') }
 
   before_save :set_published_date, if: :is_published?
-  before_save :set_entry_slug
+  before_save :set_entry_slug, :compile_markdown
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
@@ -60,6 +62,11 @@ class Entry < ActiveRecord::Base
   end
 
   private
+
+  def compile_markdown
+    self.html_body = markdown_to_html(self.body)
+    self.plain_body = markdown_to_plaintext(self.body)
+  end
 
   def set_published_date
     if self.is_published? && self.published_at.nil?

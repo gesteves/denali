@@ -1,4 +1,6 @@
 class Photo < ActiveRecord::Base
+  include Formattable
+
   belongs_to :entry, touch: true, counter_cache: true
   has_attached_file :image,
     storage: :s3,
@@ -17,6 +19,7 @@ class Photo < ActiveRecord::Base
   attr_accessor :source_file
 
   before_create :set_image
+  before_save :compile_markdown
 
   def original_url
     self.image.url
@@ -37,5 +40,10 @@ class Photo < ActiveRecord::Base
     else
       self.image = nil
     end
+  end
+
+  def compile_markdown
+    self.html_caption = markdown_to_html(self.caption)
+    self.plain_caption = markdown_to_plaintext(self.caption)
   end
 end
