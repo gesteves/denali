@@ -12,6 +12,10 @@ module Formattable
     Sanitize.fragment(markdown_to_html(text)).strip
   end
 
+  def smartypants(text)
+    Redcarpet::Render::SmartyPants.render(text)
+  end
+
   class HTMLWithPants < Redcarpet::Render::HTML
     include Redcarpet::Render::SmartyPants
   end

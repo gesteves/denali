@@ -22,6 +22,6 @@ class ApplicationController < ActionController::Base
   end
 
   def photoblog
-    @blog = Blog.find_by(domain: 'www.allencompassingtrip.com')
+    Blog.find_by(domain: 'www.allencompassingtrip.com')
   end
 end

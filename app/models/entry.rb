@@ -14,7 +14,7 @@ class Entry < ActiveRecord::Base
   scope :photo_entries, -> { where('photos_count > 0') }
 
   before_save :set_published_date, if: :is_published?
-  before_save :set_entry_slug, :compile_markdown
+  before_save :set_entry_slug
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
@@ -27,7 +27,7 @@ class Entry < ActiveRecord::Base
   end
 
   def is_text?
-    self.photos_count == 0
+    self.photos_count.blank? || self.photos_count == 0
   end
 
   def is_queued?
@@ -61,12 +61,19 @@ class Entry < ActiveRecord::Base
     end
   end
 
-  private
-
-  def compile_markdown
-    self.html_body = markdown_to_html(self.body)
-    self.plain_body = markdown_to_plaintext(self.body)
+  def formatted_body
+    markdown_to_html(self.body)
   end
+
+  def plain_body
+    markdown_to_plaintext(self.body)
+  end
+
+  def formatted_title
+    smartypants(self.title)
+  end
+
+  private
 
   def set_published_date
     if self.is_published? && self.published_at.nil?

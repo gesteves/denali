@@ -5,12 +5,11 @@ class Blog < ActiveRecord::Base
   validates :name, :description, presence: true
   validates :photo_quality, presence: true, numericality: { only_integer: true, greater_than: 0, less_than_or_equal_to: 100 }
 
-  before_save :compile_markdown
+  def formatted_description
+    markdown_to_html(self.description)
+  end
 
-  private
-
-  def compile_markdown
-    self.html_description = markdown_to_html(self.description)
-    self.plain_description = markdown_to_plaintext(self.description)
+  def plain_description
+    markdown_to_plaintext(self.description)
   end
 end

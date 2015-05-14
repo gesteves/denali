@@ -19,7 +19,6 @@ class Photo < ActiveRecord::Base
   attr_accessor :source_file
 
   before_create :set_image
-  before_save :compile_markdown
 
   def original_url
     self.image.url
@@ -31,6 +30,14 @@ class Photo < ActiveRecord::Base
     ApplicationController.helpers.thumbor_url self.original_url, width: width, height: height, smart: false, filters: filters
   end
 
+  def formatted_caption
+    markdown_to_html(self.caption)
+  end
+
+  def plain_caption
+    markdown_to_plaintext(self.caption)
+  end
+
   private
   def set_image
     if !self.source_url.nil? && !self.source_url.blank?
@@ -40,10 +47,5 @@ class Photo < ActiveRecord::Base
     else
       self.image = nil
     end
-  end
-
-  def compile_markdown
-    self.html_caption = markdown_to_html(self.caption)
-    self.plain_caption = markdown_to_plaintext(self.caption)
   end
 end
