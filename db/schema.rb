@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150512230038) do
+ActiveRecord::Schema.define(version: 20150516214138) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -44,13 +44,26 @@ ActiveRecord::Schema.define(version: 20150512230038) do
     t.text     "caption"
     t.integer  "position"
     t.integer  "entry_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
     t.string   "image_file_name"
     t.string   "image_content_type"
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "source_url"
+    t.binary   "exif"
+    t.string   "make"
+    t.string   "model"
+    t.datetime "taken_at"
+    t.string   "exposure"
+    t.string   "f_number"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.integer  "width"
+    t.integer  "height"
+    t.string   "iso"
+    t.string   "focal_length"
+    t.string   "focal_length_equivalent"
   end
 
   add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"

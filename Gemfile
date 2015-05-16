@@ -22,6 +22,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
+gem 'exifr'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

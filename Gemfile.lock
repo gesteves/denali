@@ -61,6 +61,7 @@ GEM
     debug_inspector (0.0.2)
     erubis (2.7.0)
     execjs (2.5.2)
+    exifr (1.2.2)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
     foreman (0.78.0)
@@ -199,6 +200,7 @@ DEPENDENCIES
   autoprefixer-rails
   aws-sdk
   byebug
+  exifr
   foreman
   jbuilder (~> 2.0)
   jquery-rails

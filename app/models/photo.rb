@@ -19,6 +19,7 @@ class Photo < ActiveRecord::Base
   attr_accessor :source_file
 
   before_create :set_image
+  after_image_post_process :save_exif, :save_dimensions
 
   def original_url
     self.image.url
@@ -38,6 +39,18 @@ class Photo < ActiveRecord::Base
     markdown_to_plaintext(self.caption)
   end
 
+  def is_square?
+    self.width == self.height
+  end
+
+  def is_horizontal?
+    self.width > self.height
+  end
+
+  def is_vertical?
+    self.width < self.height
+  end
+
   private
   def set_image
     if !self.source_url.nil? && !self.source_url.blank?
@@ -47,5 +60,29 @@ class Photo < ActiveRecord::Base
     else
       self.image = nil
     end
+  end
+
+  def save_dimensions
+    tempfile = image.queued_for_write[:original]
+    unless tempfile.nil?
+      geometry = Paperclip::Geometry.from_file(tempfile)
+      self.width = geometry.width.to_i
+      self.height = geometry.height.to_i
+    end
+  end
+
+  def save_exif
+    exif = EXIFR::JPEG.new(image.queued_for_write[:original].path)
+    return if exif.nil? || !exif.exif?
+    self.make = exif.make
+    self.model = exif.model
+    self.taken_at = exif.date_time
+    self.exposure = exif.exposure_time >= 1 ? "%g" % ("%.2f" % exif.exposure_time) : exif.exposure_time
+    self.f_number = exif.f_number.to_f.to_s
+    self.iso = exif.iso_speed_ratings
+    self.focal_length = exif.focal_length.to_i
+    self.focal_length_equivalent = exif.focal_length_in_35mm_film.to_i
+    self.longitude = exif.gps.longitude unless exif.gps.nil?
+    self.latitude = exif.gps.latitude unless exif.gps.nil?
   end
 end
