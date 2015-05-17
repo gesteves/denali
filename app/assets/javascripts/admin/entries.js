@@ -1,6 +1,6 @@
 var Denali = Denali || {};
 
-Denali.EntryPhotos = (function ($) {
+Denali.Entries = (function ($) {
   'use strict';
 
   var opts = {
@@ -17,16 +17,23 @@ Denali.EntryPhotos = (function ($) {
     destroy_field     : '.js-photo-destroy',
     file_button       : '.js-photo-file-button',
     position_field    : '.js-photo-position',
+    single_tag        : '.js-tags-single',
+    multiple_tags     : '.js-tags-multiple',
     add_photo_endpoint: '/admin/entries/photo',
     photo_container   : '.admin-form__photo'
   };
 
   var addPhotoFields = function (e) {
+    var new_photo;
     e.preventDefault();
     $.ajax(opts.add_photo_endpoint, {
       dataType: 'html',
       success: function (data) {
-        opts.$photo_list.append(data);
+        new_photo = $(data);
+        new_photo.find(opts.single_tag).each(function () {
+          new Awesomplete(this);
+        });
+        opts.$photo_list.append(new_photo);
       }
     });
   };
@@ -70,6 +77,9 @@ Denali.EntryPhotos = (function ($) {
       dataType: 'html',
       success: function (data) {
         new_photo = $(data);
+        new_photo.find(opts.single_tag).each(function () {
+          new Awesomplete(this);
+        });
         opts.$photo_list.append(new_photo);
         new_photo.filter(opts.photo_container).each(function (i) {
           photo = $(this);
@@ -126,7 +136,25 @@ Denali.EntryPhotos = (function ($) {
     $(this).find(opts.source_file_field).trigger('click');
   };
 
-  var init = function () {
+  var initTags = function () {
+    $(opts.multiple_tags).each(function () {
+      new Awesomplete(this, {
+        list: '#datalist-tags',
+        filter: function (text, input) {
+          return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
+        },
+        replace: function (text) {
+          var before = this.input.value.match(/^.+,\s*|/)[0];
+          this.input.value = before + text + ', ';
+        } 
+      });
+    });
+    $(opts.single_tag).each(function () {
+      new Awesomplete(this);
+    });
+  };
+
+  var initPhotos = function () {
     if (opts.$photos_container.length === 0) {
       return;
     }
@@ -145,9 +173,14 @@ Denali.EntryPhotos = (function ($) {
     opts.$photo_list.sortable();
   };
 
+  var init = function () {
+    initPhotos();
+    initTags();
+  };
+
   return {
     init: init
   };
 })(jQuery);
 
-Denali.EntryPhotos.init();
+Denali.Entries.init();

@@ -22,9 +22,9 @@
           </div>
           <div class="admin-form__photo-fields">
             <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'admin-form__input admin-form__input--caption' %>
-            <%= p.text_field :camera_list, placeholder: 'Camera', class: 'admin-form__input admin-form__input--small' %>
-            <%= p.text_field :lense_list, placeholder: 'Lens', class: 'admin-form__input admin-form__input--small' %>
-            <%= p.text_field :film_list, placeholder: 'Film', class: 'admin-form__input admin-form__input--small' %>
+            <%= p.text_field :camera_list, placeholder: 'Camera', class: 'admin-form__input admin-form__input--small js-tags-single', list: 'datalist-cameras' %>
+            <%= p.text_field :lense_list, placeholder: 'Lens', class: 'admin-form__input admin-form__input--small js-tags-single', list: 'datalist-lenses' %>
+            <%= p.text_field :film_list, placeholder: 'Film', class: 'admin-form__input admin-form__input--small js-tags-single', list: 'datalist-films' %>
             <%= link_to 'Remove', '#', class: 'button button--danger admin-form__photo-delete js-photo-delete' %>
             <%= p.hidden_field :position, class: 'js-photo-position' %>
           </div>

@@ -1,5 +1,6 @@
 class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft]
+  before_action :get_tags, only: [:new, :edit]
 
   # GET /admin/entries
   def index
@@ -116,6 +117,13 @@ class Admin::EntriesController < AdminController
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
       @entry = Entry.find(params[:id])
+    end
+
+    def get_tags
+      @tags = Entry.tag_counts_on(:tags, order: 'name asc')
+      @cameras = Photo.tag_counts_on(:cameras, order: 'name asc')
+      @films = Photo.tag_counts_on(:films, order: 'name asc')
+      @lenses = Photo.tag_counts_on(:lenses, order: 'name asc')
     end
 
     def entry_params

@@ -25,3 +25,5 @@
     </div>
   </div>
 <% end %>
+
+<%= render partial: 'tag_datalists', locals: { cameras: @cameras, lenses: @lenses, films: @films, tags: @tags } %>

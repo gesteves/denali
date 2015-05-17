@@ -178,6 +178,14 @@
     margin: 0 5px;
   }
 
+  .awesomplete {
+    flex-grow: 1;
+    
+    input {
+      width: 100%;
+    }
+  }
+
   // Because Rails
   // scss-lint:disable SelectorFormat
   .field_with_errors {
