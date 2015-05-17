@@ -72,7 +72,6 @@ Denali.Entries = (function ($) {
     var new_photo,
         photo,
         source_url;
-    console.log(files.length);
     $.ajax(opts.add_photo_endpoint + '?count=' + files.length, {
       dataType: 'html',
       success: function (data) {
