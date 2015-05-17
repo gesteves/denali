@@ -11,6 +11,5 @@ class AddExifToPhotos < ActiveRecord::Migration
     add_column :photos, :height, :integer
     add_column :photos, :iso, :string
     add_column :photos, :focal_length, :string
-    add_column :photos, :focal_length_equivalent, :string
   end
 end

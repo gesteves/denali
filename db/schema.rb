@@ -52,6 +52,7 @@ ActiveRecord::Schema.define(version: 20150516214138) do
     t.datetime "image_updated_at"
     t.string   "source_url"
     t.binary   "exif"
+    t.string   "focal_length_equivalent"
     t.string   "make"
     t.string   "model"
     t.datetime "taken_at"
@@ -63,7 +64,6 @@ ActiveRecord::Schema.define(version: 20150516214138) do
     t.integer  "height"
     t.string   "iso"
     t.string   "focal_length"
-    t.string   "focal_length_equivalent"
   end
 
   add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"
