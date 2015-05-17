@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150516214138) do
+ActiveRecord::Schema.define(version: 20150517162426) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -67,6 +67,28 @@ ActiveRecord::Schema.define(version: 20150516214138) do
   end
 
   add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"
+
+  create_table "taggings", force: :cascade do |t|
+    t.integer  "tag_id"
+    t.integer  "taggable_id"
+    t.string   "taggable_type"
+    t.integer  "tagger_id"
+    t.string   "tagger_type"
+    t.string   "context",       limit: 128
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
+
+  create_table "tags", force: :cascade do |t|
+    t.string  "name"
+    t.integer "taggings_count", default: 0
+    t.string  "slug"
+  end
+
+  add_index "tags", ["name"], name: "index_tags_on_name", unique: true
+  add_index "tags", ["slug"], name: "index_tags_on_slug"
 
   create_table "users", force: :cascade do |t|
     t.string   "provider"

@@ -16,3 +16,4 @@
 
 <%= f.text_field :title, required: true, autocomplete: 'off', placeholder: 'Title', class: 'admin-form__input' %>
 <%= f.text_area :body, placeholder: 'Your text here…', class: 'admin-form__input admin-form__input--textarea' %>
+<%= f.text_field :tag_list, value: @entry.tag_list.to_s, autocomplete: 'off', placeholder: 'Tags (comma-separated)', class: 'admin-form__input' %>

@@ -16,6 +16,8 @@ class Entry < ActiveRecord::Base
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
 
+  acts_as_taggable
+
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
   def is_photo?

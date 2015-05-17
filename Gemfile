@@ -23,6 +23,7 @@ gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr'
+gem 'acts-as-taggable-on', '~> 3.4'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
