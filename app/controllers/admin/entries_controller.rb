@@ -34,7 +34,7 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/publish
   def publish
-    if @entry.publish
+    if @entry.publish && @entry.update_position
       respond_to do |format|
         format.html { redirect_to admin_entries_path, notice: 'Entry was successfully published.' }
       end
@@ -47,7 +47,7 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/queue
   def queue
-    if @entry.queue
+    if @entry.queue && @entry.update_position
       respond_to do |format|
         format.html { redirect_to request.referrer, notice: 'Entry was successfully queued.' }
       end
@@ -60,7 +60,7 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/draft
   def draft
-    if @entry.draft
+    if @entry.draft && @entry.update_position
       respond_to do |format|
         format.html { redirect_to request.referrer, notice: 'Entry was successfully saved to drafts.' }
       end
@@ -77,7 +77,7 @@ class Admin::EntriesController < AdminController
     @entry.user = current_user
     @entry.blog = photoblog
     respond_to do |format|
-      if @entry.save
+      if @entry.save && @entry.update_position
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
       else
         format.html { render :new }
@@ -88,7 +88,7 @@ class Admin::EntriesController < AdminController
   # PATCH/PUT /admin/entries/1
   def update
     respond_to do |format|
-      if @entry.update(entry_params)
+      if @entry.update(entry_params) && @entry.update_position
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully updated.' }
       else
         format.html { render :edit }
@@ -101,6 +101,14 @@ class Admin::EntriesController < AdminController
     @entry.destroy
     respond_to do |format|
       format.html { redirect_to request.referrer || admin_entries_path, notice: 'Entry was successfully destroyed.' }
+    end
+  end
+
+  def reposition
+    @entry = Entry.find(params[:id])
+    @entry.insert_at(params[:position].to_i)
+    respond_to do |format|
+      format.js { render text: 'ok' }
     end
   end
 

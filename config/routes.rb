@@ -9,6 +9,7 @@ Rails.application.routes.draw do
         patch 'publish'
         patch 'queue'
         patch 'draft'
+        post 'reposition'
       end
       collection do
         get 'queued'

@@ -5,7 +5,7 @@
 <% if @entries.size == 0 %>
   <p class="admin-content__message">You haven’t queued any entries. Why don’t you <a href="<%= new_admin_entry_path %>">write one</a>?</p>
 <% else %>
-  <ol class="admin-entry-list">
+  <ol class="admin-entry-list admin-entry-list--sortable js-queue">
     <%= render partial: 'entry', collection: @entries %>
   </ol>
 <% end %>

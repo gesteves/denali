@@ -8,7 +8,7 @@ class Entry < ActiveRecord::Base
   validates :title, presence: true
 
   scope :drafted,   -> { where(status: 'draft').order('updated_at DESC') }
-  scope :queued,    -> { where(status: 'queued').order('created_at ASC') }
+  scope :queued,    -> { where(status: 'queued').order('position ASC') }
   scope :published, -> { where(status: 'published').order('published_at DESC') }
   scope :text_entries, -> { where('photos_count = 0') }
   scope :photo_entries, -> { where('photos_count > 0') }
@@ -17,6 +17,7 @@ class Entry < ActiveRecord::Base
   before_save :set_entry_slug
 
   acts_as_taggable
+  acts_as_list scope: :blog
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
@@ -63,6 +64,14 @@ class Entry < ActiveRecord::Base
     end
   end
 
+  def update_position
+    if self.is_queued? && self.position.nil?
+      self.insert_at(Entry.last_queued_position + 1)
+    elsif self.is_published? || self.is_draft?
+      self.remove_from_list
+    end
+  end
+
   def formatted_body
     markdown_to_html(self.body)
   end
@@ -73,6 +82,15 @@ class Entry < ActiveRecord::Base
 
   def formatted_title
     smartypants(self.title)
+  end
+
+  def self.last_queued_position
+    queue = Entry.queued
+    if queue.blank? || queue.last.position.nil?
+      0
+    else
+      queue.last.position
+    end
   end
 
   private

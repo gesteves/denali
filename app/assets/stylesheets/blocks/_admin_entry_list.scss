@@ -1,0 +1,11 @@
+.admin-entry-list {
+  @at-root #{&}--sortable > * {
+    &:hover {
+      cursor: grab;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+}
