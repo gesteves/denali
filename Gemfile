@@ -6,7 +6,7 @@ gem 'rails', '4.2.1'
 gem 'omniauth-google-oauth2'
 
 # Uploads
-gem 'aws-sdk'
+gem 'aws-sdk', '~> 1.64.0'
 gem 'paperclip', '~> 4.2'
 
 # Front-end things
@@ -24,6 +24,7 @@ gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr'
 gem 'acts-as-taggable-on', '~> 3.4'
+gem 'httparty'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
