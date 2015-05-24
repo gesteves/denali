@@ -79,11 +79,12 @@ class Photo < ActiveRecord::Base
     self.make = exif.make
     self.model = exif.model
     self.taken_at = exif.date_time
-    self.exposure = exif.exposure_time >= 1 ? "%g" % ("%.2f" % exif.exposure_time) : exif.exposure_time
-    self.f_number = "%g" % ("%.2f" % exif.f_number.to_f)
+    unless exif.exposure_time.nil?
+      self.exposure = exif.exposure_time >= 1 ? "%g" % ("%.2f" % exif.exposure_time) : exif.exposure_time
+    end
+    self.f_number = "%g" % ("%.2f" % exif.f_number.to_f) unless exif.f_number.nil?
     self.iso = exif.iso_speed_ratings
     self.focal_length = exif.focal_length.to_i
-    self.focal_length_equivalent = exif.focal_length_in_35mm_film.to_i
     self.longitude = exif.gps.longitude unless exif.gps.nil?
     self.latitude = exif.gps.latitude unless exif.gps.nil?
   end
