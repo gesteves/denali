@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150517205004) do
+ActiveRecord::Schema.define(version: 20150524003057) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -36,9 +36,11 @@ ActiveRecord::Schema.define(version: 20150517205004) do
     t.datetime "published_at"
     t.integer  "photos_count"
     t.integer  "position"
+    t.string   "tumblr_id"
   end
 
   add_index "entries", ["blog_id"], name: "index_entries_on_blog_id"
+  add_index "entries", ["tumblr_id"], name: "index_entries_on_tumblr_id"
   add_index "entries", ["user_id"], name: "index_entries_on_user_id"
 
   create_table "photos", force: :cascade do |t|

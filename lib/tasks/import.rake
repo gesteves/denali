@@ -4,6 +4,8 @@ require 'date'
 namespace :import do
   desc 'Import posts from Tumblr'
   task :tumblr => [:environment] do
+    blog = Blog.find_by(domain: 'www.allencompassingtrip.com')
+    user = User.first
     posts = get_tumblr_posts.sort{ |a, b| a['timestamp'] <=> b['timestamp'] }
     posts.each_with_index do |post, i|
       puts "Importing #{post['post_url']} (#{i + 1}/#{posts.size})"
@@ -13,6 +15,7 @@ namespace :import do
       entry.published_at = Time.at(post['timestamp']).to_datetime
       entry.status = 'published'
       entry.tag_list = post['tags'].reject{ |t| t =~ /^lens:model=|^film:name=/ }.join(', ')
+      entry.tumblr_id = post['id']
       post['photos'].each do |p|
         photo = Photo.new
         photo.source_url = p['original_size']['url']
@@ -22,7 +25,10 @@ namespace :import do
         photo.film_list = post['tags'].select{|t| t =~ /^film:name==/}.first.sub(/^film:name=/,'') unless post['tags'].select{|t| t =~ /^film:name==/}.first.nil?
         entry.photos << photo
       end
+      entry.blog = blog
+      entry.user = user
       entry.save
+      entry.update_position
     end
   end
 end
