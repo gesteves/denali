@@ -30,6 +30,12 @@ namespace :import do
       entry.save
       entry.update_position
     end
+    Photo.where('model is not ?', nil).each do |p|
+      if p.camera_list.blank?
+        p.camera_list = p.model
+        p.save
+      end
+    end
   end
 end
 
