@@ -9,11 +9,11 @@
   </div>
 <% end %>
 
-<div class="admin-form__inline">
-  <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'admin-form__label--slug' %>
-  <%= f.text_field :slug, autocomplete: 'off', placeholder: 'your-optional-url-slug', class: 'admin-form__input admin-form__input--small' %>
+<div class="form__inline">
+  <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'form__label--slug' %>
+  <%= f.text_field :slug, autocomplete: 'off', placeholder: 'your-optional-url-slug', class: 'form__input form__input--small' %>
 </div>
 
-<%= f.text_field :title, required: true, autocomplete: 'off', placeholder: 'Title', class: 'admin-form__input' %>
-<%= f.text_area :body, placeholder: 'Your text here…', class: 'admin-form__input admin-form__input--textarea' %>
-<%= f.text_field :tag_list, value: @entry.tag_list.to_s, autocomplete: 'off', placeholder: 'Tags (comma-separated)', class: 'admin-form__input admin-form__input--small js-tags-multiple' %>
+<%= f.text_field :title, required: true, autocomplete: 'off', placeholder: 'Title', class: 'form__input' %>
+<%= f.text_area :body, placeholder: 'Your text here…', class: 'form__input form__input--textarea' %>
+<%= f.text_field :tag_list, value: @entry.tag_list.to_s, autocomplete: 'off', placeholder: 'Tags (comma-separated)', class: 'form__input form__input--small js-tags-multiple' %>

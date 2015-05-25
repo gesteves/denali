@@ -1,4 +1,4 @@
-.admin-entry-list {
+.entry-list {
   @at-root #{&}--sortable > * {
     &:hover {
       cursor: grab;

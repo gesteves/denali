@@ -4,10 +4,10 @@ Denali.Entries = (function ($) {
   'use strict';
 
   var opts = {
-    $photos_container : $('.admin-form__photos'),
-    $photo_list       : $('.admin-form__photos-list'),
-    fields            : '.admin-form__fields',
-    hidden_class      : 'admin-form__fields--hidden',
+    $photos_container : $('.form__photos'),
+    $photo_list       : $('.form__photos-list'),
+    fields            : '.form__fields',
+    hidden_class      : 'form__fields--hidden',
     source_url_field  : '.js-photo-source-url',
     dropbox_button    : '.js-photo-dropbox',
     source_file_field : '.js-photo-source-file',
@@ -20,7 +20,7 @@ Denali.Entries = (function ($) {
     single_tag        : '.js-tags-single',
     multiple_tags     : '.js-tags-multiple',
     add_photo_endpoint: '/admin/entries/photo',
-    photo_container   : '.admin-form__photo'
+    photo_container   : '.form__photo'
   };
 
   var addPhotoFields = function (e) {
@@ -145,7 +145,7 @@ Denali.Entries = (function ($) {
         replace: function (text) {
           var before = this.input.value.match(/^.+,\s*|/)[0];
           this.input.value = before + text + ', ';
-        } 
+        }
       });
     });
     $(opts.single_tag).each(function () {

@@ -2,21 +2,21 @@
   <%= render partial: 'partials/admin/nav', locals: { active_nav: nil } %>
 <% end %>
 
-<%= form_for([:admin, @entry], html: { multipart: true, class: 'admin-form' }) do |f| %>
-  
+<%= form_for([:admin, @entry], html: { multipart: true, class: 'form' }) do |f| %>
+
   <%= render partial: 'entry_fields', locals: { f: f } %>
 
-  <div class="admin-form__photos">
-    <ol class="admin-form__photos-list">
+  <div class="form__photos">
+    <ol class="form__photos-list">
       <%= f.fields_for :photos do |p| %>
-        <div class="admin-form__photo">
-          <div class="admin-form__fields">
-            <div class="admin-form__photo-thumb">
+        <div class="form__photo">
+          <div class="form__fields">
+            <div class="form__photo-thumb">
               <%= responsive_image_tag p.object, [300, 600, 900], "300px", { default_width: 600, quality: photoblog.photo_quality } %>
             </div>
-            <div class="admin-form__photo-fields">
-              <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'admin-form__input admin-form__input--caption' %>
-              <%= link_to 'Remove', '#', class: 'button button--danger admin-form__photo-delete js-photo-delete' %>
+            <div class="form__photo-fields">
+              <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'form__input form__input--caption' %>
+              <%= link_to 'Remove', '#', class: 'button button--danger form__photo-delete js-photo-delete' %>
               <%= p.hidden_field :id %>
               <%= p.hidden_field :position, class: 'js-photo-position' %>
               <%= p.hidden_field :_destroy, class: 'js-photo-destroy' %>
@@ -28,8 +28,8 @@
     <%= link_to 'Add photo', '#', class: 'button button--default js-photo-add' %>
   </div>
 
-  <div class="admin-form__actions">
-    <div class="admin-form__buttons">
+  <div class="form__actions">
+    <div class="form__buttons">
       <% if @entry.is_draft? %>
         <%= link_to 'Cancel', drafts_admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button button--danger' %>
       <% elsif @entry.is_queued? %>
@@ -38,10 +38,10 @@
         <%= link_to 'Cancel', admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button button--danger' %>
       <% end %>
     </div>
-    <div class="admin-form__buttons admin-form__buttons--safe">
+    <div class="form__buttons form__buttons--safe">
     <%= f.submit 'Save changes', class: 'button button--success' %>
     </div>
   </div>
 <% end %>
 
-<%= render partial: 'tag_datalists', locals: { cameras: @cameras, lenses: @lenses, films: @films, tags: @tags } %>
+<%= render partial: 'tag_datalists', locals: { tags: @tags } %>

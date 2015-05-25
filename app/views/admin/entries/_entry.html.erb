@@ -1,19 +1,19 @@
-<li class="admin-entry" id="entry-<%= entry.id %>" data-id="<%= entry.id %>">
+<li class="entry" id="entry-<%= entry.id %>" data-id="<%= entry.id %>">
   <% entry.photos.each do |p| %>
-    <%= responsive_image_tag p, [400, 800, 1200, 1600], "(min-width: 840px) 800px, calc(100vw - 40px)", { default_height: 200, default_width: 800, quality: photoblog.photo_quality, upscale: true }, { class: "admin-entry__thumb" } %>
+    <%= responsive_image_tag p, [400, 800, 1200, 1600], "(min-width: 840px) 800px, calc(100vw - 40px)", { default_height: 200, default_width: 800, quality: photoblog.photo_quality, upscale: true }, { class: "entry__thumb" } %>
   <% end %>
-  <div class="admin-entry__content <% if entry.is_text? %>admin-entry__content--text<% end %>">
+  <div class="entry__content <% if entry.is_text? %>entry__content--text<% end %>">
     <h2><%= raw(entry.formatted_title) %></h2>
     <%= raw(entry.formatted_body) unless entry.body.blank? %>
   </div>
-  <div class="admin-entry__meta">
+  <div class="entry__meta">
     <div>
       <% entry.tag_list.each do |t| %>
-        <span class="admin-entry__tag"><%= t %></span>
+        <span class="entry__tag"><%= t %></span>
       <% end %>
     </div>
-    <div class="admin-entry__meta-bottom">
-      <div class="admin-entry__timestamp">
+    <div class="entry__meta-bottom">
+      <div class="entry__timestamp">
         <% if entry.is_published? %>
           Published <%= entry.published_at.strftime('%A, %B %-d, %Y at %-l:%M %P %Z') %>
         <% elsif entry.is_queued? %>
@@ -24,7 +24,7 @@
           Last updated <%= time_ago_in_words(entry.updated_at) %> ago
         <% end %>
       </div>
-      <div class="admin-entry__actions">
+      <div class="entry__actions">
         <%= link_to 'Edit', edit_admin_entry_path(entry) %>
         <% if entry.is_draft? %>
           <%= link_to 'Queue', queue_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to move this entry to the queue?' }  %>

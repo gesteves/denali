@@ -2,23 +2,23 @@
   <%= render partial: 'partials/admin/nav', locals: { active_nav: 'new' } %>
 <% end %>
 
-<%= form_for([:admin, @entry], html: { multipart: true, class: 'admin-form' }) do |f| %>
-  
+<%= form_for([:admin, @entry], html: { multipart: true, class: 'form' }) do |f| %>
+
   <%= render partial: 'entry_fields', locals: { f: f } %>
 
-  <div class="admin-form__photos">
-    <ol class="admin-form__photos-list">
+  <div class="form__photos">
+    <ol class="form__photos-list">
 
     </ol>
     <%= link_to 'Add photo', '#', class: 'button js-photo-add' %>
   </div>
 
-  <div class="admin-form__actions">
-    <div class="admin-form__buttons">
+  <div class="form__actions">
+    <div class="form__buttons">
       <%= link_to 'Cancel', admin_entries_path, data: { confirm: 'Are you sure you want to discard this?' }, class: 'button button--danger' %>
     </div>
-    <div class="admin-form__buttons admin-form__buttons--safe">
-      <div class="admin-form__select-container">
+    <div class="form__buttons form__buttons--safe">
+      <div class="form__select-container">
         <%= f.select :status, options_for_select([['Save draft', 'draft'], ['Add to queue', 'queued'], ['Publish it!', 'published']]), {}, { class: 'button button--pad-right' } %>
       </div>
     <%= f.submit 'Save entry', class: 'button button--success' %>
@@ -26,4 +26,4 @@
   </div>
 <% end %>
 
-<%= render partial: 'tag_datalists', locals: { cameras: @cameras, lenses: @lenses, films: @films, tags: @tags } %>
+<%= render partial: 'tag_datalists', locals: { tags: @tags } %>

@@ -1,4 +1,4 @@
-.admin-form {
+.form {
   display: flex;
   flex-flow: column;
 
@@ -127,7 +127,7 @@
 
     @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
       -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px); 
+      backdrop-filter: blur(10px);
     }
 
     &:hover {
@@ -182,7 +182,7 @@
 
   .awesomplete {
     flex-grow: 1;
-    
+
     input {
       width: 100%;
     }
