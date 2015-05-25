@@ -1,6 +1,6 @@
 class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft]
-  before_action :get_tags, only: [:new, :edit]
+  before_action :get_tags, only: [:new, :edit, :create, :update]
 
   # GET /admin/entries
   def index
@@ -88,7 +88,7 @@ class Admin::EntriesController < AdminController
   # PATCH/PUT /admin/entries/1
   def update
     respond_to do |format|
-      if @entry.update(entry_params) && @entry.update_position
+      if @entry.update(entry_params)
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully updated.' }
       else
         format.html { render :edit }
