@@ -1,11 +1,13 @@
-<nav class="nav">
-  <div class="nav__group">
-    <a href="<%= root_path %>" class="nav__link">Home</a>
-    <a href="<%= admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'published' %>">Published <%= published_count %></a>
-    <a href="<%= queued_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'queued' %>">Queued <%= queued_count %></a>
-    <a href="<%= drafts_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'drafts' %>">Drafts <%= drafts_count %></a>
-    <a href="<%= new_admin_entry_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'new' %>">Post a new entry</a>
-  </div>
-  <a href="<%= admin_settings_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'settings' %>">Settings</a>
-  <a href="<%= signout_path %>" class="nav__link">Sign out</a>
-</nav>
+<% cache "admin/nav/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
+  <nav class="nav">
+    <div class="nav__group">
+      <a href="<%= root_path %>" class="nav__link">Home</a>
+      <a href="<%= admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'published' %>">Published <%= published_count %></a>
+      <a href="<%= queued_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'queued' %>">Queued <%= queued_count %></a>
+      <a href="<%= drafts_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'drafts' %>">Drafts <%= drafts_count %></a>
+      <a href="<%= new_admin_entry_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'new' %>">Post a new entry</a>
+    </div>
+    <a href="<%= admin_settings_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'settings' %>">Settings</a>
+    <a href="<%= signout_path %>" class="nav__link">Sign out</a>
+  </nav>
+<% end %>
