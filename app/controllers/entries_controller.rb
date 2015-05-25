@@ -8,9 +8,7 @@ class EntriesController < ApplicationController
     @entry = Entry.published.find(params[:id])
     respond_to do |format|
       format.html {
-        if params[:slug] != @entry.slug
-          redirect_to entry_path(@entry.id, @entry.slug)
-        end
+        redirect_to entry_path(@entry.id, @entry.slug) if params[:slug] != @entry.slug
       }
     end
   end
