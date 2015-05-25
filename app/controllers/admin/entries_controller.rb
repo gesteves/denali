@@ -1,5 +1,5 @@
 class Admin::EntriesController < AdminController
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :reposition]
   before_action :get_tags, only: [:new, :edit, :create, :update]
 
   # GET /admin/entries
@@ -106,7 +106,6 @@ class Admin::EntriesController < AdminController
   end
 
   def reposition
-    @entry = Entry.find(params[:id])
     @entry.insert_at(params[:position].to_i)
     respond_to do |format|
       format.js { render text: 'ok' }
