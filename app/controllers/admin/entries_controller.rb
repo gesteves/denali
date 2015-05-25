@@ -129,9 +129,6 @@ class Admin::EntriesController < AdminController
 
     def get_tags
       @tags = Entry.tag_counts_on(:tags, order: 'name asc')
-      @cameras = Photo.tag_counts_on(:cameras, order: 'name asc')
-      @films = Photo.tag_counts_on(:films, order: 'name asc')
-      @lenses = Photo.tag_counts_on(:lenses, order: 'name asc')
     end
 
     def entry_params

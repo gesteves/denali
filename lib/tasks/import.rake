@@ -20,21 +20,12 @@ namespace :import do
         photo = Photo.new
         photo.source_url = p['original_size']['url']
         photo.caption = p['caption']
-        photo.camera_list = p['exif']['Camera'] unless p['exif'].nil? || p['exif']['Camera'].nil?
-        photo.lense_list = post['tags'].select{|t| t =~ /^lens:model=/}.first.sub(/^lens:model=/,'') unless post['tags'].select{|t| t =~ /^lens:model=/}.first.nil?
-        photo.film_list = post['tags'].select{|t| t =~ /^film:name==/}.first.sub(/^film:name=/,'') unless post['tags'].select{|t| t =~ /^film:name==/}.first.nil?
         entry.photos << photo
       end
       entry.blog = blog
       entry.user = user
       entry.save
       entry.update_position
-    end
-    Photo.where('model is not ?', nil).each do |p|
-      if p.camera_list.blank?
-        p.camera_list = p.model
-        p.save
-      end
     end
   end
 end

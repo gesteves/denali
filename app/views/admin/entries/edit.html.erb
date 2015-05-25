@@ -16,9 +16,6 @@
             </div>
             <div class="admin-form__photo-fields">
               <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'admin-form__input admin-form__input--caption' %>
-              <%= p.text_field :camera_list, value: p.object.camera_list.to_s, placeholder: 'Camera', class: 'admin-form__input admin-form__input--small js-tags-single', list: 'datalist-cameras' %>
-              <%= p.text_field :lense_list, value: p.object.lense_list.to_s, placeholder: 'Lens', class: 'admin-form__input admin-form__input--small js-tags-single', list: 'datalist-lenses' %>
-              <%= p.text_field :film_list, value: p.object.film_list.to_s, placeholder: 'Film', class: 'admin-form__input admin-form__input--small js-tags-single', list: 'datalist-films' %>
               <%= link_to 'Remove', '#', class: 'button button--danger admin-form__photo-delete js-photo-delete' %>
               <%= p.hidden_field :id %>
               <%= p.hidden_field :position, class: 'js-photo-position' %>

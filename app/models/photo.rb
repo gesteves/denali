@@ -14,8 +14,6 @@ class Photo < ActiveRecord::Base
 
   acts_as_list scope: :entry
 
-  acts_as_taggable_on :cameras, :lenses, :films
-
   validates_attachment_content_type :image, :content_type => /image\/jpe?g/i
 
   attr_accessor :source_file
