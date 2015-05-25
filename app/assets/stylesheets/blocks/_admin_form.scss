@@ -42,7 +42,9 @@
     }
 
     @at-root #{&}--textarea {
+      font-size: 14px;
       height: 240px;
+      line-height: 1.5;
     }
 
     @at-root #{&}--caption {

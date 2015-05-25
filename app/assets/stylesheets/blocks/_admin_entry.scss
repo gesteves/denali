@@ -18,6 +18,28 @@
     border-top: 0;
     padding: 12px 20px;
 
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 1.5rem 0;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+      margin: 1.5rem 0;
+    }
+  }
+
+  @at-root #{&}__content--text {
+    border-top: 1px solid $color-border;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+    
     h2 {
       font-size: 24px;
       font-weight: 600;
@@ -29,22 +51,7 @@
     h4,
     h5,
     h6 {
-      font-size: 16px;
       font-weight: 600;
-      line-height: 1.5;
-      margin: 1.5rem 0;
-    }
-
-    p {
-      font-size: 16px;
-      line-height: 1.5;
-      margin: 1.5rem 0;
-    }
-
-    @at-root #{&}--text {
-      border-top: 1px solid $color-border;
-      border-top-left-radius: 2px;
-      border-top-right-radius: 2px;
     }
   }
 
