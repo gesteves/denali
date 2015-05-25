@@ -25,6 +25,7 @@ gem 'sanitize'
 gem 'exifr'
 gem 'acts-as-taggable-on', '~> 3.4'
 gem 'httparty'
+gem 'kaminari'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development

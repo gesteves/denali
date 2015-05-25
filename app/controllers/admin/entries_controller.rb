@@ -4,7 +4,7 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries
   def index
-    @entries = Entry.published
+    @entries = Entry.published.page(params[:page])
     @page_title = 'Published'
   end
 

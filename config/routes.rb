@@ -1,9 +1,13 @@
 Rails.application.routes.draw do
+  concern :paginatable do
+    get '(page/:page)', :action => :index, :on => :collection, :as => ''
+  end
+
   namespace :admin do
     get 'settings' => 'blogs#edit'
     patch 'settings/update' => 'blogs#update'
 
-    resources :entries, only: [:index, :new, :create, :edit, :update, :destroy] do
+    resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], :concerns => :paginatable do
       member do
         get 'preview'
         patch 'publish'
