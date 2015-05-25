@@ -78,6 +78,11 @@ class Photo < ActiveRecord::Base
     return if exif.nil? || !exif.exif?
     self.make = exif.make
     self.model = exif.model
+    unless exif.user_comment.blank?
+      comment_array = exif.user_comment.split(/(\n)+/).select{ |c| c =~ /^film/i }
+      self.film_make = comment_array.select{ |c| c =~ /^film make/i }.blank? ? nil : comment_array.select{ |c| c =~ /^film make/i }.first.gsub(/^film make:/i, '').strip
+      self.film_type = comment_array.select{ |c| c =~ /^film type/i }.blank? ? nil : comment_array.select{ |c| c =~ /^film type/i }.first.gsub(/^film type:/i, '').strip
+    end
     self.taken_at = exif.date_time
     unless exif.exposure_time.nil?
       self.exposure = exif.exposure_time >= 1 ? "%g" % ("%.2f" % exif.exposure_time) : exif.exposure_time
