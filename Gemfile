@@ -27,6 +27,9 @@ gem 'acts-as-taggable-on', '~> 3.4'
 gem 'httparty'
 gem 'kaminari'
 
+# Caching
+gem 'dalli'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

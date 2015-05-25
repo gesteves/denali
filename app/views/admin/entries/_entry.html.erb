@@ -1,43 +1,45 @@
-<li class="entry" id="entry-<%= entry.id %>" data-id="<%= entry.id %>">
-  <% entry.photos.each do |p| %>
-    <%= responsive_image_tag p, [400, 800, 1200, 1600], "(min-width: 840px) 800px, calc(100vw - 40px)", { default_height: 200, default_width: 800, quality: photoblog.photo_quality, upscale: true }, { class: "entry__thumb" } %>
-  <% end %>
-  <div class="entry__content <% if entry.is_text? %>entry__content--text<% end %>">
-    <h2><%= raw(entry.formatted_title) %></h2>
-    <%= raw(entry.formatted_body) unless entry.body.blank? %>
-  </div>
-  <div class="entry__meta">
-    <div>
-      <% entry.tag_list.each do |t| %>
-        <span class="entry__tag"><%= t %></span>
-      <% end %>
+<% cache "admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+  <li class="entry" id="entry-<%= entry.id %>" data-id="<%= entry.id %>">
+    <% entry.photos.each do |p| %>
+      <%= responsive_image_tag p, [400, 800, 1200, 1600], "(min-width: 840px) 800px, calc(100vw - 40px)", { default_height: 200, default_width: 800, quality: photoblog.photo_quality, upscale: true }, { class: "entry__thumb" } %>
+    <% end %>
+    <div class="entry__content <% if entry.is_text? %>entry__content--text<% end %>">
+      <h2><%= raw(entry.formatted_title) %></h2>
+      <%= raw(entry.formatted_body) unless entry.body.blank? %>
     </div>
-    <div class="entry__meta-bottom">
-      <div class="entry__timestamp">
-        <% if entry.is_published? %>
-          Published <%= entry.published_at.strftime('%A, %B %-d, %Y at %-l:%M %P %Z') %>
-        <% elsif entry.is_queued? %>
-          Queued <abbr title="<%= entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P %Z') %>"><%= time_ago_in_words(entry.updated_at) %> ago</abbr>
-        <% elsif entry.is_draft? %>
-          Drafted <abbr title="<%= entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P %Z') %>"><%= time_ago_in_words(entry.updated_at) %> ago</abbr>
-        <% else %>
-          Last updated <%= time_ago_in_words(entry.updated_at) %> ago
+    <div class="entry__meta">
+      <div>
+        <% entry.tag_list.each do |t| %>
+          <span class="entry__tag"><%= t %></span>
         <% end %>
       </div>
-      <div class="entry__actions">
-        <%= link_to 'Edit', edit_admin_entry_path(entry) %>
-        <% if entry.is_draft? %>
-          <%= link_to 'Queue', queue_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to move this entry to the queue?' }  %>
-        <% end %>
-        <% if entry.is_queued? %>
-          <%= link_to 'Draft', draft_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to move this entry to the drafts?' }  %>
-        <% end %>
-        <% if entry.is_queued? || entry.is_draft? %>
-          <%= link_to 'Publish', publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry?' }  %>
-        <% end %>
-        &middot;
-        <%= link_to 'Delete', admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you sure you want to delete this entry?' } %>
+      <div class="entry__meta-bottom">
+        <div class="entry__timestamp">
+          <% if entry.is_published? %>
+            Published <%= entry.published_at.strftime('%A, %B %-d, %Y at %-l:%M %P %Z') %>
+          <% elsif entry.is_queued? %>
+            Queued <abbr title="<%= entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P %Z') %>"><%= time_ago_in_words(entry.updated_at) %> ago</abbr>
+          <% elsif entry.is_draft? %>
+            Drafted <abbr title="<%= entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P %Z') %>"><%= time_ago_in_words(entry.updated_at) %> ago</abbr>
+          <% else %>
+            Last updated <%= time_ago_in_words(entry.updated_at) %> ago
+          <% end %>
+        </div>
+        <div class="entry__actions">
+          <%= link_to 'Edit', edit_admin_entry_path(entry) %>
+          <% if entry.is_draft? %>
+            <%= link_to 'Queue', queue_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to move this entry to the queue?' }  %>
+          <% end %>
+          <% if entry.is_queued? %>
+            <%= link_to 'Draft', draft_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to move this entry to the drafts?' }  %>
+          <% end %>
+          <% if entry.is_queued? || entry.is_draft? %>
+            <%= link_to 'Publish', publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry?' }  %>
+          <% end %>
+          &middot;
+          <%= link_to 'Delete', admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you sure you want to delete this entry?' } %>
+        </div>
       </div>
     </div>
-  </div>
-</li>
+  </li>
+<% end %>
