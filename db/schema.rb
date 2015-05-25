@@ -54,7 +54,6 @@ ActiveRecord::Schema.define(version: 20150524235754) do
     t.integer  "image_file_size"
     t.datetime "image_updated_at"
     t.string   "source_url"
-    t.binary   "exif"
     t.string   "make"
     t.string   "model"
     t.datetime "taken_at"
