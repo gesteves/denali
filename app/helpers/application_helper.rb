@@ -20,4 +20,14 @@ module ApplicationHelper
     end
     image_tag src, html_options
   end
+
+  def copyright_years
+    start_year = Entry.published.last.published_at.strftime('%Y')
+    end_year = Time.now.strftime('%Y')
+    if start_year == end_year
+      start_year
+    else
+      "#{start_year}–#{end_year}"
+    end
+  end
 end

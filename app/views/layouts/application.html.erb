@@ -1,13 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width" />
   <title>Denali</title>
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
+<% cache "header/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
+  <header class="header">
+    <h1><a href="/"><%= photoblog.name %></a></h1>
+    <h2><%= raw photoblog.description %></h2>
+  </header>
+<% end %>
+
 <%= yield %>
+
+<% cache "footer/#{Time.now.strftime('%Y')}" do %>
+  <footer class="footer">
+      <p>
+        &copy; <%= copyright_years %>
+        <a href="http://gesteves.com" rel="me">Guillermo Esteves</a> &middot;
+        Powered by <a href="https://github.com/gesteves/denali">Denali</a>
+      </p>
+  </footer>
+<% end %>
 
 <%= javascript_include_tag 'application' %>
 <script src="//use.typekit.net/cur0hfm.js"></script>
