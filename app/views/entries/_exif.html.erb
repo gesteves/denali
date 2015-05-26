@@ -1,0 +1,7 @@
+<div class="exif">
+  <% unless exif.make.blank? || exif.model.blank? %><span class="exif__camera"><%= exif.model %></span><% end %>
+  <% unless exif.film_make.blank? || exif.film_type.blank? %><span class="exif__film"><%= exif.film_type %></span><% end %>
+  <% unless exif.exposure.blank? %><span class="exif__exposure"><%= exif.exposure %></span><% end %>
+  <% unless exif.f_number.blank? %><span class="exif__exposure"><%= exif.f_number %></span><% end %>
+  <% unless exif.iso.blank? %><span class="exif__iso"><%= exif.iso %></span><% end %>
+</div>

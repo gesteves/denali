@@ -1,0 +1,44 @@
+<% cache "entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+  <article class="entry <% if entry.is_text? %>entry--text<% end %>">
+    <% entry.photos.each do |photo| %>
+      <figure class="entry__photo">
+        <%= link_to permalink(entry) do %>
+          <%= responsive_image_tag photo,
+              [400, 800, 1024, 1280, 1440, 1920, 2048, 2560, 2880, 3840],
+              "(min-width: 1920px) 1920px, 100vw",
+              { default_width: 1280, quality: photoblog.photo_quality },
+              { class: "entry__image", 'data-height': photo.height } %>
+        <% end %>
+        <% unless photo.caption.blank? %>
+          <figcaption>
+            <%= raw entry.formatted_caption %>
+          </figcaption>
+        <% end %>
+      </figure>
+    <% end %>
+
+    <div class="entry__body">
+      <% if entry.is_text? %>
+        <h1><%= link_to raw(entry.formatted_title), permalink(entry) %></h1>
+      <% else %>
+        <h1><%= raw(entry.formatted_title) %></h1>
+      <% end %>
+      <%= raw(entry.formatted_body) unless entry.body.blank? %>
+    </div>
+
+    <div class="entry__meta">
+      <div class="entry__info">
+        Published on <%= link_to entry.published_at.strftime('%B %-d, %Y'), permalink(entry) %>
+        <%= render partial: 'exif', object: entry.photos.first if entry.photos.count == 1 %>
+      </div>
+
+      <% unless entry.tags.blank? %>
+        <div class="entry__tags">
+          <% entry.tags.each do |tag| %>
+            <%= tag.name %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </article>
+<% end %>
