@@ -19,9 +19,9 @@
 
     <div class="entry__body">
       <% if entry.is_text? %>
-        <h1><%= link_to raw(entry.formatted_title), permalink(entry) %></h1>
+        <h1 class="entry__headline entry__headline--text"><%= link_to raw(entry.formatted_title), permalink(entry) %></h1>
       <% else %>
-        <h1><%= raw(entry.formatted_title) %></h1>
+        <h1 class="entry__headline"><%= raw(entry.formatted_title) %></h1>
       <% end %>
       <%= raw(entry.formatted_body) unless entry.body.blank? %>
     </div>
@@ -33,7 +33,7 @@
       </div>
 
       <% unless entry.tags.blank? %>
-        <div class="entry__tags">
+        <div class="tags">
           <% entry.tags.each do |tag| %>
             <%= tag.name %>
           <% end %>
