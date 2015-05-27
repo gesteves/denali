@@ -35,7 +35,8 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/publish
   def publish
-    if @entry.publish && @entry.update_position
+    if @entry.publish
+      @entry.update_position
       respond_to do |format|
         format.html { redirect_to admin_entries_path, notice: 'Entry was successfully published.' }
       end
@@ -48,7 +49,8 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/queue
   def queue
-    if @entry.queue && @entry.update_position
+    if @entry.queue
+      @entry.update_position
       respond_to do |format|
         format.html { redirect_to request.referrer, notice: 'Entry was successfully queued.' }
       end
@@ -61,7 +63,8 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/draft
   def draft
-    if @entry.draft && @entry.update_position
+    if @entry.draft
+      @entry.update_position
       respond_to do |format|
         format.html { redirect_to request.referrer, notice: 'Entry was successfully saved to drafts.' }
       end
@@ -78,7 +81,8 @@ class Admin::EntriesController < AdminController
     @entry.user = current_user
     @entry.blog = photoblog
     respond_to do |format|
-      if @entry.save && @entry.update_position
+      if @entry.save
+        @entry.update_position
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
       else
         format.html { render :new }
