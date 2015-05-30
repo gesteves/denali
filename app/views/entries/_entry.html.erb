@@ -28,16 +28,18 @@
 
     <div class="entry__meta">
       <div class="entry__info">
-        Published on <%= link_to entry.published_at.strftime('%B %-d, %Y'), permalink(entry) %>
-        <%= render partial: 'exif', object: entry.photos.first if entry.photos.count == 1 %>
+        <p>
+          Published on <%= link_to entry.published_at.strftime('%B %-d, %Y'), permalink(entry) %>
+          <%= render partial: 'exif', object: entry.photos.first if entry.photos.count == 1 %>
+        </p>
       </div>
 
       <% unless entry.tags.blank? %>
-        <div class="tags">
+        <p class="tags">
           <% entry.tags.each do |tag| %>
-            <%= tag.name %>
+            <a href="#" rel="tag"><%= tag.name %></a>
           <% end %>
-        </div>
+        </p>
       <% end %>
     </div>
   </article>

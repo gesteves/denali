@@ -47,6 +47,12 @@
     max-width: $bp-l;
     padding: 0 20px;
 
+    p {
+      font-size: 14px;
+      line-height: (2.4/1.4);
+      margin: 0;
+    }
+
     a:link,
     a:visited {
       color: $color-text;

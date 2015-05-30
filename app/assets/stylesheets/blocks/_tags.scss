@@ -1,0 +1,20 @@
+.tags {
+  [rel="tag"] {
+    margin-right: 4px;
+    text-transform: lowercase;
+
+    &::before {
+      content: '#';
+    }
+
+    &:link,
+    &:visited {
+      color: $color-text-alt;
+    }
+
+    &:hover,
+    &:active {
+      color: $color-links;
+    }
+  }
+}
