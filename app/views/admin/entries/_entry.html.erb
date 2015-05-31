@@ -16,11 +16,11 @@
       <div class="entry__meta-bottom">
         <div class="entry__timestamp">
           <% if entry.is_published? %>
-            Published <%= link_to entry.published_at.strftime('%A, %B %-d, %Y at %-l:%M %P %Z'), permalink(entry) %>
+            Published <%= link_to entry.published_at.strftime('%A, %B %-d, %Y'), permalink(entry) %>
           <% elsif entry.is_queued? %>
-            Queued <abbr title="<%= entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P %Z') %>"><%= time_ago_in_words(entry.updated_at) %> ago</abbr>
+            Queued <abbr title="<%= entry.updated_at.strftime('%A, %B %-d, %Y') %>"><%= time_ago_in_words(entry.updated_at) %> ago</abbr>
           <% elsif entry.is_draft? %>
-            Drafted <abbr title="<%= entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P %Z') %>"><%= time_ago_in_words(entry.updated_at) %> ago</abbr>
+            Drafted <abbr title="<%= entry.updated_at.strftime('%A, %B %-d, %Y') %>"><%= time_ago_in_words(entry.updated_at) %> ago</abbr>
           <% else %>
             Last updated <%= time_ago_in_words(entry.updated_at) %> ago
           <% end %>
