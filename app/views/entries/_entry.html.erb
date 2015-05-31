@@ -37,7 +37,7 @@
       <% unless entry.tags.blank? %>
         <p class="tags">
           <% entry.tags.each do |tag| %>
-            <a href="#" rel="tag"><%= tag.name %></a>
+            <%= link_to tag.name, tag_path(tag.slug), { rel: 'tag' } %>
           <% end %>
         </p>
       <% end %>

@@ -24,16 +24,17 @@ Rails.application.routes.draw do
   end
 
 
-  get '/page/:page'              => 'entries#index',  constraints: { page: /\d+/ }
-  get '/:id(/:slug)'             => 'entries#show',   constraints: { id: /\d+/ }, :as => :entry
-  get '/post/:tumblr_id(/:slug)' => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
-  get '/rss'                     => 'entries#rss'
+  get '/page/:page'               => 'entries#index',  constraints: { page: /\d+/ }
+  get '/tagged/:tag(/page/:page)' => 'entries#tagged', constraints: { page: /\d+/ }, :as => :tag
+  get '/:id(/:slug)'              => 'entries#show',   constraints: { id: /\d+/ }, :as => :entry
+  get '/post/:tumblr_id(/:slug)'  => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
+  get '/rss'                      => 'entries#rss'
 
-  get '/admin'                   => 'admin#index'
-  get '/auth/:provider/callback' => 'sessions#create'
-  get '/auth/failure'            => 'sessions#failure'
-  get '/signin'                  => 'sessions#new',     :as => :signin
-  get '/signout'                 => 'sessions#destroy', :as => :signout
+  get '/admin'                    => 'admin#index'
+  get '/auth/:provider/callback'  => 'sessions#create'
+  get '/auth/failure'             => 'sessions#failure'
+  get '/signin'                   => 'sessions#new',     :as => :signin
+  get '/signout'                  => 'sessions#destroy', :as => :signout
 
   root 'entries#index'
 end
