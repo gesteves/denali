@@ -28,7 +28,7 @@ class EntriesController < ApplicationController
     @tag_slug = params[:tag]
     @tags = ActsAsTaggableOn::Tag.where(slug: params[:tag])
     @tags.each do |t|
-      tag_list << t.slug
+      tag_list << t.name
     end
     if params[:count].nil?
       @entries = photoblog.entries.tagged_with(tag_list, any: true).published.page(@page)
