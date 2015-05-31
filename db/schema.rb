@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150524235754) do
+ActiveRecord::Schema.define(version: 20150530003230) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 20150524235754) do
     t.string   "model"
     t.datetime "taken_at"
     t.string   "exposure"
-    t.string   "f_number"
+    t.decimal  "f_number"
     t.float    "latitude"
     t.float    "longitude"
     t.integer  "width"
