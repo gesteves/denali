@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150530003230) do
+ActiveRecord::Schema.define(version: 20150531200509) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -63,8 +63,8 @@ ActiveRecord::Schema.define(version: 20150530003230) do
     t.float    "longitude"
     t.integer  "width"
     t.integer  "height"
-    t.string   "iso"
-    t.string   "focal_length"
+    t.integer  "iso"
+    t.integer  "focal_length"
     t.string   "film_make"
     t.string   "film_type"
   end
