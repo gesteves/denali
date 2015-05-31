@@ -26,6 +26,9 @@
           <% end %>
         </div>
         <div class="entry__actions">
+          <% unless entry.is_published? %>
+            <%= link_to 'Preview', preview_admin_entry_path(entry) %>
+          <% end %>
           <%= link_to 'Edit', edit_admin_entry_path(entry) %>
           <% if entry.is_draft? %>
             <%= link_to 'Queue', queue_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to move this entry to the queue?' }  %>

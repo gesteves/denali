@@ -1,5 +1,5 @@
 class Admin::EntriesController < AdminController
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :reposition]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :reposition, :preview]
   before_action :get_tags, only: [:new, :edit, :create, :update]
 
   # GET /admin/entries
@@ -118,6 +118,12 @@ class Admin::EntriesController < AdminController
     @entry.photos.build
     respond_to do |format|
       format.html { render layout: nil }
+    end
+  end
+
+  def preview
+    respond_to do |format|
+      format.html { render 'entries/show', layout: 'application' }
     end
   end
 

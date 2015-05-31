@@ -22,6 +22,6 @@
 <% end %>
 
 <% cache "entries/#{@page}/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
-  <%= render partial: 'entry', collection: @entries %>
+  <%= render partial: 'entries/entry', collection: @entries %>
   <%= paginate @entries %>
 <% end %>
