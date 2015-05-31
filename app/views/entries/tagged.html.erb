@@ -1,6 +1,6 @@
 <% content_for :meta do %>
   <% cache "entries/meta/tagged/#{@tag_slug}/#{@page}/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
-    <title><%= raw "Photos tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %><%= raw "&middot #{@page}" unless @page.nil? || @page == 1 %></title>
+    <title><%= raw "Photos tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %><%= raw " &middot Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= Sanitize.fragment(photoblog.description) %>" />
 
     <meta property="og:title" content="<%= raw "Photos tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %>" />
