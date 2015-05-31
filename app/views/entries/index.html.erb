@@ -1,3 +1,26 @@
+<% content_for :meta do %>
+  <% cache "entries/meta/#{@page}/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
+    <title><%= photoblog.name %><%= raw "&middot #{@page}" unless @page.nil? || @page == 1 %></title>
+    <meta name="description" content="<%= Sanitize.fragment(photoblog.description) %>" />
+
+    <meta property="og:title" content="<%= photoblog.name %>" />
+    <meta property="og:image" content="<%= photoblog.entries.last.photos.first.url(1200) %>" />
+    <meta property="og:description" content="<%= Sanitize.fragment(photoblog.description) %>" />
+    <meta property="og:url" content="<%= request.original_url %>" />
+    <meta property="og:type" content="Website" />
+    <meta property="og:site_name" content="<%= photoblog.name %>" />
+    <meta property="og:locale" content="en_US" />
+
+    <meta name="twitter:site" content="@gesteves">
+    <meta name="twitter:creator" content="@gesteves">
+    <meta name="twitter:title" content="<%= photoblog.name %>">
+    <meta name="twitter:url" content="<%= request.original_url %>" />
+    <meta name="twitter:description" content="<%= Sanitize.fragment(photoblog.description) %>">
+    <meta name="twitter:image" content="<%= photoblog.entries.last.photos.first.url(1200) %>">
+    <meta name="twitter:card" content="summary_large_image">
+  <% end %>
+<% end %>
+
 <% cache "entries/#{@page}/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
   <%= render partial: 'entry', collection: @entries %>
   <%= paginate @entries %>
