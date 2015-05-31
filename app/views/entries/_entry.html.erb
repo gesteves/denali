@@ -4,7 +4,7 @@
       <figure class="entry__photo">
         <%= link_to permalink(entry) do %>
           <%= responsive_image_tag photo,
-              [400, 800, 1024, 1280, 1440, 1920, 2048, 2560, 2880, 3840],
+              photo_sizes,
               "(min-width: 1920px) 1920px, 100vw",
               { default_width: 1280, quality: photoblog.photo_quality },
               { class: "entry__image", 'data-height': photo.height } %>

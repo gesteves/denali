@@ -21,6 +21,21 @@ module ApplicationHelper
     image_tag src, html_options
   end
 
+  def photo_sizes
+    sizes = []
+    sizes << [320, 480]          # iPhone
+    sizes << [320 * 2, 480 * 2]  # iPhone 4
+    sizes << [320 * 2, 568 * 2]  # iPhone 5
+    sizes << [375 * 2, 667 * 2]  # iPhone 6
+    sizes << [414 * 3, 736 * 3]  # iPhone 6 plus
+    sizes << [1024, 768]         # iPad
+    sizes << [1024 * 2, 768 * 2] # iPad Air
+    sizes << [1280, 1280 * 2]    # Macbook
+    sizes << [1440, 1440 * 2]    # Macbook
+    sizes << [1920, 1920 * 2]    # iMac
+    sizes.flatten.sort.uniq
+  end
+
   def copyright_years
     start_year = Entry.published.last.published_at.strftime('%Y')
     end_year = Time.now.strftime('%Y')
