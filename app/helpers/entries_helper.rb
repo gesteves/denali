@@ -22,6 +22,6 @@ module EntriesHelper
     elsif make =~ /canon/i
       'Canon'
     end
-    model.match(make) ? model : "#{make} #{model}"
+    "#{make} #{model.gsub(%r{#{make}}i, '')}"
   end
 end
