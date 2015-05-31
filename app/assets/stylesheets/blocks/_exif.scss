@@ -1,29 +1,11 @@
 .exif {
-  margin-left: 2px;
-
   @at-root #{&}__field {
-    margin: 0 2px;
     white-space: nowrap;
 
     &::before {
       color: $color-text-alt;
-      content: attr(data-field-name);
+      content: ' • ' attr(data-field-name);
       margin-right: 4px;
     }
-
-    &::after {
-      color: $color-text-alt;
-      content: '•';
-      margin-left: 4px;
-    }
-
-    &:last-of-type::after {
-      content: none;
-    }
-  }
-
-  &::before {
-    color: $color-text-alt;
-    content: '•';
   }
 }
