@@ -42,5 +42,7 @@ class EntriesController < ApplicationController
   end
 
   def rss
+    @entries = photoblog.entries.published.page(1)
+    render format: 'atom'
   end
 end

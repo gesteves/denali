@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   get '/tagged/:tag(/page/:page)' => 'entries#tagged', constraints: { page: /\d+/ }, :as => :tag
   get '/:id(/:slug)'              => 'entries#show',   constraints: { id: /\d+/ }, :as => :entry
   get '/post/:tumblr_id(/:slug)'  => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
-  get '/rss'                      => 'entries#rss'
+  get '/rss'                      => 'entries#rss', defaults: { format: 'atom' }
 
   get '/admin'                    => 'admin#index'
   get '/auth/:provider/callback'  => 'sessions#create'
