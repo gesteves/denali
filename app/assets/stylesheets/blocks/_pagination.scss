@@ -1,0 +1,30 @@
+.pagination {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 1.5rem 0;
+  max-width: $bp-l;
+  text-align: center;
+  width: 100%;
+
+  @at-root #{&}__link {
+    color: $color-text-alt;
+    margin: 0 1rem;
+  }
+
+  @media (min-width: $bp-xs) {
+    font-size: 24px;
+    line-height: 1.5;
+    margin: 1rem auto;
+  }
+
+  a:link,
+  a:visited {
+    color: $color-text;
+  }
+
+  a:hover,
+  a:active {
+    color: $color-links;
+    text-decoration: none;
+  }
+}
