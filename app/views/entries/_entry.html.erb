@@ -1,5 +1,5 @@
 <% cache "entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
-  <article class="entry <% if entry.is_text? %>entry--text<% end %>">
+  <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>">
     <% entry.photos.each do |photo| %>
       <figure class="entry__photo">
         <%= link_to permalink(entry), class: 'entry__photo-link entry__photo-link--fit' do %>

@@ -71,7 +71,7 @@
 
   @at-root #{&}__photo {
     font-size: 0;
-    margin: 0 0 10px;
+    margin: 0 0 24px;
     padding: 0;
     text-align: center;
     width: 100%;
@@ -87,6 +87,10 @@
   @at-root #{&}__image {
     display: inline-block;
     max-width: 100%;
+  }
+
+  @at-root #{&}--photo #{&}__body {
+    border-top: 1px solid $color-border;
   }
 }
 
