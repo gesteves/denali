@@ -27,18 +27,21 @@ class ApplicationController < ActionController::Base
 
   def permalink(entry, opts = {})
     opts.reverse_merge! path_only: true
+    if entry.is_published?
+      entry_date = entry.published_at
+      year = entry_date.strftime('%Y')
+      month = entry_date.strftime('%-m')
+      day = entry_date.strftime('%-d')
+      id = entry.id
+      slug = entry.slug
 
-    entry_date = entry.published_at
-    year = entry_date.strftime('%Y')
-    month = entry_date.strftime('%-m')
-    day = entry_date.strftime('%-d')
-    id = entry.id
-    slug = entry.slug
-
-    if opts[:path_only]
-      entry_long_path(year, month, day, id, slug)
+      if opts[:path_only]
+        entry_long_path(year, month, day, id, slug)
+      else
+        entry_long_url(year, month, day, id, slug)
+      end
     else
-      entry_long_url(year, month, day, id, slug)
+      ''
     end
   end
 end
