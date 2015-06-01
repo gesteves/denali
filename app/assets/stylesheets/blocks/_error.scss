@@ -1,0 +1,14 @@
+.error {
+  margin: 96px 0;
+  text-align: center;
+
+  @at-root #{&}__hed {
+    font-size: 196px;
+    line-height: 1;
+  }
+
+  @at-root #{&}__dek {
+    font-size: 24px;
+    line-height: 1;
+  }
+}
