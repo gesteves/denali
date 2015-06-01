@@ -90,6 +90,18 @@
   }
 }
 
+.entry__photo-link--fit .entry__image {
+  max-height: 100vh;
+}
+
+.entry__photo-link--zoomable {
+  cursor: zoom-out;
+}
+
+.entry__photo-link--zoomable.entry__photo-link--fit {
+  cursor: zoom-in;
+}
+
 %default-entry-styles {
   p,
   ul,

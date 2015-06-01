@@ -2,12 +2,12 @@
   <article class="entry <% if entry.is_text? %>entry--text<% end %>">
     <% entry.photos.each do |photo| %>
       <figure class="entry__photo">
-        <%= link_to permalink(entry) do %>
+        <%= link_to permalink(entry), class: 'entry__photo-link entry__photo-link--fit' do %>
           <%= responsive_image_tag photo,
               photo_sizes,
               "(min-width: 1920px) 1920px, 100vw",
               { default_width: 1280, quality: photoblog.photo_quality },
-              { class: "entry__image", 'data-height': photo.height } %>
+              { class: "entry__image", 'data-width': photo.width, 'data-height': photo.height } %>
         <% end %>
         <% unless photo.caption.blank? %>
           <figcaption>
