@@ -45,13 +45,4 @@ module ApplicationHelper
       "#{start_year}–#{end_year}"
     end
   end
-
-  def permalink(entry, opts = {})
-    opts.reverse_merge! path_only: true
-    if opts[:path_only]
-      entry_path(entry.id, entry.slug)
-    else
-      entry_url(entry.id, entry.slug)
-    end
-  end
 end

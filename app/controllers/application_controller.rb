@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  helper_method :current_user, :logged_in?, :logged_out?, :photoblog
+  helper_method :current_user, :logged_in?, :logged_out?, :photoblog, :permalink
 
   def require_login
     redirect_to signin_url unless current_user
@@ -23,5 +23,22 @@ class ApplicationController < ActionController::Base
 
   def photoblog
     Blog.find_by(domain: 'www.allencompassingtrip.com')
+  end
+
+  def permalink(entry, opts = {})
+    opts.reverse_merge! path_only: true
+
+    entry_date = entry.published_at
+    year = entry_date.strftime('%Y')
+    month = entry_date.strftime('%-m')
+    day = entry_date.strftime('%-d')
+    id = entry.id
+    slug = entry.slug
+
+    if opts[:path_only]
+      entry_long_path(year, month, day, id, slug)
+    else
+      entry_long_url(year, month, day, id, slug)
+    end
   end
 end

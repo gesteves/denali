@@ -8,7 +8,7 @@ class EntriesController < ApplicationController
     @entry = photoblog.entries.published.find(params[:id])
     respond_to do |format|
       format.html {
-        redirect_to entry_path(@entry.id, @entry.slug) if params[:slug] != @entry.slug
+        redirect_to permalink(@entry) unless params_match(@entry, params)
       }
     end
   end
@@ -17,7 +17,7 @@ class EntriesController < ApplicationController
     @entry = photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
     respond_to do |format|
       format.html {
-        redirect_to entry_path(@entry.id, @entry.slug)
+        redirect_to permalink(entry)
       }
     end
   end
@@ -44,5 +44,19 @@ class EntriesController < ApplicationController
   def rss
     @entries = photoblog.entries.published.page(1)
     render format: 'atom'
+  end
+
+  private
+  def params_match(entry, params)
+    entry_date = entry.published_at
+    year = entry_date.strftime('%Y')
+    month = entry_date.strftime('%-m')
+    day = entry_date.strftime('%-d')
+    slug = entry.slug
+
+    year == params[:year] &&
+    month == params[:month] &&
+    day == params[:day] &&
+    slug == params[:slug]
   end
 end
