@@ -1,10 +1,10 @@
 <% content_for :meta do %>
   <% cache "entries/meta/tagged/#{@tag_slug}/#{@page}/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
-    <title><%= raw "Photos tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %><%= raw " &middot Page #{@page}" unless @page.nil? || @page == 1 %></title>
+    <title><%= raw "Entries tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %><%= raw " &middot Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= Sanitize.fragment(photoblog.description) %>" />
 
-    <meta property="og:title" content="<%= raw "Photos tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %>" />
-    <meta property="og:image" content="<%= photoblog.entries.last.photos.first.url(1200) %>" />
+    <meta property="og:title" content="<%= raw "Entries tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %>" />
+    <meta property="og:image" content="<%= photoblog.entries.photo_entries.published.last.photos.first.url(1200) %>" />
     <meta property="og:description" content="<%= Sanitize.fragment(photoblog.description) %>" />
     <meta property="og:url" content="<%= request.original_url %>" />
     <meta property="og:type" content="Website" />
@@ -13,10 +13,10 @@
 
     <meta name="twitter:site" content="@gesteves">
     <meta name="twitter:creator" content="@gesteves">
-    <meta name="twitter:title" content="<%= raw "Photos tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %>">
+    <meta name="twitter:title" content="<%= raw "Entries tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %>">
     <meta name="twitter:url" content="<%= request.original_url %>" />
     <meta name="twitter:description" content="<%= Sanitize.fragment(photoblog.description) %>">
-    <meta name="twitter:image" content="<%= photoblog.entries.last.photos.first.url(1200) %>">
+    <meta name="twitter:image" content="<%= photoblog.entries.photo_entries.published.first.photos.first.url(1200) %>">
     <meta name="twitter:card" content="summary_large_image">
   <% end %>
 <% end %>
