@@ -22,11 +22,11 @@ class Entry < ActiveRecord::Base
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
   def is_photo?
-    self.photos_count > 0
+    !self.photos_count.blank? && self.photos_count > 0
   end
 
   def is_photoset?
-    self.photos_count > 1
+    !self.photos_count.blank? && self.photos_count > 1
   end
 
   def is_text?
