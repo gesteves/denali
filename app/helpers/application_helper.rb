@@ -33,6 +33,7 @@ module ApplicationHelper
     sizes << [1280, 1280 * 2]    # Macbook
     sizes << [1440, 1440 * 2]    # Macbook
     sizes << [1920, 1920 * 2]    # iMac
+    sizes << [800, 800 * 2]
     sizes.flatten.sort.uniq
   end
 
