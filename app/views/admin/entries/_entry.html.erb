@@ -1,7 +1,7 @@
 <% cache "admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <li class="entry" id="entry-<%= entry.id %>" data-id="<%= entry.id %>">
     <% entry.photos.each do |p| %>
-      <%= responsive_image_tag p, photo_sizes, "(min-width: 840px) 800px, calc(100vw - 40px)", { default_width: 800, quality: photoblog.photo_quality, upscale: true }, { class: "entry__thumb" } %>
+      <%= responsive_image_tag p, [800, 1600], "(min-width: 840px) 800px, calc(100vw - 40px)", { default_width: 800, quality: photoblog.photo_quality, upscale: true }, { class: "entry__thumb" } %>
     <% end %>
     <div class="entry__content <% if entry.is_text? %>entry__content--text<% end %>">
       <h2><%= raw(entry.formatted_title) %></h2>
