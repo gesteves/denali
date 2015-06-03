@@ -24,9 +24,8 @@ Denali.ImageZoom = (function ($) {
 
     opts.$toggle.each(function () {
       var $link = $(this);
-      var width = parseInt($link.find('img').data('width'), 10);
-      var height = parseInt($link.find('img').data('height'), 10);
-      if (width <= $window.width() && height > $window.height()) {
+      var height = $link.find('img').outerHeight();
+      if (height === $window.height()) {
        $link.addClass(opts.zoomable_class);
       }
     });
