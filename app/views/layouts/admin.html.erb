@@ -4,8 +4,7 @@
   <title><%= @page_title.nil? ? '' : raw("#{@page_title} &middot; ") %><%= photoblog.name %></title>
   <%= stylesheet_link_tag 'admin', media: 'all' %>
   <%= csrf_meta_tags %>
-  <script src="//use.typekit.net/zwv6nvu.js"></script>
-  <script>try{Typekit.load();}catch(e){}</script>
+  <script src="http://use.typekit.net/zwv6nvu.js" onload="try{Typekit.load();}catch(e){}" async></script>
 </head>
 <body>
 
