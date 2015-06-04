@@ -22,8 +22,8 @@
 en:
   views:
     pagination:
-      first: "&laquo; Newest"
-      last: "Oldest &raquo;"
-      previous: "&lsaquo; Newer"
-      next: "Older &rsaquo;"
+      newest: "&laquo; Newest"
+      oldest: "Oldest &raquo;"
+      newer: "&lsaquo; Newer"
+      older: "Older &rsaquo;"
       truncate: "&hellip;"
