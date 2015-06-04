@@ -18,13 +18,9 @@
     <meta name="twitter:creator" content="@gesteves">
     <meta name="twitter:title" content="<%= @entry.formatted_title %>">
     <meta name="twitter:url" content="<%= permalink @entry, { path_only: false } %>" />
-    <% if @entry.is_text? %>
-      <meta name="twitter:description" content="<%= @entry.plain_body %>">
-      <meta name="twitter:card" content="summary">
-    <% else %>
-      <meta name="twitter:image" content="<%= @entry.photos.first.url(1200) %>">
-      <meta name="twitter:card" content="photo" />
-    <% end %>
+    <meta name="twitter:description" content="<%= @entry.body.blank? ? Sanitize.fragment(photoblog.description) : @entry.plain_body %>">
+    <meta name="twitter:image" content="<%= @entry.photos.first.url(1200) %>">
+    <meta name="twitter:card" content="<%= @entry.is_text? ? "summary" : "summary_large_image" %>" />
   <% end %>
 <% end %>
 
