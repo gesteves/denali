@@ -7,9 +7,6 @@ class Entry < ActiveRecord::Base
 
   validates :title, presence: true
 
-  scope :drafted,   -> { where(status: 'draft').order('updated_at DESC') }
-  scope :queued,    -> { where(status: 'queued').order('position ASC') }
-  scope :published, -> { where(status: 'published').order('published_at DESC') }
   scope :text_entries, -> { where('photos_count = 0') }
   scope :photo_entries, -> { where('photos_count > 0') }
 
@@ -20,6 +17,18 @@ class Entry < ActiveRecord::Base
   acts_as_list scope: :blog
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
+
+  def self.published(order = 'published_at DESC')
+    where(status: 'published').order(order)
+  end
+
+  def self.drafted(order = 'updated_at DESC')
+    where(status: 'draft').order(order)
+  end
+
+  def self.queued(order = 'position ASC')
+    where(status: 'queued').order(order)
+  end
 
   def is_photo?
     !self.photos_count.blank? && self.photos_count > 0
@@ -62,6 +71,14 @@ class Entry < ActiveRecord::Base
       self.status = 'draft'
       self.save
     end
+  end
+
+  def newer
+    Entry.published('published_at ASC').where('published_at > ?', self.published_at).limit(1).first
+  end
+
+  def older
+    Entry.published.where('published_at < ?', self.published_at).limit(1).first
   end
 
   def update_position
