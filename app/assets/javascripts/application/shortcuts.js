@@ -1,22 +1,27 @@
 var Denali = Denali || {};
 
-Denali.Shortcuts = (function ($) {
+Denali.Shortcuts = (function () {
   'use strict';
   var opts = {
-    older_page : $('.pagination a[rel=next]'),
-    newer_page : $('.pagination a[rel=prev]'),
-    photos     : $('.entry__photo-link'),
-    zoom_class : 'entry__photo-link--fit'
+    older_page : '.pagination a[rel=next]',
+    newer_page : '.pagination a[rel=prev]',
+    photos     : '.entry__image',
+    zoom_class : 'entry__image--fit'
   };
 
-  var $document = $(document);
+  var older_page,
+      newer_page,
+      photos;
 
   var init = function () {
-    $document.on('keydown', doKeyPress);
+    document.addEventListener('keydown', doKeyPress);
+    photos = document.querySelectorAll(opts.photos);
+    older_page = document.querySelector(opts.older_page);
+    newer_page = document.querySelector(opts.newer_page);
   };
 
   var doKeyPress = function (e) {
-    var key = e.keyCode || e.which;
+    var key = e.key || e.keyCode || e.which;
     var keys = {
       left  : 37,
       right : 39,
@@ -26,41 +31,50 @@ Denali.Shortcuts = (function ($) {
       k     : 75,
       z     : 90
     };
-    switch (key) {
-      case keys.left:
-      case keys.j:
-        newerPage();
-        break;
-      case keys.right:
-      case keys.k:
-        olderPage();
-        break;
-      case keys.z:
-        toggleZoom();
-        break;
+
+    if (!document.activeElement.tagName.match(/input|textarea/i)) {
+      switch (key) {
+        case keys.left:
+        case keys.j:
+          newerPage();
+          break;
+        case keys.right:
+        case keys.k:
+          olderPage();
+          break;
+        case keys.z:
+          toggleZoom();
+          break;
+      }
     }
   };
 
   var newerPage = function () {
-    if (opts.newer_page.length && !$('input, textarea').is(':focus')) {
-      window.location.href = opts.newer_page.attr('href');
+    if (newer_page) {
+      window.location.href = newer_page.getAttribute('href');
     }
   };
 
   var olderPage = function () {
-    if (opts.older_page.length && !$('input, textarea').is(':focus')) {
-      window.location.href = opts.older_page.attr('href');
+    if (older_page) {
+      window.location.href = older_page.getAttribute('href');
     }
   };
 
   var toggleZoom = function () {
-    opts.photos.toggleClass(opts.zoom_class);
-    return false;
+    var photo;
+    for (var i = 0; i < photos.length; i++) {
+      photo = photos[i];
+      photo.classList.toggle(opts.zoom_class);
+    }
   };
 
   return {
     init : init
   };
-})(jQuery);
+})();
 
-Denali.Shortcuts.init();
+document.addEventListener('DOMContentLoaded', function() {
+  'use strict';
+  Denali.Shortcuts.init();
+});
