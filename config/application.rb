@@ -25,9 +25,5 @@ module Denali
     config.generators.stylesheets = false
     config.generators.javascripts = false
     config.exceptions_app = self.routes
-
-    config.browserify_rails.force = true
-    config.browserify_rails.source_map_environments << 'development'
-    config.browserify_rails.commandline_options = ['-t babelify', '--fast']
   end
 end
