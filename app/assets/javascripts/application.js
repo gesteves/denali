@@ -1,2 +1,5 @@
-//= require ./vendor/jquery
-//= require_tree ./application
+import ImageZoom from 'application/image_zoom';
+
+document.addEventListener('DOMContentLoaded', function() {
+  new ImageZoom();
+});

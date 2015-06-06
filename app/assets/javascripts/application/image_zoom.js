@@ -1,40 +1,28 @@
+'use strict';
 
+class ImageZoom {
+  constructor(selector = '.entry__image') {
+    var images = document.querySelectorAll(selector);
+    var image;
+    for (var i = 0; i < images.length; i++) {
+      image = images[i];
+      image.addEventListener('load', (e) => this.setUpClickHandler(e));
+    }
+  }
 
-var Denali = Denali || {};
+  setUpClickHandler(e) {
+    var image = e.currentTarget;
+    var height = image.offsetHeight;
+    if (height >= window.innerHeight) {
+      image.classList.add('entry__image--zoomable');
+      image.addEventListener('click', (e) => this.toggleZoom(e));
+    }
+  }
 
-Denali.ImageZoom = (function ($) {
-  'use strict';
-  var opts = {
-    $toggle          : $('.entry__photo-link'),
-    zoomable_class  : 'entry__photo-link--zoomable',
-    zoom_class      : 'entry__photo-link--fit'
-  };
+  toggleZoom(e) {
+    e.preventDefault();
+    e.currentTarget.classList.toggle('entry__image--fit');
+  }
+}
 
-  var $window = $(window);
-  var permalink = $('html[data-permalink]');
-
-  var toggleZoom = function () {
-    var $link = $(this);
-    $link.toggleClass(opts.zoom_class);
-    return false;
-  };
-
-  var init = function () {
-    if (permalink.length === 0) { return; }
-
-    opts.$toggle.each(function () {
-      var $link = $(this);
-      var height = $link.find('img').outerHeight();
-      if (height === $window.height()) {
-       $link.addClass(opts.zoomable_class);
-      }
-    });
-    $('.' + opts.zoomable_class).on('click', toggleZoom);
-  };
-
-  return {
-    init : init
-  };
-})(jQuery);
-
-Denali.ImageZoom.init();
+export default ImageZoom;
