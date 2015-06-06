@@ -18,6 +18,7 @@ module.exports = function(grunt) {
         eqnull: true,
         browser: true,
         strict: true,
+        esnext: true,
         globals: {
           jQuery: true,
           _: true,
