@@ -5,8 +5,8 @@
         <%= responsive_image_tag photo,
             photo_sizes,
             "(min-width: 1920px) 1920px, 100vw",
-            { default_width: 1280, quality: photoblog.photo_quality },
-            { class: "entry__image entry__image--fit", 'data-width': photo.width, 'data-height': photo.height } %>
+            { default_width: 1920, quality: photoblog.photo_quality },
+            { class: "entry__image entry__image--fit", 'data-width-original': photo.width, 'data-height-original': photo.height } %>
         <% unless photo.caption.blank? %>
           <figcaption>
             <%= raw entry.formatted_caption %>

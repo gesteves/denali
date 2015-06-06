@@ -11,19 +11,15 @@ Denali.ImageZoom = (function () {
 
   var init = function () {
     var images = document.querySelectorAll(opts.images);
-    var image;
+    var image,
+        height;
     for (var i = 0; i < images.length; i++) {
       image = images[i];
-      image.addEventListener('load', setUpClickHandler);
-    }
-  };
-
-  var setUpClickHandler = function (e) {
-    var image = e.currentTarget;
-    var height = image.offsetHeight;
-    if (height >= window.innerHeight) {
-      image.classList.add(opts.zoomable_class);
-      image.addEventListener('click', toggleZoom);
+      height = parseInt(image.getAttribute('data-height-original'));
+      if (height > window.innerHeight) {
+        image.classList.add(opts.zoomable_class);
+        image.addEventListener('click', toggleZoom);
+      }
     }
   };
 
