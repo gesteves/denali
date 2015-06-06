@@ -89,20 +89,20 @@
     max-width: 100%;
   }
 
+  @at-root #{&}__image--fit {
+    max-height: 100vh;
+  }
+
   @at-root #{&}--photo #{&}__body {
     border-top: 1px solid $color-border;
   }
 }
 
-.entry__photo-link--fit .entry__image {
-  max-height: 100vh;
-}
-
-.entry__photo-link--zoomable {
+.entry__image--zoomable {
   cursor: zoom-out;
 }
 
-.entry__photo-link--zoomable.entry__photo-link--fit {
+.entry__image--zoomable.entry__image--fit {
   cursor: zoom-in;
 }
 
