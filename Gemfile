@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
+ruby '2.2.2'
 
 gem 'rails', '4.2.1'
 
@@ -33,6 +34,12 @@ gem 'dalli'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
+
+group :production do
+  gem 'puma'
+  gem 'pg'
+  gem 'rails_12factor'
+end
 
 group :development, :test do
   gem 'scss-lint'

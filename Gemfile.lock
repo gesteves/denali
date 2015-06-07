@@ -126,6 +126,9 @@ GEM
       activesupport (>= 3.0.0)
       cocaine (~> 0.5.3)
       mime-types
+    pg (0.18.2)
+    puma (2.11.3)
+      rack (>= 1.1, < 2.0)
     rack (1.6.0)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -148,6 +151,11 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
+    rails_12factor (0.0.3)
+      rails_serve_static_assets
+      rails_stdout_logging
+    rails_serve_static_assets (0.0.4)
+    rails_stdout_logging (0.0.3)
     railties (4.2.1)
       actionpack (= 4.2.1)
       activesupport (= 4.2.1)
@@ -218,7 +226,10 @@ DEPENDENCIES
   kaminari
   omniauth-google-oauth2
   paperclip (~> 4.2)
+  pg
+  puma
   rails (= 4.2.1)
+  rails_12factor
   redcarpet
   sanitize
   sass-rails (~> 5.0)

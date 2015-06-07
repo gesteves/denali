@@ -1,2 +1,1 @@
-rails: rails s
-memcached: memcached
+web: bundle exec puma -C config/puma.rb
