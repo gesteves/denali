@@ -46,7 +46,7 @@ def get_tumblr_posts(options)
     puts "Fetching posts #{options[:offset] + 1}-#{options[:offset] + options[:limit]}"
   end
   posts = []
-  url = "http://api.tumblr.com/v2/blog/#{Rails.application.secrets.tumblr_domain}/posts/photo?api_key=#{Rails.application.secrets.tumblr_consumer_key}&filter=text&offset=#{options[:offset]}&limit=#{options[:limit]}"
+  url = "http://api.tumblr.com/v2/blog/#{ENV['tumblr_domain']}/posts/photo?api_key=#{ENV['tumblr_consumer_key']}&filter=text&offset=#{options[:offset]}&limit=#{options[:limit]}"
   url += "&tag=#{options[:tag]}" unless options[:tag].nil?
   url += "&id=#{options[:id]}" unless options[:id].nil?
   response = HTTParty.get(url)

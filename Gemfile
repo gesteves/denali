@@ -26,6 +26,7 @@ gem 'exifr'
 gem 'acts-as-taggable-on', '~> 3.4'
 gem 'httparty'
 gem 'kaminari'
+gem 'figaro'
 
 # Caching
 gem 'dalli'

@@ -4,12 +4,12 @@ class Photo < ActiveRecord::Base
   belongs_to :entry, touch: true, counter_cache: true
   has_attached_file :image,
     storage: :s3,
-    s3_credentials: { access_key_id: Rails.application.secrets.aws_access_key_id,
-                      secret_access_key: Rails.application.secrets.aws_secret_access_key,
-                      bucket: Rails.application.secrets.s3_bucket },
+    s3_credentials: { access_key_id: ENV['aws_access_key_id'],
+                      secret_access_key: ENV['aws_secret_access_key'],
+                      bucket: ENV['s3_bucket'] },
     url: ':s3_domain_url',
     path: 'photos/:hash.:extension',
-    hash_secret: Rails.application.secrets.secret_key_base,
+    hash_secret: ENV['secret_key_base'],
     use_timestamp: false
 
   acts_as_list scope: :entry

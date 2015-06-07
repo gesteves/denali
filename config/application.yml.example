@@ -1,44 +1,41 @@
-# Be sure to restart your server when you modify this file.
-
-# Your secret key is used for verifying the integrity of signed cookies.
-# If you change this key, all old signed cookies will become invalid!
-
-# Make sure the secret is at least 30 characters and all random,
-# no regular words or you'll be exposed to dictionary attacks.
-# You can use `rake secret` to generate a secure secret key.
-
-# Make sure the secrets in this file are kept private
-# if you're sharing your code publicly.
-
 development:
   secret_key_base: 123abc
   aws_access_key_id: 123abc
   aws_secret_access_key: 123abc
   s3_bucket: dev.example.com
-  thumbor_server: http://thumbor.example.com
+  thumbor_server: http://example.com
   thumbor_security_key: 123abc
   google_client_id: 123abc
   google_client_secret: 123abc
   dropbox_key: 123abc
+  tumblr_consumer_key: 123abc
+  tumblr_consumer_secret: 123abc
+  tumblr_domain: www.example.com
 
 test:
   secret_key_base: 123abc
   aws_access_key_id: 123abc
   aws_secret_access_key: 123abc
   s3_bucket: dev.example.com
-  thumbor_server: http://thumbor.example.com
+  thumbor_server: http://example.com
   thumbor_security_key: 123abc
   google_client_id: 123abc
   google_client_secret: 123abc
   dropbox_key: 123abc
+  tumblr_consumer_key: 123abc
+  tumblr_consumer_secret: 123abc
+  tumblr_domain: www.example.com
 
 production:
   secret_key_base: 123abc
   aws_access_key_id: 123abc
   aws_secret_access_key: 123abc
   s3_bucket: dev.example.com
-  thumbor_server: http://thumbor.example.com
+  thumbor_server: http://example.com
   thumbor_security_key: 123abc
   google_client_id: 123abc
   google_client_secret: 123abc
   dropbox_key: 123abc
+  tumblr_consumer_key: 123abc
+  tumblr_consumer_secret: 123abc
+  tumblr_domain: www.example.com
