@@ -6,11 +6,6 @@ class EntryTest < ActiveSupport::TestCase
     assert_not entry.save
   end
 
-  test 'should not save entry without body' do
-    entry = Entry.new(title: 'Test')
-    assert_not entry.save
-  end
-
   test 'should set slug before saving' do
     title = 'This is my title'
     entry = Entry.new(title: title, body: 'Whatever.')
@@ -97,6 +92,27 @@ class EntryTest < ActiveSupport::TestCase
     entry.save
     entry.queue
     assert_nil entry.published_at
+  end
+
+  test 'publish should not set position' do
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    entry.save
+    entry.publish && entry.update_position
+    assert_nil entry.position
+  end
+
+  test 'draft should not set position' do
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    entry.save
+    entry.draft && entry.update_position
+    assert_nil entry.position
+  end
+
+  test 'queue should set position' do
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft')
+    entry.save
+    entry.queue && entry.update_position
+    assert_not_nil entry.position
   end
 
   test 'published_at should not change' do
