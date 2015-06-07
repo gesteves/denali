@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 20150607215422) do
     t.string   "model"
     t.datetime "taken_at"
     t.string   "exposure"
-    t.decimal  "f_number"
+    t.float    "f_number"
     t.float    "latitude"
     t.float    "longitude"
     t.integer  "width"
