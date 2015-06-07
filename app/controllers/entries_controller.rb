@@ -1,7 +1,7 @@
 class EntriesController < ApplicationController
   def index
     @page = params[:page] || 1
-    @entries = photoblog.entries.published.page(@page)
+    @entries = photoblog.entries.published.page(@page).per(photoblog.posts_per_page)
   end
 
   def show
