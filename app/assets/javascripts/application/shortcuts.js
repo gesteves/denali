@@ -32,7 +32,7 @@ Denali.Shortcuts = (function () {
       z     : 90
     };
 
-    if (!document.activeElement.tagName.match(/input|textarea/i)) {
+    if (!document.activeElement.tagName.match(/input|textarea/i) && !e.ctrlKey && !e.altKey && !e.metaKey) {
       switch (key) {
         case keys.left:
         case keys.j:
