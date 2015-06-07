@@ -1,7 +1,8 @@
 .signin {
   align-items: center;
   display: flex;
-  height: 100vh;
+  flex-flow: column;
+  height: 50vh;
   justify-content: center;
   margin: 0 auto;
   max-width: 300px;
