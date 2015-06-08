@@ -27,15 +27,16 @@ class EntriesController < ApplicationController
   def tagged
     tag_list = []
     @page = params[:page] || 1
+    @count = params[:count]
     @tag_slug = params[:tag]
     @tags = ActsAsTaggableOn::Tag.where(slug: params[:tag])
     @tags.each do |t|
       tag_list << t.name
     end
-    if params[:count].nil?
+    if @count.nil?
       @entries = photoblog.entries.tagged_with(tag_list, any: true).published.page(@page)
     else
-      @entries = photoblog.entries.tagged_with(tag_list, any: true).published.page(@page).per([params[:count].to_i, 20].min)
+      @entries = photoblog.entries.tagged_with(tag_list, any: true).published.page(@page).per(@count)
     end
     expires_in 60.minutes, :public => true
     respond_to do |format|
