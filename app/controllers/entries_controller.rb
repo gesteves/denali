@@ -2,10 +2,12 @@ class EntriesController < ApplicationController
   def index
     @page = params[:page] || 1
     @entries = photoblog.entries.published.page(@page).per(photoblog.posts_per_page)
+    expires_in 60.minutes, :public => true
   end
 
   def show
     @entry = photoblog.entries.published.find(params[:id])
+    expires_in 60.minutes, :public => true
     respond_to do |format|
       format.html {
         redirect_to permalink(@entry) unless params_match(@entry, params)
@@ -35,6 +37,7 @@ class EntriesController < ApplicationController
     else
       @entries = photoblog.entries.tagged_with(tag_list, any: true).published.page(@page).per([params[:count].to_i, 20].min)
     end
+    expires_in 60.minutes, :public => true
     respond_to do |format|
       format.html
       format.json
@@ -43,6 +46,7 @@ class EntriesController < ApplicationController
 
   def rss
     @entries = photoblog.entries.published.page(1)
+    expires_in 60.minutes, :public => true
     render format: 'atom'
   end
 
