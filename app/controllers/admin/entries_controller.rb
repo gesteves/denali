@@ -143,7 +143,7 @@ class Admin::EntriesController < AdminController
 
     def get_redirect_url(entry)
       if entry.is_published?
-        admin_entries_path
+        permalink(entry, { path_only: false })
       elsif entry.is_queued?
         queued_admin_entries_path
       else
