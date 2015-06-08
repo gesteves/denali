@@ -20,9 +20,6 @@
 !/log/.keep
 /tmp
 
-# Ignore secrets files
-/config/secrets.yml
-
 # Fuck .DS_Store files
 .DS_Store
 
