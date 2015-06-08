@@ -33,7 +33,7 @@ module ApplicationHelper
     sizes << [1280, 1280 * 2]    # Macbook
     sizes << [1440, 1440 * 2]    # Macbook
     sizes << [1920, 1920 * 2]    # iMac
-    sizes.flatten.sort.uniq
+    sizes.flatten.sort.reverse.uniq
   end
 
   def copyright_years
