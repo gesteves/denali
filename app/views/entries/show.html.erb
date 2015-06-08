@@ -19,7 +19,9 @@
     <meta name="twitter:title" content="<%= @entry.formatted_title %>">
     <meta name="twitter:url" content="<%= permalink @entry, { path_only: false } %>" />
     <meta name="twitter:description" content="<%= @entry.body.blank? ? Sanitize.fragment(photoblog.description) : @entry.plain_body %>">
-    <meta name="twitter:image" content="<%= @entry.photos.first.url(1200) %>">
+    <% if @entry.is_photo? %>
+      <meta name="twitter:image" content="<%= @entry.photos.first.url(1200) %>">
+    <% end %>
     <meta name="twitter:card" content="<%= @entry.is_text? ? "summary" : "summary_large_image" %>" />
   <% end %>
 <% end %>
