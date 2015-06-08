@@ -17,7 +17,7 @@ namespace :import do
         entry.slug = post['slug']
         entry.published_at = Time.at(post['timestamp']).to_datetime
         entry.status = 'published'
-        entry.tag_list = post['tags'].reject{ |t| t =~ /^lens:model=|^film:name=/ }.join(', ')
+        entry.tag_list = post['tags'].reject{ |t| t =~ /^lens:model=|^film:name=/ }.uniq{ |t| t.downcase }.join(', ')
         entry.tumblr_id = post['id']
         post['photos'].each do |p|
           photo = Photo.new
