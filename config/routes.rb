@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   end
 
 
-  get '/page/:page'                    => 'entries#index',  constraints: { page: /\d+/ }
+  get '/page/:page'                    => 'entries#index',  constraints: { page: /\d+/ }, :as => :entries
   get '/tagged/:tag(/page/:page)'      => 'entries#tagged', constraints: { page: /\d+/ }, :as => :tag
   get '/e/:id'                         => 'entries#show',   constraints: { id: /\d+/ }, :as => :entry
   get '/:year/:month/:day/:id(/:slug)' => 'entries#show',   constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, :as => :entry_long

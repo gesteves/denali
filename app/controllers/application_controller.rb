@@ -5,6 +5,14 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user, :logged_in?, :logged_out?, :photoblog, :permalink
 
+  def default_url_options
+    if Rails.env.production?
+      { host: photoblog.domain }
+    else
+      {}
+    end
+  end
+
   def require_login
     redirect_to signin_url unless current_user
   end
