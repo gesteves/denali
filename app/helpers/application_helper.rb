@@ -37,12 +37,12 @@ module ApplicationHelper
   end
 
   def copyright_years
-    start_year = Entry.published.last.published_at.strftime('%Y')
-    end_year = Time.now.strftime('%Y')
-    if start_year == end_year
-      start_year
+    if Entry.published.last.nil?
+      Time.now.strftime('%Y')
+    elsif Entry.published.last.published_at.strftime('%Y') == Time.now.strftime('%Y')
+      Time.now.strftime('%Y')
     else
-      "#{start_year}–#{end_year}"
+      "#{Entry.published.last.published_at.strftime('%Y')}-#{Time.now.strftime('%Y')}"
     end
   end
 end
