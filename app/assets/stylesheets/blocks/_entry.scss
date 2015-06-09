@@ -87,6 +87,7 @@
   @at-root #{&}__image {
     display: inline-block;
     max-width: 100%;
+    width: auto;
   }
 
   @at-root #{&}__image--fit {
