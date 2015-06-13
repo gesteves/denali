@@ -54,7 +54,7 @@ class EntriesController < ApplicationController
   end
 
   def redirect_heroku
-    if Rails.env.production? && request.host != photoblog.domain
+    if Rails.env.production? && request.host.match(/herokuapp\.com/i)
       redirect_to "http://#{photoblog.domain}#{request.fullpath}", :status => :moved_permanently
     end
   end
