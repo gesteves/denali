@@ -2,6 +2,7 @@
   <% cache "entries/meta/tagged/#{@tag_slug}/#{@page}/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
     <title><%= raw "Entries tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %><%= raw " &middot Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= Sanitize.fragment(photoblog.description) %>" />
+    <link rel="canonical" href="<%= tag_url(@tags.first.slug) %>">
 
     <meta property="og:title" content="<%= raw "Entries tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %>" />
     <meta property="og:image" content="<%= photoblog.entries.photo_entries.published.last.photos.first.url(1200) %>" />
