@@ -52,6 +52,12 @@ class EntriesController < ApplicationController
     render format: 'atom'
   end
 
+  def sitemap
+    @entries = photoblog.entries.published
+    expires_in 24.hours, :public => true
+    render format: 'xml'
+  end
+
   private
   def params_match(entry, params)
     entry_date = entry.published_at

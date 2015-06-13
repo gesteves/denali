@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   get '/:year/:month/:day/:id(/:slug)' => 'entries#show',   constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, :as => :entry_long
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
   get '/rss'                           => 'entries#rss', defaults: { format: 'atom' }
+  get '/sitemap'                       => 'entries#sitemap', defaults: { format: 'xml' }
 
   get '/admin'                    => 'admin#index'
   get '/auth/:provider/callback'  => 'sessions#create'
