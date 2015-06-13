@@ -1,4 +1,6 @@
 class EntriesController < ApplicationController
+  before_filter :redirect_heroku
+
   def index
     @page = params[:page] || 1
     @entries = photoblog.entries.published.page(@page).per(photoblog.posts_per_page)
@@ -49,6 +51,12 @@ class EntriesController < ApplicationController
     @entries = photoblog.entries.published.page(1)
     expires_in 60.minutes, :public => true
     render format: 'atom'
+  end
+
+  def redirect_heroku
+    if Rails.env.production? && request.host != photoblog.domain
+      redirect_to "http://#{photoblog.domain}#{request.fullpath}", :status => :moved_permanently
+    end
   end
 
   private
