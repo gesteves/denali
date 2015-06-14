@@ -1,7 +1,7 @@
 <% content_for :meta do %>
   <% cache "entry/meta/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
     <title><%= raw "#{@entry.formatted_title} &middot; #{photoblog.name}" %></title>
-    <link rel="canonical" href="<%= permalink @entry, { path_only: false } %>">
+    <link rel="canonical" href="<%= permalink_url @entry %>">
     <meta name="description" content="<%= @entry.body.blank? ? Sanitize.fragment(photoblog.description) : @entry.plain_body %>" />
 
     <meta property="og:title" content="<%= @entry.formatted_title %>" />
@@ -9,7 +9,7 @@
       <meta property="og:image" content="<%= @entry.photos.first.url(1200) %>" />
     <% end %>
     <meta property="og:description" content="<%= @entry.body.blank? ? Sanitize.fragment(photoblog.description) : @entry.plain_body %>" />
-    <meta property="og:url" content="<%= permalink @entry, { path_only: false } %>" />
+    <meta property="og:url" content="<%= permalink_url @entry %>" />
     <meta property="og:type" content="Article" />
     <meta property="og:site_name" content="<%= photoblog.name %>" />
     <meta property="og:locale" content="en_US" />
@@ -17,7 +17,7 @@
     <meta name="twitter:site" content="@gesteves">
     <meta name="twitter:creator" content="@gesteves">
     <meta name="twitter:title" content="<%= @entry.formatted_title %>">
-    <meta name="twitter:url" content="<%= permalink @entry, { path_only: false } %>" />
+    <meta name="twitter:url" content="<%= permalink_url @entry %>" />
     <meta name="twitter:description" content="<%= @entry.body.blank? ? Sanitize.fragment(photoblog.description) : @entry.plain_body %>">
     <% if @entry.is_photo? %>
       <meta name="twitter:image" content="<%= @entry.photos.first.url(1200) %>">

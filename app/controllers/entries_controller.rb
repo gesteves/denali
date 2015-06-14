@@ -11,7 +11,7 @@ class EntriesController < ApplicationController
     expires_in 60.minutes, :public => true
     respond_to do |format|
       format.html {
-        redirect_to permalink(@entry) unless params_match(@entry, params)
+        redirect_to permalink_url(@entry) unless params_match(@entry, params)
       }
     end
   end
@@ -20,7 +20,7 @@ class EntriesController < ApplicationController
     @entry = photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
     respond_to do |format|
       format.html {
-        redirect_to permalink(@entry)
+        redirect_to permalink_url(@entry)
       }
     end
   end

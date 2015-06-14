@@ -6,7 +6,7 @@ xml.urlset xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9' do
   end
   @entries.each do |e|
     xml.url do
-      xml.loc permalink e, { path_only: false }
+      xml.loc permalink_url e
       xml.lastmod e.updated_at.strftime('%Y-%m-%dT%H:%M:%S%:z')
     end
   end

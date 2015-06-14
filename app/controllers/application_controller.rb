@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  helper_method :current_user, :logged_in?, :logged_out?, :photoblog, :permalink
+  helper_method :current_user, :logged_in?, :logged_out?, :photoblog, :permalink_path, :permalink_url
 
   def default_url_options
     if Rails.env.production?
@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
     Blog.find_by(domain: 'www.allencompassingtrip.com')
   end
 
-  def permalink(entry, opts = {})
+  def permalink_path(entry, opts = {})
     opts.reverse_merge! path_only: true
     if entry.is_published?
       entry_date = entry.published_at
@@ -42,12 +42,22 @@ class ApplicationController < ActionController::Base
       day = entry_date.strftime('%-d')
       id = entry.id
       slug = entry.slug
+      entry_long_path(year, month, day, id, slug)
+    else
+      ''
+    end
+  end
 
-      if opts[:path_only]
-        entry_long_path(year, month, day, id, slug)
-      else
-        entry_long_url(year, month, day, id, slug)
-      end
+  def permalink_url(entry, opts = {})
+    opts.reverse_merge! path_only: true
+    if entry.is_published?
+      entry_date = entry.published_at
+      year = entry_date.strftime('%Y')
+      month = entry_date.strftime('%-m')
+      day = entry_date.strftime('%-d')
+      id = entry.id
+      slug = entry.slug
+      entry_long_url(year, month, day, id, slug)
     else
       ''
     end

@@ -13,7 +13,7 @@ cache "entries/atom/#{photoblog.id}/#{photoblog.updated_at.to_i}" do
           end
           body = entry.formatted_body unless entry.body.blank?
           e.content body, type: 'html'
-          e.url permalink(entry, { path_only: false })
+          e.url permalink_url(entry)
           e.author do |author|
             author.name entry.user.name
           end
