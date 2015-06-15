@@ -5,14 +5,14 @@ cache "rss/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
     xml.link rel: 'alternate', type: 'text/html', href: root_url
     xml.link rel: 'self', type: 'application/atom+xml', href: rss_url
     xml.title @photoblog.name
-    xml.updated @photoblog.updated_at
+    xml.updated @photoblog.updated_at.utc.strftime('%FT%TZ')
 
     @entries.each do |e|
       cache "entry/rss/#{e.id}/#{e.updated_at.to_i}" do
         xml.entry do
           xml.id atom_tag(permalink_url(e), e.updated_at)
-          xml.published e.published_at
-          xml.updated e.updated_at
+          xml.published e.published_at.utc.strftime('%FT%TZ')
+          xml.updated e.updated_at.utc.strftime('%FT%TZ')
           xml.link rel: 'alternate', type: 'text/html', href: permalink_url(e)
           xml.title e.formatted_title
           body = ''
@@ -22,7 +22,6 @@ cache "rss/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
           end
           body += e.formatted_body unless e.body.blank?
           xml.content body, type: 'html'
-          xml.url permalink_url(e)
           xml.author do |author|
             author.name e.user.name
           end
