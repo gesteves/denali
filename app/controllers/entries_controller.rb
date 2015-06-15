@@ -3,12 +3,12 @@ class EntriesController < ApplicationController
 
   def index
     @page = params[:page] || 1
-    @entries = photoblog.entries.published.page(@page).per(photoblog.posts_per_page)
+    @entries = @photoblog.entries.published.page(@page).per(@photoblog.posts_per_page)
     expires_in 60.minutes, :public => true
   end
 
   def show
-    @entry = photoblog.entries.published.find(params[:id])
+    @entry = @photoblog.entries.published.find(params[:id])
     expires_in 60.minutes, :public => true
     respond_to do |format|
       format.html {
@@ -18,7 +18,7 @@ class EntriesController < ApplicationController
   end
 
   def tumblr
-    @entry = photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
+    @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
     respond_to do |format|
       format.html {
         redirect_to permalink_url(@entry)
@@ -36,9 +36,9 @@ class EntriesController < ApplicationController
       tag_list << t.name
     end
     if @count.nil?
-      @entries = photoblog.entries.tagged_with(tag_list, any: true).published.page(@page)
+      @entries = @photoblog.entries.tagged_with(tag_list, any: true).published.page(@page)
     else
-      @entries = photoblog.entries.tagged_with(tag_list, any: true).published.page(@page).per(@count)
+      @entries = @photoblog.entries.tagged_with(tag_list, any: true).published.page(@page).per(@count)
     end
     expires_in 60.minutes, :public => true
     respond_to do |format|
@@ -48,20 +48,20 @@ class EntriesController < ApplicationController
   end
 
   def rss
-    @entries = photoblog.entries.published.page(1)
+    @entries = @photoblog.entries.published.page(1)
     expires_in 60.minutes, :public => true
     render format: 'atom'
   end
 
   def sitemap
-    @entries = photoblog.entries.published
+    @entries = @photoblog.entries.published
     expires_in 24.hours, :public => true
     render format: 'xml'
   end
 
   def redirect_heroku
     if Rails.env.production? && request.host.match(/herokuapp\.com/i) && !request.user_agent.match(/cloudfront/i)
-      redirect_to "http://#{photoblog.domain}#{request.fullpath}", status: 301
+      redirect_to "http://#{@photoblog.domain}#{request.fullpath}", status: 301
     end
   end
 

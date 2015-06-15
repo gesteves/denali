@@ -10,7 +10,7 @@
 <% end %>
 
 <div class="form__inline">
-  <%= f.label :slug, "http://#{photoblog.domain}/123/", class: 'form__label--slug' %>
+  <%= f.label :slug, "http://#{@photoblog.domain}/123/", class: 'form__label--slug' %>
   <%= f.text_field :slug, autocomplete: 'off', placeholder: 'your-optional-url-slug', class: 'form__input form__input--small' %>
 </div>
 

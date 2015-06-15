@@ -1,29 +1,29 @@
 <% content_for :meta do %>
-  <% cache "entries/meta/tagged/#{@tag_slug}/#{@page}/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
-    <title><%= raw "Entries tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %><%= raw " &middot Page #{@page}" unless @page.nil? || @page == 1 %></title>
-    <meta name="description" content="<%= Sanitize.fragment(photoblog.description) %>" />
+  <% cache "entries/meta/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+    <title><%= raw "Entries tagged “#{@tags.first.name}” &middot; #{@photoblog.name}" %><%= raw " &middot Page #{@page}" unless @page.nil? || @page == 1 %></title>
+    <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>" />
     <link rel="canonical" href="<%= tag_url(@tags.first.slug) %>">
 
-    <meta property="og:title" content="<%= raw "Entries tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %>" />
-    <meta property="og:image" content="<%= photoblog.entries.photo_entries.published.last.photos.first.url(1200) %>" />
-    <meta property="og:description" content="<%= Sanitize.fragment(photoblog.description) %>" />
+    <meta property="og:title" content="<%= raw "Entries tagged “#{@tags.first.name}” &middot; #{@photoblog.name}" %>" />
+    <meta property="og:image" content="<%= @photoblog.entries.photo_entries.published.last.photos.first.url(1200) %>" />
+    <meta property="og:description" content="<%= Sanitize.fragment(@photoblog.description) %>" />
     <meta property="og:url" content="<%= @page.nil? || @page == 1 ? tag_url(@tags.first.slug) : tag_url(@tags.first.slug, @page) %>" />
     <meta property="og:type" content="Website" />
-    <meta property="og:site_name" content="<%= photoblog.name %>" />
+    <meta property="og:site_name" content="<%= @photoblog.name %>" />
     <meta property="og:locale" content="en_US" />
 
     <meta name="twitter:site" content="@gesteves">
     <meta name="twitter:creator" content="@gesteves">
-    <meta name="twitter:title" content="<%= raw "Entries tagged “#{@tags.first.name}” &middot; #{photoblog.name}" %>">
+    <meta name="twitter:title" content="<%= raw "Entries tagged “#{@tags.first.name}” &middot; #{@photoblog.name}" %>">
     <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? tag_url(@tags.first.slug) : tag_url(@tags.first.slug, @page) %>" />
-    <meta name="twitter:description" content="<%= Sanitize.fragment(photoblog.description) %>">
-    <meta name="twitter:image" content="<%= photoblog.entries.photo_entries.published.first.photos.first.url(1200) %>">
+    <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta name="twitter:image" content="<%= @photoblog.entries.photo_entries.published.first.photos.first.url(1200) %>">
     <meta name="twitter:card" content="summary_large_image">
   <% end %>
 <% end %>
 
 
-<% cache "entries/tagged/#{@tag_slug}/#{@page}/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
+<% cache "entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <%= render partial: 'entries/entry', collection: @entries %>
   <%= paginate @entries %>
 <% end %>

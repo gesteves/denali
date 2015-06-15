@@ -5,25 +5,25 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries
   def index
     @page = params[:page] || 1
-    @entries = photoblog.entries.published.page(@page)
+    @entries = @photoblog.entries.published.page(@page)
     @page_title = 'Published'
   end
 
   # GET /admin/entries/queued
   def queued
-    @entries = photoblog.entries.queued
+    @entries = @photoblog.entries.queued
     @page_title = 'Queued'
   end
 
   # GET /admin/entries/drafts
   def drafts
-    @entries = photoblog.entries.drafted
+    @entries = @photoblog.entries.drafted
     @page_title = 'Drafts'
   end
 
   # GET /admin/entries/new
   def new
-    @entry = photoblog.entries.new
+    @entry = @photoblog.entries.new
     @entry.photos.build
     @page_title = 'New entry'
   end
@@ -76,7 +76,7 @@ class Admin::EntriesController < AdminController
   def create
     @entry = Entry.new(entry_params)
     @entry.user = current_user
-    @entry.blog = photoblog
+    @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save && @entry.update_position
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
@@ -130,7 +130,7 @@ class Admin::EntriesController < AdminController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
-      @entry = photoblog.entries.find(params[:id])
+      @entry = @photoblog.entries.find(params[:id])
     end
 
     def get_tags

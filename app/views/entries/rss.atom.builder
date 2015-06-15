@@ -1,6 +1,6 @@
-cache "entries/atom/#{photoblog.id}/#{photoblog.updated_at.to_i}" do
+cache "entries/atom/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
   atom_feed do |feed|
-    feed.title photoblog.name
+    feed.title @photoblog.name
     feed.updated @entries.maximum(:updated_at)
     @entries.each do |entry|
       cache "entry/atom/#{entry.id}/#{entry.updated_at.to_i}" do

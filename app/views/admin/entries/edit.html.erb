@@ -12,7 +12,7 @@
         <div class="form__photo">
           <div class="form__fields">
             <div class="form__photo-thumb">
-              <%= responsive_image_tag p.object, [300, 600, 900], "300px", { default_width: 600, quality: photoblog.photo_quality } %>
+              <%= responsive_image_tag p.object, [300, 600, 900], "300px", { default_width: 600, quality: @photoblog.photo_quality } %>
             </div>
             <div class="form__photo-fields">
               <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'form__input form__input--caption' %>

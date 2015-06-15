@@ -1,4 +1,4 @@
-<% cache "admin/nav/#{active_nav || 'none'}/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
+<% cache "admin/nav/#{active_nav || 'none'}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <nav class="nav">
     <div class="nav__group">
       <a href="<%= root_path %>" class="nav__link">Home</a>

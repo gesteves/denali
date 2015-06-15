@@ -10,10 +10,10 @@
 </head>
 <body>
 
-<% cache "header/#{photoblog.id}/#{photoblog.updated_at.to_i}" do %>
+<% cache "header/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <header class="header">
-    <h1><a href="/"><%= photoblog.name %></a></h1>
-    <h2><%= raw photoblog.description %></h2>
+    <h1><a href="/"><%= @photoblog.name %></a></h1>
+    <h2><%= raw @photoblog.description %></h2>
   </header>
 <% end %>
 

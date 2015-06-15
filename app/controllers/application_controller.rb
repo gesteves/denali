@@ -2,12 +2,13 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  before_filter :get_photoblog
 
-  helper_method :current_user, :logged_in?, :logged_out?, :photoblog, :permalink_path, :permalink_url
+  helper_method :current_user, :logged_in?, :logged_out?, :permalink_path, :permalink_url
 
   def default_url_options
     if Rails.env.production?
-      { host: photoblog.domain }
+      { host: @photoblog.domain }
     else
       {}
     end
@@ -29,8 +30,8 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
-  def photoblog
-    Blog.find_by(domain: 'www.allencompassingtrip.com')
+  def get_photoblog
+    @photoblog = Blog.find_by(domain: 'www.allencompassingtrip.com')
   end
 
   def permalink_path(entry, opts = {})
