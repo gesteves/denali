@@ -9,7 +9,7 @@
             { class: "entry__image entry__image--fit", 'data-width-original': photo.width, 'data-height-original': photo.height } %>
         <% unless photo.caption.blank? %>
           <figcaption>
-            <%= raw entry.formatted_caption %>
+            <%= raw photo.formatted_caption %>
           </figcaption>
         <% end %>
       </figure>
