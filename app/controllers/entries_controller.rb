@@ -36,9 +36,9 @@ class EntriesController < ApplicationController
       tag_list << t.name
     end
     if @count.nil?
-      @entries = @photoblog.entries.tagged_with(tag_list, any: true).published.page(@page)
+      @entries = @photoblog.entries.published.tagged_with(tag_list, any: true).page(@page)
     else
-      @entries = @photoblog.entries.tagged_with(tag_list, any: true).published.page(@page).per(@count)
+      @entries = @photoblog.entries.published.tagged_with(tag_list, any: true).limit(@count)
     end
     expires_in 60.minutes, :public => true
     respond_to do |format|
