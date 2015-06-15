@@ -40,6 +40,6 @@ Rails.application.configure do
 
   config.time_zone = 'Eastern Time (US & Canada)'
 
-  config.action_controller.perform_caching = true
+  config.action_controller.perform_caching = false
   config.cache_store = :dalli_store
 end
