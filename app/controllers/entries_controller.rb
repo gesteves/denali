@@ -32,6 +32,7 @@ class EntriesController < ApplicationController
     @count = params[:count]
     @tag_slug = params[:tag]
     @tags = ActsAsTaggableOn::Tag.where(slug: params[:tag])
+    raise ActiveRecord::RecordNotFound if @tags.empty?
     @tags.each do |t|
       tag_list << t.name
     end
