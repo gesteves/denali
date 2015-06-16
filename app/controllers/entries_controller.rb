@@ -41,10 +41,9 @@ class EntriesController < ApplicationController
     else
       @entries = @photoblog.entries.published.tagged_with(tag_list, any: true).limit(@count)
     end
-    expires_in 60.minutes, :public => true
     respond_to do |format|
-      format.html
-      format.json
+      format.html { expires_in 60.minutes, :public => true }
+      format.json { expires_in 12.hours, :public => true }
     end
   end
 
