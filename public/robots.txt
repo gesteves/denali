@@ -2,5 +2,6 @@ User-agent: *
 Disallow: /page
 Disallow: /tagged/page
 Disallow: /admin
+Disallow: /signin
 
 Sitemap: http://www.allencompassingtrip.com/sitemap.xml
