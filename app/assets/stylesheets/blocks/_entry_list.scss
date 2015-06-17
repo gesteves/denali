@@ -16,7 +16,7 @@
     padding: 1px;
     position: relative;
 
-    @media (min-width: $bp-m) {
+    @media (min-width: $bp-s) {
       flex-basis: calc(100%/3);
       flex-grow: 0;
       flex-shrink: 0;
@@ -75,7 +75,7 @@
     max-height: calc(50vw - 3rem);
     padding: 1.5rem;
 
-    @media (min-width: $bp-m) {
+    @media (min-width: $bp-s) {
       max-height: calc((100vw/3) - 3rem);
     }
 

@@ -36,6 +36,19 @@ module ApplicationHelper
     sizes.flatten.sort.uniq
   end
 
+  def photo_thumb_sizes
+    sizes = []
+    sizes << [157, 237]          # iPhone
+    sizes << [157 * 2, 237 * 2]  # iPhone 4
+    sizes << [157 * 2, 281 * 2]  # iPhone 5
+    sizes << [185 * 2, 220 * 2]  # iPhone 6
+    sizes << [204 * 3, 243 * 3]  # iPhone 6 plus
+    sizes << [339, 253]          # iPad
+    sizes << [339 * 2, 253 * 2]  # iPad Air
+    sizes << [318, 318 * 2]      # Macbook
+    sizes.flatten.sort.uniq
+  end
+
   def copyright_years
     if Entry.published.last.nil?
       Time.now.strftime('%Y')

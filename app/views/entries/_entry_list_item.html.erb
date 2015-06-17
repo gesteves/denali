@@ -4,8 +4,8 @@
       <% if entry_list_item.is_photo? %>
         <figure class="entry-list__photo">
           <%= responsive_image_tag entry_list_item.photos.first,
-                  [300],
-                  '100vw',
+                  photo_thumb_sizes,
+                  '(min-width: 1280px) calc((1280px - 2px)/4 - 2px), (min-width: 600px) calc((100vw - 2px)/3 - 2px), calc((100vw - 2px)/2 - 2px)',
                   { quality: @photoblog.photo_quality, square: true },
                   { class: 'entry-list__image' } %>
           <figcaption class="entry-list__photo-title">
