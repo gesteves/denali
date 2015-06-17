@@ -43,7 +43,7 @@ group :production do
 end
 
 group :development, :test do
-  gem 'scss-lint'
+  gem 'scss_lint'
   gem 'foreman'
   gem 'byebug'
   gem 'web-console', '~> 2.0'
