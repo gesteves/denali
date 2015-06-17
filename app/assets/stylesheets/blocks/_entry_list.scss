@@ -2,8 +2,8 @@
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-start;
-  margin: 0 auto 24px auto;
-  max-width: 1000px;
+  margin: 48px auto;
+  max-width: $bp-xl;
   padding: 0 1px;
 
   @at-root #{&}__item {
@@ -14,6 +14,7 @@
     font-size: 0;
     overflow: hidden;
     padding: 1px;
+    position: relative;
 
     @media (min-width: $bp-m) {
       flex-basis: calc(100%/3);
@@ -30,6 +31,15 @@
 
   @at-root #{&}__link {
     display: block;
+
+    &:hover,
+    &:active {
+      text-decoration: none;
+
+      h2 {
+        text-decoration: underline;
+      }
+    }
   }
 
   @at-root #{&}__photo {
@@ -51,8 +61,8 @@
     position: absolute;
     right: 0;
     text-shadow: 0 1px 0 #000;
-    transition: opacity ease-in-out 150ms;
     top: 0;
+    transition: opacity ease-in-out 150ms;
     width: 100%;
 
     &:hover {
@@ -62,7 +72,16 @@
 
   @at-root #{&}__item--text {
     font-size: 14px;
+    max-height: calc(50vw - 3rem);
     padding: 1.5rem;
+
+    @media (min-width: $bp-m) {
+      max-height: calc((100vw/3) - 3rem);
+    }
+
+    @media (min-width: $bp-xl) {
+      max-height: calc(#{$bp-xl}/4 - 3rem);
+    }
 
     h2 {
       font-size: 16px;
@@ -71,6 +90,7 @@
     }
 
     p {
+      color: $color-text;
       font-size: 14px;
       font-weight: 400;
       line-height: 1.5;
@@ -79,6 +99,18 @@
     p + p {
       margin-top: 0;
       text-indent: 1.5rem;
+    }
+
+    &::after {
+      background-image: linear-gradient(to bottom, transparentize($color-background, 1), $color-background);
+      bottom: 0;
+      content: '';
+      display: block;
+      height: 3rem;
+      left: 0;
+      pointer-events: none;
+      position: absolute;
+      width: 100%;
     }
   }
 }

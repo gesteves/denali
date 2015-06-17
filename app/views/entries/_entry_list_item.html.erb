@@ -1,7 +1,7 @@
 <% cache "entry/list/#{entry_list_item.id}/#{entry_list_item.updated_at.to_i}" do %>
   <li class="entry-list__item <%= 'entry-list__item--text' if entry_list_item.is_text? %>">
-    <% if entry_list_item.is_photo? %>
-      <a class="entry-list__link" href="<%= permalink_url(entry_list_item) %>">
+    <a class="entry-list__link" href="<%= permalink_url(entry_list_item) %>">
+      <% if entry_list_item.is_photo? %>
         <figure class="entry-list__photo">
           <%= responsive_image_tag entry_list_item.photos.first,
                   [300],
@@ -12,10 +12,10 @@
             <%= raw entry_list_item.formatted_title %>
           </figcaption>
         </figure>
-      </a>
-    <% else %>
-      <h2><%= link_to entry_list_item.formatted_title, permalink_url(entry_list_item) %></h2>
-      <%= simple_format(truncate(entry_list_item.plain_body, length: 150, omission: '…')) %>
-    <% end %>
+      <% else %>
+        <h2><%= entry_list_item.formatted_title %></h2>
+        <%= simple_format(truncate(entry_list_item.plain_body, length: 600, omission: '…')) %>
+      <% end %>
+    </a>
   </li>
 <% end %>
