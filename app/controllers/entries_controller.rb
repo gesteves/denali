@@ -1,5 +1,5 @@
 class EntriesController < ApplicationController
-  before_filter :redirect_heroku
+  before_filter :domain_redirect
 
   def index
     @page = params[:page] || 1
@@ -57,12 +57,6 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.published
     expires_in 24.hours, :public => true
     render format: 'xml'
-  end
-
-  def redirect_heroku
-    if Rails.env.production? && request.host.match(/herokuapp\.com/i) && !request.user_agent.match(/cloudfront/i)
-      redirect_to "http://#{@photoblog.domain}#{request.fullpath}", status: 301
-    end
   end
 
   private
