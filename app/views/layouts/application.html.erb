@@ -21,10 +21,7 @@
 
 <% cache "footer/#{Time.now.strftime('%Y')}" do %>
   <footer class="footer">
-      <p>
-        &copy; <%= copyright_years %>
-        <a href="http://gesteves.com" rel="me">Guillermo Esteves</a>
-      </p>
+      <p> &copy; <%= copyright_years %> <a href="http://gesteves.com" rel="me">Guillermo Esteves</a> &middot; Powered by <%= link_to 'Denali', 'https://github.com/gesteves/denali' %></p>
   </footer>
 <% end %>
 
