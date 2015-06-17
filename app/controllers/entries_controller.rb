@@ -4,6 +4,7 @@ class EntriesController < ApplicationController
   def index
     @page = params[:page] || 1
     @entries = @photoblog.entries.published.page(@page).per(@photoblog.posts_per_page)
+    raise ActiveRecord::RecordNotFound if @entries.empty?
     expires_in 60.minutes, :public => true
   end
 
@@ -32,7 +33,6 @@ class EntriesController < ApplicationController
     @count = params[:count]
     @tag_slug = params[:tag]
     @tags = ActsAsTaggableOn::Tag.where(slug: params[:tag])
-    raise ActiveRecord::RecordNotFound if @tags.empty?
     @tags.each do |t|
       tag_list << t.name
     end
@@ -41,6 +41,7 @@ class EntriesController < ApplicationController
     else
       @entries = @photoblog.entries.published.tagged_with(tag_list, any: true).limit(@count)
     end
+    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     respond_to do |format|
       format.html { expires_in 60.minutes, :public => true }
       format.json { expires_in 12.hours, :public => true }
