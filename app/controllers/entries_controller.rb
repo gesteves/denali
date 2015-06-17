@@ -37,7 +37,7 @@ class EntriesController < ApplicationController
       tag_list << t.name
     end
     if @count.nil?
-      @entries = @photoblog.entries.published.tagged_with(tag_list, any: true).page(@page)
+      @entries = @photoblog.entries.published.tagged_with(tag_list, any: true).page(@page).per(@photoblog.posts_per_page)
     else
       @entries = @photoblog.entries.published.tagged_with(tag_list, any: true).limit(@count)
     end
