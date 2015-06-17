@@ -2,7 +2,7 @@ module ApplicationHelper
 
   def responsive_image_tag(photo, widths = [], sizes = '100vw', image_options = {}, html_options = {})
     image_options.reverse_merge! square: false, quality: 90, upscale: false
-    html_options.reverse_merge! alt: photo.plain_caption || photo.entry.title
+    html_options.reverse_merge! alt: photo.caption.blank? ? photo.entry.title : photo.plain_caption
     html_options[:sizes] = sizes unless sizes == ''
     srcset = []
     if image_options[:square]
@@ -33,6 +33,19 @@ module ApplicationHelper
     sizes << [1280, 1280 * 2]    # Macbook
     sizes << [1440, 1440 * 2]    # Macbook
     sizes << [1920, 1920 * 2]    # iMac
+    sizes.flatten.sort.uniq
+  end
+
+  def photo_thumb_sizes
+    sizes = []
+    sizes << [157, 237]          # iPhone
+    sizes << [157 * 2, 237 * 2]  # iPhone 4
+    sizes << [157 * 2, 281 * 2]  # iPhone 5
+    sizes << [185 * 2, 220 * 2]  # iPhone 6
+    sizes << [204 * 3, 243 * 3]  # iPhone 6 plus
+    sizes << [339, 253]          # iPad
+    sizes << [339 * 2, 253 * 2]  # iPad Air
+    sizes << [318, 318 * 2]      # Macbook
     sizes.flatten.sort.uniq
   end
 

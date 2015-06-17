@@ -21,22 +21,6 @@
 
 <% cache "footer/#{Time.now.strftime('%Y')}" do %>
   <footer class="footer">
-      <ul class="shortcuts">
-        <li class="shortcuts__shortcut">
-          <kbd class="shortcuts__key">&larr;</kbd>
-          <kbd class="shortcuts__key">j</kbd>
-          Newer posts
-        </li>
-        <li class="shortcuts__shortcut">
-          <kbd class="shortcuts__key">&rarr;</kbd>
-          <kbd class="shortcuts__key">k</kbd>
-          Older posts
-        </li>
-        <li class="shortcuts__shortcut">
-          <kbd class="shortcuts__key">z</kbd>
-          Zoom images
-        </li>
-      </ul>
       <p>
         &copy; <%= copyright_years %>
         <a href="http://gesteves.com" rel="me">Guillermo Esteves</a>

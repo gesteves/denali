@@ -1,0 +1,21 @@
+<% cache "entry/list/#{entry_list_item.id}/#{entry_list_item.updated_at.to_i}" do %>
+  <li class="entry-list__item <%= 'entry-list__item--text' if entry_list_item.is_text? %>">
+    <a class="entry-list__link" href="<%= permalink_url(entry_list_item) %>">
+      <% if entry_list_item.is_photo? %>
+        <figure class="entry-list__photo">
+          <%= responsive_image_tag entry_list_item.photos.first,
+                  photo_thumb_sizes,
+                  '(min-width: 1280px) calc((1280px - 2px)/4 - 2px), (min-width: 600px) calc((100vw - 2px)/3 - 2px), calc((100vw - 2px)/2 - 2px)',
+                  { quality: @photoblog.photo_quality, square: true },
+                  { class: 'entry-list__image' } %>
+          <figcaption class="entry-list__photo-title">
+            <%= raw entry_list_item.formatted_title %>
+          </figcaption>
+        </figure>
+      <% else %>
+        <h2><%= entry_list_item.formatted_title %></h2>
+        <%= simple_format(truncate(entry_list_item.plain_body, length: 600, omission: '…')) %>
+      <% end %>
+    </a>
+  </li>
+<% end %>
