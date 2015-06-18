@@ -20,7 +20,7 @@
           <% if entry.is_published? %>
             <%= link_to "Published #{entry.published_at.strftime('%A, %B %-d, %Y')}", permalink_url(entry) %>
           <% else %>
-            <%= link_to "Updated #{entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P')}", preview_admin_entry_url(entry) %>
+            <%= link_to "Updated #{entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P')}", preview_admin_entry_path(entry) %>
           <% end %>
         </div>
         <div class="entry__actions">
