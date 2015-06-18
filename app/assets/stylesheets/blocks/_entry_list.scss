@@ -4,7 +4,6 @@
   justify-content: flex-start;
   margin: 48px auto;
   max-width: $bp-xl;
-  padding: 0 1px;
 
   @at-root #{&}__item {
     display: block;
@@ -13,7 +12,6 @@
     flex-shrink: 0;
     font-size: 0;
     overflow: hidden;
-    padding: 1px;
     position: relative;
 
     @media (min-width: $bp-s) {

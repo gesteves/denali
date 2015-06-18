@@ -38,14 +38,14 @@ module ApplicationHelper
 
   def photo_thumb_sizes
     sizes = []
-    sizes << [157, 237]          # iPhone
-    sizes << [157 * 2, 237 * 2]  # iPhone 4
-    sizes << [157 * 2, 281 * 2]  # iPhone 5
-    sizes << [185 * 2, 220 * 2]  # iPhone 6
-    sizes << [204 * 3, 243 * 3]  # iPhone 6 plus
-    sizes << [339, 253]          # iPad
-    sizes << [339 * 2, 253 * 2]  # iPad Air
-    sizes << [318, 318 * 2]      # Macbook
+    sizes << [160, 240]          # iPhone
+    sizes << [160 * 2, 240 * 2]  # iPhone 4
+    sizes << [160 * 2, 284 * 2]  # iPhone 5
+    sizes << [188 * 2, 223 * 2]  # iPhone 6
+    sizes << [207 * 3, 246 * 3]  # iPhone 6 plus
+    sizes << [342, 258]          # iPad
+    sizes << [342 * 2, 258 * 2]  # iPad Air
+    sizes << [320, 320 * 2]      # Macbook
     sizes.flatten.sort.uniq
   end
 
