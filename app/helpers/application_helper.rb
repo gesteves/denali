@@ -7,7 +7,7 @@ module ApplicationHelper
     srcset = []
     if image_options[:square]
       widths.each do |w|
-        srcset << "#{photo.url(w, w, image_options[:quality], image_options[:upscale])} #{w}w"
+        srcset << "#{photo.url(w, w, image_options[:quality], image_options[:upscale], true)} #{w}w"
       end
       html_options[:srcset] = srcset.join(', ')
       html_options[:src] = photo.url(image_options[:default_width], image_options[:default_width], image_options[:quality], image_options[:upscale]) if image_options[:default_width].present?

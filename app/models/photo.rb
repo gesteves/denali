@@ -25,10 +25,10 @@ class Photo < ActiveRecord::Base
     self.image.url
   end
 
-  def url(width, height = 0, quality = 90, upscale = false)
+  def url(width, height = 0, quality = 90, upscale = false, smart = false)
     filters = ["quality(#{quality})"]
     filters << 'no_upscale()' unless upscale
-    ApplicationController.helpers.thumbor_url self.original_url, width: width, height: height, smart: false, filters: filters
+    ApplicationController.helpers.thumbor_url self.original_url, width: width, height: height, smart: smart, filters: filters
   end
 
   def formatted_caption
