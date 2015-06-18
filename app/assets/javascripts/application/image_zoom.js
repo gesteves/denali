@@ -9,6 +9,7 @@ Denali.ImageZoom = (function () {
     zoom_class      : 'entry__image--fit'
   };
 
+  var zoomable_images = [];
   var init = function () {
     var images = document.querySelectorAll(opts.images);
     var image,
@@ -19,13 +20,16 @@ Denali.ImageZoom = (function () {
       if (height > window.innerHeight) {
         image.classList.add(opts.zoomable_class);
         image.addEventListener('click', toggleZoom);
+        zoomable_images.push(image);
       }
     }
   };
 
   var toggleZoom = function (e) {
     e.preventDefault();
-    e.currentTarget.classList.toggle(opts.zoom_class);
+    for (var i = 0; i < zoomable_images.length; i++) {
+      zoomable_images[i].classList.toggle(opts.zoom_class);
+    }
   };
 
   return {
