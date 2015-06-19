@@ -35,38 +35,29 @@ class ApplicationController < ActionController::Base
   end
 
   def permalink_path(entry, opts = {})
-    opts.reverse_merge! path_only: true
-    if entry.is_published?
-      entry_date = entry.published_at
-      year = entry_date.strftime('%Y')
-      month = entry_date.strftime('%-m')
-      day = entry_date.strftime('%-d')
-      id = entry.id
-      slug = entry.slug
-      entry_long_path(year, month, day, id, slug)
-    else
-      ''
-    end
+    year, month, day, id, slug = entry_slug_params(entry)
+    entry_long_path(year, month, day, id, slug)
   end
 
-  def permalink_url(entry, opts = {})
-    opts.reverse_merge! path_only: true
-    if entry.is_published?
-      entry_date = entry.published_at
-      year = entry_date.strftime('%Y')
-      month = entry_date.strftime('%-m')
-      day = entry_date.strftime('%-d')
-      id = entry.id
-      slug = entry.slug
-      entry_long_url(year, month, day, id, slug)
-    else
-      ''
-    end
+  def permalink_url(entry)
+    year, month, day, id, slug = entry_slug_params(entry)
+    entry_long_url(year, month, day, id, slug)
   end
 
   def domain_redirect
     if Rails.env.production? && !request.host.match(@photoblog.domain) && !request.user_agent.match(/cloudfront/i)
       redirect_to "http://#{@photoblog.domain}#{request.fullpath}", status: 301
     end
+  end
+
+  private
+  def entry_slug_params(entry)
+    entry_date = entry.published_at || entry.updated_at
+    year = entry_date.strftime('%Y')
+    month = entry_date.strftime('%-m')
+    day = entry_date.strftime('%-d')
+    id = entry.id
+    slug = entry.slug
+    return year, month, day, id, slug
   end
 end
