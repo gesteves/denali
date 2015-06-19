@@ -7,7 +7,7 @@ module ApplicationHelper
     srcset = []
     if image_options[:square]
       widths.each do |w|
-        srcset << "#{photo.url(w, w, image_options[:quality], image_options[:upscale], true)} #{w}w"
+        srcset << "#{photo.url(w, w, image_options[:quality], image_options[:upscale])} #{w}w"
       end
     else
       widths.each do |w|
