@@ -35,40 +35,25 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/publish
   def publish
-    if @entry.publish && @entry.update_position
-      respond_to do |format|
-        format.html { redirect_to admin_entries_path, notice: 'Entry was successfully published.' }
-      end
-    else
-      respond_to do |format|
-        format.html { redirect_to request.referrer, notice: 'Entry couldn\'t be published.' }
-      end
+    notice = @entry.publish && @entry.update_position ? 'Entry was successfully published.' : 'Entry couldn\'t be published.'
+    respond_to do |format|
+      format.html { redirect_to request.referrer, notice: notice }
     end
   end
 
   # PATCH /admin/entries/1/queue
   def queue
-    if @entry.queue && @entry.update_position
-      respond_to do |format|
-        format.html { redirect_to request.referrer, notice: 'Entry was successfully queued.' }
-      end
-    else
-      respond_to do |format|
-        format.html { redirect_to request.referrer, notice: 'Entry couldn\'t be queued.' }
-      end
+    notice = @entry.queue && @entry.update_position ? 'Entry was successfully queued.' : 'Entry couldn\'t be queued.'
+    respond_to do |format|
+      format.html { redirect_to request.referrer, notice: notice }
     end
   end
 
   # PATCH /admin/entries/1/draft
   def draft
-    if @entry.draft && @entry.update_position
-      respond_to do |format|
-        format.html { redirect_to request.referrer, notice: 'Entry was successfully saved to drafts.' }
-      end
-    else
-      respond_to do |format|
-        format.html { redirect_to request.referrer, notice: 'Entry couldn\'t be saved to drafts.' }
-      end
+    notice = @entry.draft && @entry.update_position ? 'Entry was successfully saved as draft.' : 'Entry couldn\'t be saved as draft.'
+    respond_to do |format|
+      format.html { redirect_to request.referrer, notice: notice }
     end
   end
 
