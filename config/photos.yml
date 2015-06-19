@@ -1,0 +1,60 @@
+entry:
+  srcset:
+    - 640x0
+    - 960x0
+    - 1136x0
+    - 750x0
+    - 1334x0
+    - 1242x0
+    - 2208x0
+    - 1024x0
+    - 768x0
+    - 2048x0
+    - 1536x0
+    - 1280x0
+    - 1440x0
+    - 2560x0
+    - 2880x0
+    - 1920x0
+    - 3840x0
+  sizes:
+    - "(min-width: 1920px) 1920px"
+    - 100vw
+  filters:
+    - "no_upscale()"
+entry_list_item:
+  srcset:
+    - 320x320
+    - 480x480
+    - 568x568
+    - 376x376
+    - 446x446
+    - 621x621
+    - 738x738
+    - 342x342
+    - 258x258
+    - 684x684
+    - 516x516
+    - 640x640
+  sizes:
+    - "(min-width: 1280px) 320px"
+    - "(min-width: 600px) calc(100vw/3)"
+    - calc(100vw/2)
+  filters:
+    - "no_upscale()"
+admin_entry:
+  srcset:
+    - 800x0
+    - 1600x0
+  sizes:
+    - "(min-width: 840px) 800px"
+    - calc(100vw - 40px)
+admin_edit:
+  srcset:
+    - 300x0
+    - 600x0
+    - 900x0
+  sizes:
+    - 300px
+  filters:
+    - "no_upscale()"

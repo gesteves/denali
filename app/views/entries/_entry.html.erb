@@ -3,8 +3,7 @@
     <% entry.photos.each do |photo| %>
       <figure class="entry__photo">
         <%= responsive_image_tag photo,
-            get_srcset('entry'),
-            "(min-width: 1920px) 1920px, 100vw",
+            'entry',
             { quality: @photoblog.photo_quality },
             { class: "entry__image entry__image--fit", 'data-width-original': photo.width, 'data-height-original': photo.height } %>
         <% unless photo.caption.blank? %>

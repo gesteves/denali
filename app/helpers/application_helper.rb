@@ -1,25 +1,33 @@
 module ApplicationHelper
 
-  def responsive_image_tag(photo, widths = [], sizes = '100vw', image_options = {}, html_options = {})
-    image_options.reverse_merge! square: false, quality: 90, upscale: false
+  def responsive_image_tag(photo, photo_key, image_options = {}, html_options = {})
     html_options.reverse_merge! alt: photo.caption.blank? ? photo.entry.title : photo.plain_caption
-    html_options[:sizes] = sizes
-    srcset = []
-    if image_options[:square]
-      widths.each do |w|
-        srcset << "#{photo.url(w, w, image_options[:quality], image_options[:upscale])} #{w}w"
-      end
-    else
-      widths.each do |w|
-        srcset << "#{photo.url(w, 0, image_options[:quality], image_options[:upscale])} #{w}w"
-      end
-    end
-    html_options[:srcset] = srcset.join(', ')
+    image_options.reverse_merge! quality: 90
+    html_options[:srcset] = get_srcset(photo, photo_key, image_options[:quality])
+    html_options[:sizes] = get_sizes(photo_key)
     content_tag :img, nil, html_options
   end
 
-  def get_srcset(photo_type)
-    PHOTO_SIZES[photo_type].sort.uniq
+
+  def get_srcset(photo, photo_key, quality)
+    srcset = []
+    filters = ["quality(#{quality})"] + get_filters(photo_key)
+    PHOTOS[photo_key]['srcset'].uniq.sort{ |a,b| a.split('x').first.to_i <=> b.split('x').first.to_i }.each do |s|
+      width = s.split('x').first.to_i
+      height = s.split('x').last.to_i
+      srcset << "#{photo.url(width, height, filters)} #{width}w"
+    end
+    srcset.join(', ')
+  end
+
+  def get_sizes(photo_key)
+    PHOTOS[photo_key]['sizes'].join(', ')
+  end
+
+  def get_filters(photo_key)
+    filters = []
+    filters << PHOTOS[photo_key]['filters'] unless PHOTOS[photo_key]['filters'].nil?
+    filters
   end
 
   def copyright_years
