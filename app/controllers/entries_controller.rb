@@ -20,6 +20,7 @@ class EntriesController < ApplicationController
 
   def tumblr
     @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
+    raise ActiveRecord::RecordNotFound if @entry.nil?
     respond_to do |format|
       format.html {
         redirect_to permalink_url(@entry), status: 301
