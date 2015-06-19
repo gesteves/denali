@@ -73,20 +73,29 @@ class Photo < ActiveRecord::Base
 
   def save_exif
     exif = EXIFR::JPEG.new(image.queued_for_write[:original].path)
-    return if exif.nil? || !exif.exif?
-    self.make = exif.make
-    self.model = exif.model
-    self.iso = exif.iso_speed_ratings
-    self.f_number = exif.f_number.to_f unless exif.f_number.nil?
-    self.focal_length = exif.focal_length.to_i unless exif.focal_length.nil?
-    self.longitude = exif.gps.longitude unless exif.gps.nil?
-    self.latitude = exif.gps.latitude unless exif.gps.nil?
-    self.taken_at = exif.date_time
-    self.exposure = exif.exposure_time
-    unless exif.user_comment.blank?
-      comment_array = exif.user_comment.split(/(\n)+/).select{ |c| c =~ /^film/i }
-      self.film_make = comment_array.select{ |c| c =~ /^film make/i }.blank? ? nil : comment_array.select{ |c| c =~ /^film make/i }.first.gsub(/^film make:/i, '').strip
-      self.film_type = comment_array.select{ |c| c =~ /^film type/i }.blank? ? nil : comment_array.select{ |c| c =~ /^film type/i }.first.gsub(/^film type:/i, '').strip
+    unless exif.nil? || !exif.exif?
+      self.make = exif.make
+      self.model = exif.model
+      self.iso = exif.iso_speed_ratings
+      self.taken_at = exif.date_time
+      self.exposure = exif.exposure_time
+      self.f_number = exif.f_number.to_f unless exif.f_number.nil?
+      self.focal_length = exif.focal_length.to_i unless exif.focal_length.nil?
+      save_gps_info(exif.gps) unless exif.gps.nil?
+      save_film_info(exif.user_comment) unless exif.user_comment.blank?
     end
+  end
+
+  def save_gps_info(gps)
+    self.longitude = gps.longitude
+    self.latitude = gps.latitude
+  end
+
+  def save_film_info(comment)
+    comment_array = comment.split(/(\n)+/).select{ |c| c =~ /^film/i }
+    film_make = comment_array.select{ |c| c =~ /^film make/i }
+    film_type = comment_array.select{ |c| c =~ /^film type/i }
+    self.film_make = film_make.first.gsub(/^film make:/i, '').strip unless film_make.blank?
+    self.film_type = film_type.first.gsub(/^film type:/i, '').strip unless film_type.blank?
   end
 end
