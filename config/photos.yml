@@ -22,6 +22,7 @@ entry:
     - 100vw
   filters:
     - "no_upscale()"
+    - "quality(90)"
 entry_list_item:
   srcset:
     - 320x320
@@ -42,6 +43,7 @@ entry_list_item:
     - calc(100vw/2)
   filters:
     - "no_upscale()"
+    - "quality(90)"
 admin_entry:
   srcset:
     - 800x0
@@ -49,6 +51,8 @@ admin_entry:
   sizes:
     - "(min-width: 840px) 800px"
     - calc(100vw - 40px)
+  filters:
+    - "quality(90)"
 admin_edit:
   srcset:
     - 300x0
@@ -58,3 +62,4 @@ admin_edit:
     - 300px
   filters:
     - "no_upscale()"
+    - "quality(90)"

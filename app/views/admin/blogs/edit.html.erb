@@ -20,9 +20,6 @@
   <%= f.label :description, 'Blog description', class: 'form__label' %>
   <%= f.text_area :description, placeholder: 'This blog’s description…', required: true, class: 'form__input form__input--textarea' %>
 
-  <%= f.label :photo_quality, class: 'form__label' %>
-  <%= f.number_field :photo_quality, min: 1, max: 100, pattern: '\d+', class: 'form__input', required: true %>
-
   <%= f.label :posts_per_page, class: 'form__label' %>
   <%= f.number_field :posts_per_page, min: 1, max: 100, pattern: '\d+', class: 'form__input', required: true %>
 

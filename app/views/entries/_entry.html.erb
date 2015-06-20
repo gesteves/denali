@@ -4,7 +4,6 @@
       <figure class="entry__photo">
         <%= responsive_image_tag photo,
             'entry',
-            { quality: @photoblog.photo_quality },
             { class: "entry__image entry__image--fit", 'data-width-original': photo.width, 'data-height-original': photo.height } %>
         <% unless photo.caption.blank? %>
           <figcaption>

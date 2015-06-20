@@ -2,8 +2,6 @@
 
 one:
   name: MyString
-  photo_quality: 1
 
 two:
   name: MyString
-  photo_quality: 1

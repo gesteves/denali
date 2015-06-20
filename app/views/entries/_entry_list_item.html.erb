@@ -5,7 +5,6 @@
         <figure class="entry-list__photo">
           <%= responsive_image_tag entry_list_item.photos.first,
                   'entry_list_item',
-                  { quality: @photoblog.photo_quality },
                   { class: 'entry-list__image' } %>
           <figcaption class="entry-list__photo-title">
             <%= raw entry_list_item.formatted_title %>
