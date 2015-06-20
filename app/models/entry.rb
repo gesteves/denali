@@ -103,6 +103,10 @@ class Entry < ActiveRecord::Base
     smartypants(self.title)
   end
 
+  def formatted_tweet_text
+    smartypants(self.tweet_text)
+  end
+
   def self.last_queued_position
     queue = Entry.queued
     if queue.blank? || queue.last.position.nil?
@@ -110,6 +114,22 @@ class Entry < ActiveRecord::Base
     else
       queue.last.position
     end
+  end
+
+  def slug_params
+    entry_date = self.published_at || self.updated_at
+    year = entry_date.strftime('%Y')
+    month = entry_date.strftime('%-m')
+    day = entry_date.strftime('%-d')
+    id = self.id
+    slug = self.slug
+    return year, month, day, id, slug
+  end
+
+  def enqueue_jobs
+    TwitterJob.perform_later(self) if self.post_to_twitter
+    TumblrJob.perform_later(self) if self.post_to_tumblr
+    # FacebookJob.perform_later(self) if self.post_to_facebook
   end
 
   private

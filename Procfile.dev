@@ -1,2 +1,4 @@
 rails: rails s
 memcached: memcached
+redis: redis-server
+resque: env TERM_CHILD=1 QUEUE=* bundle exec rake resque:work

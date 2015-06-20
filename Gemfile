@@ -32,8 +32,13 @@ gem 'figaro'
 # Caching
 gem 'dalli'
 
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+# Background Jobs
+gem 'resque'
+gem 'resque-scheduler'
+
+# Social Networks
+gem 'twitter'
+gem 'tumblr_client'
 
 group :production do
   gem 'puma'

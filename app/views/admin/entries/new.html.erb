@@ -13,6 +13,15 @@
     <%= link_to 'Add photo', '#', class: 'button js-photo-add' %>
   </div>
 
+  <div class="form__options">
+    <h2>Sharing options</h2>
+    <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box(:post_to_tumblr) %> Post to Tumblr<% end %>
+    <%= f.label :post_to_twitter, class: 'form__label form__label--checkbox' do %>
+      <%= f.check_box(:post_to_twitter) %> Post to Twitter
+    <% end %>
+    <%= f.text_area :tweet_text, placeholder: 'Your tweet here…', maxlength: 90, class: 'form__input form__input--textarea form__input--short' %>
+  </div>
+
   <div class="form__actions">
     <div class="form__buttons">
       <%= link_to 'Cancel', admin_entries_path, data: { confirm: 'Are you sure you want to discard this?' }, class: 'button button--danger' %>

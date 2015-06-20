@@ -35,8 +35,13 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/publish
   def publish
-    notice = @entry.publish && @entry.update_position ? 'Entry was successfully published.' : 'Entry couldn\'t be published.'
     respond_to do |format|
+      if @entry.publish && @entry.update_position
+        @entry.enqueue_jobs
+        notice = 'Entry was successfully published.'
+      else
+        notice = 'Entry couldn\'t be published.'
+      end
       format.html { redirect_to request.referrer || admin_entries_path, notice: notice }
     end
   end
@@ -64,6 +69,7 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save && @entry.update_position
+        @entry.enqueue_jobs if @entry.is_published?
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
       else
         format.html { render :new }
@@ -123,7 +129,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :tweet_text, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption])
     end
 
     def get_redirect_url(entry)
