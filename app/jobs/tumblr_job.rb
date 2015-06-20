@@ -11,29 +11,24 @@ class TumblrJob < ActiveJob::Base
       oauth_token: ENV['tumblr_access_token'],
       oauth_token_secret: ENV['tumblr_access_token_secret']
     })
+    opts = {
+      tags: entry.tag_list.join(', '),
+      slug: entry.slug,
+      state: 'draft'
+    }
     if entry.is_photo?
-      photos = []
-      entry.photos.each do |p|
-        photos << p.original_url
-      end
-      tumblr.photo(ENV['tumblr_domain'], {
-        tags: entry.tag_list.join(', '),
-        format: 'markdown',
-        slug: entry.slug,
-        caption: "#{entry.title}\n\n#{entry.body}",
-        state: 'draft',
+      opts.merge!({
+        caption: entry.formatted_content,
         link: permalink_url(entry),
-        source: photos
+        source: entry.photos.map{ |p| p.original_url }
       })
+      tumblr.photo(ENV['tumblr_domain'], opts)
     else
-      tumblr.text(ENV['tumblr_domain'], {
-        tags: entry.tag_list.join(', '),
-        format: 'markdown',
-        slug: entry.slug,
+      opts.merge!({
         title: entry.formatted_title,
-        body: entry.body,
-        state: 'draft'
+        body: entry.formatted_body
       })
+      tumblr.text(ENV['tumblr_domain'], opts)
     end
   end
 end

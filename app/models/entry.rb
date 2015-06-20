@@ -107,6 +107,12 @@ class Entry < ActiveRecord::Base
     smartypants(self.tweet_text)
   end
 
+  def formatted_content
+    content = self.title
+    content += "\n\n#{self.body}" unless self.body.blank?
+    markdown_to_html(content)
+  end
+
   def self.last_queued_position
     queue = Entry.queued
     if queue.blank? || queue.last.position.nil?
