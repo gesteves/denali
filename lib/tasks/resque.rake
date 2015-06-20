@@ -1,9 +1,11 @@
-require 'resque/tasks'
-require 'resque/scheduler/tasks'
+require "resque/tasks"
+require 'resque_scheduler/tasks'
 
-namespace :resque do
-  task :setup => :environment do
-    require 'resque'
-    require 'resque-scheduler'
-  end
+task "resque:setup" => :environment do
+    ENV['QUEUE'] = '*'
 end
+
+task "resque:scheduler_setup" => :environment
+
+desc "Alias for resque:work (To run workers on Heroku)"
+task "jobs:work" => "resque:work"
