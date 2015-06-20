@@ -113,11 +113,23 @@
       font-weight: normal;
       margin: 0 2px 0 0;
     }
+
+    @at-root #{&}--checkbox {
+      display: block;
+      font-size: 16px;
+      font-weight: 300;
+      margin: 0;
+    }
   }
 
   @at-root #{&}__photos {
     border-bottom: 1px solid $color-border;
-    margin: 24px 0;
+    padding: 0 0 24px;
+  }
+
+  @at-root #{&}__options {
+    border-bottom: 1px solid $color-border;
+    margin: 24px 0 0;
     padding: 0 0 24px;
   }
 

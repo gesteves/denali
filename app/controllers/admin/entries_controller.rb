@@ -69,7 +69,7 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save && @entry.update_position
-        @entry.enqueue_jobs
+        @entry.enqueue_jobs if @entry.is_published?
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
       else
         format.html { render :new }
@@ -129,7 +129,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_facebook, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption])
     end
 
     def get_redirect_url(entry)

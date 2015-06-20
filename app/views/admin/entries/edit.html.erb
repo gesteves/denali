@@ -28,6 +28,14 @@
     <%= link_to 'Add photo', '#', class: 'button button--default js-photo-add' %>
   </div>
 
+  <% unless @entry.is_published? %>
+    <div class="form__options">
+      <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box(:post_to_facebook) %> Post to Facebook<% end %>
+      <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box(:post_to_tumblr) %> Post to Tumblr<% end %>
+      <%= f.label :post_to_twitter, class: 'form__label form__label--checkbox' do %><%= f.check_box(:post_to_twitter) %> Post to Twitter<% end %>
+    </div>
+  <% end %>
+
   <div class="form__actions">
     <div class="form__buttons">
       <% if @entry.is_draft? %>
