@@ -37,7 +37,7 @@ class Admin::EntriesController < AdminController
   def publish
     notice = @entry.publish && @entry.update_position ? 'Entry was successfully published.' : 'Entry couldn\'t be published.'
     respond_to do |format|
-      format.html { redirect_to request.referrer, notice: notice }
+      format.html { redirect_to request.referrer || admin_entries_path, notice: notice }
     end
   end
 
@@ -45,7 +45,7 @@ class Admin::EntriesController < AdminController
   def queue
     notice = @entry.queue && @entry.update_position ? 'Entry was successfully queued.' : 'Entry couldn\'t be queued.'
     respond_to do |format|
-      format.html { redirect_to request.referrer, notice: notice }
+      format.html { redirect_to request.referrer || queued_admin_entries_path, notice: notice }
     end
   end
 
@@ -53,7 +53,7 @@ class Admin::EntriesController < AdminController
   def draft
     notice = @entry.draft && @entry.update_position ? 'Entry was successfully saved as draft.' : 'Entry couldn\'t be saved as draft.'
     respond_to do |format|
-      format.html { redirect_to request.referrer, notice: notice }
+      format.html { redirect_to request.referrer || drafts_admin_entries_path, notice: notice }
     end
   end
 
