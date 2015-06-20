@@ -1,6 +1,8 @@
 require 'open-uri'
-class TweetEntryJob < ActiveJob::Base
+class TwitterJob < ActiveJob::Base
   include ActionView::Helpers::TextHelper
+  include Addressable
+
   queue_as :default
 
   def perform(entry)
@@ -11,17 +13,11 @@ class TweetEntryJob < ActiveJob::Base
       config.access_token_secret = ENV['twitter_access_token_secret']
     end
     if entry.is_photo?
-      tweet = "#{truncate(entry.formatted_title, length: (140 - 48), omission: '…')} #{entry_url(entry)}"
+      tweet = "#{truncate(entry.formatted_title, length: (140 - 48), omission: '…')} #{permalink_url(entry)}"
       twitter.update_with_media(tweet, open(entry.photos.first.url(2560)))
     else
-      tweet = "#{truncate(entry.formatted_title, length: (140 - 25), omission: '…')} #{entry_url(entry)}"
+      tweet = "#{truncate(entry.formatted_title, length: (140 - 25), omission: '…')} #{permalink_url(entry)}"
       twitter.update(tweet)
     end
-  end
-
-  private
-  def entry_url(entry)
-    year, month, day, id, slug = entry.slug_params
-    Rails.application.routes.url_helpers.entry_long_url(year, month, day, id, slug, { host: entry.blog.domain })
   end
 end

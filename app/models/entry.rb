@@ -124,7 +124,8 @@ class Entry < ActiveRecord::Base
 
   def enqueue_jobs
     if self.is_published?
-      TweetEntryJob.perform_later(self)
+      TwitterJob.perform_later(self)
+      TumblrJob.perform_later(self)
     end
   end
 
