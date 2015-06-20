@@ -103,6 +103,10 @@ class Entry < ActiveRecord::Base
     smartypants(self.title)
   end
 
+  def formatted_tweet_text
+    smartypants(self.tweet_text)
+  end
+
   def self.last_queued_position
     queue = Entry.queued
     if queue.blank? || queue.last.position.nil?

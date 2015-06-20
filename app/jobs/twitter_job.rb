@@ -23,7 +23,7 @@ class TwitterJob < ActiveJob::Base
 
   def build_tweet(entry, short_url_length, media_length)
     max_length = entry.is_text? ? 136 - short_url_length : 136 - short_url_length - media_length
-    text = entry.tweet_text.blank? ? entry.formatted_title : entry.tweet_text
+    text = entry.tweet_text.blank? ? entry.formatted_title : entry.formatted_tweet_text
     "#{truncate(text, length: max_length, omission: '… ')} #{permalink_url(entry)}"
   end
 end
