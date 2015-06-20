@@ -25,7 +25,7 @@ class Photo < ActiveRecord::Base
     self.image.url
   end
 
-  def url(width, height = 0, filters = [])
+  def url(width, height = 0, filters = ['quality(90)'])
     ApplicationController.helpers.thumbor_url self.original_url, width: width, height: height, filters: filters
   end
 
