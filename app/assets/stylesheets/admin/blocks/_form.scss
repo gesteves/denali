@@ -47,6 +47,10 @@
       line-height: 1.5;
     }
 
+    @at-root #{&}--textarea {
+      height: 48px;
+    }
+
     @at-root #{&}--caption {
       flex-grow: 0;
       font-size: 16px;
@@ -115,9 +119,11 @@
     }
 
     @at-root #{&}--checkbox {
+      align-items: center;
       display: block;
-      font-size: 16px;
+      flex: row wrap;
       font-weight: 300;
+      line-height: 2;
       margin: 0;
     }
   }
@@ -129,8 +135,18 @@
 
   @at-root #{&}__options {
     border-bottom: 1px solid $color-border;
+    display: flex;
+    flex-flow: column;
     margin: 24px 0 0;
     padding: 0 0 24px;
+
+    h2 {
+      font-family: 'proxima-nova', sans-serif;
+      font-size: 12px;
+      font-weight: bold;
+      line-height: 1.5;
+      margin: 0;
+    }
   }
 
   @at-root #{&}__photo {
