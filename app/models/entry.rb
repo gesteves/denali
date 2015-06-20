@@ -112,6 +112,22 @@ class Entry < ActiveRecord::Base
     end
   end
 
+  def slug_params
+    entry_date = self.published_at || self.updated_at
+    year = entry_date.strftime('%Y')
+    month = entry_date.strftime('%-m')
+    day = entry_date.strftime('%-d')
+    id = self.id
+    slug = self.slug
+    return year, month, day, id, slug
+  end
+
+  def enqueue_jobs
+    if self.is_published?
+      TweetEntryJob.perform_later(self)
+    end
+  end
+
   private
 
   def set_published_date

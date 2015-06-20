@@ -36,6 +36,9 @@ gem 'dalli'
 gem 'resque'
 gem 'resque-scheduler'
 
+# Social Networks
+gem 'twitter'
+
 group :production do
   gem 'puma'
   gem 'pg'
