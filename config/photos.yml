@@ -22,6 +22,7 @@ entry:
     - 100vw
   filters:
     - "no_upscale()"
+    - "quality(90)"
 entry_list_item:
   srcset:
     - 320x320
