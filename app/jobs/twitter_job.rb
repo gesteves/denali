@@ -12,12 +12,27 @@ class TwitterJob < ActiveJob::Base
       config.access_token        = ENV['twitter_access_token']
       config.access_token_secret = ENV['twitter_access_token_secret']
     end
+    config = twitter.configuration
+    tweet = build_tweet(entry, config)
+
     if entry.is_photo?
-      tweet = "#{truncate(entry.formatted_title, length: (140 - 48), omission: '…')} #{permalink_url(entry)}"
-      twitter.update_with_media(tweet, open(entry.photos.first.url(2560)))
+      twitter.update_with_media(tweet, get_photo(entry, config))
     else
-      tweet = "#{truncate(entry.formatted_title, length: (140 - 25), omission: '…')} #{permalink_url(entry)}"
       twitter.update(tweet)
     end
+  end
+
+  def build_tweet(entry, config)
+    max_length = max_length(entry, config)
+    "#{truncate(entry.formatted_title, length: max_length, omission: '…')} #{permalink_url(entry)}"
+  end
+
+  def max_length(entry, config)
+    entry.is_text? ? 135 - config.short_url_length_https : 135 - config.short_url_length_https - config.characters_reserved_per_media
+  end
+
+  def get_photo(entry, config)
+    width = config.photo_sizes[:large].width || 2048
+    open(entry.photos.first.url(width))
   end
 end
