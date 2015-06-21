@@ -137,7 +137,7 @@ class Entry < ActiveRecord::Base
   def enqueue_jobs
     TwitterJob.perform_later(self) if self.post_to_twitter
     TumblrJob.perform_later(self) if self.post_to_tumblr
-    # FacebookJob.perform_later(self) if self.post_to_facebook
+    YoJob.perform_later(self)
   end
 
   private
