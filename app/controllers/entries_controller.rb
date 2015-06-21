@@ -1,5 +1,6 @@
 class EntriesController < ApplicationController
-  before_filter :domain_redirect
+  before_action :domain_redirect
+  before_action :load_tags, :load_tagged_entries, only: [:tagged]
 
   def index
     @page = params[:page] || 1
@@ -29,19 +30,7 @@ class EntriesController < ApplicationController
   end
 
   def tagged
-    tag_list = []
     @page = params[:page] || 1
-    @count = params[:count]
-    @tag_slug = params[:tag]
-    @tags = ActsAsTaggableOn::Tag.where(slug: params[:tag])
-    @tags.each do |t|
-      tag_list << t.name
-    end
-    if @count.nil?
-      @entries = @photoblog.entries.published.tagged_with(tag_list, any: true).page(@page).per(@photoblog.posts_per_page)
-    else
-      @entries = @photoblog.entries.published.tagged_with(tag_list, any: true).limit(@count)
-    end
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     respond_to do |format|
       format.html { expires_in 60.minutes, :public => true }
@@ -73,5 +62,20 @@ class EntriesController < ApplicationController
     month == params[:month] &&
     day == params[:day] &&
     slug == params[:slug]
+  end
+
+  def load_tags
+    @tag_slug = params[:tag]
+    @tags = ActsAsTaggableOn::Tag.where(slug: params[:tag])
+    @tag_list = @tags.map{ |t| t.name }
+  end
+
+  def load_tagged_entries
+    @count = params[:count]
+    if @count.nil?
+      @entries = @photoblog.entries.published.tagged_with(@tag_list, any: true).page(@page).per(@photoblog.posts_per_page)
+    else
+      @entries = @photoblog.entries.published.tagged_with(@tag_list, any: true).limit(@count)
+    end
   end
 end
