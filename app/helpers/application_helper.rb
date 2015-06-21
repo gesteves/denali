@@ -9,13 +9,18 @@ module ApplicationHelper
 
 
   def get_srcset(photo, photo_key)
-    srcset = []
-    PHOTOS[photo_key]['srcset'].uniq.sort{ |a,b| a.split('x').first.to_i <=> b.split('x').first.to_i }.each do |s|
-      width = s.split('x').first.to_i
-      height = s.split('x').last.to_i
-      srcset << "#{photo.url(width, height, get_filters(photo_key))} #{width}w"
-    end
-    srcset.join(', ')
+    filters = get_filters(photo_key)
+    PHOTOS[photo_key]['srcset'].
+      uniq.
+      sort{ |a, b| a.split('x').first.to_i <=> b.split('x').first.to_i }.
+      map{ |s| build_srcset_url(photo, s, filters)}.
+      join(', ')
+  end
+
+  def build_srcset_url(photo, dimensions, filters)
+    width = dimensions.split('x').first.to_i
+    height = dimensions.split('x').last.to_i
+    "#{photo.url(width, height, filters)} #{width}w"
   end
 
   def get_sizes(photo_key)
