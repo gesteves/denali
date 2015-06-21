@@ -28,6 +28,7 @@ gem 'acts-as-taggable-on', '~> 3.4'
 gem 'httparty'
 gem 'kaminari'
 gem 'figaro'
+gem 'cloudfront-invalidator'
 
 # Caching
 gem 'dalli'

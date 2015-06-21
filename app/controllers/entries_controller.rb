@@ -10,7 +10,7 @@ class EntriesController < ApplicationController
 
   def show
     @entry = @photoblog.entries.published.find(params[:id])
-    expires_in 60.minutes, :public => true
+    expires_in 24.hours, :public => true
     respond_to do |format|
       format.html {
         redirect_to(permalink_url(@entry), status: 301) unless params_match(@entry, params)
@@ -45,7 +45,7 @@ class EntriesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     respond_to do |format|
       format.html { expires_in 60.minutes, :public => true }
-      format.json { expires_in 12.hours, :public => true }
+      format.json { expires_in 24.hours, :public => true }
     end
   end
 

@@ -2,6 +2,8 @@ class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :reposition, :preview]
   before_action :get_tags, only: [:new, :edit, :create, :update]
 
+  helper_method :enqueue_jobs, :enqueue_invalidation
+
   # GET /admin/entries
   def index
     @page = params[:page] || 1
@@ -37,7 +39,7 @@ class Admin::EntriesController < AdminController
   def publish
     respond_to do |format|
       if @entry.publish && @entry.update_position
-        @entry.enqueue_jobs
+        enqueue_jobs @entry
         notice = 'Entry was successfully published.'
       else
         notice = 'Entry couldn\'t be published.'
@@ -69,7 +71,7 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save && @entry.update_position
-        @entry.enqueue_jobs if @entry.is_published?
+        enqueue_jobs @entry
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
       else
         format.html { render :new }
@@ -81,6 +83,7 @@ class Admin::EntriesController < AdminController
   def update
     respond_to do |format|
       if @entry.update(entry_params)
+        enqueue_invalidation(@entry, entry_params[:invalidate_cloudfront])
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully updated.' }
       else
         format.html { render :edit }
@@ -129,7 +132,17 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :tweet_text, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :tweet_text, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption])
+    end
+
+    def enqueue_jobs(entry)
+      entry.enqueue_jobs if entry.is_published?
+    end
+
+    def enqueue_invalidation(entry, invalidate)
+      if Rails.env.production? && entry.is_published? && invalidate == "1"
+        CloudfrontInvalidationJob.perform_later(entry)
+      end
     end
 
     def get_redirect_url(entry)

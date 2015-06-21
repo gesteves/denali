@@ -2,40 +2,61 @@ development:
   secret_key_base: 123abc
   aws_access_key_id: 123abc
   aws_secret_access_key: 123abc
+  aws_cloudfront_distribution_id: abc123
   s3_bucket: dev.example.com
   thumbor_server: http://example.com
   thumbor_security_key: 123abc
   google_client_id: 123abc
   google_client_secret: 123abc
   dropbox_key: 123abc
+  twitter_consumer_key: 123abc
+  twitter_consumer_secret: 123abc
+  twitter_access_token: 123abc
+  twitter_access_token_secret: 123abc
+  tumblr_domain: example.tumblr.com
   tumblr_consumer_key: 123abc
   tumblr_consumer_secret: 123abc
-  tumblr_domain: www.example.com
+  tumblr_access_token: 123abc
+  tumblr_access_token_secret: 123abc
 
 test:
   secret_key_base: 123abc
   aws_access_key_id: 123abc
   aws_secret_access_key: 123abc
+  aws_cloudfront_distribution_id: abc123
   s3_bucket: dev.example.com
   thumbor_server: http://example.com
   thumbor_security_key: 123abc
   google_client_id: 123abc
   google_client_secret: 123abc
   dropbox_key: 123abc
+  twitter_consumer_key: 123abc
+  twitter_consumer_secret: 123abc
+  twitter_access_token: 123abc
+  twitter_access_token_secret: 123abc
+  tumblr_domain: example.tumblr.com
   tumblr_consumer_key: 123abc
   tumblr_consumer_secret: 123abc
-  tumblr_domain: www.example.com
+  tumblr_access_token: 123abc
+  tumblr_access_token_secret: 123abc
 
 production:
   secret_key_base: 123abc
   aws_access_key_id: 123abc
   aws_secret_access_key: 123abc
+  aws_cloudfront_distribution_id: abc123
   s3_bucket: dev.example.com
   thumbor_server: http://example.com
   thumbor_security_key: 123abc
   google_client_id: 123abc
   google_client_secret: 123abc
   dropbox_key: 123abc
+  twitter_consumer_key: 123abc
+  twitter_consumer_secret: 123abc
+  twitter_access_token: 123abc
+  twitter_access_token_secret: 123abc
+  tumblr_domain: example.tumblr.com
   tumblr_consumer_key: 123abc
   tumblr_consumer_secret: 123abc
-  tumblr_domain: www.example.com
+  tumblr_access_token: 123abc
+  tumblr_access_token_secret: 123abc

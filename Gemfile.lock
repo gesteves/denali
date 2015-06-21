@@ -58,6 +58,8 @@ GEM
       columnize (= 0.9.0)
     climate_control (0.0.3)
       activesupport (>= 3.0)
+    cloudfront-invalidator (0.2.1)
+      ruby-hmac
     cocaine (0.5.7)
       climate_control (>= 0.0.3, < 1.0)
     columnize (0.9.0)
@@ -193,6 +195,7 @@ GEM
       redis (~> 3.0)
       resque (~> 1.25)
       rufus-scheduler (~> 3.0)
+    ruby-hmac (0.4.0)
     ruby-thumbor (2.0.0)
     rufus-scheduler (3.1.2)
     sanitize (4.0.0)
@@ -270,6 +273,7 @@ DEPENDENCIES
   autoprefixer-rails
   aws-sdk (~> 1.64.0)
   byebug
+  cloudfront-invalidator
   dalli
   exifr
   figaro

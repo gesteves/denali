@@ -9,6 +9,6 @@ module Addressable
 
   def permalink_path(entry)
     year, month, day, id, slug = entry.slug_params
-    Rails.application.routes.url_helpers.entry_long_path(year, month, day, id)
+    Rails.application.routes.url_helpers.entry_long_path(year, month, day, id, slug)
   end
 end
