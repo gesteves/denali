@@ -7,7 +7,6 @@ module ApplicationHelper
     content_tag :img, nil, html_options
   end
 
-
   def get_srcset(photo, photo_key)
     filters = get_filters(photo_key)
     PHOTOS[photo_key]['srcset'].

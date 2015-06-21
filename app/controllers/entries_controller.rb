@@ -30,7 +30,6 @@ class EntriesController < ApplicationController
   end
 
   def tagged
-    @page = params[:page] || 1
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     respond_to do |format|
       format.html { expires_in 60.minutes, :public => true }
@@ -71,6 +70,7 @@ class EntriesController < ApplicationController
   end
 
   def load_tagged_entries
+    @page = params[:page] || 1
     @count = params[:count]
     if @count.nil?
       @entries = @photoblog.entries.published.tagged_with(@tag_list, any: true).page(@page).per(@photoblog.posts_per_page)
