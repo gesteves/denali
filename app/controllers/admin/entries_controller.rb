@@ -136,13 +136,11 @@ class Admin::EntriesController < AdminController
     end
 
     def enqueue_jobs(entry)
-      entry.enqueue_jobs if entry.is_published?
+      entry.enqueue_jobs if Rails.env.production? && entry.is_published?
     end
 
     def enqueue_invalidation(entry, invalidate)
-      if Rails.env.production? && entry.is_published? && invalidate == "1"
-        CloudfrontInvalidationJob.perform_later(entry)
-      end
+      CloudfrontInvalidationJob.perform_later(entry) if Rails.env.production? && entry.is_published? && invalidate == "1"
     end
 
     def get_redirect_url(entry)
