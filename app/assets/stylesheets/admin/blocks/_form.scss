@@ -135,10 +135,11 @@
 
   @at-root #{&}__options {
     border-bottom: 1px solid $color-border;
+    border-top: 1px solid $color-border;
     display: flex;
     flex-flow: column;
     margin: 24px 0 0;
-    padding: 0 0 24px;
+    padding: 24px 0;
 
     h2 {
       font-family: 'proxima-nova', sans-serif;

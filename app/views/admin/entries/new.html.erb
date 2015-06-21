@@ -4,14 +4,14 @@
 
 <%= form_for([:admin, @entry], html: { multipart: true, class: 'form' }) do |f| %>
 
-  <%= render partial: 'entry_fields', locals: { f: f } %>
-
   <div class="form__photos">
     <ol class="form__photos-list">
 
     </ol>
     <%= link_to 'Add photo', '#', class: 'button js-photo-add' %>
   </div>
+
+  <%= render partial: 'entry_fields', locals: { f: f } %>
 
   <div class="form__options">
     <h2>Sharing options</h2>
