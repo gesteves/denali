@@ -43,7 +43,7 @@ entry_list_item:
     - calc(100vw/2)
   filters:
     - "no_upscale()"
-    - "quality(75)"
+    - "quality(90)"
 admin_entry:
   srcset:
     - 800x0
