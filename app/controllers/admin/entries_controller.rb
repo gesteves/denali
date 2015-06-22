@@ -2,7 +2,8 @@ class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :reposition, :preview]
   before_action :get_tags, only: [:new, :edit, :create, :update]
 
-  helper_method :enqueue_jobs, :enqueue_invalidation
+  after_action :enqueue_jobs, only: [:create, :publish]
+  after_action :enqueue_invalidation, only: [:update]
 
   # GET /admin/entries
   def index
@@ -39,7 +40,6 @@ class Admin::EntriesController < AdminController
   def publish
     respond_to do |format|
       if @entry.publish && @entry.update_position
-        enqueue_jobs @entry
         notice = 'Entry was successfully published.'
       else
         notice = 'Entry couldn\'t be published.'
@@ -71,7 +71,6 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save && @entry.update_position
-        enqueue_jobs @entry
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
       else
         format.html { render :new }
@@ -83,7 +82,6 @@ class Admin::EntriesController < AdminController
   def update
     respond_to do |format|
       if @entry.update(entry_params)
-        enqueue_invalidation(@entry, entry_params[:invalidate_cloudfront])
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully updated.' }
       else
         format.html { render :edit }
@@ -135,12 +133,17 @@ class Admin::EntriesController < AdminController
       params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_facebook, :tweet_text, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption])
     end
 
-    def enqueue_jobs(entry)
-      entry.enqueue_jobs if Rails.env.production? && entry.is_published?
+    def enqueue_jobs
+      if @entry.is_published? && Rails.env.production?
+        TwitterJob.perform_later(@entry) if @entry.post_to_twitter
+        TumblrJob.perform_later(@entry) if @entry.post_to_tumblr
+        BufferJob.perform_later(@entry) if @entry.post_to_facebook
+        YoJob.perform_later(@entry)
+      end
     end
 
-    def enqueue_invalidation(entry, invalidate)
-      CloudfrontInvalidationJob.perform_later(entry) if Rails.env.production? && entry.is_published? && invalidate == "1"
+    def enqueue_invalidation
+      CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && @entry.is_published? && entry_params[:invalidate_cloudfront] == "1"
     end
 
     def get_redirect_url(entry)
