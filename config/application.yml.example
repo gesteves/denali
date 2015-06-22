@@ -19,6 +19,7 @@ development:
   tumblr_access_token: 123abc
   tumblr_access_token_secret: 123abc
   yo_api_token: 123abc
+  buffer_access_token: 123abc
 
 test:
   secret_key_base: 123abc
@@ -41,6 +42,7 @@ test:
   tumblr_access_token: 123abc
   tumblr_access_token_secret: 123abc
   yo_api_token: 123abc
+  buffer_access_token: 123abc
 
 production:
   secret_key_base: 123abc
@@ -63,3 +65,4 @@ production:
   tumblr_access_token: 123abc
   tumblr_access_token_secret: 123abc
   yo_api_token: 123abc
+  buffer_access_token: 123abc
