@@ -32,7 +32,7 @@ class BufferJob < ActiveJob::Base
 
   def build_media(entry)
     {
-      picture: entry.photos.first.original_url,
+      picture: entry.photos.first.url(2560),
       thumbnail: entry.photos.first.url(512, 512)
     }
   end
