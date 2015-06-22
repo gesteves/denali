@@ -16,18 +16,12 @@ class BufferJob < ActiveJob::Base
   def build_body(entry)
     {
       profile_ids: get_profile_ids,
-      text: build_text(entry),
+      text: "#{entry.formatted_title}\n\n#{permalink_url(entry)}",
       shorten: false,
       media: build_media(entry),
       now: true,
       access_token: ENV['buffer_access_token']
     }
-  end
-
-  def build_text(entry)
-    text = entry.formatted_title
-    text += "\n\n#{entry.plain_body}" unless entry.body.blank?
-    text += "\n\n#{permalink_url(entry)}"
   end
 
   def build_media(entry)
