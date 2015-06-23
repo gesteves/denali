@@ -28,15 +28,9 @@
 }
 
 .entry__headline {
-  font-size: 16px;
-  line-height: 1.5;
-  margin: 1.5rem 0;
-}
-
-.entry__headline--text {
-  font-size: 24px;
-  line-height: 1;
-  margin: 1rem 0;
+  font-size: 20px;
+  line-height: (24/20);
+  margin: (2.4rem/2.0) 0;
 }
 
 .entry__meta {
