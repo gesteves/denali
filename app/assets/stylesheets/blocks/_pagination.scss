@@ -6,11 +6,6 @@
   text-align: center;
   width: 100%;
 
-  @at-root #{&}__link {
-    color: $color-text-alt;
-    margin: 0 1rem;
-  }
-
   @media (min-width: $bp-xs) {
     font-size: 24px;
     line-height: 1.5;
@@ -27,4 +22,9 @@
     color: $color-links;
     text-decoration: none;
   }
+}
+
+.pagination__link {
+  color: $color-text-alt;
+  margin: 0 1rem;
 }

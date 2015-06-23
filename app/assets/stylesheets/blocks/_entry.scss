@@ -14,89 +14,89 @@
   @media (min-width: $bp-max) {
     margin: ($bp-max * 0.2) auto;
   }
+}
 
-  @at-root #{&}__body {
-    @extend %default-entry-styles;
-    margin: 0 auto;
-    max-width: $bp-l;
-    padding: 0 20px;
+.entry__body {
+  @extend %default-entry-styles;
+  margin: 0 auto;
+  max-width: $bp-l;
+  padding: 0 20px;
 
-    @media (min-width: $bp-l) {
-      padding: 0;
-    }
-  }
-
-  @at-root #{&}__headline {
-    font-size: 16px;
-    line-height: 1.5;
-    margin: 1.5rem 0;
-  }
-
-  @at-root #{&}__headline--text {
-    font-size: 24px;
-    line-height: 1;
-    margin: 1rem 0;
-  }
-
-  @at-root #{&}__meta {
-    color: $color-text;
-    font-size: 12px;
-    font-weight: 400;
-    line-height: 2;
-    margin: 24px auto;
-    max-width: $bp-l;
-    padding: 0 20px;
-
-    p {
-      font-size: 14px;
-      line-height: (2.4/1.4);
-      margin: 0;
-    }
-
-    a:link,
-    a:visited {
-      color: $color-text;
-    }
-
-    a:hover,
-    a:active {
-      color: $color-links;
-      text-decoration: none;
-    }
-
-    @media (min-width: $bp-l) {
-      padding: 0;
-    }
-  }
-
-  @at-root #{&}__photo {
-    font-size: 0;
-    margin: 0 0 24px;
+  @media (min-width: $bp-l) {
     padding: 0;
-    text-align: center;
-    width: 100%;
+  }
+}
 
-    a {
-      display: inline-block;
-      font-size: 0;
-      margin: 0;
-      padding: 0;
-    }
+.entry__headline {
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 1.5rem 0;
+}
+
+.entry__headline--text {
+  font-size: 24px;
+  line-height: 1;
+  margin: 1rem 0;
+}
+
+.entry__meta {
+  color: $color-text;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 2;
+  margin: 24px auto;
+  max-width: $bp-l;
+  padding: 0 20px;
+
+  p {
+    font-size: 14px;
+    line-height: (2.4/1.4);
+    margin: 0;
   }
 
-  @at-root #{&}__image {
+  a:link,
+  a:visited {
+    color: $color-text;
+  }
+
+  a:hover,
+  a:active {
+    color: $color-links;
+    text-decoration: none;
+  }
+
+  @media (min-width: $bp-l) {
+    padding: 0;
+  }
+}
+
+.entry__photo {
+  font-size: 0;
+  margin: 0 0 24px;
+  padding: 0;
+  text-align: center;
+  width: 100%;
+
+  a {
     display: inline-block;
-    max-width: 100%;
-    width: auto;
+    font-size: 0;
+    margin: 0;
+    padding: 0;
   }
+}
 
-  @at-root #{&}__image--fit {
-    max-height: 100vh;
-  }
+.entry__image {
+  display: inline-block;
+  max-width: 100%;
+  width: auto;
+}
 
-  @at-root #{&}--photo #{&}__body {
-    border-top: 1px solid $color-border;
-  }
+.entry__image--fit {
+  max-height: 100vh;
+}
+
+.entry--photo #{&}__body {
+  border-top: 1px solid $color-border;
 }
 
 .entry__image--zoomable {

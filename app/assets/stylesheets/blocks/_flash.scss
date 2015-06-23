@@ -9,16 +9,16 @@
     font-weight: 100;
     line-height: 1;
   }
+}
 
-  @at-root #{&}--success {
-    @include flash($color-alert-success);
-  }
+.flash--success {
+  @include flash($color-alert-success);
+}
 
-  @at-root #{&}--warning {
-    @include flash($color-alert-warning);
-  }
+.flash--warning {
+  @include flash($color-alert-warning);
+}
 
-  @at-root #{&}--danger {
-    @include flash($color-alert-danger);
-  }
+.flash--danger {
+  @include flash($color-alert-danger);
 }

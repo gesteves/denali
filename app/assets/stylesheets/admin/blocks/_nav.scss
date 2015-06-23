@@ -19,42 +19,42 @@
     background-color: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(10px);
   }
+}
 
-  @at-root #{&}__group {
-    align-content: center;
-    display: flex;
-    flex-flow: row nowrap;
-    flex-grow: 1;
+.nav__group {
+  align-content: center;
+  display: flex;
+  flex-flow: row nowrap;
+  flex-grow: 1;
+}
+
+.nav__link {
+  display: block;
+  padding: 0 10px;
+
+  &:link,
+  &:visited {
+    color: $color-gray-dark;
   }
 
-  @at-root #{&}__link {
-    display: block;
-    padding: 0 10px;
+  &:hover,
+  &:active {
+    color: $color-links;
+    text-decoration: none;
+  }
+}
 
-    &:link,
-    &:visited {
-      color: $color-gray-dark;
-    }
+.nav__link--is-active {
+  border-bottom: 2px solid;
+  font-weight: 600;
 
-    &:hover,
-    &:active {
-      color: $color-links;
-      text-decoration: none;
-    }
+  &:link,
+  &:visited {
+    color: $color-text;
   }
 
-  @at-root #{&}__link--is-active {
-    border-bottom: 2px solid;
-    font-weight: 600;
-
-    &:link,
-    &:visited {
-      color: $color-text;
-    }
-
-    &:hover,
-    &:active {
-      color: $color-links;
-    }
+  &:hover,
+  &:active {
+    color: $color-links;
   }
 }

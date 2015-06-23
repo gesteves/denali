@@ -12,22 +12,6 @@
   position: relative;
   text-align: center;
 
-  @at-root #{&}--info {
-    @include button($color-alert-info);
-  }
-
-  @at-root #{&}--danger {
-    @include button($color-alert-danger);
-  }
-
-  @at-root #{&}--success {
-    @include button($color-alert-success);
-  }
-
-  @at-root #{&}--pad-right {
-    padding-right: 20px;
-  }
-
   &:hover {
     cursor: pointer;
   }
@@ -35,4 +19,20 @@
   &:focus {
     outline-width: 0;
   }
+}
+
+.button--info {
+  @include button($color-alert-info);
+}
+
+.button--danger {
+  @include button($color-alert-danger);
+}
+
+.button--success {
+  @include button($color-alert-success);
+}
+
+.button--pad-right {
+  padding-right: 20px;
 }

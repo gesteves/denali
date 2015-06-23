@@ -1,11 +1,9 @@
-.entry-list {
-  @at-root #{&}--sortable > * {
-    &:hover {
-      cursor: grab;
-    }
+.entry-list--sortable > * {
+  &:hover {
+    cursor: grab;
+  }
 
-    &:active {
-      cursor: grabbing;
-    }
+  &:active {
+    cursor: grabbing;
   }
 }

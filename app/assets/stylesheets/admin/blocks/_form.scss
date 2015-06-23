@@ -2,225 +2,225 @@
   display: flex;
   flex-flow: column;
 
-  @at-root #{&}__input {
-    border: 1px solid $color-border;
-    border-radius: 2px;
-    color: $color-text;
-    display: block;
-    flex-grow: 1;
-    font-family: 'proxima-nova', sans-serif;
-    font-size: 24px;
-    line-height: 1.5;
-    margin: 6px 0;
-
-    &:focus,
-    &:required:focus,
-    &:required:invalid:focus {
-      border-color: shade($color-border, 15%);
-      outline-width: 0;
-    }
-
-    &:required {
-      border-color: $color-border;
-    }
-
-    &:required::placeholder {
-      font-weight: 600;
-    }
-
-    &:invalid {
-      border-color: $color-alert-danger;
-    }
-
-    &::placeholder {
-      font-weight: 100;
-    }
-
-    @at-root #{&}--small {
-      font-size: 14px;
-      line-height: 1.5;
-    }
-
-    @at-root #{&}--textarea {
-      font-size: 14px;
-      height: 240px;
-      line-height: 1.5;
-    }
-
-    @at-root #{&}--short {
-      height: 48px;
-    }
-
-    @at-root #{&}--caption {
-      flex-grow: 0;
-      font-size: 16px;
-      height: 60px;
-      margin: 0 0 6px;
-      width: 100%;
-    }
-
-    @at-root #{&}--file {
-      display: none;
-    }
-
-    @at-root #{&}--url {
-      font-size: 14px;
-      line-height: (24/14);
-      margin: 0;
-      padding: 6px 2px;
-    }
-  }
-
-  @at-root #{&}__actions {
-    display: flex;
-    flex-flow: row nowrap;
-    padding: 24px 0;
-  }
-
-  @at-root #{&}__buttons {
-    display: flex;
-  }
-
-  @at-root #{&}__buttons--safe {
-    flex-grow: 1;
-    justify-content: flex-end;
-  }
-
-  @at-root #{&}__select-container {
-    position: relative;
-
-    &:after {
-      color: $color-gray-medium;
-      content: '▼';
-      position: absolute;
-      right: 8px;
-      top: 50%;
-      transform: scaleY(0.8) translateY(-50%);
-    }
-  }
-
-  @at-root #{&}__inline {
-    align-items: center;
-    display: flex;
-  }
-
-  @at-root #{&}__label {
-    font-family: 'proxima-nova', sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 1.5;
-    margin: 24px 0 0;
-
-    @at-root #{&}--slug {
-      color: $color-text-alt;
-      font-size: 14px;
-      font-weight: normal;
-      margin: 0 2px 0 0;
-    }
-
-    @at-root #{&}--checkbox {
-      align-items: center;
-      display: block;
-      flex: row wrap;
-      font-weight: 300;
-      line-height: 2;
-      margin: 0;
-    }
-  }
-
-  @at-root #{&}__photos {
-    border-bottom: 1px solid $color-border;
-    padding: 0 0 24px;
-  }
-
-  @at-root #{&}__options {
-    border-bottom: 1px solid $color-border;
-    border-top: 1px solid $color-border;
-    display: flex;
-    flex-flow: column;
-    margin: 24px 0 0;
-    padding: 24px 0;
-
-    h2 {
-      font-family: 'proxima-nova', sans-serif;
-      font-size: 12px;
-      font-weight: bold;
-      line-height: 1.5;
-      margin: 0;
-    }
-  }
-
-  @at-root #{&}__photo {
-    background-color: rgba(255, 255, 255, 0.75);
-    margin: 0 0 24px;
-
-    @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-      -webkit-backdrop-filter: blur(10px);
-      backdrop-filter: blur(10px);
-    }
-
-    &:hover {
-      cursor: grab;
-    }
-
-    &:active {
-      cursor: grabbing;
-    }
-  }
-
-  @at-root #{&}__photo-thumb {
-    width: 300px;
-  }
-
-  @at-root #{&}__photo-fields {
-    display: flex;
-    flex-flow: column nowrap;
-    flex-grow: 1;
-    justify-content: space-between;
-    margin-left: 10px;
-  }
-
-  @at-root #{&}__photo-delete {
-    align-self: flex-end;
-    flex: 0 1 auto;
-    margin-top: 24px;
-  }
-
-  @at-root #{&}__fields {
-    border: 1px solid $color-border;
-    display: flex;
-    padding: 12px 10px;
-    position: relative;
-
-    @at-root #{&}--hidden {
-      display: none;
-    }
-
-    @at-root #{&}--initial {
-      align-items: center;
-      border: 0;
-      padding: 0;
-    }
-  }
-
-  @at-root #{&}__fields-separator {
-    font-size: 12px;
-    line-height: 1.5;
-    margin: 0 5px;
-  }
-
-  .awesomplete {
-    flex-grow: 1;
-
-    input {
-      width: 100%;
-    }
-  }
-
   // Because Rails
   // scss-lint:disable SelectorFormat
   .field_with_errors {
     display: flex;
   }
   // scss-lint:enable SelectorFormat
+}
+
+.form__input {
+  border: 1px solid $color-border;
+  border-radius: 2px;
+  color: $color-text;
+  display: block;
+  flex-grow: 1;
+  font-family: 'proxima-nova', sans-serif;
+  font-size: 24px;
+  line-height: 1.5;
+  margin: 6px 0;
+
+  &:focus,
+  &:required:focus,
+  &:required:invalid:focus {
+    border-color: shade($color-border, 15%);
+    outline-width: 0;
+  }
+
+  &:required {
+    border-color: $color-border;
+  }
+
+  &:required::placeholder {
+    font-weight: 600;
+  }
+
+  &:invalid {
+    border-color: $color-alert-danger;
+  }
+
+  &::placeholder {
+    font-weight: 100;
+  }
+
+  &.form__input--small {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  &.form__input--textarea {
+    font-size: 14px;
+    height: 240px;
+    line-height: 1.5;
+  }
+
+  &.form__input--short {
+    height: 48px;
+  }
+
+  &.form__input--caption {
+    flex-grow: 0;
+    font-size: 16px;
+    height: 60px;
+    margin: 0 0 6px;
+    width: 100%;
+  }
+
+  &.form__input--file {
+    display: none;
+  }
+
+  &.form__input--url {
+    font-size: 14px;
+    line-height: (24/14);
+    margin: 0;
+    padding: 6px 2px;
+  }
+}
+
+.form__actions {
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 24px 0;
+}
+
+.form__buttons {
+  display: flex;
+}
+
+.form__buttons--safe {
+  flex-grow: 1;
+  justify-content: flex-end;
+}
+
+.form__select-container {
+  position: relative;
+
+  &:after {
+    color: $color-gray-medium;
+    content: '▼';
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: scaleY(0.8) translateY(-50%);
+  }
+}
+
+.form__inline {
+  align-items: center;
+  display: flex;
+}
+
+.form__label {
+  font-family: 'proxima-nova', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.5;
+  margin: 24px 0 0;
+
+  &.form__label--slug {
+    color: $color-text-alt;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0 2px 0 0;
+  }
+
+  &.form__label--checkbox {
+    align-items: center;
+    display: block;
+    flex: row wrap;
+    font-weight: 300;
+    line-height: 2;
+    margin: 0;
+  }
+}
+
+.form__photos {
+  border-bottom: 1px solid $color-border;
+  padding: 0 0 24px;
+}
+
+.form__options {
+  border-bottom: 1px solid $color-border;
+  border-top: 1px solid $color-border;
+  display: flex;
+  flex-flow: column;
+  margin: 24px 0 0;
+  padding: 24px 0;
+
+  h2 {
+    font-family: 'proxima-nova', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1.5;
+    margin: 0;
+  }
+}
+
+.form__photo {
+  background-color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 24px;
+
+  @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+  }
+
+  &:hover {
+    cursor: grab;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.form__photo-thumb {
+  width: 300px;
+}
+
+.form__photo-fields {
+  display: flex;
+  flex-flow: column nowrap;
+  flex-grow: 1;
+  justify-content: space-between;
+  margin-left: 10px;
+}
+
+.form__photo-delete {
+  align-self: flex-end;
+  flex: 0 1 auto;
+  margin-top: 24px;
+}
+
+.form__fields {
+  border: 1px solid $color-border;
+  display: flex;
+  padding: 12px 10px;
+  position: relative;
+
+  &.form__fields--hidden {
+    display: none;
+  }
+
+  &.form__fields--initial {
+    align-items: center;
+    border: 0;
+    padding: 0;
+  }
+}
+
+.form__fields-separator {
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0 5px;
+}
+
+.awesomplete {
+  flex-grow: 1;
+
+  input {
+    width: 100%;
+  }
 }
