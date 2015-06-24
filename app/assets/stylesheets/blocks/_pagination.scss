@@ -1,5 +1,5 @@
 .pagination {
-  font-size: 24px;
+  font-size: 48px;
   line-height: 1;
   margin: 1rem 0;
   max-width: $bp-l;
@@ -7,7 +7,6 @@
   width: 100%;
 
   @media (min-width: $bp-xs) {
-    font-size: 48px;
     margin: 1rem auto;
   }
 
