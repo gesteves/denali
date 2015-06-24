@@ -101,6 +101,12 @@
   cursor: zoom-in;
 }
 
+.entry--photo {
+  .entry__body {
+    border-top: 1px solid $color-border;
+  }
+}
+
 %default-entry-styles {
   p,
   ul,
