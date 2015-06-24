@@ -1,14 +1,13 @@
 .pagination {
-  font-size: 16px;
-  line-height: 1.5;
-  margin: 1.5rem 0;
+  font-size: 24px;
+  line-height: 1;
+  margin: 1rem 0;
   max-width: $bp-l;
   text-align: center;
   width: 100%;
 
   @media (min-width: $bp-xs) {
-    font-size: 24px;
-    line-height: 1.5;
+    font-size: 48px;
     margin: 1rem auto;
   }
 
