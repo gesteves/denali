@@ -2,7 +2,7 @@
   <% unless exif.make.blank? || exif.model.blank? %><span class="exif__field" data-field-name="Camera"><%= camera exif.make, exif.model %></span><% end %>
   <% unless exif.focal_length.blank? %><span class="exif__field" data-field-name="Focal length"><%= exif.focal_length %> mm</span><% end %>
   <% unless exif.film_make.blank? || exif.film_type.blank? %><span class="exif__field" data-field-name="Film"><%= film exif.film_make, exif.film_type %></span><% end %>
-  <% unless exif.exposure.blank? %><span class="exif__field" data-field-name="Exposure"><%= exposure exif.exposure %>&Prime;</span><% end %>
-  <% unless exif.f_number.blank? %><span class="exif__field" data-field-name="Aperture"><span class="exif__f">f</span>/<%= aperture exif.f_number %></span><% end %>
+  <% unless exif.exposure.blank? %><span class="exif__field" data-field-name="Exposure"><%= exposure exif.exposure %> s</span><% end %>
+  <% unless exif.f_number.blank? %><span class="exif__field" data-field-name="Aperture">f/<%= aperture exif.f_number %></span><% end %>
   <% unless exif.iso.blank? %><span class="exif__field" data-field-name="ISO"><%= exif.iso %></span><% end %>
 </span>
