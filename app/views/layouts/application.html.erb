@@ -19,9 +19,15 @@
 
 <%= yield %>
 
-<% cache "footer/#{Time.now.strftime('%Y')}" do %>
+<% cache "footer/#{@photoblog.id}/#{@photoblog.updated_at.to_i}/#{Time.now.strftime('%Y')}" do %>
   <footer class="footer">
-      <p> &copy; <%= copyright_years %> <a href="http://gesteves.com" rel="me">Guillermo Esteves</a> &middot; Powered by <%= link_to 'Denali', 'https://github.com/gesteves/denali' %></p>
+      <p>
+      &copy; <%= copyright_years %> <a href="http://www.gesteves.com" rel="me">Guillermo Esteves</a>
+      &middot; <a href="http://twitter.com/gesteves" rel="me">Twitter</a>
+      &middot; <a href="http://instagram.com/gesteves" rel="me">Instagram</a>
+      &middot; <a href="http://gesteves.tumblr.com" rel="me">Tumblr</a>
+      &middot; <%= link_to 'RSS', rss_url %>
+      </p>
   </footer>
 <% end %>
 

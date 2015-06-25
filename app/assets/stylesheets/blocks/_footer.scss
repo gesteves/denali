@@ -1,11 +1,16 @@
 .footer {
-  margin: 0 auto;
-  padding: 10px 20px;
+  margin: 24px auto;
+  max-width: $bp-l;
+  padding: 0 20px;
   width: 100%;
 
   p {
     font-size: 14px;
     line-height: (24/14);
     text-align: center;
+  }
+
+  @media (min-width: $bp-l) {
+    padding: 0;
   }
 }
