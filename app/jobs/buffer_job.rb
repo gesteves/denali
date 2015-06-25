@@ -16,7 +16,7 @@ class BufferJob < ActiveJob::Base
   def build_body(entry)
     {
       profile_ids: get_profile_ids,
-      text: "#{entry.formatted_title}\n\n#{permalink_url(entry)}",
+      text: "#{entry.formatted_title}\n\n#{short_permalink_url(entry)}",
       shorten: false,
       media: build_media(entry),
       now: true,
