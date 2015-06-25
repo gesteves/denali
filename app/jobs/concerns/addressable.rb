@@ -11,4 +11,8 @@ module Addressable
     year, month, day, id, slug = entry.slug_params
     Rails.application.routes.url_helpers.entry_long_path(year, month, day, id, slug)
   end
+
+  def short_permalink_url(entry)
+    Rails.application.routes.url_helpers.entry_url(entry.id, { host: @photoblog.short_domain })
+  end
 end

@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_filter :get_photoblog
 
-  helper_method :current_user, :logged_in?, :logged_out?, :permalink_path, :permalink_url
+  helper_method :current_user, :logged_in?, :logged_out?, :permalink_path, :permalink_url, :short_permalink_url
 
   def default_url_options
     if Rails.env.production?
@@ -42,6 +42,10 @@ class ApplicationController < ActionController::Base
   def permalink_url(entry)
     year, month, day, id, slug = entry.slug_params
     entry_long_url(year, month, day, id, slug)
+  end
+
+  def short_permalink_url(entry)
+    entry_url(entry.id, { host: @photoblog.short_domain })
   end
 
   def domain_redirect

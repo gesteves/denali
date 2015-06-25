@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150621235547) do
+ActiveRecord::Schema.define(version: 20150625224100) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20150621235547) do
     t.string   "domain"
     t.text     "description"
     t.integer  "posts_per_page", default: 10
+    t.string   "short_domain"
   end
 
   add_index "blogs", ["domain"], name: "index_blogs_on_domain"

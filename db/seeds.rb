@@ -6,4 +6,4 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Blog.create(name: 'All-Encompassing Trip', domain: 'www.allencompassingtrip.com', description: 'Photography by Guillermo Esteves', posts_per_page: 36)
+Blog.create(name: 'All-Encompassing Trip', domain: 'www.allencompassingtrip.com', short_domain: 'aetrip.co', description: 'Photography by Guillermo Esteves', posts_per_page: 36)
