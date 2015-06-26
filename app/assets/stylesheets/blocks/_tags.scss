@@ -2,6 +2,7 @@
   [rel="tag"] {
     margin-right: 4px;
     text-transform: lowercase;
+    white-space: nowrap;
 
     &::before {
       content: '#';
