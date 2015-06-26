@@ -21,13 +21,8 @@
 
 <% cache "footer/#{@photoblog.id}/#{@photoblog.updated_at.to_i}/#{Time.now.strftime('%Y')}" do %>
   <footer class="footer">
-      <p>
-      &copy; <%= copyright_years %> <a href="http://www.gesteves.com" rel="me">Guillermo Esteves</a>
-      &middot; <a href="http://twitter.com/gesteves" rel="me">Twitter</a>
-      &middot; <a href="http://instagram.com/gesteves" rel="me">Instagram</a>
-      &middot; <a href="http://gesteves.tumblr.com" rel="me">Tumblr</a>
-      &middot; <%= link_to 'RSS', rss_url %>
-      </p>
+      <p>If you like these photos, follow me on <a href="http://twitter.com/gesteves" rel="me">Twitter</a>, <a href="http://instagram.com/gesteves" rel="me">Instagram</a>, <a href="http://gesteves.tumblr.com" rel="me">Tumblr</a>, or subscribe to my <%= link_to 'RSS feed', rss_url %>.</p>
+      <p>&copy; <%= copyright_years %> <a href="http://www.gesteves.com" rel="me">Guillermo Esteves</a>. Have a nice day!</p>
   </footer>
 <% end %>
 

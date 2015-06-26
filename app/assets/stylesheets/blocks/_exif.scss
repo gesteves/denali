@@ -1,9 +1,13 @@
 .exif__field {
+  color: $color-text-alt;
   white-space: nowrap;
 
-  &::before {
-    color: $color-text-alt;
-    content: ' • ' attr(data-field-name);
-    margin-right: 4px;
+  &::after {
+    content: ' • ';
+    margin-right: 2px;
+  }
+
+  &:last-of-type::after {
+    content: none;
   }
 }

@@ -25,6 +25,10 @@ module EntriesHelper
     "#{make} #{model.gsub(%r{#{make}}i, '')}"
   end
 
+  def article(word)
+    %w(a e i o u).include?(word[0].downcase) ? 'an' : 'a'
+  end
+
   def atom_tag(url, date)
     tag = url.gsub(/^http(s)?:\/\//, '').gsub('#', '/').split('/')
     tag[0] = "tag:#{tag[0]},#{date.strftime('%Y-%m-%d')}:"

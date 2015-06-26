@@ -4,6 +4,10 @@
   justify-content: flex-start;
   margin: 48px auto;
   max-width: $bp-xl;
+
+  @media (min-width: $bp-m) {
+    margin: 72px auto;
+  }
 }
 
 .entry-list__item {

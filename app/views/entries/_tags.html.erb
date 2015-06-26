@@ -1,0 +1,5 @@
+<p class="tags">
+  <% tags.each do |tag| %>
+    <%= link_to tag.name, tag_path(tag.slug), { rel: 'tag' } %>
+  <% end %>
+</p>

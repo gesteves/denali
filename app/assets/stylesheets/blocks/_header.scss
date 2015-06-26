@@ -1,18 +1,19 @@
 .header {
-  margin: 48px auto 24px;
+  margin: 48px auto;
   max-width: $bp-max;
   text-align: center;
   width: 100%;
 
   h1 {
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 300;
-    line-height: 1;
+    line-height: (24/24);
     margin: 0;
     width: 100%;
 
     @media (min-width: $bp-s) {
-      font-size: 24px;
+      font-size: 36px;
+      line-height: (36/36);
     }
   }
 
@@ -20,16 +21,13 @@
     font-size: 16px;
     font-style: italic;
     font-weight: 300;
-    line-height: 1.5;
+    line-height: (24/16);
     margin: 0;
-  }
 
-  p {
-    font-size: 16px;
-    font-weight: 300;
-    line-height: 1.5;
-    margin: 0;
-    width: 100%;
+    @media (min-width: $bp-s) {
+      font-size: 18px;
+      line-height: (36/18);
+    }
   }
 
   a:link,
@@ -41,5 +39,9 @@
   a:active {
     color: $color-links;
     text-decoration: none;
+  }
+
+  @media (min-width: $bp-m) {
+    margin: 72px auto;
   }
 }

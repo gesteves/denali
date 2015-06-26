@@ -1,8 +1,11 @@
 .share {
-  margin: 0 auto;
+  margin: 12px auto 0;
   max-width: $bp-l;
-  padding: 48px 0 0;
   text-align: center;
+
+  @media (min-width: $bp-m) {
+    margin: 18px auto 0;
+  }
 }
 
 .share__link {
