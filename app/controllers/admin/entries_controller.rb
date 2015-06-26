@@ -115,7 +115,13 @@ class Admin::EntriesController < AdminController
 
   def preview
     respond_to do |format|
-      format.html { render 'entries/show', layout: 'application' }
+      format.html {
+        if @entry.is_published?
+          redirect_to permalink_url @entry
+        else
+          render 'entries/show', layout: 'application'
+        end
+      }
     end
   end
 
