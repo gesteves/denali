@@ -37,6 +37,30 @@ module.exports = function(grunt) {
         bundleExec: true
       }
     },
+    svgstore: {
+      options: {
+        prefix: 'svg-',
+        svg: {
+          style: 'display: none;'
+        },
+        cleanup: ['style', 'fill', 'stroke']
+      },
+      default: {
+        files: {
+          'app/views/partials/_icons.svg.erb': ['tmp/app/assets/images/svg/*.svg']
+        }
+      }
+    },
+    svgmin: {
+      options: {},
+      dist: {
+        files: [{
+          expand: true,
+          src: ['app/assets/images/svg/*.svg'],
+          dest: 'tmp'
+        }]
+      }
+    },
     watch: {
       js: {
         files: '<%= jshint.files %>',
@@ -45,6 +69,10 @@ module.exports = function(grunt) {
       sass: {
         files: ['.scss-lint.yml', 'app/assets/stylesheets/**/*.scss'],
         tasks: 'scsslint'
+      },
+      svg: {
+        files: ['source/svg/*.svg'],
+        tasks: ['svgmin', 'svgstore']
       }
     }
   });
@@ -52,6 +80,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-scss-lint');
+  grunt.loadNpmTasks('grunt-svgstore');
+  grunt.loadNpmTasks('grunt-svgmin');
 
   grunt.registerTask('default', 'watch');
+  grunt.registerTask('svg', ['svgmin', 'svgstore']);
 };

@@ -25,6 +25,9 @@
     <meta name="twitter:card" content="<%= @entry.is_text? ? "summary" : "summary_large_image" %>" />
   <% end %>
 <% end %>
+<% content_for :svg do %>
+  <%= render partial: 'partials/icons.svg.erb' %>
+<% end %>
 
 
 <%= render partial: 'entries/entry', object: @entry %>

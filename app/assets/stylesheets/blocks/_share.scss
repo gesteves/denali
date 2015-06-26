@@ -1,0 +1,31 @@
+.share {
+  margin: 0 auto;
+  max-width: $bp-l;
+  padding: 48px 0 0;
+  text-align: center;
+}
+
+.share__link {
+  border-radius: 40px;
+  display: inline-block;
+  height: 40px;
+  margin: 0 5px;
+  width: 40px;
+
+  &:link,
+  &:visited {
+    background-color: #DDD;
+  }
+
+  &:hover,
+  &:active {
+    background-color: $color-links;
+  }
+}
+
+.share__icon {
+  fill: #FFF;
+  height: 100%;
+  padding: 10px;
+  width: 100%;
+}

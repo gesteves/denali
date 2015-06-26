@@ -37,4 +37,48 @@ module ApplicationHelper
     first_entry = Entry.published.last
     first_entry.nil? ? current_year : "#{first_entry.published_at.strftime('%Y')}-#{current_year}"
   end
+
+  def inline_svg(svg_id, svg_class = "icon")
+    svg_id = svg_id.gsub("#", "")
+    "<svg viewBox=\"0 0 100 100\" class=\"#{svg_class} #{svg_class}--#{svg_id}\"><use xlink:href=\"#svg-#{svg_id}\"></use></svg>".html_safe
+  end
+
+  def facebook_share_url(entry)
+    params = {
+      u: permalink_url(entry)
+    }
+
+    "https://www.facebook.com/sharer/sharer.php?#{params.to_query}"
+  end
+
+  def twitter_share_url(entry)
+    params = {
+      text: entry.tweet_text.blank? ? truncate(entry.formatted_title, length: 120, omission: '…') : entry.tweet_text,
+      url: permalink_url(entry),
+      via: 'gesteves'
+    }
+
+    "https://twitter.com/intent/tweet?#{params.to_query}"
+  end
+
+  def tumblr_share_url(entry)
+    params = {
+      posttype: 'photo',
+      content: entry.photos.map{ |p| p.url(2560) }.join(','),
+      caption: "<a href=\"#{permalink_url entry}\">#{entry.formatted_title}</a>",
+      tags: entry.tag_list.join(',')
+    }
+
+    "https://www.tumblr.com/widgets/share/tool?#{params.to_query}"
+  end
+
+  def pinterest_share_url(entry)
+    params = {
+      url: permalink_url(entry),
+      media: entry.photos.first.url(2560),
+      description: entry.formatted_title
+    }
+
+    "https://www.pinterest.com/pin/create/button/?#{params.to_query}"
+  end
 end
