@@ -10,7 +10,6 @@
 
 .entry__body {
   @extend %default-entry-styles;
-  border-bottom: 1px solid $color-border;
   margin: 0 auto;
   max-width: $bp-m;
   padding: 24px 20px;
@@ -33,9 +32,10 @@
 }
 
 .entry__meta {
-  border-bottom: 1px solid $color-border;
+  border-bottom: 4px solid $color-border;
+  border-top: 1px solid $color-border;
   margin: 0 auto;
-  max-width: $bp-m;
+  max-width: ($bp-m - 180px);
   padding: 24px 20px;
 
   p {
@@ -65,7 +65,7 @@
   }
 
   @media (min-width: $bp-m) {
-    padding: 36px 90px;
+    padding: 36px 0;
   }
 }
 
@@ -112,7 +112,7 @@
 
 .entry--photo {
   .entry__body {
-    border-top: 1px solid $color-border;
+    border-top: 4px solid $color-border;
     padding-top: 24px;
 
     @media (min-width: $bp-m) {

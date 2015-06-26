@@ -25,36 +25,10 @@
     </div>
 
     <div class="entry__meta">
-      <p>
-        <%= entry.user.name %>
-
-        <% if entry.is_published? %>
-          published
-        <% elsif entry.is_queued? %>
-          queued
-        <% elsif entry.is_draft? %>
-          drafted
-        <% else %>
-          updated
-        <% end %>
-
-        <% if entry.is_text? %>
-          this article
-        <% elsif entry.is_photoset? %>
-          these photos
-        <% elsif entry.is_photo? %>
-          this photo
-        <% end %>
-        on
-        <% if entry.is_published? %>
-          <%= link_to entry.published_at.strftime('%B %-d, %Y'), permalink_url(entry) %>
-        <% else %>
-          <%= link_to entry.updated_at.strftime('%B %-d, %Y'), preview_admin_entry_url(entry) %>
-        <% end %>
-      </p>
-      <%= render partial: 'entries/exif', object: entry.photos.first if entry.photos.count == 1 %>
+      <%= render partial: 'entries/byline', locals: { entry: entry } %>
+      <%= render partial: 'entries/exif', locals: { photo: entry.photos.first } if entry.photos.count == 1 %>
       <%= render partial: 'entries/tags', object: entry.tags unless entry.tags.blank? %>
-      <%= render partial: 'entries/share', object: entry if entry.is_photo? %>
+      <%= render partial: 'entries/share', locals: { entry: entry } if entry.is_photo? %>
     </div>
   </article>
 <% end %>
