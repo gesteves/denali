@@ -13,6 +13,6 @@ module Addressable
   end
 
   def short_permalink_url(entry)
-    Rails.application.routes.url_helpers.entry_url(entry.id, { host: @photoblog.short_domain })
+    Rails.application.routes.url_helpers.entry_url(entry.id, { host: entry.blog.short_domain })
   end
 end
