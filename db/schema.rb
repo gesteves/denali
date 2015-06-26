@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150625224100) do
+ActiveRecord::Schema.define(version: 20150626230450) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(version: 20150625224100) do
     t.boolean  "post_to_tumblr"
     t.string   "tweet_text"
     t.boolean  "post_to_facebook"
+    t.boolean  "send_yo"
   end
 
   add_index "entries", ["blog_id"], name: "index_entries_on_blog_id"
