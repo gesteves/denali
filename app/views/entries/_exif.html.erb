@@ -7,6 +7,9 @@
       <% end %>
     </span>
   <% end %>
+  <% unless photo.focal_length.blank? %>
+    <span class="exif__field"><%= photo.focal_length %> mm focal length</span>
+  <% end %>
   <% unless photo.exposure.blank? && photo.f_number.blank? %>
     <span class="exif__field">
       <% unless photo.exposure.blank? %>
