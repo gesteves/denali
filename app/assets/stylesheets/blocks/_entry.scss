@@ -240,4 +240,12 @@
       top: -10px;
     }
   }
+
+  .twitter_tweet {
+    margin: 24px auto 0 !important;
+
+    @media (min-width: $bp-m) {
+      margin: 36px auto 0 !important;
+    }
+  }
 }
