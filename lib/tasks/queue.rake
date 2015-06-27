@@ -8,7 +8,7 @@ namespace :queue do
       TwitterJob.perform_later(entry) if entry.post_to_twitter
       TumblrJob.perform_later(entry) if entry.post_to_tumblr
       BufferJob.perform_later(entry) if entry.post_to_facebook
-      YoJob.perform_later(entry)
+      YoJob.perform_later(entry) if entry.send_yo
       puts "Entry \"#{entry.title}\" published successfully."
     else
       puts 'Queued entry failed to publish.'
