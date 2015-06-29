@@ -38,7 +38,6 @@ gem 'resque'
 gem 'resque-scheduler'
 
 # Social Networks
-gem 'twitter'
 gem 'tumblr_client'
 
 group :production do
