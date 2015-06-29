@@ -1,5 +1,4 @@
-require 'open-uri'
-class TumblrJob < ActiveJob::Base
+class TumblrJob < EntryJob
 
   queue_as :default
 
@@ -29,10 +28,5 @@ class TumblrJob < ActiveJob::Base
       })
       tumblr.text(ENV['tumblr_domain'], opts)
     end
-  end
-
-  def permalink_url(entry)
-    year, month, day, id, slug = entry.slug_params
-    Rails.application.routes.url_helpers.entry_long_url(year, month, day, id, slug, { host: entry.blog.domain })
   end
 end
