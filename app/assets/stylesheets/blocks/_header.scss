@@ -6,7 +6,9 @@
 
   h1 {
     font-family: 'kepler-std-display', 'Times New Roman', serif;
+    font-feature-settings: 'liga', 'clig';
     font-size: 24px;
+    font-variant-ligatures: common-ligatures;
     font-weight: 300;
     line-height: (24/24);
     margin: 0;
