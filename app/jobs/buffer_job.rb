@@ -9,7 +9,7 @@ class BufferJob < EntryJob
   def build_body(entry, service)
     body = {
       profile_ids: get_profile_ids(service),
-      text: build_text(service, entry),
+      text: build_text(entry, service),
       shorten: false,
       now: true,
       access_token: ENV['buffer_access_token']
