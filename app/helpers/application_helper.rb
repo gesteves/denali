@@ -63,9 +63,10 @@ module ApplicationHelper
 
   def tumblr_share_url(entry)
     params = {
-      posttype: 'photo',
-      content: entry.photos.map{ |p| p.url(2560) }.join(','),
-      caption: "<a href=\"#{permalink_url entry}\">#{entry.formatted_title}</a>",
+      posttype: 'link',
+      title: entry.formatted_title,
+      content: permalink_url(entry),
+      caption: entry.formatted_body,
       tags: entry.tag_list.join(',')
     }
 
