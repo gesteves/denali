@@ -2,7 +2,8 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  before_filter :get_photoblog
+
+  before_action :get_photoblog
 
   helper_method :current_user, :logged_in?, :logged_out?, :permalink_path, :permalink_url, :short_permalink_url
 

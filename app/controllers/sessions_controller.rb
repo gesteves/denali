@@ -1,4 +1,5 @@
 class SessionsController < ApplicationController
+  skip_before_action :domain_redirect
 
   def new
     render layout: nil
