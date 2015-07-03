@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
 
   get '/page/:page'                    => 'entries#index',  constraints: { page: /\d+/ }, :as => :entries
+  get '/count/:count'                  => 'entries#index',  constraints: { count: /\d+/ }
   get '/tagged/:tag(/page/:page)'      => 'entries#tagged', constraints: { page: /\d+/ }, :as => :tag
   get '/tagged/:tag(/count/:count)'    => 'entries#tagged', constraints: { count: /\d+/ }
   get '/e/:id'                         => 'entries#show',   constraints: { id: /\d+/ }, :as => :entry
