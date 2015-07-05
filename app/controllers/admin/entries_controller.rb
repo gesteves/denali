@@ -4,6 +4,7 @@ class Admin::EntriesController < AdminController
 
   after_action :enqueue_jobs, only: [:create, :publish]
   after_action :enqueue_invalidation, only: [:update]
+  after_action :update_position, only: [:publish, :queue, :draft, :create]
 
   # GET /admin/entries
   def index
@@ -38,29 +39,25 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/publish
   def publish
+    notice = @entry.publish ? 'Entry was successfully published.' : 'Entry couldn\'t be published.'
     respond_to do |format|
-      if @entry.publish && @entry.update_position
-        notice = 'Entry was successfully published.'
-      else
-        notice = 'Entry couldn\'t be published.'
-      end
-      format.html { redirect_to request.referrer || admin_entries_path, notice: notice }
+      format.html { redirect_to admin_entries_path, notice: notice }
     end
   end
 
   # PATCH /admin/entries/1/queue
   def queue
-    notice = @entry.queue && @entry.update_position ? 'Entry was successfully queued.' : 'Entry couldn\'t be queued.'
+    notice = @entry.queue ? 'Entry was successfully queued.' : 'Entry couldn\'t be queued.'
     respond_to do |format|
-      format.html { redirect_to request.referrer || queued_admin_entries_path, notice: notice }
+      format.html { redirect_to queued_admin_entries_path, notice: notice }
     end
   end
 
   # PATCH /admin/entries/1/draft
   def draft
-    notice = @entry.draft && @entry.update_position ? 'Entry was successfully saved as draft.' : 'Entry couldn\'t be saved as draft.'
+    notice = @entry.draft ? 'Entry was successfully saved as draft.' : 'Entry couldn\'t be saved as draft.'
     respond_to do |format|
-      format.html { redirect_to request.referrer || drafts_admin_entries_path, notice: notice }
+      format.html { redirect_to drafts_admin_entries_path, notice: notice }
     end
   end
 
@@ -70,7 +67,7 @@ class Admin::EntriesController < AdminController
     @entry.user = current_user
     @entry.blog = @photoblog
     respond_to do |format|
-      if @entry.save && @entry.update_position
+      if @entry.save
         format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
       else
         format.html { render :new }
@@ -150,6 +147,10 @@ class Admin::EntriesController < AdminController
 
     def enqueue_invalidation
       CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && @entry.is_published? && entry_params[:invalidate_cloudfront] == "1"
+    end
+
+    def update_position
+      @entry.update_position
     end
 
     def get_redirect_url(entry)

@@ -85,11 +85,9 @@ class Entry < ActiveRecord::Base
 
   def update_position
     if self.is_queued?
-      self.insert_at(Entry.last_queued_position + 1) if self.position.nil?
-      !self.position.nil?
-    elsif self.is_published? || self.is_draft?
+      self.insert_at(Entry.last_queued_position + 1)
+    else
       self.remove_from_list
-      self.position.nil?
     end
   end
 
