@@ -40,25 +40,19 @@ class Admin::EntriesController < AdminController
   # PATCH /admin/entries/1/publish
   def publish
     notice = @entry.publish ? 'Entry was successfully published.' : 'Entry couldn\'t be published.'
-    respond_to do |format|
-      format.html { redirect_to admin_entries_path, notice: notice }
-    end
+    redirect_entry(@entry, notice)
   end
 
   # PATCH /admin/entries/1/queue
   def queue
     notice = @entry.queue ? 'Entry was successfully queued.' : 'Entry couldn\'t be queued.'
-    respond_to do |format|
-      format.html { redirect_to queued_admin_entries_path, notice: notice }
-    end
+    redirect_entry(@entry, notice)
   end
 
   # PATCH /admin/entries/1/draft
   def draft
     notice = @entry.draft ? 'Entry was successfully saved as draft.' : 'Entry couldn\'t be saved as draft.'
-    respond_to do |format|
-      format.html { redirect_to drafts_admin_entries_path, notice: notice }
-    end
+    redirect_entry(@entry, notice)
   end
 
   # POST /admin/entries
@@ -151,6 +145,12 @@ class Admin::EntriesController < AdminController
 
     def update_position
       @entry.update_position
+    end
+
+    def redirect_entry(entry, notice)
+      respond_to do |format|
+        format.html { redirect_to get_redirect_url(entry), notice: notice }
+      end
     end
 
     def get_redirect_url(entry)
