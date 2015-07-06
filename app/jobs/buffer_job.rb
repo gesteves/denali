@@ -20,10 +20,10 @@ class BufferJob < EntryJob
 
   def build_text(entry, service)
     if service == 'twitter'
-      caption = entry.tweet_text.blank? ? entry.formatted_title : entry.formatted_tweet_text
+      caption = entry.tweet_text.blank? ? entry.title : entry.tweet_text
       caption = truncate(caption, length: 90, omission: '…')
     else
-      caption = entry.formatted_title
+      caption = entry.title
     end
     "#{caption} #{permalink_url(entry)}"
   end
