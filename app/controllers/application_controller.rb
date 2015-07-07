@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_login
-    redirect_to signin_url unless current_user
+    redirect_to signin_path unless current_user
   end
 
   def logged_in?
