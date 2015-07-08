@@ -1,11 +1,16 @@
-task :deploy => ['deploy:push']
+task :deploy => ['deploy:push', 'deploy:figaro']
 
 namespace :deploy do
-  task :migrations => [:push, :off, :migrate, :restart, :on]
+  task :migrations => [:push, :off, :figaro, :migrate, :restart, :on]
 
   task :push do
     puts 'Pushing app to Heroku...'
     puts `git push heroku master`
+  end
+
+  task :figaro do
+    puts 'Syncing configuration values...'
+    puts `bundle exec figaro heroku:set -e production`
   end
 
   task :restart do
