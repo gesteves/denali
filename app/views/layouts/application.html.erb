@@ -4,7 +4,7 @@
   <%= render partial: 'partials/analytics' if Rails.env.production? %>
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
-  <%= stylesheet_link_tag 'application', media: 'all' %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': true %>
   <script src="http://use.typekit.net/vtp0iqq.js" onload="try{Typekit.load();}catch(e){}" async></script>
   <%= csrf_meta_tags %>
 </head>
@@ -26,6 +26,6 @@
   </footer>
 <% end %>
 
-<%= javascript_include_tag 'application' %>
+<%= javascript_include_tag 'application', 'data-turbolinks-track': true %>
 </body>
 </html>

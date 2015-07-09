@@ -37,7 +37,7 @@ Denali.ImageZoom = (function () {
   };
 })();
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('page:change', function() {
   'use strict';
   Denali.ImageZoom.init();
 });

@@ -51,13 +51,13 @@ Denali.Shortcuts = (function () {
 
   var newerPage = function () {
     if (newer_page) {
-      window.location.href = newer_page.getAttribute('href');
+      Turbolinks.visit(newer_page.getAttribute('href'));
     }
   };
 
   var olderPage = function () {
     if (older_page) {
-      window.location.href = older_page.getAttribute('href');
+      Turbolinks.visit(older_page.getAttribute('href'));
     }
   };
 
@@ -74,7 +74,7 @@ Denali.Shortcuts = (function () {
   };
 })();
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('page:change', function() {
   'use strict';
   Denali.Shortcuts.init();
 });

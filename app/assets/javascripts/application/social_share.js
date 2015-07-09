@@ -28,7 +28,7 @@ Denali.SocialShare = (function () {
   };
 })();
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('page:change', function() {
   'use strict';
   Denali.SocialShare.init();
 });
