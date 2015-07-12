@@ -18,6 +18,7 @@ Denali.Shortcuts = (function () {
     photos = document.querySelectorAll(opts.photos);
     older_page = document.querySelector(opts.older_page);
     newer_page = document.querySelector(opts.newer_page);
+    document.removeEventListener('page:change', Denali.Shortcuts.init);
   };
 
   var doKeyPress = function (e) {
@@ -74,7 +75,4 @@ Denali.Shortcuts = (function () {
   };
 })();
 
-document.addEventListener('page:change', function() {
-  'use strict';
-  Denali.Shortcuts.init();
-});
+document.addEventListener('page:change', Denali.Shortcuts.init);
