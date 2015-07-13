@@ -14,13 +14,12 @@ Denali.Shortcuts = (function () {
       photos;
 
   var init = function () {
-    document.addEventListener('keydown', doKeyPress);
     photos = document.querySelectorAll(opts.photos);
     older_page = document.querySelector(opts.older_page);
     newer_page = document.querySelector(opts.newer_page);
   };
 
-  var doKeyPress = function (e) {
+  var handleKeyPress = function (e) {
     var key = e.key || e.keyCode || e.which;
     var keys = {
       left  : 37,
@@ -70,12 +69,10 @@ Denali.Shortcuts = (function () {
   };
 
   return {
-    init : init
+    init : init,
+    handleKeyPress: handleKeyPress
   };
 })();
 
-document.addEventListener('DOMContentLoaded', function () {
-  'use strict';
-  Denali.Shortcuts.init();
-  document.addEventListener('page:change', Denali.Shortcuts.init);
-});
+document.addEventListener('page:change', Denali.Shortcuts.init);
+document.addEventListener('keydown', Denali.Shortcuts.handleKeyPress);

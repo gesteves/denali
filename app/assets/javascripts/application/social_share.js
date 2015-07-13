@@ -28,8 +28,4 @@ Denali.SocialShare = (function () {
   };
 })();
 
-document.addEventListener('DOMContentLoaded', function () {
-  'use strict';
-  Denali.SocialShare.init();
-  document.addEventListener('page:change', Denali.SocialShare.init);
-});
+document.addEventListener('page:change', Denali.SocialShare.init);
