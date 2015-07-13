@@ -11,6 +11,7 @@ entry:
     - 1024x0
     - 768x0
     - 2048x0
+    - 1152x0
     - 1536x0
     - 1280x0
     - 1440x0
@@ -38,6 +39,7 @@ entry_list_item:
     - 684x684
     - 516x516
     - 640x640
+    - 768x768
   sizes:
     - "(min-width: 1280px) 320px"
     - "(min-width: 600px) calc(100vw/3)"
