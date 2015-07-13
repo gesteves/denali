@@ -15,7 +15,6 @@ Denali.SocialShare = (function () {
       button = buttons[i];
       button.addEventListener('click', openShareWindow);
     }
-    document.removeEventListener('page:change', Denali.SocialShare.init);
   };
 
   var openShareWindow = function (e) {
@@ -29,4 +28,8 @@ Denali.SocialShare = (function () {
   };
 })();
 
-document.addEventListener('page:change', Denali.SocialShare.init);
+document.addEventListener('DOMContentLoaded', function () {
+  'use strict';
+  Denali.SocialShare.init();
+  document.addEventListener('page:change', Denali.SocialShare.init);
+});

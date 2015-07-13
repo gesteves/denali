@@ -23,7 +23,6 @@ Denali.ImageZoom = (function () {
         zoomable_images.push(image);
       }
     }
-    document.removeEventListener('page:change', Denali.ImageZoom.init);
   };
 
   var toggleZoom = function (e) {
@@ -38,4 +37,8 @@ Denali.ImageZoom = (function () {
   };
 })();
 
-document.addEventListener('page:change', Denali.ImageZoom.init);
+document.addEventListener('DOMContentLoaded', function () {
+  'use strict';
+  Denali.ImageZoom.init();
+  document.addEventListener('page:change', Denali.ImageZoom.init);
+});
