@@ -73,6 +73,3 @@ Denali.Shortcuts = (function () {
     handleKeyPress: handleKeyPress
   };
 })();
-
-document.addEventListener('page:change', Denali.Shortcuts.init);
-document.addEventListener('keydown', Denali.Shortcuts.handleKeyPress);
