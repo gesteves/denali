@@ -13,7 +13,7 @@ class EntriesController < ApplicationController
   end
 
   def show
-    @entry = @photoblog.entries.published.find(params[:id])
+    @entry = @photoblog.entries.includes(:photos, :user).published.find(params[:id])
     expires_in 60.minutes, :public => true
     respond_to do |format|
       format.html {
@@ -42,13 +42,13 @@ class EntriesController < ApplicationController
   end
 
   def rss
-    @entries = @photoblog.entries.published.page(1)
+    @entries = @photoblog.entries.includes(:photos, :user).published.page(1)
     expires_in 60.minutes, :public => true
     render format: 'atom'
   end
 
   def sitemap
-    @entries = @photoblog.entries.published
+    @entries = @photoblog.entries.includes(:photos).published
     expires_in 24.hours, :public => true
     render format: 'xml'
   end
@@ -70,7 +70,7 @@ class EntriesController < ApplicationController
   def load_entries
     @page = params[:page] || 1
     @count = params[:count] || @photoblog.posts_per_page
-    @entries = @photoblog.entries.published.page(@page).per(@count)
+    @entries = @photoblog.entries.includes(:photos).published.page(@page).per(@count)
   end
 
   def load_tags
@@ -82,6 +82,6 @@ class EntriesController < ApplicationController
   def load_tagged_entries
     @page = params[:page] || 1
     @count = params[:count] || @photoblog.posts_per_page
-    @entries = @photoblog.entries.published.tagged_with(@tag_list, any: true).page(@page).per(@count)
+    @entries = @photoblog.entries.includes(:photos).published.tagged_with(@tag_list, any: true).page(@page).per(@count)
   end
 end

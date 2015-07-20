@@ -1,7 +1,6 @@
 module ApplicationHelper
 
   def responsive_image_tag(photo, photo_key, html_options = {})
-    html_options.reverse_merge! alt: photo.caption.blank? ? photo.entry.title : photo.plain_caption
     html_options[:srcset] = get_srcset(photo, photo_key)
     html_options[:sizes] = get_sizes(photo_key)
     content_tag :img, nil, html_options
