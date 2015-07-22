@@ -1,4 +1,4 @@
-$gutters: 4px;
+$gutters: 8px;
 
 .entry-list {
   column-count: 2;
@@ -23,7 +23,7 @@ $gutters: 4px;
 .entry-list__item {
   display: inline-block;
   font-size: 0;
-  margin-bottom: 2px;
+  margin-bottom: $gutters;
   overflow: hidden;
   position: relative;
 }
