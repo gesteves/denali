@@ -43,7 +43,6 @@ entry_list_item:
   filters:
     - "no_upscale()"
     - "quality(90)"
-  smart_cropping: Yes
 admin_entry:
   srcset:
     - 800x0
