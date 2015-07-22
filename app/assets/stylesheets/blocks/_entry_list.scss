@@ -21,7 +21,7 @@ $gutters: 8px;
 }
 
 .entry-list__item {
-  display: block;
+  display: inline-block;
   font-size: 0;
   margin-bottom: $gutters;
   overflow: hidden;
