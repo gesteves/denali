@@ -1,35 +1,31 @@
+$gutters: 8px;
+
 .entry-list {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
+  column-count: 2;
+  column-gap: $gutters;
   margin: 48px auto;
   max-width: $bp-xl;
+  padding: 0 $gutters;
+
+  @media (min-width: $bp-s) {
+    column-count: 3;
+  }
 
   @media (min-width: $bp-m) {
     margin: 72px auto;
+  }
+
+  @media (min-width: $bp-xl) {
+    column-count: 4;
   }
 }
 
 .entry-list__item {
   display: block;
-  flex-basis: 50%;
-  flex-grow: 0;
-  flex-shrink: 0;
   font-size: 0;
+  margin-bottom: $gutters;
   overflow: hidden;
   position: relative;
-
-  @media (min-width: $bp-s) {
-    flex-basis: calc(100%/3);
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-
-  @media (min-width: $bp-xl) {
-    flex-basis: 25%;
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
 }
 
 .entry-list__link {
@@ -65,7 +61,6 @@
   right: 0;
   text-shadow: 0 1px 0 #000;
   top: 0;
-  transition: opacity ease-in-out 150ms;
   width: 100%;
 
   &:hover {
@@ -78,13 +73,6 @@
   max-height: calc(50vw - 3rem);
   padding: 1.5rem;
 
-  @media (min-width: $bp-s) {
-    max-height: calc((100vw/3) - 3rem);
-  }
-
-  @media (min-width: $bp-xl) {
-    max-height: calc(#{$bp-xl}/4 - 3rem);
-  }
 
   h2 {
     font-size: 16px;
@@ -102,6 +90,14 @@
   p + p {
     margin-top: 0;
     text-indent: 1.5rem;
+  }
+
+  @media (min-width: $bp-s) {
+    max-height: calc((100vw/3));
+  }
+
+  @media (min-width: $bp-xl) {
+    max-height: ($bp-xl/4);
   }
 
   &::after {
