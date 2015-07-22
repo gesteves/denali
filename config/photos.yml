@@ -26,24 +26,27 @@ entry:
     - "quality(90)"
 entry_list_item:
   srcset:
-    - 296x0
-    - 544x0
-    - 351x0
-    - 424x0
-    - 585x0
-    - 705x0
-    - 662x0
-    - 490x0
-    - 746x0
-    - 310x0
-    - 620x0
+    - 320x320
+    - 480x480
+    - 568x568
+    - 376x376
+    - 446x446
+    - 621x621
+    - 738x738
+    - 342x342
+    - 258x258
+    - 684x684
+    - 516x516
+    - 640x640
+    - 768x768
   sizes:
-    - "(min-width: 1280px) 310px"
-    - "(min-width: 600px) calc((100vw - 32px)/3)"
-    - calc((100vw - 24px)/2)
+    - "(min-width: 1280px) 320px"
+    - "(min-width: 600px) calc(100vw/3)"
+    - calc(100vw/2)
   filters:
     - "no_upscale()"
     - "quality(90)"
+  smart_cropping: Yes
 admin_entry:
   srcset:
     - 800x0
