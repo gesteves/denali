@@ -26,23 +26,20 @@ entry:
     - "quality(90)"
 entry_list_item:
   srcset:
-    - 320x320
-    - 480x480
-    - 568x568
-    - 376x376
-    - 446x446
-    - 621x621
-    - 738x738
-    - 342x342
-    - 258x258
-    - 684x684
-    - 516x516
-    - 640x640
-    - 768x768
+    - 308x308
+    - 363x363
+    - 603x603
+    - 336x336
+    - 672x672
+    - 251x251
+    - 502x502
+    - 758x758
+    - 315x315
+    - 630x630
   sizes:
-    - "(min-width: 1280px) 320px"
-    - "(min-width: 600px) calc(100vw/3)"
-    - calc(100vw/2)
+    - "(min-width: 1280px) 315px"
+    - "(min-width: 600px) calc((100vw - 16px)/3)"
+    - calc((100vw - 12px)/2)
   filters:
     - "no_upscale()"
     - "quality(90)"
