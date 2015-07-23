@@ -3,3 +3,4 @@
 //= require_tree ./application
 
 document.addEventListener('page:change', picturefill);
+Turbolinks.enableProgressBar();
