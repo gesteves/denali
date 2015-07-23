@@ -36,12 +36,6 @@ module ApplicationHelper
     PHOTOS[photo_key]['smart_cropping'].present? && PHOTOS[photo_key]['smart_cropping']
   end
 
-  def copyright_years
-    current_year = Time.now.strftime('%Y')
-    first_entry = Entry.published.last
-    first_entry.nil? ? current_year : "#{first_entry.published_at.strftime('%Y')}-#{current_year}"
-  end
-
   def inline_svg(svg_id, svg_class = "icon")
     svg_id = svg_id.gsub("#", "")
     "<svg viewBox=\"0 0 100 100\" class=\"#{svg_class} #{svg_class}--#{svg_id}\"><use xlink:href=\"#svg-#{svg_id}\"></use></svg>".html_safe
