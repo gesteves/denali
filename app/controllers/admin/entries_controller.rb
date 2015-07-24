@@ -6,6 +6,8 @@ class Admin::EntriesController < AdminController
   after_action :enqueue_invalidation, only: [:update]
   after_action :update_position, only: [:publish, :queue, :draft, :create]
 
+  skip_before_action :require_login, only: [:preview]
+
   # GET /admin/entries
   def index
     @page = params[:page] || 1
