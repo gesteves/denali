@@ -1,15 +1,15 @@
 module AdminHelper
 
   def published_count(opts = {})
-    render_count Entry.published.count, opts
+    render_count Entry.published.size, opts
   end
 
   def drafts_count(opts = {})
-    render_count Entry.drafted.count, opts
+    render_count Entry.drafted.size, opts
   end
 
   def queued_count(opts = {})
-    render_count Entry.queued.count, opts
+    render_count Entry.queued.size, opts
   end
 
   private
