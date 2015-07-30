@@ -42,7 +42,7 @@ gem 'resque-scheduler'
 gem 'tumblr_client'
 
 group :production do
-  gem 'puma'
+  gem 'passenger'
   gem 'pg'
   gem 'rails_12factor'
   gem 'newrelic_rpm'

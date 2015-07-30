@@ -143,9 +143,10 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (= 0.3.0)
+    passenger (5.0.15)
+      rack
+      rake (>= 0.8.1)
     pg (0.18.2)
-    puma (2.11.3)
-      rack (>= 1.1, < 2.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -285,8 +286,8 @@ DEPENDENCIES
   newrelic_rpm
   omniauth-google-oauth2
   paperclip (~> 4.2)
+  passenger
   pg
-  puma
   rails (= 4.2.3)
   rails_12factor
   redcarpet
