@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
   end
 
   def domain_redirect
-    if Rails.env.production? && !request.host.match(@photoblog.domain) && !request.user_agent.match(/cloudfront/i)
+    if Rails.env.production? && !request.host.try(:match, @photoblog.domain) && !request.user_agent.try(:match, /cloudfront/i)
       redirect_to "http://#{@photoblog.domain}#{request.fullpath}", status: 301
     end
   end
