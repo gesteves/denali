@@ -20,7 +20,11 @@ Denali.SocialShare = (function () {
   var openShareWindow = function (e) {
     e.preventDefault();
     var link = this.getAttribute('href');
+    var network = this.getAttribute('data-social-share');
     window.open(link, 'Share', 'width=500,height=400');
+    Denali.Analytics.trackEvent('Share', {
+      network: network
+    });
   };
 
   return {

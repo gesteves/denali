@@ -35,10 +35,13 @@ Denali.ImageZoom = (function () {
   };
 
   var toggleZoom = function (e) {
+    var zoom_state;
     e.preventDefault();
     for (var i = 0; i < zoomable_images.length; i++) {
       zoomable_images[i].classList.toggle(opts.zoom_class);
     }
+    zoom_state = zoomable_images[0].classList.contains(opts.zoom_class) ? 'Zoom out' : 'Zoom in';
+    Denali.Analytics.trackEvent(zoom_state);
   };
 
   return {

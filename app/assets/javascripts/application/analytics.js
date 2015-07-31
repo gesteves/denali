@@ -17,8 +17,19 @@ Denali.Analytics = (function () {
     }
   };
 
+  var trackEvent = function(name, data) {
+    if (typeof _gs !== 'undefined') {
+      if (typeof data === 'undefined') {
+        _gs('event', name);
+      } else {
+        _gs('event', name, data);
+      }
+    }
+  };
+
   return {
-    init : init
+    init : init,
+    trackEvent : trackEvent
   };
 })();
 
