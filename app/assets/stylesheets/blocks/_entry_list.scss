@@ -3,7 +3,7 @@
   flex-flow: row wrap;
   justify-content: center;
   margin: 48px auto;
-  max-width: $bp-xl;
+  max-width: $bp-max;
   padding: 0 2px;
 
   @media (min-width: $bp-m) {
@@ -27,7 +27,7 @@
     flex-shrink: 0;
   }
 
-  @media (min-width: $bp-xl) {
+  @media (min-width: $bp-xxl) {
     flex-basis: 25%;
     flex-grow: 0;
     flex-shrink: 0;
@@ -48,44 +48,53 @@
 }
 
 .entry-list__photo {
+  background-color: $color-gray-light;
+  overflow: hidden;
   position: relative;
+
+  &:hover .entry-list__photo-title {
+    opacity: 1;
+  }
 }
 
 .entry-list__photo-title {
-  background: rgba(0, 0, 0, 0.65);
-  bottom: 0;
-  color: #FFF;
-  display: block;
-  font-size: 16px;
-  font-weight: 400;
-  height: 100%;
-  left: 0;
-  line-height: 1.5;
-  opacity: 0;
-  padding: 1.5rem;
-  position: absolute;
-  right: 0;
-  text-shadow: 0 1px 0 #000;
-  top: 0;
-  transition: opacity ease-in-out 150ms;
-  width: 100%;
+  display: none;
 
-  &:hover {
-    opacity: 1;
+  @media (min-width: $bp-s) {
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.85));
+    bottom: 0;
+    color: #FFF;
+    display: block;
+    font-size: 16px;
+    font-weight: 400;
+    left: 0;
+    line-height: 1.5;
+    opacity: 0;
+    padding: 3rem 1.5rem 1.5rem;
+    position: absolute;
+    right: 0;
+    text-shadow: 0 1px 0 #000;
+    transition: opacity 150ms linear;
+    width: 100%;
+    z-index: 1;
   }
 }
 
 .entry-list__item--text {
   font-size: 14px;
-  max-height: calc(50vw - 3rem);
+  max-height: calc((100vw - 12px)/2);
   padding: 1.5rem;
 
   @media (min-width: $bp-s) {
-    max-height: calc((100vw/3) - 3rem);
+    max-height: calc((100vw - 16px)/3);
   }
 
-  @media (min-width: $bp-xl) {
-    max-height: calc(#{$bp-xl}/4 - 3rem);
+  @media (min-width: $bp-xxl) {
+    max-height: calc((100vw - 20px)/4);
+  }
+
+  @media (min-width: $bp-max) {
+    max-height: 475px;
   }
 
   h2 {

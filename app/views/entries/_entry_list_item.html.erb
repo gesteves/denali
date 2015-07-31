@@ -12,7 +12,7 @@
         </figure>
       <% else %>
         <h2><%= entry_list_item.formatted_title %></h2>
-        <%= simple_format(truncate(entry_list_item.plain_body, length: 600, omission: '…')) %>
+        <%= simple_format(truncate(entry_list_item.plain_body, length: 1200, omission: '…')) %>
       <% end %>
     </a>
   </li>

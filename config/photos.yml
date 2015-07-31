@@ -30,18 +30,22 @@ entry_list_item:
     - 363x363
     - 603x603
     - 336x336
-    - 672x672
     - 251x251
+    - 672x672
     - 502x502
     - 758x758
-    - 315x315
-    - 630x630
+    - 422x422
+    - 844x844
+    - 355x355
+    - 710x710
+    - 475x475
+    - 950x950
   sizes:
-    - "(min-width: 1280px) 315px"
+    - "(min-width: 1920px) 475px"
+    - "(min-width: 1440px) calc((100vw - 20px)/4)"
     - "(min-width: 600px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
   filters:
-    - "no_upscale()"
     - "quality(90)"
 admin_entry:
   srcset:
