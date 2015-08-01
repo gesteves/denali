@@ -1,7 +1,10 @@
 .pagination {
-  font-size: 48px;
+  font-family: 'kepler-std-display', 'Times New Roman', serif;
+  font-size: 24px;
+  display: flex;
+  flex-flow: row nowrap;
   line-height: 1;
-  margin: 48px 0;
+  margin: 24px 0;
   max-width: $bp-l;
   text-align: center;
   width: 100%;
@@ -24,5 +27,21 @@
 
 .pagination__link {
   color: $color-text-alt;
-  margin: 0 1rem;
+  flex-basis: 50%;
+  padding: 24px 0;
+  text-align: center;
+
+  &:last-of-type {
+    border-left: 1px solid $color-border;
+  }
+}
+
+.pagination__prev::before {
+  content: '«';
+  padding: 0 1rem;
+}
+
+.pagination__next::after {
+  content: '»';
+  padding: 0 1rem;
 }
