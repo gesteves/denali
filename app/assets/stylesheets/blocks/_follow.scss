@@ -1,0 +1,21 @@
+.follow {
+  text-align: center;
+}
+
+.follow__link {
+  display: inline-block;
+  height: 20px;
+  margin: 0 10px;
+  padding: 2px;
+  width: 20px;
+
+  &:link,
+  &:visited {
+    fill: $color-text;
+  }
+
+  &:hover,
+  &:active {
+    fill: $color-links;
+  }
+}
