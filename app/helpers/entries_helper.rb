@@ -36,4 +36,8 @@ module EntriesHelper
     tag[0] = "tag:#{tag[0]},#{date.strftime('%Y-%m-%d')}:"
     tag.join('/')
   end
+
+  def background_blur(photo)
+    "style=\"background-image: url('#{photo.url(150, 0, ['quality(50)'])}')\"".html_safe
+  end
 end
