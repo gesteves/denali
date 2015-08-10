@@ -116,7 +116,7 @@
 }
 
 .entry__image--fit {
-  max-height: 90vh;
+  max-height: 95vh;
 }
 
 @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
@@ -134,10 +134,10 @@
   }
 
   .entry__image--zoomable.entry__image--fit {
-    margin: 48px 0;
+    margin: 24px 0;
 
     @media (min-width: $bp-m) {
-      margin: 72px 0;
+      margin: 36px 0;
     }
   }
 }
