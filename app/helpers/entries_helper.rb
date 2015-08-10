@@ -38,6 +38,6 @@ module EntriesHelper
   end
 
   def background_blur(photo)
-    "style=\"background-image: url('#{photo.url(150)}')\"".html_safe
+    "style=\"background-image: url('#{photo.url(150, 0, ['quality(50)'])}')\"".html_safe
   end
 end
