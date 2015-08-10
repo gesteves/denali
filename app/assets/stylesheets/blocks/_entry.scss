@@ -135,10 +135,10 @@
   }
 
   .entry__image--zoomable.entry__image--fit {
-    margin: 24px 0;
+    margin: 48px 0;
 
     @media (min-width: $bp-m) {
-      margin: 36px 0;
+      margin: 72px 0;
     }
   }
 }
