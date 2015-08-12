@@ -1,7 +1,7 @@
 .pagination {
   color: $color-text-alt;
   display: flex;
-  font-size: 48px;
+  font-size: 16px;
   justify-content: center;
   line-height: 1;
 }
@@ -20,4 +20,14 @@
     color: $color-links;
     text-decoration: none;
   }
+}
+
+.pagination__prev::before {
+  content: '«';
+  padding: 0 0.5rem;
+}
+
+.pagination__next::after {
+  content: '»';
+  padding: 0 0.5rem;
 }
