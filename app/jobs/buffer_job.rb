@@ -3,7 +3,6 @@ class BufferJob < EntryJob
   queue_as :default
 
   def perform(entry, service)
-    HTTParty.get(entry.photos.first.url(1200)) if service == 'facebook'
     HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: build_body(entry, service))
   end
 
