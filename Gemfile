@@ -19,7 +19,7 @@ gem 'autoprefixer-rails'
 gem 'turbolinks'
 
 # Misc
-gem 'jbuilder', '~> 2.0'
+gem 'jbuilder', '~> 2.3'
 gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'acts_as_list'
 gem 'redcarpet'
@@ -52,7 +52,7 @@ group :development, :test do
   gem 'scss-lint'
   gem 'foreman'
   gem 'byebug'
-  gem 'web-console', '~> 2.0'
+  gem 'web-console', '~> 2.1'
   gem 'spring'
   gem 'sqlite3'
 end
