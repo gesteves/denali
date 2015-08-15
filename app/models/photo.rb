@@ -51,9 +51,9 @@ class Photo < ActiveRecord::Base
 
   private
   def set_image
-    if !self.source_url.nil? && !self.source_url.blank?
+    if self.source_url.present?
       self.image = URI.parse(self.source_url)
-    elsif !self.source_file.nil? && !self.source_file.blank?
+    elsif self.source_file.present?
       self.image = self.source_file
     else
       self.image = nil
@@ -77,10 +77,10 @@ class Photo < ActiveRecord::Base
       self.iso = exif.iso_speed_ratings
       self.taken_at = exif.date_time
       self.exposure = exif.exposure_time
-      self.f_number = exif.f_number.to_f unless exif.f_number.nil?
-      self.focal_length = exif.focal_length.to_i unless exif.focal_length.nil?
-      save_gps_info(exif.gps) unless exif.gps.nil?
-      save_film_info(exif.user_comment) unless exif.user_comment.blank?
+      self.f_number = exif.try(:f_number).try(:to_f)
+      self.focal_length = exif.try(:focal_length).try(:to_i)
+      save_gps_info(exif.gps) if exif.gps.present?
+      save_film_info(exif.user_comment) if exif.user_comment.present?
     end
   end
 
@@ -93,7 +93,7 @@ class Photo < ActiveRecord::Base
     comment_array = comment.split(/(\n)+/).select{ |c| c =~ /^film/i }
     film_make = comment_array.select{ |c| c =~ /^film make/i }
     film_type = comment_array.select{ |c| c =~ /^film type/i }
-    self.film_make = film_make.first.gsub(/^film make:/i, '').strip unless film_make.blank?
-    self.film_type = film_type.first.gsub(/^film type:/i, '').strip unless film_type.blank?
+    self.film_make = film_make.try(:first).try(:gsub, /^film make:/i, '').try(:strip)
+    self.film_type = film_type.try(:first).try(:gsub, /^film type:/i, '').try(:strip)
   end
 end
