@@ -7,7 +7,7 @@
     <meta property="og:title" content="<%= @photoblog.name %>" />
     <% first_entry = @entries[0] %>
     <% if first_entry.is_photo? %>
-      <meta property="og:image" content="<%= first_entry.photos.first.url(1200) %>" />
+      <meta property="og:image" content="<%= first_entry.photos.first.url(1280) %>" />
     <% end %>
     <meta property="og:description" content="<%= Sanitize.fragment(@photoblog.description) %>" />
     <meta property="og:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>" />
@@ -21,7 +21,7 @@
     <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>" />
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <% if first_entry.is_photo? %>
-      <meta name="twitter:image" content="<%= first_entry.photos.first.url(1200) %>">
+      <meta name="twitter:image" content="<%= first_entry.photos.first.url(1280) %>">
       <meta name="twitter:card" content="summary_large_image">
     <% else %>
       <meta name="twitter:card" content="summary">

@@ -17,7 +17,7 @@ cache "rss/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
           xml.title e.formatted_title
           body = ''
           e.photos.each do |p|
-            body += image_tag p.url(2048)
+            body += image_tag p.url(1280)
             body += p.formatted_caption unless p.caption.blank?
           end
           body += e.formatted_body unless e.body.blank?

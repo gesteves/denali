@@ -5,7 +5,7 @@
     <link rel="canonical" href="<%= tag_url(@tags.first.slug) %>">
 
     <meta property="og:title" content="<%= raw "Entries tagged “#{@tags.first.name}” &middot; #{@photoblog.name}" %>" />
-    <meta property="og:image" content="<%= @photoblog.entries.photo_entries.published.last.photos.first.url(1200) %>" />
+    <meta property="og:image" content="<%= @photoblog.entries.photo_entries.published.last.photos.first.url(1280) %>" />
     <meta property="og:description" content="<%= Sanitize.fragment(@photoblog.description) %>" />
     <meta property="og:url" content="<%= @page.nil? || @page == 1 ? tag_url(@tags.first.slug) : tag_url(@tags.first.slug, @page) %>" />
     <meta property="og:type" content="Website" />
@@ -17,7 +17,7 @@
     <meta name="twitter:title" content="<%= raw "Entries tagged “#{@tags.first.name}” &middot; #{@photoblog.name}" %>">
     <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? tag_url(@tags.first.slug) : tag_url(@tags.first.slug, @page) %>" />
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
-    <meta name="twitter:image" content="<%= @photoblog.entries.photo_entries.published.first.photos.first.url(1200) %>">
+    <meta name="twitter:image" content="<%= @photoblog.entries.photo_entries.published.first.photos.first.url(1280) %>">
     <meta name="twitter:card" content="summary_large_image">
   <% end %>
 <% end %>

@@ -14,7 +14,7 @@ class BufferJob < EntryJob
       now: true,
       access_token: ENV['buffer_access_token']
     }
-    body[:media] = build_media(entry) if entry.is_photo?
+    body[:media] = build_media(entry, service) if entry.is_photo?
     body
   end
 
@@ -28,9 +28,10 @@ class BufferJob < EntryJob
     "#{caption} #{permalink_url(entry)}"
   end
 
-  def build_media(entry)
+  def build_media(entry, service)
+    width = service == 'twitter' ? 1280 : 2048
     {
-      picture: entry.photos.first.url(2048),
+      picture: entry.photos.first.url(width),
       thumbnail: entry.photos.first.url(512, 512)
     }
   end
