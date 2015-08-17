@@ -1,0 +1,14 @@
+<% content_for :nav do %>
+  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'tagged' } %>
+<% end %>
+
+<% cache "admin/entries/tagged/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% if @entries.size == 0 %>
+    <p class="content__message">You haven’t published any entries. Why don’t you <a href="<%= new_admin_entry_path %>">write one</a>?</p>
+  <% else %>
+    <ol class="entry__list">
+      <%= render partial: 'entry', collection: @entries %>
+    </ol>
+    <%= paginate @entries %>
+  <% end %>
+<% end %>

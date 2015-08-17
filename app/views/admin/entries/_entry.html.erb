@@ -11,8 +11,8 @@
     </div>
     <div class="entry__meta">
       <div>
-        <% entry.tag_list.each do |t| %>
-          <span class="entry__tag"><%= t %></span>
+        <% entry.tags.each do |t| %>
+          <span class="entry__tag"><%= link_to t.name, admin_tag_path(t.slug) %></span>
         <% end %>
       </div>
       <div class="entry__meta-bottom">

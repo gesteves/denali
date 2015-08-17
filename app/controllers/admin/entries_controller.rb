@@ -1,6 +1,9 @@
 class Admin::EntriesController < AdminController
+  include Tags
+
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :reposition, :preview]
   before_action :get_tags, only: [:new, :edit, :create, :update]
+  before_action :load_tags, :load_tagged_entries, only: [:tagged]
 
   after_action :enqueue_jobs, only: [:create, :publish]
   after_action :enqueue_invalidation, only: [:update]
@@ -25,6 +28,11 @@ class Admin::EntriesController < AdminController
   def drafts
     @entries = @photoblog.entries.includes(:photos).drafted
     @page_title = 'Drafts'
+  end
+
+  def tagged
+    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    @page_title = "Entries tagged \"#{@tag_list.first}\""
   end
 
   # GET /admin/entries/new
@@ -163,5 +171,10 @@ class Admin::EntriesController < AdminController
       else
         drafts_admin_entries_path
       end
+    end
+
+    def load_tagged_entries
+      @page = params[:page] || 1
+      @entries = @photoblog.entries.includes(:photos).tagged_with(@tag_list, any: true).page(@page)
     end
 end

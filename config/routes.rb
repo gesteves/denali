@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
+    get '/tagged/:tag(/page/:page)' => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tag'
     get 'settings' => 'blogs#edit'
     patch 'settings/update' => 'blogs#update'
 
