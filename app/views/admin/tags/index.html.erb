@@ -1,0 +1,3 @@
+<% @tags.each do |t| %>
+  <%= link_to t.name, admin_tagged_entries_path(t.slug) %>: <%= link_to 'Delete', admin_tag_path(t.id), method: :delete, data: { confirm: "Are you sure you want to delete the \"#{t.name}\" tag?" } %><br/>
+<% end %>

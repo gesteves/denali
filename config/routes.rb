@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    get '/tagged/:tag(/page/:page)' => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tag'
+    get '/tagged/:tag(/page/:page)' => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
     get 'settings' => 'blogs#edit'
     patch 'settings/update' => 'blogs#update'
 
@@ -22,6 +22,8 @@ Rails.application.routes.draw do
         get 'photo'
       end
     end
+
+    resources :tags, only: [:index, :destroy]
   end
 
 

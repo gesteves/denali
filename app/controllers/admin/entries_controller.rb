@@ -29,6 +29,7 @@ class Admin::EntriesController < AdminController
     @page_title = 'Drafts'
   end
 
+  # GET /admin/entries/tagged/film
   def tagged
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     @page_title = "Entries tagged \"#{@tag_list.first}\""
