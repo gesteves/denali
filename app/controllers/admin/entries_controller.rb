@@ -180,6 +180,6 @@ class Admin::EntriesController < AdminController
 
     def load_tagged_entries
       @page = params[:page] || 1
-      @entries = @photoblog.entries.includes(:photos).tagged_with(@tag_list, any: true).order('updated_at DESC').page(@page)
+      @entries = @photoblog.entries.includes(:photos).tagged_with(@tag_list, any: true).order('created_at DESC').page(@page)
     end
 end
