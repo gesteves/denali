@@ -1,5 +1,4 @@
 class EntriesController < ApplicationController
-  include Tags
 
   before_action :domain_redirect
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
@@ -73,6 +72,12 @@ class EntriesController < ApplicationController
     @page = params[:page] || 1
     @count = params[:count] || @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(:photos).published.page(@page).per(@count)
+  end
+
+  def load_tags
+    @tag_slug = params[:tag]
+    @tags = ActsAsTaggableOn::Tag.where(slug: params[:tag])
+    @tag_list = @tags.map{ |t| t.name }
   end
 
   def load_tagged_entries
