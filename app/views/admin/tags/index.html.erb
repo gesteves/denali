@@ -1,3 +1,17 @@
-<% @tags.each do |t| %>
-  <%= link_to t.name, admin_tagged_entries_path(t.slug) %>: <%= link_to 'Delete', admin_tag_path(t.id), method: :delete, data: { confirm: "Are you sure you want to delete the \"#{t.name}\" tag?" } %><br/>
-<% end %>
+<table>
+  <thead>
+    <tr>
+    <th>Tag</th>
+    <th>On</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tags.each do |t| %>
+      <tr>
+      <td><%= link_to t.name, admin_tagged_entries_path(t.slug) %></td>
+      <td><%= pluralize(Entry.tagged_with(t.name).size, 'item') %></td>
+      <td><%= link_to 'Delete', admin_tag_path(t.id), method: :delete, data: { confirm: "Are you sure you want to delete the \"#{t.name}\" tag?" } %></td>
+      </tr>
+  <% end %>
+  </tbody>
+</table>
