@@ -1,4 +1,5 @@
 class Admin::EntriesController < AdminController
+  include TagList
 
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :reposition, :preview]
   before_action :get_tags, only: [:new, :edit, :create, :update]
@@ -170,12 +171,6 @@ class Admin::EntriesController < AdminController
       else
         drafts_admin_entries_path
       end
-    end
-
-    def load_tags
-      @tag_slug = params[:tag]
-      @tags = ActsAsTaggableOn::Tag.where(slug: params[:tag])
-      @tag_list = @tags.map{ |t| t.name }
     end
 
     def load_tagged_entries
