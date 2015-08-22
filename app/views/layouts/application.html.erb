@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%= render partial: 'partials/analytics' if Rails.env.production? %>
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': true %>
-  <%= render partial: 'partials/typekit' %>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -31,6 +29,8 @@
     <p>&copy; 2009-<%= Time.now.strftime('%Y') %> <a href="http://www.gesteves.com" rel="me">Guillermo Esteves</a>. Published with <a href="https://github.com/gesteves/denali">Denali</a>.</p>
 </footer>
 
-<%= javascript_include_tag 'application', 'data-turbolinks-track': true, 'data-turbolinks-eval': false %>
+<%= javascript_include_tag 'application', 'data-turbolinks-track': true, 'data-turbolinks-eval': false, async: true %>
+<%= render partial: 'partials/typekit' %>
+<%= render partial: 'partials/analytics' if Rails.env.production? %>
 </body>
 </html>
