@@ -47,6 +47,7 @@ entry_list_item:
     - calc((100vw - 12px)/2)
   filters:
     - "quality(75)"
+    - "strip_icc()"
 admin_entry:
   srcset:
     - 800x0
