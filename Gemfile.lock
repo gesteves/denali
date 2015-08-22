@@ -88,6 +88,7 @@ GEM
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     hashie (3.4.2)
+    htmlcompressor (0.2.0)
     httparty (0.13.5)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
@@ -279,6 +280,7 @@ DEPENDENCIES
   exifr
   figaro
   foreman
+  htmlcompressor
   httparty
   jbuilder (~> 2.3)
   jquery-rails
@@ -306,4 +308,4 @@ DEPENDENCIES
   web-console (~> 2.1)
 
 BUNDLED WITH
-   1.10.5
+   1.10.6

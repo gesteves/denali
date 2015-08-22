@@ -17,6 +17,7 @@ gem 'jquery-rails'
 gem 'thumbor_rails', '1.1.0'
 gem 'autoprefixer-rails'
 gem 'turbolinks'
+gem 'htmlcompressor'
 
 # Misc
 gem 'jbuilder', '~> 2.3'

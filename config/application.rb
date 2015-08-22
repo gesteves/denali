@@ -26,6 +26,7 @@ module Denali
     config.generators.javascripts = false
     config.exceptions_app = self.routes
     config.middleware.use Rack::Deflater
+    config.middleware.use HtmlCompressor::Rack
     config.active_job.queue_adapter = :resque
   end
 end
