@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150626230450) do
+ActiveRecord::Schema.define(version: 20150823183604) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20150626230450) do
     t.integer  "focal_length"
     t.string   "film_make"
     t.string   "film_type"
+    t.boolean  "use_smart_cropping"
   end
 
   add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"
