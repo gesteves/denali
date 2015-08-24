@@ -49,6 +49,3 @@ Denali.ImageZoom = (function () {
     init : init
   };
 })();
-
-document.addEventListener('page:change', Denali.ImageZoom.init);
-document.addEventListener('orientationchange', Denali.ImageZoom.init);

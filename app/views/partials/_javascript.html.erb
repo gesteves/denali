@@ -1,0 +1,3 @@
+<%= render partial: 'partials/analytics' if Rails.env.production? %>
+<%= render partial: 'partials/typekit' %>
+<%= javascript_include_tag 'application', 'data-turbolinks-track': true, 'data-turbolinks-eval': false, async: true %>

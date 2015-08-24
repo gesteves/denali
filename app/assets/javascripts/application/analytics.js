@@ -26,5 +26,3 @@ Denali.Analytics = (function () {
     init : init
   };
 })();
-
-Denali.Analytics.init();
