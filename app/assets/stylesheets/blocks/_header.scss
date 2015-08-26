@@ -12,7 +12,7 @@
 .header__link {
   display: block;
   margin: 0 auto;
-  max-width: 480px;
+  max-width: 420px;
   width: 50vw;
 
   &:hover,
@@ -20,6 +20,14 @@
     path {
       fill: $color-links;
     }
+  }
+
+  @media (min-width: $bp-xxl) {
+    width: 460px;
+  }
+
+  @media (min-width: $bp-max) {
+    width: 480px;
   }
 }
 
