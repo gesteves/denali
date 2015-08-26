@@ -1,11 +1,11 @@
 .header {
-  margin: 24px auto;
+  margin: 48px auto;
   max-width: $bp-max;
   text-align: center;
   width: 100%;
 
   @media (min-width: $bp-m) {
-    margin: 36px auto;
+    margin: 72px auto;
   }
 }
 
