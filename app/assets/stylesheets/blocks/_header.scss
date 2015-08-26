@@ -23,11 +23,11 @@
   }
 
   @media (min-width: $bp-xxl) {
-    width: 460px;
+    max-width: 460px;
   }
 
   @media (min-width: $bp-max) {
-    width: 480px;
+    max-width: 480px;
   }
 }
 
