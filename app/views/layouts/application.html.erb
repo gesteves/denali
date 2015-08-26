@@ -12,8 +12,9 @@
 
 <% cache "header/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <header class="header">
-    <h1><a href="/"><%= @photoblog.name %></a></h1>
-    <h2><%= raw @photoblog.description %></h2>
+    <a href="/" class="header__link">
+      <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
+    </a>
   </header>
 <% end %>
 

@@ -2,12 +2,12 @@
   display: flex;
   flex-flow: row wrap;
   justify-content: center;
-  margin: 48px auto;
+  margin: 24px auto;
   max-width: $bp-max;
   padding: 0 2px;
 
   @media (min-width: $bp-m) {
-    margin: 72px auto;
+    margin: 36px auto;
   }
 }
 

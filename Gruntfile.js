@@ -71,7 +71,7 @@ module.exports = function(grunt) {
         tasks: 'scsslint'
       },
       svg: {
-        files: ['source/svg/*.svg'],
+        files: ['app/assets/svg/*.svg'],
         tasks: ['svgmin', 'svgstore']
       }
     }
