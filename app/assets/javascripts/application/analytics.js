@@ -3,14 +3,6 @@ var Denali = Denali || {};
 Denali.Analytics = (function () {
   'use strict';
 
-  var init = function () {
-    if (typeof Turbolinks !== 'undefined' && Turbolinks.supported) {
-      document.addEventListener('page:change', sendPageview);
-    } else {
-      sendPageview();
-    }
-  };
-
   var sendPageview = function () {
     if (typeof ga !== 'undefined') {
       ga('send', {
@@ -23,6 +15,6 @@ Denali.Analytics = (function () {
   };
 
   return {
-    init : init
+    sendPageview: sendPageview
   };
 })();
