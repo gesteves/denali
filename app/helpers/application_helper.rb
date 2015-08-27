@@ -17,14 +17,15 @@ module ApplicationHelper
   end
 
   def build_srcset_url(photo, width, quality, square)
-    imgix_path = Images.path(photo.original_path).auto('format').width(width).q(quality)
+    imgix_path = Images.path(photo.original_path).auto('format').q(quality)
     if square
-      imgix_path.height = width
       imgix_path.fit = 'crop'
       imgix_path.crop = 'faces' if photo.use_smart_cropping?
+      imgix_path.height = width
     else
       imgix_path.fit = 'max'
     end
+    imgix_path.width(width)
     "#{imgix_path.to_url} #{width}w"
   end
 
