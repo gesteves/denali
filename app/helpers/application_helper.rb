@@ -22,6 +22,8 @@ module ApplicationHelper
       imgix_path.height = width
       imgix_path.fit = 'crop'
       imgix_path.crop = 'faces' if photo.use_smart_cropping?
+    else
+      imgix_path.fit = 'max'
     end
     "#{imgix_path.to_url} #{width}w"
   end
