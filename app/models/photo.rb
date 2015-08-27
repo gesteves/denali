@@ -31,7 +31,9 @@ class Photo < ActiveRecord::Base
 
   def url(width, height = nil, quality = 90)
     path = Images.path(self.original_path).width(width).q(quality).auto('format')
-    unless height.nil?
+    if height.nil?
+      path.fit = 'max'
+    else
       path.height = height
       path.fit = 'crop'
     end
