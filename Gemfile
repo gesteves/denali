@@ -14,10 +14,10 @@ gem 'paperclip', '~> 4.2'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
-gem 'thumbor_rails', '1.1.0'
 gem 'autoprefixer-rails'
 gem 'turbolinks'
 gem 'htmlcompressor'
+gem 'imgix'
 
 # Misc
 gem 'jbuilder', '~> 2.3'

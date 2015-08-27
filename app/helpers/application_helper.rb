@@ -7,33 +7,27 @@ module ApplicationHelper
   end
 
   def get_srcset(photo, photo_key)
-    filters = get_filters(photo_key)
-    smart = use_smart_cropping?(photo, photo_key)
+    quality = PHOTOS[photo_key]['quality'] || 90
+    square = PHOTOS[photo_key]['square'].present?
     PHOTOS[photo_key]['srcset'].
       uniq.
-      sort{ |a, b| a.split('x').first.to_i <=> b.split('x').first.to_i }.
-      map{ |s| build_srcset_url(photo, s, filters, smart)}.
+      sort.
+      map { |width| build_srcset_url(photo, width, quality, square)}.
       join(', ')
   end
 
-  def build_srcset_url(photo, dimensions, filters, smart)
-    width = dimensions.split('x').first.to_i
-    height = dimensions.split('x').last.to_i
-    "#{photo.url(width, height, filters, smart)} #{width}w"
+  def build_srcset_url(photo, width, quality, square)
+    imgix_path = Images.path(photo.original_path).auto('format').width(width).q(quality)
+    if square
+      imgix_path.height = width
+      imgix_path.fit = 'crop'
+      imgix_path.crop = 'faces' if photo.use_smart_cropping?
+    end
+    "#{imgix_path.to_url} #{width}w"
   end
 
   def get_sizes(photo_key)
     PHOTOS[photo_key]['sizes'].join(', ')
-  end
-
-  def get_filters(photo_key)
-    filters = []
-    filters << PHOTOS[photo_key]['filters'] unless PHOTOS[photo_key]['filters'].nil?
-    filters
-  end
-
-  def use_smart_cropping?(photo, photo_key)
-    photo.use_smart_cropping? && PHOTOS[photo_key]['smart_cropping'].present? && PHOTOS[photo_key]['smart_cropping']
   end
 
   def inline_svg(svg_id, svg_class = "icon")

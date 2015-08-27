@@ -25,8 +25,17 @@ class Photo < ActiveRecord::Base
     self.image.url
   end
 
-  def url(width, height = 0, filters = ['quality(90)'], smart = false)
-    ApplicationController.helpers.thumbor_url self.original_url, width: width, height: height, filters: filters, smart: smart
+  def original_path
+    self.image.path
+  end
+
+  def url(width, height = nil, quality = 90)
+    path = Images.path(self.original_path).width(width).q(quality).auto('format')
+    unless height.nil?
+      path.height = height
+      path.fit = 'crop'
+    end
+    path.to_url
   end
 
   def formatted_caption
