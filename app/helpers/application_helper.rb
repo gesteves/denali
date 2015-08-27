@@ -12,12 +12,12 @@ module ApplicationHelper
     PHOTOS[photo_key]['srcset'].
       uniq.
       sort.
-      map { |width| build_srcset_url(photo.original_path, width, quality, square)}.
+      map { |width| build_srcset_url(photo, width, quality, square)}.
       join(', ')
   end
 
-  def build_srcset_url(path, width, quality, square)
-    imgix_path = Imgix.path(path).auto('format').width(width).q(quality)
+  def build_srcset_url(photo, width, quality, square)
+    imgix_path = Images.path(photo.original_path).auto('format').width(width).q(quality)
     if square
       imgix_path.height = width
       imgix_path.fit = 'crop'

@@ -30,7 +30,7 @@ class Photo < ActiveRecord::Base
   end
 
   def url(width, height = nil, quality = 90)
-    path = Imgix.path(self.original_path).width(width).q(quality).auto('format')
+    path = Images.path(self.original_path).width(width).q(quality).auto('format')
     unless height.nil?
       path.height = height
       path.fit = 'crop'
