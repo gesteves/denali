@@ -52,7 +52,7 @@ admin_entry:
   sizes:
     - "(min-width: 840px) 800px"
     - calc(100vw - 40px)
-  quality: 90
+  quality: 60
 admin_edit:
   srcset:
     - 300
@@ -60,4 +60,4 @@ admin_edit:
     - 900
   sizes:
     - 300px
-  quality: 90
+  quality: 60
