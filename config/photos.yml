@@ -43,7 +43,7 @@ entry_list_item:
     - "(min-width: 1440px) calc((100vw - 20px)/4)"
     - "(min-width: 600px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
-  quality: 75
+  quality: 60
   square: Yes
 admin_entry:
   srcset:
