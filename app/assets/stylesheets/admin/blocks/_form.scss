@@ -185,6 +185,10 @@
   flex-flow: column nowrap;
   flex-grow: 1;
   margin-left: 10px;
+
+  .form__label {
+    margin: 0;
+  }
 }
 
 .form__photo-delete {
