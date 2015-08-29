@@ -4,6 +4,7 @@ class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :reposition, :preview]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
+  before_action :set_crop_options, only: [:edit, :photo]
 
   after_action :enqueue_jobs, only: [:create, :publish]
   after_action :enqueue_invalidation, only: [:update]
@@ -137,7 +138,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_facebook, :send_yo, :tweet_text, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :use_smart_cropping])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_facebook, :send_yo, :tweet_text, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :crop])
     end
 
     def enqueue_jobs
@@ -176,5 +177,16 @@ class Admin::EntriesController < AdminController
     def load_tagged_entries
       @page = params[:page] || 1
       @entries = @photoblog.entries.includes(:photos).tagged_with(@tag_list, any: true).order('created_at DESC').page(@page)
+    end
+
+    def set_crop_options
+      @crop_options = [
+        ['Center', ''],
+        ['Detect faces', 'faces'],
+        ['Top', 'top'],
+        ['Right', 'right'],
+        ['Bottom', 'bottom'],
+        ['Left', 'left']
+      ]
     end
 end
