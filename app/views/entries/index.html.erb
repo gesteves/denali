@@ -23,9 +23,7 @@
 <% end %>
 
 <% content_for :inline_css do %>
-  <style>
-    <%= Rails.application.assets['entry_list.css'].to_s %>
-  </style>
+<style><%= Rails.application.assets['entry_list.css'].to_s.html_safe %></style>
 <% end %>
 
 <% cache "entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
