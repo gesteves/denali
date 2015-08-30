@@ -4,7 +4,10 @@
   <%= render partial: 'partials/analytics' if Rails.env.production? %>
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': true %>
+  <%= yield :inline_css %>
+  <noscript>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': true %>
+  </noscript>
   <%= render partial: 'partials/javascript' %>
   <%= csrf_meta_tags %>
 </head>

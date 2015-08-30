@@ -26,5 +26,11 @@
   <% end %>
 <% end %>
 
+<% content_for :inline_css do %>
+  <style>
+    <%= Rails.application.assets['entry.css'].to_s %>
+  </style>
+<% end %>
+
 <%= render partial: 'entries/entry', object: @entry %>
 <%= render partial: 'entries/entry_pagination', object: @entry %>

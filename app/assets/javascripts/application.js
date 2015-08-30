@@ -1,4 +1,5 @@
 //= require ./vendor/picturefill
+//= require ./vendor/loadcss
 //= require turbolinks
 //= require_tree ./application
 

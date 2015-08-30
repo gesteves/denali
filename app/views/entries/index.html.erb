@@ -22,6 +22,12 @@
   <% end %>
 <% end %>
 
+<% content_for :inline_css do %>
+  <style>
+    <%= Rails.application.assets['entry_list.css'].to_s %>
+  </style>
+<% end %>
+
 <% cache "entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <ol class="entry-list">
     <%= render partial: 'entries/entry_list_item', collection: @entries %>

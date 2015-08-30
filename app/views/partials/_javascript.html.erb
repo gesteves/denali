@@ -1,2 +1,2 @@
-<%= javascript_include_tag 'application', 'data-turbolinks-track': true, 'data-turbolinks-eval': false, async: true %>
+<%= javascript_include_tag 'application', 'data-turbolinks-track': true, 'data-turbolinks-eval': false, async: true, onload: "loadCSS('#{asset_url 'application.css'}');" %>
 <%= render partial: 'partials/typekit' %>
