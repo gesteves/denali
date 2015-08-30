@@ -6,7 +6,7 @@ Denali.ImageZoom = (function () {
   var opts = {
     images          : '.entry__image',
     zoomable_class  : 'entry__image--zoomable',
-    zoom_class      : 'entry__image--fit',
+    zoom_class      : 'entry__photo--fit',
     max_width       : 1920
   };
 
@@ -41,7 +41,7 @@ Denali.ImageZoom = (function () {
   var toggleZoom = function (e) {
     e.preventDefault();
     for (var i = 0; i < zoomable_images.length; i++) {
-      zoomable_images[i].classList.toggle(opts.zoom_class);
+      zoomable_images[i].parentNode.classList.toggle(opts.zoom_class);
     }
   };
 
