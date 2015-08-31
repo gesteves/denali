@@ -1,7 +1,7 @@
 <% cache "entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>">
     <% entry.photos.each do |photo| %>
-      <figure class="entry__photo entry__photo--fit" style="<%= photo_size_in_vw(photo) %>">
+      <figure class="entry__photo entry__photo--fit" style="<%= photo_height_in_vw(photo) %>">
         <%= responsive_image_tag photo,
             'entry',
             { class: "entry__image",

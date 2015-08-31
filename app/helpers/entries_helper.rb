@@ -37,8 +37,8 @@ module EntriesHelper
     tag.join('/')
   end
 
-  def photo_size_in_vw(photo)
+  def photo_height_in_vw(photo)
     h = "#{(photo.height.to_f*100)/photo.width.to_f}vw"
-    "width:100vw;height:#{h};"
+    "height:#{h};"
   end
 end
