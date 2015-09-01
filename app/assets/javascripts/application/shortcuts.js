@@ -5,8 +5,8 @@ Denali.Shortcuts = (function () {
   var opts = {
     older_page : '.pagination a[rel=next]',
     newer_page : '.pagination a[rel=prev]',
-    photos     : '.entry__image',
-    zoom_class : 'entry__image--fit'
+    photos     : '.entry__photo',
+    zoom_class : 'entry__photo--fit'
   };
 
   var older_page,
