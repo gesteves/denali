@@ -12,6 +12,7 @@
 }
 
 .entry-list__item {
+  @include aspect-ratio(1, 1, '.entry-list__link');
   display: block;
   flex-basis: 50%;
   flex-grow: 0;
@@ -19,7 +20,6 @@
   font-size: 0;
   overflow: hidden;
   padding: 2px;
-  position: relative;
 
   @media (min-width: $bp-s) {
     flex-basis: calc(100%/3);
@@ -36,6 +36,7 @@
 
 .entry-list__link {
   display: block;
+  margin: 2px;
 
   &:hover,
   &:active {
@@ -49,21 +50,7 @@
 
 .entry-list__photo {
   background-color: $color-gray-very-light;
-  height: calc((100vw - 12px)/2);
   overflow: hidden;
-  position: relative;
-
-  @media (min-width: $bp-s) {
-    height: calc((100vw - 16px)/3);
-  }
-
-  @media (min-width: $bp-xxl) {
-    height: calc((100vw - 20px)/4);
-  }
-
-  @media (min-width: $bp-max) {
-    height: 475px;
-  }
 
   &:hover .entry-list__photo-title {
     opacity: 1;

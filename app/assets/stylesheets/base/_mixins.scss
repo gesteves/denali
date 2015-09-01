@@ -29,3 +29,22 @@
     text-decoration: none;
   }
 }
+
+@mixin aspect-ratio($width, $height, $child-selector: '*') {
+  position: relative;
+
+  &:before {
+    content: '';
+    display: block;
+    padding-top: ($height / $width) * 100%;
+    width: 100%;
+  }
+
+  > #{$child-selector} {
+    bottom: 0;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+}
