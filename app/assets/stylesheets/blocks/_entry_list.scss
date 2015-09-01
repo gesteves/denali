@@ -37,6 +37,7 @@
 .entry-list__link {
   display: block;
   margin: 2px;
+  overflow: hidden;
 
   &:hover,
   &:active {
@@ -45,6 +46,41 @@
     h2 {
       text-decoration: underline;
     }
+  }
+}
+
+.entry-list__link--text {
+  font-size: 14px;
+  padding: 1.5rem;
+
+  h2 {
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0 0 1.5rem;
+  }
+
+  p {
+    color: $color-text;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  p + p {
+    margin-top: 0;
+    text-indent: 1.5rem;
+  }
+
+  &::after {
+    background-image: linear-gradient(to bottom, transparentize($color-background, 1), $color-background);
+    bottom: 0;
+    content: '';
+    display: block;
+    height: 50%;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
   }
 }
 
@@ -80,53 +116,5 @@
     transition: opacity 150ms linear;
     width: 100%;
     z-index: 1;
-  }
-}
-
-.entry-list__item--text {
-  font-size: 14px;
-  max-height: calc((100vw - 12px)/2);
-  padding: 1.5rem;
-
-  @media (min-width: $bp-s) {
-    max-height: calc((100vw - 16px)/3);
-  }
-
-  @media (min-width: $bp-xxl) {
-    max-height: calc((100vw - 20px)/4);
-  }
-
-  @media (min-width: $bp-max) {
-    max-height: 475px;
-  }
-
-  h2 {
-    font-size: 16px;
-    line-height: 1.5;
-    margin: 0 0 1.5rem;
-  }
-
-  p {
-    color: $color-text;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 1.5;
-  }
-
-  p + p {
-    margin-top: 0;
-    text-indent: 1.5rem;
-  }
-
-  &::after {
-    background-image: linear-gradient(to bottom, transparentize($color-background, 1), $color-background);
-    bottom: 0;
-    content: '';
-    display: block;
-    height: 3rem;
-    left: 0;
-    pointer-events: none;
-    position: absolute;
-    width: 100%;
   }
 }
