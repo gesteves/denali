@@ -4,6 +4,7 @@ class EntriesController < ApplicationController
   before_action :domain_redirect
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :load_entries, only: [:index]
+  before_action :check_if_user_has_visited, only: [:index, :tagged, :show]
 
   def index
     raise ActiveRecord::RecordNotFound if @entries.empty?
@@ -79,5 +80,10 @@ class EntriesController < ApplicationController
     @page = params[:page] || 1
     @count = params[:count] || @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(:photos).published.tagged_with(@tag_list, any: true).page(@page).per(@count)
+  end
+
+  def check_if_user_has_visited
+    @has_visited = cookies[:has_visited].present?
+    cookies[:has_visited] = { value: true, expires: 1.year.from_now }
   end
 end
