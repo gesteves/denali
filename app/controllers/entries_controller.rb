@@ -25,6 +25,15 @@ class EntriesController < ApplicationController
     end
   end
 
+  def tagged
+    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    expires_in 60.minutes, :public => true
+    respond_to do |format|
+      format.html
+      format.json
+    end
+  end
+
   def tumblr
     @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
     raise ActiveRecord::RecordNotFound if @entry.nil?
@@ -32,15 +41,6 @@ class EntriesController < ApplicationController
       format.html {
         redirect_to permalink_url(@entry), status: 301
       }
-    end
-  end
-
-  def tagged
-    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
-    expires_in 60.minutes, :public => true
-    respond_to do |format|
-      format.html
-      format.json
     end
   end
 
