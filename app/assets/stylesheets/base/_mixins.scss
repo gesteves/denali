@@ -33,7 +33,7 @@
 @mixin aspect-ratio($width, $height, $child-selector: '*') {
   position: relative;
 
-  &:before {
+  &::before {
     content: '';
     display: block;
     padding-top: ($height / $width) * 100%;
