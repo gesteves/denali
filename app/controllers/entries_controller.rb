@@ -5,10 +5,10 @@ class EntriesController < ApplicationController
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :load_entries, only: [:index]
   before_action :check_if_user_has_visited, only: [:index, :tagged, :show]
+  before_action :set_max_age, only: [:index, :tagged, :show]
 
   def index
     raise ActiveRecord::RecordNotFound if @entries.empty?
-    expires_in 60.minutes, :public => true
     respond_to do |format|
       format.html
       format.json
@@ -17,7 +17,6 @@ class EntriesController < ApplicationController
 
   def show
     @entry = @photoblog.entries.includes(:photos, :user).published.find(params[:id])
-    expires_in 60.minutes, :public => true
     respond_to do |format|
       format.html {
         redirect_to(permalink_url(@entry), status: 301) unless params_match(@entry, params)
@@ -27,7 +26,6 @@ class EntriesController < ApplicationController
 
   def tagged
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
-    expires_in 60.minutes, :public => true
     respond_to do |format|
       format.html
       format.json
@@ -85,5 +83,10 @@ class EntriesController < ApplicationController
   def check_if_user_has_visited
     @has_visited = cookies[:has_visited].present?
     cookies[:has_visited] = { value: true, expires: 1.year.from_now }
+  end
+
+  def set_max_age
+    max_age = env['default_max_age'].try(:to_i) || 60
+    expires_in max_age.minutes, :public => true
   end
 end
