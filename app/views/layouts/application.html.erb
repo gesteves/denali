@@ -4,19 +4,12 @@
   <%= render partial: 'partials/analytics' if Rails.env.production? %>
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
-
-  <% if @has_visited %>
+  <%= yield :inline_css %>
+  <noscript>
     <%= stylesheet_link_tag 'application', media: 'all' %>
-    <%= javascript_include_tag 'application', async: true %>
-  <% else %>
-    <%= yield :inline_css %>
-    <noscript>
-      <%= stylesheet_link_tag 'application', media: 'all' %>
-    </noscript>
-    <%= javascript_include_tag 'application', async: true, onload: "loadCSS('#{asset_url 'application.css'}');".html_safe %>
-  <% end %>
-
-  <%= render partial: 'partials/typekit' %>
+  </noscript>
+  <%= javascript_include_tag 'application', async: true, onload: "loadCSS('#{asset_url 'application.css'}');".html_safe %>
+  <script src="https://use.typekit.net/vtp0iqq.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
 </head>
 <body>
 <%= render partial: 'partials/icons.svg.erb' %>
