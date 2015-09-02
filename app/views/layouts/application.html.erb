@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%= render partial: 'partials/analytics' if Rails.env.production? %>
+  <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
   <%= yield :inline_css %>
