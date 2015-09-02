@@ -17,7 +17,7 @@ module ApplicationHelper
   end
 
   def build_srcset_url(photo, width, quality, square)
-    imgix_path = Images.path(photo.original_path).auto('format').q(quality)
+    imgix_path = Ix.path(photo.original_path).auto('format').q(quality)
     if square
       imgix_path.fit = 'crop'
       imgix_path.crop = photo.crop unless photo.crop.blank?

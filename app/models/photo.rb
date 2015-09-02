@@ -30,7 +30,7 @@ class Photo < ActiveRecord::Base
   end
 
   def url(width, height = nil, quality = 90)
-    path = Images.path(self.original_path).width(width).q(quality).auto('format')
+    path = Ix.path(self.original_path).width(width).q(quality).auto('format')
     if height.nil?
       path.fit = 'max'
     else
