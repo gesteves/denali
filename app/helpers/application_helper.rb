@@ -61,9 +61,11 @@ module ApplicationHelper
       posttype: 'link',
       title: entry.formatted_title,
       content: permalink_url(entry),
-      caption: entry.formatted_body,
-      tags: entry.tag_list.join(',')
+      canonicalUrl: permalink_url(entry)
     }
+
+    params[:caption] = 'bleh' unless entry.body.blank?
+    params[:tags] = entry.tag_list.join(',') unless entry.tag_list.blank?
 
     "https://www.tumblr.com/widgets/share/tool?#{params.to_query}"
   end
