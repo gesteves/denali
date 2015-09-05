@@ -5,31 +5,31 @@ namespace :deploy do
 
   task :push do
     puts 'Pushing app to Heroku...'
-    puts `git push heroku master`
+    system('git push heroku master')
   end
 
   task :figaro do
     puts 'Syncing configuration values...'
-    puts `bundle exec figaro heroku:set -e production`
+    system('bundle exec figaro heroku:set -e production')
   end
 
   task :restart do
     puts 'Restarting app servers...'
-    puts `heroku restart`
+    system('heroku restart')
   end
 
   task :migrate do
     puts 'Running database migrations…'
-    puts `heroku run rake db:migrate`
+    system('heroku run rake db:migrate')
   end
 
   task :off do
     puts 'Putting the app into maintenance mode...'
-    puts `heroku maintenance:on`
+    system('heroku maintenance:on')
   end
 
   task :on do
     puts 'Taking the app out of maintenance mode...'
-    puts `heroku maintenance:off`
+    system('heroku maintenance:off')
   end
 end
