@@ -1,6 +1,6 @@
 .button {
   @include button($color-alert-default, $color-text);
-  -webkit-appearance: none;
+  appearance: none;
   border-radius: 2px;
   color: $color-text;
   display: block;
