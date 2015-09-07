@@ -15,7 +15,7 @@
             <div class="form__photo-fields">
               <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'form__input form__input--caption' %>
               <%= p.label :crop, class: 'form__label' do %>
-                Crop mode <%= p.select(:crop, options_for_select(@crop_options)) %>
+                Crop mode <%= p.select(:crop, options_for_select(@crop_options, p.object.crop)) %>
               <% end %>
               <%= link_to 'Remove', '#', class: 'button button--danger form__photo-delete js-photo-delete' %>
               <%= p.hidden_field :id %>
