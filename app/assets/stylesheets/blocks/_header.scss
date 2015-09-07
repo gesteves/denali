@@ -12,7 +12,7 @@
 .header__link {
   display: block;
   margin: 0 auto;
-  max-width: 420px;
+  max-width: 320px;
   width: 50vw;
 
   &:hover,
@@ -22,12 +22,16 @@
     }
   }
 
+  @media (min-width: $bp-s) {
+    width: 33vw;
+  }
+
   @media (min-width: $bp-xxl) {
-    max-width: 460px;
+    max-width: 360px;
   }
 
   @media (min-width: $bp-max) {
-    max-width: 480px;
+    max-width: 420px;
   }
 }
 
