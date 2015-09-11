@@ -1,17 +1,28 @@
 {
   "name": "denali",
-  "version": "0.0.0",
-  "dependencies": {
-    "grunt": "~0.4.5"
-  },
+  "version": "1.0.0",
+  "description": "A simple, fast photoblogging CMS built in Ruby on Rails which features responsive, high-resolution images. You can see it live at [All-Encompassing Trip](http://www.allencompassingtrip.com).",
+  "main": "Gulpfile.js",
+  "dependencies": {},
   "devDependencies": {
-    "grunt-contrib-jshint": "^0.11.2",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-scss-lint": "^0.3.6",
-    "grunt-svgmin": "^2.0.1",
-    "grunt-svgstore": "^0.5.0"
+    "gulp": "^3.9.0",
+    "gulp-cheerio": "^0.6.2",
+    "gulp-jshint": "^1.11.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-scss-lint": "^0.3.0",
+    "gulp-scss-lint-stylish": "^0.1.3",
+    "gulp-svgmin": "^1.2.0",
+    "gulp-svgstore": "^5.0.4",
+    "jshint-stylish": "^2.0.1"
   },
-  "engines": {
-    "node": ">= 0.12"
-  }
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gesteves/denali.git"
+  },
+  "author": "Guillermo Esteves",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/gesteves/denali/issues"
+  },
+  "homepage": "https://github.com/gesteves/denali#readme"
 }
