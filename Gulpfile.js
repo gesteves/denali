@@ -26,7 +26,7 @@ gulp.task('js', function () {
 
 // Lint Sass
 gulp.task('sass', function() {
-  gulp.src(paths.sass)
+  return gulp.src(paths.sass)
     .pipe(scsslint({
       config: '.scss-lint.yml',
       bundleExec: true,
