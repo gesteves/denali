@@ -1,8 +1,10 @@
-//= require ./vendor/picturefill
-//= require ./vendor/loadcss
-//= require ./vendor/fastclick
+//= require ./vendors/picturefill
+//= require ./vendors/loadcss
+//= require ./vendors/fastclick
 //= require turbolinks
 //= require_tree ./application
+
+'use strict';
 
 Turbolinks.enableProgressBar();
 

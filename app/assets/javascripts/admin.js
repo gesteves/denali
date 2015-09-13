@@ -1,6 +1,6 @@
-//= require ./vendor/jquery
-//= require ./vendor/jquery_ui
-//= require ./vendor/awesomplete
-//= require ./vendor/picturefill
+//= require ./vendors/jquery
+//= require ./vendors/jquery_ui
+//= require ./vendors/awesomplete
+//= require ./vendors/picturefill
 //= require_tree ./admin
 //= require jquery_ujs

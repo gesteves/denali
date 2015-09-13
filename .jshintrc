@@ -15,6 +15,10 @@
     "_": true,
     "Modernizr": true,
     "Dropbox": true,
-    "Awesomplete": true
+    "Awesomplete": true,
+    "Denali": true,
+    "Turbolinks": true,
+    "picturefill": true,
+    "FastClick": true
   }
 }

@@ -12,7 +12,7 @@ var svgmin      = require('gulp-svgmin');
 var svgstore    = require('gulp-svgstore');
 
 var paths = {
-  js: ['Gulpfile.js', 'app/assets/javascripts/admin/**/*.js', '!app/assets/javascripts/vendor/*.js'],
+  js: ['Gulpfile.js', 'app/assets/javascripts/**/*.js', '!app/assets/javascripts/vendors/*.js'],
   svg: ['app/assets/images/svg/*.svg'],
   sass: ['app/assets/stylesheets/**/*.scss', '!app/assets/stylesheets/vendors/*.scss']
 };
@@ -38,9 +38,7 @@ gulp.task('sass', function() {
 // and save as a Rails partial
 gulp.task('svg', function () {
   return gulp.src(paths.svg)
-    .pipe(rename({
-      prefix: 'svg-'
-    }))
+    .pipe(rename({ prefix: 'svg-' }))
     .pipe(svgmin())
     .pipe(cheerio({
       run: function ($) {
