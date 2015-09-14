@@ -30,7 +30,7 @@
     </div>
     <div class="form__buttons form__buttons--safe">
       <div class="form__select-container">
-        <%= f.select :status, options_for_select([['Save draft', 'draft'], ['Add to queue', 'queued'], ['Publish it!', 'published']]), {}, { class: 'button button--pad-right' } %>
+        <%= f.select :status, options_for_select([['Add to queue', 'queued'], ['Save draft', 'draft'], ['Publish it!', 'published']]), {}, { class: 'button button--pad-right' } %>
       </div>
     <%= f.submit 'Save entry', class: 'button button--success' %>
     </div>
