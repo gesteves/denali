@@ -5,6 +5,7 @@ json.cache! "entries/json/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@phot
       json.url permalink_url e
       json.photos e.photos do |p|
         json.url p.original_url
+        json.crop p.crop || 'center'
       end
     end
   end
