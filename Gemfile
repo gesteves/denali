@@ -38,6 +38,7 @@ gem 'dalli'
 # Background Jobs
 gem 'resque'
 gem 'resque-scheduler'
+gem 'resque-web', require: 'resque_web'
 
 # Social Networks
 gem 'tumblr_client'

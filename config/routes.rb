@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  require "resque_web"
+  mount ResqueWeb::Engine => "/resque-web"
+
   concern :paginatable do
     get '(page/:page)', :action => :index, :on => :collection, :as => ''
   end
