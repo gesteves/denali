@@ -5,6 +5,7 @@ class EntriesController < ApplicationController
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :load_entries, only: [:index]
   before_action :set_max_age, only: [:index, :tagged, :show]
+  before_action :check_if_user_has_visited, only: [:index, :tagged, :show]
 
   def index
     raise ActiveRecord::RecordNotFound if @entries.empty?
@@ -82,5 +83,10 @@ class EntriesController < ApplicationController
   def set_max_age
     max_age = env['default_max_age'].try(:to_i) || 60
     expires_in max_age.minutes, :public => true
+  end
+
+  def check_if_user_has_visited
+    @has_visited = cookies[:has_visited].present?
+    cookies[:has_visited] = { value: true, expires: 1.year.from_now }
   end
 end

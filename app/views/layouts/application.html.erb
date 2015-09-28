@@ -3,10 +3,14 @@
 <head>
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
-  <%= yield :inline_css %>
-  <noscript>
+  <% if @has_visited %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
-  </noscript>
+  <% else %>
+    <%= yield :inline_css %>
+    <noscript>
+      <%= stylesheet_link_tag 'application', media: 'all' %>
+    </noscript>
+  <% end %>
   <%= javascript_include_tag 'application', async: true, onload: "loadCSS('#{asset_url 'application.css'}');".html_safe %>
   <script src="https://use.typekit.net/vtp0iqq.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
