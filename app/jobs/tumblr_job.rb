@@ -18,15 +18,16 @@ class TumblrJob < EntryJob
       opts.merge!({
         caption: entry.formatted_content,
         link: permalink_url(entry),
-        source: entry.photos.map{ |p| p.original_url }
+        data: entry.photos.map{ |p| open(p.original_url).path }
       })
-      tumblr.photo(ENV['tumblr_domain'], opts)
+      response = tumblr.photo(ENV['tumblr_domain'], opts)
     else
       opts.merge!({
         title: entry.formatted_title,
         body: entry.formatted_body
       })
-      tumblr.text(ENV['tumblr_domain'], opts)
+      response = tumblr.text(ENV['tumblr_domain'], opts)
     end
+    raise StandardError, response['errors'].join(', ') if response['errors'].present?
   end
 end
