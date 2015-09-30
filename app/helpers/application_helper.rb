@@ -19,7 +19,7 @@ module ApplicationHelper
     PHOTOS[photo_key]['srcset'].
       uniq.
       sort.
-      map { |width| build_imgix_url(photo, width, quality, square)}.
+      map { |width| "#{build_imgix_url(photo, width, quality, square)} #{width}w" }.
       join(', ')
   end
 
@@ -33,7 +33,7 @@ module ApplicationHelper
       imgix_path.fit = 'max'
     end
     imgix_path.width(width)
-    "#{imgix_path.to_url} #{width}w"
+    imgix_path.to_url
   end
 
   def get_sizes(photo_key)
