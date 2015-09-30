@@ -18,13 +18,11 @@
 <body>
 <%= render partial: 'partials/icons.svg.erb' %>
 
-<% cache "header/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <header class="header">
-    <a href="/" class="header__link">
-      <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
-    </a>
-  </header>
-<% end %>
+<header class="header">
+  <a href="/" class="header__link">
+    <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
+  </a>
+</header>
 
 <%= yield %>
 
