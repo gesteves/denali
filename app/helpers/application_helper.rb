@@ -3,7 +3,14 @@ module ApplicationHelper
   def responsive_image_tag(photo, photo_key, html_options = {})
     html_options[:srcset] = get_srcset(photo, photo_key)
     html_options[:sizes] = get_sizes(photo_key)
-    content_tag :img, nil, html_options
+    image_tag get_src(photo, photo_key), html_options
+  end
+
+  def get_src(photo, photo_key)
+    quality = PHOTOS[photo_key]['quality'] || 90
+    square = PHOTOS[photo_key]['square'].present?
+    width = PHOTOS[photo_key]['src']
+    build_imgix_url(photo, width, quality, square)
   end
 
   def get_srcset(photo, photo_key)
@@ -12,11 +19,11 @@ module ApplicationHelper
     PHOTOS[photo_key]['srcset'].
       uniq.
       sort.
-      map { |width| build_srcset_url(photo, width, quality, square)}.
+      map { |width| build_imgix_url(photo, width, quality, square)}.
       join(', ')
   end
 
-  def build_srcset_url(photo, width, quality, square)
+  def build_imgix_url(photo, width, quality, square)
     imgix_path = Ix.path(photo.original_path).auto('format').q(quality)
     if square
       imgix_path.fit = 'crop'

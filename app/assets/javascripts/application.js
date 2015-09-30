@@ -1,4 +1,3 @@
-//= require ./vendors/picturefill
 //= require ./vendors/loadcss
 //= require ./vendors/fastclick
 //= require turbolinks
@@ -20,7 +19,6 @@ if (document.readyState !== 'loading') {
 }
 
 // Attach event listeners
-document.addEventListener('page:change', picturefill);
 document.addEventListener('page:change', Denali.SocialShare.init);
 document.addEventListener('page:change', Denali.Shortcuts.init);
 document.addEventListener('page:change', Denali.ImageZoom.init);
