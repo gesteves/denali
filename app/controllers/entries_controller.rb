@@ -81,7 +81,7 @@ class EntriesController < ApplicationController
   end
 
   def set_max_age
-    max_age = env['default_max_age'].try(:to_i) || 60
+    max_age = ENV['default_max_age'].try(:to_i) || 60
     expires_in max_age.minutes, :public => true
   end
 
