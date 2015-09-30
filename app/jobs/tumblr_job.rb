@@ -20,14 +20,13 @@ class TumblrJob < EntryJob
         link: permalink_url(entry),
         data: entry.photos.map{ |p| open(p.original_url).path }
       })
-      response = tumblr.photo(ENV['tumblr_domain'], opts)
+      tumblr.photo(ENV['tumblr_domain'], opts)
     else
       opts.merge!({
         title: entry.formatted_title,
         body: entry.formatted_body
       })
-      response = tumblr.text(ENV['tumblr_domain'], opts)
+      tumblr.text(ENV['tumblr_domain'], opts)
     end
-    raise StandardError, response['errors'].join(', ') if response['errors'].present?
   end
 end
