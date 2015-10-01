@@ -33,16 +33,21 @@ Denali.LazyLoad = (function () {
         loadImage(image);
       }
     }
+    if (typeof picturefill !== 'undefined') {
+      picturefill();
+    }
     requested_animation_frame = false;
   };
 
   var loadImage = function (image) {
-    var src = image.getAttribute('data-src');
-    var srcset = image.getAttribute('data-srcset');
-    image.setAttribute('src', src);
-    image.setAttribute('srcset', srcset);
-    image.removeAttribute('data-src');
-    image.removeAttribute('data-srcset');
+    if (image.hasAttribute('data-src')) {
+      image.setAttribute('src', image.getAttribute('data-src'));
+      image.removeAttribute('data-src');
+    }
+    if (image.hasAttribute('data-srcset')) {
+      image.setAttribute('srcset', image.getAttribute('data-srcset'));
+      image.removeAttribute('data-srcset');
+    }
     image.classList.remove(opts.load_class);
   };
 
