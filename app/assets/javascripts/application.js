@@ -15,6 +15,7 @@ if (document.readyState !== 'loading') {
   Denali.Shortcuts.init();
   Denali.ImageZoom.init();
   Denali.Analytics.sendPageview();
+  Denali.LazyLoad.lazyLoad();
   FastClick.attach(document.body);
 }
 
@@ -23,8 +24,10 @@ document.addEventListener('page:change', Denali.SocialShare.init);
 document.addEventListener('page:change', Denali.Shortcuts.init);
 document.addEventListener('page:change', Denali.ImageZoom.init);
 document.addEventListener('page:change', Denali.Analytics.sendPageview);
+document.addEventListener('page:change', Denali.LazyLoad.lazyLoad);
 document.addEventListener('page:change', function () {
   FastClick.attach(document.body);
 });
 document.addEventListener('orientationchange', Denali.ImageZoom.init);
 document.addEventListener('keydown', Denali.Shortcuts.handleKeyPress);
+document.addEventListener('scroll', Denali.LazyLoad.handleScroll);
