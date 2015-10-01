@@ -47,6 +47,7 @@ Denali.LazyLoad = (function () {
   var loadImage = function (image) {
     if (image.hasAttribute('data-srcset')) {
       image.setAttribute('srcset', image.getAttribute('data-srcset'));
+      image.removeAttribute('data-srcset');
     }
     image.classList.remove(opts.load_class);
   };
