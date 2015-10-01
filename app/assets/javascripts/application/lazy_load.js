@@ -4,7 +4,6 @@ Denali.LazyLoad = (function () {
   'use strict';
 
   var opts = {
-    images     : '.js-lazy-load',
     load_class : 'js-lazy-load',
     offset     : 500
   };
@@ -25,7 +24,7 @@ Denali.LazyLoad = (function () {
         image_top,
         bottom;
 
-    images = document.querySelectorAll(opts.images);
+    images = document.querySelectorAll('.' + opts.load_class);
 
     if (images.length === 0) {
       return;
