@@ -41,17 +41,11 @@ Denali.LazyLoad = (function () {
       }
     }
 
-    if ((typeof picturefill !== 'undefined')) {
-      picturefill();
-    }
-
+    picturefill();
     requested_animation_frame = false;
   };
 
   var loadImage = function (image) {
-    if (image.hasAttribute('data-src')) {
-      image.src = image.getAttribute('data-src');
-    }
     if (image.hasAttribute('data-srcset')) {
       image.setAttribute('srcset', image.getAttribute('data-srcset'));
     }
