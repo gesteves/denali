@@ -20,11 +20,21 @@ Denali.LazyLoad = (function () {
 
   var lazyLoad = function () {
     var image,
+        images,
         image_top,
-        image_bottom;
-    var images = document.querySelectorAll(opts.images);
-    var top = window.scrollY;
-    var bottom = top + window.innerHeight;
+        image_bottom,
+        top,
+        bottom;
+
+    images = document.querySelectorAll(opts.images);
+
+    if (images.length === 0) {
+      return;
+    }
+
+    top = window.scrollY;
+    bottom = top + window.innerHeight;
+
     for (var i = 0; i < images.length; i++) {
       image = images[i];
       image_top = image.getBoundingClientRect().top;
@@ -33,9 +43,11 @@ Denali.LazyLoad = (function () {
         loadImage(image);
       }
     }
-    if (typeof picturefill !== 'undefined') {
+
+    if ((typeof picturefill !== 'undefined')) {
       picturefill();
     }
+
     requested_animation_frame = false;
   };
 
