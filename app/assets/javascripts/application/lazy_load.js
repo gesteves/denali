@@ -15,10 +15,10 @@ Denali.LazyLoad = (function () {
       return;
     }
     requested_animation_frame = true;
-    requestAnimationFrame(lazyLoad);
+    requestAnimationFrame(loadImages);
   };
 
-  var lazyLoad = function () {
+  var loadImages = function () {
     var image,
         images,
         image_top,
@@ -53,18 +53,16 @@ Denali.LazyLoad = (function () {
 
   var loadImage = function (image) {
     if (image.hasAttribute('data-src')) {
-      image.setAttribute('src', image.getAttribute('data-src'));
-      image.removeAttribute('data-src');
+      image.src = image.getAttribute('data-src');
     }
     if (image.hasAttribute('data-srcset')) {
       image.setAttribute('srcset', image.getAttribute('data-srcset'));
-      image.removeAttribute('data-srcset');
     }
     image.classList.remove(opts.load_class);
   };
 
   return {
-    lazyLoad : lazyLoad,
+    loadImages : loadImages,
     handleScroll : handleScroll
   };
 })();
