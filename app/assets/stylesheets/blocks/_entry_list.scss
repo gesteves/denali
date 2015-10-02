@@ -52,6 +52,12 @@
 .entry-list__image {
   height: 100%;
   width: 100%;
+
+  &.noscript {
+    left: 0;
+    position: absolute;
+    top: 0;
+  }
 }
 
 .entry-list__link--text {

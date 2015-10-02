@@ -24,6 +24,7 @@ entry:
     - 100vw
   quality: 90
 entry_list_item:
+  src: 475
   srcset:
     - 308
     - 363

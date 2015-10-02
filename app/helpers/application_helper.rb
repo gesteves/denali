@@ -11,7 +11,8 @@ module ApplicationHelper
     html_options[:sizes] = get_sizes(photo_key)
     content = content_tag :img, nil, html_options
     content += content_tag :noscript do
-      image_tag get_src(photo, photo_key)
+      css_class = "#{html_options[:class]} noscript"
+      image_tag get_src(photo, photo_key), { class: css_class }
     end
   end
 
