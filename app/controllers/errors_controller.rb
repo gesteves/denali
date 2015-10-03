@@ -1,4 +1,6 @@
 class ErrorsController < ApplicationController
+  skip_before_action :domain_redirect
+
   def file_not_found
     render status: 404
   end

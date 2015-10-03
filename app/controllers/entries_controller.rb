@@ -1,7 +1,7 @@
 class EntriesController < ApplicationController
   include TagList
 
-  before_action :domain_redirect
+  skip_before_action :domain_redirect
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :load_entries, only: [:index]
   before_action :set_max_age, only: [:index, :tagged, :show]

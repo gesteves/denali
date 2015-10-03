@@ -50,8 +50,6 @@ class ApplicationController < ActionController::Base
   end
 
   def domain_redirect
-    puts request.host
-    puts request.user_agent
     if Rails.env.production? && !request.host.try(:match, @photoblog.domain) && !request.user_agent.try(:match, /cloudfront/i)
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
       redirect_to "#{protocol}://#{@photoblog.domain}#{request.fullpath}", status: 301
