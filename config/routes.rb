@@ -17,7 +17,10 @@ Rails.application.routes.draw do
         patch 'publish'
         patch 'queue'
         patch 'draft'
-        post 'reposition'
+        post 'up'
+        post 'down'
+        post 'top'
+        post 'bottom'
       end
       collection do
         get 'queued'

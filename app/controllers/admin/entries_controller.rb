@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :reposition, :preview]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :preview]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_crop_options, only: [:edit, :photo]
@@ -99,11 +99,24 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def reposition
-    @entry.insert_at(params[:position].to_i)
-    respond_to do |format|
-      format.js { render text: 'ok' }
-    end
+  def up
+    @entry.move_higher
+    respond_to_reposition
+  end
+
+  def down
+    @entry.move_lower
+    respond_to_reposition
+  end
+
+  def top
+    @entry.move_to_top
+    respond_to_reposition
+  end
+
+  def bottom
+    @entry.move_to_bottom
+    respond_to_reposition
   end
 
   def photo
@@ -188,5 +201,12 @@ class Admin::EntriesController < AdminController
         ['Bottom', 'bottom'],
         ['Left', 'left']
       ]
+    end
+
+    def respond_to_reposition
+      respond_to do |format|
+        format.html { redirect_to queued_admin_entries_path }
+        format.js { render text: 'ok' }
+      end
     end
 end
