@@ -16,16 +16,18 @@
         <% end %>
       </div>
       <div class="entry__meta-bottom">
-        <div class="entry__timestamp">
-          <% if entry.is_published? %>
+        <% if entry.is_published? %>
+          <div class="entry__timestamp">
             <%= link_to "Published #{entry.published_at.strftime('%A, %B %-d, %Y')}", permalink_url(entry) %>
-          <% elsif entry.is_queued? %>
-              <%= link_to 'Move to top', top_admin_entry_path(entry.id), method: :post, data: { queue: 'top' } %> |
-              <%= link_to 'Move up', up_admin_entry_path(entry.id), method: :post, data: { queue: 'up' } %> |
-              <%= link_to 'Move down', down_admin_entry_path(entry.id), method: :post, data: { queue: 'down' } %> |
-              <%= link_to 'Move to bottom', bottom_admin_entry_path(entry.id), method: :post, data: { queue: 'bottom' } %>
-          <% end %>
-        </div>
+          </div>
+        <% elsif entry.is_queued? %>
+          <div class="entry__actions entry__actions--queue">
+            <%= link_to 'Move to top', top_admin_entry_path(entry.id), method: :post, data: { queue: 'top' } %>
+            <%= link_to 'Move up', up_admin_entry_path(entry.id), method: :post, data: { queue: 'up' } %>
+            <%= link_to 'Move down', down_admin_entry_path(entry.id), method: :post, data: { queue: 'down' } %>
+            <%= link_to 'Move to bottom', bottom_admin_entry_path(entry.id), method: :post, data: { queue: 'bottom' } %>
+          </div>
+        <% end %>
         <div class="entry__actions">
           <% unless entry.is_published? %>
             <%= link_to 'Preview', preview_admin_entry_path(entry) %>
