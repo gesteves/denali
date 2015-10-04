@@ -151,7 +151,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_facebook, :send_yo, :tweet_text, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :crop])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_facebook, :tweet_text, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :crop])
     end
 
     def enqueue_jobs
@@ -159,7 +159,6 @@ class Admin::EntriesController < AdminController
         BufferJob.perform_later(@entry, 'twitter') if @entry.post_to_twitter
         BufferJob.perform_later(@entry, 'facebook') if @entry.post_to_facebook
         TumblrJob.perform_later(@entry) if @entry.post_to_tumblr
-        YoJob.perform_later(@entry) if @entry.send_yo
       end
     end
 
