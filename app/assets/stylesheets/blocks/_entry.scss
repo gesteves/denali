@@ -93,14 +93,8 @@
   }
 }
 
-.entry__photo--fit {
-  max-height: 100vh;
-}
-
 .entry__image {
-  background-color: $color-gray-very-light;
   display: inline-block;
-  max-height: 100%;
   max-width: 100%;
   position: relative;
   width: auto;
@@ -111,11 +105,15 @@
   border-top: 1px solid $color-border;
 }
 
+.entry__image--fit {
+  max-height: 100vh;
+}
+
 .entry__image--zoomable {
   cursor: zoom-out;
 }
 
-.entry__photo--fit .entry__image--zoomable {
+.entry__image--fit.entry__image--zoomable {
   cursor: zoom-in;
 }
 

@@ -1,10 +1,10 @@
 <% cache "entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>">
     <% entry.photos.each do |photo| %>
-      <figure class="entry__photo entry__photo--fit">
+      <figure class="entry__photo">
         <%= responsive_image_tag photo,
             'entry',
-            { class: "entry__image",
+            { class: "entry__image entry__image--fit",
               alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption,
               'data-width-original': photo.width,
               'data-height-original': photo.height } %>
