@@ -17,10 +17,8 @@ entry:
     - 2560
     - 2732
     - 2880
-    - 1920
-    - 3840
   sizes:
-    - "(min-width: 1920px) 1920px"
+    - "(min-width: 1440px) 1440px"
     - 100vw
   quality: 90
 entry_list_item:
@@ -38,12 +36,9 @@ entry_list_item:
     - 844
     - 355
     - 710
-    - 475
     - 900
-    - 950
   sizes:
-    - "(min-width: 1920px) 475px"
-    - "(min-width: 1440px) calc((100vw - 20px)/4)"
+    - "(min-width: 1440px) 355px"
     - "(min-width: 600px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
   quality: 50

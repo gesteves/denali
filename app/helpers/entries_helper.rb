@@ -36,9 +36,4 @@ module EntriesHelper
     tag[0] = "tag:#{tag[0]},#{date.strftime('%Y-%m-%d')}:"
     tag.join('/')
   end
-
-  def photo_height_in_vw(photo)
-    h = "#{(photo.height.to_f*100)/photo.width.to_f}vw"
-    "height:#{h};"
-  end
 end
