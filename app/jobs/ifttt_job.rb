@@ -3,7 +3,7 @@ class IftttJob < EntryJob
   queue_as :default
 
   def perform(entry)
-    url = ENV['ifttt_webhook_url']
+    url = "https://maker.ifttt.com/trigger/#{ENV['ifttt_event']}/with/key/#{ENV['ifttt_key']}"
     body = {
       value1: entry.title,
       value2: permalink_url(entry)
