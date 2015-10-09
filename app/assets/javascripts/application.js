@@ -5,8 +5,6 @@
 
 'use strict';
 
-Turbolinks.enableProgressBar();
-
 // I'm loading scripts async, so if the page has finished loading then
 // I need to init these scripts directly, because the `page:change`
 // event has already fired.
