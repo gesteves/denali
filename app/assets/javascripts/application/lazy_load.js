@@ -4,8 +4,7 @@ Denali.LazyLoad = (function () {
   'use strict';
 
   var opts = {
-    load_class : 'js-lazy-load',
-    offset     : 100
+    load_class : 'js-lazy-load'
   };
 
   var requested_animation_frame = false;
@@ -30,12 +29,12 @@ Denali.LazyLoad = (function () {
       return;
     }
 
-    bottom = window.scrollY + window.innerHeight;
+    bottom = window.scrollY + (window.innerHeight * 2);
 
     for (var i = 0; i < images.length; i++) {
       image = images[i];
       image_top = image.getBoundingClientRect().top;
-      if (image_top <= bottom + opts.offset) {
+      if (image_top <= bottom) {
         loadImage(image);
       }
     }
