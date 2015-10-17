@@ -44,8 +44,7 @@ module ApplicationHelper
     else
       imgix_path.fit = 'max'
     end
-    imgix_path.width(width)
-    imgix_path.to_url(ch: 'Width,DPR')
+    imgix_path.to_url(ch: 'Width,DPR', width: width)
   end
 
   def get_sizes(photo_key)
