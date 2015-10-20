@@ -36,7 +36,6 @@ module ApplicationHelper
 
   def build_imgix_url(photo, width, quality, square)
     imgix_path = Ix.path(photo.original_path).auto('format').q(quality)
-    imgix_path
     if square
       imgix_path.fit = 'crop'
       imgix_path.crop = photo.crop unless photo.crop.blank?
@@ -44,7 +43,8 @@ module ApplicationHelper
     else
       imgix_path.fit = 'max'
     end
-    imgix_path.to_url(ch: 'Width,DPR', width: width)
+    imgix_path.width(width)
+    imgix_path.to_url
   end
 
   def get_sizes(photo_key)
