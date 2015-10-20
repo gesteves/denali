@@ -1,5 +1,6 @@
 //= require ./vendors/picturefill
 //= require ./vendors/loadcss
+//= require ./vendors/salvattore
 //= require turbolinks
 //= require_tree ./application
 
@@ -13,6 +14,7 @@ if (document.readyState !== 'loading') {
   Denali.Shortcuts.init();
   Denali.ImageZoom.init();
   Denali.Analytics.sendPageview();
+  Denali.Grid.init();
   Denali.LazyLoad.loadImages();
 }
 
@@ -22,7 +24,9 @@ document.addEventListener('page:change', Denali.SocialShare.init);
 document.addEventListener('page:change', Denali.Shortcuts.init);
 document.addEventListener('page:change', Denali.ImageZoom.init);
 document.addEventListener('page:change', Denali.Analytics.sendPageview);
+document.addEventListener('page:change', Denali.Grid.init);
 document.addEventListener('page:change', Denali.LazyLoad.loadImages);
 document.addEventListener('orientationchange', Denali.ImageZoom.init);
 document.addEventListener('keydown', Denali.Shortcuts.handleKeyPress);
 document.addEventListener('scroll', Denali.LazyLoad.handleScroll);
+window.addEventListener('resize', Denali.LazyLoad.handleScroll);

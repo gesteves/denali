@@ -1,5 +1,6 @@
 <% cache "entry/list/#{entry_list_item.id}/#{entry_list_item.updated_at.to_i}" do %>
   <li class="entry-list__item">
+    <div class="entry-list__shim" style="padding-top:<%= entry_list_item.is_photo? ? number_to_percentage((entry_list_item.photos.first.height.to_f / entry_list_item.photos.first.width.to_f) * 100) : '100%' %>"></div>
     <a class="entry-list__link <%= entry_list_item.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= permalink_url(entry_list_item) %>">
       <% if entry_list_item.is_photo? %>
         <figure class="entry-list__photo">

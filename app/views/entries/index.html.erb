@@ -27,7 +27,7 @@
 <% end %>
 
 <% cache "entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <ol class="entry-list">
+  <ol class="entry-list" data-columns>
     <%= render partial: 'entries/entry_list_item', collection: @entries %>
   </ol>
   <%= paginate @entries %>
