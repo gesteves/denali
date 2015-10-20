@@ -9,70 +9,35 @@
   @media (min-width: $bp-m) {
     margin: 72px auto;
   }
-
-  &::before {
-    display: none;
-  }
-
-  @media (max-width: ($bp-s - 1)) {
-    @at-root #{&}[data-columns]::before {
-      content: '2 .entry-list__column.entry-list__column--half';
-    }
-  }
-
-  @media (min-width: $bp-s) and (max-width: ($bp-xxl - 1)) {
-    @at-root #{&}[data-columns]::before {
-      content: '3 .entry-list__column.entry-list__column--third';
-    }
-  }
-
-  @media (min-width: $bp-xxl) {
-    @at-root #{&}[data-columns]::before {
-      content: '4 .entry-list__column.entry-list__column--quarter';
-    }
-  }
-}
-
-.entry-list__column {
-  flex-grow: 0;
-  flex-shrink: 0;
-}
-
-.entry-list__column--half {
-  flex-basis: 50%;
-}
-
-.entry-list__column--third {
-  flex-basis: calc(100%/3);
-}
-
-.entry-list__column--quarter {
-  flex-basis: 25%;
 }
 
 .entry-list__item {
+  @include aspect-ratio(1, 1, '.entry-list__link');
   display: block;
+  flex-basis: 50%;
+  flex-grow: 0;
+  flex-shrink: 0;
   font-size: 0;
   overflow: hidden;
   padding: 2px;
-  position: relative;
-}
 
-.entry-list__shim {
-  content: '';
-  display: block;
-  width: 100%;
+  @media (min-width: $bp-s) {
+    flex-basis: calc(100%/3);
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  @media (min-width: $bp-xxl) {
+    flex-basis: 25%;
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
 }
 
 .entry-list__link {
-  bottom: 0;
   display: block;
-  left: 0;
   margin: 2px;
   overflow: hidden;
-  position: absolute;
-  right: 0;
-  top: 0;
 
   &:hover,
   &:active {
@@ -136,7 +101,6 @@
 
 .entry-list__photo {
   overflow: hidden;
-  position: relative;
 
   &:hover .entry-list__photo-title {
     opacity: 1;

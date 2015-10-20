@@ -29,7 +29,7 @@ Denali.LazyLoad = (function () {
       return;
     }
 
-    bottom = window.scrollY + window.innerHeight;
+    bottom = window.scrollY + (window.innerHeight * 2);
 
     for (var i = 0; i < images.length; i++) {
       image = images[i];
