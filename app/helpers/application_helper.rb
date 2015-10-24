@@ -38,7 +38,7 @@ module ApplicationHelper
     imgix_path = Ix.path(photo.original_path).auto('format').q(quality)
     if square
       imgix_path.fit = 'crop'
-      imgix_path.crop = photo.crop unless photo.crop.blank?
+      imgix_path.crop = 'entropy'
       imgix_path.height = width
     else
       imgix_path.fit = 'max'
