@@ -1,4 +1,5 @@
 entry:
+  src: 1440
   srcset:
     - 640
     - 960
@@ -44,6 +45,7 @@ entry_list_item:
   quality: 50
   square: Yes
 admin_entry:
+  src: 800
   srcset:
     - 800
     - 1600
@@ -52,6 +54,7 @@ admin_entry:
     - calc(100vw - 40px)
   quality: 60
 admin_edit:
+  src: 300
   srcset:
     - 300
     - 600
