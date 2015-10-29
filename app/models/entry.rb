@@ -84,7 +84,7 @@ class Entry < ActiveRecord::Base
   end
 
   def related(count = 12)
-    Entry.published.photo_entries.tagged_with(self.tag_list, any: true).where('id != ? AND published_at > ?', self.id, 5.year.ago).sample(count)
+    Entry.published.photo_entries.tagged_with(self.tag_list, any: true).where('id != ? AND published_at > ?', self.id, 1.year.ago).sample(count)
   end
 
   def update_position
