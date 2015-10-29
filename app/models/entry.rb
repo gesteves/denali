@@ -83,6 +83,10 @@ class Entry < ActiveRecord::Base
     Entry.published.where('published_at < ?', self.published_at).limit(1).first
   end
 
+  def related(count = 12)
+    Entry.published.tagged_with(self.tag_list, any: true).where('id != ?', self.id).limit(count)
+  end
+
   def update_position
     if self.is_queued?
       self.insert_at(Entry.last_queued_position + 1)
