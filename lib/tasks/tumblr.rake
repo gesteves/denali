@@ -19,7 +19,7 @@ namespace :tumblr do
         date: entry.published_at.to_s
       }
       tumblr.photo(ENV['tumblr_domain'], opts)
-      puts "Imported #{opts[:link]} (#{i + 1}/#{entries.size})"
+      puts "Exported #{opts[:link]} (#{i + 1}/#{entries.size})"
       sleep 1
     end
   end
