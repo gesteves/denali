@@ -54,6 +54,7 @@ cache "rss/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
               tags = "Tagged "
               e.tags.each do |tag|
                 tags += link_to "##{tag.name.downcase}", tag_url(tag.slug)
+                tags += ' '
               end
               tags
             end
