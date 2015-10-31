@@ -56,7 +56,7 @@ cache "rss/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
                 tags += link_to "##{tag.name.downcase}", tag_url(tag.slug)
                 tags += ' '
               end
-              tags
+              tags.html_safe
             end
           end
           xml.content body, type: 'html'
