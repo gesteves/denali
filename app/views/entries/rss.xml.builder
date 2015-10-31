@@ -49,16 +49,6 @@ cache "rss/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
               exif
             end
           end
-          unless e.tags.blank?
-            body += content_tag :p do
-              tags = "Tagged "
-              e.tags.each do |tag|
-                tags += link_to "##{tag.name.downcase}", tag_url(tag.slug)
-                tags += ' '
-              end
-              tags.html_safe
-            end
-          end
           xml.content body, type: 'html'
           xml.author do |author|
             author.name e.user.name
