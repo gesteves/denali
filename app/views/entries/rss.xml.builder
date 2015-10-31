@@ -21,6 +21,43 @@ cache "rss/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
             body += p.formatted_caption unless p.caption.blank?
           end
           body += e.formatted_body unless e.body.blank?
+          if e.photos.count == 1
+            photo = e.photos.first
+            body += content_tag :p do
+              exif = ''
+              unless photo.make.blank? || photo.model.blank?
+                exif += "Taken with #{article photo.make} #{camera photo.make, photo.model}"
+                unless photo.film_make.blank? || photo.film_type.blank?
+                  exif += "on #{film photo.film_make, photo.film_type}"
+                end
+              end
+              unless photo.focal_length.blank?
+                exif += " • #{photo.focal_length} mm focal length"
+              end
+              unless photo.exposure.blank? && photo.f_number.blank?
+                 exif +=  " • "
+                  unless photo.exposure.blank?
+                    exif += exposure photo.exposure
+                  end
+                  unless photo.f_number.blank?
+                    exif += " at f/#{aperture photo.f_number}"
+                  end
+              end
+              unless photo.iso.blank?
+                exif += " • ISO #{photo.iso}"
+              end
+              exif
+            end
+          end
+          unless e.tags.blank?
+            body += content_tag :p do
+              tags = "Tagged "
+              e.tags.each do |tag|
+                tags += link_to "##{tag.name.downcase}", tag_url(tag.slug)
+              end
+              tags
+            end
+          end
           xml.content body, type: 'html'
           xml.author do |author|
             author.name e.user.name
