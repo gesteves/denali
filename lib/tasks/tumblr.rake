@@ -18,8 +18,12 @@ namespace :tumblr do
         data: entry.photos.map { |p| open(p.original_url).path },
         date: entry.published_at.to_s
       }
-      tumblr.photo(ENV['tumblr_domain'], opts)
-      puts "Exported #{opts[:link]} (#{i + 1}/#{entries.size})"
+      response = tumblr.photo(ENV['tumblr_domain'], opts)
+      if response['id'].present?
+        puts "Exported #{opts[:link]} (#{i + 1}/#{entries.size})"
+      else
+        puts "Exporting #{opts[:link]} failed (#{i + 1}/#{entries.size})"
+      end
       sleep 1
     end
   end
