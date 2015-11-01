@@ -1,7 +1,7 @@
 namespace :tumblr do
   desc 'Import all posts to Tumblr'
   task :export => [:environment] do
-    entries = Entry.published('published_at ASC').photo_entries.limit(3)
+    entries = Entry.published('published_at ASC').photo_entries
     entries.each_with_index do |entry, i|
       tumblr = Tumblr::Client.new({
         consumer_key: ENV['tumblr_consumer_key'],
