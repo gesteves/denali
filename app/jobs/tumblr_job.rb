@@ -11,8 +11,7 @@ class TumblrJob < EntryJob
     })
     opts = {
       tags: entry.tag_list.join(', '),
-      slug: entry.slug,
-      state: 'draft'
+      slug: entry.slug
     }
     if entry.is_photo?
       opts.merge!({
