@@ -1,7 +1,18 @@
 namespace :tumblr do
   desc 'Import all posts to Tumblr'
   task :export => [:environment] do
-    entries = Entry.published('published_at DESC').where('id < ? AND id >= ?', 1038, 681).photo_entries
+    limit = ENV['ENTRY_COUNT'] || 125
+    if ENV['ENTRY_ID'].present?
+      entries = Entry.published('published_at DESC').where('id = ?', ENV['ENTRY_ID']).limit(limit)
+    elsif ENV['NEWEST_ENTRY_ID'].present? && ENV['OLDEST_ENTRY_ID'].present?
+      entries = Entry.published('published_at DESC').where('id <= ? AND id >= ?', ENV['NEWEST_ENTRY_ID'], ENV['OLDEST_ENTRY_ID']).photo_entries.limit(limit)
+    elsif ENV['NEWEST_ENTRY_ID'].present?
+      entries = Entry.published('published_at DESC').where('id <= ?', ENV['NEWEST_ENTRY_ID']).photo_entries.limit(limit)
+    elsif ENV['OLDEST_ENTRY_ID'].present?
+      entries = Entry.published('published_at DESC').where('id >= ?', ENV['OLDEST_ENTRY_ID']).photo_entries.limit(limit)
+    else
+      entries = Entry.published('published_at DESC').photo_entries.limit(limit)
+    end
     entries.each_with_index do |entry, i|
       tumblr = Tumblr::Client.new({
         consumer_key: ENV['tumblr_consumer_key'],
@@ -21,8 +32,8 @@ namespace :tumblr do
       response = tumblr.photo(ENV['tumblr_domain'], opts)
       if response['id'].present?
         puts "Exported #{opts[:link]} (#{i + 1}/#{entries.size})"
-      else
-        puts "Exporting #{opts[:link]} failed (#{i + 1}/#{entries.size}) (response: #{response})"
+      elsif response['errors'].present?
+        puts "#{response['errors']} Exporting failed at entry ID #{entry.id}"
         break
       end
     end
