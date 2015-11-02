@@ -1,7 +1,7 @@
 namespace :tumblr do
   desc 'Import all posts to Tumblr'
   task :export => [:environment] do
-    entries = Entry.published('published_at ASC').photo_entries
+    entries = Entry.published('published_at DESC').photo_entries
     entries.each_with_index do |entry, i|
       tumblr = Tumblr::Client.new({
         consumer_key: ENV['tumblr_consumer_key'],
@@ -22,7 +22,8 @@ namespace :tumblr do
       if response['id'].present?
         puts "Exported #{opts[:link]} (#{i + 1}/#{entries.size})"
       else
-        puts "Exporting #{opts[:link]} failed (#{i + 1}/#{entries.size})"
+        puts "Exporting #{opts[:link]} failed (#{i + 1}/#{entries.size}) (response: #{response})"
+        break
       end
       sleep 1
     end
