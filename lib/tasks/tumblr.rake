@@ -13,13 +13,13 @@ namespace :tumblr do
     else
       entries = Entry.published('published_at DESC').photo_entries.limit(limit)
     end
+    tumblr = Tumblr::Client.new({
+      consumer_key: ENV['tumblr_consumer_key'],
+      consumer_secret: ENV['tumblr_consumer_secret'],
+      oauth_token: ENV['tumblr_access_token'],
+      oauth_token_secret: ENV['tumblr_access_token_secret']
+    })
     entries.each_with_index do |entry, i|
-      tumblr = Tumblr::Client.new({
-        consumer_key: ENV['tumblr_consumer_key'],
-        consumer_secret: ENV['tumblr_consumer_secret'],
-        oauth_token: ENV['tumblr_access_token'],
-        oauth_token_secret: ENV['tumblr_access_token_secret']
-      })
       opts = {
         tags: entry.tag_list.join(', '),
         slug: entry.slug,
