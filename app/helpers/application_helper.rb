@@ -26,14 +26,15 @@ module ApplicationHelper
   def get_srcset(photo, photo_key)
     quality = PHOTOS[photo_key]['quality'] || 90
     square = PHOTOS[photo_key]['square'].present?
+    client_hints = PHOTOS[photo_key]['client_hints']
     PHOTOS[photo_key]['srcset'].
       uniq.
       sort.
-      map { |width| "#{build_imgix_url(photo, width, quality, square)} #{width}w" }.
+      map { |width| "#{build_imgix_url(photo, width, quality, square, client_hints)} #{width}w" }.
       join(', ')
   end
 
-  def build_imgix_url(photo, width, quality, square)
+  def build_imgix_url(photo, width, quality, square, client_hints = nil)
     imgix_path = Ix.path(photo.original_path).auto('format').q(quality)
     if square
       imgix_path.fit = 'crop'
@@ -43,7 +44,11 @@ module ApplicationHelper
       imgix_path.fit = 'max'
     end
     imgix_path.width(width)
-    imgix_path.to_url
+    if client_hints.nil?
+      imgix_path.to_url
+    else
+      imgix_path.to_url(ch: client_hints)
+    end
   end
 
   def get_sizes(photo_key)
