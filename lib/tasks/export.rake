@@ -72,7 +72,13 @@ namespace :export do
       tags = entry.tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')
 
       entry.photos.each do |p|
-        flickr.upload_photo open(p.original_url).path, title: title, description: body, tags: tags
+        begin
+          response = flickr.upload_photo open(p.original_url).path, title: title, description: body, tags: tags
+        rescue => e
+          puts "Exporting failed at entry ID #{entry.id}: #{e}"
+        else
+          puts "Exported #{permalink_url(entry)} (Flickr ID: #{response})"
+        end
       end
     end
   end
