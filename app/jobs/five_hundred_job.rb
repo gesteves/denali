@@ -3,8 +3,8 @@ class FiveHundredJob < EntryJob
   queue_as :default
 
   def perform(entry)
-    consumer = OAuth::Consumer.new(ENV['500px_consumer_key'], ENV['500px_consumer_secret'], { site: 'https://api.500px.com' })
-    access_token = OAuth::AccessToken.new(consumer, ENV['500px_access_token'], ENV['500px_access_token_secret'])
+    consumer = OAuth::Consumer.new(ENV['fivehundredpx_consumer_key'], ENV['fivehundredpx_consumer_secret'], { site: 'https://api.500px.com' })
+    access_token = OAuth::AccessToken.new(consumer, ENV['fivehundredpx_access_token'], ENV['fivehundredpx_access_token_secret'])
 
     opts = {
         name: entry.formatted_title,
@@ -26,8 +26,8 @@ class FiveHundredJob < EntryJob
             upload_key: body['upload_key'],
             photo_id: body['photo']['id'],
             file: File.new(open(p.original_url).path),
-            consumer_key: ENV['500px_consumer_key'],
-            access_key: ENV['500px_access_token']
+            consumer_key: ENV['fivehundredpx_consumer_key'],
+            access_key: ENV['fivehundredpx_access_token']
           }
           HTTMultiParty.post('http://upload.500px.com/v1/upload', body: opts)
         end
