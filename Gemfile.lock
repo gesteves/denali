@@ -89,6 +89,10 @@ GEM
       activesupport (>= 4.1.0)
     hashie (3.4.2)
     htmlcompressor (0.3.0)
+    httmultiparty (0.3.16)
+      httparty (>= 0.7.3)
+      mimemagic
+      multipart-post
     httparty (0.13.7)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
@@ -299,6 +303,7 @@ DEPENDENCIES
   flickraw
   foreman
   htmlcompressor
+  httmultiparty
   httparty
   imgix
   jbuilder (~> 2.3)
@@ -306,6 +311,7 @@ DEPENDENCIES
   kaminari
   lograge
   newrelic_rpm
+  oauth
   omniauth-google-oauth2
   paperclip (~> 4.2)
   passenger

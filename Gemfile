@@ -28,9 +28,11 @@ gem 'sanitize'
 gem 'exifr'
 gem 'acts-as-taggable-on', '~> 3.4'
 gem 'httparty'
+gem 'httmultiparty'
 gem 'kaminari'
 gem 'figaro'
 gem 'cloudfront-invalidator'
+gem 'oauth'
 
 # Caching
 gem 'dalli'
