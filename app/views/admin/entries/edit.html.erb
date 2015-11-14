@@ -37,8 +37,9 @@
     <%= f.label :invalidate_cloudfront, class: 'form__label form__label--checkbox' do %><%= f.check_box(:invalidate_cloudfront) %> Send CloudFront invalidation request for this entry<% end %>
   <% else %>
     <h2>Sharing options</h2>
-    <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box(:post_to_facebook) %> Post to Facebook<% end %>
-    <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box(:post_to_tumblr) %> Post to Tumblr<% end %>
+    <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_facebook %> Post to Facebook<% end %>
+    <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_tumblr %> Post to Tumblr<% end %>
+    <%= f.label :post_to_flickr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_flickr %> Post to Flickr<% end %>
     <%= f.label :post_to_twitter, class: 'form__label form__label--checkbox' do %>
       <%= f.check_box(:post_to_twitter) %> Post to Twitter
     <% end %>

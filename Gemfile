@@ -42,6 +42,7 @@ gem 'resque-web', require: 'resque_web'
 
 # Social Networks
 gem 'tumblr_client'
+gem 'flickraw'
 
 group :production do
   gem 'passenger'

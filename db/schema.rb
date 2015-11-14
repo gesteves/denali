@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151004200800) do
+ActiveRecord::Schema.define(version: 20151114185806) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -42,6 +42,8 @@ ActiveRecord::Schema.define(version: 20151004200800) do
     t.boolean  "post_to_tumblr"
     t.string   "tweet_text"
     t.boolean  "post_to_facebook"
+    t.boolean  "post_to_ifttt"
+    t.boolean  "post_to_flickr"
   end
 
   add_index "entries", ["blog_id"], name: "index_entries_on_blog_id"
@@ -73,7 +75,6 @@ ActiveRecord::Schema.define(version: 20151004200800) do
     t.string   "film_make"
     t.string   "film_type"
     t.string   "crop"
-    t.text     "color_palette"
   end
 
   add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"
