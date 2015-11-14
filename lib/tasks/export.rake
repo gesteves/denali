@@ -73,7 +73,7 @@ namespace :export do
 
       entry.photos.each do |p|
         begin
-          response = flickr.upload_photo open(p.original_url).path, title: title, description: body, tags: tags
+          flickr.upload_photo open(p.original_url).path, title: title, description: body, tags: tags
         rescue => e
           puts "Exporting failed at entry ID #{entry.id}: #{e}"
         else
