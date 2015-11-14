@@ -60,7 +60,7 @@ namespace :export do
     flickr.access_token = ENV['flickr_access_token']
     flickr.access_secret = ENV['flickr_access_token_secret']
 
-    entries.each do |entry|
+    entries.each_with_index do |entry, i|
       title = entry.formatted_title
 
       if entry.body.present?
@@ -77,7 +77,7 @@ namespace :export do
         rescue => e
           puts "Exporting failed at entry ID #{entry.id}: #{e}"
         else
-          puts "Exported #{permalink_url(entry)} (Flickr ID: #{response})"
+          puts "Exported #{permalink_url(entry)} (#{i + 1}/#{entries.size})"
         end
       end
     end
