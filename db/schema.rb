@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151115032621) do
+ActiveRecord::Schema.define(version: 20151115034407) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -29,11 +29,11 @@ ActiveRecord::Schema.define(version: 20151115032621) do
     t.string   "title"
     t.text     "body"
     t.string   "slug"
-    t.string   "status",            default: "draft"
+    t.string   "status",           default: "draft"
     t.integer  "blog_id"
     t.integer  "user_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.datetime "published_at"
     t.integer  "photos_count"
     t.integer  "position"
@@ -45,7 +45,6 @@ ActiveRecord::Schema.define(version: 20151115032621) do
     t.boolean  "post_to_ifttt"
     t.boolean  "post_to_flickr"
     t.boolean  "post_to_500px"
-    t.boolean  "post_to_pinterest"
   end
 
   add_index "entries", ["blog_id"], name: "index_entries_on_blog_id"
