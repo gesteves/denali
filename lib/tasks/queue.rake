@@ -11,6 +11,7 @@ namespace :queue do
       TumblrJob.perform_later(entry) if entry.post_to_tumblr
       FlickrJob.perform_later(entry) if entry.post_to_flickr && entry.is_photo?
       FiveHundredJob.perform_later(entry) if entry.post_to_500px && entry.is_photo?
+      PinterestJob.perform_later(entry) if entry.post_to_pinterest && entry.is_photo?
       puts "Entry \"#{entry.title}\" published successfully."
     else
       puts 'Queued entry failed to publish.'

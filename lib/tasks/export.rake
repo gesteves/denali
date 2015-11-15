@@ -136,6 +136,38 @@ namespace :export do
       end
     end
   end
+
+  desc 'Export posts to Pinterest'
+  task :pinterest => [:environment] do
+    if ENV['ENTRY_ID'].present?
+      entries = Entry.published('published_at ASC').where('id = ?', ENV['ENTRY_ID'])
+    elsif ENV['NEWEST_ENTRY_ID'].present? && ENV['OLDEST_ENTRY_ID'].present?
+      entries = Entry.published('published_at ASC').where('id <= ? AND id >= ?', ENV['NEWEST_ENTRY_ID'], ENV['OLDEST_ENTRY_ID']).photo_entries
+    elsif ENV['NEWEST_ENTRY_ID'].present?
+      entries = Entry.published('published_at ASC').where('id <= ?', ENV['NEWEST_ENTRY_ID']).photo_entries
+    elsif ENV['OLDEST_ENTRY_ID'].present?
+      entries = Entry.published('published_at ASC').where('id >= ?', ENV['OLDEST_ENTRY_ID']).photo_entries
+    else
+      entries = Entry.published('published_at ASC').photo_entries.limit(limit)
+    end
+
+    entries.each_with_index do |entry, i|
+      opts = {
+        board: ENV['pinterest_board_id'],
+        note: entry.title,
+        link: permalink_url(entry)
+      }
+      entry.photos.each do |p|
+        opts[:image_url] = p.original_url
+        response = HTTParty.post('https://api.pinterest.com/v1/pins/', query: opts, headers: { 'Authorization' => "BEARER #{ENV['pinterest_token']}" })
+        if response.code == 201
+          puts "Exported #{permalink_url(entry)} (#{i + 1}/#{entries.size})"
+        else
+          puts "Exporting failed at entry ID #{entry.id}: #{response.body}"
+        end
+      end
+    end
+  end
 end
 
 def permalink_url(entry)
