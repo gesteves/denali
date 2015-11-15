@@ -42,7 +42,7 @@ GEM
       activerecord (>= 3.0)
     addressable (2.3.8)
     arel (6.0.3)
-    autoprefixer-rails (6.0.3)
+    autoprefixer-rails (6.1.0.1)
       execjs
       json
     aws-sdk (1.64.0)
@@ -53,7 +53,7 @@ GEM
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
     builder (3.2.2)
-    byebug (6.0.2)
+    byebug (8.2.0)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cloudfront-invalidator (0.2.1)
@@ -68,7 +68,7 @@ GEM
     coffee-script (2.4.1)
       coffee-script-source
       execjs
-    coffee-script-source (1.9.1.1)
+    coffee-script-source (1.10.0)
     crass (1.0.2)
     dalli (2.7.4)
     debug_inspector (0.0.2)
@@ -87,7 +87,7 @@ GEM
       thor (~> 0.19.1)
     globalid (0.3.6)
       activesupport (>= 4.1.0)
-    hashie (3.4.2)
+    hashie (3.4.3)
     htmlcompressor (0.3.0)
     httmultiparty (0.3.16)
       httparty (>= 0.7.3)
@@ -107,7 +107,7 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (1.8.3)
-    jwt (1.5.1)
+    jwt (1.5.2)
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -122,12 +122,12 @@ GEM
     mime-types (2.6.2)
     mimemagic (0.3.0)
     mini_portile (0.6.2)
-    minitest (5.8.1)
+    minitest (5.8.2)
     mono_logger (1.1.0)
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    newrelic_rpm (3.13.2.302)
+    newrelic_rpm (3.14.0.305)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     nokogumbo (1.4.1)
@@ -142,12 +142,12 @@ GEM
     omniauth (1.2.2)
       hashie (>= 1.2, < 4)
       rack (~> 1.0)
-    omniauth-google-oauth2 (0.2.8)
+    omniauth-google-oauth2 (0.2.10)
       addressable (~> 2.3)
       jwt (~> 1.0)
       multi_json (~> 1.3)
       omniauth (>= 1.1.1)
-      omniauth-oauth2 (>= 1.1.1)
+      omniauth-oauth2 (~> 1.3.1)
     omniauth-oauth2 (1.3.1)
       oauth2 (~> 1.0)
       omniauth (~> 1.2)
@@ -157,10 +157,10 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (= 0.3.0)
-    passenger (5.0.20)
+    passenger (5.0.21)
       rack
       rake (>= 0.8.1)
-    pg (0.18.3)
+    pg (0.18.4)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -213,14 +213,14 @@ GEM
       redis (~> 3.0)
       resque (~> 1.25)
       rufus-scheduler (~> 3.0)
-    resque-web (0.0.6)
+    resque-web (0.0.7)
       coffee-rails
       jquery-rails
       resque
       sass-rails
       twitter-bootstrap-rails
     ruby-hmac (0.4.0)
-    rufus-scheduler (3.1.7)
+    rufus-scheduler (3.1.9)
     sanitize (4.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.4.4)
@@ -248,7 +248,7 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (>= 1.3, < 3)
-    spring (1.4.0)
+    spring (1.4.1)
     sprockets (3.4.0)
       rack (> 1, < 3)
     sprockets-rails (2.3.3)
