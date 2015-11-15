@@ -7,7 +7,7 @@ class FiveHundredJob < EntryJob
     access_token = OAuth::AccessToken.new(consumer, ENV['fivehundredpx_access_token'], ENV['fivehundredpx_access_token_secret'])
 
     opts = {
-      name: entry.formatted_title,
+      name: entry.title,
       tags: entry.tag_list.join(','),
       privacy: 0
     }

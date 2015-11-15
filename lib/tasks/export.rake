@@ -61,7 +61,7 @@ namespace :export do
     flickr.access_secret = ENV['flickr_access_token_secret']
 
     entries.each_with_index do |entry, i|
-      title = entry.formatted_title
+      title = entry.title
 
       if entry.body.present?
         body = "#{entry.formatted_body}\n\n#{permalink_url(entry)}"
@@ -102,7 +102,7 @@ namespace :export do
 
     entries.each_with_index do |entry, i|
       opts = {
-        name: entry.formatted_title,
+        name: entry.title,
         tags: entry.tag_list.join(','),
         privacy: 0
       }

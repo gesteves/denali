@@ -10,7 +10,7 @@ class FlickrJob < EntryJob
     flickr.access_token = ENV['flickr_access_token']
     flickr.access_secret = ENV['flickr_access_token_secret']
 
-    title = entry.formatted_title
+    title = entry.title
 
     if entry.body.present?
       body = "#{entry.formatted_body}\n\n#{permalink_url(entry)}"
