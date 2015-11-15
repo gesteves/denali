@@ -165,6 +165,7 @@ namespace :export do
         else
           puts "Exporting failed at entry ID #{entry.id}: #{response.body}"
         end
+        sleep 1
       end
     end
   end
