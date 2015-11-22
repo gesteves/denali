@@ -94,6 +94,10 @@
   flex-flow: row nowrap;
 }
 
+.entry-timestamp {
+  flex-grow: 1;
+}
+
 .entry__actions--queue {
   flex-grow: 1;
 }
