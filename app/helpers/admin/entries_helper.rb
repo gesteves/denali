@@ -5,6 +5,6 @@ module Admin::EntriesHelper
     else
       counter + 1
     end
-    (Time.now + days.days).strftime('%A, %B %-d, %Y')
+    (Time.now + days.days).strftime('%A, %B %-d')
   end
 end
