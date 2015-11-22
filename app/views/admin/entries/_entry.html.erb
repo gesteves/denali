@@ -15,6 +15,11 @@
           <span class="entry__tag"><%= link_to t.name, admin_tag_path(t.slug) %></span>
         <% end %>
       </div>
+      <% if entry.is_queued? %>
+        <div>
+          Queued for <%= publish_date_for_queued(entry, entry_counter) %>
+        </div>
+      <% end %>
       <div class="entry__meta-bottom">
         <% if entry.is_published? %>
           <div class="entry__timestamp">
