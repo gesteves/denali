@@ -23,7 +23,7 @@
       <div class="entry__meta-bottom">
         <% if entry.is_published? %>
           <div class="entry__timestamp">
-            <%= link_to "Published #{entry.published_at.strftime('%A, %B %-d, %Y')}", permalink_url(entry) %>
+            <%= link_to "Published #{entry.published_at.strftime('%A, %B %-d')}", permalink_url(entry) %>
           </div>
         <% elsif entry.is_queued? %>
           <div class="entry__actions entry__actions--queue">
