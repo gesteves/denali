@@ -29,12 +29,10 @@ Denali.ImageZoom = (function () {
       height = max_width * image_ratio;
       if (height > window.innerHeight) {
         image.classList.add(opts.zoomable_class);
-        image.style.minHeight = window.innerHeight + 'px';
         image.addEventListener('click', toggleZoom);
         zoomable_images.push(image);
       } else {
         image.classList.remove(opts.zoomable_class);
-        image.style.minHeight = height + 'px';
         image.removeEventListener('click', toggleZoom);
       }
     }
