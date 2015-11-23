@@ -7,7 +7,6 @@ class Admin::EntriesController < AdminController
   before_action :set_crop_options, only: [:edit, :photo]
 
   after_action :enqueue_jobs, only: [:create, :publish]
-  after_action :enqueue_invalidation, only: [:update]
   after_action :update_position, only: [:publish, :queue, :draft, :create]
 
   skip_before_action :require_login, only: [:preview]
@@ -151,7 +150,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_500px, :post_to_facebook, :tweet_text, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :crop])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_500px, :post_to_facebook, :tweet_text, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :crop])
     end
 
     def enqueue_jobs
@@ -163,10 +162,6 @@ class Admin::EntriesController < AdminController
         FlickrJob.perform_later(@entry) if @entry.post_to_flickr && @entry.is_photo?
         FiveHundredJob.perform_later(@entry) if @entry.post_to_500px && @entry.is_photo?
       end
-    end
-
-    def enqueue_invalidation
-      CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && @entry.is_published? && entry_params[:invalidate_cloudfront] == "1"
     end
 
     def update_position

@@ -31,7 +31,6 @@ gem 'httparty'
 gem 'httmultiparty'
 gem 'kaminari'
 gem 'figaro'
-gem 'cloudfront-invalidator'
 gem 'oauth'
 
 # Caching

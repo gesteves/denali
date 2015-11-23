@@ -32,10 +32,7 @@
   <%= render partial: 'entry_fields', locals: { f: f } %>
 
   <div class="form__options">
-  <% if @entry.is_published? %>
-    <h2>Options</h2>
-    <%= f.label :invalidate_cloudfront, class: 'form__label form__label--checkbox' do %><%= f.check_box(:invalidate_cloudfront) %> Send CloudFront invalidation request for this entry<% end %>
-  <% else %>
+  <% unless @entry.is_published? %>
     <h2>Sharing options</h2>
     <%= f.label :post_to_500px, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_500px %> Post to 500px<% end %>
     <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_facebook %> Post to Facebook<% end %>

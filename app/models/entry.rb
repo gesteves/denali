@@ -18,8 +18,6 @@ class Entry < ActiveRecord::Base
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
-  attr_accessor :invalidate_cloudfront
-
   def self.published(order = 'published_at DESC')
     where(status: 'published').order(order)
   end
