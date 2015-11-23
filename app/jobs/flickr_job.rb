@@ -1,4 +1,4 @@
-class FlickrJob < EntryJob
+class FlickrJob < ApplicationJob
 
   queue_as :default
 

@@ -1,4 +1,4 @@
-class BufferJob < EntryJob
+class BufferJob < ApplicationJob
   include ActionView::Helpers::TextHelper
   queue_as :default
 

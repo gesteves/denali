@@ -1,4 +1,4 @@
-class FiveHundredJob < EntryJob
+class FiveHundredJob < ApplicationJob
 
   queue_as :default
 

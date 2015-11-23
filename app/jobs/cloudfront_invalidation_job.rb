@@ -1,4 +1,4 @@
-class CloudfrontInvalidationJob < EntryJob
+class CloudfrontInvalidationJob < ApplicationJob
 
   queue_as :default
 

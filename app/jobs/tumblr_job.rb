@@ -1,4 +1,4 @@
-class TumblrJob < EntryJob
+class TumblrJob < ApplicationJob
 
   queue_as :default
 

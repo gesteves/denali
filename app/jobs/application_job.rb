@@ -1,4 +1,4 @@
-class EntryJob < ActiveJob::Base
+class ApplicationJob < ActiveJob::Base
   include ActionView::Helpers::TextHelper
 
   def permalink_url(entry)

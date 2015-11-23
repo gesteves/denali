@@ -1,4 +1,4 @@
-class IftttJob < EntryJob
+class IftttJob < ApplicationJob
 
   queue_as :default
 
