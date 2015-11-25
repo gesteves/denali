@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Sign in &middot; <%= @photoblog.name %></title>
-  <%= stylesheet_link_tag 'admin', media: 'all' %>
-  <%= csrf_meta_tags %>
-  <script src="http://use.typekit.net/zwv6nvu.js" onload="try{Typekit.load();}catch(e){}" async></script>
-</head>
-<body>
+<% content_for :inline_css do %>
+  <style><%= Rails.application.assets['sessions.css'].to_s.html_safe %></style>
+<% end %>
 
 <div class="signin">
-<a href="/auth/google_oauth2" class="button button--danger">Sign in with Google</a>
+  <a href="/auth/google_oauth2" class="button button--danger">Sign in with Google</a>
 </div>
-
-</body>
-</html>
