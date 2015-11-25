@@ -15,7 +15,7 @@
 .header__section {
   &:first-of-type {
     border-bottom: 1px solid $color-border;
-    width: 50vw;
+    width: calc(100% - 40px);
   }
 
   @media (min-width: $bp-m) {
