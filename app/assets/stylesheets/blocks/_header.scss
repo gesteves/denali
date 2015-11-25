@@ -34,6 +34,16 @@
   font-size: 16px;
   font-style: italic;
   margin: 12px 0;
+
+  a:link,
+  a:visited {
+    color: $color-text-alt;
+  }
+
+  a:hover,
+  a:active {
+    color: $color-links;
+  }
 }
 
 .header__link {
