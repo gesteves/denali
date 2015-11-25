@@ -21,7 +21,7 @@
   @media (min-width: $bp-m) {
     border-bottom: 1px solid $color-border;
     flex-grow: 1;
-    margin-bottom: 13px;
+    margin-bottom: 45px;
     padding: 0 20px;
 
     &:first-of-type {
@@ -34,7 +34,7 @@
   color: $color-text-alt;
   font-size: 16px;
   font-style: italic;
-  margin: 12px 0;
+  line-height: 44px;
 
   a:link,
   a:visited {
