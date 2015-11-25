@@ -1,0 +1,11 @@
+<header class="header">
+  <div class="header__section">
+    <p class="header__tagline"><%= @photoblog.description %></p>
+  </div>
+  <a href="/" class="header__link">
+    <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
+  </a>
+  <div class="header__section">
+    <%= render partial: 'partials/follow.html.erb' %>
+  </div>
+</header>
