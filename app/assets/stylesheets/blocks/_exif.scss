@@ -1,5 +1,8 @@
-.exif__field {
+.exif {
   color: $color-text-alt;
+}
+
+.exif__field {
   white-space: nowrap;
 
   &::after {

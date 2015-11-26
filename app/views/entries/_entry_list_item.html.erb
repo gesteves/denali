@@ -6,8 +6,38 @@
           <%= lazy_responsive_image_tag entry_list_item.photos.first,
                   'entry_list_item',
                   { class: 'entry-list__image', alt: entry_list_item.photos.first.caption.blank? ? entry_list_item.title : entry_list_item.photos.first.plain_caption } %>
-          <figcaption class="entry-list__photo-title">
-            <p class="entry-list__photo-caption"><%= raw entry_list_item.formatted_title %></p>
+          <figcaption class="entry-list__photo-caption">
+            <p class="entry-list__photo-title"><%= raw truncate(entry_list_item.formatted_title, length: 100, separator: ' ', omission: '…', escape: false) %></p>
+            <p class="entry-list__photo-meta">Published on <%= entry_list_item.published_at.strftime('%B %-d, %Y') %></p>
+            <% unless entry_list_item.is_photoset? %>
+              <p class="entry-list__photo-meta">
+                <span class="exif__field">
+                  <% photo = entry_list_item.photos.first %>
+                  <%= camera photo.make, photo.model %>
+                </span>
+                <% unless photo.film_make.blank? || photo.film_type.blank? %>
+                  <span class="exif__field">
+                    <%= film photo.film_make, photo.film_type %>
+                  </span>
+                <% end %>
+                <% unless photo.focal_length.blank? %>
+                  <span class="exif__field"><%= photo.focal_length %> mm</span>
+                <% end %>
+                <% unless photo.exposure.blank? %>
+                  <span class="exif__field">
+                    <%= exposure photo.exposure %>
+                  </span>
+                <% end %>
+                <% unless photo.f_number.blank? %>
+                  <span class="exif__field">
+                    f/<%= aperture photo.f_number %>
+                  </span>
+                <% end %>
+                <% unless photo.iso.blank? %>
+                  <span class="exif__field">ISO <%= photo.iso %></span>
+                <% end %>
+              </p>
+            <% end %>
           </figcaption>
         </figure>
       <% else %>
