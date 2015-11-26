@@ -48,21 +48,29 @@ entry_list_item:
 admin_entry:
   src: 800
   srcset:
+    - 560
+    - 670
     - 800
     - 1122
+    - 1456
     - 1600
   sizes:
     - "(min-width: 840px) 800px"
     - calc(100vw - 40px)
   quality: 60
+  client_hints: "Width,DPR"
 admin_edit:
   src: 300
   srcset:
     - 300
+    - 516
     - 600
+    - 626
     - 900
     - 1056
+    - 1412
   sizes:
     - "(min-width: 800px) 300px"
     - calc(100vw - 60px)
   quality: 60
+  client_hints: "Width,DPR"
