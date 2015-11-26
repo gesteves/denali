@@ -113,7 +113,7 @@
 
   &:hover .entry-list__photo-title {
     @media (min-width: $bp-s) {
-      background-color: rgba(0, 0, 0, 0.25);
+      text-decoration: underline;
     }
   }
 }
@@ -122,21 +122,20 @@
   align-items: flex-end;
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.85));
   bottom: 0;
+  color: #FFF;
   display: flex;
   height: 100%;
   justify-content: center;
   left: 0;
   line-height: 1.2;
-  padding: 1.5rem;
+  padding: 20px;
   position: absolute;
   right: 0;
-  transition: background-color 150ms linear;
   width: 100%;
   z-index: 1;
 }
 
 .entry-list__photo-caption {
-  color: #FFF;
   font-family: 'kepler-std-display', 'Times New Roman', serif;
   font-size: 16px;
   font-weight: 400;
