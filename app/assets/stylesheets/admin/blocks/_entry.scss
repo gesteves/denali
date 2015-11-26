@@ -90,8 +90,10 @@
 }
 
 .entry__meta-bottom {
-  display: flex;
-  flex-flow: row nowrap;
+  @media (min-width: $bp-admin-m) {
+    display: flex;
+    flex-flow: row nowrap;
+  }
 }
 
 .entry__timestamp {

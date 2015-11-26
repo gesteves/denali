@@ -49,6 +49,7 @@ admin_entry:
   src: 800
   srcset:
     - 800
+    - 1122
     - 1600
   sizes:
     - "(min-width: 840px) 800px"
