@@ -5,7 +5,7 @@
         <%= responsive_image_tag photo,
             'entry',
             { class: "entry__image entry__image--fit",
-              alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption,
+              alt: photo.caption.blank? ? entry.title : photo.plain_caption,
               'data-width-original': photo.width,
               'data-height-original': photo.height } %>
         <% unless photo.caption.blank? %>
