@@ -1,0 +1,49 @@
+<% content_for :meta do %>
+  <title>About <%= @photoblog.name %></title>
+  <meta name="description" content="" />
+  <link rel="canonical" href="<%= about_url %>">
+
+  <meta property="og:title" content="<%= @photoblog.name %>" />
+  <meta property="og:image" content="<%= image_url 'cover.png' %>" />
+  <meta property="og:description" content="" />
+  <meta property="og:url" content="<%= about_url %>" />
+  <meta property="og:type" content="Website" />
+  <meta property="og:site_name" content="<%= @photoblog.name %>" />
+  <meta property="og:locale" content="en_US" />
+
+  <meta name="twitter:site" content="@gesteves">
+  <meta name="twitter:creator" content="@gesteves">
+  <meta name="twitter:title" content="<%= @photoblog.name %>">
+  <meta name="twitter:url" content="<%= about_url %>" />
+  <meta name="twitter:description" content="">
+  <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
+  <meta name="twitter:card" content="summary_large_image">
+<% end %>
+
+<% content_for :inline_css do %>
+  <style><%= Rails.application.assets['entry.css'].to_s.html_safe %></style>
+<% end %>
+
+<article class="entry entry--text">
+
+  <div class="entry__body">
+    <h1 class="entry__headline">
+      About <%= @photoblog.name %>
+    </h1>
+    <blockquote>
+      <p>“The world’s big and I want to have a good look at it before it gets dark.”</p>
+      <p>—John Muir</p>
+    </blockquote>
+    <p>I’m <a href="http://www.gesteves.com" rel="me">Guillermo Esteves</a>, a web developer and amateur photographer from Washington, DC. <cite>All-Encompassing Trip</cite> is my photoblog, where I publish my photos to document my life and travel. I post one new photo every day around noon, eastern time.</p>
+
+    <h2>About the site</h2>
+    <p><cite>All-Encompassing Trip</cite> is published through <a href="https://github.com/gesteves/denali">Denali</a>, a custom photoblogging <abbr>CMS</abbr> I wrote because I wanted something that’s really fast, serves high-resolution images, and makes it easy to queue up a bunch of photos and cross-post them to the social networks I use. It is hosted in <a href="https://www.heroku.com/">Heroku</a>, and uses <a href="https://www.imgix.com">imgix</a> to process and serve all the photos.</p>
+
+    <h2>Prints</h2>
+    <p>For most photos, prints are available upon request. Hit me up via <a href="mailto:contact@allencompassingtrip.com">email</a>, and we’ll discuss options and prices.</p>
+
+    <h2>Elsewhere</h2>
+    <p>You can follow me on <a href="https://twitter.com/gesteves" rel="me">Twitter</a>, <a href="http://gesteves.tumblr.com" rel="me">Tumblr</a>, <a href="https://www.instagram.com/gesteves/" rel="me">Instagram</a>, <a href="https://www.flickr.com/photos/gesteves/" rel="me">Flickr</a>, and <a href="https://500px.com/gesteves" rel="me">500px</a>. You can also subscribe to this site via <a href="<%= rss_url %>">RSS</a> or <a href="https://apple.news/TOUnOh13VRX2x8_VPMwaMbQ">Apple News</a>.</p>
+
+  </div>
+</article>
