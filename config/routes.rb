@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   require "resque_web"
   mount ResqueWeb::Engine => "/resque-web"
 
@@ -40,6 +41,8 @@ Rails.application.routes.draw do
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
   get '/rss'                           => 'entries#rss', defaults: { format: 'xml' }
   get '/sitemap'                       => 'entries#sitemap', defaults: { format: 'xml' }
+
+  get '/about' => 'pages#about', :as => :about
 
   get '/admin'                    => 'admin#index'
   get '/auth/:provider/callback'  => 'sessions#create'

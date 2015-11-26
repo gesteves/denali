@@ -18,24 +18,10 @@
 </head>
 <body>
 <%= render partial: 'partials/icons.svg.erb' %>
-
-<header class="header">
-  <a href="/" class="header__link">
-    <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
-  </a>
-</header>
-
+<%= render partial: 'partials/header.html.erb' %>
 <%= yield %>
-
 <footer class="footer">
-    <div class="follow">
-      <a href="https://apple.news/TOUnOh13VRX2x8_VPMwaMbQ" class="follow__link" rel="me" title="Subscribe on Apple News"><%= inline_svg 'apple', 'follow__icon' %></a>
-      <a href="http://instagram.com/gesteves" class="follow__link" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>
-      <a href="http://twitter.com/gesteves" class="follow__link" rel="me" title="Follow on Twitter"><%= inline_svg 'twitter', 'follow__icon' %></a>
-      <a href="http://gesteves.tumblr.com" class="follow__link" rel="me" title="Follow on Tumblr"><%= inline_svg 'tumblr', 'follow__icon' %></a>
-      <a href="<%= rss_url %>" class="follow__link" title="Subscribe to RSS"><%= inline_svg 'rss', 'follow__icon' %></a>
-      <a href="mailto:contact@allencompassingtrip.com" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
-    </div>
+    <%= render partial: 'partials/follow.html.erb' %>
     <p>&copy; 2009-<%= Time.now.strftime('%Y') %> <a href="http://www.gesteves.com" rel="me">Guillermo Esteves</a>. Have a nice day.</p>
 </footer>
 </body>

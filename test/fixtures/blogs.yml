@@ -1,7 +1,8 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-
-two:
-  name: MyString
+  name: 'All-Encompassing Trip'
+  domain: 'www.allencompassingtrip.com'
+  short_domain: 'aetrip.com'
+  description: 'Photography by Guillermo Esteves'
+  posts_per_page: 60
