@@ -7,7 +7,7 @@
                   'entry_list_item',
                   { class: 'entry-list__image', alt: entry_list_item.photos.first.caption.blank? ? entry_list_item.title : entry_list_item.photos.first.plain_caption } %>
           <figcaption class="entry-list__photo-title">
-            <%= raw entry_list_item.formatted_title %>
+            <%= raw truncate(entry_list_item.formatted_title, length: 65, omission: '…') %>
           </figcaption>
         </figure>
       <% else %>
