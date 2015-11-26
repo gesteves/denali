@@ -7,10 +7,11 @@
   font-family: 'proxima-nova', 'Helvetica Neue', sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  margin: 0 2px;
+  margin: 5px 0;
   padding: 6px 10px;
   position: relative;
   text-align: center;
+  width: 100%;
 
   &:hover {
     cursor: pointer;
@@ -18,6 +19,11 @@
 
   &:focus {
     outline-width: 0;
+  }
+
+  @media (min-width: $bp-admin-m) {
+    width: auto;
+    margin: 0 5px;
   }
 }
 

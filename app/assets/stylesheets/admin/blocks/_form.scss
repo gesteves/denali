@@ -76,17 +76,31 @@
     line-height: (24/14);
     margin: 0;
     padding: 6px 2px;
+    width: 100%;
+
+    @media (min-width: $bp-admin-m) {
+      width: auto;
+    }
   }
 }
 
 .form__actions {
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
   padding: 24px 0;
+
+  @media (min-width: $bp-admin-m) {
+    flex-flow: row nowrap;
+  }
 }
 
 .form__buttons {
   display: flex;
+  flex-flow: column nowrap;
+
+  @media (min-width: $bp-admin-m) {
+    flex-flow: row nowrap;
+  }
 }
 
 .form__buttons--safe {
@@ -101,7 +115,7 @@
     color: $color-gray-medium;
     content: '▼';
     position: absolute;
-    right: 8px;
+    right: 10px;
     top: 50%;
     transform: scaleY(0.8) translateY(-50%);
   }
@@ -121,9 +135,14 @@
 
   &.form__label--slug {
     color: $color-text-alt;
+    display: none;
     font-size: 14px;
     font-weight: normal;
     margin: 0 2px 0 0;
+
+    @media (min-width: $bp-admin-m) {
+      display: inline-block;
+    }
   }
 
   &.form__label--checkbox {
@@ -176,17 +195,22 @@
 }
 
 .form__photo-thumb {
-  width: 300px;
+  @media (min-width: $bp-admin-m) {
+    width: 300px;
+  }
 }
 
 .form__photo-fields {
   display: flex;
   flex-flow: column nowrap;
   flex-grow: 1;
-  margin-left: 10px;
 
   .form__label {
     margin: 0;
+  }
+
+  @media (min-width: $bp-admin-m) {
+    margin-left: 10px;
   }
 }
 
@@ -199,6 +223,7 @@
 .form__fields {
   border: 1px solid $color-border;
   display: flex;
+  flex-flow: column nowrap;
   padding: 12px 10px;
   position: relative;
 
@@ -208,15 +233,21 @@
 
   &.form__fields--initial {
     align-items: center;
-    border: 0;
-    padding: 0;
+  }
+
+  @media (min-width: $bp-admin-m) {
+    flex-flow: row nowrap;
   }
 }
 
 .form__fields-separator {
   font-size: 12px;
   line-height: 1.5;
-  margin: 0 5px;
+  margin: 5px 0;
+
+  @media (min-width: $bp-admin-m) {
+    margin: 0 5px;
+  }
 }
 
 .awesomplete {

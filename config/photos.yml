@@ -61,6 +61,8 @@ admin_edit:
     - 300
     - 600
     - 900
+    - 1056
   sizes:
-    - 300px
+    - "(min-width: 800px) 300px"
+    - calc(100vw - 60px)
   quality: 60
