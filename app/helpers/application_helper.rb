@@ -30,7 +30,6 @@ module ApplicationHelper
     PHOTOS[photo_key]['srcset'].
       uniq.
       sort.
-      reject { |width| width > photo.width }.
       map { |width| "#{build_imgix_url(photo, width, quality, square, client_hints)} #{width}w" }.
       join(', ')
   end
