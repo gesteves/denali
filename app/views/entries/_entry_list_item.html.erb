@@ -7,12 +7,12 @@
                   'entry_list_item',
                   { class: 'entry-list__image', alt: entry_list_item.photos.first.caption.blank? ? entry_list_item.title : entry_list_item.photos.first.plain_caption } %>
           <figcaption class="entry-list__photo-caption">
-            <p class="entry-list__photo-title"><%= raw truncate(entry_list_item.formatted_title, length: 100, separator: ' ', omission: '…', escape: false) %></p>
+            <p class="entry-list__photo-title"><%= raw truncate(entry_list_item.formatted_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
             <p class="entry-list__photo-meta">Published on <%= entry_list_item.published_at.strftime('%B %-d, %Y') %></p>
             <% unless entry_list_item.is_photoset? %>
+              <% photo = entry_list_item.photos.first %>
               <p class="entry-list__photo-meta">
                 <span class="exif__field">
-                  <% photo = entry_list_item.photos.first %>
                   <%= camera photo.make, photo.model %>
                 </span>
                 <% unless photo.film_make.blank? || photo.film_type.blank? %>

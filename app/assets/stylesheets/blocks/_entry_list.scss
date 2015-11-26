@@ -143,15 +143,26 @@
 .entry-list__photo-title {
   color: #FFF;
   font-family: 'kepler-std-display', 'Times New Roman', serif;
-  font-size: 16px;
   font-weight: 400;
   line-height: 1.2;
-  margin: 1.2rem;
+  margin: 1.2rem 0;
   text-align: center;
   text-shadow: 0 1px 0 #000;
 
   @media (min-width: $bp-s) {
-    font-size: 2vw;
+    font-size: 16px;
+  }
+
+  @media (min-width: $bp-m) {
+    font-size: 20px;
+  }
+
+  @media (min-width: $bp-l) {
+    font-size: 24px;
+  }
+
+  @media (min-width: $bp-xl) {
+    font-size: 32px;
   }
 
   @media (min-width: $bp-xxl) {
@@ -163,7 +174,7 @@
   color: #FFF;
   font-size: 12px;
   font-style: italic;
-  line-height: 1.2;
+  line-height: 1.5;
   text-align: center;
   text-shadow: 0 1px 0 #000;
 }
