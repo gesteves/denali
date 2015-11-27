@@ -135,8 +135,8 @@
   z-index: 1;
 
   @supports (backdrop-filter: none) {
-    background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(10px);
+    background-color: rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(20px);
   }
 }
 
