@@ -9,7 +9,9 @@
           <figcaption class="entry-list__photo-caption">
             <p class="entry-list__photo-title"><%= raw truncate(entry_list_item.formatted_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
             <p class="entry-list__photo-meta">Published on <%= entry_list_item.published_at.strftime('%B %-d, %Y') %></p>
-            <% unless entry_list_item.is_photoset? %>
+            <% if entry_list_item.is_photoset? %>
+              <p class="entry-list__photo-meta"><%= pluralize(entry_list_item.photos_count, 'photo') %></p>
+            <% else %>
               <% photo = entry_list_item.photos.first %>
               <p class="entry-list__photo-meta">
                 <span class="exif__field">
