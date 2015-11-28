@@ -44,6 +44,7 @@ gem 'resque-web', require: 'resque_web'
 # Social Networks
 gem 'tumblr_client'
 gem 'flickraw'
+gem 'twitter'
 
 group :production do
   gem 'passenger'
@@ -65,4 +66,3 @@ end
 group :test do
   gem 'codeclimate-test-reporter', require: nil
 end
-

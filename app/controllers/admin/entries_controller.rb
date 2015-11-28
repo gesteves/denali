@@ -156,9 +156,9 @@ class Admin::EntriesController < AdminController
     def enqueue_jobs
       if @entry.is_published? && Rails.env.production?
         IftttJob.perform_later(@entry)
-        BufferJob.perform_later(@entry, 'twitter') if @entry.post_to_twitter
-        BufferJob.perform_later(@entry, 'facebook') if @entry.post_to_facebook
+        TwitterJob.perform_later(@entry) if @entry.post_to_twitter
         TumblrJob.perform_later(@entry) if @entry.post_to_tumblr
+        BufferJob.perform_later(@entry, 'facebook') if @entry.post_to_facebook
         FlickrJob.perform_later(@entry) if @entry.post_to_flickr && @entry.is_photo?
         FiveHundredJob.perform_later(@entry) if @entry.post_to_500px && @entry.is_photo?
       end
