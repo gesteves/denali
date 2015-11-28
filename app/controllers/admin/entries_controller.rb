@@ -157,7 +157,7 @@ class Admin::EntriesController < AdminController
       if @entry.is_published?
         IftttJob.perform_later(@entry)
         TwitterJob.perform_later(@entry) if @entry.post_to_twitter
-        TumblrJob.perform_later(@entry) if @entry.post_to_tumblr
+        TumblrJob.perform_later(@entry) if @entry.post_to_tumblr && @entry.is_photo?
         BufferJob.perform_later(@entry, 'facebook') if @entry.post_to_facebook
         FlickrJob.perform_later(@entry) if @entry.post_to_flickr && @entry.is_photo?
         FiveHundredJob.perform_later(@entry) if @entry.post_to_500px && @entry.is_photo?
