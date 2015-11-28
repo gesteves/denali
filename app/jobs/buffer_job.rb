@@ -8,7 +8,7 @@ class BufferJob < ApplicationJob
   def build_body(entry, service)
     body = {
       profile_ids: get_profile_ids(service),
-      text: build_text(entry, service),
+      text: build_text(entry),
       shorten: false,
       now: true,
       access_token: ENV['buffer_access_token']
@@ -17,7 +17,7 @@ class BufferJob < ApplicationJob
     body
   end
 
-  def build_text(entry, service)
+  def build_text(entry)
     caption = entry.tweet_text.blank? ? entry.title : entry.tweet_text
     caption = truncate(caption, length: 90, omission: '…', escape: false)
     "#{caption} #{permalink_url(entry)}"
