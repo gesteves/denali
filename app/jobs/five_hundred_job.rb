@@ -1,5 +1,4 @@
 class FiveHundredJob < ApplicationJob
-
   queue_as :default
 
   def perform(entry)

@@ -1,5 +1,4 @@
 class BufferJob < ApplicationJob
-  include ActionView::Helpers::TextHelper
   queue_as :default
 
   def perform(entry, service)
@@ -14,30 +13,25 @@ class BufferJob < ApplicationJob
       now: true,
       access_token: ENV['buffer_access_token']
     }
-    body[:media] = build_media(entry, service) if entry.is_photo?
+    body[:media] = build_media(entry) if entry.is_photo?
     body
   end
 
   def build_text(entry, service)
-    if service == 'twitter'
-      caption = entry.tweet_text.blank? ? entry.title : entry.tweet_text
-      caption = truncate(caption, length: 90, omission: '…', escape: false)
-    else
-      caption = entry.title
-    end
+    caption = entry.tweet_text.blank? ? entry.title : entry.tweet_text
+    caption = truncate(caption, length: 90, omission: '…', escape: false)
     "#{caption} #{permalink_url(entry)}"
   end
 
-  def build_media(entry, service)
-    width = service == 'twitter' ? 1280 : 2048
+  def build_media(entry)
     {
-      picture: entry.photos.first.url(width),
+      picture: entry.photos.first.url(2048),
       thumbnail: entry.photos.first.url(512, 512)
     }
   end
 
   def get_profile_ids(service)
     response = JSON.parse(HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}").body)
-    response.select{ |profile| profile['service'].downcase.match(service) }.map{ |profile| profile['id'] }
+    response.select { |profile| profile['service'].downcase.match(service) }.map { |profile| profile['id'] }
   end
 end
