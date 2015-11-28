@@ -16,7 +16,7 @@ class TumblrJob < ApplicationJob
       opts.merge!({
         caption: entry.formatted_content,
         link: permalink_url(entry),
-        data: entry.photos.map{ |p| open(p.original_url).path }
+        data: entry.photos.map { |p| open(p.original_url).path }
       })
       tumblr.photo(ENV['tumblr_domain'], opts)
     else
