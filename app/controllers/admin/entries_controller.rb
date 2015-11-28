@@ -154,7 +154,7 @@ class Admin::EntriesController < AdminController
     end
 
     def enqueue_jobs
-      if @entry.is_published? && Rails.env.production?
+      if @entry.is_published?
         IftttJob.perform_later(@entry)
         TwitterJob.perform_later(@entry) if @entry.post_to_twitter
         TumblrJob.perform_later(@entry) if @entry.post_to_tumblr

@@ -8,6 +8,6 @@ class IftttJob < ApplicationJob
       value2: permalink_url(entry)
     }
     body[:value3] = entry.photos.first.url(2048) if entry.is_photo?
-    HTTParty.post(url, body: body)
+    HTTParty.post(url, body: body) if Rails.env.production?
   end
 end

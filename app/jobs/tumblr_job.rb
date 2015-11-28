@@ -18,13 +18,13 @@ class TumblrJob < ApplicationJob
         link: permalink_url(entry),
         data: entry.photos.map { |p| open(p.original_url).path }
       })
-      tumblr.photo(ENV['tumblr_domain'], opts)
+      tumblr.photo(ENV['tumblr_domain'], opts) if Rails.env.production?
     else
       opts.merge!({
         title: entry.formatted_title,
         body: entry.formatted_body
       })
-      tumblr.text(ENV['tumblr_domain'], opts)
+      tumblr.text(ENV['tumblr_domain'], opts) if Rails.env.production?
     end
   end
 end

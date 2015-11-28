@@ -17,9 +17,11 @@ class FiveHundredJob < ApplicationJob
       opts[:description] = permalink_url(entry)
     end
 
-    entry.photos.each do |p|
-      response = access_token.post('https://api.500px.com/v1/photos', opts)
-      upload_photo(p, response.body) if response.code == '200'
+    if Rails.env.production?
+      entry.photos.each do |p|
+        response = access_token.post('https://api.500px.com/v1/photos', opts)
+        upload_photo(p, response.body) if response.code == '200'
+      end
     end
   end
 

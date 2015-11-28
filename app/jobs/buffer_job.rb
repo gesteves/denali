@@ -2,7 +2,7 @@ class BufferJob < ApplicationJob
   queue_as :default
 
   def perform(entry, service)
-    HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: build_body(entry, service))
+    HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: build_body(entry, service)) if Rails.env.production?
   end
 
   def build_body(entry, service)

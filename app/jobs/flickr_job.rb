@@ -19,8 +19,10 @@ class FlickrJob < ApplicationJob
 
     tags = entry.tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')
 
-    entry.photos.each do |p|
-      flickr.upload_photo open(p.original_url).path, title: title, description: body, tags: tags
+    if Rails.env.production?
+      entry.photos.each do |p|
+        flickr.upload_photo open(p.original_url).path, title: title, description: body, tags: tags
+      end
     end
   end
 end
