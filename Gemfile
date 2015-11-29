@@ -33,6 +33,7 @@ gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
 gem 'skylight'
+gem 'htmlentities'
 
 # Caching
 gem 'dalli'

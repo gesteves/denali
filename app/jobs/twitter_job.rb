@@ -26,7 +26,8 @@ class TwitterJob < ApplicationJob
     else
       max_length = 139 - url_length
     end
-    text = entry.tweet_text.blank? ? entry.title : entry.tweet_text
+    coder = HTMLEntities.new
+    text = coder.decode(entry.tweet_text.blank? ? entry.formatted_title : entry.formatted_tweet_text)
     "#{truncate(text, length: max_length, omission: '…')} #{permalink_url(entry)}"
   end
 end

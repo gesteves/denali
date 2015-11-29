@@ -91,6 +91,7 @@ GEM
       activesupport (>= 4.1.0)
     hashie (3.4.3)
     htmlcompressor (0.3.0)
+    htmlentities (4.3.4)
     httmultiparty (0.3.16)
       httparty (>= 0.7.3)
       mimemagic
@@ -320,6 +321,7 @@ DEPENDENCIES
   flickraw
   foreman
   htmlcompressor
+  htmlentities
   httmultiparty
   httparty
   imgix
