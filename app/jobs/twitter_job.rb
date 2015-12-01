@@ -12,7 +12,8 @@ class TwitterJob < ApplicationJob
     tweet = build_tweet(entry, config)
     if entry.is_photo?
       width = config.photo_sizes[:large].w
-      twitter.update_with_media(tweet, File.new(open(entry.photos.first.url(width)).path)) if Rails.env.production?
+      opts = set_coordinates(entry.photos.first)
+      twitter.update_with_media(tweet, File.new(open(entry.photos.first.url(width)).path), opts) if Rails.env.production?
     else
       twitter.update(tweet) if Rails.env.production?
     end
@@ -29,5 +30,15 @@ class TwitterJob < ApplicationJob
     coder = HTMLEntities.new
     text = coder.decode(entry.tweet_text.blank? ? entry.formatted_title : entry.formatted_tweet_text)
     "#{truncate(text, length: max_length, omission: '…')} #{permalink_url(entry)}"
+  end
+
+  def set_coordinates(photo)
+    opts = {}
+    if photo.latitude.present? && photo.longitude.present?
+      opts[:lat] = photo.latitude
+      opts[:long] = photo.longitude
+      opts[:display_coordinates] = true
+    end
+    opts
   end
 end
