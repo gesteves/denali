@@ -42,12 +42,8 @@ module ApplicationHelper
     else
       imgix_path.fit = 'max'
     end
-    imgix_path.width(width)
-    if client_hints.nil?
-      imgix_path.to_url
-    else
-      imgix_path.to_url(ch: client_hints)
-    end
+    imgix_path.ch(client_hints) if client_hints.present?
+    imgix_path.width(width).to_url
   end
 
   def get_sizes(photo_key)
