@@ -91,6 +91,7 @@
 
 .entry__meta-bottom {
   @media (min-width: $bp-admin-m) {
+    align-items: center;
     display: flex;
     flex-flow: row nowrap;
   }
