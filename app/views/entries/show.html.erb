@@ -27,7 +27,7 @@
 <% end %>
 
 <% content_for :inline_css do %>
-  <style><%= Rails.application.assets['entry.css'].to_s.html_safe %></style>
+  <style><%= Denali::Application.assets['entry.css'].to_s.html_safe %></style>
 <% end %>
 
 <%= render partial: 'entries/entry', object: @entry %>
