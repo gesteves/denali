@@ -1,4 +1,3 @@
-//= require ./vendors/loadcss
 //= require ./vendors/fastclick
 //= require ./vendors/picturefill
 //= require turbolinks

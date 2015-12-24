@@ -56,11 +56,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def check_if_user_has_visited
-    @has_visited = cookies[:has_visited].present?
-    cookies[:has_visited] = { value: true, expires: 1.year.from_now }
-  end
-
   def set_max_age
     max_age = ENV['default_max_age'].try(:to_i) || 60
     expires_in max_age.minutes, :public => true

@@ -2,10 +2,6 @@
   <title>Unprocessable entity &middot; <%= @photoblog.name %></title>
 <% end %>
 
-<% content_for :inline_css do %>
-<style><%= Rails.application.assets['error.css'].to_s.html_safe %></style>
-<% end %>
-
 <div class="error">
 <h1 class="error__hed">422</h1>
 <h2 class="error__dek">Unprocessable entity, whatever that means.</h2>
