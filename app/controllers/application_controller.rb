@@ -62,7 +62,8 @@ class ApplicationController < ActionController::Base
   end
 
   def set_cors_headers
-    response.headers['Access-Control-Allow-Origin'] = @photoblog.domain
+    protocol = Rails.configuration.force_ssl ? 'https' : 'http'
+    response.headers['Access-Control-Allow-Origin'] = "#{protocol}://#{@photoblog.domain}"
     response.headers['Access-Control-Allow-Methods'] = '*'
     response.headers['Access-Control-Request-Method'] = '*'
     response.headers['Access-Control-Allow-Headers'] = '*'
