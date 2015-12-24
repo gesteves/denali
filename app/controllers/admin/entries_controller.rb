@@ -143,11 +143,10 @@ class Admin::EntriesController < AdminController
     respond_to do |format|
       if @entry.is_published?
         TwitterJob.perform_later(@entry)
-        format.js { render plain: 'OK' }
+        format.html { render plain: 'Tweet scheduled!' }
       else
-        format.js { render plain: 'Not OK', status: 400 }
+        format.html { render plain: 'Couldn\'t schedule tweet, sorry!' }
       end
-      format.html { redirect_to get_redirect_url(@entry) }
     end
   end
 

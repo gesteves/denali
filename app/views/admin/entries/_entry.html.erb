@@ -34,7 +34,9 @@
           </div>
         <% end %>
         <div class="entry__actions">
-          <% unless entry.is_published? %>
+          <% if entry.is_published? %>
+            <%= link_to 'Tweet', tweet_admin_entry_path(entry.id), method: :post, data: { confirm: 'Are you sure you want to tweet this entry?' } %>
+          <% else %>
             <%= link_to 'Preview', preview_admin_entry_path(entry) %>
           <% end %>
           <%= link_to 'Edit', edit_admin_entry_path(entry) %>
