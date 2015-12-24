@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_action :get_photoblog, :set_cors_headers
+  before_action :get_photoblog
 
   helper_method :current_user, :logged_in?, :logged_out?, :permalink_path, :permalink_url, :short_permalink_url
 
@@ -59,13 +59,5 @@ class ApplicationController < ActionController::Base
   def set_max_age
     max_age = ENV['default_max_age'].try(:to_i) || 60
     expires_in max_age.minutes, :public => true
-  end
-
-  def set_cors_headers
-    protocol = Rails.configuration.force_ssl ? 'https' : 'http'
-    response.headers['Access-Control-Allow-Origin'] = "#{protocol}://#{@photoblog.domain}"
-    response.headers['Access-Control-Allow-Methods'] = '*'
-    response.headers['Access-Control-Request-Method'] = '*'
-    response.headers['Access-Control-Allow-Headers'] = '*'
   end
 end
