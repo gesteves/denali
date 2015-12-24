@@ -18,13 +18,12 @@
   <%= render partial: 'partials/admin/nav', locals: { active_nav: 'none' } %>
 <% end %>
 
-<% flash.each do |name, message| -%>
-  <div class="flash flash--<%= name %>">
-    <%= message %>
-  </div>
-<% end %>
-
 <div class="content">
+  <% flash.each do |name, message| -%>
+    <div class="flash flash--<%= name %>">
+      <p><%= message %></p>
+    </div>
+  <% end %>
   <%= yield %>
 </div>
 

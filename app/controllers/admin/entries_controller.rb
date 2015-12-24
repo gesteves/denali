@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :preview, :tweet]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :preview, :tweet, :facebook, :share]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_crop_options, only: [:edit, :photo]
@@ -139,15 +139,28 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def share
+    @page_title = "Share “#{@entry.title}”"
+  end
+
   def tweet
-    respond_to do |format|
-      if @entry.is_published?
-        TwitterJob.perform_later(@entry)
-        format.html { render plain: 'Tweet scheduled!' }
-      else
-        format.html { render plain: 'Couldn\'t schedule tweet, sorry!' }
-      end
+    if @entry.is_published?
+      TwitterJob.perform_later(@entry)
+      @notice = 'Entry was shared to Twitter!'
+    else
+      @notice = 'Can\'t share this entry to Twitter'
     end
+    respond_to_share
+  end
+
+  def facebook
+    if @entry.is_published?
+      BufferJob.perform_later(@entry, 'facebook')
+      @notice = 'Entry was shared to Facebook!'
+    else
+      @notice = 'Can\'t share this entry to Facebook'
+    end
+    respond_to_share
   end
 
   private
@@ -215,6 +228,12 @@ class Admin::EntriesController < AdminController
       respond_to do |format|
         format.html { redirect_to queued_admin_entries_path }
         format.js { render text: 'ok' }
+      end
+    end
+
+    def respond_to_share
+      respond_to do |format|
+        format.html { redirect_to share_admin_entry_path(@entry), notice: @notice }
       end
     end
 end

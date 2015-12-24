@@ -2,7 +2,6 @@
   @include button($color-alert-default, $color-text);
   appearance: none;
   border-radius: 2px;
-  color: $color-text;
   display: block;
   font-family: 'proxima-nova', 'Helvetica Neue', sans-serif;
   font-size: 16px;
@@ -37,6 +36,14 @@
 
 .button--success {
   @include button($color-alert-success);
+}
+
+.button--twitter {
+  @include button($color-twitter);
+}
+
+.button--facebook {
+  @include button($color-facebook);
 }
 
 .button--pad-right {

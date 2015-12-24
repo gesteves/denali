@@ -100,6 +100,12 @@
   flex-grow: 1;
 }
 
+.entry__actions {
+  align-items: center;
+  display: flex;
+  flex-flow: row;
+}
+
 .entry__actions--queue {
   flex-grow: 1;
 }

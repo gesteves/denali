@@ -1,24 +1,23 @@
 .flash {
-  @include flash($color-alert-default);
+  @include flash($color-alert-default, $color-text);
   border-radius: 2px;
-  color: #FFF;
   padding: 0 20px;
 
-  h2 {
+  p {
     font-size: 24px;
     font-weight: 100;
     line-height: 1;
   }
 }
 
-.flash--success {
+.flash--notice {
   @include flash($color-alert-success);
 }
 
-.flash--warning {
-  @include flash($color-alert-warning);
+.flash--alert {
+  @include flash($color-alert-danger);
 }
 
-.flash--danger {
-  @include flash($color-alert-danger);
+.flash--flash {
+  @include flash($color-alert-info);
 }

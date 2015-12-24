@@ -1,7 +1,7 @@
-@mixin flash($color) {
-  background-color: tint($color, 50%);
-  border: 1px solid $color;
-  text-shadow: 0 -1px 0 $color;
+@mixin flash($background-color, $text-color: #FFF) {
+  background-color: $background-color;
+  border: 1px solid shade($background-color, 10%);
+  color: $text-color;
 }
 
 @mixin button($background-color, $text-color: #FFF) {

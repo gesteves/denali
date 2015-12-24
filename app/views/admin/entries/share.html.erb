@@ -1,0 +1,32 @@
+<% cache "admin/entry/share#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+  <div class="entry">
+    <%= link_to @entry.is_published? ? permalink_url(@entry) : preview_admin_entry_path(@entry) do %>
+      <% @entry.photos.each do |p| %>
+        <%= responsive_image_tag p, 'admin_entry', { class: 'entry__thumb' } %>
+      <% end %>
+    <% end %>
+    <div class="entry__content <% if @entry.is_text? %>entry__content--text<% end %>">
+      <h2><%= raw(@entry.formatted_title) %></h2>
+      <%= raw(@entry.formatted_body) unless @entry.body.blank? %>
+    </div>
+    <div class="entry__meta">
+      <div>
+        <% @entry.tags.each do |t| %>
+          <span class="entry__tag"><%= link_to t.name, admin_tag_path(t.slug) %></span>
+        <% end %>
+      </div>
+      <div class="entry__meta-bottom">
+        <% if @entry.is_published? %>
+          <div class="entry__timestamp">
+            <%= link_to "Published #{@entry.published_at.strftime('%A, %B %-d, %Y')}", permalink_url(@entry) %>
+          </div>
+          <div class="entry__actions">
+            Share on
+            <%= button_to 'Twitter', tweet_admin_entry_path(@entry.id), method: :post, data: { confirm: 'Are you sure you want to tweet this entry?' }, class: 'button button--twitter' %>
+            <%= button_to 'Facebook', facebook_admin_entry_path(@entry.id), method: :post, data: { confirm: 'Are you sure you want to share this entry on Facebook?' }, class: 'button button--facebook' %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

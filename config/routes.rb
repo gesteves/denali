@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], :concerns => :paginatable do
       member do
         get 'preview'
+        get 'share'
         patch 'publish'
         patch 'queue'
         patch 'draft'
@@ -20,6 +21,7 @@ Rails.application.routes.draw do
         post 'top'
         post 'bottom'
         post 'tweet'
+        post 'facebook'
       end
       collection do
         get 'queued'
