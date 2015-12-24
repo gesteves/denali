@@ -144,7 +144,7 @@ class Admin::EntriesController < AdminController
   end
 
   def tweet
-    if @entry.is_published?
+    if @entry.is_published? && @entry.is_photo?
       TwitterJob.perform_later(@entry)
       @notice = 'Entry was shared to Twitter!'
     else
@@ -154,7 +154,7 @@ class Admin::EntriesController < AdminController
   end
 
   def facebook
-    if @entry.is_published?
+    if @entry.is_published? && @entry.is_photo?
       BufferJob.perform_later(@entry, 'facebook')
       @notice = 'Entry was shared to Facebook!'
     else
@@ -178,13 +178,13 @@ class Admin::EntriesController < AdminController
     end
 
     def enqueue_jobs
-      if @entry.is_published?
+      if @entry.is_published? && @entry.is_photo?
         IftttJob.perform_later(@entry)
         TwitterJob.perform_later(@entry) if @entry.post_to_twitter
-        TumblrJob.perform_later(@entry) if @entry.post_to_tumblr && @entry.is_photo?
+        TumblrJob.perform_later(@entry) if @entry.post_to_tumblr
         BufferJob.perform_later(@entry, 'facebook') if @entry.post_to_facebook
-        FlickrJob.perform_later(@entry) if @entry.post_to_flickr && @entry.is_photo?
-        FiveHundredJob.perform_later(@entry) if @entry.post_to_500px && @entry.is_photo?
+        FlickrJob.perform_later(@entry) if @entry.post_to_flickr
+        FiveHundredJob.perform_later(@entry) if @entry.post_to_500px
       end
     end
 

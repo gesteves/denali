@@ -10,25 +10,15 @@ class TwitterJob < ApplicationJob
     end
     config = twitter.configuration
     tweet = build_tweet(entry, config)
-    if Rails.env.production?
-      if entry.is_photo?
-        width = config.photo_sizes[:large].w
-        opts = set_coordinates(entry.photos.first)
-        twitter.update_with_media(tweet, File.new(open(entry.photos.first.url(width)).path), opts)
-      else
-        twitter.update(tweet)
-      end
-    end
+    width = config.photo_sizes[:large].w
+    opts = set_coordinates(entry.photos.first)
+    twitter.update_with_media(tweet, File.new(open(entry.photos.first.url(width)).path), opts) if Rails.env.production?
   end
 
   def build_tweet(entry, config)
     url_length = config.short_url_length_https
     media_length = config.characters_reserved_per_media
-    if entry.is_photo?
-      max_length = 138 - url_length - media_length
-    else
-      max_length = 139 - url_length
-    end
+    max_length = 138 - url_length - media_length
     coder = HTMLEntities.new
     text = coder.decode(entry.tweet_text.blank? ? entry.formatted_title : entry.formatted_tweet_text)
     "#{truncate(text, length: max_length, omission: '…')} #{permalink_url(entry)}"

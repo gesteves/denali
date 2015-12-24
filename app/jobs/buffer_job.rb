@@ -13,7 +13,7 @@ class BufferJob < ApplicationJob
       now: true,
       access_token: ENV['buffer_access_token']
     }
-    body[:media] = build_media(entry) if entry.is_photo?
+    body[:media] = build_media(entry)
     body
   end
 

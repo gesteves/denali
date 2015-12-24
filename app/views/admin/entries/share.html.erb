@@ -20,11 +20,13 @@
           <div class="entry__timestamp">
             <%= link_to "Published #{@entry.published_at.strftime('%A, %B %-d, %Y')}", permalink_url(@entry) %>
           </div>
-          <div class="entry__actions">
-            Share on
-            <%= button_to 'Twitter', tweet_admin_entry_path(@entry.id), method: :post, data: { confirm: 'Are you sure you want to tweet this entry?' }, class: 'button button--twitter' %>
-            <%= button_to 'Facebook', facebook_admin_entry_path(@entry.id), method: :post, data: { confirm: 'Are you sure you want to share this entry on Facebook?' }, class: 'button button--facebook' %>
-          </div>
+          <% if @entry.is_photo? %>
+            <div class="entry__actions">
+              Share on
+              <%= button_to 'Twitter', tweet_admin_entry_path(@entry.id), method: :post, data: { confirm: 'Are you sure you want to tweet this entry?' }, class: 'button button--twitter' %>
+              <%= button_to 'Facebook', facebook_admin_entry_path(@entry.id), method: :post, data: { confirm: 'Are you sure you want to share this entry on Facebook?' }, class: 'button button--facebook' %>
+            </div>
+          <% end %>
         <% end %>
       </div>
     </div>
