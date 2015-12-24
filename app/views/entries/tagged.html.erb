@@ -23,7 +23,7 @@
 <% end %>
 
 <% content_for :inline_css do %>
-  <style><%= Denali::Application.assets['entry_list.css'].to_s.html_safe %></style>
+  <style><%= Rails.application.assets['entry_list.css'].to_s.html_safe %></style>
 <% end %>
 
 <% cache "entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>

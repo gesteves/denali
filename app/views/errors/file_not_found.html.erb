@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :inline_css do %>
-<style><%= Denali::Application.assets['error.css'].to_s.html_safe %></style>
+<style><%= Rails.application.assets['error.css'].to_s.html_safe %></style>
 <% end %>
 
 <div class="error">
