@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :preview]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :preview, :tweet]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_crop_options, only: [:edit, :photo]
@@ -136,6 +136,18 @@ class Admin::EntriesController < AdminController
           render 'entries/show', layout: 'application'
         end
       }
+    end
+  end
+
+  def tweet
+    respond_to do |format|
+      if @entry.is_published?
+        TwitterJob.perform_later(@entry)
+        format.js { render plain: 'OK' }
+      else
+        format.js { render plain: 'Not OK', status: 400 }
+      end
+      format.html { redirect_to get_redirect_url(@entry) }
     end
   end
 
