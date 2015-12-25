@@ -21,7 +21,8 @@
 <div class="content">
   <% flash.each do |name, message| -%>
     <div class="flash flash--<%= name %>">
-      <p><%= message %></p>
+      <p class="flash__message"><%= message %></p>
+      <a href="#" class="flash__close js-flash-close">&times;</a>
     </div>
   <% end %>
   <%= yield %>
