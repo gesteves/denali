@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
     email = auth_hash.try(:[], 'info').try(:[], 'email')
 
     if email =~ /@gesteves\.com$/
-      flash[:notice] = "Welcome, #{auth_hash['info']['name']}."
+      flash[:notice] = "Welcome, #{auth_hash['info']['name']}!"
       user = User.from_omniauth(env['omniauth.auth'])
       session[:user_id] = user.id
       redirect_to admin_entries_path

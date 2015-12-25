@@ -49,20 +49,32 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/publish
   def publish
-    notice = @entry.publish ? 'Entry was successfully published.' : 'Entry couldn\'t be published.'
-    redirect_entry(@entry, notice)
+    if @entry.publish
+      flash[:notice] = 'Your entry was published!'
+    else
+      flash[:alert] = 'Your entry couldn’t be published…'
+    end
+    redirect_entry
   end
 
   # PATCH /admin/entries/1/queue
   def queue
-    notice = @entry.queue ? 'Entry was successfully queued.' : 'Entry couldn\'t be queued.'
-    redirect_entry(@entry, notice)
+    if @entry.queue
+      flash[:notice] = 'Your entry was queued!'
+    else
+      flash[:alert] = 'Your entry couldn’t be queued…'
+    end
+    redirect_entry
   end
 
   # PATCH /admin/entries/1/draft
   def draft
-    notice = @entry.draft ? 'Entry was successfully saved as draft.' : 'Entry couldn\'t be saved as draft.'
-    redirect_entry(@entry, notice)
+    if @entry.draft
+      flash[:notice] = 'Your entry was saved as draft!'
+    else
+      flash[:alert] = 'Your entry couldn’t be saved as draft…'
+    end
+    redirect_entry
   end
 
   # POST /admin/entries
@@ -72,8 +84,10 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save
-        format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
+        flash[:notice] = 'Your entry was saved!'
+        format.html { redirect_to get_redirect_url(@entry) }
       else
+        flash[:alert] = 'Your entry couldn’t be saved…'
         format.html { render :new }
       end
     end
@@ -83,8 +97,10 @@ class Admin::EntriesController < AdminController
   def update
     respond_to do |format|
       if @entry.update(entry_params)
-        format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully updated.' }
+        flash[:notice] = 'Your entry was updated!'
+        format.html { redirect_to get_redirect_url(@entry) }
       else
+        flash[:alert] = 'Your entry couldn’t be updated…'
         format.html { render :edit }
       end
     end
@@ -94,7 +110,8 @@ class Admin::EntriesController < AdminController
   def destroy
     @entry.destroy
     respond_to do |format|
-      format.html { redirect_to request.referrer || admin_entries_path, notice: 'Entry was successfully destroyed.' }
+      flash[:notice] = 'Your entry was deleted!'
+      format.html { redirect_to request.referrer || admin_entries_path }
     end
   end
 
@@ -146,9 +163,9 @@ class Admin::EntriesController < AdminController
   def tweet
     if @entry.is_published? && @entry.is_photo?
       TwitterJob.perform_later(@entry)
-      @notice = 'Entry was shared to Twitter!'
+      flash[:notice] = 'Your entry was shared to Twitter!'
     else
-      @notice = 'Can\'t share this entry to Twitter'
+      flash[:alert] = 'Your entry couldn’t be shared to Twitter…'
     end
     respond_to_share
   end
@@ -156,9 +173,9 @@ class Admin::EntriesController < AdminController
   def facebook
     if @entry.is_published? && @entry.is_photo?
       BufferJob.perform_later(@entry, 'facebook')
-      @notice = 'Entry was shared to Facebook!'
+      flash[:notice] = 'Your entry was shared to Facebook!'
     else
-      @notice = 'Can\'t share this entry to Facebook'
+      flash[:alert] = 'Your entry couldn’t be shared to Facebook…'
     end
     respond_to_share
   end
@@ -192,9 +209,9 @@ class Admin::EntriesController < AdminController
       @entry.update_position
     end
 
-    def redirect_entry(entry, notice)
+    def redirect_entry
       respond_to do |format|
-        format.html { redirect_to get_redirect_url(entry), notice: notice }
+        format.html { redirect_to get_redirect_url(@entry)}
       end
     end
 
@@ -233,7 +250,7 @@ class Admin::EntriesController < AdminController
 
     def respond_to_share
       respond_to do |format|
-        format.html { redirect_to share_admin_entry_path(@entry), notice: @notice }
+        format.html { redirect_to share_admin_entry_path(@entry) }
       end
     end
 end
