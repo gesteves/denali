@@ -3,3 +3,5 @@ notifications:
   email:
     on_success: change
     on_failure: change
+script:
+  - RAILS_ENV=test bundle exec rake db:migrate --trace
