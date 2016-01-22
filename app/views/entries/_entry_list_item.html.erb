@@ -3,7 +3,7 @@
     <a class="entry-list__link <%= entry_list_item.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= permalink_url(entry_list_item) %>">
       <% if entry_list_item.is_photo? %>
         <figure class="entry-list__photo">
-          <%= lazy_responsive_image_tag entry_list_item.photos.first,
+          <%= responsive_image_tag entry_list_item.photos.first,
                   'entry_list_item',
                   { class: 'entry-list__image', alt: entry_list_item.photos.first.caption.blank? ? entry_list_item.title : entry_list_item.photos.first.plain_caption } %>
           <figcaption class="entry-list__photo-caption">
