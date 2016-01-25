@@ -22,4 +22,3 @@ document.addEventListener('page:change', Denali.ImageZoom.init);
 document.addEventListener('page:change', Denali.Analytics.sendPageview);
 document.addEventListener('orientationchange', Denali.ImageZoom.init);
 document.addEventListener('keydown', Denali.Shortcuts.handleKeyPress);
-document.addEventListener('scroll', Denali.LazyLoad.handleScroll);
