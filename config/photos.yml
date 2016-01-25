@@ -1,4 +1,5 @@
 entry:
+  src: 640
   srcset:
     - 640
     - 960
@@ -23,6 +24,7 @@ entry:
   quality: 90
   client_hints: "Width,DPR"
 entry_list_item:
+  src: 308
   srcset:
     - 308
     - 363
@@ -44,6 +46,7 @@ entry_list_item:
   quality: 50
   square: Yes
 admin_entry:
+  src: 560
   srcset:
     - 560
     - 670
@@ -57,6 +60,7 @@ admin_entry:
   quality: 60
   client_hints: "Width,DPR"
 admin_edit:
+  src: 300
   srcset:
     - 300
     - 516

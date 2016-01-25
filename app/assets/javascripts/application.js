@@ -1,4 +1,4 @@
-//= require ./vendors/picturefill
+
 //= require turbolinks
 //= require_tree ./application
 
@@ -14,7 +14,6 @@ if (document.readyState !== 'loading') {
   Denali.Shortcuts.init();
   Denali.ImageZoom.init();
   Denali.Analytics.sendPageview();
-  Denali.LazyLoad.loadImages();
 }
 
 document.addEventListener('page:change', picturefill);
@@ -22,7 +21,6 @@ document.addEventListener('page:change', Denali.SocialShare.init);
 document.addEventListener('page:change', Denali.Shortcuts.init);
 document.addEventListener('page:change', Denali.ImageZoom.init);
 document.addEventListener('page:change', Denali.Analytics.sendPageview);
-document.addEventListener('page:change', Denali.LazyLoad.loadImages);
 document.addEventListener('orientationchange', Denali.ImageZoom.init);
 document.addEventListener('keydown', Denali.Shortcuts.handleKeyPress);
 document.addEventListener('scroll', Denali.LazyLoad.handleScroll);

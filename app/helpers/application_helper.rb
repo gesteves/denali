@@ -7,14 +7,6 @@ module ApplicationHelper
     content_tag :img, nil, html_options
   end
 
-  def lazy_responsive_image_tag(photo, photo_key, html_options = {})
-    html_options[:'data-srcset'] = get_srcset(photo, photo_key)
-    html_options[:sizes] = get_sizes(photo_key)
-    html_options[:class] += ' js-lazy-load'
-    html_options[:'data-src'] = get_src(photo, photo_key) unless PHOTOS[photo_key]['src'].nil?
-    content_tag :img, nil, html_options
-  end
-
   def get_src(photo, photo_key)
     quality = PHOTOS[photo_key]['quality'] || 90
     square = PHOTOS[photo_key]['square'].present?
