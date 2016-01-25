@@ -16,7 +16,6 @@ if (document.readyState !== 'loading') {
   Denali.Analytics.sendPageview();
 }
 
-document.addEventListener('page:change', picturefill);
 document.addEventListener('page:change', Denali.SocialShare.init);
 document.addEventListener('page:change', Denali.Shortcuts.init);
 document.addEventListener('page:change', Denali.ImageZoom.init);
