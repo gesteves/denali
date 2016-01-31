@@ -54,11 +54,14 @@ group :production do
   gem 'lograge'
 end
 
+group :development do
+  gem 'web-console', '~> 2.1'
+end
+
 group :development, :test do
   gem 'scss-lint'
   gem 'foreman'
   gem 'byebug'
-  gem 'web-console', '~> 2.1'
   gem 'spring'
   gem 'sqlite3'
 end
