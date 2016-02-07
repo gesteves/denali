@@ -72,10 +72,6 @@ Denali.Map = (function () {
       });
     });
 
-    layer.on('ready', function () {
-      map.fitBounds(layer.getBounds());
-    });
-
     layer.loadURL('/map/photos.json').on('ready', function (e) {
       var cluster_group = new L.MarkerClusterGroup({
         showCoverageOnHover: false,
