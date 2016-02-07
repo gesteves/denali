@@ -73,7 +73,14 @@ Denali.Map = (function () {
     layer.loadURL('/map/photos.json').on('ready', function (e) {
       var cluster_group = new L.MarkerClusterGroup({
         showCoverageOnHover: false,
-        maxClusterRadius: 50
+        maxClusterRadius: 50,
+        iconCreateFunction: function (cluster) {
+          return L.mapbox.marker.icon({
+            // show the number of markers in the cluster on the icon.
+            'marker-symbol': cluster.getChildCount(),
+            'marker-color': '#bf0222'
+          });
+        }
       });
       e.target.eachLayer(function (layer) {
         cluster_group.addLayer(layer);
