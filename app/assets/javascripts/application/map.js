@@ -4,7 +4,10 @@ Denali.Map = (function () {
   'use strict';
 
   var opts = {
-    map_container_id : 'map'
+    map_container_id  : 'map',
+    use_geolocation   : false,
+    default_latitude  : 10.4383493,
+    default_longitude : -66.8447572
   };
 
   var map;
@@ -14,6 +17,18 @@ Denali.Map = (function () {
       return;
     }
     loadMapbox();
+  };
+
+  var getLocation = function () {
+    if ('geolocation' in navigator && opts.use_geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        initMap(position.coords.latitude, position.coords.longitude);
+      }, function () {
+        initMap(opts.default_latitude, opts.default_longitude);
+      });
+    } else {
+      initMap(opts.default_latitude, opts.default_longitude);
+    }
   };
 
   var loadMapbox = function () {
@@ -39,7 +54,7 @@ Denali.Map = (function () {
     script.src = 'https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js';
     script.async = 'true';
     script.onload = function () {
-      initMap();
+      getLocation();
     };
     styles1.href = 'https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css';
     styles1.rel = 'stylesheet';
@@ -50,9 +65,9 @@ Denali.Map = (function () {
     head.appendChild(styles2);
   };
 
-  var initMap = function () {
+  var initMap = function (latitude, longitude) {
     L.mapbox.accessToken = 'pk.eyJ1IjoiZ2VzdGV2ZXMiLCJhIjoiY2lqN3RqcXVtMDAwZ3VtbHhpNGZoaWU3ZSJ9.4r3ypzJwvsZM5loCLETnFQ';
-    map = L.mapbox.map(opts.map_container_id, 'mapbox.high-contrast').setView([38.8899389, -77.0112392], 2);
+    map = L.mapbox.map(opts.map_container_id, 'mapbox.high-contrast').setView([latitude, longitude], 2);
 
     var layer = L.mapbox.featureLayer();
 
