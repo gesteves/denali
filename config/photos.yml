@@ -74,3 +74,12 @@ admin_edit:
     - calc(100vw - 60px)
   quality: 60
   client_hints: "Width,DPR"
+map:
+  src: 300
+  srcset:
+    - 300
+    - 600
+  sizes:
+    - 300px
+  quality: 60
+  square: Yes

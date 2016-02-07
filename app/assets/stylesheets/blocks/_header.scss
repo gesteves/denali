@@ -86,3 +86,39 @@
     transition: fill 150ms ease-in-out;
   }
 }
+
+.header--map {
+  border-bottom: 1px solid $color-border;
+  flex-flow: row nowrap;
+  height: 50px;
+  justify-content: center;
+  margin: 0;
+  padding: 0 20px;
+
+  @media (min-width: $bp-m) {
+    justify-content: space-between;
+  }
+
+  .header__section:first-of-type {
+    display: none;
+  }
+
+  .header__section {
+    border: 0;
+    display: none;
+    flex-grow: 0;
+    margin: 0;
+    padding: 0;
+
+    @media (min-width: $bp-m) {
+      display: block;
+    }
+  }
+
+  .header__link {
+    height: 40px;
+    margin: 0;
+    width: 97px;
+    padding: 0;
+  }
+}
