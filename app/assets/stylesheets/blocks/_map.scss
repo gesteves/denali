@@ -15,6 +15,6 @@
     position: relative;
     text-align: center;
     width: 20px;
-    text-shadow: 0 1px 0 shade($color-red, 0.75);
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.75);
   }
 }
