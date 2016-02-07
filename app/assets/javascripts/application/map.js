@@ -89,7 +89,8 @@ Denali.Map = (function () {
 
     layer.loadURL('/map/photos.json').on('ready', function (e) {
       var cluster_group = new L.MarkerClusterGroup({
-        showCoverageOnHover: false
+        showCoverageOnHover: false,
+        maxClusterRadius: 50,
         iconCreateFunction: function (cluster) {
           return L.divIcon({
               className: 'map__marker map__marker--cluster',
