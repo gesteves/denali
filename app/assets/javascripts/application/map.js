@@ -60,6 +60,12 @@ Denali.Map = (function () {
       var marker = e.layer,
           feature = marker.feature;
       var content = feature.properties.description;
+      marker.setIcon(L.divIcon({
+          className: 'map__marker map__marker--point',
+          html: '',
+          iconSize: [10, 10],
+          iconAnchor: [5, 5]
+        }));
       marker.bindPopup(content, {
         closeButton: false,
         minWidth: 319
@@ -76,9 +82,10 @@ Denali.Map = (function () {
         maxClusterRadius: 30,
         iconCreateFunction: function (cluster) {
           return L.divIcon({
-              className: 'map__marker',
-              html: cluster.getChildCount() > 99 ? '99+' : cluster.getChildCount(),
-              iconSize: L.point(20, 20)
+              className: 'map__marker map__marker--cluster',
+              html: cluster.getChildCount(),
+              iconSize: cluster.getChildCount() > 99 ? [30, 30] : [20, 20],
+              iconAnchor: cluster.getChildCount() > 99 ? [15, 15] : [10, 10]
             }
           );
         }
