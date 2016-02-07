@@ -74,7 +74,7 @@ Denali.Map = (function () {
       var cluster_group = new L.MarkerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 50,
-        disableClusteringAtZoom: 1
+        disableClusteringAtZoom: 14
       });
       e.target.eachLayer(function (layer) {
         cluster_group.addLayer(layer);
