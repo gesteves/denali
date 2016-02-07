@@ -5,7 +5,7 @@ class MapsController < ApplicationController
 
   def photos
     @entries = @photoblog.entries.photo_entries.includes(:photos).published
-    expires_in 60.minutes, :public => true
+    expires_in 24.hours, :public => true
     respond_to do |format|
       format.json
     end
