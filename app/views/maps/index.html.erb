@@ -2,13 +2,35 @@
 <html lang="en">
 <head>
   <%= render partial: 'partials/meta_tags' %>
-  <%= yield :meta %>
+  <title>Map &middot; <%= @photoblog.name %></title>
+  <meta name="description" content="All <%= @photoblog.name %> photos, mapped." />
+  <link rel="canonical" href="<%= map_url %>">
+
+  <meta property="og:title" content="<%= @photoblog.name %>" />
+  <meta property="og:image" content="<%= image_url 'cover.png' %>" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="628" />
+  <meta property="og:description" content="All <%= @photoblog.name %> photos, mapped." />
+  <meta property="og:url" content="<%= map_url %>" />
+  <meta property="og:type" content="Website" />
+  <meta property="og:site_name" content="<%= @photoblog.name %>" />
+  <meta property="og:locale" content="en_US" />
+
+  <meta name="twitter:site" content="@gesteves">
+  <meta name="twitter:creator" content="@gesteves">
+  <meta name="twitter:title" content="<%= @photoblog.name %>">
+  <meta name="twitter:url" content="<%= map_url %>" />
+  <meta name="twitter:description" content="All <%= @photoblog.name %> photos, mapped.">
+  <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
+  <meta name="twitter:card" content="summary_large_image">
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_include_tag 'application', async: true %>
   <script src="https://use.typekit.net/vtp0iqq.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>
-<div id="map" class="map"></div>
+  <%= render partial: 'partials/icons.svg.erb' %>
+  <%= render partial: 'partials/header.html.erb', locals: { additional_classes: 'header--map' } %>
+  <div id="map" class="map"></div>
 </body>
 </html>

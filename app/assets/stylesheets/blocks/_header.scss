@@ -86,3 +86,28 @@
     transition: fill 150ms ease-in-out;
   }
 }
+
+.header--map {
+  height: 50px;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0 20px;
+
+  .header__section:first-of-type {
+    display: none;
+  }
+
+  .header__section {
+    border: 0;
+    flex-grow: 0;
+    margin: 0;
+    padding: 0;
+  }
+
+  .header__link {
+    height: 40px;
+    margin: 0;
+    width: 97px;
+    padding: 0;
+  }
+}
