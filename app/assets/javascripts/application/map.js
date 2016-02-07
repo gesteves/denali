@@ -32,37 +32,18 @@ Denali.Map = (function () {
   };
 
   var loadMapbox = function () {
-    var head = document.getElementsByTagName('head')[0];
-    var script = document.createElement('script');
-    var styles = document.createElement('link');
-    script.src = 'https://api.tiles.mapbox.com/mapbox.js/v2.3.0/mapbox.js';
-    script.async = 'true';
-    script.onload = function () {
+    loadJS('https://api.tiles.mapbox.com/mapbox.js/v2.3.0/mapbox.js', function () {
       loadMarkerCluster();
-    };
-    styles.href = 'https://api.tiles.mapbox.com/mapbox.js/v2.3.0/mapbox.css';
-    styles.rel = 'stylesheet';
-    head.appendChild(script);
-    head.appendChild(styles);
+    });
+    loadCSS('https://api.tiles.mapbox.com/mapbox.js/v2.3.0/mapbox.css');
   };
 
   var loadMarkerCluster = function () {
-    var head = document.getElementsByTagName('head')[0];
-    var script = document.createElement('script');
-    var styles1 = document.createElement('link');
-    var styles2 = document.createElement('link');
-    script.src = 'https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js';
-    script.async = 'true';
-    script.onload = function () {
+    loadJS('https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js', function () {
       getLocation();
-    };
-    styles1.href = 'https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css';
-    styles1.rel = 'stylesheet';
-    styles2.href = 'https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css';
-    styles2.rel = 'stylesheet';
-    head.appendChild(script);
-    head.appendChild(styles1);
-    head.appendChild(styles2);
+    });
+    loadCSS('https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css');
+    loadCSS('https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css');
   };
 
   var initMap = function (latitude, longitude) {
