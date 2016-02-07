@@ -66,7 +66,7 @@ Denali.Map = (function () {
   };
 
   var initMap = function (latitude, longitude) {
-    L.mapbox.accessToken = 'pk.eyJ1IjoiZ2VzdGV2ZXMiLCJhIjoiY2lqN3RqcXVtMDAwZ3VtbHhpNGZoaWU3ZSJ9.4r3ypzJwvsZM5loCLETnFQ';
+    L.mapbox.accessToken = 'pk.eyJ1IjoiZ2VzdGV2ZXMiLCJhIjoiY2lrY3EyeDA3MG03Y3Y5a3V6d3MwNHR3cSJ9.qG9UBVJvti71fNvW5iKONA';
     map = L.mapbox.map(opts.map_container_id, 'gesteves.ce0e3aae').setView([latitude, longitude], 2);
 
     var layer = L.mapbox.featureLayer();
