@@ -52,7 +52,7 @@ Denali.Map = (function () {
 
   var initMap = function () {
     L.mapbox.accessToken = 'pk.eyJ1IjoiZ2VzdGV2ZXMiLCJhIjoiY2lqN3RqcXVtMDAwZ3VtbHhpNGZoaWU3ZSJ9.4r3ypzJwvsZM5loCLETnFQ';
-    map = L.mapbox.map(opts.map_container_id, 'mapbox.high-contrast').setView([38.8899389, -77.0112392], 2);
+    map = L.mapbox.map(opts.map_container_id, 'mapbox.emerald').setView([38.8899389, -77.0112392], 2);
 
     var layer = L.mapbox.featureLayer();
 
