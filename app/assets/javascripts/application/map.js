@@ -67,7 +67,7 @@ Denali.Map = (function () {
 
   var initMap = function (latitude, longitude) {
     L.mapbox.accessToken = 'pk.eyJ1IjoiZ2VzdGV2ZXMiLCJhIjoiY2lqN3RqcXVtMDAwZ3VtbHhpNGZoaWU3ZSJ9.4r3ypzJwvsZM5loCLETnFQ';
-    map = L.mapbox.map(opts.map_container_id, 'mapbox.high-contrast').setView([latitude, longitude], 2);
+    map = L.mapbox.map(opts.map_container_id, 'gesteves.ce0e3aae').setView([latitude, longitude], 2);
 
     var layer = L.mapbox.featureLayer();
 
