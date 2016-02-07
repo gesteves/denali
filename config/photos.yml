@@ -79,6 +79,7 @@ map:
   srcset:
     - 300
     - 600
+    - 900
   sizes:
     - 300px
   quality: 60
