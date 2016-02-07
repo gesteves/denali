@@ -167,6 +167,12 @@
   @media (min-width: $bp-xxl) {
     font-size: 24px;
   }
+
+  .entry-list__item--map & {
+    font-size: 18px;
+    line-height: 1.2;
+    margin: 1.2rem 0;
+  }
 }
 
 .entry-list__photo-meta {

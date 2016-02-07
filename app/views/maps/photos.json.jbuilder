@@ -7,6 +7,7 @@ json.array! @entries do |e|
     end
     json.properties do
       json.title e.title
+      json.description tooltip_content(p, e)
       json.set! 'marker-color', '#bf0222'
       json.set! 'marker-size', 'small'
     end

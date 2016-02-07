@@ -56,13 +56,22 @@ Denali.Map = (function () {
 
     var layer = L.mapbox.featureLayer();
 
+    layer.on('layeradd', function(e) {
+      var marker = e.layer,
+          feature = marker.feature;
+      var content = feature.properties.description;
+      marker.bindPopup(content, {
+        closeButton: false,
+        minWidth: 319
+      });
+    });
+
     layer.loadURL('/map/photos.json').on('ready', function (e) {
       var cluster_group = new L.MarkerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 50
       });
       e.target.eachLayer(function (layer) {
-        console.log(layer);
         cluster_group.addLayer(layer);
       });
       map.addLayer(cluster_group);
