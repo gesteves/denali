@@ -77,7 +77,7 @@ Denali.Map = (function () {
       var content = feature.properties.description;
       marker.setIcon(L.divIcon({
           className: 'map__marker map__marker--point',
-          html: '',
+          html: '&bull;',
           iconSize: [10, 10],
           iconAnchor: [5, 5]
         }));

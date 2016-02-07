@@ -5,21 +5,25 @@
   .map__marker {
     align-items: center;
     background-color: $color-red;
-    background-image: linear-gradient(to bottom, $color-red, shade($color-red, 25%));
+    background-image: linear-gradient(to bottom, $color-red, shade($color-red, 20%));
     border-radius: 100%;
-    color: #FFF;
+    color: white;
     display: flex;
     justify-content: center;
-    font-family: 'kepler-std', 'Times New Roman', serif;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    font-weight: bold;
     text-align: center;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.75);
+    text-shadow: 0 -1px 0 shade($color-red, 50%);
 
     &.map__marker--cluster {
-      box-shadow: 0 0 0 2px transparentize($color-red, 0.5);
+      box-shadow: 0 0 0 2px shade($color-red, 30%), 0 2px 4px 0 black;
     }
 
     &.map__marker--point {
-      box-shadow: 0 0 0 1px transparentize($color-red, 0.5);
+      box-shadow: 0 0 0 1px shade($color-red, 30%), 0 2px 4px 0 black;
+      font-size: 16px;
+      font-weight: bold;
     }
   }
 }
