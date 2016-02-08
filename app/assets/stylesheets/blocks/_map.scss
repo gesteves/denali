@@ -29,20 +29,24 @@
 }
 
 .map__loading {
+  background-color: $color-red;
+  background-image: linear-gradient(to bottom, $color-red, shade($color-red, 20%));
   border-radius: 100%;
+  box-shadow: 0 0 0 2px shade($color-red, 30%), 0 2px 4px 0 black;
   display: none;
-  height: 40px;
+  height: 50px;
   left: 50%;
-  margin-left: -20px;
-  margin-top: -20px;
+  margin-left: -25px;
+  margin-top: -25px;
+  padding: 5px;
   position: absolute;
   top: 50%;
-  width: 40px;
+  width: 50px;
 }
 
 .map__loading-spinner {
   animation: load 1s infinite linear;
-  fill: $color-red;
+  fill: white;
   height: 40px;
   width: 40px;
 }
