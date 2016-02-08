@@ -90,17 +90,18 @@
 .header--map {
   border-bottom: 1px solid $color-border;
   flex-flow: row nowrap;
-  height: 50px;
+  height: 60px;
   justify-content: center;
   margin: 0;
+  max-width: 100%;
   padding: 0 20px;
 
   @media (min-width: $bp-m) {
     justify-content: space-between;
   }
 
-  .header__section:first-of-type {
-    display: none;
+  .header__tagline {
+    font-size: 14px;
   }
 
   .header__section {
