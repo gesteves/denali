@@ -6,7 +6,7 @@ module MapsHelper
           img = responsive_image_tag(photo, 'map', { class: 'entry-list__image' })
           caption = content_tag :figcaption, class: 'entry-list__photo-caption' do
             content_tag :p, class: 'entry-list__photo-title' do
-              entry.formatted_title
+              raw entry.formatted_title
             end
           end
           img + caption
