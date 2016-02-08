@@ -32,5 +32,8 @@
   <%= render partial: 'partials/icons.svg.erb' %>
   <%= render partial: 'partials/header.html.erb', locals: { additional_classes: 'header--map' } %>
   <div id="map" class="map"></div>
+  <div class="map__loading js-loading">
+    <%= inline_svg 'spinner', 'map__loading-spinner' %>
+  </div>
 </body>
 </html>

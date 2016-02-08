@@ -10,12 +10,15 @@ Denali.Map = (function () {
     default_longitude : -66.8447572
   };
 
-  var map;
+  var map,
+      loading,
+      show_bar = true;
 
   var init = function () {
     if (document.getElementById(opts.map_container_id) === null) {
       return;
     }
+    loading = document.querySelector('.js-loading');
     loadMapbox();
   };
 
@@ -46,7 +49,18 @@ Denali.Map = (function () {
     loadCSS('https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css');
   };
 
+  var showLoadingSpinner = function () {
+    if (show_bar) {
+      loading.style.display = 'block';
+    }
+  };
+
+  var hideLoadingSpinner = function () {
+    loading.style.display = 'none';
+  };
+
   var initMap = function (latitude, longitude) {
+    setTimeout(showLoadingSpinner, 500);
     L.mapbox.accessToken = 'pk.eyJ1IjoiZ2VzdGV2ZXMiLCJhIjoiY2lrY3EyeDA3MG03Y3Y5a3V6d3MwNHR3cSJ9.qG9UBVJvti71fNvW5iKONA';
     map = L.mapbox.map(opts.map_container_id, 'gesteves.ce0e3aae', { minZoom: 2, maxZoom: 18 }).setView([latitude, longitude], 2);
 
@@ -67,7 +81,6 @@ Denali.Map = (function () {
         minWidth: 319
       });
     });
-
     layer.loadURL('/map/photos.json').on('ready', function (e) {
       var cluster_group = new L.MarkerClusterGroup({
         showCoverageOnHover: false,
@@ -87,6 +100,8 @@ Denali.Map = (function () {
         cluster_group.addLayer(layer);
       });
       map.addLayer(cluster_group);
+      show_bar = false;
+      hideLoadingSpinner();
     });
   };
 
