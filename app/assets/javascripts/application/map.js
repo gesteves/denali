@@ -63,7 +63,7 @@ Denali.Map = (function () {
           iconAnchor: [5, 5]
         }));
       marker.bindPopup(content, {
-        closeButton: false,
+        closeButton: true,
         minWidth: 319
       });
     });
