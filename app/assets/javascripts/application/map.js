@@ -63,7 +63,9 @@ Denali.Map = (function () {
     var height = window.innerHeight,
         width = window.innerWidth;
 
-    if ((width >= 1920) || (height >= 1200)) {
+    if ((width >= 2560) || (height >= 1440)) {
+      return 5;
+    } else if ((width >= 1920) || (height >= 1200)) {
       return 4;
     } else if ((width >= 1440 ) || (height >= 900)) {
       return 3;
