@@ -5,9 +5,8 @@ Denali.Map = (function () {
 
   var opts = {
     map_container_id  : 'map',
-    use_geolocation   : false,
-    default_latitude  : 10.4383493,
-    default_longitude : -66.8447572
+    default_latitude  : 38.8899389,
+    default_longitude : -77.0112392
   };
 
   var map,
@@ -22,18 +21,6 @@ Denali.Map = (function () {
     loadMapbox();
   };
 
-  var getLocation = function () {
-    if ('geolocation' in navigator && opts.use_geolocation) {
-      navigator.geolocation.getCurrentPosition(function (position) {
-        initMap(position.coords.latitude, position.coords.longitude);
-      }, function () {
-        initMap(opts.default_latitude, opts.default_longitude);
-      });
-    } else {
-      initMap(opts.default_latitude, opts.default_longitude);
-    }
-  };
-
   var loadMapbox = function () {
     loadJS('https://api.tiles.mapbox.com/mapbox.js/v2.3.0/mapbox.js', function () {
       loadMarkerCluster();
@@ -43,7 +30,7 @@ Denali.Map = (function () {
 
   var loadMarkerCluster = function () {
     loadJS('https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js', function () {
-      getLocation();
+      initMap(opts.default_latitude, opts.default_longitude);
     });
     loadCSS('https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css');
     loadCSS('https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css');
