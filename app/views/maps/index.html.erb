@@ -23,6 +23,8 @@
   <meta name="twitter:description" content="<%= @photoblog.name %> photos, mapped.">
   <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
   <meta name="twitter:card" content="summary_large_image">
+  <link href="https://api.tiles.mapbox.com" rel="preconnect" />
+  <link href="https://api.mapbox.com" rel="preconnect" />
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_include_tag 'application', async: true %>
   <script src="https://use.typekit.net/vtp0iqq.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
