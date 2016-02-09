@@ -59,10 +59,30 @@ Denali.Map = (function () {
     loading.style.display = 'none';
   };
 
+  var getZoom = function () {
+    var height = window.innerHeight,
+        width = window.innerWidth;
+
+    if ((width >= 1920) || (height >= 1200)) {
+      return 4;
+    } else if ((width >= 1440 ) || (height >= 900)) {
+      return 3;
+    } else if ((width >= 1280) || (height >= 800)) {
+      return 2;
+    } else {
+      return 1;
+    }
+  };
+
   var initMap = function (latitude, longitude) {
     setTimeout(showLoadingSpinner, 500);
+    var south_west = L.latLng(-90, -180),
+        north_east = L.latLng(90, 180),
+        bounds = L.latLngBounds(south_west, north_east),
+        zoom = getZoom();
+    console.log(zoom);
     L.mapbox.accessToken = 'pk.eyJ1IjoiZ2VzdGV2ZXMiLCJhIjoiY2lrY3EyeDA3MG03Y3Y5a3V6d3MwNHR3cSJ9.qG9UBVJvti71fNvW5iKONA';
-    map = L.mapbox.map(opts.map_container_id, 'gesteves.ce0e3aae', { minZoom: 2, maxZoom: 18 }).setView([latitude, longitude], 2);
+    map = L.mapbox.map(opts.map_container_id, 'gesteves.ce0e3aae', { minZoom: zoom, maxZoom: 18, maxBounds: bounds }).setView([latitude, longitude], zoom);
 
     var layer = L.mapbox.featureLayer();
 
