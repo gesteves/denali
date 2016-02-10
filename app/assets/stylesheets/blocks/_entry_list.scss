@@ -57,6 +57,10 @@
   }
 }
 
+.entry-list__item--map {
+  font-family: 'kepler-std', 'Times New Roman', serif;
+}
+
 .entry-list__image {
   height: 100%;
   width: 100%;
@@ -175,7 +179,8 @@
   }
 }
 
-.entry-list__photo-meta {
+.entry-list__photo-meta,
+.entry-list__item--map .entry-list__photo-meta {
   color: #FFF;
   font-size: 12px;
   font-style: italic;
