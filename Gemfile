@@ -8,7 +8,7 @@ gem 'omniauth-google-oauth2'
 
 # Uploads
 gem 'aws-sdk', '~> 1.64.0'
-gem 'paperclip', '~> 4.2'
+gem 'paperclip', '~> 4.3'
 
 # Front-end things
 gem 'sass-rails', '~> 5.0'
