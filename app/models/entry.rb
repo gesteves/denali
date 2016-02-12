@@ -30,6 +30,10 @@ class Entry < ActiveRecord::Base
     where(status: 'queued').order(order)
   end
 
+  def self.mapped
+    where(show_in_map: true)
+  end
+
   def is_photo?
     !self.photos_count.blank? && self.photos_count > 0
   end
