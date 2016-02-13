@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     get 'settings' => 'blogs#edit'
     patch 'settings/update' => 'blogs#update'
 
-    resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], :concerns => :paginatable do
+    resources :slack_incoming_webhooks, only: [:index, :destroy], concerns: :paginatable
+
+    resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable do
       member do
         get 'preview'
         get 'share'
