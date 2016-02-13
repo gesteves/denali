@@ -2,11 +2,10 @@ class SlackController < ApplicationController
   def index
     if params[:code].present? && params[:state] == session[:slack_state]
       session[:slack_state] = nil
-      access_token = get_access_token(params[:code])
-      if access_token['ok']
-        @added = true
-        @channel = access_token['incoming_webhook']['channel']
-        @team = access_token['team_name']
+      token = get_access_token(params[:code])
+      if token['ok']
+        @webhook = SlackIncomingWebhook.new(team_name: token['team_name'], team_id: token['team_id'], channel: token['incoming_webhook']['channel'], url: token['incoming_webhook']['url'], configuration_url: token['incoming_webhook']['configuration_url'], blog_id: @photoblog.id)
+        @added = @webhook.save
       end
     else
       @state = session[:slack_state] = SecureRandom.hex(10)
