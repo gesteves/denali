@@ -8,6 +8,7 @@ class SlackController < ApplicationController
         @added = @webhook.save
       end
     else
+      redirect_to slack_path if params[:state].present?
       @state = session[:slack_state] = SecureRandom.hex(10)
     end
   end
