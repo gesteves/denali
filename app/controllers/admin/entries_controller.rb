@@ -202,6 +202,7 @@ class Admin::EntriesController < AdminController
         BufferJob.perform_later(@entry, 'facebook') if @entry.post_to_facebook
         FlickrJob.perform_later(@entry) if @entry.post_to_flickr
         FiveHundredJob.perform_later(@entry) if @entry.post_to_500px
+        SlackIncomingWebhook.post_all(@entry) if @entry.post_to_slack
       end
     end
 
