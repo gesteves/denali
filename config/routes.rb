@@ -45,14 +45,13 @@ Rails.application.routes.draw do
   get '/slack'                         => 'slack#index', :as => :slack
   get '/rss'                           => 'entries#rss', defaults: { format: 'xml' }
   get '/sitemap'                       => 'entries#sitemap', defaults: { format: 'xml' }
+  get '/about'                         => 'pages#about', :as => :about
 
-  get '/about' => 'pages#about', :as => :about
-
-  get '/admin'                    => 'admin#index'
-  get '/auth/:provider/callback'  => 'sessions#create'
-  get '/auth/failure'             => 'sessions#failure'
-  get '/signin'                   => 'sessions#new',     :as => :signin
-  get '/signout'                  => 'sessions#destroy', :as => :signout
+  get '/admin'                         => 'admin#index'
+  get '/auth/:provider/callback'       => 'sessions#create'
+  get '/auth/failure'                  => 'sessions#failure'
+  get '/signin'                        => 'sessions#new',     :as => :signin
+  get '/signout'                       => 'sessions#destroy', :as => :signout
 
   root 'entries#index'
 
