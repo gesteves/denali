@@ -5,11 +5,10 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    get '/tagged/:tag(/page/:page)' => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tag'
-    get 'settings' => 'blogs#edit'
-    patch 'settings/update' => 'blogs#update'
-
-    resources :slack_incoming_webhooks, only: [:index, :destroy], concerns: :paginatable
+    get '/tagged/:tag(/page/:page)'   => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tag'
+    get 'settings'                    => 'blogs#edit'
+    patch 'settings/update'           => 'blogs#update'
+    get '/slack(/page/:page)'         => 'slack_incoming_webhooks#index',  constraints: { page: /\d+/ }, :as => :slack
 
     resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable do
       member do
