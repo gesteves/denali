@@ -2,6 +2,7 @@
   <tr>
     <td><%= webhook.team_name %></td>
     <td><%= webhook.channel %></td>
+    <td><%= webhook.created_at.strftime('%A, %B %-d, %Y at %l:%M %P') %></td>
     <td class="table__actions"><%= link_to 'Delete', admin_slack_incoming_webhook_path(webhook.id), method: :delete, data: { confirm: 'Are you sure you want to delete this webhook?' } %></td>
   </tr>
 <% end %>
