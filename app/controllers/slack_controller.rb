@@ -1,7 +1,8 @@
 class SlackController < ApplicationController
   before_action :domain_redirect
-  
+
   def index
+    expires_in 0, private: true, must_revalidate: true 
     if params[:code].present? && params[:state] == session[:slack_state]
       session[:slack_state] = nil
       token = get_access_token(params[:code])
