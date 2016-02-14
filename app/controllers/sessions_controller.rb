@@ -1,6 +1,6 @@
 class SessionsController < ApplicationController
   skip_before_action :domain_redirect
-
+  before_action :block_cloudfront
   def new
     render
   end

@@ -63,4 +63,10 @@ class ApplicationController < ActionController::Base
     max_age = ENV['default_max_age'].try(:to_i) || 60
     expires_in max_age.minutes, :public => true
   end
+
+  def block_cloudfront
+    if request.user_agent.try(:match, /cloudfront/i)
+      raise ActionController::RoutingError.new('Not Found')
+    end
+  end
 end
