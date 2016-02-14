@@ -48,7 +48,7 @@ class EntriesController < ApplicationController
   end
 
   def sitemap
-    @entries = @photoblog.entries.includes(:photos).published
+    @entries = @photoblog.entries.published
     expires_in 24.hours, :public => true
     render format: 'xml'
   end
