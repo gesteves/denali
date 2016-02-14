@@ -1,0 +1,40 @@
+<% content_for :meta do %>
+  <title>Add to Slack</title>
+  <meta name="description" content="Get notified in Slack when a new photo is published to <%= @photoblog.name %>" />
+  <link rel="canonical" href="<%= slack_url %>">
+
+  <meta property="og:title" content="<%= @photoblog.name %>" />
+  <meta property="og:image" content="<%= image_url 'cover.png' %>" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="628" />
+  <meta property="og:description" content="" />
+  <meta property="og:url" content="<%= slack_url %>" />
+  <meta property="og:type" content="Website" />
+  <meta property="og:site_name" content="<%= @photoblog.name %>" />
+  <meta property="og:locale" content="en_US" />
+
+  <meta name="twitter:site" content="@gesteves">
+  <meta name="twitter:creator" content="@gesteves">
+  <meta name="twitter:title" content="<%= @photoblog.name %>">
+  <meta name="twitter:url" content="<%= slack_url %>" />
+  <meta name="twitter:description" content="Get notified in Slack when a new photo is published to <%= @photoblog.name %>">
+  <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
+  <meta name="twitter:card" content="summary_large_image">
+<% end %>
+
+<article class="entry entry--text">
+
+  <div class="entry__body">
+    <h1 class="entry__headline">
+      Add <%= @photoblog.name %> to Slack
+    </h1>
+
+    <% if @added %>
+      <p>Thanks! You'll get notifications in the <%= @webhook.channel %> channel of <%= @webhook.team_name %> when new photos are published. Have a nice day!</p>
+    <% else %>
+      <p>Now you can receive notifications in Slack once a day when new photos are published! Just use this button to set it up.</p>
+      <a class="follow__slack" href="https://slack.com/oauth/authorize?scope=incoming-webhook&amp;client_id=20888890816.21290100946&amp;state=<%= @state %>&amp;redirect_uri=<%= slack_url %>"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"></a>
+    <% end %>
+
+  </div>
+</article>

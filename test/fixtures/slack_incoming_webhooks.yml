@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  team_name: MyString
+  team_id: MyString
+  url: MyString
+  channel: MyString
+  configuration_url: MyString
+
+two:
+  team_name: MyString
+  team_id: MyString
+  url: MyString
+  channel: MyString
+  configuration_url: MyString

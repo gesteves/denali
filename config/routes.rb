@@ -9,7 +9,9 @@ Rails.application.routes.draw do
     get 'settings' => 'blogs#edit'
     patch 'settings/update' => 'blogs#update'
 
-    resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], :concerns => :paginatable do
+    resources :slack_incoming_webhooks, only: [:index, :destroy], concerns: :paginatable
+
+    resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable do
       member do
         get 'preview'
         get 'share'
@@ -41,6 +43,7 @@ Rails.application.routes.draw do
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
   get '/map'                           => 'maps#index', :as => :map
   get '/map/photos.:format'            => 'maps#photos'
+  get '/slack'                         => 'slack#index', :as => :slack
   get '/rss'                           => 'entries#rss', defaults: { format: 'xml' }
   get '/sitemap'                       => 'entries#sitemap', defaults: { format: 'xml' }
 

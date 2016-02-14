@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160208005050) do
+ActiveRecord::Schema.define(version: 20160213225159) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20160208005050) do
     t.boolean  "post_to_flickr"
     t.boolean  "post_to_500px"
     t.boolean  "show_in_map",      default: true
+    t.boolean  "post_to_slack"
   end
 
   add_index "entries", ["blog_id"], name: "index_entries_on_blog_id"
@@ -79,6 +80,19 @@ ActiveRecord::Schema.define(version: 20160208005050) do
   end
 
   add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"
+
+  create_table "slack_incoming_webhooks", force: :cascade do |t|
+    t.string   "team_name"
+    t.string   "team_id"
+    t.string   "url"
+    t.string   "channel"
+    t.string   "configuration_url"
+    t.integer  "blog_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "slack_incoming_webhooks", ["blog_id"], name: "index_slack_incoming_webhooks_on_blog_id"
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
