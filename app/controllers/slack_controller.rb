@@ -9,8 +9,6 @@ class SlackController < ApplicationController
         @webhook = SlackIncomingWebhook.new(team_name: token['team_name'], team_id: token['team_id'], channel: token['incoming_webhook']['channel'], url: token['incoming_webhook']['url'], configuration_url: token['incoming_webhook']['configuration_url'], blog_id: @photoblog.id)
         @added = @webhook.save
       end
-    else
-      redirect_to slack_path
     end
   end
 
