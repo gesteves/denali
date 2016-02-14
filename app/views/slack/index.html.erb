@@ -30,9 +30,10 @@
     </h1>
 
     <% if @added %>
-      <p>You’ll get notifications in the <i><%= @webhook.channel %></i> channel of <i><%= @webhook.team_name %></i> when new photos are published. Have a nice day!</p>
+      <p>Thanks! You’ll get notifications in the <i><%= @webhook.channel %></i> channel of <i><%= @webhook.team_name %></i> when new photos are published. Have a nice day!</p>
     <% else %>
-      <p>You’ll get notifications notifications in Slack once a day when new photos are published. Just use this button to set it up.</p>
+      <%= content_tag :img, nil, src: image_url('slack.png'), srcset: "#{image_url('slack.png')} 1x, #{image_url('slack@2x.png')} 2x" %>
+      <p>Get notifications in Slack once a day when new photos are published. Just tap this button to get started.</p>
       <a class="follow__slack" href="https://slack.com/oauth/authorize?scope=incoming-webhook&amp;client_id=20888890816.21290100946&amp;state=<%= @state %>&amp;redirect_uri=<%= slack_url %>"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"></a>
     <% end %>
 
