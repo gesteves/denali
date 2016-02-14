@@ -1,5 +1,5 @@
 class SlackIncomingWebhook < ActiveRecord::Base
-  belongs_to :blog
+  belongs_to :blog, touch: true
 
   def self.post_all(entry)
     self.find_each do |webhook|
