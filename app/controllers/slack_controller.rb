@@ -1,4 +1,6 @@
 class SlackController < ApplicationController
+  before_action :domain_redirect
+  
   def index
     if params[:code].present? && params[:state] == session[:slack_state]
       session[:slack_state] = nil
