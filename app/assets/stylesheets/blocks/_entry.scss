@@ -280,6 +280,20 @@
     position: relative;
   }
 
+  .entry__disclaimer {
+    color: $color-text-alt;
+    font-size: 12px;
+    font-weight: 300;
+    line-height: (24/12);
+    margin: (2.4rem/1.2) 0;
+
+    @media (min-width: $bp-m) {
+      font-size: 15px;
+      line-height: (36/15);
+      margin: (3.6rem/1.5) 0;
+    }
+  }
+
   .twitter-tweet {
     // scss-lint:disable ImportantRule
     // Needed to override inline styles injected by Twitter in embedded tweets
