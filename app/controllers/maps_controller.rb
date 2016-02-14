@@ -1,6 +1,5 @@
 class MapsController < ApplicationController
   layout false
-  before_action :domain_redirect
   before_action :set_max_age, only: [:index]
 
   def index
