@@ -5,7 +5,6 @@ namespace :queue do
     if entry.nil?
       puts 'There are no posts in the queue.'
     elsif entry.publish && entry.is_photo?
-      IftttJob.perform_later(entry)
       TwitterJob.perform_later(entry) if entry.post_to_twitter
       TumblrJob.perform_later(entry) if entry.post_to_tumblr
       BufferJob.perform_later(entry, 'facebook') if entry.post_to_facebook
