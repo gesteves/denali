@@ -97,7 +97,7 @@ class Admin::EntriesController < AdminController
   def update
     respond_to do |format|
       if @entry.update(entry_params)
-        logger.info "Entry #{entry.id} was updated."
+        logger.info "Entry #{@entry.id} was updated."
         flash[:notice] = 'Your entry was updated!'
         format.html { redirect_to get_redirect_url(@entry) }
       else
