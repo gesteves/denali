@@ -8,6 +8,7 @@ class SlackController < ApplicationController
       if token['ok']
         @webhook = SlackIncomingWebhook.new(team_name: token['team_name'], team_id: token['team_id'], channel: token['incoming_webhook']['channel'], url: token['incoming_webhook']['url'], configuration_url: token['incoming_webhook']['configuration_url'], blog_id: @photoblog.id)
         @added = @webhook.save
+        logger.info "[LOG] Slack incoming webhook created for #{@webhook.team_name} in #{@webhook.channel} channel."
       end
     else
       redirect_to slack_path if params[:state].present?

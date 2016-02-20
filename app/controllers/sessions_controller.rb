@@ -15,8 +15,10 @@ class SessionsController < ApplicationController
       session[:user_id] = user.id
       url = session[:original_url] || admin_entries_path
       session[:original_url] = nil
+      logger.info "[LOG] #{auth_hash['info']['name']} has logged in."
       redirect_to url
     else
+      logger.info "[LOG] Login unsuccessful by #{email}."
       redirect_to signin_path, alert: 'There was a problem logging you in.'
     end
   end
