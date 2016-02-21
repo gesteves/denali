@@ -14,7 +14,7 @@ cache "rss/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
           xml.published e.published_at.utc.strftime('%FT%TZ')
           xml.updated e.updated_at.utc.strftime('%FT%TZ')
           xml.link rel: 'alternate', type: 'text/html', href: permalink_url(e)
-          xml.title e.formatted_title
+          xml.title e.plain_title
           body = ''
           e.photos.each do |p|
             body += image_tag p.url(2732)

@@ -20,7 +20,7 @@ class TwitterJob < ApplicationJob
     media_length = config.characters_reserved_per_media
     max_length = 138 - url_length - media_length
     coder = HTMLEntities.new
-    text = coder.decode(entry.tweet_text.blank? ? entry.formatted_title : entry.formatted_tweet_text)
+    text = coder.decode(entry.tweet_text.blank? ? entry.plain_title : entry.tweet_text)
     "#{truncate(text, length: max_length, omission: '…')} #{permalink_url(entry)}"
   end
 

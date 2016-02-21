@@ -6,7 +6,7 @@
       <% end %>
     <% end %>
     <div class="entry__content <% if @entry.is_text? %>entry__content--text<% end %>">
-      <h2><%= raw(@entry.formatted_title) %></h2>
+      <h2><%= raw(@entry.plain_title) %></h2>
       <%= raw(@entry.formatted_body) unless @entry.body.blank? %>
     </div>
     <div class="entry__meta">

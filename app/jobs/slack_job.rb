@@ -5,12 +5,12 @@ class SlackJob < ApplicationJob
     payload = { text: '', channel: webhook.channel }
     attachment = {
       fallback: "#{entry.plain_title} #{permalink_url(entry)}",
-      title: entry.formatted_plain_title,
+      title: entry.plain_title,
       title_link: permalink_url(entry),
       image_url: entry.photos.first.url(800),
       color: '#BF0222'
     }
-    attachment[:text] = entry.formatted_plain_body if entry.body.present?
+    attachment[:text] = entry.plain_body if entry.body.present?
     payload[:attachments] = [attachment]
     request = HTTParty.post(webhook.url, body: payload.to_json) if Rails.env.production?
     webhook.destroy if request.code == 404

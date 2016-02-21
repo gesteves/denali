@@ -6,7 +6,7 @@ module MapsHelper
           img = responsive_image_tag(photo, 'map', { class: 'entry-list__image' })
           caption = content_tag :figcaption, class: 'entry-list__photo-caption' do
             title = content_tag :p, class: 'entry-list__photo-title' do
-              raw truncate(entry.formatted_title, length: 80, separator: ' ', omission: '…', escape: false)
+              raw truncate(entry.plain_title, length: 80, separator: ' ', omission: '…', escape: false)
             end
             pubdate = content_tag :p, class: 'entry-list__photo-meta' do
               "Published on #{entry.published_at.strftime('%B %-d, %Y')}"

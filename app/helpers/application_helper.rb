@@ -57,7 +57,7 @@ module ApplicationHelper
 
   def twitter_share_url(entry)
     params = {
-      text: entry.tweet_text.blank? ? truncate(entry.formatted_title, length: 120, omission: '…') : entry.tweet_text,
+      text: entry.tweet_text.blank? ? truncate(entry.plain_title, length: 120, omission: '…') : entry.tweet_text,
       url: permalink_url(entry),
       via: 'gesteves'
     }
@@ -68,7 +68,7 @@ module ApplicationHelper
   def tumblr_share_url(entry)
     params = {
       posttype: 'link',
-      title: entry.formatted_title,
+      title: entry.plain_title,
       content: permalink_url(entry),
       canonicalUrl: permalink_url(entry)
     }
@@ -83,7 +83,7 @@ module ApplicationHelper
     params = {
       url: permalink_url(entry),
       media: entry.photos.first.url(2560),
-      description: entry.formatted_title
+      description: entry.plain_title
     }
 
     "https://www.pinterest.com/pin/create/button/?#{params.to_query}"

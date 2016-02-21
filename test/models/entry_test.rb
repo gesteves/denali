@@ -123,4 +123,13 @@ class EntryTest < ActiveSupport::TestCase
     entry.publish
     assert_equal published_at, entry.published_at
   end
+
+  test 'entry formatting should work' do
+    entry = Entry.new(title: 'This is the *title* you\'re looking for', body: 'This is the *body* you\'re looking for.', status: 'queued')
+    entry.save
+    assert_equal entry.plain_title, 'This is the title you’re looking for'
+    assert_equal entry.formatted_body, "<p>This is the <em>body</em> you&rsquo;re looking for.</p>\n"
+    assert_equal entry.plain_body, 'This is the body you’re looking for.'
+    assert_equal entry.formatted_content, "<p>This is the <em>title</em> you&rsquo;re looking for</p>\n\n<p>This is the <em>body</em> you&rsquo;re looking for.</p>\n"
+  end
 end

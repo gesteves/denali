@@ -19,9 +19,9 @@
     <div class="entry__body">
       <h1 class="entry__headline">
         <% if entry.is_text? %>
-          <%= link_to raw(entry.formatted_title), permalink_url(entry) %>
+          <%= link_to raw(entry.plain_title), permalink_url(entry) %>
         <% else %>
-          <%= raw(entry.formatted_title) %>
+          <%= raw(entry.plain_title) %>
         <% end %>
       </h1>
       <%= raw(entry.formatted_body) unless entry.body.blank? %>

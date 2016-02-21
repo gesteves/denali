@@ -101,28 +101,12 @@ class Entry < ActiveRecord::Base
     markdown_to_html(self.body)
   end
 
-  def formatted_plain_body
-    smartypants(markdown_to_plaintext(self.body))
-  end
-
   def plain_body
     markdown_to_plaintext(self.body)
   end
 
   def plain_title
     markdown_to_plaintext(self.title)
-  end
-
-  def formatted_title
-    smartypants(self.title)
-  end
-
-  def formatted_plain_title
-    smartypants(markdown_to_plaintext(self.title))
-  end
-
-  def formatted_tweet_text
-    smartypants(self.tweet_text)
   end
 
   def formatted_content
