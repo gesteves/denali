@@ -48,7 +48,7 @@ class EntriesControllerTest < ActionController::TestCase
     entry = entries(:peppers)
     assert_not_nil assigns(:entry)
     assert_equal assigns(:entry), entry
-    assert_redirected_to entry_long_url(year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug)
+    assert_redirected_to entry.permalink_url
   end
 
   test 'should render tag page' do
