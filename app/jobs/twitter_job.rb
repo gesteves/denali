@@ -21,7 +21,7 @@ class TwitterJob < ApplicationJob
     max_length = 138 - url_length - media_length
     coder = HTMLEntities.new
     text = coder.decode(entry.tweet_text.blank? ? entry.plain_title : entry.tweet_text)
-    "#{truncate(text, length: max_length, omission: '…')} #{permalink_url(entry)}"
+    "#{truncate(text, length: max_length, omission: '…')} #{entry.permalink_url}"
   end
 
   def set_coordinates(photo)

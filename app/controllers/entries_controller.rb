@@ -17,7 +17,7 @@ class EntriesController < ApplicationController
     @entry = @photoblog.entries.includes(:photos, :user).published.find(params[:id])
     respond_to do |format|
       format.html {
-        redirect_to(permalink_url(@entry), status: 301) unless params_match(@entry, params)
+        redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
       }
     end
   end
@@ -35,7 +35,7 @@ class EntriesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @entry.nil?
     respond_to do |format|
       format.html {
-        redirect_to permalink_url(@entry), status: 301
+        redirect_to @entry.permalink_url, status: 301
       }
     end
   end

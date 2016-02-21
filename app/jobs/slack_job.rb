@@ -4,9 +4,9 @@ class SlackJob < ApplicationJob
   def perform(entry, webhook)
     payload = { text: '', channel: webhook.channel }
     attachment = {
-      fallback: "#{entry.plain_title} #{permalink_url(entry)}",
+      fallback: "#{entry.plain_title} #{entry.permalink_url}",
       title: entry.plain_title,
-      title_link: permalink_url(entry),
+      title_link: entry.permalink_url,
       image_url: entry.photos.first.url(800),
       color: '#BF0222'
     }

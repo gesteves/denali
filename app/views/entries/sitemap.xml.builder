@@ -7,7 +7,7 @@ cache "sitemap/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
     end
     @entries.each do |e|
       xml.url do
-        xml.loc permalink_url e
+        xml.loc e.permalink_url
         xml.lastmod e.updated_at.strftime('%Y-%m-%dT%H:%M:%S%:z')
       end
     end

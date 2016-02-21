@@ -1,4 +1,5 @@
 class Entry < ActiveRecord::Base
+  include Rails.application.routes.url_helpers
   include Formattable
 
   has_many :photos, -> { order 'position ASC' }, dependent: :destroy
@@ -132,6 +133,22 @@ class Entry < ActiveRecord::Base
     id = self.id
     slug = self.slug
     return year, month, day, id, slug
+  end
+
+  def permalink_path
+    year, month, day, id, slug = self.slug_params
+    entry_long_path(year, month, day, id, slug)
+  end
+
+  def permalink_url
+    year, month, day, id, slug = self.slug_params
+    opts = Rails.env.production? ? { host: self.blog.domain } : { only_path: true }
+    entry_long_url(year, month, day, id, slug, opts)
+  end
+
+  def short_permalink_url
+    opts = Rails.env.production? ? { host: self.blog.short_domain } : { only_path: true }
+    entry_url(self.id, opts)
   end
 
   private

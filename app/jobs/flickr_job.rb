@@ -12,9 +12,9 @@ class FlickrJob < ApplicationJob
     title = entry.title
 
     if entry.body.present?
-      body = "#{entry.formatted_body}\n\n#{permalink_url(entry)}"
+      body = "#{entry.formatted_body}\n\n#{entry.permalink_url}"
     else
-      body = permalink_url(entry)
+      body = entry.permalink_url
     end
 
     tags = entry.tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')

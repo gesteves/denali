@@ -13,7 +13,7 @@ class TumblrJob < ApplicationJob
       tags: entry.tag_list.join(', '),
       slug: entry.slug,
       caption: entry.formatted_content,
-      link: permalink_url(entry),
+      link: entry.permalink_url,
       data: entry.photos.map { |p| open(p.original_url).path }
     }
 

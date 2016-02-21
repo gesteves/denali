@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :get_photoblog
   before_action :domain_redirect
 
-  helper_method :current_user, :logged_in?, :logged_out?, :permalink_path, :permalink_url, :short_permalink_url
+  helper_method :current_user, :logged_in?, :logged_out?
 
   def default_url_options
     if Rails.env.production?
@@ -37,20 +37,6 @@ class ApplicationController < ActionController::Base
 
   def get_photoblog
     @photoblog = Blog.find_by(domain: 'www.allencompassingtrip.com')
-  end
-
-  def permalink_path(entry, opts = {})
-    year, month, day, id, slug = entry.slug_params
-    entry_long_path(year, month, day, id, slug)
-  end
-
-  def permalink_url(entry)
-    year, month, day, id, slug = entry.slug_params
-    entry_long_url(year, month, day, id, slug)
-  end
-
-  def short_permalink_url(entry)
-    entry_url(entry.id, { host: @photoblog.short_domain })
   end
 
   def domain_redirect

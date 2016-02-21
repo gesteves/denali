@@ -149,7 +149,7 @@ class Admin::EntriesController < AdminController
     respond_to do |format|
       format.html {
         if @entry.is_published?
-          redirect_to permalink_url @entry
+          redirect_to @entry.permalink_url
         else
           render 'entries/show', layout: 'application'
         end
@@ -218,7 +218,7 @@ class Admin::EntriesController < AdminController
 
     def get_redirect_url(entry)
       if entry.is_published?
-        permalink_url(entry)
+        entry.permalink_url
       elsif entry.is_queued?
         queued_admin_entries_path
       else

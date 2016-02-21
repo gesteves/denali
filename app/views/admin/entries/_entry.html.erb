@@ -1,6 +1,6 @@
 <% cache "admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <li class="entry">
-    <%= link_to entry.is_published? ? permalink_url(entry) : preview_admin_entry_path(entry) do %>
+    <%= link_to entry.is_published? ? entry.permalink_url : preview_admin_entry_path(entry) do %>
       <% entry.photos.each do |p| %>
         <%= responsive_image_tag p, 'admin_entry', { class: 'entry__thumb' } %>
       <% end %>
@@ -23,7 +23,7 @@
       <div class="entry__meta-bottom">
         <% if entry.is_published? %>
           <div class="entry__timestamp">
-            <%= link_to "Published #{entry.published_at.strftime('%A, %B %-d, %Y')}", permalink_url(entry) %>
+            <%= link_to "Published #{entry.published_at.strftime('%A, %B %-d, %Y')}", entry.permalink_url %>
           </div>
         <% elsif entry.is_queued? %>
           <div class="entry__actions entry__actions--queue">

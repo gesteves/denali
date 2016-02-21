@@ -12,9 +12,9 @@ class FiveHundredJob < ApplicationJob
     }
 
     if entry.body.present?
-      opts[:description] = "#{entry.plain_body}\n\n#{permalink_url(entry)}"
+      opts[:description] = "#{entry.plain_body}\n\n#{entry.permalink_url}"
     else
-      opts[:description] = permalink_url(entry)
+      opts[:description] = entry.permalink_url
     end
 
     if Rails.env.production?

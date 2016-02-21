@@ -10,10 +10,10 @@ cache "rss/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
     @entries.each do |e|
       cache "entry/rss/#{e.id}/#{e.updated_at.to_i}" do
         xml.entry do
-          xml.id atom_tag(permalink_url(e), e.updated_at)
+          xml.id atom_tag(e.permalink_url, e.updated_at)
           xml.published e.published_at.utc.strftime('%FT%TZ')
           xml.updated e.updated_at.utc.strftime('%FT%TZ')
-          xml.link rel: 'alternate', type: 'text/html', href: permalink_url(e)
+          xml.link rel: 'alternate', type: 'text/html', href: e.permalink_url
           xml.title e.plain_title
           body = ''
           e.photos.each do |p|

@@ -19,7 +19,7 @@
     <div class="entry__body">
       <h1 class="entry__headline">
         <% if entry.is_text? %>
-          <%= link_to raw(entry.plain_title), permalink_url(entry) %>
+          <%= link_to raw(entry.plain_title), entry.permalink_url %>
         <% else %>
           <%= raw(entry.plain_title) %>
         <% end %>

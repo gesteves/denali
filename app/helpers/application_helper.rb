@@ -49,7 +49,7 @@ module ApplicationHelper
 
   def facebook_share_url(entry)
     params = {
-      u: permalink_url(entry)
+      u: entry.permalink_url
     }
 
     "https://www.facebook.com/sharer/sharer.php?#{params.to_query}"
@@ -58,7 +58,7 @@ module ApplicationHelper
   def twitter_share_url(entry)
     params = {
       text: entry.tweet_text.blank? ? truncate(entry.plain_title, length: 120, omission: '…') : entry.tweet_text,
-      url: permalink_url(entry),
+      url: entry.permalink_url,
       via: 'gesteves'
     }
 
@@ -69,8 +69,8 @@ module ApplicationHelper
     params = {
       posttype: 'link',
       title: entry.plain_title,
-      content: permalink_url(entry),
-      canonicalUrl: permalink_url(entry)
+      content: entry.permalink_url,
+      canonicalUrl: entry.permalink_url
     }
 
     params[:tags] = entry.tag_list.join(',') unless entry.tag_list.blank?
@@ -80,7 +80,7 @@ module ApplicationHelper
 
   def pinterest_share_url(entry)
     params = {
-      url: permalink_url(entry),
+      url: entry.permalink_url,
       media: entry.photos.first.url(2560),
       description: entry.plain_title
     }
