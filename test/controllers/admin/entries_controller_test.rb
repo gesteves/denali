@@ -4,20 +4,22 @@ class Admin::EntriesControllerTest < ActionController::TestCase
 
   def setup
     session[:user_id] = users(:guille).id
+    @entry = entries(:peppers)
+    @entry.tag_list = 'washington'
+    @entry.save
   end
 
   test 'should render preview page' do
-    entry = entries(:panda)
-    get :preview, id: entry.id
+    panda = entries(:panda)
+    get :preview, id: panda.id
     assert_response :success
     assert_template layout: 'layouts/application'
     assert_template :show
   end
 
   test 'should redirect published photos from preview page' do
-    entry = entries(:peppers)
-    get :preview, id: entry.id
-    assert_redirected_to entry.permalink_url
+    get :preview, id: @entry.id
+    assert_redirected_to @entry.permalink_url
   end
 
   test 'should render entries page' do
@@ -42,9 +44,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should render tag page' do
-    entry = entries(:peppers)
-    entry.tag_list = 'washington'
-    entry.save
     get :tagged, tag: 'washington'
     assert_response :success
     assert_not_nil assigns(:entries)
@@ -60,8 +59,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should render edit entry page' do
-    entry = entries(:peppers)
-    get :edit, id: entry.id
+    get :edit, id: @entry.id
     assert_not_nil assigns(:entry)
     assert_response :success
     assert_template layout: 'layouts/admin'
@@ -69,8 +67,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should render share entry page' do
-    entry = entries(:peppers)
-    get :share, id: entry.id
+    get :share, id: @entry.id
     assert_not_nil assigns(:entry)
     assert_response :success
     assert_template layout: 'layouts/admin'
