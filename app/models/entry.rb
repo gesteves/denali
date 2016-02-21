@@ -143,11 +143,13 @@ class Entry < ActiveRecord::Base
   def permalink_url
     year, month, day, id, slug = self.slug_params
     opts = Rails.env.production? ? { host: self.blog.domain } : { only_path: true }
+    opts[:protocol] = Rails.configuration.force_ssl ? 'https' : 'http'
     entry_long_url(year, month, day, id, slug, opts)
   end
 
   def short_permalink_url
     opts = Rails.env.production? ? { host: self.blog.short_domain } : { only_path: true }
+    opts[:protocol] = Rails.configuration.force_ssl ? 'https' : 'http'
     entry_url(self.id, opts)
   end
 
