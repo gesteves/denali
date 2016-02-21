@@ -39,4 +39,12 @@ class EntriesControllerTest < ActionController::TestCase
     assert_select '.entry__image', 1
     assert_select '.entry__headline', 1
   end
+
+  test 'should redirect from tumblr url' do
+    get :tumblr, tumblr_id: '17444976847'
+    entry = entries(:peppers)
+    assert_not_nil assigns(:entry)
+    assert_equal assigns(:entry), entry
+    assert_redirected_to entry_long_url(year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug)
+  end
 end
