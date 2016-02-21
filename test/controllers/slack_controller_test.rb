@@ -6,4 +6,9 @@ class SlackControllerTest < ActionController::TestCase
     assert_template :index
     assert_response :success
   end
+
+  test "shouldn't be cached" do
+    get :index
+    assert_equal @response['Cache-Control'], 'max-age=0, private, must-revalidate'
+  end
 end

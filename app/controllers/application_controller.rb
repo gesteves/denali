@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
   end
 
   def no_cache
-    expires_in 0, private: true, must_revalidate: true
+    expires_in 0, must_revalidate: true
   end
 
   def block_cloudfront
