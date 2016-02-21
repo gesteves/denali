@@ -20,3 +20,12 @@ potomac:
   published_at: 2012-02-11 23:00:00.000000
   show_in_map: false
   photos_count: 1
+
+panda:
+  title: One of the giant pandas at the National Zoo, Washington, DC. July 3rd, 2011.
+  slug: national-zoo-panda
+  status: queued
+  blog: allencompassingtrip
+  user: guille
+  show_in_map: true
+  photos_count: 1
