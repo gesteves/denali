@@ -1,0 +1,19 @@
+<% content_for :meta do %>
+  <%= render partial: 'meta' %>
+<% end %>
+
+<article class="entry entry--text">
+
+  <div class="entry__body">
+    <h1 class="entry__headline">
+      Add <%= @photoblog.name %> to Slack
+    </h1>
+
+    <% if @webhook.present? %>
+      <p>Thanks! You’ll get notifications in the <i><%= @webhook.channel %></i> channel of <i><%= @webhook.team_name %></i> when new photos are published. Have a nice day!</p>
+    <% else %>
+      <p>Oh no! <i><%= @photoblog.name %></i> couldn’t be added to your team’s Slack.</p>
+    <% end %>
+
+  </div>
+</article>
