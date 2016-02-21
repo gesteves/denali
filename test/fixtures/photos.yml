@@ -56,3 +56,22 @@ panda:
   height: 768
   iso: 100
   focal_length: 24
+
+franklin:
+  position: 1
+  entry: panda
+  image_file_name: tumblr_lx00c71gKU1qzattso1_1280.jpg
+  image_content_type: image/jpeg
+  image_file_size: 531641
+  source_url: http://41.media.tumblr.com/tumblr_lx00c71gKU1qzattso1_1280.jpg
+  make: OLYMPUS IMAGING CORP.
+  model: XZ-1
+  taken_at: 2011-07-06 16:14:53.000000
+  exposure: 1/2000
+  f_number: 2.500000
+  latitude: 38.894333
+  longitude: -77.027667
+  width: 1024
+  height: 768
+  iso: 100
+  focal_length: 24

@@ -29,3 +29,12 @@ panda:
   user: guille
   show_in_map: true
   photos_count: 1
+
+franklin:
+  title: Ben Franklin in front of the Old Post Office, Washington, DC. July 6th, 2011.
+  slug: ben-franklin-old-post-office
+  status: draft
+  blog: allencompassingtrip
+  user: guille
+  show_in_map: true
+  photos_count: 1
