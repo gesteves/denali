@@ -1,17 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  title: MyString
-  body: MyText
-  slug: MyString
-  status: MyString
-  blog_id: 
-  user_id: 
+peppers:
+  title: Peppers at Eastern Market, Washington, DC. July 2nd, 2011.
+  slug: eastern-market-peppers
+  status: published
+  blog: allencompassingtrip
+  user: guille
+  published_at: 2012-02-11 21:00:00.000000
+  show_in_map: true
 
-two:
-  title: MyString
-  body: MyText
-  slug: MyString
-  status: MyString
-  blog_id: 
-  user_id: 
+potomac:
+  title: Potomac Avenue Metro station, Washington, DC. July 3rd, 2011.
+  slug: potomac-avenue
+  status: published
+  blog: allencompassingtrip
+  user: guille
+  published_at: 2012-02-11 23:00:00.000000
+  show_in_map: false
