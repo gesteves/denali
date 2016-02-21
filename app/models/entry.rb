@@ -8,9 +8,6 @@ class Entry < ActiveRecord::Base
 
   validates :title, presence: true
 
-  scope :text_entries, -> { where('photos_count = 0') }
-  scope :photo_entries, -> { where('photos_count > 0') }
-
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
 
@@ -33,6 +30,14 @@ class Entry < ActiveRecord::Base
 
   def self.mapped
     where(show_in_map: true)
+  end
+
+  def self.text_entries
+    where('photos_count = 0')
+  end
+
+  def self.photo_entries
+    where('photos_count > 0')
   end
 
   def is_photo?
