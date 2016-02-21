@@ -50,4 +50,28 @@ class EntriesControllerTest < ActionController::TestCase
     assert_equal assigns(:entry), entry
     assert_redirected_to entry_long_url(year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug)
   end
+
+  test 'should render tag page' do
+    entry = entries(:peppers)
+    entry.tag_list = 'washington'
+    entry.save
+    get :tagged, tag: 'washington'
+    assert_response :success
+    assert_not_nil assigns(:entries)
+    assert_template layout: 'layouts/application'
+    assert_template :tagged
+    assert_select '.entry-list' do
+      assert_select '.entry-list__item', 1
+    end
+  end
+
+  test 'should render tag page json' do
+    entry = entries(:peppers)
+    entry.tag_list = 'washington'
+    entry.save
+    get :tagged, tag: 'washington', format: 'json'
+    assert_template :tagged
+    assert_response :success
+  end
+
 end
