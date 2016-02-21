@@ -65,6 +65,10 @@ class ApplicationController < ActionController::Base
     expires_in max_age.minutes, :public => true
   end
 
+  def no_cache
+    expires_in 0, private: true, must_revalidate: true
+  end
+
   def block_cloudfront
     if request.user_agent.try(:match, /cloudfront/i)
       raise ActionController::RoutingError.new('Not Found')

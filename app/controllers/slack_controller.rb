@@ -1,7 +1,7 @@
 class SlackController < ApplicationController
+  before_action :no_cache
 
   def index
-    expires_in 0, private: true, must_revalidate: true
     if params[:code].present? && params[:state] == session[:slack_state]
       session[:slack_state] = nil
       @webhook = save_webhook(params[:code])
