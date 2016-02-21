@@ -6,10 +6,4 @@ class SlackControllerTest < ActionController::TestCase
     assert_template :index
     assert_response :success
   end
-
-  test "should redirect to index index" do
-    get :index, state: 123
-    assert_redirected_to slack_path
-  end
-
 end
