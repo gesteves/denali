@@ -14,16 +14,19 @@ class EntriesControllerTest < ActionController::TestCase
 
   test "should generate index json" do
     get :index, format: 'json'
+    assert_template :index
     assert_response :success
   end
 
   test "should generate sitemap" do
     get :sitemap, format: 'xml'
+    assert_template :sitemap
     assert_response :success
   end
 
   test "should generate feed" do
     get :rss, format: 'xml'
+    assert_template :rss
     assert_response :success
   end
 
@@ -32,8 +35,8 @@ class EntriesControllerTest < ActionController::TestCase
     get :show, year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug
     assert_response :success
     assert_not_nil assigns(:entry)
-    assert_template :show
     assert_template layout: 'layouts/application'
+    assert_template :show
     assert_select '.entry', 1
     assert_select '.entry__photo', 1
     assert_select '.entry__image', 1
