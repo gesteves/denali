@@ -8,6 +8,7 @@ peppers:
   user: guille
   published_at: 2012-02-11 21:00:00.000000
   show_in_map: true
+  photos_count: 1
 
 potomac:
   title: Potomac Avenue Metro station, Washington, DC. July 3rd, 2011.
@@ -17,3 +18,4 @@ potomac:
   user: guille
   published_at: 2012-02-11 23:00:00.000000
   show_in_map: false
+  photos_count: 1
