@@ -1,6 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
+allencompassingtrip:
   name: 'All-Encompassing Trip'
   domain: 'www.allencompassingtrip.com'
   short_domain: 'aetrip.com'
