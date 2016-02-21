@@ -142,18 +142,27 @@ class Entry < ActiveRecord::Base
 
   def permalink_url
     year, month, day, id, slug = self.slug_params
-    opts = Rails.env.production? ? { host: self.blog.domain } : { only_path: true }
-    opts[:protocol] = Rails.configuration.force_ssl ? 'https' : 'http'
-    entry_long_url(year, month, day, id, slug, opts)
+    entry_long_url(year, month, day, id, slug, url_opts(self.blog.domain))
   end
 
   def short_permalink_url
-    opts = Rails.env.production? ? { host: self.blog.short_domain } : { only_path: true }
-    opts[:protocol] = Rails.configuration.force_ssl ? 'https' : 'http'
-    entry_url(self.id, opts)
+    entry_url(self.id, url_opts(self.blog.short_domain))
   end
 
   private
+
+  def url_opts(domain)
+    if Rails.env.production?
+      {
+        protocol: Rails.configuration.force_ssl ? 'https' : 'http',
+        host: domain
+      }
+    else
+      {
+        only_path: true
+      }
+    end
+  end
 
   def set_published_date
     if self.is_published? && self.published_at.nil?
