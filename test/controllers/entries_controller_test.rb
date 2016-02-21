@@ -5,8 +5,8 @@ class EntriesControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:entries)
-    assert_template :index
     assert_template layout: 'layouts/application'
+    assert_template :index
     assert_select '.entry-list' do
       assert_select '.entry-list__item', 2
     end
