@@ -12,6 +12,21 @@ class EntriesControllerTest < ActionController::TestCase
     end
   end
 
+  test "should generate index json" do
+    get :index, format: 'json'
+    assert_response :success
+  end
+
+  test "should generate sitemap" do
+    get :sitemap, format: 'xml'
+    assert_response :success
+  end
+
+  test "should generate feed" do
+    get :rss, format: 'xml'
+    assert_response :success
+  end
+
   test 'photo page should render correctly' do
     entry = entries(:peppers)
     get :show, year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug
