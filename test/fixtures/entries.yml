@@ -10,6 +10,12 @@ peppers:
   show_in_map: true
   photos_count: 1
   tumblr_id: 17444976847
+  post_to_twitter: true
+  post_to_tumblr: true
+  post_to_facebook: true
+  post_to_flickr: true
+  post_to_500px: true
+  post_to_slack: true
 
 potomac:
   title: Potomac Avenue Metro station, Washington, DC. July 3rd, 2011.
@@ -29,6 +35,12 @@ panda:
   user: guille
   show_in_map: true
   photos_count: 1
+  post_to_twitter: true
+  post_to_tumblr: true
+  post_to_facebook: true
+  post_to_flickr: true
+  post_to_500px: true
+  post_to_slack: true
 
 franklin:
   title: Ben Franklin in front of the Old Post Office, Washington, DC. July 6th, 2011.
@@ -38,3 +50,9 @@ franklin:
   user: guille
   show_in_map: true
   photos_count: 1
+  post_to_twitter: true
+  post_to_tumblr: true
+  post_to_facebook: true
+  post_to_flickr: true
+  post_to_500px: true
+  post_to_slack: true
