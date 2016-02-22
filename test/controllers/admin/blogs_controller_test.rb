@@ -13,4 +13,10 @@ class Admin::BlogsControllerTest < ActionController::TestCase
     assert_template layout: 'layouts/admin'
     assert_template :edit
   end
+
+  test 'should update blog' do
+    session[:user_id] = users(:guille).id
+    patch :update, blog: { id: blogs(:allencompassingtrip).id }
+    assert_redirected_to admin_settings_path
+  end
 end
