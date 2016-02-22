@@ -49,7 +49,6 @@ class Admin::EntriesController < AdminController
   # PATCH /admin/entries/1/publish
   def publish
     if @entry.publish
-      @entry.enqueue_jobs
       flash[:notice] = 'Your entry was published!'
     else
       flash[:alert] = 'Your entry couldn’t be published…'
@@ -84,7 +83,6 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save
-        @entry.enqueue_jobs
         flash[:notice] = 'Your entry was saved!'
         format.html { redirect_to get_redirect_url(@entry) }
       else

@@ -2,9 +2,9 @@ require 'test_helper'
 
 class FlickrJobTest < ActiveJob::TestCase
   test 'flickr jobs should be queued if entry published' do
-    published = entries(:peppers)
+    queued = entries(:panda)
     assert_enqueued_with(job: FlickrJob) do
-      published.enqueue_jobs
+      queued.publish
     end
   end
 end

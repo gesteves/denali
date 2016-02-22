@@ -66,7 +66,7 @@ class Entry < ActiveRecord::Base
 
   def publish
     self.status = 'published'
-    self.save
+    self.save && self.enqueue_jobs
   end
 
   def queue
@@ -161,6 +161,7 @@ class Entry < ActiveRecord::Base
     self.enqueue_flickr
     self.enqueue_500px
     self.enqueue_slack
+    true
   end
 
   def enqueue_twitter

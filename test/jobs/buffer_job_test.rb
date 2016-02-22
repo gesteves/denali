@@ -2,9 +2,9 @@ require 'test_helper'
 
 class BufferJobTest < ActiveJob::TestCase
   test 'buffer jobs should be queued if entry published' do
-    published = entries(:peppers)
+    queued = entries(:panda)
     assert_enqueued_with(job: BufferJob) do
-      published.enqueue_jobs
+      queued.publish
     end
   end
 end

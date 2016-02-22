@@ -5,7 +5,6 @@ namespace :queue do
     if entry.nil?
       puts 'There are no posts in the queue.'
     elsif entry.publish
-      entry.enqueue_jobs
       puts "Entry \"#{entry.title}\" published successfully."
     else
       puts 'Queued entry failed to publish.'

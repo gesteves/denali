@@ -2,9 +2,9 @@ require 'test_helper'
 
 class FiveHundredJobTest < ActiveJob::TestCase
   test '500px jobs should be queued if entry published' do
-    published = entries(:peppers)
+    queued = entries(:panda)
     assert_enqueued_with(job: FiveHundredJob) do
-      published.enqueue_jobs
+      queued.publish
     end
   end
 end
