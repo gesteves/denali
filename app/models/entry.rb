@@ -154,6 +154,39 @@ class Entry < ActiveRecord::Base
     entry_url(self.id, url_opts(self.blog.short_domain))
   end
 
+  def enqueue_jobs
+    self.enqueue_twitter
+    self.enqueue_tumblr
+    self.enqueue_facebook
+    self.enqueue_flickr
+    self.enqueue_500px
+    self.enqueue_slack
+  end
+
+  def enqueue_twitter
+    TwitterJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_twitter
+  end
+
+  def enqueue_tumblr
+    TumblrJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_tumblr
+  end
+
+  def enqueue_facebook
+    BufferJob.perform_later(self, 'facebook') if self.is_published? && self.is_photo? && self.post_to_facebook
+  end
+
+  def enqueue_flickr
+    FlickrJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_flickr
+  end
+
+  def enqueue_500px
+    FiveHundredJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_500px
+  end
+
+  def enqueue_slack
+    SlackIncomingWebhook.post_all(self) if self.is_published? && self.is_photo? && self.post_to_slack
+  end
+
   private
 
   def url_opts(domain)

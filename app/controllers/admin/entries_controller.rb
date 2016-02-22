@@ -6,7 +6,6 @@ class Admin::EntriesController < AdminController
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_crop_options, only: [:edit, :photo]
 
-  after_action :enqueue_jobs, only: [:create, :publish]
   after_action :update_position, only: [:publish, :queue, :draft, :create]
 
   skip_before_action :require_login, only: [:preview]
@@ -50,6 +49,7 @@ class Admin::EntriesController < AdminController
   # PATCH /admin/entries/1/publish
   def publish
     if @entry.publish
+      @entry.enqueue_jobs
       flash[:notice] = 'Your entry was published!'
     else
       flash[:alert] = 'Your entry couldn’t be published…'
@@ -84,6 +84,7 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save
+        @entry.enqueue_jobs
         flash[:notice] = 'Your entry was saved!'
         format.html { redirect_to get_redirect_url(@entry) }
       else
@@ -193,17 +194,6 @@ class Admin::EntriesController < AdminController
 
     def entry_params
       params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_500px, :post_to_facebook, :post_to_slack, :tweet_text, :show_in_map, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :crop])
-    end
-
-    def enqueue_jobs
-      if @entry.is_published? && @entry.is_photo?
-        TwitterJob.perform_later(@entry) if @entry.post_to_twitter
-        TumblrJob.perform_later(@entry) if @entry.post_to_tumblr
-        BufferJob.perform_later(@entry, 'facebook') if @entry.post_to_facebook
-        FlickrJob.perform_later(@entry) if @entry.post_to_flickr
-        FiveHundredJob.perform_later(@entry) if @entry.post_to_500px
-        SlackIncomingWebhook.post_all(@entry) if @entry.post_to_slack
-      end
     end
 
     def update_position

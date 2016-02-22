@@ -12,7 +12,7 @@ class SlackJob < ApplicationJob
     }
     attachment[:text] = entry.plain_body if entry.body.present?
     payload[:attachments] = [attachment]
-    request = HTTParty.post(webhook.url, body: payload.to_json) if Rails.env.production?
+    request = HTTParty.post(webhook.url, body: payload.to_json) unless Rails.env.test?
     webhook.destroy if request.code == 404
   end
 end

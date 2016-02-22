@@ -4,13 +4,8 @@ namespace :queue do
     entry = Entry.queued.first
     if entry.nil?
       puts 'There are no posts in the queue.'
-    elsif entry.publish && entry.is_photo?
-      TwitterJob.perform_later(entry) if entry.post_to_twitter
-      TumblrJob.perform_later(entry) if entry.post_to_tumblr
-      BufferJob.perform_later(entry, 'facebook') if entry.post_to_facebook
-      FlickrJob.perform_later(entry) if entry.post_to_flickr
-      FiveHundredJob.perform_later(entry) if entry.post_to_500px
-      SlackIncomingWebhook.post_all(entry) if entry.post_to_slack
+    elsif entry.publish
+      entry.enqueue_jobs
       puts "Entry \"#{entry.title}\" published successfully."
     else
       puts 'Queued entry failed to publish.'
