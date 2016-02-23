@@ -139,14 +139,30 @@ class Admin::EntriesControllerTest < ActionController::TestCase
 
     post :down, id: entry.id
     assert_equal assigns(:entry).position, 2
+    assert_redirected_to queued_admin_entries_path
 
     post :up, id: entry.id
     assert_equal assigns(:entry).position, 1
+    assert_redirected_to queued_admin_entries_path
 
     post :bottom, id: entry.id
     assert_equal assigns(:entry).position, 3
+    assert_redirected_to queued_admin_entries_path
 
     post :top, id: entry.id
     assert_equal assigns(:entry).position, 1
+    assert_redirected_to queued_admin_entries_path
+  end
+
+  test 'should share on twitter' do
+    entry = entries(:peppers)
+    post :tweet, id: entry.id
+    assert_redirected_to share_admin_entry_path, id: entry.id
+  end
+
+  test 'should share on facebook' do
+    entry = entries(:peppers)
+    post :facebook, id: entry.id
+    assert_redirected_to share_admin_entry_path, id: entry.id
   end
 end
