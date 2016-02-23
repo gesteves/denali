@@ -139,6 +139,7 @@ GEM
     mimemagic (0.3.0)
     mini_portile2 (2.0.0)
     minitest (5.8.4)
+    mock_redis (0.16.0)
     mono_logger (1.1.0)
     multi_json (1.11.2)
     multi_xml (0.5.5)
@@ -331,6 +332,7 @@ DEPENDENCIES
   jquery-rails
   kaminari
   lograge
+  mock_redis
   newrelic_rpm
   oauth
   omniauth-google-oauth2
