@@ -36,3 +36,4 @@ exclude_paths:
 - app/assets/javascripts/vendors/*
 - db/schema.rb
 - bin/*
+- test/*
