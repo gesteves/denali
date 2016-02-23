@@ -41,6 +41,7 @@ panda:
   post_to_flickr: true
   post_to_500px: true
   post_to_slack: true
+  position: 1
 
 franklin:
   title: Ben Franklin in front of the Old Post Office, Washington, DC. July 6th, 2011.

@@ -132,4 +132,26 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal entry.plain_body, 'This is the body you’re looking for.'
     assert_equal entry.formatted_content, "<p>This is the <em>title</em> you&rsquo;re looking for</p>\n\n<p>This is the <em>body</em> you&rsquo;re looking for.</p>\n"
   end
+
+  test 'entry positioning should work' do
+    blog = blogs(:allencompassingtrip)
+    entry_1 = entries(:panda)
+
+    entry_2 = Entry.new(title: 'test 1', status: 'queued', blog_id: blog.id)
+    entry_2.save
+    entry_3 = Entry.new(title: 'test 2', status: 'queued', blog_id: blog.id)
+    entry_3.save
+
+    entry_1.move_lower
+    assert_equal entry_1.position, 2
+
+    entry_1.move_higher
+    assert_equal entry_1.position, 1
+
+    entry_1.move_to_bottom
+    assert_equal entry_1.position, 3
+
+    entry_1.move_to_top
+    assert_equal entry_1.position, 1
+  end
 end
