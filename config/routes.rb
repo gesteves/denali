@@ -46,6 +46,7 @@ Rails.application.routes.draw do
   get '/rss'                           => 'entries#rss', defaults: { format: 'xml' }
   get '/sitemap'                       => 'entries#sitemap', defaults: { format: 'xml' }
   get '/about'                         => 'pages#about', :as => :about
+  get '/oembed'                        => 'oembed#show', :as => :oembed
 
   get '/admin'                         => 'admin#index'
   get '/auth/:provider/callback'       => 'sessions#create'
