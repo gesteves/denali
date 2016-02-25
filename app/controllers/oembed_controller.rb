@@ -7,7 +7,8 @@ class OembedController < ApplicationController
       raise ActiveRecord::RecordNotFound
     else
       @entry = @photoblog.entries.includes(:photos, :user).published.find(url[:id])
-      @url, @width, @height = get_photo_width(@entry, params[:maxwidth], params[:maxheight])
+      @url, @width, @height = get_photo(@entry, 1200, params[:maxwidth], params[:maxheight])
+      @thumb_url, @thumb_width, @thumb_height = get_photo(@entry, 150, params[:maxwidth], params[:maxheight])
 
       request.format = params[:format] || 'json'
       respond_to do |format|
@@ -19,11 +20,12 @@ class OembedController < ApplicationController
 
   private
 
-  def get_photo_width(entry, maxwidth, maxheight)
+  def get_photo(entry, default_width = 1200, maxwidth, maxheight)
     if entry.is_photo?
-      width = maxwidth || 600
+      width = maxwidth.present? ? [maxwidth.to_i, default_width].min : default_width
       url = entry.photos.first.url(width, maxheight)
-      height = maxheight || ((entry.photos.first.height.to_f * width.to_f)/entry.photos.first.width.to_f).round
+      default_height = ((entry.photos.first.height.to_f * width.to_f)/entry.photos.first.width.to_f).round
+      height = maxheight.present? ? [maxheight.to_i, default_height].min : default_height
     end
     return url, width, height
   end
