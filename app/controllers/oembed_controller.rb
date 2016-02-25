@@ -21,7 +21,7 @@ class OembedController < ApplicationController
 
   def get_photo_width(entry, maxwidth, maxheight)
     if entry.is_photo?
-      width = maxwidth || 1200
+      width = maxwidth || 600
       url = entry.photos.first.url(width, maxheight)
       height = maxheight || ((entry.photos.first.height.to_f * width.to_f)/entry.photos.first.width.to_f).round
     end
