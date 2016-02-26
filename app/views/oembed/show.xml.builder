@@ -4,6 +4,9 @@ xml.ombed do
   xml.version '1.0'
   xml.title @entry.plain_title
   xml.author @entry.user.name
+  xml.author_url root_url
+  xml.provider @entry.blog.name
+  xml.provider_url root_url
   if @entry.is_photo?
     xml.thumbnail_url @thumb_url
     xml.thumbnail_width @thumb_width
