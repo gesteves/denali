@@ -4,7 +4,7 @@ xml.ombed do
   xml.version '1.0'
   xml.title @entry.plain_title
   xml.author_name @entry.user.name
-  xml.author_url root_url
+  xml.author_url about_url
   xml.provider_name @entry.blog.name
   xml.provider_url root_url
   if @entry.is_photo?
