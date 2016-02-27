@@ -60,6 +60,14 @@ class Photo < ActiveRecord::Base
     self.width < self.height
   end
 
+  def height_from_width(width)
+    ((self.height.to_f * width.to_f)/self.width.to_f).round
+  end
+
+  def width_from_height(height)
+    ((self.width.to_f * height.to_f)/self.height.to_f).round
+  end
+
   private
   def set_image
     if self.source_url.present?

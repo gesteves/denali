@@ -25,12 +25,21 @@ class OembedController < ApplicationController
     end
   end
 
-  def get_photo(entry, default_width = 1200, maxwidth, maxheight)
+  def get_photo(entry, width = 1200, maxwidth, maxheight)
     if entry.is_photo?
-      width = maxwidth.present? ? [maxwidth.to_i, default_width].min : default_width
-      url = entry.photos.first.url(width, maxheight)
-      default_height = ((entry.photos.first.height.to_f * width.to_f)/entry.photos.first.width.to_f).round
-      height = maxheight.present? ? [maxheight.to_i, default_height].min : default_height
+      height = entry.photos.first.height_from_width(width)
+
+      if maxwidth.present? && maxwidth.to_i < width
+        width = maxwidth.to_i
+        height = entry.photos.first.height_from_width(width)
+      end
+
+      if maxheight.present? && maxheight.to_i < height
+        height = maxheight.to_i
+        width = entry.photos.first.width_from_height(height)
+      end
+
+      url = entry.photos.first.url(width: width, height: height)
     end
     return url, width, height
   end
