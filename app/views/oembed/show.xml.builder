@@ -3,9 +3,9 @@ xml.ombed do
   xml.type @entry.is_photo? ? 'photo' : 'link'
   xml.version '1.0'
   xml.title @entry.plain_title
-  xml.author @entry.user.name
+  xml.author_name @entry.user.name
   xml.author_url root_url
-  xml.provider @entry.blog.name
+  xml.provider_name @entry.blog.name
   xml.provider_url root_url
   if @entry.is_photo?
     xml.thumbnail_url @thumb_url
