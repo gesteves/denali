@@ -43,6 +43,7 @@ class EntriesController < ApplicationController
   end
 
   def rss
+    expires_in 1.year, :public => true
     redirect_to entries_url(page: 1, format: 'atom'), status: 301
   end
 
