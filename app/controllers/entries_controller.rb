@@ -10,6 +10,7 @@ class EntriesController < ApplicationController
     respond_to do |format|
       format.html
       format.json
+      format.atom
     end
   end
 
@@ -27,6 +28,7 @@ class EntriesController < ApplicationController
     respond_to do |format|
       format.html
       format.json
+      format.atom
     end
   end
 
@@ -41,9 +43,7 @@ class EntriesController < ApplicationController
   end
 
   def rss
-    @entries = @photoblog.entries.includes(:photos, :user).published.page(1)
-    expires_in 60.minutes, :public => true
-    render format: 'atom'
+    redirect_to entries_url(page: 1, format: 'atom'), status: 301
   end
 
   def sitemap

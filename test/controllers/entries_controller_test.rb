@@ -24,9 +24,14 @@ class EntriesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should redirect old feed url" do
+    get :rss
+    assert_redirected_to entries_url page: 1, format: 'atom'
+  end
+
   test "should generate feed" do
-    get :rss, format: 'xml'
-    assert_template :rss
+    get :index, page: 1, format: 'atom'
+    assert_template :index
     assert_response :success
   end
 
@@ -70,6 +75,15 @@ class EntriesControllerTest < ActionController::TestCase
     entry.tag_list = 'washington'
     entry.save
     get :tagged, tag: 'washington', format: 'json'
+    assert_template :tagged
+    assert_response :success
+  end
+
+  test 'should render tag page feed' do
+    entry = entries(:peppers)
+    entry.tag_list = 'washington'
+    entry.save
+    get :tagged, tag: 'washington', format: 'atom'
     assert_template :tagged
     assert_response :success
   end

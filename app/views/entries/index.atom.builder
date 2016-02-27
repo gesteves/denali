@@ -1,14 +1,14 @@
-cache "rss/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+cache "entries/atom/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
   xml.instruct!
   xml.feed xmlns: 'http://www.w3.org/2005/Atom' do
     xml.id atom_tag(root_url, @photoblog.updated_at)
     xml.link rel: 'alternate', type: 'text/html', href: root_url
-    xml.link rel: 'self', type: 'application/atom+xml', href: rss_url
+    xml.link rel: 'self', type: 'application/atom+xml', href: entries_url(page: @page, format: 'atom')
     xml.title @photoblog.name
     xml.updated @photoblog.updated_at.utc.strftime('%FT%TZ')
 
     @entries.each do |e|
-      cache "entry/rss/#{e.id}/#{e.updated_at.to_i}" do
+      cache "entry/atom/#{e.id}/#{e.updated_at.to_i}" do
         xml.entry do
           xml.id atom_tag(e.permalink_url, e.updated_at)
           xml.published e.published_at.utc.strftime('%FT%TZ')

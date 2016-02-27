@@ -39,14 +39,16 @@ Rails.application.routes.draw do
   get '/tagged/:tag(/count/:count)'    => 'entries#tagged', constraints: { count: /\d+/ }
   get '/e/:id'                         => 'entries#show',   constraints: { id: /\d+/ }, :as => :entry
   get '/:year/:month/:day/:id(/:slug)' => 'entries#show',   constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, :as => :entry_long
-  get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
   get '/map'                           => 'maps#index', :as => :map
   get '/map/photos.:format'            => 'maps#photos'
   get '/slack'                         => 'slack#index', :as => :slack
-  get '/rss'                           => 'entries#rss', defaults: { format: 'xml' }
   get '/sitemap'                       => 'entries#sitemap', defaults: { format: 'xml' }
   get '/about'                         => 'pages#about', :as => :about
   get '/oembed'                        => 'oembed#show', :as => :oembed
+
+  # Redirects
+  get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
+  get '/rss'                           => 'entries#rss'
 
   get '/admin'                         => 'admin#index'
   get '/auth/:provider/callback'       => 'sessions#create'
