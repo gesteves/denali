@@ -1,23 +1,23 @@
 <% content_for :meta do %>
   <% cache "entries/meta/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <title><%= @photoblog.name %><%= raw " &middot Page #{@page}" unless @page.nil? || @page == 1 %></title>
-    <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>" />
     <link rel="canonical" href="<%= root_url %>">
 
-    <meta property="og:title" content="<%= @photoblog.name %>">
-    <meta property="og:image" content="<%= image_url 'cover.png' %>">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="628">
-    <meta property="og:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
-    <meta property="og:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>">
-    <meta property="og:type" content="Website">
-    <meta property="og:site_name" content="<%= @photoblog.name %>">
-    <meta property="og:locale" content="en_US">
+    <meta property="og:title" content="<%= @photoblog.name %>" />
+    <meta property="og:image" content="<%= image_url 'cover.png' %>" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="628" />
+    <meta property="og:description" content="<%= Sanitize.fragment(@photoblog.description) %>" />
+    <meta property="og:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>" />
+    <meta property="og:type" content="Website" />
+    <meta property="og:site_name" content="<%= @photoblog.name %>" />
+    <meta property="og:locale" content="en_US" />
 
     <meta name="twitter:site" content="@gesteves">
     <meta name="twitter:creator" content="@gesteves">
     <meta name="twitter:title" content="<%= @photoblog.name %>">
-    <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>">
+    <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>" />
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
     <meta name="twitter:card" content="summary_large_image">
