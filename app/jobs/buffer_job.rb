@@ -25,8 +25,8 @@ class BufferJob < ApplicationJob
 
   def build_media(entry)
     {
-      picture: entry.photos.first.url(2048),
-      thumbnail: entry.photos.first.url(512, 512)
+      picture: entry.photos.first.url(width: 2048),
+      thumbnail: entry.photos.first.url(width: 512)
     }
   end
 

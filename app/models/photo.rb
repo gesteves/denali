@@ -29,14 +29,14 @@ class Photo < ActiveRecord::Base
     self.image.path
   end
 
-  def url(width, height = nil, quality = 90)
-    path = Ix.path(self.original_path).width(width).q(quality).auto('format')
-    if height.nil?
-      path.fit = 'max'
-    else
-      path.height = height
-      path.fit = 'crop'
+  def url(opts)
+    opts.reverse_merge!(width: 1200, quality: 90, fit: 'max', auto: 'format', client_hints: nil, square: false)
+    if opts[:square]
+      opts[:height] = opts[:width]
+      opts[:fit] = 'crop'
     end
+    path = Ix.path(self.original_path).width(opts[:width]).q(opts[:quality]).auto(opts[:auto]).fit(opts[:fit])
+    path.height = opts[:height] if opts[:height].present?
     path.to_url
   end
 

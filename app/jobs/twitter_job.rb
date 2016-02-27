@@ -12,7 +12,7 @@ class TwitterJob < ApplicationJob
     tweet = build_tweet(entry, config)
     width = config.photo_sizes[:large].w
     opts = set_coordinates(entry.photos.first)
-    twitter.update_with_media(tweet, File.new(open(entry.photos.first.url(width)).path), opts) if Rails.env.production?
+    twitter.update_with_media(tweet, File.new(open(entry.photos.first.url(width: width)).path), opts) if Rails.env.production?
   end
 
   def build_tweet(entry, config)

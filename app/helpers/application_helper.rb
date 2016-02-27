@@ -11,7 +11,7 @@ module ApplicationHelper
     quality = PHOTOS[photo_key]['quality'] || 90
     square = PHOTOS[photo_key]['square'].present?
     width = PHOTOS[photo_key]['src']
-    build_imgix_url(photo, width, quality, square)
+    photo.url(width: width, quality: quality, square: square)
   end
 
   def get_srcset(photo, photo_key)
@@ -21,21 +21,8 @@ module ApplicationHelper
     PHOTOS[photo_key]['srcset'].
       uniq.
       sort.
-      map { |width| "#{build_imgix_url(photo, width, quality, square, client_hints)} #{width}w" }.
+      map { |width| "#{photo.url(width: width, quality: quality, square: square, client_hints: client_hints)} #{width}w" }.
       join(', ')
-  end
-
-  def build_imgix_url(photo, width, quality, square, client_hints = nil)
-    imgix_path = Ix.path(photo.original_path).auto('format').q(quality)
-    if square
-      imgix_path.fit = 'crop'
-      imgix_path.crop = photo.crop unless photo.crop.blank?
-      imgix_path.height = width
-    else
-      imgix_path.fit = 'max'
-    end
-    imgix_path.ch(client_hints) if client_hints.present?
-    imgix_path.width(width).to_url
   end
 
   def get_sizes(photo_key)
@@ -81,7 +68,7 @@ module ApplicationHelper
   def pinterest_share_url(entry)
     params = {
       url: entry.permalink_url,
-      media: entry.photos.first.url(2560),
+      media: entry.photos.first.url(width: 2560),
       description: entry.plain_title
     }
 

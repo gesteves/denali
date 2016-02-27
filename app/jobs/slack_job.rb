@@ -7,7 +7,7 @@ class SlackJob < ApplicationJob
       fallback: "#{entry.plain_title} #{entry.permalink_url}",
       title: entry.plain_title,
       title_link: entry.permalink_url,
-      image_url: entry.photos.first.url(800),
+      image_url: entry.photos.first.url(width: 800),
       color: '#BF0222'
     }
     attachment[:text] = entry.plain_body if entry.body.present?
