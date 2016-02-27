@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width" />
-  <meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width" />
+  <meta name="viewport" content="width=device-width">
+  <meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width">
   <title><%= @page_title.nil? ? '' : raw("#{@page_title} &middot; ") %><%= @photoblog.name %></title>
   <%= stylesheet_link_tag 'admin', media: 'all' %>
   <%= csrf_meta_tags %>
