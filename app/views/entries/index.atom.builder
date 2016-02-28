@@ -1,10 +1,16 @@
 cache "entries/atom/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
   xml.instruct!
   xml.feed xmlns: 'http://www.w3.org/2005/Atom' do
-    xml.id atom_tag(root_url, @photoblog.updated_at)
-    xml.link rel: 'alternate', type: 'text/html', href: root_url
+    if @page.nil? || @page == 1
+      xml.id atom_tag(root_url, @photoblog.updated_at)
+      xml.title @photoblog.name
+      xml.link rel: 'alternate', type: 'text/html', href: root_url
+    else
+      xml.id atom_tag(entries_url(page: @page), @photoblog.updated_at)
+      xml.title "#{@photoblog.name} - Page #{@page}"
+      xml.link rel: 'alternate', type: 'text/html', href: entries_url(page: @page)
+    end
     xml.link rel: 'self', type: 'application/atom+xml', href: entries_url(page: @page, format: 'atom')
-    xml.title @photoblog.name
     xml.updated @photoblog.updated_at.utc.strftime('%FT%TZ')
 
     @entries.each do |e|
