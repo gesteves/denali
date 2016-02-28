@@ -69,13 +69,13 @@ class EntriesController < ApplicationController
 
   def load_entries
     @page = (params[:page] || 1).to_i
-    @count = params[:count].to_i || @photoblog.posts_per_page
+    @count = (params[:count] || @photoblog.posts_per_page).to_i
     @entries = @photoblog.entries.includes(:photos).published.page(@page).per(@count)
   end
 
   def load_tagged_entries
     @page = (params[:page] || 1).to_i
-    @count = params[:count].to_i || @photoblog.posts_per_page
+    @count = (params[:count] || @photoblog.posts_per_page).to_i
     @entries = @photoblog.entries.includes(:photos).published.tagged_with(@tag_list, any: true).page(@page).per(@count)
   end
 end
