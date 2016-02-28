@@ -27,6 +27,7 @@
     <meta name="twitter:card" content="<%= @entry.is_text? ? "summary" : "summary_large_image" %>">
     <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode @entry.permalink_url}&format=json" %>">
     <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode @entry.permalink_url}&format=xml" %>">
+    <%= auto_discovery_link_tag :atom, entries_url(page: 1, format: 'atom'), title: @photoblog.name %>
   <% end %>
 <% end %>
 

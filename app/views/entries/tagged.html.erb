@@ -21,6 +21,7 @@
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
     <meta name="twitter:card" content="summary_large_image">
+    <%= auto_discovery_link_tag :atom, tag_url(page: 1, format: 'atom'), title: "#{@photoblog.name} - Entries tagged “#{@tags.first.name}”" %>
   <% end %>
 <% end %>
 
