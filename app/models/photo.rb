@@ -35,8 +35,9 @@ class Photo < ActiveRecord::Base
       opts[:height] = opts[:width]
       opts[:fit] = 'crop'
     end
-    path = Ix.path(self.original_path).width(opts[:width]).q(opts[:quality]).auto(opts[:auto]).fit(opts[:fit])
+    path = Ix.path(self.original_path).q(opts[:quality]).auto(opts[:auto]).fit(opts[:fit]).width(opts[:width])
     path.height = opts[:height] if opts[:height].present?
+    path.crop = opts[:crop] if opts[:crop].present? && opts[:square]
     path.to_url
   end
 

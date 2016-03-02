@@ -17,11 +17,12 @@ module ApplicationHelper
   def get_srcset(photo, photo_key)
     quality = PHOTOS[photo_key]['quality'] || 90
     square = PHOTOS[photo_key]['square'].present?
+    crop = photo.crop unless photo.crop.blank?
     client_hints = PHOTOS[photo_key]['client_hints']
     PHOTOS[photo_key]['srcset'].
       uniq.
       sort.
-      map { |width| "#{photo.url(width: width, quality: quality, square: square, client_hints: client_hints)} #{width}w" }.
+      map { |width| "#{photo.url(width: width, quality: quality, square: square, client_hints: client_hints, crop: crop)} #{width}w" }.
       join(', ')
   end
 
