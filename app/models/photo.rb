@@ -20,7 +20,6 @@ class Photo < ActiveRecord::Base
 
   before_create :set_image
   after_image_post_process :save_exif, :save_dimensions
-  after_commit :enqueue_color_job, if: Proc.new { |photo| photo.present? && photo.dominant_color.blank? }
 
   def original_url
     self.image.url
@@ -70,14 +69,6 @@ class Photo < ActiveRecord::Base
     ((self.width.to_f * height.to_f)/self.height.to_f).round
   end
 
-  def color
-    if self.dominant_color.present?
-      self.dominant_color
-    else
-      '#f4f4f4'
-    end
-  end
-
   private
   def set_image
     if self.source_url.present?
@@ -124,9 +115,5 @@ class Photo < ActiveRecord::Base
     film_type = comment_array.select{ |c| c =~ /^film type/i }
     self.film_make = film_make.try(:first).try(:gsub, /^film make:/i, '').try(:strip)
     self.film_type = film_type.try(:first).try(:gsub, /^film type:/i, '').try(:strip)
-  end
-
-  def enqueue_color_job
-    DominantColorJob.perform_later(self)
   end
 end
