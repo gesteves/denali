@@ -59,8 +59,7 @@ namespace :export do
         puts "Entry \"#{entry.title}\" queued for export to Pinterest."
       end
     elsif ENV['OLDEST_ENTRY_ID'].present?
-      id = ENV['OLDEST_ENTRY_ID'].to_i + (50 * (Time.now.day - 4))
-      entries = Entry.published('published_at ASC').where('id > ?', id).photo_entries.limit(50)
+      entries = Entry.published('published_at ASC').where('id >= ?', ENV['OLDEST_ENTRY_ID']).photo_entries.limit(50)
       entries.each do |entry|
         PinterestJob.perform_later(entry)
       end
