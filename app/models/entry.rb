@@ -160,6 +160,7 @@ class Entry < ActiveRecord::Base
     self.enqueue_facebook
     self.enqueue_flickr
     self.enqueue_500px
+    self.enqueue_pinterest
     self.enqueue_slack
     true
   end
@@ -186,6 +187,10 @@ class Entry < ActiveRecord::Base
 
   def enqueue_slack
     SlackIncomingWebhook.post_all(self) if self.is_published? && self.is_photo? && self.post_to_slack
+  end
+
+  def enqueue_pinterest
+    PinterestJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_pinterest
   end
 
   private

@@ -1,4 +1,4 @@
-task :export => ['export:twitter', 'export:tumblr', 'export:facebook', 'export:flickr', 'export:fivehundredpx']
+task :export => ['export:twitter', 'export:tumblr', 'export:facebook', 'export:flickr', 'export:fivehundredpx', 'export:pinterest']
 
 namespace :export do
   task :twitter => [:environment] do
@@ -6,7 +6,7 @@ namespace :export do
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
         TwitterJob.perform_later(entry)
-        puts "Entry \"#{entry.title}\" exported to Twitter."
+        puts "Entry \"#{entry.title}\" queued for export to Twitter."
       end
     end
   end
@@ -16,7 +16,7 @@ namespace :export do
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
         TumblrJob.perform_later(entry)
-        puts "Entry \"#{entry.title}\" exported to Tumblr."
+        puts "Entry \"#{entry.title}\" queued for export to Tumblr."
       end
     end
   end
@@ -26,7 +26,7 @@ namespace :export do
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
         BufferJob.perform_later(entry, 'facebook')
-        puts "Entry \"#{entry.title}\" exported to Facebook."
+        puts "Entry \"#{entry.title}\" queued for export to Facebook."
       end
     end
   end
@@ -36,7 +36,7 @@ namespace :export do
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
         FlickrJob.perform_later(entry)
-        puts "Entry \"#{entry.title}\" exported to Flickr."
+        puts "Entry \"#{entry.title}\" queued for export to Flickr."
       end
     end
   end
@@ -46,7 +46,23 @@ namespace :export do
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
         FiveHundredJob.perform_later(entry)
-        puts "Entry \"#{entry.title}\" exported to 500px."
+        puts "Entry \"#{entry.title}\" queued for export to 500px."
+      end
+    end
+  end
+
+  task :pinterest => [:environment] do
+    if ENV['ENTRY_ID'].present?
+      entry = Entry.find(ENV['ENTRY_ID'])
+      if entry.present?
+        PinterestJob.perform_later(entry)
+        puts "Entry \"#{entry.title}\" queued for export to Pinterest."
+      end
+    elsif ENV['OLDEST_ENTRY_ID'].present?
+      id = ENV['OLDEST_ENTRY_ID'].to_i + (50 * (Time.now.day - 4))
+      entries = Entry.published('published_at ASC').where('id > ?', id).photo_entries.limit(50)
+      entries.each do |entry|
+        PinterestJob.perform_later(entry)
       end
     end
   end
