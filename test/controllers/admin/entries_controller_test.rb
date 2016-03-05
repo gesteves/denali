@@ -66,14 +66,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_template :edit
   end
 
-  test 'should render share entry page' do
-    get :share, id: @entry.id
-    assert_not_nil assigns(:entry)
-    assert_response :success
-    assert_template layout: 'layouts/admin'
-    assert_template :share
-  end
-
   test 'should render photo fields' do
     get :photo
     assert_response :success
@@ -152,17 +144,5 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     post :top, id: entry.id
     assert_equal assigns(:entry).position, 1
     assert_redirected_to queued_admin_entries_path
-  end
-
-  test 'should share on twitter' do
-    entry = entries(:peppers)
-    post :tweet, id: entry.id
-    assert_redirected_to share_admin_entry_path, id: entry.id
-  end
-
-  test 'should share on facebook' do
-    entry = entries(:peppers)
-    post :facebook, id: entry.id
-    assert_redirected_to share_admin_entry_path, id: entry.id
   end
 end

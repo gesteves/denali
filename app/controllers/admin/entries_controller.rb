@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :preview, :tweet, :facebook, :share]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :preview]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_crop_options, only: [:edit, :photo]
@@ -156,30 +156,6 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def share
-    @page_title = "Share “#{@entry.title}”"
-  end
-
-  def tweet
-    if @entry.is_published? && @entry.is_photo?
-      TwitterJob.perform_later(@entry)
-      flash[:notice] = 'Your entry was shared to Twitter!'
-    else
-      flash[:alert] = 'Your entry couldn’t be shared to Twitter…'
-    end
-    respond_to_share
-  end
-
-  def facebook
-    if @entry.is_published? && @entry.is_photo?
-      BufferJob.perform_later(@entry, 'facebook')
-      flash[:notice] = 'Your entry was shared to Facebook!'
-    else
-      flash[:alert] = 'Your entry couldn’t be shared to Facebook…'
-    end
-    respond_to_share
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
@@ -234,12 +210,6 @@ class Admin::EntriesController < AdminController
       respond_to do |format|
         format.html { redirect_to queued_admin_entries_path }
         format.js { render text: 'ok' }
-      end
-    end
-
-    def respond_to_share
-      respond_to do |format|
-        format.html { redirect_to share_admin_entry_path(@entry) }
       end
     end
 end

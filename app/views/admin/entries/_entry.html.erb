@@ -34,9 +34,7 @@
           </div>
         <% end %>
         <div class="entry__actions">
-          <% if entry.is_published? %>
-            <%= link_to 'Share', share_admin_entry_path(entry.id) %>
-          <% else %>
+          <% unless entry.is_published? %>
             <%= link_to 'Preview', preview_admin_entry_path(entry) %>
           <% end %>
           <%= link_to 'Edit', edit_admin_entry_path(entry) %>
