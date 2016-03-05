@@ -58,12 +58,6 @@ namespace :export do
         PinterestJob.perform_later(entry)
         puts "Entry \"#{entry.title}\" queued for export to Pinterest."
       end
-    elsif ENV['OLDEST_ENTRY_ID'].present?
-      limit = ENV['LIMIT'] || 50
-      entries = Entry.published('id ASC').where('id >= ?', ENV['OLDEST_ENTRY_ID']).photo_entries.limit(limit)
-      entries.each do |entry|
-        PinterestJob.perform_later(entry)
-      end
     end
   end
 end
