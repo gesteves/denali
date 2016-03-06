@@ -11,18 +11,18 @@ module ApplicationHelper
     quality = PHOTOS[photo_key]['quality'] || 90
     square = PHOTOS[photo_key]['square'].present?
     width = PHOTOS[photo_key]['src']
-    photo.url(width: width, quality: quality, square: square)
+    photo.url(w: width, q: quality, square: square)
   end
 
   def get_srcset(photo, photo_key)
-    quality = PHOTOS[photo_key]['quality'] || 90
+    quality = PHOTOS[photo_key]['quality']
     square = PHOTOS[photo_key]['square'].present?
-    crop = photo.crop unless photo.crop.blank?
+    crop = photo.crop
     client_hints = PHOTOS[photo_key]['client_hints']
     PHOTOS[photo_key]['srcset'].
       uniq.
       sort.
-      map { |width| "#{photo.url(width: width, quality: quality, square: square, client_hints: client_hints, crop: crop)} #{width}w" }.
+      map { |width| "#{photo.url(w: width, q: quality, square: square, ch: client_hints, crop: crop)} #{width}w" }.
       join(', ')
   end
 
@@ -69,7 +69,7 @@ module ApplicationHelper
   def pinterest_share_url(entry)
     params = {
       url: entry.permalink_url,
-      media: entry.photos.first.url(width: 2560),
+      media: entry.photos.first.url(w: 2560),
       description: entry.plain_title
     }
 

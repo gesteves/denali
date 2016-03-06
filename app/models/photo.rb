@@ -30,15 +30,13 @@ class Photo < ActiveRecord::Base
   end
 
   def url(opts)
-    opts.reverse_merge!(width: 1200, quality: 90, fit: 'max', auto: 'format', client_hints: nil, square: false)
+    opts.reverse_merge!(w: 1200, q: 90, auto: 'format', square: false)
     if opts[:square]
-      opts[:height] = opts[:width]
+      opts[:h] = opts[:w]
       opts[:fit] = 'crop'
+      opts.delete(:square)
     end
-    path = Ix.path(self.original_path).q(opts[:quality]).auto(opts[:auto]).fit(opts[:fit]).width(opts[:width])
-    path.height = opts[:height] if opts[:height].present?
-    path.crop = opts[:crop] if opts[:crop].present? && opts[:square]
-    path.to_url
+    Ix.path(self.original_path).to_url(opts.reject { |k,v| v.blank? })
   end
 
   def formatted_caption
