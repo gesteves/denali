@@ -20,6 +20,7 @@ class Photo < ActiveRecord::Base
 
   before_create :set_image
   after_image_post_process :save_exif, :save_dimensions
+  after_commit :get_dominant_color, if: Proc.new { |photo| photo.present? && photo.dominant_color.blank? }
 
   def original_url
     self.image.url
@@ -67,6 +68,10 @@ class Photo < ActiveRecord::Base
 
   def width_from_height(height)
     ((self.width.to_f * height.to_f)/self.height.to_f).round
+  end
+
+  def get_dominant_color
+    DominantColorJob.perform_later(self)
   end
 
   private
