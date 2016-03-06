@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160306001454) do
+ActiveRecord::Schema.define(version: 20160306143828) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -78,7 +78,6 @@ ActiveRecord::Schema.define(version: 20160306001454) do
     t.string   "film_make"
     t.string   "film_type"
     t.string   "crop"
-    t.string   "dominant_color"
   end
 
   add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"

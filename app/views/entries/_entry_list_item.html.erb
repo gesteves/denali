@@ -1,6 +1,6 @@
 <% cache "entry/list/#{entry_list_item.id}/#{entry_list_item.updated_at.to_i}" do %>
   <li class="entry-list__item">
-    <a class="entry-list__link <%= entry_list_item.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= entry_list_item.permalink_url %>" <%= entry_color(entry_list_item) %>>
+    <a class="entry-list__link <%= entry_list_item.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= entry_list_item.permalink_url %>">
       <% if entry_list_item.is_photo? %>
         <figure class="entry-list__photo">
           <%= responsive_image_tag entry_list_item.photos.first,

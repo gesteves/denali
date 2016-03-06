@@ -36,11 +36,4 @@ module EntriesHelper
     tag[0] = "tag:#{tag[0]},#{date.strftime('%Y-%m-%d')}:"
     tag.join('/')
   end
-
-  def entry_color(entry)
-    if entry.is_photo?
-      color = entry.photos.first.dominant_color || '#f4f4f4'
-      "style=background-color:#{color};"
-    end
-  end
 end
