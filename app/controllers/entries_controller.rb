@@ -6,7 +6,6 @@ class EntriesController < ApplicationController
   before_action :set_max_age, only: [:index, :tagged, :show]
 
   def index
-    raise ActiveRecord::RecordNotFound if @entries.empty?
     respond_to do |format|
       format.html
       format.json
