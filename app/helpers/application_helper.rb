@@ -17,7 +17,7 @@ module ApplicationHelper
   def get_srcset(photo, photo_key)
     quality = PHOTOS[photo_key]['quality']
     square = PHOTOS[photo_key]['square'].present?
-    crop = photo.crop
+    crop = photo.crop if square
     client_hints = PHOTOS[photo_key]['client_hints']
     PHOTOS[photo_key]['srcset'].
       uniq.
