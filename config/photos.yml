@@ -22,7 +22,7 @@ entry:
     - "(min-width: 1440px) 1440px"
     - 100vw
   quality: 90
-  client_hints: "Width,DPR"
+  client_hints: "Width,DPR,Save-Data"
 entry_list_item:
   src: 355
   srcset:
@@ -45,6 +45,7 @@ entry_list_item:
     - calc((100vw - 12px)/2)
   quality: 50
   square: Yes
+  client_hints: "Save-Data"
 admin_entry:
   src: 560
   srcset:
@@ -58,7 +59,7 @@ admin_entry:
     - "(min-width: 840px) 800px"
     - calc(100vw - 40px)
   quality: 60
-  client_hints: "Width,DPR"
+  client_hints: "Width,DPR,Save-Data"
 admin_edit:
   src: 300
   srcset:
@@ -73,7 +74,7 @@ admin_edit:
     - "(min-width: 800px) 300px"
     - calc(100vw - 60px)
   quality: 60
-  client_hints: "Width,DPR"
+  client_hints: "Width,DPR,Save-Data"
 map:
   src: 300
   srcset:
@@ -84,3 +85,4 @@ map:
     - 300px
   quality: 60
   square: Yes
+  client_hints: "Save-Data"
