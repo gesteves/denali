@@ -43,4 +43,39 @@ json.relationships do
       end
     end
   end
+  json.tags do
+    json.data do
+      json.array! entry.tags do |t|
+        json.type 'tag'
+        json.(t, :id)
+        json.attributes do
+          json.(t, :name)
+          json.(t, :slug)
+          json.(t, :taggings_count)
+        end
+        json.links do
+          json.self tag_url(t.slug)
+        end
+      end
+    end
+  end
+  json.user do
+    json.data do
+      json.type 'user'
+      json.id entry.user.id
+      json.attributes do
+        json.name entry.user.name
+      end
+    end
+  end
+  json.blog do
+    json.data do
+      json.type 'blog'
+      json.id entry.blog.id
+      json.attributes do
+        json.name entry.blog.name
+        json.description entry.blog.description
+      end
+    end
+  end
 end
