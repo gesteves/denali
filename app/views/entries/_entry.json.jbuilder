@@ -1,5 +1,5 @@
 json.type 'entry'
-json.(entry, :id)
+json.id entry.id.to_s
 json.attributes do
   json.(entry, :title)
   json.(entry, :plain_title)
@@ -17,7 +17,7 @@ json.relationships do
     json.data do
       json.array! entry.photos do |p|
         json.type 'photo'
-        json.(p, :id)
+        json.id p.id.to_s
         json.attributes do
           json.(p, :caption)
           json.(p, :formatted_caption)
@@ -49,7 +49,7 @@ json.relationships do
     json.data do
       json.array! entry.tags do |t|
         json.type 'tag'
-        json.(t, :id)
+        json.id t.id.to_s
         json.attributes do
           json.(t, :name)
           json.(t, :slug)
@@ -64,7 +64,7 @@ json.relationships do
   json.user do
     json.data do
       json.type 'user'
-      json.id entry.user.id
+      json.id entry.user.id.to_s
       json.attributes do
         json.name entry.user.name
       end
@@ -73,7 +73,7 @@ json.relationships do
   json.blog do
     json.data do
       json.type 'blog'
-      json.id entry.blog.id
+      json.id entry.blog.id.to_s
       json.attributes do
         json.name entry.blog.name
         json.description entry.blog.description
