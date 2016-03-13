@@ -31,8 +31,10 @@ json.relationships do
           json.(p, :focal_length)
           json.(p, :film_make)
           json.(p, :film_type)
-          json.(p, :latitude)
-          json.(p, :longitude)
+          if entry.show_in_map
+            json.(p, :latitude)
+            json.(p, :longitude)
+          end
           json.(p, :width)
           json.(p, :height)
           json.(p, :crop)
