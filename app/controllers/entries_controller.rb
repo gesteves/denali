@@ -1,6 +1,7 @@
 class EntriesController < ApplicationController
   include TagList
 
+  before_action :set_request_format, only: [:index, :tagged]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :load_entries, only: [:index]
   before_action :set_max_age, only: [:index, :tagged, :show]
@@ -76,5 +77,9 @@ class EntriesController < ApplicationController
     @page = (params[:page] || 1).to_i
     @count = (params[:count] || @photoblog.posts_per_page).to_i
     @entries = @photoblog.entries.includes(:photos).published.tagged_with(@tag_list, any: true).page(@page).per(@count)
+  end
+
+  def set_request_format
+    request.format = 'json' if request.headers['Content-Type'].try(:downcase) == 'application/vnd.api+json'
   end
 end
