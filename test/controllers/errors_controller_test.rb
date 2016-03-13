@@ -5,20 +5,20 @@ class ErrorsControllerTest < ActionController::TestCase
     get :file_not_found
     assert_response 404
     assert_template layout: 'layouts/application'
-    assert_template :file_not_found
+    assert_template :error
   end
 
   test 'should render 422 page' do
     get :unprocessable
     assert_response 422
     assert_template layout: 'layouts/application'
-    assert_template :unprocessable
+    assert_template :error
   end
 
   test 'should render 500 page' do
     get :internal_server_error
     assert_response 500
     assert_template layout: 'layouts/application'
-    assert_template :internal_server_error
+    assert_template :error
   end
 end

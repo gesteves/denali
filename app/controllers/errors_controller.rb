@@ -1,13 +1,19 @@
 class ErrorsController < ApplicationController
   def file_not_found
-    render status: 404
+    @errors = [{ status: 404, message: 'Page not found' }]
+    render 'error', status: @errors.first[:status]
   end
 
   def unprocessable
-    render status: 422
+    @errors = [{ status: 422, message: 'Unprocessable entity' }]
+    render 'error', status: @errors.first[:status]
   end
 
   def internal_server_error
-    render status: 500
+    @status = 500
+    @message = 'Internal server error'
+    @errors = [{ status: 500, message: 'Internal server error' }]
+    render 'error', status: @errors.first[:status]
   end
+
 end
