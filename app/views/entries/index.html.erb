@@ -22,6 +22,7 @@
     <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
     <meta name="twitter:card" content="summary_large_image">
     <%= auto_discovery_link_tag :atom, entries_url(page: 1, format: 'atom'), title: @photoblog.name %>
+    <link rel="alternate" type="application/vnd.api+json" href="<%= @page == 1 ? entries_url : entries_url(page: @page) %>" %>
   <% end %>
 <% end %>
 
