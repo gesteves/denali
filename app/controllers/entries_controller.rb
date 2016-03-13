@@ -1,7 +1,7 @@
 class EntriesController < ApplicationController
   include TagList
 
-  before_action :set_request_format, only: [:index, :tagged]
+  before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :load_entries, only: [:index]
   before_action :set_max_age, only: [:index, :tagged, :show]
@@ -20,6 +20,7 @@ class EntriesController < ApplicationController
       format.html {
         redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
       }
+      format.json
     end
   end
 
