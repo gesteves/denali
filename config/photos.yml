@@ -22,7 +22,7 @@ entry:
     - "(min-width: 1440px) 1440px"
     - 100vw
   quality: 90
-  client_hints: "Width,DPR,Save-Data"
+  client_hints: "Save-Data"
 entry_list_item:
   src: 355
   srcset:
@@ -59,7 +59,7 @@ admin_entry:
     - "(min-width: 840px) 800px"
     - calc(100vw - 40px)
   quality: 60
-  client_hints: "Width,DPR,Save-Data"
+  client_hints: "Save-Data"
 admin_edit:
   src: 300
   srcset:
@@ -74,7 +74,7 @@ admin_edit:
     - "(min-width: 800px) 300px"
     - calc(100vw - 60px)
   quality: 60
-  client_hints: "Width,DPR,Save-Data"
+  client_hints: "Save-Data"
 map:
   src: 300
   srcset:
