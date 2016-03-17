@@ -11,9 +11,6 @@
     <link href="<%= image_path 'icon-76.png' %>" rel="apple-touch-icon" sizes="76x76">
     <link href="<%= image_path "favicon.png" %>" rel="icon" type="image/png">
     <%= render partial: 'entries/entry_meta.html.erb', locals: { entry: @entry } %>
-    <script type="application/ld+json">
-      <%= raw render partial: 'entries/entry_schema.json.jbuilder', locals: { entry: @entry } %>
-    </script>
     <style amp-custom>
       <%= Rails.application.assets['amp.css'].to_s.gsub('@charset "UTF-8";', '').html_safe %>
     </style>

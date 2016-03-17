@@ -28,4 +28,7 @@
   <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
   <link rel="amphtml" href="<%= entry.permalink_url(format: 'amp') %>">
   <link rel="canonical" href="<%= entry.permalink_url %>">
+  <script type="application/ld+json">
+    <%= raw render partial: 'entries/entry_schema.json.jbuilder', locals: { entry: entry } %>
+  </script>
 <% end %>
