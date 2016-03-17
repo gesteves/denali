@@ -24,9 +24,10 @@
     flex-grow: 1;
     margin-bottom: 45px;
     padding: 0 20px;
+    width: inherit;
 
     &:first-of-type {
-      width: auto;
+      width: inherit;
     }
   }
 }
@@ -63,7 +64,7 @@
   }
 
   @media (min-width: $bp-s) {
-    width: 33vw;
+    width: 100%;
   }
 
   @media (min-width: $bp-m) {
