@@ -42,4 +42,6 @@ Rails.application.configure do
 
   config.action_controller.perform_caching = false
   config.cache_store = :dalli_store
+
+  config.sass.line_comments = false
 end

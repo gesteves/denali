@@ -2,6 +2,7 @@
 @import 'base/variables';
 @import 'base/functions';
 @import 'base/mixins';
+@import 'blocks/entry';
 @import 'blocks/footer';
 @import 'blocks/tags';
 @import 'blocks/exif';
@@ -73,4 +74,3 @@ a:active {
     max-width: 420px;
   }
 }
-@import 'blocks/entry';
