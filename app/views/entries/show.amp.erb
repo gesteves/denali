@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
     <meta name="theme-color" content="#BF0222">
-    <meta http-equiv="Accept-CH" content="DPR, Width, Viewport-Width, Save-Data">
-    <link href="<%= image_path 'favicon.svg' %>" rel="mask-icon" color="#000000">
     <link href="<%= image_path 'icon-192.png' %>" rel="icon" sizes="192x192">
     <link href="<%= image_path 'icon-180.png' %>" rel="apple-touch-icon" sizes="180x180">
     <link href="<%= image_path 'icon-152.png' %>" rel="apple-touch-icon" sizes="152x152">
@@ -14,10 +12,7 @@
     <link href="<%= image_path "favicon.png" %>" rel="icon" type="image/png">
     <%= render partial: 'entries/entry_meta.html.erb', locals: { entry: @entry } %>
     <style amp-custom>
-      body {
-        margin: 0;
-        font-family: 'Georgia', Serif;
-      }
+      <%= Rails.application.assets['amp.css'].to_s.gsub('@charset "UTF-8";', '').html_safe %>
     </style>
     <script type="application/ld+json">
       {
@@ -34,8 +29,8 @@
     <script async src="https://cdn.ampproject.org/v0.js"></script>
   </head>
   <body>
-    <header>
-      <a href="/">
+    <header class="header">
+      <a href="/" class="header__link">
         <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
       </a>
     </header>
