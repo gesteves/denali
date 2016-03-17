@@ -30,7 +30,7 @@ class Photo < ActiveRecord::Base
   end
 
   def url(opts)
-    opts.reverse_merge!(w: 1200, q: 90, auto: 'format', square: false)
+    opts.reverse_merge!(w: 1200, auto: 'format', square: false)
     if opts[:square]
       opts[:h] = opts[:w]
       opts[:fit] = 'crop'
