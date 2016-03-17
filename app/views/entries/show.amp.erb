@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html ⚡ lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+    <meta name="theme-color" content="#BF0222">
+    <link href="<%= image_path 'icon-192.png' %>" rel="icon" sizes="192x192">
+    <link href="<%= image_path 'icon-180.png' %>" rel="apple-touch-icon" sizes="180x180">
+    <link href="<%= image_path 'icon-152.png' %>" rel="apple-touch-icon" sizes="152x152">
+    <link href="<%= image_path 'icon-120.png' %>" rel="apple-touch-icon" sizes="120x120">
+    <link href="<%= image_path 'icon-76.png' %>" rel="apple-touch-icon" sizes="76x76">
+    <link href="<%= image_path "favicon.png" %>" rel="icon" type="image/png">
+    <%= render partial: 'entries/entry_meta.html.erb', locals: { entry: @entry } %>
+    <script type="application/ld+json">
+      <%= raw render partial: 'entries/entry_schema.json.jbuilder', locals: { entry: @entry } %>
+    </script>
+    <style amp-custom>
+      <%= Rails.application.assets['amp.css'].to_s.gsub('@charset "UTF-8";', '').html_safe %>
+    </style>
+    <style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>
+    <script async src="https://cdn.ampproject.org/v0.js"></script>
+    <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+  </head>
+  <body>
+    <header class="header">
+      <a href="/" class="header__link">
+        <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
+      </a>
+    </header>
+    <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>">
+      <% @entry.photos.each do |photo| %>
+        <figure class="entry__photo">
+          <%= amp_image_tag photo,
+              'entry',
+              { alt: photo.caption.blank? ? @entry.title : photo.plain_caption, width: photo.width, height: photo.height } %>
+          <% unless photo.caption.blank? %>
+            <figcaption>
+              <%= raw photo.formatted_caption %>
+            </figcaption>
+          <% end %>
+        </figure>
+      <% end %>
+
+      <div class="entry__body">
+        <h1 class="entry__headline">
+          <% if @entry.is_text? %>
+            <%= link_to raw(@entry.plain_title), @entry.permalink_url %>
+          <% else %>
+            <%= raw(@entry.plain_title) %>
+          <% end %>
+        </h1>
+        <%= raw(@entry.formatted_body) unless @entry.body.blank? %>
+      </div>
+
+      <div class="entry__meta">
+        <%= render partial: 'entries/byline.html.erb', locals: { entry: @entry } %>
+        <%= render partial: 'entries/exif.html.erb', locals: { photo: @entry.photos.first } if @entry.photos.count == 1 %>
+        <%= render partial: 'entries/tags.html.erb', object: @entry.tags unless @entry.tags.blank? %>
+      </div>
+    </article>
+    <%= render partial: 'entries/entry_pagination.html.erb', object: @entry %>
+
+    <footer class="footer">
+        <p>&copy; 2009-<%= Time.now.strftime('%Y') %> <a href="http://www.gesteves.com" rel="me">Guillermo Esteves</a>. <a href="/">View the full site</a>.</p>
+    </footer>
+
+    <amp-analytics type="googleanalytics" id="analytics">
+    <script type="application/json">
+    {
+      "vars": {
+        "account": "<%= ENV['analytics_id'] %>"
+      },
+      "triggers": {
+        "trackPageview": {
+          "on": "visible",
+          "request": "pageview"
+        }
+      }
+    }
+    </script>
+    </amp-analytics>
+  </body>
+</html>

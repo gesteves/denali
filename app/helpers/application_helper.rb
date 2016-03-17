@@ -7,6 +7,13 @@ module ApplicationHelper
     content_tag :img, nil, html_options
   end
 
+  def amp_image_tag(photo, photo_key, html_options = {})
+    html_options[:srcset] = get_srcset(photo, photo_key)
+    html_options[:sizes] = get_sizes(photo_key)
+    html_options[:src] = get_src(photo, photo_key) unless PHOTOS[photo_key]['src'].nil?
+    content_tag 'amp-img', nil, html_options
+  end
+
   def get_src(photo, photo_key)
     quality = PHOTOS[photo_key]['quality'] || 90
     square = PHOTOS[photo_key]['square'].present?

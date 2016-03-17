@@ -20,7 +20,7 @@
 }
 
 .entry__headline {
-  font-family: 'kepler-std-display', 'Times New Roman', serif;
+  font-family: 'kepler-std-display', 'Georgia', serif;
   font-feature-settings: 'liga', 'clig';
   font-size: 20px;
   font-variant-ligatures: common-ligatures;
@@ -137,7 +137,7 @@
 
 .entry__related {
   border-top: 4px solid $color-border;
-  font-family: 'kepler-std-display', 'Times New Roman', serif;
+  font-family: 'kepler-std-display', 'Georgia', serif;
   font-feature-settings: 'liga', 'clig';
   font-size: 18px;
   font-variant-ligatures: common-ligatures;
@@ -188,7 +188,7 @@
   h4,
   h5,
   h6 {
-    font-family: 'kepler-std-display', 'Times New Roman', serif;
+    font-family: 'kepler-std-display', 'Georgia', serif;
     font-size: 18px;
     font-weight: 300;
     line-height: (24/18);
@@ -291,16 +291,6 @@
       font-size: 15px;
       line-height: (36/15);
       margin: (3.6rem/1.5) 0;
-    }
-  }
-
-  .twitter-tweet {
-    // scss-lint:disable ImportantRule
-    // Needed to override inline styles injected by Twitter in embedded tweets
-    margin: 24px auto 0 !important;
-
-    @media (min-width: $bp-m) {
-      margin: 36px auto 0 !important;
     }
   }
 }

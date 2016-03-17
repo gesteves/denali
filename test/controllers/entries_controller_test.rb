@@ -48,6 +48,18 @@ class EntriesControllerTest < ActionController::TestCase
     assert_select '.entry__headline', 1
   end
 
+  test 'photo amp page should render correctly' do
+    entry = entries(:peppers)
+    get :show, year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug, format: 'amp'
+    assert_response :success
+    assert_not_nil assigns(:entry)
+    assert_template layout: nil
+    assert_template :show
+    assert_select '.entry', 1
+    assert_select '.entry__photo', 1
+    assert_select '.entry__headline', 1
+  end
+
   test 'should redirect from tumblr url' do
     get :tumblr, tumblr_id: '17444976847'
     entry = entries(:peppers)
