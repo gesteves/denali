@@ -145,13 +145,15 @@ class Entry < ActiveRecord::Base
     entry_long_path(year, month, day, id, slug)
   end
 
-  def permalink_url
+  def permalink_url(opts = {})
+    opts.reverse_merge!(host: self.blog.domain)
     year, month, day, id, slug = self.slug_params
-    entry_long_url(year, month, day, id, slug, url_opts(self.blog.domain))
+    entry_long_url(year, month, day, id, slug, url_opts(opts))
   end
 
-  def short_permalink_url
-    entry_url(self.id, url_opts(self.blog.short_domain))
+  def short_permalink_url(opts = {})
+    opts.reverse_merge!(host: self.blog.short_domain)
+    entry_url(self.id, url_opts(opts))
   end
 
   def enqueue_jobs
@@ -195,17 +197,13 @@ class Entry < ActiveRecord::Base
 
   private
 
-  def url_opts(domain)
+  def url_opts(opts)
     if Rails.env.production?
-      {
-        protocol: Rails.configuration.force_ssl ? 'https' : 'http',
-        host: domain
-      }
+      opts.reverse_merge!(protocol: Rails.configuration.force_ssl ? 'https' : 'http')
     else
-      {
-        only_path: true
-      }
+      opts.reverse_merge!(only_path: true)
     end
+    opts
   end
 
   def set_published_date
