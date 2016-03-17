@@ -6,7 +6,7 @@
   max-width: $bp-xxl;
   padding: 0 2px;
 
-  @media (min-width: $bp-m) {
+  @media (min-width: $bp-l) {
     margin: 72px auto;
   }
 }
@@ -14,7 +14,7 @@
 .entry-list--related {
   margin-top: 0;
 
-  @media (min-width: $bp-m) {
+  @media (min-width: $bp-s) {
     margin-top: 0;
   }
 }
@@ -29,7 +29,7 @@
   overflow: hidden;
   padding: 2px;
 
-  @media (min-width: $bp-s) {
+  @media (min-width: $bp-xs) {
     flex-basis: calc(100%/3);
     flex-grow: 0;
     flex-shrink: 0;
@@ -115,7 +115,7 @@
   overflow: hidden;
 
   &:hover .entry-list__photo-caption {
-    @media (min-width: $bp-s) {
+    @media (min-width: $bp-xs) {
       opacity: 1;
     }
   }
@@ -152,15 +152,15 @@
   text-align: center;
   width: 100%;
 
-  @media (min-width: $bp-s) {
+  @media (min-width: $bp-xs) {
     font-size: 16px;
   }
 
-  @media (min-width: $bp-m) {
+  @media (min-width: $bp-s) {
     font-size: 20px;
   }
 
-  @media (min-width: $bp-l) {
+  @media (min-width: $bp-m) {
     font-size: 24px;
   }
 

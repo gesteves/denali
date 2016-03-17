@@ -31,7 +31,7 @@ img {
   // Needed to override inline styles injected by Twitter in embedded tweets
   margin: 24px auto 0 !important;
 
-  @media (min-width: $bp-m) {
+  @media (min-width: $bp-s) {
     margin: 36px auto 0 !important;
   }
 }
