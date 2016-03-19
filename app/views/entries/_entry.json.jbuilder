@@ -22,7 +22,6 @@ json.relationships do
           json.(p, :caption)
           json.(p, :formatted_caption)
           json.(p, :plain_caption)
-          json.(p, :original_url)
           json.(p, :make)
           json.(p, :model)
           json.(p, :exposure)
@@ -41,6 +40,14 @@ json.relationships do
           json.(p, :taken_at)
           json.(p, :updated_at)
           json.(p, :created_at)
+        end
+        json.links do
+          json.large p.url(w: 2048)
+          json.medium p.url(w: 1024)
+          json.small p.url(w: 640)
+          json.large_square p.url(w: 2048, square: true)
+          json.medium_square p.url(w: 1024, square: true)
+          json.small_square p.url(w: 640, square: true)
         end
       end
     end
