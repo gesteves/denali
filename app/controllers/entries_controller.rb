@@ -16,7 +16,7 @@ class EntriesController < ApplicationController
   end
 
   def show
-    @entry = @photoblog.entries.includes(:photos, :user).published.find(params[:id])
+    @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
     respond_to do |format|
       format.html {
         redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)

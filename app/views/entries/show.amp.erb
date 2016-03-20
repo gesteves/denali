@@ -30,11 +30,6 @@
           <%= amp_image_tag photo,
               'entry',
               { alt: photo.caption.blank? ? @entry.title : photo.plain_caption, width: photo.width, height: photo.height } %>
-          <% unless photo.caption.blank? %>
-            <figcaption>
-              <%= raw photo.formatted_caption %>
-            </figcaption>
-          <% end %>
         </figure>
       <% end %>
 
