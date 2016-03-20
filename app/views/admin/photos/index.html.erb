@@ -1,7 +1,9 @@
 
 <% @photos.each do |p| %>
   <div class="photo">
-    <%= responsive_image_tag p, 'admin_edit' %>
+    <a href="<%= p.entry.permalink_url %>">
+      <%= responsive_image_tag p, 'admin_edit' %>
+    </a>
     <%= form_for([:admin, p], html: { class: 'photo__form' }) do |f| %>
       <%= f.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'photo__input form__input form__input--textarea' %>
       <%= f.submit 'Save changes', class: 'button button--success' %>
