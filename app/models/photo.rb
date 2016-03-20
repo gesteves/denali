@@ -34,6 +34,7 @@ class Photo < ActiveRecord::Base
     if opts[:square]
       opts[:h] = opts[:w]
       opts[:fit] = 'crop'
+      opts[:crop] = self.crop if self.crop.present?
       opts.delete(:square)
     end
     Ix.path(self.original_path).to_url(opts.reject { |k,v| v.blank? })
