@@ -4,6 +4,10 @@
   margin: 24px 0;
 }
 
+.photo__link {
+  min-width: 300px;
+}
+
 .photo__form {
   display: flex;
   flex-flow: column;
@@ -17,5 +21,9 @@
 
   .button {
     margin: 0;
+  }
+
+  p {
+    margin: 0 0 1.5rem;
   }
 }

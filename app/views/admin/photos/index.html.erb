@@ -1,10 +1,12 @@
 
 <% @photos.each do |p| %>
   <div class="photo">
-    <a href="<%= p.entry.permalink_url %>">
+    <a href="<%= p.entry.permalink_url %>" class="photo__link">
       <%= responsive_image_tag p, 'admin_edit' %>
     </a>
     <%= form_for([:admin, p], html: { class: 'photo__form' }) do |f| %>
+      <p><%= p.entry.plain_title %></p>
+      <% if p.entry.body.present? %><p><%= p.entry.plain_body %></p><% end %>
       <%= f.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'photo__input form__input form__input--textarea' %>
       <%= f.submit 'Save changes', class: 'button button--success' %>
     <% end %>

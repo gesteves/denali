@@ -1,7 +1,7 @@
 class Admin::PhotosController < AdminController
   def index
     @page = params[:page] || 1
-    @photos = Photo.where('caption = ?', '').order('created_at DESC').page(@page)
+    @photos = Photo.where('caption = ?', '').order('created_at DESC').page(@page).includes(:entry)
     @page_title = 'Photos without caption'
   end
 
