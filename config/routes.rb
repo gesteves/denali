@@ -10,8 +10,6 @@ Rails.application.routes.draw do
     patch 'settings/update'           => 'blogs#update'
     get '/slack(/page/:page)'         => 'slack_incoming_webhooks#index',  constraints: { page: /\d+/ }, :as => :slack
 
-    resources :photos, only: [:index, :update], concerns: :paginatable
-
     resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable do
       member do
         get 'preview'
