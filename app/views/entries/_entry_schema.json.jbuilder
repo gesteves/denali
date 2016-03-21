@@ -5,7 +5,7 @@ json.set! 'mainEntityOfPage' do
   json.set! '@id', entry.permalink_url
 end
 json.headline entry.plain_title
-json.description entry.body.blank? ? Sanitize.fragment(@photoblog.description) : entry.plain_body
+json.description meta_description(entry)
 json.set! 'datePublished', entry.published_at
 json.set! 'dateModified', entry.updated_at
 if entry.is_photo?
