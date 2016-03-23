@@ -1,4 +1,4 @@
-entry:
+entry: &entry
   src: 1440
   srcset:
     - 640
@@ -21,6 +21,9 @@ entry:
   sizes:
     - "(min-width: 1440px) 1440px"
     - 100vw
+entry_amp:
+  <<: *entry
+  auto: 'format,compress'
 entry_list_item:
   src: 355
   srcset:

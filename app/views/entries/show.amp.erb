@@ -28,7 +28,7 @@
       <% @entry.photos.each do |photo| %>
         <figure class="entry__photo">
           <%= amp_image_tag photo,
-              'entry',
+              'entry_amp',
               { alt: photo.caption.blank? ? @entry.title : photo.plain_caption, width: photo.width, height: photo.height } %>
         </figure>
       <% end %>

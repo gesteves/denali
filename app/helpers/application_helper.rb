@@ -25,10 +25,11 @@ module ApplicationHelper
     quality = PHOTOS[photo_key]['quality']
     square = PHOTOS[photo_key]['square'].present?
     client_hints = PHOTOS[photo_key]['client_hints']
+    auto = PHOTOS[photo_key]['auto'] || 'format'
     PHOTOS[photo_key]['srcset'].
       uniq.
       sort.
-      map { |width| "#{photo.url(w: width, q: quality, square: square, ch: client_hints)} #{width}w" }.
+      map { |width| "#{photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)} #{width}w" }.
       join(', ')
   end
 
