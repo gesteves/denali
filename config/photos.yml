@@ -14,7 +14,6 @@ entry:
   sizes:
     - "(min-width: 1440px) 1440px"
     - 100vw
-  quality: 90
   client_hints: "Width,DPR,Save-Data"
 entry_list_item:
   src: 355
