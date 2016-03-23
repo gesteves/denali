@@ -4,17 +4,23 @@ entry:
     - 640
     - 750
     - 1242
-    - 1536
     - 2048
+    - 1536
+    - 1388
+    - 1014
+    - 876
     - 2732
+    - 1962
+    - 1356
+    - 1278
     - 1280
-    - 2560
     - 1440
+    - 2560
     - 2880
+    - 2304
   sizes:
     - "(min-width: 1440px) 1440px"
     - 100vw
-  client_hints: "Width,DPR,Save-Data"
 entry_list_item:
   src: 355
   srcset:
@@ -36,7 +42,6 @@ entry_list_item:
     - "(min-width: 600px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
   square: Yes
-  client_hints: "Save-Data"
 admin_entry:
   src: 560
   srcset:
@@ -49,7 +54,6 @@ admin_entry:
   sizes:
     - "(min-width: 840px) 800px"
     - calc(100vw - 40px)
-  client_hints: "Width,DPR,Save-Data"
 admin_edit:
   src: 300
   srcset:
@@ -63,7 +67,6 @@ admin_edit:
   sizes:
     - "(min-width: 800px) 300px"
     - calc(100vw - 60px)
-  client_hints: "Width,DPR,Save-Data"
 map:
   src: 300
   srcset:
@@ -73,4 +76,3 @@ map:
   sizes:
     - 300px
   square: Yes
-  client_hints: "Save-Data"
