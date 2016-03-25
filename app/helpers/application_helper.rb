@@ -15,10 +15,12 @@ module ApplicationHelper
   end
 
   def get_src(photo, photo_key)
-    quality = PHOTOS[photo_key]['quality'] || 90
+    quality = PHOTOS[photo_key]['quality']
     square = PHOTOS[photo_key]['square'].present?
     width = PHOTOS[photo_key]['src']
-    photo.url(w: width, q: quality, square: square)
+    client_hints = PHOTOS[photo_key]['client_hints']
+    auto = PHOTOS[photo_key]['auto'] || 'format'
+    photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)
   end
 
   def get_srcset(photo, photo_key)
