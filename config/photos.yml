@@ -80,3 +80,4 @@ map:
   sizes:
     - 300px
   square: Yes
+  auto: 'format,compress'
