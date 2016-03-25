@@ -3,6 +3,7 @@ entry: &entry
   srcset:
     - 640
     - 750
+    - 1014
     - 1242
     - 2048
     - 1536
@@ -28,6 +29,7 @@ entry_list_item:
   src: 355
   srcset:
     - 308
+    - 333
     - 363
     - 603
     - 336
