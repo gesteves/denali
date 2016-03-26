@@ -90,7 +90,6 @@ GEM
     globalid (0.3.6)
       activesupport (>= 4.1.0)
     hashie (3.4.3)
-    honeybadger (2.5.3)
     htmlcompressor (0.3.0)
     htmlentities (4.3.4)
     httmultiparty (0.3.16)
@@ -322,7 +321,6 @@ DEPENDENCIES
   figaro
   flickraw
   foreman
-  honeybadger (~> 2.0)
   htmlcompressor
   htmlentities
   httmultiparty

@@ -33,7 +33,6 @@ gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
 gem 'htmlentities'
-gem 'honeybadger', '~> 2.0'
 
 # Caching
 gem 'dalli'
