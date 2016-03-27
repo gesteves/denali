@@ -18,7 +18,7 @@
             <img class="js-photo-thumb" />
           </div>
           <div class="form__photo-fields">
-            <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'form__input form__input--caption' %>
+            <%= p.text_area :caption, required: true, placeholder: 'Write a caption for this photo…', class: 'form__input form__input--caption' %>
             <%= p.label :crop, class: 'form__label' do %>
               Crop mode <%= p.select(:crop, options_for_select(@crop_options)) %>
             <% end %>
