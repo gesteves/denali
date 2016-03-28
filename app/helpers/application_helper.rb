@@ -31,6 +31,7 @@ module ApplicationHelper
     PHOTOS[photo_key]['srcset'].
       uniq.
       sort.
+      reject { |width| width > photo.width }.
       map { |width| "#{photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)} #{width}w" }.
       join(', ')
   end
