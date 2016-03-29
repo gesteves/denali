@@ -12,25 +12,30 @@ defaults: &defaults
   social:
     dropbox:
       enabled: false
+    facebook:
+      enabled: false
     fivehundredpx:
       enabled: false
+      username:
     flickr:
       enabled: true
-      flickr_username: 'niv513'
+      username: 'niv513'
     google:
       enabled: false
     instagram:
       enabled: true
-      instagram_handle: '@nivshah'
+      username: '@nivshah'
     pinterest:
       enabled: false
+      username:
     slack:
       enabled: false
     tumblr:
       enabled: false
+      username:
     twitter:
       enabled: true
-      twitter_handle: '@nivshah'
+      username: '@nivshah'
 
 development:
   <<: *defaults
