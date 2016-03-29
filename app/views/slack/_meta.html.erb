@@ -12,9 +12,9 @@
 <meta property="og:site_name" content="<%= @photoblog.name %>">
 <meta property="og:locale" content="en_US">
 
-<% if Rails.application.config.social.twitter.enabled == true %>
-  <meta name="twitter:site" content="<%= Rails.application.config.social.twitter_handle %>">
-  <meta name="twitter:creator" content="<%= Rails.application.config.social.twitter_handle %>">
+<% if Rails.application.config.social['twitter']['enabled'] == true %>
+  <meta name="twitter:site" content="<%= Rails.application.config.social['twitter']['twitter_handle'] %>">
+  <meta name="twitter:creator" content="<%= Rails.application.config.social['twitter']['twitter_handle'] %>">
 <% end %>
 <meta name="twitter:title" content="Add <%= @photoblog.name %> to Slack">
 <meta name="twitter:url" content="<%= slack_url %>">
