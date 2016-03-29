@@ -7,6 +7,7 @@ defaults: &defaults
     posts_per_page: 36
     photographer: 'Niv Shah'
     email: 'contact@mytheoryontimetravel.org'
+    auth_email: "nivshah@gmail.com"
 
   social:
     dropbox:
