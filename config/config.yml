@@ -1,0 +1,37 @@
+defaults: &defaults
+  site:
+    domain: 'mytheoryontimetravel.org'
+    name: 'My Theory On Time Travel'
+    photographer: 'Niv Shah'
+
+  social:
+    dropbox:
+      enabled: false
+    fivehundredpx:
+      enabled: false
+    flickr:
+      enabled: true
+      flickr_username: 'niv513'
+    google:
+      enabled: false
+    instagram:
+      enabled: true
+      instagram_handle: '@nivshah'
+    pinterest:
+      enabled: false
+    slack:
+      enabled: false
+    tumblr:
+      enabled: false
+    twitter:
+      enabled: true
+      twitter_handle: '@nivshah'
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults
