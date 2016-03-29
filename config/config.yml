@@ -24,7 +24,7 @@ defaults: &defaults
       enabled: false
     instagram:
       enabled: true
-      username: '@nivshah'
+      username: 'nivshah'
     pinterest:
       enabled: false
       username:
@@ -35,7 +35,7 @@ defaults: &defaults
       username:
     twitter:
       enabled: true
-      username: '@nivshah'
+      username: 'nivshah'
 
 development:
   <<: *defaults
