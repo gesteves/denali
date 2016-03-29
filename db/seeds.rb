@@ -6,4 +6,10 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Blog.create(name: 'All-Encompassing Trip', domain: 'www.allencompassingtrip.com', short_domain: 'aetrip.co', description: 'Photography by Guillermo Esteves', posts_per_page: 36)
+Blog.create(
+  name: Rails.application.config.site['name'],
+  domain: Rails.application.config.site['domain'],
+  short_domain: Rails.application.config.site['short_domain'],
+  description: Rails.application.config.site['description'],
+  posts_per_page: Rails.application.config.site['posts_per_page']
+)

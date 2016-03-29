@@ -1,8 +1,12 @@
 defaults: &defaults
   site:
     domain: 'mytheoryontimetravel.org'
+    short_domain: 'mtott.co'
     name: 'My Theory On Time Travel'
+    description: "Niv's Photoblog"
+    posts_per_page: 36
     photographer: 'Niv Shah'
+    email: 'contact@mytheoryontimetravel.org'
 
   social:
     dropbox:
