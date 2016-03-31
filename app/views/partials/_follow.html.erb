@@ -3,7 +3,6 @@
   <a href="<%= map_path %>" class="follow__link" title="Map"><%= inline_svg 'map', 'follow__icon' %></a>
   <a href="mailto:<%= Rails.application.config.site['email'] %>"" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
   <a href="<%= entries_url page: 1, format: 'atom' %>" class="follow__link" title="Subscribe to Feed"><%= inline_svg 'feed', 'follow__icon' %></a>
-  <!-- <a href="https://apple.news/TOUnOh13VRX2x8_VPMwaMbQ" class="follow__link" rel="me" title="Subscribe on Apple News"><%= inline_svg 'apple', 'follow__icon' %></a>-->
   <% if Rails.application.config.social['instagram']['enabled'] %>
     <a href="https://www.instagram.com/<%= Rails.application.config.social['instagram']['username'] %>/" class="follow__link" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>
   <% end %>
@@ -14,6 +13,6 @@
     <a href="https://twitter.com/<%= Rails.application.config.social['twitter']['username'] %>" class="follow__link" rel="me" title="Follow on Twitter"><%= inline_svg 'twitter', 'follow__icon' %></a>
   <% end %>
   <% if Rails.application.config.social['tumblr']['enabled'] %>
-    <a href="http://gesteves.tumblr.com" class="follow__link" rel="me" title="Follow on Tumblr"><%= inline_svg 'tumblr', 'follow__icon' %></a>
+    <a href="http://<%= Rails.application.config.social['tumblr']['url'] %>" class="follow__link" rel="me" title="Follow on Tumblr"><%= inline_svg 'tumblr', 'follow__icon' %></a>
   <% end %>
 </div>

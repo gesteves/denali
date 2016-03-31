@@ -32,7 +32,7 @@ defaults: &defaults
       enabled: false
     tumblr:
       enabled: false
-      username:
+      url:
     twitter:
       enabled: true
       username: 'nivshah'

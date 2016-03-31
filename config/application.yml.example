@@ -30,7 +30,6 @@ development:
   tumblr_access_token: abc123
   tumblr_consumer_key: abc123
   tumblr_consumer_secret: abc123
-  tumblr_domain: yertumblr.tumblr.com
   twitter_access_token_secret: abc123
   twitter_access_token: abc123
   twitter_consumer_key: abc123
@@ -68,7 +67,6 @@ test:
   tumblr_access_token: abc123
   tumblr_consumer_key: abc123
   tumblr_consumer_secret: abc123
-  tumblr_domain: yertumblr.tumblr.com
   twitter_access_token_secret: abc123
   twitter_access_token: abc123
   twitter_consumer_key: abc123
@@ -106,7 +104,6 @@ production:
   tumblr_access_token: abc123
   tumblr_consumer_key: abc123
   tumblr_consumer_secret: abc123
-  tumblr_domain: yertumblr.tumblr.com
   twitter_access_token_secret: abc123
   twitter_access_token: abc123
   twitter_consumer_key: abc123
