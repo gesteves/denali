@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   get '/map/photos.:format'            => 'maps#photos'
   get '/slack'                         => 'slack#index', :as => :slack
   get '/sitemap'                       => 'entries#sitemap', defaults: { format: 'xml' }
-  get '/about'                         => 'pages#about', :as => :about
+  get '/about'                         => 'blogs#about', :as => :about
   get '/oembed'                        => 'oembed#show', :as => :oembed
 
   # Redirects
