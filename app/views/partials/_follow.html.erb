@@ -1,7 +1,7 @@
 <div class="follow">
   <a href="<%= about_path %>" class="follow__link" title="About <%= @photoblog.name %>"><%= inline_svg 'about', 'follow__icon' %></a>
   <a href="<%= map_path %>" class="follow__link" title="Map"><%= inline_svg 'map', 'follow__icon' %></a>
-  <a href="mailto:<%= Rails.application.config.site['email'] %>"" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
+  <a href="mailto:<%= Rails.application.config.site['email'] %>" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
   <a href="<%= entries_url page: 1, format: 'atom' %>" class="follow__link" title="Subscribe to Feed"><%= inline_svg 'feed', 'follow__icon' %></a>
   <% if Rails.application.config.social['instagram']['enabled'] %>
     <a href="https://www.instagram.com/<%= Rails.application.config.social['instagram']['username'] %>/" class="follow__link" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>

@@ -12,4 +12,5 @@ Blog.create(
   short_domain: Rails.application.config.site['short_domain'],
   description: Rails.application.config.site['description'],
   posts_per_page: Rails.application.config.site['posts_per_page']
+  about: Rails.application.config.site['about']
 )

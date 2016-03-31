@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_photoblog
-    @photoblog = Blog.find_by(domain: Rails.application.config.site['domain'])
+    @photoblog = Blog.first
   end
 
   def domain_redirect
