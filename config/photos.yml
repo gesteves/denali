@@ -19,10 +19,8 @@ entry: &entry
     - 2560
     - 2880
     - 2304
-    - 1920
-    - 3840
   sizes:
-    - "(min-width: 1920px) 1920px"
+    - "(min-width: 1440px) 1440px"
     - 100vw
 entry_amp:
   <<: *entry
