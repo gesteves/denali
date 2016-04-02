@@ -21,6 +21,10 @@ class Photo < ActiveRecord::Base
   before_create :set_image
   after_image_post_process :save_exif, :save_dimensions
 
+  def self.oldest
+    order('taken_at ASC').limit(1).try(:first)
+  end
+
   def original_url
     self.image.url
   end
