@@ -11,19 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160402190834) do
+ActiveRecord::Schema.define(version: 20160402191657) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.string   "domain"
     t.text     "description"
-    t.integer  "posts_per_page", default: 10
+    t.integer  "posts_per_page",       default: 10
     t.string   "short_domain"
     t.text     "about"
     t.string   "copyright"
-    t.integer  "max_age",        default: 5
+    t.integer  "max_age",              default: 5
+    t.boolean  "show_related_entries", default: true
   end
 
   add_index "blogs", ["domain"], name: "index_blogs_on_domain"

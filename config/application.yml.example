@@ -1,4 +1,4 @@
-development:
+default: &default
   analytics_id: UA-123
   aws_access_key_id: abc123
   aws_cloudfront_distribution_id: abc123
@@ -22,7 +22,6 @@ development:
   pinterest_token: abc123
   s3_bucket: www.yerbucket.com
   secret_key_base: abc123
-  show_related_photos: true
   slack_client_id: '123456'
   slack_client_secret: abc123
   tumblr_access_token_secret: abc123
@@ -35,42 +34,11 @@ development:
   twitter_consumer_key: abc123
   twitter_consumer_secret: abc123
 
+development:
+  <<: *default
+
 test:
-  analytics_id: UA-123
-  aws_access_key_id: abc123
-  aws_cloudfront_distribution_id: abc123
-  aws_secret_access_key: abc123
-  buffer_access_token: abc123
-  dropbox_key: abc123
-  fivehundredpx_access_token_secret: abc123
-  fivehundredpx_access_token: abc123
-  fivehundredpx_consumer_key: abc123
-  fivehundredpx_consumer_secret: abc123
-  flickr_access_token_secret: abc123
-  flickr_access_token: abc123
-  flickr_consumer_key: abc123
-  flickr_consumer_secret: abc123
-  google_client_id: abc123
-  google_client_secret: abc123
-  imgix_domain: example.imgix.net
-  imgix_secure: 'true'
-  imgix_token: abc123
-  pinterest_board_id: '123456'
-  pinterest_token: abc123
-  s3_bucket: www.yerbucket.com
-  secret_key_base: abc123
-  show_related_photos: true
-  slack_client_id: '123456'
-  slack_client_secret: abc123
-  tumblr_access_token_secret: abc123
-  tumblr_access_token: abc123
-  tumblr_consumer_key: abc123
-  tumblr_consumer_secret: abc123
-  tumblr_domain: yertumblr.tumblr.com
-  twitter_access_token_secret: abc123
-  twitter_access_token: abc123
-  twitter_consumer_key: abc123
-  twitter_consumer_secret: abc123
+  <<: *default
 
 production:
   analytics_id: UA-123
@@ -96,7 +64,6 @@ production:
   pinterest_token: abc123
   s3_bucket: www.yerbucket.com
   secret_key_base: abc123
-  show_related_photos: true
   slack_client_id: '123456'
   slack_client_secret: abc123
   tumblr_access_token_secret: abc123

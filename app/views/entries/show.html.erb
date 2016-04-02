@@ -4,4 +4,4 @@
 
 <%= render partial: 'entries/entry', object: @entry %>
 <%= render partial: 'entries/entry_pagination', object: @entry %>
-<%= render partial: 'entries/related', object: @entry if ENV['show_related_entries'].present? %>
+<%= render partial: 'entries/related', object: @entry if @photoblog.show_related_entries? %>
