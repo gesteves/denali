@@ -33,7 +33,10 @@
   <%= f.text_field :copyright, placeholder: 'Your copyright information…', class: 'form__input', required: true, autocomplete: 'off' %>
 
   <%= f.label :posts_per_page, class: 'form__label' %>
-  <%= f.number_field :posts_per_page, min: 1, max: 100, pattern: '\d+', class: 'form__input', required: true %>
+  <%= f.number_field :posts_per_page, min: 1, max: 120, pattern: '\d+', class: 'form__input', required: true %>
+
+  <%= f.label 'Page caching, in minutes', class: 'form__label' %>
+  <%= f.number_field :max_age, min: 0, max: 525600, placeholder: 'Time, in minutes, public pages will be cached.', pattern: '\d+', class: 'form__input', required: true %>
 
   <div class="form__actions">
     <div class="form__buttons">

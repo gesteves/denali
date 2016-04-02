@@ -4,7 +4,6 @@ development:
   aws_cloudfront_distribution_id: abc123
   aws_secret_access_key: abc123
   buffer_access_token: abc123
-  default_max_age: '5'
   dropbox_key: abc123
   fivehundredpx_access_token_secret: abc123
   fivehundredpx_access_token: abc123
@@ -42,7 +41,6 @@ test:
   aws_cloudfront_distribution_id: abc123
   aws_secret_access_key: abc123
   buffer_access_token: abc123
-  default_max_age: '5'
   dropbox_key: abc123
   fivehundredpx_access_token_secret: abc123
   fivehundredpx_access_token: abc123
@@ -80,7 +78,6 @@ production:
   aws_cloudfront_distribution_id: abc123
   aws_secret_access_key: abc123
   buffer_access_token: abc123
-  default_max_age: '5'
   dropbox_key: abc123
   fivehundredpx_access_token_secret: abc123
   fivehundredpx_access_token: abc123
