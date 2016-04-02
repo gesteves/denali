@@ -48,6 +48,7 @@ Denali.Entries = (function ($) {
           $(this).remove();
         });
       } else {
+        photo.find('[required]').removeAttr('required');
         delete_field.val('true');
         photo.slideUp();
       }
