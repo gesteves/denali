@@ -55,12 +55,9 @@
         </div>
       </article>
     <% end %>
-    
-    <%= render partial: 'entries/entry_pagination.html.erb', object: @entry %>
 
-    <footer class="footer">
-        <p>&copy; 2009-<%= Time.now.strftime('%Y') %> <a href="http://www.gesteves.com" rel="me">Guillermo Esteves</a>. <a href="<%= @entry.permalink_url %>">View the full site</a>.</p>
-    </footer>
+    <%= render partial: 'entries/entry_pagination.html.erb', object: @entry %>
+    <%= render partial: 'partials/footer.html.erb' %>
 
     <amp-analytics type="googleanalytics" id="analytics">
     <script type="application/json">
