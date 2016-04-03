@@ -13,6 +13,7 @@ default: &default
   flickr_access_token: abc123
   flickr_consumer_key: abc123
   flickr_consumer_secret: abc123
+  google_apps_domain: example.com
   google_client_id: abc123
   google_client_secret: abc123
   imgix_domain: example.imgix.net
@@ -55,6 +56,7 @@ production:
   flickr_access_token: abc123
   flickr_consumer_key: abc123
   flickr_consumer_secret: abc123
+  google_apps_domain: example.com
   google_client_id: abc123
   google_client_secret: abc123
   imgix_domain: example.imgix.net
