@@ -22,6 +22,7 @@ default: &default
   pinterest_board_id: '123456'
   pinterest_token: abc123
   s3_bucket: www.yerbucket.com
+  s3_region: us-east-1
   secret_key_base: abc123
   slack_client_id: '123456'
   slack_client_secret: abc123
@@ -65,6 +66,7 @@ production:
   pinterest_board_id: '123456'
   pinterest_token: abc123
   s3_bucket: www.yerbucket.com
+  s3_region: us-east-1
   secret_key_base: abc123
   slack_client_id: '123456'
   slack_client_secret: abc123

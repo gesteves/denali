@@ -7,6 +7,7 @@ class Photo < ActiveRecord::Base
     s3_credentials: { access_key_id: ENV['aws_access_key_id'],
                       secret_access_key: ENV['aws_secret_access_key'],
                       bucket: ENV['s3_bucket'] },
+    s3_region: ENV['s3_region'],
     url: ':s3_domain_url',
     path: 'photos/:hash.:extension',
     hash_secret: ENV['secret_key_base'],
