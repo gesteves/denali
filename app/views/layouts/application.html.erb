@@ -8,7 +8,8 @@
     <%= javascript_include_tag 'application', async: true %>
   <% else %>
     <%= yield :inline_css %>
-    <%= javascript_include_tag 'application', async: true, onload: "loadCSS('#{asset_url 'application.css'}');".html_safe %>
+    <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
+    <%= javascript_include_tag 'application', async: true %>
     <noscript>
       <%= stylesheet_link_tag 'application', media: 'all' %>
     </noscript>
