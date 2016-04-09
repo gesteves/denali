@@ -2,6 +2,12 @@
   <%= render partial: 'entries/entry_meta', locals: { entry: @entry } %>
 <% end %>
 
+<% content_for :inline_css do %>
+  <% cache "entry/styles/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+    <style><%= Rails.application.assets['entry.css'].to_s.html_safe %></style>
+  <% end %>
+<% end %>
+
 <%= render partial: 'entries/entry', object: @entry %>
 <%= render partial: 'entries/entry_pagination', object: @entry %>
 <%= render partial: 'entries/related', object: @entry if @photoblog.show_related_entries? %>

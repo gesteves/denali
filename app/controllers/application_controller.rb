@@ -60,4 +60,9 @@ class ApplicationController < ActionController::Base
       raise ActionController::RoutingError.new('Not Found')
     end
   end
+
+  def check_if_user_has_visited
+    @has_visited = cookies[:has_visited].present?
+    cookies[:has_visited] = { value: true, expires: 1.year.from_now }
+  end
 end
