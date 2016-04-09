@@ -25,3 +25,4 @@ document.addEventListener('page:change', Denali.Map.init);
 document.addEventListener('page:change', Denali.Analytics.sendPageview);
 document.addEventListener('orientationchange', Denali.ImageZoom.init);
 document.addEventListener('keydown', Denali.Shortcuts.handleKeyPress);
+window.addEventListener('resize', Denali.ImageZoom.handleResize);
