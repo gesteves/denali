@@ -23,8 +23,7 @@ cache "#{@app_version}/entries/tagged/atom/#{@tag_slug}/page/#{@page}/count/#{@c
           xml.title e.plain_title
           body = ''
           e.photos.each do |p|
-            body += image_tag p.url(w: 1280)
-            body += p.formatted_caption unless p.caption.blank?
+            body += image_tag p.url(w: 1280), alt: p.caption.blank? ? e.title : p.plain_caption
           end
           body += e.formatted_body unless e.body.blank?
           xml.content body, type: 'html'
