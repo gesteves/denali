@@ -70,6 +70,6 @@ class ApplicationController < ActionController::Base
   def set_app_version
     # Requires enabling dyno metadata with `heroku labs:enable runtime-dyno-metadata`
     # See: https://devcenter.heroku.com/articles/dyno-metadata
-    @app_version = ENV['HEROKU_SLUG_ID'] || 'v1'
+    @app_version = ENV['HEROKU_RELEASE_VERSION'] || 'v1'
   end
 end
