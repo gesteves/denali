@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :inline_css do %>
-  <% cache "entry/styles/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% cache "#{@app_version}/entry/styles" do %>
     <style><%= Rails.application.assets['entry.css'].to_s.html_safe %></style>
   <% end %>
 <% end %>

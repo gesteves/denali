@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_action :get_photoblog
   before_action :domain_redirect
+  before_action :set_app_version
 
   helper_method :current_user, :logged_in?, :logged_out?
 
@@ -64,5 +65,11 @@ class ApplicationController < ActionController::Base
   def check_if_user_has_visited
     @has_visited = cookies[:has_visited].present?
     cookies[:has_visited] = { value: true, expires: 1.year.from_now }
+  end
+
+  def set_app_version
+    # Requires enabling dyno metadata with `heroku labs:enable runtime-dyno-metadata`
+    # See: https://devcenter.heroku.com/articles/dyno-metadata
+    @app_version = ENV['HEROKU_SLUG_ID'] || 'v1'
   end
 end
