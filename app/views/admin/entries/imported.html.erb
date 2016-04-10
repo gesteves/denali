@@ -2,7 +2,7 @@
   <%= render partial: 'partials/admin/nav', locals: { active_nav: 'imported' } %>
 <% end %>
 
-<% cache "admin/entries/imported/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "#{@app_version}/admin/entries/imported/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <% if @entries.size == 0 %>
     <p class="content__message">You haven’t imported any entries.</p>
   <% else %>

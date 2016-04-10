@@ -1,4 +1,4 @@
-<% cache "blog/footer/#{Time.now.strftime('%Y')}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "#{@app_version}/blog/footer/#{Time.now.strftime('%Y')}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <footer class="footer">
       <p>&copy; <%= Photo.oldest.try(:taken_at).try(:strftime, '%Y') %>-<%= Time.now.strftime('%Y') %> <%= raw @photoblog.copyright %></p>
   </footer>

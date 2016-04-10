@@ -1,4 +1,4 @@
-<% cache "admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+<% cache "#{@app_version}/admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <li class="entry">
     <%= link_to entry.is_published? ? entry.permalink_url : preview_admin_entry_path(entry) do %>
       <% entry.photos.each do |p| %>

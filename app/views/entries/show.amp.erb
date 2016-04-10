@@ -27,7 +27,7 @@
       </a>
     </header>
 
-    <% cache "entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+    <% cache "#{@app_version}/entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
       <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>">
         <% @entry.photos.each do |photo| %>
           <figure class="entry__photo">

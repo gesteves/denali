@@ -1,5 +1,5 @@
 <% content_for :meta do %>
-  <% cache "entries/meta/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% cache "#{@app_version}/entries/meta/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <title><%= @photoblog.name %><%= raw " &middot Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <link rel="canonical" href="<%= root_url %>">
@@ -32,7 +32,7 @@
   <% end %>
 <% end %>
 
-<% cache "entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "#{@app_version}/entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <ol class="entry-list">
     <%= render partial: 'entries/entry_list_item', collection: @entries %>
   </ol>

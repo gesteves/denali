@@ -1,4 +1,4 @@
-<% cache "entry/pagination/#{@photoblog.id}/#{@photoblog.updated_at.to_i}/#{entry_pagination.id}/#{entry_pagination.updated_at.to_i}" do %>
+<% cache "#{@app_version}/entry/pagination/#{@photoblog.id}/#{@photoblog.updated_at.to_i}/#{entry_pagination.id}/#{entry_pagination.updated_at.to_i}" do %>
   <nav class="pagination">
     <span class="pagination__link">
       <% if entry_pagination.newer.nil? %>
