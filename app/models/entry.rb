@@ -1,4 +1,4 @@
-class Entry < ActiveRecord::Base
+class Entry < ApplicationRecord
   include Rails.application.routes.url_helpers
   include Formattable
 

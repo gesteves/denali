@@ -1,4 +1,4 @@
-class Photo < ActiveRecord::Base
+class Photo < ApplicationRecord
   include Formattable
 
   belongs_to :entry, touch: true, counter_cache: true

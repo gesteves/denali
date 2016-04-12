@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   has_many :entries, dependent: :destroy
 
   def self.from_omniauth(auth)

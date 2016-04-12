@@ -1,4 +1,4 @@
-class SlackIncomingWebhook < ActiveRecord::Base
+class SlackIncomingWebhook < ApplicationRecord
   belongs_to :blog, touch: true
 
   def self.post_all(entry)
