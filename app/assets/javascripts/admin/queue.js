@@ -68,5 +68,3 @@ Denali.Queue = (function ($) {
     init: init
   };
 })(jQuery);
-
-Denali.Queue.init();

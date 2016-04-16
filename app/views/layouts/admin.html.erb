@@ -7,7 +7,11 @@
   <title><%= @page_title.nil? ? '' : raw("#{@page_title} &middot; ") %><%= @photoblog.name %></title>
   <%= stylesheet_link_tag 'admin', media: 'all' %>
   <%= csrf_meta_tags %>
+  <%= javascript_include_tag 'admin', async: true %>
   <script src="https://use.typekit.net/zwv6nvu.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
+  <% unless ENV['dropbox_key'].nil? %>
+    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="<%= ENV['dropbox_key'] %>" async></script>
+  <% end %>
 </head>
 <body>
 
@@ -27,9 +31,5 @@
   <%= yield %>
 </div>
 
-<%= javascript_include_tag 'admin' %>
-<% unless ENV['dropbox_key'].nil? %>
-  <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="<%= ENV['dropbox_key'] %>"></script>
-<% end %>
 </body>
 </html>
