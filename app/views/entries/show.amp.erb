@@ -28,7 +28,7 @@
     </header>
 
     <% cache "#{@app_version}/entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
-      <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main article">
+      <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
         <% @entry.photos.each do |photo| %>
           <figure class="entry__photo">
             <%= amp_image_tag photo,
