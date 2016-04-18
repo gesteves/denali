@@ -1,8 +1,10 @@
 <% cache "#{@app_version}/entry/related/#{@entry.id}/#{@entry.updated_at.to_i}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <% if @entry.related.size >= 4 %>
-    <h2 class="entry__related">Related Photos You Might Like</h2>
-    <ol class="entry-list entry-list--related">
-      <%= render partial: 'entries/entry_list_item', collection: @entry.related %>
-    </ol>
+    <aside role="complementary">
+      <h2 class="entry__related">Related Photos You Might Like</h2>
+      <ol class="entry-list entry-list--related">
+        <%= render partial: 'entries/entry_list_item', collection: @entry.related %>
+      </ol>
+    </aside>
   <% end %>
 <% end %>

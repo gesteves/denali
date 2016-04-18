@@ -21,14 +21,14 @@
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
   </head>
   <body>
-    <header class="header">
+    <header class="header" role="banner">
       <a href="/" class="header__link">
         <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
       </a>
     </header>
 
     <% cache "#{@app_version}/entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
-      <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>">
+      <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main article">
         <% @entry.photos.each do |photo| %>
           <figure class="entry__photo">
             <%= amp_image_tag photo,

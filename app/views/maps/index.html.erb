@@ -31,11 +31,11 @@
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>
-  <%= render partial: 'partials/icons.svg.erb' %>
   <%= render partial: 'partials/header.html.erb', locals: { additional_classes: 'header--map' } %>
-  <div id="map" class="map"></div>
+  <div id="map" class="map" role="main"></div>
   <div class="map__loading js-loading">
     <%= inline_svg 'spinner', 'map__loading-spinner' %>
   </div>
+  <%= render partial: 'partials/icons.svg.erb' %>
 </body>
 </html>
