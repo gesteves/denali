@@ -1,5 +1,5 @@
 <% cache "#{@app_version}/entry/meta/#{entry.id}/#{entry.updated_at.to_i}" do %>
-  <title><%= raw "#{entry.plain_title} &middot; #{entry.blog.name}" %></title>
+  <title><%= sanitize "#{entry.plain_title} &middot; #{entry.blog.name}" %></title>
   <meta name="description" content="<%= meta_description entry %>">
   <meta property="og:title" content="<%= entry.plain_title %>">
   <% if entry.is_photo? %>
@@ -32,6 +32,6 @@
   <link rel="amphtml" href="<%= entry.permalink_url(format: 'amp') %>">
   <link rel="canonical" href="<%= entry.permalink_url %>">
   <script type="application/ld+json">
-    <%= raw render partial: 'entries/entry_schema.json.jbuilder', locals: { entry: entry } %>
+    <%= sanitize render partial: 'entries/entry_schema.json.jbuilder', locals: { entry: entry } %>
   </script>
 <% end %>

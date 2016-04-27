@@ -40,12 +40,12 @@
         <div class="entry__body">
           <h1 class="entry__headline">
             <% if @entry.is_text? %>
-              <%= link_to raw(@entry.plain_title), @entry.permalink_url %>
+              <%= link_to sanitize(@entry.plain_title), @entry.permalink_url %>
             <% else %>
-              <%= raw(@entry.plain_title) %>
+              <%= sanitize(@entry.plain_title) %>
             <% end %>
           </h1>
-          <%= raw(@entry.formatted_body) unless @entry.body.blank? %>
+          <%= sanitize(@entry.formatted_body) unless @entry.body.blank? %>
         </div>
 
         <div class="entry__meta">

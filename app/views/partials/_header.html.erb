@@ -1,6 +1,6 @@
 <header role="banner" class="header <%= additional_classes if local_assigns[:additional_classes] %> ">
   <div class="header__section">
-    <p class="header__tagline"><%= raw @photoblog.description %></p>
+    <p class="header__tagline"><%= sanitize @photoblog.description %></p>
   </div>
   <a href="/" class="header__link">
     <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
