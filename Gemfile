@@ -64,6 +64,7 @@ group :development, :test do
   gem 'byebug'
   gem 'spring'
   gem 'sqlite3'
+  gem 'brakeman', require: nil
 end
 
 group :test do
