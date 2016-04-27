@@ -6,4 +6,4 @@ notifications:
 script:
 - RAILS_ENV=test bundle exec rake db:migrate --trace
 - bundle exec rake
-- bundle exec brakeman check
+- bundle exec brakeman:check
