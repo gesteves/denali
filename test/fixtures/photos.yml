@@ -1,11 +1,77 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  caption: MyText
+peppers:
   position: 1
-  entry_id: 
+  entry: peppers
+  image_file_name: tumblr_lwzxda7qwx1qzattso1_1280.jpg
+  image_content_type: image/jpeg
+  image_file_size: 1239274
+  source_url: http://41.media.tumblr.com/tumblr_lwzxda7qwx1qzattso1_1280.jpg
+  make: OLYMPUS IMAGING CORP.
+  model: XZ-1
+  taken_at: 2011-07-02 16:18:21.000000
+  exposure: 1/100
+  f_number: 2.500000
+  latitude: 38.887333
+  longitude: -76.996167
+  width: 960
+  height: 1280
+  iso: 200
+  focal_length: 24
 
-two:
-  caption: MyText
+potomac:
   position: 1
-  entry_id: 
+  entry: potomac
+  image_file_name: tumblr_lwzxfitFan1qzattso1_1280.jpg
+  image_content_type: image/jpeg
+  image_file_size: 621488
+  source_url: http://36.media.tumblr.com/tumblr_lwzxfitFan1qzattso1_1280.jpg
+  make: OLYMPUS IMAGING CORP.
+  model: XZ-1
+  taken_at: 2011-07-03 14:23:57.000000
+  exposure: 1/15
+  f_number: 2.000000
+  latitude: 38.880833
+  longitude: -76.985333
+  width: 960
+  height: 1280
+  iso: 200
+  focal_length: 6
+
+panda:
+  position: 1
+  entry: panda
+  image_file_name: tumblr_lwzxj59UEs1qzattso1_1280.jpg
+  image_content_type: image/jpeg
+  image_file_size: 1373881
+  source_url: http://41.media.tumblr.com/tumblr_lwzxj59UEs1qzattso1_1280.jpg
+  make: OLYMPUS IMAGING CORP.
+  model: XZ-1
+  taken_at: 2011-07-03 15:22:37.000000
+  exposure: 1/800
+  f_number: 2.500000
+  latitude: 38.927833
+  longitude: -77.048000
+  width: 1024
+  height: 768
+  iso: 100
+  focal_length: 24
+
+franklin:
+  position: 1
+  entry: panda
+  image_file_name: tumblr_lx00c71gKU1qzattso1_1280.jpg
+  image_content_type: image/jpeg
+  image_file_size: 531641
+  source_url: http://41.media.tumblr.com/tumblr_lx00c71gKU1qzattso1_1280.jpg
+  make: OLYMPUS IMAGING CORP.
+  model: XZ-1
+  taken_at: 2011-07-06 16:14:53.000000
+  exposure: 1/2000
+  f_number: 2.500000
+  latitude: 38.894333
+  longitude: -77.027667
+  width: 1024
+  height: 768
+  iso: 100
+  focal_length: 24

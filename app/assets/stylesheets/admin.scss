@@ -1,5 +1,6 @@
 @import 'vendors/reset';
 @import 'vendors/awesomplete';
+@import 'vendors/turbolinks';
 
 @import 'base/variables';
 @import 'base/functions';
@@ -11,8 +12,7 @@
 
 @import 'admin/blocks/content';
 @import 'admin/blocks/entry';
-@import 'admin/blocks/entry_list';
 @import 'admin/blocks/form';
 @import 'admin/blocks/nav';
 @import 'admin/blocks/pagination';
-@import 'admin/blocks/signin';
+@import 'admin/blocks/table';

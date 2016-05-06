@@ -1,17 +1,60 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  title: MyString
-  body: MyText
-  slug: MyString
-  status: MyString
-  blog_id: 
-  user_id: 
+peppers:
+  title: Peppers at Eastern Market, Washington, DC. July 2nd, 2011.
+  slug: eastern-market-peppers
+  status: published
+  blog: allencompassingtrip
+  user: guille
+  published_at: 2012-02-11 21:00:00.000000
+  show_in_map: true
+  photos_count: 1
+  tumblr_id: 17444976847
+  post_to_twitter: true
+  post_to_tumblr: true
+  post_to_facebook: true
+  post_to_flickr: true
+  post_to_500px: true
+  post_to_slack: true
 
-two:
-  title: MyString
-  body: MyText
-  slug: MyString
-  status: MyString
-  blog_id: 
-  user_id: 
+potomac:
+  title: Potomac Avenue Metro station, Washington, DC. July 3rd, 2011.
+  slug: potomac-avenue
+  status: published
+  blog: allencompassingtrip
+  user: guille
+  published_at: 2012-02-11 23:00:00.000000
+  show_in_map: false
+  photos_count: 1
+
+panda:
+  title: One of the giant pandas at the National Zoo, Washington, DC. July 3rd, 2011.
+  slug: national-zoo-panda
+  status: queued
+  blog: allencompassingtrip
+  user: guille
+  show_in_map: true
+  photos_count: 1
+  post_to_twitter: true
+  post_to_tumblr: true
+  post_to_facebook: true
+  post_to_flickr: true
+  post_to_500px: true
+  post_to_slack: true
+  post_to_pinterest: true
+  position: 1
+
+franklin:
+  title: Ben Franklin in front of the Old Post Office, Washington, DC. July 6th, 2011.
+  slug: ben-franklin-old-post-office
+  status: draft
+  blog: allencompassingtrip
+  user: guille
+  show_in_map: true
+  photos_count: 1
+  post_to_twitter: true
+  post_to_tumblr: true
+  post_to_facebook: true
+  post_to_flickr: true
+  post_to_500px: true
+  post_to_slack: true

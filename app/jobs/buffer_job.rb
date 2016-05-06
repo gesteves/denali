@@ -1,43 +1,37 @@
-class BufferJob < EntryJob
-  include ActionView::Helpers::TextHelper
+class BufferJob < ApplicationJob
   queue_as :default
 
   def perform(entry, service)
-    HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: build_body(entry, service))
+    HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: build_body(entry, service)) if Rails.env.production?
   end
 
   def build_body(entry, service)
     body = {
       profile_ids: get_profile_ids(service),
-      text: build_text(entry, service),
+      text: build_text(entry),
       shorten: false,
       now: true,
       access_token: ENV['buffer_access_token']
     }
-    body[:media] = build_media(entry, service) if entry.is_photo?
+    body[:media] = build_media(entry)
     body
   end
 
-  def build_text(entry, service)
-    if service == 'twitter'
-      caption = entry.tweet_text.blank? ? entry.title : entry.tweet_text
-      caption = truncate(caption, length: 90, omission: '…', escape: false)
-    else
-      caption = entry.title
-    end
-    "#{caption} #{permalink_url(entry)}"
+  def build_text(entry)
+    caption = entry.tweet_text.blank? ? entry.title : entry.tweet_text
+    caption = truncate(caption, length: 90, omission: '…', escape: false)
+    "#{caption} #{entry.permalink_url}"
   end
 
-  def build_media(entry, service)
-    width = service == 'twitter' ? 1280 : 2048
+  def build_media(entry)
     {
-      picture: entry.photos.first.url(width),
-      thumbnail: entry.photos.first.url(512, 512)
+      picture: entry.photos.first.url(w: 2048),
+      thumbnail: entry.photos.first.url(w: 512)
     }
   end
 
   def get_profile_ids(service)
     response = JSON.parse(HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}").body)
-    response.select{ |profile| profile['service'].downcase.match(service) }.map{ |profile| profile['id'] }
+    response.select { |profile| profile['service'].downcase.match(service) }.map { |profile| profile['id'] }
   end
 end

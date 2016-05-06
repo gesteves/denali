@@ -1,36 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%= render partial: 'partials/analytics' if Rails.env.production? %>
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': true %>
-  <%= render partial: 'partials/typekit' %>
-  <%= csrf_meta_tags %>
+  <% if @has_visited || !content_for?(:inline_css) %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+  <% else %>
+    <%= yield :inline_css %>
+    <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
+    <noscript>
+      <%= stylesheet_link_tag 'application', media: 'all' %>
+    </noscript>
+  <% end %>
+  <%= javascript_include_tag 'application', async: true %>
+  <script src="https://use.typekit.net/vtp0iqq.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
+  <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>
-<%= render partial: 'partials/icons.svg.erb' %>
-
-<% cache "header/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <header class="header">
-    <h1><a href="/"><%= @photoblog.name %></a></h1>
-    <h2><%= raw @photoblog.description %></h2>
-  </header>
-<% end %>
-
+<%= render partial: 'partials/header.html.erb' %>
 <%= yield %>
-
-<footer class="footer">
-    <div class="follow">
-      <a href="http://instagram.com/gesteves" class="follow__link" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>
-      <a href="http://twitter.com/gesteves" class="follow__link" rel="me" title="Follow on Twitter"><%= inline_svg 'twitter', 'follow__icon' %></a>
-      <a href="http://gesteves.tumblr.com" class="follow__link" rel="me" title="Follow on Tumblr"><%= inline_svg 'tumblr', 'follow__icon' %></a>
-      <a href="<%= rss_url %>" class="follow__link" title="Subscribe to RSS"><%= inline_svg 'rss', 'follow__icon' %></a>
-      <a href="mailto:contact@allencompassingtrip.com" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
-    </div>
-    <p>&copy; 2009-<%= Time.now.strftime('%Y') %> <a href="http://www.gesteves.com" rel="me">Guillermo Esteves</a>. Published with <a href="https://github.com/gesteves/denali">Denali</a>.</p>
-</footer>
-
-<%= javascript_include_tag 'application', 'data-turbolinks-track': true, 'data-turbolinks-eval': false %>
+<%= render partial: 'partials/footer.html.erb' %>
+<%= render partial: 'partials/icons.svg.erb' %>
 </body>
 </html>

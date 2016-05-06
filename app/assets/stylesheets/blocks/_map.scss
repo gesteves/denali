@@ -1,0 +1,62 @@
+.map {
+  height: calc(100vh - 60px);
+  width: 100vw;
+
+  .map__marker {
+    align-items: center;
+    background-color: $color-red;
+    background-image: linear-gradient(to bottom, $color-red, shade($color-red, 20%));
+    border-radius: 100%;
+    color: white;
+    display: flex;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    justify-content: center;
+    text-align: center;
+    text-shadow: 0 -1px 0 shade($color-red, 50%);
+
+    &.map__marker--cluster {
+      box-shadow: 0 0 0 2px shade($color-red, 30%), 0 2px 4px 0 black;
+    }
+
+    &.map__marker--point {
+      box-shadow: 0 0 0 1px shade($color-red, 30%), 0 2px 4px 0 black;
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+}
+
+.map__loading {
+  background-color: $color-red;
+  background-image: linear-gradient(to bottom, $color-red, shade($color-red, 20%));
+  border-radius: 100%;
+  box-shadow: 0 0 0 2px shade($color-red, 30%), 0 2px 4px 0 black;
+  display: none;
+  height: 50px;
+  left: 50%;
+  margin-left: -25px;
+  margin-top: -25px;
+  padding: 5px;
+  position: absolute;
+  top: 50%;
+  width: 50px;
+}
+
+.map__loading-spinner {
+  animation: load 1s infinite linear;
+  fill: white;
+  height: 40px;
+  width: 40px;
+}
+
+@keyframes load {
+  0% {
+    transform: rotate(0deg);
+  }
+  
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,16 +1,18 @@
 // Swatches
 $color-red             : #BF0222;
 $color-gray-dark       : #444;
-$color-gray-medium     : #AAA;
-$color-gray-light      : #EEE;
-$color-gray-very-light : #F4F4F4;
+$color-gray-medium     : #666;
+$color-gray-light      : #AAA;
+$color-gray-very-light : #EEE;
 
 // Colors
 $color-background    : #FFF;
 $color-links         : $color-red;
 $color-text          : $color-gray-dark;
 $color-text-alt      : $color-gray-medium;
-$color-border        : $color-gray-light;
+$color-border        : $color-gray-very-light;
+$color-twitter       : #55ACEE;
+$color-facebook      : #3B5998;
 
 $color-alert-default : #F4F4F4;
 $color-alert-info    : #51C1DB;
@@ -19,10 +21,15 @@ $color-alert-warning : #F3AC5D;
 $color-alert-danger  : #DE5152;
 
 // Breakpoints
-$bp-xs  : 480px;
-$bp-s   : 600px;
-$bp-m   : 840px;
-$bp-l   : 960px;
+$bp-xxs : 480px;
+$bp-xs  : 600px;
+$bp-s   : 840px;
+$bp-m   : 960px;
+$bp-l   : 1024px;
 $bp-xl  : 1280px;
 $bp-xxl : 1440px;
 $bp-max : 1920px;
+
+// Admin breakpoints
+
+$bp-admin-m: 800px;

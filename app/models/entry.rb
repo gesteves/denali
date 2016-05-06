@@ -1,4 +1,5 @@
-class Entry < ActiveRecord::Base
+class Entry < ApplicationRecord
+  include Rails.application.routes.url_helpers
   include Formattable
 
   has_many :photos, -> { order 'position ASC' }, dependent: :destroy
@@ -7,9 +8,6 @@ class Entry < ActiveRecord::Base
 
   validates :title, presence: true
 
-  scope :text_entries, -> { where('photos_count = 0') }
-  scope :photo_entries, -> { where('photos_count > 0') }
-
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
 
@@ -17,8 +15,6 @@ class Entry < ActiveRecord::Base
   acts_as_list scope: :blog
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
-
-  attr_accessor :invalidate_cloudfront
 
   def self.published(order = 'published_at DESC')
     where(status: 'published').order(order)
@@ -30,6 +26,18 @@ class Entry < ActiveRecord::Base
 
   def self.queued(order = 'position ASC')
     where(status: 'queued').order(order)
+  end
+
+  def self.mapped
+    where(show_in_map: true)
+  end
+
+  def self.text_entries
+    where('photos_count = 0')
+  end
+
+  def self.photo_entries
+    where('photos_count > 0')
   end
 
   def is_photo?
@@ -58,7 +66,7 @@ class Entry < ActiveRecord::Base
 
   def publish
     self.status = 'published'
-    self.save
+    self.save && self.enqueue_jobs
   end
 
   def queue
@@ -83,6 +91,10 @@ class Entry < ActiveRecord::Base
     Entry.published.where('published_at < ?', self.published_at).limit(1).first
   end
 
+  def related(count = 12)
+    Entry.includes(:photos).tagged_with(self.tag_list, any: true, order_by_matching_tag_count: true).where('entries.id != ? AND entries.status = ?', self.id, 'published').limit(count)
+  end
+
   def update_position
     if self.is_queued?
       self.insert_at(Entry.last_queued_position + 1)
@@ -99,12 +111,8 @@ class Entry < ActiveRecord::Base
     markdown_to_plaintext(self.body)
   end
 
-  def formatted_title
-    smartypants(self.title)
-  end
-
-  def formatted_tweet_text
-    smartypants(self.tweet_text)
+  def plain_title
+    markdown_to_plaintext(self.title)
   end
 
   def formatted_content
@@ -132,7 +140,71 @@ class Entry < ActiveRecord::Base
     return year, month, day, id, slug
   end
 
+  def permalink_path
+    year, month, day, id, slug = self.slug_params
+    entry_long_path(year, month, day, id, slug)
+  end
+
+  def permalink_url(opts = {})
+    opts.reverse_merge!(host: self.blog.domain)
+    year, month, day, id, slug = self.slug_params
+    entry_long_url(year, month, day, id, slug, url_opts(opts))
+  end
+
+  def short_permalink_url(opts = {})
+    opts.reverse_merge!(host: self.blog.short_domain)
+    entry_url(self.id, url_opts(opts))
+  end
+
+  def enqueue_jobs
+    self.enqueue_twitter
+    self.enqueue_tumblr
+    self.enqueue_facebook
+    self.enqueue_flickr
+    self.enqueue_500px
+    self.enqueue_pinterest
+    self.enqueue_slack
+    true
+  end
+
+  def enqueue_twitter
+    TwitterJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_twitter
+  end
+
+  def enqueue_tumblr
+    TumblrJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_tumblr
+  end
+
+  def enqueue_facebook
+    BufferJob.perform_later(self, 'facebook') if self.is_published? && self.is_photo? && self.post_to_facebook
+  end
+
+  def enqueue_flickr
+    FlickrJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_flickr
+  end
+
+  def enqueue_500px
+    FiveHundredJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_500px
+  end
+
+  def enqueue_slack
+    SlackIncomingWebhook.post_all(self) if self.is_published? && self.is_photo? && self.post_to_slack
+  end
+
+  def enqueue_pinterest
+    PinterestJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_pinterest
+  end
+
   private
+
+  def url_opts(opts)
+    if Rails.env.production?
+      opts.reverse_merge!(protocol: Rails.configuration.force_ssl ? 'https' : 'http')
+    else
+      opts.reverse_merge!(only_path: true)
+    end
+    opts
+  end
 
   def set_published_date
     if self.is_published? && self.published_at.nil?

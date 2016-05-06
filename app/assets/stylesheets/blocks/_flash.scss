@@ -1,24 +1,38 @@
 .flash {
-  @include flash($color-alert-default);
+  @include stripes($color-alert-default, $color-text);
+  align-items: center;
   border-radius: 2px;
-  color: #FFF;
-  padding: 0 20px;
+  display: flex;
+  flex-flow: row nowrap;
+  padding: 10px;
 
-  h2 {
-    font-size: 24px;
-    font-weight: 100;
+  .flash__message {
+    flex-grow: 1;
+    font-size: 12px;
     line-height: 1;
+    margin: 0;
+    text-transform: uppercase;
+  }
+
+  .flash__close {
+    color: currentColor;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 12px;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
   }
 }
 
-.flash--success {
-  @include flash($color-alert-success);
+.flash--notice {
+  @include stripes($color-alert-success);
 }
 
-.flash--warning {
-  @include flash($color-alert-warning);
+.flash--alert {
+  @include stripes($color-alert-danger);
 }
 
-.flash--danger {
-  @include flash($color-alert-danger);
+.flash--flash {
+  @include stripes($color-alert-info);
 }

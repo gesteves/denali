@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title><%= @page_title.nil? ? '' : raw("#{@page_title} &middot; ") %><%= @photoblog.name %></title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width">
+  <title><%= @page_title.nil? ? '' : sanitize("#{@page_title} &middot; ") %><%= @photoblog.name %></title>
   <%= stylesheet_link_tag 'admin', media: 'all' %>
   <%= csrf_meta_tags %>
-  <script>
-    (function(d) {
-      var config = {
-        kitId: 'zwv6nvu',
-        scriptTimeout: 3000,
-        async: true
-      },
-      h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='//use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
-    })(document);
-  </script>
+  <%= javascript_include_tag 'admin', async: true %>
+  <script src="https://use.typekit.net/zwv6nvu.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
+  <% unless ENV['dropbox_key'].nil? %>
+    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="<%= ENV['dropbox_key'] %>" async></script>
+  <% end %>
 </head>
 <body>
 
@@ -23,19 +21,15 @@
   <%= render partial: 'partials/admin/nav', locals: { active_nav: 'none' } %>
 <% end %>
 
-<% flash.each do |name, message| -%>
-  <div class="flash flash--<%= name %>">
-    <%= message %>
-  </div>
-<% end %>
-
 <div class="content">
+  <% flash.each do |name, message| -%>
+    <div class="flash flash--<%= name %>">
+      <p class="flash__message"><%= message %></p>
+      <a href="#" class="flash__close js-flash-close">&times;</a>
+    </div>
+  <% end %>
   <%= yield %>
 </div>
 
-<%= javascript_include_tag 'admin' %>
-<% unless ENV['dropbox_key'].nil? %>
-  <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="<%= ENV['dropbox_key'] %>"></script>
-<% end %>
 </body>
 </html>

@@ -1,9 +1,9 @@
 .share {
   margin: 12px auto 0;
-  max-width: $bp-l;
+  max-width: $bp-m;
   text-align: center;
 
-  @media (min-width: $bp-m) {
+  @media (min-width: $bp-s) {
     margin: 18px auto 0;
   }
 }
@@ -17,7 +17,7 @@
 
   &:link,
   &:visited {
-    background-color: #DDD;
+    background-color: $color-gray-light;
   }
 
   &:hover,

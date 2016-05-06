@@ -1,0 +1,24 @@
+{
+  "node": true,
+  "curly": true,
+  "eqeqeq": true,
+  "indent": 2,
+  "quotmark": "single",
+  "unused": true,
+  "trailing": true,
+  "smarttabs": true,
+  "eqnull": true,
+  "browser": true,
+  "strict": true,
+  "globals": {
+    "jQuery": true,
+    "_": true,
+    "Modernizr": true,
+    "Dropbox": true,
+    "Awesomplete": true,
+    "Denali": true,
+    "Turbolinks": true,
+    "picturefill": true,
+    "FastClick": true
+  }
+}

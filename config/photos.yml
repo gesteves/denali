@@ -1,68 +1,84 @@
-entry:
+entry: &entry
+  src: 1440
   srcset:
-    - 640x0
-    - 960x0
-    - 1136x0
-    - 750x0
-    - 1334x0
-    - 1242x0
-    - 2208x0
-    - 1024x0
-    - 768x0
-    - 2048x0
-    - 1152x0
-    - 1536x0
-    - 1280x0
-    - 1440x0
-    - 2560x0
-    - 2880x0
-    - 1920x0
-    - 3840x0
+    - 640
+    - 750
+    - 1014
+    - 1242
+    - 2048
+    - 1536
+    - 1388
+    - 1014
+    - 876
+    - 2732
+    - 1962
+    - 1356
+    - 1278
+    - 1280
+    - 1440
+    - 2560
+    - 2880
+    - 2304
   sizes:
-    - "(min-width: 1920px) 1920px"
+    - "(min-width: 1440px) 1440px"
     - 100vw
-  filters:
-    - "no_upscale()"
-    - "quality(90)"
+entry_amp:
+  <<: *entry
+  auto: 'format,compress'
 entry_list_item:
+  src: 355
   srcset:
-    - 308x308
-    - 363x363
-    - 603x603
-    - 336x336
-    - 251x251
-    - 672x672
-    - 502x502
-    - 758x758
-    - 422x422
-    - 844x844
-    - 355x355
-    - 710x710
-    - 475x475
-    - 950x950
+    - 308
+    - 333
+    - 363
+    - 603
+    - 336
+    - 251
+    - 672
+    - 502
+    - 758
+    - 422
+    - 844
+    - 355
+    - 710
+    - 900
   sizes:
-    - "(min-width: 1920px) 475px"
-    - "(min-width: 1440px) calc((100vw - 20px)/4)"
+    - "(min-width: 1440px) 355px"
     - "(min-width: 600px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
-  filters:
-    - "quality(90)"
+  square: Yes
 admin_entry:
+  src: 560
   srcset:
-    - 800x0
-    - 1600x0
+    - 560
+    - 670
+    - 800
+    - 1122
+    - 1456
+    - 1600
   sizes:
     - "(min-width: 840px) 800px"
     - calc(100vw - 40px)
-  filters:
-    - "quality(90)"
 admin_edit:
+  src: 300
   srcset:
-    - 300x0
-    - 600x0
-    - 900x0
+    - 300
+    - 516
+    - 600
+    - 626
+    - 900
+    - 1056
+    - 1412
+  sizes:
+    - "(min-width: 800px) 300px"
+    - calc(100vw - 60px)
+map:
+  src: 300
+  srcset:
+    - 300
+    - 600
+    - 900
   sizes:
     - 300px
-  filters:
-    - "no_upscale()"
-    - "quality(90)"
+  square: Yes
+  auto: 'format,compress'

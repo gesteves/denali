@@ -1,30 +1,25 @@
-<% cache "entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
-  <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>">
+<% cache "#{@app_version}/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+  <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
     <% entry.photos.each do |photo| %>
       <figure class="entry__photo">
         <%= responsive_image_tag photo,
             'entry',
             { class: "entry__image entry__image--fit",
-              alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption,
+              alt: photo.caption.blank? ? entry.title : photo.plain_caption,
               'data-width-original': photo.width,
               'data-height-original': photo.height } %>
-        <% unless photo.caption.blank? %>
-          <figcaption>
-            <%= raw photo.formatted_caption %>
-          </figcaption>
-        <% end %>
       </figure>
     <% end %>
 
     <div class="entry__body">
       <h1 class="entry__headline">
         <% if entry.is_text? %>
-          <%= link_to raw(entry.formatted_title), permalink_url(entry) %>
+          <%= link_to sanitize(entry.plain_title), entry.permalink_url %>
         <% else %>
-          <%= raw(entry.formatted_title) %>
+          <%= sanitize(entry.plain_title) %>
         <% end %>
       </h1>
-      <%= raw(entry.formatted_body) unless entry.body.blank? %>
+      <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
     </div>
 
     <div class="entry__meta">

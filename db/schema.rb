@@ -11,16 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150626230450) do
+ActiveRecord::Schema.define(version: 20160403222415) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.string   "domain"
     t.text     "description"
-    t.integer  "posts_per_page", default: 10
+    t.integer  "posts_per_page",       default: 10
     t.string   "short_domain"
+    t.text     "about"
+    t.string   "copyright"
+    t.integer  "max_age",              default: 5
+    t.boolean  "show_related_entries", default: true
   end
 
   add_index "blogs", ["domain"], name: "index_blogs_on_domain"
@@ -29,11 +33,11 @@ ActiveRecord::Schema.define(version: 20150626230450) do
     t.string   "title"
     t.text     "body"
     t.string   "slug"
-    t.string   "status",           default: "draft"
+    t.string   "status",            default: "draft"
     t.integer  "blog_id"
     t.integer  "user_id"
-    t.datetime "created_at",                         null: false
-    t.datetime "updated_at",                         null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.datetime "published_at"
     t.integer  "photos_count"
     t.integer  "position"
@@ -42,7 +46,11 @@ ActiveRecord::Schema.define(version: 20150626230450) do
     t.boolean  "post_to_tumblr"
     t.string   "tweet_text"
     t.boolean  "post_to_facebook"
-    t.boolean  "send_yo"
+    t.boolean  "post_to_flickr"
+    t.boolean  "post_to_500px"
+    t.boolean  "show_in_map",       default: true
+    t.boolean  "post_to_slack"
+    t.boolean  "post_to_pinterest"
   end
 
   add_index "entries", ["blog_id"], name: "index_entries_on_blog_id"
@@ -73,9 +81,23 @@ ActiveRecord::Schema.define(version: 20150626230450) do
     t.integer  "focal_length"
     t.string   "film_make"
     t.string   "film_type"
+    t.string   "crop"
   end
 
   add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"
+
+  create_table "slack_incoming_webhooks", force: :cascade do |t|
+    t.string   "team_name"
+    t.string   "team_id"
+    t.string   "url"
+    t.string   "channel"
+    t.string   "configuration_url"
+    t.integer  "blog_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "slack_incoming_webhooks", ["blog_id"], name: "index_slack_incoming_webhooks_on_blog_id"
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
@@ -108,6 +130,9 @@ ActiveRecord::Schema.define(version: 20150626230450) do
     t.datetime "oauth_expires_at"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "avatar_url"
   end
 
 end

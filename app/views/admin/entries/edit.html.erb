@@ -13,7 +13,10 @@
               <%= responsive_image_tag p.object, 'admin_edit' %>
             </div>
             <div class="form__photo-fields">
-              <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'form__input form__input--caption' %>
+              <%= p.text_area :caption, required: true, placeholder: 'Write the caption of the photo here…', class: 'form__input form__input--caption' %>
+              <%= p.label :crop, class: 'form__label' do %>
+                Crop mode <%= p.select(:crop, options_for_select(@crop_options, p.object.crop)) %>
+              <% end %>
               <%= link_to 'Remove', '#', class: 'button button--danger form__photo-delete js-photo-delete' %>
               <%= p.hidden_field :id %>
               <%= p.hidden_field :position, class: 'js-photo-position' %>
@@ -29,14 +32,16 @@
   <%= render partial: 'entry_fields', locals: { f: f } %>
 
   <div class="form__options">
-  <% if @entry.is_published? %>
-    <h2>Options</h2>
-    <%= f.label :invalidate_cloudfront, class: 'form__label form__label--checkbox' do %><%= f.check_box(:invalidate_cloudfront) %> Send CloudFront invalidation request for this entry<% end %>
-  <% else %>
+    <h2>Entry options</h2>
+    <%= f.label :show_in_map, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_in_map %> Show in map<% end %>
+  <% unless @entry.is_published? %>
     <h2>Sharing options</h2>
-    <%= f.label :send_yo, class: 'form__label form__label--checkbox' do %><%= f.check_box(:send_yo) %> Send Yo<% end %>
-    <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box(:post_to_facebook) %> Post to Facebook<% end %>
-    <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box(:post_to_tumblr) %> Post to Tumblr<% end %>
+    <%= f.label :post_to_500px, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_500px %> Post to 500px<% end %>
+    <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_facebook %> Post to Facebook<% end %>
+    <%= f.label :post_to_flickr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_flickr %> Post to Flickr<% end %>
+    <%= f.label :post_to_pinterest, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_pinterest %> Post to Pinterest<% end %>
+    <%= f.label :post_to_slack, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_slack %> Post to Slack<% end %>
+    <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_tumblr %> Post to Tumblr<% end %>
     <%= f.label :post_to_twitter, class: 'form__label form__label--checkbox' do %>
       <%= f.check_box(:post_to_twitter) %> Post to Twitter
     <% end %>

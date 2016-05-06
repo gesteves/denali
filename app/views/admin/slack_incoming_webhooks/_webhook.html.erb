@@ -1,0 +1,7 @@
+<% cache "#{@app_version}/admin/slack_incoming_webhook/#{webhook.id}/#{webhook.updated_at.to_i}" do %>
+  <tr>
+    <td><%= webhook.team_name %></td>
+    <td><%= webhook.channel %></td>
+    <td><%= webhook.created_at.strftime('%B %-d, %Y at %l:%M %P') %></td>
+  </tr>
+<% end %>

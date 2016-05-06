@@ -1,16 +1,16 @@
 .button {
   @include button($color-alert-default, $color-text);
-  -webkit-appearance: none;
+  appearance: none;
   border-radius: 2px;
-  color: $color-text;
   display: block;
   font-family: 'proxima-nova', 'Helvetica Neue', sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  margin: 0 2px;
+  margin: 5px 0;
   padding: 6px 10px;
   position: relative;
   text-align: center;
+  width: 100%;
 
   &:hover {
     cursor: pointer;
@@ -18,6 +18,11 @@
 
   &:focus {
     outline-width: 0;
+  }
+
+  @media (min-width: $bp-admin-m) {
+    margin: 0 5px;
+    width: auto;
   }
 }
 
@@ -31,6 +36,14 @@
 
 .button--success {
   @include button($color-alert-success);
+}
+
+.button--twitter {
+  @include button($color-twitter);
+}
+
+.button--facebook {
+  @include button($color-facebook);
 }
 
 .button--pad-right {

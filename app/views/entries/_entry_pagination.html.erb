@@ -1,10 +1,10 @@
-<% cache "entry/pagination/#{@photoblog.id}/#{@photoblog.updated_at.to_i}/#{entry_pagination.id}/#{entry_pagination.updated_at.to_i}" do %>
-  <nav class="pagination">
+<% cache "#{@app_version}/entry/pagination/#{@photoblog.id}/#{@photoblog.updated_at.to_i}/#{entry_pagination.id}/#{entry_pagination.updated_at.to_i}" do %>
+  <nav class="pagination" role="navigation">
     <span class="pagination__link">
       <% if entry_pagination.newer.nil? %>
         <span class="pagination__prev"><%= t('views.pagination.newer').html_safe %></span>
       <% else %>
-        <%= link_to t('views.pagination.newer').html_safe, permalink_url(entry_pagination.newer), rel: 'prev', class: 'pagination__prev' %>
+        <%= link_to t('views.pagination.newer').html_safe, entry_pagination.newer.permalink_url, rel: 'prev', class: 'pagination__prev' %>
       <% end %>
     </span>
 
@@ -12,7 +12,7 @@
       <% if entry_pagination.older.nil? %>
         <span class="pagination__next"><%= t('views.pagination.older').html_safe %></span>
       <% else %>
-        <%= link_to t('views.pagination.older').html_safe, permalink_url(entry_pagination.older), rel: 'next', class: 'pagination__next' %>
+        <%= link_to t('views.pagination.older').html_safe, entry_pagination.older.permalink_url, rel: 'next', class: 'pagination__next' %>
       <% end %>
     </span>
   </nav>

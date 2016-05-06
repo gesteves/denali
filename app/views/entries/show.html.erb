@@ -1,30 +1,13 @@
 <% content_for :meta do %>
-  <% cache "entry/meta/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
-    <title><%= raw "#{@entry.formatted_title} &middot; #{@photoblog.name}" %></title>
-    <link rel="canonical" href="<%= permalink_url @entry %>">
-    <meta name="description" content="<%= @entry.body.blank? ? Sanitize.fragment(@photoblog.description) : @entry.plain_body %>" />
+  <%= render partial: 'entries/entry_meta', locals: { entry: @entry } %>
+<% end %>
 
-    <meta property="og:title" content="<%= @entry.formatted_title %>" />
-    <% if @entry.is_photo? %>
-      <meta property="og:image" content="<%= @entry.photos.first.url(1280) %>" />
-    <% end %>
-    <meta property="og:description" content="<%= @entry.body.blank? ? Sanitize.fragment(@photoblog.description) : @entry.plain_body %>" />
-    <meta property="og:url" content="<%= permalink_url @entry %>" />
-    <meta property="og:type" content="Article" />
-    <meta property="og:site_name" content="<%= @photoblog.name %>" />
-    <meta property="og:locale" content="en_US" />
-
-    <meta name="twitter:site" content="@gesteves">
-    <meta name="twitter:creator" content="@gesteves">
-    <meta name="twitter:title" content="<%= @entry.formatted_title %>">
-    <meta name="twitter:url" content="<%= permalink_url @entry %>" />
-    <meta name="twitter:description" content="<%= @entry.body.blank? ? Sanitize.fragment(@photoblog.description) : @entry.plain_body %>">
-    <% if @entry.is_photo? %>
-      <meta name="twitter:image" content="<%= @entry.photos.first.url(1280) %>">
-    <% end %>
-    <meta name="twitter:card" content="<%= @entry.is_text? ? "summary" : "summary_large_image" %>" />
+<% content_for :inline_css do %>
+  <% cache "#{@app_version}/entry/styles" do %>
+    <style><%= Rails.application.assets['entry.css'].to_s.html_safe %></style>
   <% end %>
 <% end %>
 
 <%= render partial: 'entries/entry', object: @entry %>
 <%= render partial: 'entries/entry_pagination', object: @entry %>
+<%= render partial: 'entries/related', object: @entry if @photoblog.show_related_entries? %>

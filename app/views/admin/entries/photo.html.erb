@@ -4,16 +4,13 @@
       <div class="form__photo">
         <div class="form__fields form__fields--initial">
           <%= p.url_field :source_url, placeholder: 'Paste a URL', autocomplete: 'off', class: 'form__input form__input--url js-photo-source-url' %>
-          <span class="form__fields-separator"></span>
           <% unless ENV['dropbox_key'].nil? %>
             <%= link_to 'Add from Dropbox', '#', class: 'button js-photo-dropbox' %>
-            <span class="form__fields-separator"></span>
           <% end %>
           <div class="button js-photo-file-button">
             Upload a file
             <%= p.file_field :source_file, accept: '.jpg,.jpeg', class: 'form__input form__input--file js-photo-source-file' %>
           </div>
-          <span class="form__fields-separator"></span>
           <%= link_to 'Close', '#', class: 'button button--danger js-photo-delete' %>
         </div>
         <div class="form__fields form__fields--hidden">
@@ -21,7 +18,10 @@
             <img class="js-photo-thumb" />
           </div>
           <div class="form__photo-fields">
-            <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'form__input form__input--caption' %>
+            <%= p.text_area :caption, required: true, placeholder: 'Write a caption for this photo…', class: 'form__input form__input--caption' %>
+            <%= p.label :crop, class: 'form__label' do %>
+              Crop mode <%= p.select(:crop, options_for_select(@crop_options)) %>
+            <% end %>
             <%= link_to 'Remove', '#', class: 'button button--danger form__photo-delete js-photo-delete' %>
             <%= p.hidden_field :position, class: 'js-photo-position' %>
           </div>

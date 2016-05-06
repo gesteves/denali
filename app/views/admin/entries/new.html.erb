@@ -14,9 +14,14 @@
   <%= render partial: 'entry_fields', locals: { f: f } %>
 
   <div class="form__options">
+    <h2>Entry options</h2>
+    <%= f.label :show_in_map, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_in_map, { checked: true } %> Show in map<% end %>
     <h2>Sharing options</h2>
-    <%= f.label :send_yo, class: 'form__label form__label--checkbox' do %><%= f.check_box :send_yo, { checked: true } %> Send Yo<% end %>
+    <%= f.label :post_to_500px, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_500px, { checked: true } %> Post to 500px<% end %>
     <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_facebook, { checked: true } %> Post to Facebook<% end %>
+    <%= f.label :post_to_flickr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_flickr, { checked: true } %> Post to Flickr<% end %>
+    <%= f.label :post_to_pinterest, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_pinterest, { checked: true } %> Post to Pinterest<% end %>
+    <%= f.label :post_to_slack, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_slack, { checked: true } %> Post to Slack<% end %>
     <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_tumblr, { checked: true } %> Post to Tumblr<% end %>
     <%= f.label :post_to_twitter, class: 'form__label form__label--checkbox' do %>
       <%= f.check_box :post_to_twitter, { checked: true } %> Post to Twitter
@@ -30,7 +35,7 @@
     </div>
     <div class="form__buttons form__buttons--safe">
       <div class="form__select-container">
-        <%= f.select :status, options_for_select([['Save draft', 'draft'], ['Add to queue', 'queued'], ['Publish it!', 'published']]), {}, { class: 'button button--pad-right' } %>
+        <%= f.select :status, options_for_select([['Add to queue', 'queued'], ['Save draft', 'draft'], ['Publish it!', 'published']]), {}, { class: 'button button--pad-right' } %>
       </div>
     <%= f.submit 'Save entry', class: 'button button--success' %>
     </div>

@@ -1,0 +1,10 @@
+<div class="follow">
+  <a href="<%= about_path %>" class="follow__link" title="About <%= @photoblog.name %>"><%= inline_svg 'about', 'follow__icon' %></a>
+  <a href="<%= map_path %>" class="follow__link" title="Map"><%= inline_svg 'map', 'follow__icon' %></a>
+  <a href="mailto:contact@allencompassingtrip.com" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
+  <a href="<%= entries_url page: 1, format: 'atom' %>" class="follow__link" title="Subscribe to Feed"><%= inline_svg 'feed', 'follow__icon' %></a>
+  <a href="https://www.instagram.com/gesteves/" class="follow__link" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>
+  <a href="<%= slack_path %>" class="follow__link" title="Add to Slack"><%= inline_svg 'slack', 'follow__icon' %></a>
+  <a href="https://twitter.com/gesteves" class="follow__link" rel="me" title="Follow on Twitter"><%= inline_svg 'twitter', 'follow__icon' %></a>
+  <a href="http://gesteves.tumblr.com" class="follow__link" rel="me" title="Follow on Tumblr"><%= inline_svg 'tumblr', 'follow__icon' %></a>
+</div>

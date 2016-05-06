@@ -24,6 +24,6 @@ en:
     pagination:
       newest: "Newest"
       oldest: "Oldest"
-      newer: "Next"
-      older: "Previous"
+      newer: "Newer"
+      older: "Older"
       truncate: "&hellip;"

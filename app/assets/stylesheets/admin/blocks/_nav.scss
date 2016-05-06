@@ -3,29 +3,37 @@
   background-color: #FFF;
   border-bottom: 1px solid $color-border;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
   font-size: 12px;
-  left: 0;
   line-height: 2;
   padding: 4px 10px 0;
-  position: fixed;
   text-transform: uppercase;
-  top: 0;
   width: 100%;
   z-index: 1;
 
-  @supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
-    -webkit-backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.75);
-    backdrop-filter: blur(10px);
+  @media (min-width: $bp-admin-m) {
+    flex-flow: row nowrap;
+    left: 0;
+    position: fixed;
+    top: 0;
+
+    @supports (backdrop-filter: none) {
+      background-color: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(10px);
+      border: 0;
+    }
   }
 }
 
 .nav__group {
   align-content: center;
   display: flex;
-  flex-flow: row nowrap;
+  flex-flow: column nowrap;
   flex-grow: 1;
+
+  @media (min-width: $bp-admin-m) {
+    flex-flow: row nowrap;
+  }
 }
 
 .nav__link {

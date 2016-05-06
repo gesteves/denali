@@ -4,36 +4,67 @@ Denali.Queue = (function ($) {
   'use strict';
 
   var opts = {
-    queue_selector : '.js-queue'
+    link_selector  : '[data-queue]',
+    entry_selector : '.entry',
+    list_selector  : '.entry-list'
   };
 
-  var stopSort = function (e, ui) {
-    updatePosition(ui.item);
+  var $list;
+
+  var updatePosition = function () {
+    $list = $(opts.list_selector);
+    var $link = $(this);
+    var $entry = $link.parents(opts.entry_selector);
+    var direction = $link.data('queue');
+    $.post($link.attr('href'));
+    switch (direction) {
+      case 'top':
+        moveToTop($entry);
+        break;
+      case 'up':
+        moveUp($entry);
+        break;
+      case 'down':
+        moveDown($entry);
+        break;
+      case 'bottom':
+        moveToBottom($entry);
+        break;
+    }
+    return false;
   };
 
-  var updatePosition = function ($element) {
-    var id = $element.data('id');
-    var index = $(opts.queue_selector).find('#entry-' + id).index();
-    $.post('/admin/entries/' + id + '/reposition.js', {
-      id : id,
-      position: index + 1
-    });
+  var moveToTop = function ($entry) {
+    $entry.detach();
+    $list.prepend($entry);
+  };
+
+  var moveUp = function ($entry) {
+    var $previous = $entry.prev();
+    if ($previous.length) {
+      $entry.detach();
+      $previous.before($entry);
+    }
+  };
+
+  var moveDown = function ($entry) {
+    var $next = $entry.next();
+    if ($next.length) {
+      $entry.detach();
+      $next.after($entry);
+    }
+  };
+
+  var moveToBottom = function ($entry) {
+    $entry.detach();
+    $list.append($entry);
   };
 
   var init = function () {
-    var $queue = $(opts.queue_selector);
-    
-    if ($queue.length === 0) {
-      return;
-    }
-
-    $queue.on('sortstop', stopSort);
-    $queue.sortable();
+    $(opts.link_selector).on('click', updatePosition);
   };
 
   return {
     init: init
   };
 })(jQuery);
-
-Denali.Queue.init();

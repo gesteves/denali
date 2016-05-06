@@ -1,4 +1,4 @@
-class Photo < ActiveRecord::Base
+class Photo < ApplicationRecord
   include Formattable
 
   belongs_to :entry, touch: true, counter_cache: true
@@ -7,6 +7,7 @@ class Photo < ActiveRecord::Base
     s3_credentials: { access_key_id: ENV['aws_access_key_id'],
                       secret_access_key: ENV['aws_secret_access_key'],
                       bucket: ENV['s3_bucket'] },
+    s3_region: ENV['s3_region'],
     url: ':s3_domain_url',
     path: 'photos/:hash.:extension',
     hash_secret: ENV['secret_key_base'],
@@ -21,12 +22,27 @@ class Photo < ActiveRecord::Base
   before_create :set_image
   after_image_post_process :save_exif, :save_dimensions
 
+  def self.oldest
+    order('taken_at ASC').limit(1).try(:first)
+  end
+
   def original_url
     self.image.url
   end
 
-  def url(width, height = 0, filters = ['quality(90)'], smart = false)
-    ApplicationController.helpers.thumbor_url self.original_url, width: width, height: height, filters: filters, smart: smart
+  def original_path
+    self.image.path
+  end
+
+  def url(opts)
+    opts.reverse_merge!(w: 1200, auto: 'format', square: false)
+    if opts[:square]
+      opts[:h] = opts[:w]
+      opts[:fit] = 'crop'
+      opts[:crop] = self.crop if self.crop.present?
+      opts.delete(:square)
+    end
+    Ix.path(self.original_path).to_url(opts.reject { |k,v| v.blank? })
   end
 
   def formatted_caption
@@ -47,6 +63,14 @@ class Photo < ActiveRecord::Base
 
   def is_vertical?
     self.width < self.height
+  end
+
+  def height_from_width(width)
+    ((self.height.to_f * width.to_f)/self.width.to_f).round
+  end
+
+  def width_from_height(height)
+    ((self.width.to_f * height.to_f)/self.height.to_f).round
   end
 
   private

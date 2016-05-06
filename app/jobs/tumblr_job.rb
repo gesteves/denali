@@ -1,5 +1,4 @@
-class TumblrJob < EntryJob
-
+class TumblrJob < ApplicationJob
   queue_as :default
 
   def perform(entry)
@@ -9,24 +8,15 @@ class TumblrJob < EntryJob
       oauth_token: ENV['tumblr_access_token'],
       oauth_token_secret: ENV['tumblr_access_token_secret']
     })
+
     opts = {
       tags: entry.tag_list.join(', '),
       slug: entry.slug,
-      state: 'draft'
+      caption: entry.formatted_content,
+      link: entry.permalink_url,
+      data: entry.photos.map { |p| open(p.original_url).path }
     }
-    if entry.is_photo?
-      opts.merge!({
-        caption: entry.formatted_content,
-        link: permalink_url(entry),
-        source: entry.photos.map{ |p| p.original_url }
-      })
-      tumblr.photo(ENV['tumblr_domain'], opts)
-    else
-      opts.merge!({
-        title: entry.formatted_title,
-        body: entry.formatted_body
-      })
-      tumblr.text(ENV['tumblr_domain'], opts)
-    end
+
+    tumblr.photo(ENV['tumblr_domain'], opts) if Rails.env.production?
   end
 end

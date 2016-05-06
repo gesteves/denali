@@ -1,20 +1,24 @@
 class SessionsController < ApplicationController
   skip_before_action :domain_redirect
-
+  before_action :block_cloudfront
+  
   def new
-    render layout: nil
+    render
   end
 
   def create
     auth_hash = request.env['omniauth.auth']
-    email = auth_hash.try(:[], 'info').try(:[], 'email')
 
-    if email =~ /@gesteves\.com$/
-      flash[:notice] = "Welcome, #{auth_hash['info']['name']}."
+    if auth_hash.present?
+      flash[:notice] = "Welcome, #{auth_hash['info']['name']}!"
       user = User.from_omniauth(env['omniauth.auth'])
       session[:user_id] = user.id
-      redirect_to admin_entries_path
+      url = session[:original_url] || admin_entries_path
+      session[:original_url] = nil
+      logger.info "[INFO] Successful login by #{auth_hash['info']['email']}"
+      redirect_to url
     else
+      logger.info "[INFO] Unsuccessful login"
       redirect_to signin_path, alert: 'There was a problem logging you in.'
     end
   end

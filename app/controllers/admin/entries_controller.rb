@@ -1,11 +1,11 @@
 class Admin::EntriesController < AdminController
+  include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :reposition, :preview]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :preview]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
+  before_action :set_crop_options, only: [:edit, :photo]
 
-  after_action :enqueue_jobs, only: [:create, :publish]
-  after_action :enqueue_invalidation, only: [:update]
   after_action :update_position, only: [:publish, :queue, :draft, :create]
 
   skip_before_action :require_login, only: [:preview]
@@ -35,6 +35,12 @@ class Admin::EntriesController < AdminController
     @page_title = "Entries tagged \"#{@tag_list.first}\""
   end
 
+  def imported
+    @page = params[:page] || 1
+    @entries = @photoblog.entries.published.joins(:photos).where('photos.width <= ?', 1280).page(@page)
+    @page_title = "Imported"
+  end
+
   # GET /admin/entries/new
   def new
     @entry = @photoblog.entries.new
@@ -49,20 +55,32 @@ class Admin::EntriesController < AdminController
 
   # PATCH /admin/entries/1/publish
   def publish
-    notice = @entry.publish ? 'Entry was successfully published.' : 'Entry couldn\'t be published.'
-    redirect_entry(@entry, notice)
+    if @entry.publish
+      flash[:notice] = 'Your entry was published!'
+    else
+      flash[:alert] = 'Your entry couldn’t be published…'
+    end
+    redirect_entry
   end
 
   # PATCH /admin/entries/1/queue
   def queue
-    notice = @entry.queue ? 'Entry was successfully queued.' : 'Entry couldn\'t be queued.'
-    redirect_entry(@entry, notice)
+    if @entry.queue
+      flash[:notice] = 'Your entry was queued!'
+    else
+      flash[:alert] = 'Your entry couldn’t be queued…'
+    end
+    redirect_entry
   end
 
   # PATCH /admin/entries/1/draft
   def draft
-    notice = @entry.draft ? 'Entry was successfully saved as draft.' : 'Entry couldn\'t be saved as draft.'
-    redirect_entry(@entry, notice)
+    if @entry.draft
+      flash[:notice] = 'Your entry was saved as draft!'
+    else
+      flash[:alert] = 'Your entry couldn’t be saved as draft…'
+    end
+    redirect_entry
   end
 
   # POST /admin/entries
@@ -72,8 +90,10 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save
-        format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully created.' }
+        flash[:notice] = 'Your entry was saved!'
+        format.html { redirect_to get_redirect_url(@entry) }
       else
+        flash[:alert] = 'Your entry couldn’t be saved…'
         format.html { render :new }
       end
     end
@@ -83,8 +103,11 @@ class Admin::EntriesController < AdminController
   def update
     respond_to do |format|
       if @entry.update(entry_params)
-        format.html { redirect_to get_redirect_url(@entry), notice: 'Entry was successfully updated.' }
+        logger.info "Entry #{@entry.id} was updated."
+        flash[:notice] = 'Your entry was updated!'
+        format.html { redirect_to get_redirect_url(@entry) }
       else
+        flash[:alert] = 'Your entry couldn’t be updated…'
         format.html { render :edit }
       end
     end
@@ -94,21 +117,36 @@ class Admin::EntriesController < AdminController
   def destroy
     @entry.destroy
     respond_to do |format|
-      format.html { redirect_to request.referrer || admin_entries_path, notice: 'Entry was successfully destroyed.' }
+      flash[:notice] = 'Your entry was deleted!'
+      format.html { redirect_to request.referrer || admin_entries_path }
     end
   end
 
-  def reposition
-    @entry.insert_at(params[:position].to_i)
-    respond_to do |format|
-      format.js { render text: 'ok' }
-    end
+  def up
+    @entry.move_higher
+    respond_to_reposition
+  end
+
+  def down
+    @entry.move_lower
+    respond_to_reposition
+  end
+
+  def top
+    @entry.move_to_top
+    respond_to_reposition
+  end
+
+  def bottom
+    @entry.move_to_bottom
+    respond_to_reposition
   end
 
   def photo
     @entry = Entry.new
     @count = params[:count] || 1
     @entry.photos.build
+    request.format = 'html'
     respond_to do |format|
       format.html { render layout: nil }
     end
@@ -118,7 +156,7 @@ class Admin::EntriesController < AdminController
     respond_to do |format|
       format.html {
         if @entry.is_published?
-          redirect_to permalink_url @entry
+          redirect_to @entry.permalink_url
         else
           render 'entries/show', layout: 'application'
         end
@@ -137,35 +175,22 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_facebook, :send_yo, :tweet_text, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption])
-    end
-
-    def enqueue_jobs
-      if @entry.is_published? && Rails.env.production?
-        BufferJob.perform_later(@entry, 'twitter') if @entry.post_to_twitter
-        BufferJob.perform_later(@entry, 'facebook') if @entry.post_to_facebook
-        TumblrJob.perform_later(@entry) if @entry.post_to_tumblr
-        YoJob.perform_later(@entry) if @entry.send_yo
-      end
-    end
-
-    def enqueue_invalidation
-      CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && @entry.is_published? && entry_params[:invalidate_cloudfront] == "1"
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_500px, :post_to_facebook, :post_to_slack, :post_to_pinterest, :tweet_text, :show_in_map, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :crop])
     end
 
     def update_position
       @entry.update_position
     end
 
-    def redirect_entry(entry, notice)
+    def redirect_entry
       respond_to do |format|
-        format.html { redirect_to get_redirect_url(entry), notice: notice }
+        format.html { redirect_to get_redirect_url(@entry)}
       end
     end
 
     def get_redirect_url(entry)
       if entry.is_published?
-        permalink_url(entry)
+        entry.permalink_url
       elsif entry.is_queued?
         queued_admin_entries_path
       else
@@ -173,14 +198,26 @@ class Admin::EntriesController < AdminController
       end
     end
 
-    def load_tags
-      @tag_slug = params[:tag]
-      @tags = ActsAsTaggableOn::Tag.where(slug: params[:tag])
-      @tag_list = @tags.map{ |t| t.name }
-    end
-
     def load_tagged_entries
       @page = params[:page] || 1
       @entries = @photoblog.entries.includes(:photos).tagged_with(@tag_list, any: true).order('created_at DESC').page(@page)
+    end
+
+    def set_crop_options
+      @crop_options = [
+        ['Center', ''],
+        ['Detect faces', 'faces'],
+        ['Top', 'top'],
+        ['Right', 'right'],
+        ['Bottom', 'bottom'],
+        ['Left', 'left']
+      ]
+    end
+
+    def respond_to_reposition
+      respond_to do |format|
+        format.html { redirect_to queued_admin_entries_path }
+        format.js { render text: 'ok' }
+      end
     end
 end

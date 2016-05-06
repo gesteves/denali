@@ -1,22 +1,23 @@
 source 'https://rubygems.org'
-ruby '2.2.2'
+ruby '2.3.0'
 
-gem 'rails', '4.2.3'
+gem 'rails', '~> 4.2'
 
 # Auth
 gem 'omniauth-google-oauth2'
 
 # Uploads
-gem 'aws-sdk', '~> 1.64.0'
-gem 'paperclip', '~> 4.2'
+gem 'aws-sdk', '~> 2.0'
+gem 'paperclip', '~> 5.0.0.beta1'
 
 # Front-end things
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
-gem 'thumbor_rails', '1.1.0'
 gem 'autoprefixer-rails'
 gem 'turbolinks'
+gem 'htmlcompressor'
+gem 'imgix'
 
 # Misc
 gem 'jbuilder', '~> 2.3'
@@ -27,9 +28,11 @@ gem 'sanitize'
 gem 'exifr'
 gem 'acts-as-taggable-on', '~> 3.4'
 gem 'httparty'
+gem 'httmultiparty'
 gem 'kaminari'
 gem 'figaro'
-gem 'cloudfront-invalidator'
+gem 'oauth'
+gem 'htmlentities'
 
 # Caching
 gem 'dalli'
@@ -40,24 +43,31 @@ gem 'resque-scheduler'
 
 # Social Networks
 gem 'tumblr_client'
+gem 'flickraw'
+gem 'twitter'
 
 group :production do
   gem 'passenger'
   gem 'pg'
   gem 'rails_12factor'
   gem 'newrelic_rpm'
+  gem 'lograge'
+end
+
+group :development do
+  gem 'web-console', '~> 3.0'
 end
 
 group :development, :test do
   gem 'scss-lint'
   gem 'foreman'
   gem 'byebug'
-  gem 'web-console', '~> 2.1'
   gem 'spring'
   gem 'sqlite3'
+  gem 'brakeman', require: nil
 end
 
 group :test do
   gem 'codeclimate-test-reporter', require: nil
+  gem 'mock_redis'
 end
-

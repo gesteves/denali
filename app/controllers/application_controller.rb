@@ -4,8 +4,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_action :get_photoblog
+  before_action :domain_redirect
+  before_action :set_app_version
 
-  helper_method :current_user, :logged_in?, :logged_out?, :permalink_path, :permalink_url, :short_permalink_url
+  helper_method :current_user, :logged_in?, :logged_out?
 
   def default_url_options
     if Rails.env.production?
@@ -16,7 +18,10 @@ class ApplicationController < ActionController::Base
   end
 
   def require_login
-    redirect_to signin_path unless current_user
+    unless current_user
+      session[:original_url] = request.original_url
+      redirect_to signin_path
+    end
   end
 
   def logged_in?
@@ -32,26 +37,39 @@ class ApplicationController < ActionController::Base
   end
 
   def get_photoblog
-    @photoblog = Blog.find_by(domain: 'www.allencompassingtrip.com')
-  end
-
-  def permalink_path(entry, opts = {})
-    year, month, day, id, slug = entry.slug_params
-    entry_long_path(year, month, day, id, slug)
-  end
-
-  def permalink_url(entry)
-    year, month, day, id, slug = entry.slug_params
-    entry_long_url(year, month, day, id, slug)
-  end
-
-  def short_permalink_url(entry)
-    entry_url(entry.id, { host: @photoblog.short_domain })
+    @photoblog = Blog.first
   end
 
   def domain_redirect
     if Rails.env.production? && !request.host.try(:match, @photoblog.domain) && !request.user_agent.try(:match, /cloudfront/i)
-      redirect_to "http://#{@photoblog.domain}#{request.fullpath}", status: 301
+      protocol = Rails.configuration.force_ssl ? 'https' : 'http'
+      redirect_to "#{protocol}://#{@photoblog.domain}#{request.fullpath}", status: 301
     end
+  end
+
+  def set_max_age
+    max_age = @photoblog.max_age
+    expires_in max_age.minutes, :public => true
+  end
+
+  def no_cache
+    expires_in 0, must_revalidate: true
+  end
+
+  def block_cloudfront
+    if request.user_agent.try(:match, /cloudfront/i)
+      raise ActionController::RoutingError.new('Not Found')
+    end
+  end
+
+  def check_if_user_has_visited
+    @has_visited = cookies[:has_visited].present?
+    cookies[:has_visited] = { value: true, expires: 1.year.from_now }
+  end
+
+  def set_app_version
+    # Requires enabling dyno metadata with `heroku labs:enable runtime-dyno-metadata`
+    # See: https://devcenter.heroku.com/articles/dyno-metadata
+    @app_version = ENV['HEROKU_RELEASE_VERSION'] || 'v1'
   end
 end

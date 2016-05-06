@@ -1,17 +1,49 @@
-<% cache "entry/list/#{entry_list_item.id}/#{entry_list_item.updated_at.to_i}" do %>
-  <li class="entry-list__item <%= 'entry-list__item--text' if entry_list_item.is_text? %>">
-    <a class="entry-list__link" href="<%= permalink_url(entry_list_item) %>">
+<% cache "#{@app_version}/entry/list/#{entry_list_item.id}/#{entry_list_item.updated_at.to_i}" do %>
+  <li class="entry-list__item" role="article">
+    <a class="entry-list__link <%= entry_list_item.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= entry_list_item.permalink_url %>">
       <% if entry_list_item.is_photo? %>
         <figure class="entry-list__photo">
           <%= responsive_image_tag entry_list_item.photos.first,
                   'entry_list_item',
                   { class: 'entry-list__image', alt: entry_list_item.photos.first.caption.blank? ? entry_list_item.title : entry_list_item.photos.first.plain_caption } %>
-          <figcaption class="entry-list__photo-title">
-            <%= raw entry_list_item.formatted_title %>
+          <figcaption class="entry-list__photo-caption">
+            <p class="entry-list__photo-title"><%= sanitize truncate(entry_list_item.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
+            <p class="entry-list__photo-meta">Published on <%= entry_list_item.published_at.strftime('%B %-d, %Y') %></p>
+            <% if entry_list_item.is_photoset? %>
+              <p class="entry-list__photo-meta"><%= pluralize(entry_list_item.photos_count, 'photo') %></p>
+            <% else %>
+              <% photo = entry_list_item.photos.first %>
+              <p class="entry-list__photo-meta">
+                <span class="exif__field">
+                  <%= camera photo.make, photo.model %>
+                </span>
+                <% unless photo.film_make.blank? || photo.film_type.blank? %>
+                  <span class="exif__field">
+                    <%= film photo.film_make, photo.film_type %>
+                  </span>
+                <% end %>
+                <% unless photo.focal_length.blank? %>
+                  <span class="exif__field"><%= photo.focal_length %> mm</span>
+                <% end %>
+                <% unless photo.exposure.blank? %>
+                  <span class="exif__field">
+                    <%= exposure photo.exposure %>
+                  </span>
+                <% end %>
+                <% unless photo.f_number.blank? %>
+                  <span class="exif__field">
+                    f/<%= aperture photo.f_number %>
+                  </span>
+                <% end %>
+                <% unless photo.iso.blank? %>
+                  <span class="exif__field">ISO <%= photo.iso %></span>
+                <% end %>
+              </p>
+            <% end %>
           </figcaption>
         </figure>
       <% else %>
-        <h2><%= entry_list_item.formatted_title %></h2>
+        <h2><%= entry_list_item.plain_title %></h2>
         <%= simple_format(truncate(entry_list_item.plain_body, length: 1200, omission: '…')) %>
       <% end %>
     </a>

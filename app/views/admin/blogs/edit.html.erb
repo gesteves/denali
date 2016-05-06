@@ -20,14 +20,26 @@
   <%= f.label :description, 'Blog description', class: 'form__label' %>
   <%= f.text_area :description, placeholder: 'This blog’s description…', required: true, class: 'form__input form__input--textarea' %>
 
+  <%= f.label :about, 'About this blog', class: 'form__label' %>
+  <%= f.text_area :about, placeholder: 'The content of this blog’s about page…', required: true, class: 'form__input form__input--textarea' %>
+
   <%= f.label :domain, 'Domain', class: 'form__label' %>
   <%= f.text_field :domain, placeholder: 'example.com', class: 'form__input', required: true, autocomplete: 'off' %>
 
   <%= f.label :short_domain, 'Short domain', class: 'form__label' %>
   <%= f.text_field :short_domain, placeholder: 'xmpl.co', class: 'form__input', required: true, autocomplete: 'off' %>
 
+  <%= f.label :copyright, 'Copyright', class: 'form__label' %>
+  <%= f.text_field :copyright, placeholder: 'Your copyright information…', class: 'form__input', required: true, autocomplete: 'off' %>
+
   <%= f.label :posts_per_page, class: 'form__label' %>
-  <%= f.number_field :posts_per_page, min: 1, max: 100, pattern: '\d+', class: 'form__input', required: true %>
+  <%= f.number_field :posts_per_page, min: 1, max: 120, pattern: '\d+', class: 'form__input', required: true %>
+
+  <%= f.label 'Page caching, in minutes', class: 'form__label' %>
+  <%= f.number_field :max_age, min: 0, max: 525600, placeholder: 'Time, in minutes, public pages will be cached.', pattern: '\d+', class: 'form__input', required: true %>
+
+  <h2>More options</h2>
+  <%= f.label :show_related_entries, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_related_entries %> Show related entries<% end %>
 
   <div class="form__actions">
     <div class="form__buttons">
@@ -39,4 +51,3 @@
   </div>
 
 <% end %>
-

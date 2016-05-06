@@ -3,37 +3,41 @@ module ApplicationHelper
   def responsive_image_tag(photo, photo_key, html_options = {})
     html_options[:srcset] = get_srcset(photo, photo_key)
     html_options[:sizes] = get_sizes(photo_key)
+    html_options[:src] = get_src(photo, photo_key) unless PHOTOS[photo_key]['src'].nil?
     content_tag :img, nil, html_options
   end
 
-  def get_srcset(photo, photo_key)
-    filters = get_filters(photo_key)
-    smart = use_smart_cropping?(photo_key)
-    PHOTOS[photo_key]['srcset'].
-      uniq.
-      sort{ |a, b| a.split('x').first.to_i <=> b.split('x').first.to_i }.
-      map{ |s| build_srcset_url(photo, s, filters, smart)}.
-      join(', ')
+  def amp_image_tag(photo, photo_key, html_options = {})
+    html_options[:srcset] = get_srcset(photo, photo_key)
+    html_options[:sizes] = get_sizes(photo_key)
+    html_options[:src] = get_src(photo, photo_key) unless PHOTOS[photo_key]['src'].nil?
+    content_tag 'amp-img', nil, html_options
   end
 
-  def build_srcset_url(photo, dimensions, filters, smart = false)
-    width = dimensions.split('x').first.to_i
-    height = dimensions.split('x').last.to_i
-    "#{photo.url(width, height, filters, smart)} #{width}w"
+  def get_src(photo, photo_key)
+    quality = PHOTOS[photo_key]['quality']
+    square = PHOTOS[photo_key]['square'].present?
+    width = PHOTOS[photo_key]['src']
+    client_hints = PHOTOS[photo_key]['client_hints']
+    auto = PHOTOS[photo_key]['auto'] || 'format'
+    photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)
+  end
+
+  def get_srcset(photo, photo_key)
+    quality = PHOTOS[photo_key]['quality']
+    square = PHOTOS[photo_key]['square'].present?
+    client_hints = PHOTOS[photo_key]['client_hints']
+    auto = PHOTOS[photo_key]['auto'] || 'format'
+    PHOTOS[photo_key]['srcset'].
+      uniq.
+      sort.
+      reject { |width| width > photo.width }.
+      map { |width| "#{photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)} #{width}w" }.
+      join(', ')
   end
 
   def get_sizes(photo_key)
     PHOTOS[photo_key]['sizes'].join(', ')
-  end
-
-  def get_filters(photo_key)
-    filters = []
-    filters << PHOTOS[photo_key]['filters'] unless PHOTOS[photo_key]['filters'].nil?
-    filters
-  end
-
-  def use_smart_cropping?(photo_key)
-    PHOTOS[photo_key]['smart_cropping'].present? && PHOTOS[photo_key]['smart_cropping']
   end
 
   def inline_svg(svg_id, svg_class = "icon")
@@ -43,7 +47,7 @@ module ApplicationHelper
 
   def facebook_share_url(entry)
     params = {
-      u: permalink_url(entry)
+      u: entry.permalink_url
     }
 
     "https://www.facebook.com/sharer/sharer.php?#{params.to_query}"
@@ -51,8 +55,8 @@ module ApplicationHelper
 
   def twitter_share_url(entry)
     params = {
-      text: entry.tweet_text.blank? ? truncate(entry.formatted_title, length: 120, omission: '…') : entry.tweet_text,
-      url: permalink_url(entry),
+      text: entry.tweet_text.blank? ? truncate(entry.plain_title, length: 120, omission: '…') : entry.tweet_text,
+      url: entry.permalink_url,
       via: 'gesteves'
     }
 
@@ -62,20 +66,21 @@ module ApplicationHelper
   def tumblr_share_url(entry)
     params = {
       posttype: 'link',
-      title: entry.formatted_title,
-      content: permalink_url(entry),
-      caption: entry.formatted_body,
-      tags: entry.tag_list.join(',')
+      title: entry.plain_title,
+      content: entry.permalink_url,
+      canonicalUrl: entry.permalink_url
     }
+
+    params[:tags] = entry.tag_list.join(',') unless entry.tag_list.blank?
 
     "https://www.tumblr.com/widgets/share/tool?#{params.to_query}"
   end
 
   def pinterest_share_url(entry)
     params = {
-      url: permalink_url(entry),
-      media: entry.photos.first.url(2560),
-      description: entry.formatted_title
+      url: entry.permalink_url,
+      media: entry.photos.first.url(w: 2560),
+      description: entry.plain_title
     }
 
     "https://www.pinterest.com/pin/create/button/?#{params.to_query}"

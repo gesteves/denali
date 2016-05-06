@@ -1,0 +1,23 @@
+<% content_for :nav do %>
+  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'slack' } %>
+<% end %>
+
+<% cache "#{@app_version}/admin/slack_incoming_webhooks/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% if @webhooks.size == 0 %>
+    <p class="content__message">No webhooks have been installed.</p>
+  <% else %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Channel</th>
+          <th>Added</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render partial: 'webhook', collection: @webhooks %>
+      </tbody>
+    </table>
+    <%= paginate @webhooks %>
+  <% end %>
+<% end %>
