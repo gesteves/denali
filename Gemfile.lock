@@ -270,6 +270,8 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    sentry-raven (1.0.0)
+      faraday (>= 0.7.6)
     sexp_processor (4.7.0)
     simple_oauth (0.3.1)
     simplecov (0.11.2)
@@ -373,6 +375,7 @@ DEPENDENCIES
   sass-rails (~> 5.0)
   scss-lint
   sdoc (~> 0.4.0)
+  sentry-raven
   spring
   sqlite3
   tumblr_client
