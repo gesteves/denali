@@ -157,7 +157,7 @@ class Admin::EntriesController < AdminController
         if @entry.is_published?
           redirect_to @entry.permalink_url
         else
-          render 'entries/show', layout: 'application'
+          render 'entries/show.html.erb', layout: 'application'
         end
       }
     end
