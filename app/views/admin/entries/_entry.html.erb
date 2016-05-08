@@ -1,6 +1,6 @@
 <% cache "#{@app_version}/admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <li class="entry">
-    <%= link_to entry.is_published? ? entry.permalink_url : preview_admin_entry_path(entry) do %>
+    <%= link_to entry.is_published? ? entry.permalink_url : preview_admin_entry_path(entry), 'data-no-turbolink': true do %>
       <% entry.photos.each do |p| %>
         <%= responsive_image_tag p, 'admin_entry', { class: 'entry__thumb' } %>
       <% end %>

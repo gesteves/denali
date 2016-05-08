@@ -152,12 +152,13 @@ class Admin::EntriesController < AdminController
   end
 
   def preview
+    request.format = 'html'
     respond_to do |format|
       format.html {
         if @entry.is_published?
           redirect_to @entry.permalink_url
         else
-          render 'entries/show.html.erb', layout: 'application'
+          render 'entries/show', layout: 'application'
         end
       }
     end
