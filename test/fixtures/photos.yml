@@ -59,7 +59,7 @@ panda:
 
 franklin:
   position: 1
-  entry: panda
+  entry: franklin
   image_file_name: tumblr_lx00c71gKU1qzattso1_1280.jpg
   image_content_type: image/jpeg
   image_file_size: 531641
