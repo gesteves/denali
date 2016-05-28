@@ -24,10 +24,10 @@ Denali.LazyLoad = (function () {
     }
   };
 
-  var handleIntersection = function (changes) {
-    changes.forEach(function (change) {
-      loadImage(change.target);
-      observer.unobserve(change.target);
+  var handleIntersection = function (entries) {
+    entries.forEach(function (entry) {
+      loadImage(entry.target);
+      observer.unobserve(entry.target);
     });
   };
 
