@@ -2,7 +2,7 @@
   <li class="entry">
     <% if entry.is_photo? %>
       <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : preview_admin_entry_path(entry) %>" <%= aspect_ratio(entry.photos.first) if entry.is_photo? %> data-no-turbolink>
-        <%= lazy_responsive_image_tag entry.photos.first, 'admin_entry', { class: 'entry__thumb', onload: 'this.style.opacity = 1' } %>
+        <%= lazy_responsive_image_tag entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
       </a>
     <% end %>
     <div class="entry__content <% if entry.is_text? %>entry__content--text<% end %>">

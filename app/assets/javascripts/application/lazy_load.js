@@ -11,17 +11,17 @@ Denali.LazyLoad = (function () {
   var observer;
 
   var init = function () {
-    var images;
+    var images = document.querySelectorAll('.' + opts.load_class);
     if (typeof IntersectionObserver === 'undefined') {
       document.addEventListener('scroll', handleScroll);
       loadImages();
     } else {
       observer = new IntersectionObserver(handleIntersection);
-      images = document.querySelectorAll('.' + opts.load_class);
       for (var i = 0; i < images.length; i++) {
         observer.observe(images[i]);
       }
     }
+    hideImages(images);
   };
 
   var handleIntersection = function (entries) {
@@ -72,6 +72,19 @@ Denali.LazyLoad = (function () {
       image.removeAttribute('data-src');
     }
     image.classList.remove(opts.load_class);
+  };
+
+  var hideImages = function (images) {
+    var image;
+    for (var i = 0; i < images.length; i++) {
+      image = images[i];
+      image.style.opacity = 0;
+      image.addEventListener('load', showImage);
+    }
+  };
+
+  var showImage = function (event) {
+    event.target.style.opacity = 1;
   };
 
   return {

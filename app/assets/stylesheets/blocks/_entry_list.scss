@@ -63,7 +63,6 @@
 
 .entry-list__image {
   height: 100%;
-  opacity: 0;
   transition: opacity $fadein_duration linear;
   width: 100%;
 
@@ -71,10 +70,6 @@
     left: 0;
     position: absolute;
     top: 0;
-  }
-
-  .entry-list__item--map & {
-    opacity: 1;
   }
 }
 
