@@ -43,21 +43,19 @@ Denali.LazyLoad = (function () {
     var image,
         images,
         image_top,
-        bottom;
+        viewport_height;
 
     images = document.querySelectorAll('.' + opts.load_class);
-
+    viewport_height = document.documentElement.clientHeight;
     if (images.length === 0) {
       document.removeEventListener('scroll', handleScroll);
       return;
     }
 
-    bottom = window.pageYOffset + document.documentElement.clientHeight;
-
     for (var i = 0; i < images.length; i++) {
       image = images[i];
       image_top = image.getBoundingClientRect().top;
-      if (image_top <= bottom) {
+      if (image_top <= viewport_height) {
         loadImage(image);
       }
     }
