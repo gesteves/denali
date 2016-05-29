@@ -34,7 +34,7 @@
 
 <% cache "#{@app_version}/entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <ol class="entry-list" role="main">
-    <%= render partial: 'entries/entry_list_item', collection: @entries %>
+    <%= render partial: 'entries/entry_list_item', collection: @entries, locals: { lazy_load_start_index: 12 } %>
   </ol>
   <%= paginate @entries %>
 <% end %>
