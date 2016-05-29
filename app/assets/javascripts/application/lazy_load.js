@@ -11,17 +11,25 @@ Denali.LazyLoad = (function () {
   var observer;
 
   var init = function () {
+    var image, i;
     var images = document.querySelectorAll('.' + opts.load_class);
     if (typeof IntersectionObserver === 'undefined') {
+      for (i = 0; i < images.length; i++) {
+        image = images[i];
+        image.style.opacity = 0;
+        image.addEventListener('load', showImage);
+      }
       document.addEventListener('scroll', handleScroll);
       loadImages();
     } else {
       observer = new IntersectionObserver(handleIntersection);
-      for (var i = 0; i < images.length; i++) {
-        observer.observe(images[i]);
+      for (i = 0; i < images.length; i++) {
+        image = images[i];
+        image.style.opacity = 0;
+        image.addEventListener('load', showImage);
+        observer.observe(image);
       }
     }
-    hideImages(images);
   };
 
   var handleIntersection = function (entries) {
@@ -46,11 +54,13 @@ Denali.LazyLoad = (function () {
         viewport_height;
 
     images = document.querySelectorAll('.' + opts.load_class);
-    viewport_height = document.documentElement.clientHeight;
+
     if (images.length === 0) {
       document.removeEventListener('scroll', handleScroll);
       return;
     }
+
+    viewport_height = document.documentElement.clientHeight;
 
     for (var i = 0; i < images.length; i++) {
       image = images[i];
@@ -72,15 +82,6 @@ Denali.LazyLoad = (function () {
       image.removeAttribute('data-src');
     }
     image.classList.remove(opts.load_class);
-  };
-
-  var hideImages = function (images) {
-    var image;
-    for (var i = 0; i < images.length; i++) {
-      image = images[i];
-      image.style.opacity = 0;
-      image.addEventListener('load', showImage);
-    }
   };
 
   var showImage = function (event) {
