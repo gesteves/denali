@@ -72,6 +72,10 @@
     position: absolute;
     top: 0;
   }
+
+  .entry-list__item--map & {
+    opacity: 1;
+  }
 }
 
 .entry-list__link--text {
