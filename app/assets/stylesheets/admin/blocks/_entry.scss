@@ -15,7 +15,7 @@
   opacity: 0;
   position: absolute;
   top: 0;
-  transition: opacity 150ms linear;
+  transition: opacity $fadein_duration linear;
 }
 
 .entry__link {

@@ -64,7 +64,7 @@
 .entry-list__image {
   height: 100%;
   opacity: 0;
-  transition: opacity 150ms linear;
+  transition: opacity $fadein_duration linear;
   width: 100%;
 
   &.noscript {
