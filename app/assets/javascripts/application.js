@@ -13,7 +13,6 @@ Turbolinks.enableProgressBar();
 // event has already fired.
 if (document.readyState !== 'loading') {
   Denali.SocialShare.init();
-  Denali.Shortcuts.init();
   Denali.ImageZoom.init();
   Denali.LazyLoad.init();
   Denali.Map.init();
@@ -21,11 +20,9 @@ if (document.readyState !== 'loading') {
 }
 
 document.addEventListener('page:change', Denali.SocialShare.init);
-document.addEventListener('page:change', Denali.Shortcuts.init);
 document.addEventListener('page:change', Denali.ImageZoom.init);
 document.addEventListener('page:change', Denali.LazyLoad.init);
 document.addEventListener('page:change', Denali.Map.init);
 document.addEventListener('page:change', Denali.Analytics.sendPageview);
 document.addEventListener('orientationchange', Denali.ImageZoom.init);
-document.addEventListener('keydown', Denali.Shortcuts.handleKeyPress);
 window.addEventListener('resize', Denali.ImageZoom.handleResize);
