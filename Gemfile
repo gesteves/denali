@@ -53,7 +53,6 @@ group :production do
   gem 'rails_12factor'
   gem 'newrelic_rpm'
   gem 'lograge'
-  gem 'librato-rails'
 end
 
 group :development do
