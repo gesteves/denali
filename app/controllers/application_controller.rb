@@ -41,7 +41,11 @@ class ApplicationController < ActionController::Base
   end
 
   def domain_redirect
-    if Rails.env.production? && !request.host.try(:match, @photoblog.domain) && !request.user_agent.try(:match, /cloudfront/i)
+    # Prevent people from bypassing CloudFront and hitting Heroku directly,
+    # by checking the `X-Denali-Secret` header, which should be sent by CloudFront.
+    # If it doesn't match the secret in the environment variables,
+    # redirect the visitor to the CDN.
+    if Rails.env.production? && !request.host.try(:match, @photoblog.domain) && request.headers['X-Denali-Secret'] != ENV['denali_secret']
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
       redirect_to "#{protocol}://#{@photoblog.domain}#{request.fullpath}", status: 301
     end
