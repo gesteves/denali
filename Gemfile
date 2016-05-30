@@ -34,7 +34,6 @@ gem 'figaro'
 gem 'oauth'
 gem 'htmlentities'
 gem 'sentry-raven'
-gem 'librato-rails'
 
 # Caching
 gem 'dalli'
