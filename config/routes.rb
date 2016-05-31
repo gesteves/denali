@@ -47,6 +47,8 @@ Rails.application.routes.draw do
   # Redirects
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
   get '/rss'                           => 'entries#rss'
+  get '/feed'                          => 'entries#rss'
+  get '/atom'                          => 'entries#rss'
 
   get '/admin'                         => 'admin#index'
   get '/auth/:provider/callback'       => 'sessions#create'
