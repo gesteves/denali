@@ -53,11 +53,11 @@ class ApplicationController < ActionController::Base
 
   def set_max_age
     max_age = @photoblog.max_age
-    expires_in max_age.minutes, :public => true
+    expires_in max_age.minutes, public: true
   end
 
   def no_cache
-    expires_in 0, must_revalidate: true
+    expires_now
   end
 
   def block_cloudfront
