@@ -9,7 +9,11 @@ Denali.Analytics = (function () {
     }
   };
 
+  var init = function () {
+    document.addEventListener('page:change', sendPageview);
+  };
+
   return {
-    sendPageview: sendPageview
+    init: init
   };
 })();

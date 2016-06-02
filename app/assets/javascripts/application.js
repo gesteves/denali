@@ -16,13 +16,13 @@ if (document.readyState !== 'loading') {
   Denali.ImageZoom.init();
   Denali.LazyLoad.init();
   Denali.Map.init();
-  Denali.Analytics.sendPageview();
+  Denali.Analytics.init();
 }
 
+document.addEventListener('DOMContentLoaded', Denali.Analytics.init);
 document.addEventListener('page:change', Denali.SocialShare.init);
 document.addEventListener('page:change', Denali.ImageZoom.init);
 document.addEventListener('page:change', Denali.LazyLoad.init);
 document.addEventListener('page:change', Denali.Map.init);
-document.addEventListener('page:change', Denali.Analytics.sendPageview);
 document.addEventListener('orientationchange', Denali.ImageZoom.init);
 window.addEventListener('resize', Denali.ImageZoom.handleResize);
