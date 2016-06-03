@@ -10,11 +10,4 @@ namespace :queue do
       puts 'Queued entry failed to publish.'
     end
   end
-
-  task :fix => [:environment] do
-    Entry.queued.each_with_index do |entry, index|
-      entry.position = index + 1
-      entry.save
-    end
-  end
 end
