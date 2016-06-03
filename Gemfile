@@ -48,7 +48,7 @@ gem 'flickraw'
 gem 'twitter'
 
 group :production do
-  gem 'passenger'
+  gem 'puma'
   gem 'pg'
   gem 'rails_12factor'
   gem 'newrelic_rpm'
