@@ -16,7 +16,7 @@ Denali.Queue = (function ($) {
     var $link = $(this);
     var $entry = $link.parents(opts.entry_selector);
     var direction = $link.data('queue');
-    $.post($link.attr('href'));
+    $.post($link.attr('href') + '.json');
     switch (direction) {
       case 'top':
         moveToTop($entry);

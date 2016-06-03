@@ -65,12 +65,14 @@ class Entry < ApplicationRecord
   end
 
   def publish
+    self.remove_from_list
     self.status = 'published'
     self.save && self.enqueue_jobs
   end
 
   def queue
     unless status == 'published'
+      self.insert_at(Entry.queued.size)
       self.status = 'queued'
       self.save
     end
@@ -78,6 +80,7 @@ class Entry < ApplicationRecord
 
   def draft
     unless status == 'published'
+      self.remove_from_list
       self.status = 'draft'
       self.save
     end
@@ -93,14 +96,6 @@ class Entry < ApplicationRecord
 
   def related(count = 12)
     Entry.includes(:photos).tagged_with(self.tag_list, any: true, order_by_matching_tag_count: true).where('entries.id != ? AND entries.status = ?', self.id, 'published').limit(count)
-  end
-
-  def update_position
-    if self.is_queued?
-      self.insert_at(Entry.last_queued_position + 1)
-    else
-      self.remove_from_list
-    end
   end
 
   def formatted_body
@@ -119,15 +114,6 @@ class Entry < ApplicationRecord
     content = self.title
     content += "\n\n#{self.body}" unless self.body.blank?
     markdown_to_html(content)
-  end
-
-  def self.last_queued_position
-    queue = Entry.queued
-    if queue.blank? || queue.last.position.nil?
-      0
-    else
-      queue.last.position
-    end
   end
 
   def slug_params
