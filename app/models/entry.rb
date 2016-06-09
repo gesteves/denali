@@ -95,7 +95,8 @@ class Entry < ApplicationRecord
   end
 
   def related(count = 12)
-    Entry.includes(:photos).tagged_with(self.tag_list, any: true, order_by_matching_tag_count: true).where('entries.id != ? AND entries.status = ?', self.id, 'published').limit(count)
+    earliest_date = (self.published_at || self.created_at) - 2.years
+    Entry.includes(:photos).tagged_with(self.tag_list, any: true, order_by_matching_tag_count: true).where('entries.id != ? AND entries.status = ? AND published_at > ?', self.id, 'published', earliest_date).limit(count)
   end
 
   def formatted_body
