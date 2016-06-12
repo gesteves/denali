@@ -9,10 +9,10 @@ Rails.application.routes.draw do
     get 'settings'                    => 'blogs#edit'
     patch 'settings/update'           => 'blogs#update'
     get '/slack(/page/:page)'         => 'slack_incoming_webhooks#index',  constraints: { page: /\d+/ }, :as => :slack
-    get '/preview/:id'                => 'entries#preview', constraints: { id: /\d+/ }, :as => 'preview_entry'
 
     resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable do
       member do
+        get 'preview'
         patch 'publish'
         patch 'queue'
         patch 'draft'

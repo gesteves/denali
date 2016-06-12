@@ -5,8 +5,6 @@ class Admin::EntriesController < AdminController
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_crop_options, only: [:edit, :photo]
-  before_action :domain_redirect, only: [:preview]
-  before_action :set_max_age, only: [:preview]
 
   after_action :update_position, only: [:create]
 
