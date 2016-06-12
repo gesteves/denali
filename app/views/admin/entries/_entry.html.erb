@@ -17,7 +17,7 @@
       </div>
       <% if entry.is_queued? %>
         <div class="entry__timestamp">
-          Queued for <%= publish_date_for_queued(entry, entry_counter) %>
+          Queued for <%= publish_date_for_queued(entry) %>
         </div>
       <% end %>
       <div class="entry__meta-bottom">

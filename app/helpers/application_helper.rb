@@ -98,4 +98,13 @@ module ApplicationHelper
 
     "https://www.pinterest.com/pin/create/button/?#{params.to_query}"
   end
+
+  def publish_date_for_queued(entry, format = '%A, %B %-d')
+    days = if Time.now.utc.hour < 17
+      entry.position - 1
+    else
+      entry.position
+    end
+    (Time.now + days.days).strftime(format)
+  end
 end
