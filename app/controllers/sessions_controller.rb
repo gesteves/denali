@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
-
+  before_action :no_cache
+  
   def new
     render
   end
