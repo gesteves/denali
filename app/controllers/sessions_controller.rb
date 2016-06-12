@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
   before_action :no_cache
-  
+  skip_before_action :domain_redirect
+
   def new
     render
   end
