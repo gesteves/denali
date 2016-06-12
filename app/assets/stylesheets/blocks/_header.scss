@@ -72,14 +72,6 @@
     order: inherit;
     padding: 0 20px;
   }
-
-  @media (min-width: $bp-xxl) {
-    max-width: 360px;
-  }
-
-  @media (min-width: $bp-max) {
-    max-width: 420px;
-  }
 }
 
 .header__icon {
