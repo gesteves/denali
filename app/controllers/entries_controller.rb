@@ -47,13 +47,13 @@ class EntriesController < ApplicationController
   end
 
   def rss
-    expires_in 1.year, :public => true
+    expires_in 1.year, public: true
     redirect_to entries_url(page: 1, format: 'atom'), status: 301
   end
 
   def sitemap
     @entries = @photoblog.entries.published
-    expires_in 24.hours, :public => true
+    expires_in 24.hours, public: true
     render format: 'xml'
   end
 

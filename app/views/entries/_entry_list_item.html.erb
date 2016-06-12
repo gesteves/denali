@@ -1,11 +1,18 @@
-<% cache "#{@app_version}/entry/list/#{entry_list_item.id}/#{entry_list_item.updated_at.to_i}" do %>
+<% lazy_load = !local_assigns[:lazy_load_start_index] || entry_list_item_counter >= lazy_load_start_index %>
+<% cache "#{@app_version}/entry/list/#{lazy_load ? 'lazy' : 'nolazy'}/#{entry_list_item.id}/#{entry_list_item.updated_at.to_i}" do %>
   <li class="entry-list__item" role="article">
     <a class="entry-list__link <%= entry_list_item.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= entry_list_item.permalink_url %>">
       <% if entry_list_item.is_photo? %>
         <figure class="entry-list__photo">
-          <%= responsive_image_tag entry_list_item.photos.first,
+          <% if lazy_load %>
+            <%= lazy_responsive_image_tag entry_list_item.photos.first,
                   'entry_list_item',
                   { class: 'entry-list__image', alt: entry_list_item.photos.first.caption.blank? ? entry_list_item.title : entry_list_item.photos.first.plain_caption } %>
+          <% else %>
+            <%= responsive_image_tag entry_list_item.photos.first,
+                  'entry_list_item',
+                  { class: 'entry-list__image', alt: entry_list_item.photos.first.caption.blank? ? entry_list_item.title : entry_list_item.photos.first.plain_caption } %>
+          <% end %>
           <figcaption class="entry-list__photo-caption">
             <p class="entry-list__photo-title"><%= sanitize truncate(entry_list_item.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
             <p class="entry-list__photo-meta">Published on <%= entry_list_item.published_at.strftime('%B %-d, %Y') %></p>

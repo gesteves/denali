@@ -7,6 +7,14 @@ module ApplicationHelper
     content_tag :img, nil, html_options
   end
 
+  def lazy_responsive_image_tag(photo, photo_key, html_options = {})
+    html_options[:'data-srcset'] = get_srcset(photo, photo_key)
+    html_options[:sizes] = get_sizes(photo_key)
+    html_options[:class] += ' js-lazy-load'
+    html_options[:'data-src'] = get_src(photo, photo_key) unless PHOTOS[photo_key]['src'].nil?
+    content_tag :img, nil, html_options
+  end
+
   def amp_image_tag(photo, photo_key, html_options = {})
     html_options[:srcset] = get_srcset(photo, photo_key)
     html_options[:sizes] = get_sizes(photo_key)
@@ -43,6 +51,11 @@ module ApplicationHelper
   def inline_svg(svg_id, svg_class = "icon")
     svg_id = svg_id.gsub("#", "")
     "<svg viewBox=\"0 0 100 100\" class=\"#{svg_class} #{svg_class}--#{svg_id}\"><use xlink:href=\"#svg-#{svg_id}\"></use></svg>".html_safe
+  end
+
+  def aspect_ratio(photo)
+    padding = (photo.height.to_f/photo.width.to_f) * 100
+    "style=padding-top:#{padding}%"
   end
 
   def facebook_share_url(entry)

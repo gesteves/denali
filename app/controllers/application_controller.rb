@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :domain_redirect
   before_action :set_app_version
 
-  helper_method :current_user, :logged_in?, :logged_out?
+  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?
 
   def default_url_options
     if Rails.env.production?
@@ -32,6 +32,10 @@ class ApplicationController < ActionController::Base
     !logged_in?
   end
 
+  def is_cloudfront?
+    request.headers['X-Denali-Secret'] == ENV['denali_secret']
+  end
+
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
@@ -41,7 +45,8 @@ class ApplicationController < ActionController::Base
   end
 
   def domain_redirect
-    if Rails.env.production? && !request.host.try(:match, @photoblog.domain) && !request.user_agent.try(:match, /cloudfront/i)
+    # Prevent people from bypassing CloudFront and hitting Heroku directly.
+    if Rails.env.production? && !is_cloudfront?
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
       redirect_to "#{protocol}://#{@photoblog.domain}#{request.fullpath}", status: 301
     end
@@ -49,17 +54,11 @@ class ApplicationController < ActionController::Base
 
   def set_max_age
     max_age = @photoblog.max_age
-    expires_in max_age.minutes, :public => true
+    expires_in max_age.minutes, public: true
   end
 
   def no_cache
-    expires_in 0, must_revalidate: true
-  end
-
-  def block_cloudfront
-    if request.user_agent.try(:match, /cloudfront/i)
-      raise ActionController::RoutingError.new('Not Found')
-    end
+    expires_now
   end
 
   def check_if_user_has_visited

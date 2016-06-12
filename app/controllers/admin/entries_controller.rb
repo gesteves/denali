@@ -5,8 +5,10 @@ class Admin::EntriesController < AdminController
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_crop_options, only: [:edit, :photo]
+  before_action :domain_redirect, only: [:preview]
+  before_action :set_max_age, only: [:preview]
 
-  after_action :update_position, only: [:publish, :queue, :draft, :create]
+  after_action :update_position, only: [:create]
 
   skip_before_action :require_login, only: [:preview]
 
@@ -153,6 +155,7 @@ class Admin::EntriesController < AdminController
   end
 
   def preview
+    request.format = 'html'
     respond_to do |format|
       format.html {
         if @entry.is_published?
@@ -179,7 +182,9 @@ class Admin::EntriesController < AdminController
     end
 
     def update_position
-      @entry.update_position
+      if !@entry.is_queued?
+        @entry.remove_from_list
+      end
     end
 
     def redirect_entry
@@ -217,7 +222,14 @@ class Admin::EntriesController < AdminController
     def respond_to_reposition
       respond_to do |format|
         format.html { redirect_to queued_admin_entries_path }
-        format.js { render text: 'ok' }
+        format.json {
+          response = {
+            status: 200,
+            entry_id: @entry.id,
+            entry_position: @entry.position
+          }
+          render json: response
+        }
       end
     end
 end

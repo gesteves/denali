@@ -25,7 +25,6 @@ module Denali
     config.generators.stylesheets = false
     config.generators.javascripts = false
     config.exceptions_app = self.routes
-    config.middleware.use Rack::Deflater
     config.middleware.use HtmlCompressor::Rack, {
       remove_javascript_protocol: false
     }
