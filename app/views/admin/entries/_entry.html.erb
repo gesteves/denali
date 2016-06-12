@@ -1,7 +1,7 @@
 <% cache "#{@app_version}/admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <li class="entry" <% if entry.is_queued? %>data-position="<%= entry.position %>"<% end %>>
     <% if entry.is_photo? %>
-      <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : preview_admin_entry_path(entry) %>" <%= aspect_ratio(entry.photos.first) if entry.is_photo? %> data-no-turbolink>
+      <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : admin_preview_entry_path(entry) %>" <%= aspect_ratio(entry.photos.first) if entry.is_photo? %> data-no-turbolink>
         <%= lazy_responsive_image_tag entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
       </a>
     <% end %>
@@ -35,7 +35,7 @@
         <% end %>
         <div class="entry__actions">
           <% unless entry.is_published? %>
-            <%= link_to 'Preview', preview_admin_entry_path(entry) %>
+            <%= link_to 'Preview', admin_preview_entry_path(entry) %>
           <% end %>
           <%= link_to 'Edit', edit_admin_entry_path(entry) %>
           <% if entry.is_draft? %>
