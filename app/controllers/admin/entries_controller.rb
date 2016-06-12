@@ -45,6 +45,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/new
   def new
     @entry = @photoblog.entries.new
+    @entry.status = 'queued'
     @entry.photos.build
     @page_title = 'New entry'
   end

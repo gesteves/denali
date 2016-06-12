@@ -14,6 +14,10 @@
   <%= render partial: 'entry_fields', locals: { f: f } %>
 
   <div class="form__options">
+    <h2>Publish status</h2>
+    <%= f.label :status_queued, class: 'form__label form__label--checkbox' do %><%= f.radio_button :status, 'queued' %>Queued<% end %>
+    <%= f.label :status_draft, class: 'form__label form__label--checkbox' do %><%= f.radio_button :status, 'draft' %>Draft<% end %>
+    <%= f.label :status_published, class: 'form__label form__label--checkbox' do %><%= f.radio_button :status, 'published' %>Publish it!<% end %>
     <h2>Entry options</h2>
     <%= f.label :show_in_map, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_in_map, { checked: true } %> Show in map<% end %>
     <h2>Sharing options</h2>
@@ -34,9 +38,6 @@
       <%= link_to 'Cancel', admin_entries_path, data: { confirm: 'Are you sure you want to discard this?' }, class: 'button button--danger' %>
     </div>
     <div class="form__buttons form__buttons--safe">
-      <div class="form__select-container">
-        <%= f.select :status, options_for_select([['Add to queue', 'queued'], ['Save draft', 'draft'], ['Publish it!', 'published']]), {}, { class: 'button button--pad-right' } %>
-      </div>
     <%= f.submit 'Save entry', class: 'button button--success' %>
     </div>
   </div>
