@@ -4,7 +4,7 @@ class EntriesController < ApplicationController
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :load_entries, only: [:index]
-  before_action :set_max_age, only: [:index, :tagged, :show]
+  before_action :set_max_age, only: [:index, :tagged]
   before_action :check_if_user_has_visited, only: [:index, :tagged, :show]
 
   def index
@@ -17,6 +17,7 @@ class EntriesController < ApplicationController
   end
 
   def show
+    expires_in 24.hours, public: true
     @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
     respond_to do |format|
       format.html {

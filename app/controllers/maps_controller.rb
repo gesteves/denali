@@ -1,9 +1,9 @@
 class MapsController < ApplicationController
   layout false
-  before_action :set_max_age, only: [:index]
   before_action :check_if_user_has_visited, only: [:index]
 
   def index
+    expires_in 24.hours, public: true
   end
 
   def photos

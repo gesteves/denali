@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160403222415) do
+ActiveRecord::Schema.define(version: 20160613163502) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -23,7 +23,6 @@ ActiveRecord::Schema.define(version: 20160403222415) do
     t.string   "short_domain"
     t.text     "about"
     t.string   "copyright"
-    t.integer  "max_age",              default: 5
     t.boolean  "show_related_entries", default: true
   end
 

@@ -1,6 +1,7 @@
 class BlogsController < ApplicationController
-  before_action :set_max_age, :check_if_user_has_visited
+  before_action :check_if_user_has_visited
 
   def about
+    expires_in 24.hours, public: true
   end
 end

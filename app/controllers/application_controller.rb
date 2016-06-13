@@ -53,8 +53,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_max_age
-    max_age = @photoblog.max_age
-    expires_in max_age.minutes, public: true
+    expires_in 5.minutes, public: true
   end
 
   def no_cache
