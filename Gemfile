@@ -34,6 +34,7 @@ gem 'figaro'
 gem 'oauth'
 gem 'htmlentities'
 gem 'sentry-raven'
+gem 'cloudfront-invalidator'
 
 # Caching
 gem 'dalli'
