@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_max_age
-    expires_in 5.minutes, public: true
+    expires_in 60.minutes, public: true
   end
 
   def no_cache
