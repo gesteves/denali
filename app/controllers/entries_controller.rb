@@ -38,6 +38,7 @@ class EntriesController < ApplicationController
   end
 
   def tumblr
+    expires_in 1.year, public: true
     @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
     raise ActiveRecord::RecordNotFound if @entry.nil?
     respond_to do |format|
