@@ -1,6 +1,6 @@
 User-agent: *
 Disallow: /page
-Disallow: /tagged/page
+Disallow: /tagged
 Disallow: /admin
 Disallow: /signin
 
