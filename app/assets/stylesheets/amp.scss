@@ -58,19 +58,12 @@ a:active {
     }
   }
 
-  @media (min-width: $bp-s) {
-    width: 33vw;
+  @media (min-width: $bp-xs) {
+    width: 100%;
   }
 
-  @media (min-width: $bp-m) {
+  @media (min-width: $bp-l) {
     margin: 0 auto;
-  }
-
-  @media (min-width: $bp-xxl) {
-    max-width: 360px;
-  }
-
-  @media (min-width: $bp-max) {
-    max-width: 420px;
+    padding: 0 20px;
   }
 }
