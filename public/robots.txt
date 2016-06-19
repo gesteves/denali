@@ -1,7 +1,0 @@
-User-agent: *
-Disallow: /page
-Disallow: /tagged
-Disallow: /admin
-Disallow: /signin
-
-Sitemap: https://www.allencompassingtrip.com/sitemap.xml

@@ -1,0 +1,2 @@
+module RobotsHelper
+end

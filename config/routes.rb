@@ -40,7 +40,7 @@ Rails.application.routes.draw do
   get '/map'                           => 'maps#index', :as => :map
   get '/map/photos.:format'            => 'maps#photos'
   get '/slack'                         => 'slack#index', :as => :slack
-  get '/sitemap'                       => 'entries#sitemap', defaults: { format: 'xml' }
+  get '/sitemap.:format'               => 'entries#sitemap', defaults: { format: 'xml' }, :as => :sitemap
   get '/about'                         => 'blogs#about', :as => :about
   get '/oembed'                        => 'oembed#show', :as => :oembed
 
@@ -53,13 +53,14 @@ Rails.application.routes.draw do
   get '/atom'                          => 'entries#index', defaults: { format: 'atom' }
 
   # Admin
-  get '/admin'                         => 'admin#index'
+  get '/admin'                         => 'admin#index',      :as => :admin
   get '/auth/:provider/callback'       => 'sessions#create'
   get '/auth/failure'                  => 'sessions#failure'
   get '/signin'                        => 'sessions#new',     :as => :signin
   get '/signout'                       => 'sessions#destroy', :as => :signout
 
   # The rest
+  get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }
   root 'entries#index'
   match '/404', to: 'errors#file_not_found', via: :all
   match '/422', to: 'errors#unprocessable', via: :all
