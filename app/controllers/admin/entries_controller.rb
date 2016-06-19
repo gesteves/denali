@@ -6,7 +6,6 @@ class Admin::EntriesController < AdminController
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_crop_options, only: [:edit, :photo]
   before_action :domain_redirect, only: [:preview]
-  before_action :set_max_age, only: [:preview]
 
   after_action :update_position, only: [:create]
   after_action :enqueue_invalidation, only: [:update]
@@ -156,6 +155,7 @@ class Admin::EntriesController < AdminController
   end
 
   def preview
+    expires_in 60.minutes, public: true
     request.format = 'html'
     respond_to do |format|
       format.html {

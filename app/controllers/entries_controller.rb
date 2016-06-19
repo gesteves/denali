@@ -4,9 +4,9 @@ class EntriesController < ApplicationController
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :load_entries, only: [:index]
-  before_action :set_max_age, only: [:index, :tagged]
 
   def index
+    expires_in 60.minutes, public: true
     raise ActiveRecord::RecordNotFound if @entries.empty?
     respond_to do |format|
       format.html
@@ -28,6 +28,7 @@ class EntriesController < ApplicationController
   end
 
   def tagged
+    expires_in 60.minutes, public: true
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     respond_to do |format|
       format.html
