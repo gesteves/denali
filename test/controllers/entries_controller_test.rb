@@ -24,11 +24,6 @@ class EntriesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should redirect old feed url" do
-    get :rss
-    assert_redirected_to entries_url page: 1, format: 'atom'
-  end
-
   test "should generate feed" do
     get :index, page: 1, format: 'atom'
     assert_template :index
