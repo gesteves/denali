@@ -43,6 +43,12 @@ class ApplicationController < ActionController::Base
     @photoblog = Blog.first
   end
 
+  def block_cloudfront
+    if Rails.env.production? && is_cloudfront?
+      raise ActionController::RoutingError.new('Not Found')
+    end
+  end
+
   def domain_redirect
     # Prevent people from bypassing CloudFront and hitting Heroku directly.
     if Rails.env.production? && !is_cloudfront?

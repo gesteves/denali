@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   before_action :no_cache
+  before_action :block_cloudfront
   skip_before_action :domain_redirect
 
   def new
