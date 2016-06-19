@@ -31,7 +31,7 @@ Rails.application.routes.draw do
   end
 
 
-  get '/(page/:page)'                    => 'entries#index',  constraints: { page: /\d+/ }, :as => :entries
+  get '/(page/:page)'                  => 'entries#index',  constraints: { page: /\d+/ }, :as => :entries
   get '/count/:count'                  => 'entries#index',  constraints: { count: /\d+/ }
   get '/tagged/:tag(/page/:page)'      => 'entries#tagged', constraints: { page: /\d+/ }, :as => :tag
   get '/tagged/:tag(/count/:count)'    => 'entries#tagged', constraints: { count: /\d+/ }
@@ -46,18 +46,21 @@ Rails.application.routes.draw do
 
   # Redirects
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
-  get '/rss'                           => 'entries#rss'
-  get '/feed'                          => 'entries#rss'
-  get '/atom'                          => 'entries#rss'
 
+  # Feeds
+  get '/rss'                           => 'entries#index', format: 'atom', count: 25
+  get '/feed'                          => 'entries#index', format: 'atom', count: 25
+  get '/atom'                          => 'entries#index', format: 'atom', count: 25
+
+  # Admin
   get '/admin'                         => 'admin#index'
   get '/auth/:provider/callback'       => 'sessions#create'
   get '/auth/failure'                  => 'sessions#failure'
   get '/signin'                        => 'sessions#new',     :as => :signin
   get '/signout'                       => 'sessions#destroy', :as => :signout
 
+  # The rest
   root 'entries#index'
-
   match '/404', to: 'errors#file_not_found', via: :all
   match '/422', to: 'errors#unprocessable', via: :all
   match '/500', to: 'errors#internal_server_error', via: :all
