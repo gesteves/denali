@@ -11,7 +11,7 @@
     <link href="<%= image_path 'icon-76.png' %>" rel="apple-touch-icon" sizes="76x76">
     <link href="<%= image_path "favicon.png" %>" rel="icon" type="image/png">
     <%= render partial: 'entries/entry_meta.html.erb', locals: { entry: @entry } %>
-    <% cache "#{@app_version}/amp/styles" do %>
+    <% cache "amp/styles" do %>
       <style amp-custom>
         <%= Rails.application.assets['amp.css'].to_s.gsub('@charset "UTF-8";', '').html_safe %>
       </style>
@@ -27,7 +27,7 @@
       </a>
     </header>
 
-    <% cache "#{@app_version}/entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+    <% cache "entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
       <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
         <% @entry.photos.each do |photo| %>
           <figure class="entry__photo">
