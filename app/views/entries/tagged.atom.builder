@@ -5,12 +5,14 @@ cache "entries/tagged/atom/#{@tag_slug}/page/#{@page}/count/#{@count}/#{@photobl
       xml.id atom_tag(tag_url(tag: @tag_slug), @photoblog.updated_at)
       xml.title "#{@photoblog.name} - Entries tagged “#{@tags.first.name}”"
       xml.link rel: 'alternate', type: 'text/html', href: tag_url(tag: @tag_slug)
+      xml.link rel: 'self', type: 'application/atom+xml', href: tag_url(format: 'atom', tag: @tag_slug)
     else
       xml.id atom_tag(tag_url(tag: @tag_slug, page: @page), @photoblog.updated_at)
       xml.title "#{@photoblog.name} - Entries tagged “#{@tags.first.name}” - Page #{@page}"
       xml.link rel: 'alternate', type: 'text/html', href: tag_url(tag: @tag_slug, page: @page)
+      xml.link rel: 'self', type: 'application/atom+xml', href: tag_url(page: @page, format: 'atom', tag: @tag_slug)
     end
-    xml.link rel: 'self', type: 'application/atom+xml', href: tag_url(page: @page, format: 'atom', tag: @tag_slug)
+
     xml.updated @photoblog.updated_at.utc.strftime('%FT%TZ')
 
     @entries.each do |e|
