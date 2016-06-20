@@ -1,16 +1,12 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :preview]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_crop_options, only: [:edit, :photo]
-  before_action :domain_redirect, only: [:preview]
-
   after_action :update_position, only: [:create]
   after_action :enqueue_invalidation, only: [:update]
-
-  skip_before_action :require_login, only: [:preview]
 
   # GET /admin/entries
   def index
@@ -151,20 +147,6 @@ class Admin::EntriesController < AdminController
     request.format = 'html'
     respond_to do |format|
       format.html { render layout: nil }
-    end
-  end
-
-  def preview
-    expires_in 60.minutes, public: true
-    request.format = 'html'
-    respond_to do |format|
-      format.html {
-        if @entry.is_published?
-          redirect_to @entry.permalink_url
-        else
-          render 'entries/show', layout: 'application'
-        end
-      }
     end
   end
 

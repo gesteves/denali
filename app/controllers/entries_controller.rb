@@ -15,6 +15,16 @@ class EntriesController < ApplicationController
     end
   end
 
+  def tagged
+    expires_in 60.minutes, public: true
+    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    respond_to do |format|
+      format.html
+      format.json
+      format.atom
+    end
+  end
+
   def show
     expires_in 24.hours, public: true
     @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
@@ -27,13 +37,18 @@ class EntriesController < ApplicationController
     end
   end
 
-  def tagged
+  def preview
     expires_in 60.minutes, public: true
-    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    request.format = 'html'
+    @entry = @photoblog.entries.includes(:photos, :user, :blog).find(params[:id])
     respond_to do |format|
-      format.html
-      format.json
-      format.atom
+      format.html {
+        if @entry.is_published?
+          redirect_to @entry.permalink_url
+        else
+          render 'entries/show'
+        end
+      }
     end
   end
 

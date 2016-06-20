@@ -9,19 +9,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     @entry.save
   end
 
-  test 'should render preview page' do
-    panda = entries(:panda)
-    get :preview, id: panda.id
-    assert_response :success
-    assert_template layout: 'layouts/application'
-    assert_template :show
-  end
-
-  test 'should redirect published photos from preview page' do
-    get :preview, id: @entry.id
-    assert_redirected_to @entry.permalink_url
-  end
-
   test 'should render entries page' do
     get :index
     assert_response :success

@@ -26,12 +26,14 @@
   <% end %>
   <meta name="twitter:card" content="<%= entry.is_text? ? "summary" : "summary_large_image" %>">
   <%= auto_discovery_link_tag :atom, entries_url(page: 1, format: 'atom'), title: entry.blog.name %>
-  <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
-  <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">
-  <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
-  <link rel="amphtml" href="<%= entry.permalink_url(format: 'amp') %>">
-  <link rel="canonical" href="<%= entry.permalink_url %>">
-  <script type="application/ld+json">
-    <%= sanitize render partial: 'entries/entry_schema.json.jbuilder', locals: { entry: entry } %>
-  </script>
+  <% if @entry.is_published? %>
+    <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
+    <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">
+    <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
+    <link rel="amphtml" href="<%= entry.permalink_url(format: 'amp') %>">
+    <link rel="canonical" href="<%= entry.permalink_url %>">
+    <script type="application/ld+json">
+      <%= sanitize render partial: 'entries/entry_schema.json.jbuilder', locals: { entry: entry } %>
+    </script>
+  <% end %>
 <% end %>

@@ -43,6 +43,19 @@ class EntriesControllerTest < ActionController::TestCase
     assert_select '.entry__headline', 1
   end
 
+  test 'should preview page' do
+    panda = entries(:panda)
+    get :preview, id: panda.id, slug: panda.slug
+    assert_response :success
+    assert_template :show
+  end
+
+  test 'should redirect published photos from preview page' do
+    entry = entries(:peppers)
+    get :preview, id: entry.id, slug: entry.slug
+    assert_redirected_to entry.permalink_url
+  end
+
   test 'photo amp page should render correctly' do
     entry = entries(:peppers)
     get :show, year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug, format: 'amp'
