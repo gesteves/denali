@@ -10,7 +10,9 @@
     <link href="<%= image_path 'icon-120.png' %>" rel="apple-touch-icon" sizes="120x120">
     <link href="<%= image_path 'icon-76.png' %>" rel="apple-touch-icon" sizes="76x76">
     <link href="<%= image_path "favicon.png" %>" rel="icon" type="image/png">
-    <%= render partial: 'entries/entry_meta.html.erb', locals: { entry: @entry } %>
+    <% cache "entry/amp/meta/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+      <%= render partial: 'entries/entry_meta.html.erb', locals: { entry: @entry } %>
+    <% end %>
     <% cache "amp/styles" do %>
       <style amp-custom>
         <%= Rails.application.assets['amp.css'].to_s.gsub('@charset "UTF-8";', '').html_safe %>

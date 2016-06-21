@@ -1,5 +1,7 @@
 <% content_for :meta do %>
-  <%= render partial: 'entries/entry_meta', locals: { entry: @entry } %>
+  <% cache "entry/meta/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+    <%= render partial: 'entries/entry_meta', locals: { entry: @entry } %>
+  <% end %>
 <% end %>
 
 <%= render partial: 'entries/entry', object: @entry %>
