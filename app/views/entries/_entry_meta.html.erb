@@ -30,7 +30,9 @@
     <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
     <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">
     <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
-    <link rel="amphtml" href="<%= entry.permalink_url(format: 'amp') %>">
+    <% unless @is_amp %>
+      <link rel="amphtml" href="<%= entry.permalink_url(format: 'amp') %>">
+    <% end %>
     <link rel="canonical" href="<%= entry.permalink_url %>">
     <script type="application/ld+json">
       <%= sanitize render partial: 'entries/entry_schema.json.jbuilder', locals: { entry: entry } %>
