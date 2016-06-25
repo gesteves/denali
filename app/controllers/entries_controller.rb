@@ -8,35 +8,41 @@ class EntriesController < ApplicationController
   def index
     expires_in 60.minutes, public: true
     raise ActiveRecord::RecordNotFound if @entries.empty?
-    respond_to do |format|
-      format.html
-      format.json
-      format.atom
+    if stale?(@photoblog)
+      respond_to do |format|
+        format.html
+        format.json
+        format.atom
+      end
     end
   end
 
   def tagged
     expires_in 60.minutes, public: true
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
-    respond_to do |format|
-      format.html
-      format.json
-      format.atom
+    if stale?(@photoblog)
+      respond_to do |format|
+        format.html
+        format.json
+        format.atom
+      end
     end
   end
 
   def show
     expires_in 24.hours, public: true
     @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
-    respond_to do |format|
-      format.html {
-        redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
-      }
-      format.json
-      format.amp {
-        @is_amp = true
-        render layout: nil
-      }
+    if stale?(@photoblog)
+      respond_to do |format|
+        format.html {
+          redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
+        }
+        format.json
+        format.amp {
+          @is_amp = true
+          render layout: nil
+        }
+      end
     end
   end
 
@@ -44,14 +50,16 @@ class EntriesController < ApplicationController
     expires_in 60.minutes, public: true
     request.format = 'html'
     @entry = @photoblog.entries.includes(:photos, :user, :blog).find(params[:id])
-    respond_to do |format|
-      format.html {
-        if @entry.is_published?
-          redirect_to @entry.permalink_url
-        else
-          render 'entries/show'
-        end
-      }
+    if stale?(@entry)
+      respond_to do |format|
+        format.html {
+          if @entry.is_published?
+            redirect_to @entry.permalink_url
+          else
+            render 'entries/show'
+          end
+        }
+      end
     end
   end
 
@@ -59,17 +67,21 @@ class EntriesController < ApplicationController
     expires_in 1.year, public: true
     @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
     raise ActiveRecord::RecordNotFound if @entry.nil?
-    respond_to do |format|
-      format.html {
-        redirect_to @entry.permalink_url, status: 301
-      }
+    if stale?(@entry)
+      respond_to do |format|
+        format.html {
+          redirect_to @entry.permalink_url, status: 301
+        }
+      end
     end
   end
 
   def sitemap
     @entries = @photoblog.entries.published
     expires_in 24.hours, public: true
-    render format: 'xml'
+    if stale?(@photoblog)
+      render format: 'xml'
+    end
   end
 
   private
