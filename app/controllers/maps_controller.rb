@@ -3,12 +3,12 @@ class MapsController < ApplicationController
 
   def index
     expires_in 24.hours, public: true
-    fresh_when @photoblog
+    fresh_when @photoblog, public: true
   end
 
   def photos
     expires_in 24.hours, public: true
-    if stale?(@photoblog)
+    if stale?(@photoblog, public: true)
       respond_to do |format|
         format.json
       end

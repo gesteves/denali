@@ -8,7 +8,7 @@ class EntriesController < ApplicationController
   def index
     expires_in 60.minutes, public: true
     raise ActiveRecord::RecordNotFound if @entries.empty?
-    if stale?(@photoblog)
+    if stale?(@photoblog, public: true)
       respond_to do |format|
         format.html
         format.json
@@ -20,7 +20,7 @@ class EntriesController < ApplicationController
   def tagged
     expires_in 60.minutes, public: true
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
-    if stale?(@photoblog)
+    if stale?(@photoblog, public: true)
       respond_to do |format|
         format.html
         format.json
@@ -32,7 +32,7 @@ class EntriesController < ApplicationController
   def show
     expires_in 24.hours, public: true
     @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
-    if stale?(@photoblog)
+    if stale?(@photoblog, public: true)
       respond_to do |format|
         format.html {
           redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
@@ -50,7 +50,7 @@ class EntriesController < ApplicationController
     expires_in 60.minutes, public: true
     request.format = 'html'
     @entry = @photoblog.entries.includes(:photos, :user, :blog).find(params[:id])
-    if stale?(@entry)
+    if stale?(@entry, public: true)
       respond_to do |format|
         format.html {
           if @entry.is_published?
@@ -67,7 +67,7 @@ class EntriesController < ApplicationController
     expires_in 1.year, public: true
     @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
     raise ActiveRecord::RecordNotFound if @entry.nil?
-    if stale?(@entry)
+    if stale?(@entry, public: true)
       respond_to do |format|
         format.html {
           redirect_to @entry.permalink_url, status: 301
@@ -79,7 +79,7 @@ class EntriesController < ApplicationController
   def sitemap
     @entries = @photoblog.entries.published
     expires_in 24.hours, public: true
-    if stale?(@photoblog)
+    if stale?(@photoblog, public: true)
       render format: 'xml'
     end
   end
