@@ -150,7 +150,6 @@ class Entry < ApplicationRecord
     self.enqueue_tumblr
     self.enqueue_facebook
     self.enqueue_flickr
-    self.enqueue_500px
     self.enqueue_pinterest
     self.enqueue_slack
     true
@@ -170,10 +169,6 @@ class Entry < ApplicationRecord
 
   def enqueue_flickr
     FlickrJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_flickr
-  end
-
-  def enqueue_500px
-    FiveHundredJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_500px
   end
 
   def enqueue_slack
