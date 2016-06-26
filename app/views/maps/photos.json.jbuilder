@@ -1,5 +1,5 @@
 json.cache! "maps/photos/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
-  json.array! @photoblog.entries.photo_entries.published.mapped.joins(:photos).includes(:photos).where('photos.latitude is not null AND photos.longitude is not null') do |e|
+  json.array! @entries do |e|
     e.photos.each do |p|
       json.type 'Feature'
       json.geometry do

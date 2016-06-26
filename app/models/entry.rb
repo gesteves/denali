@@ -31,7 +31,7 @@ class Entry < ApplicationRecord
   end
 
   def self.mapped
-    where(show_in_map: true)
+    photo_entries.published.joins(:photos).includes(:photos).where(entries: { show_in_map: true }).where.not(photos: { latitude: nil, longitude: nil })
   end
 
   def self.text_entries

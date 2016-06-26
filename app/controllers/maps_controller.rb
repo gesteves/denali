@@ -8,6 +8,7 @@ class MapsController < ApplicationController
 
   def photos
     expires_in 24.hours, public: true
+    @entries = @photoblog.entries.mapped
     if stale?(@photoblog, public: true)
       respond_to do |format|
         format.json
