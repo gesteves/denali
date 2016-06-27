@@ -89,7 +89,13 @@ class Admin::EntriesController < AdminController
     respond_to do |format|
       if @entry.save
         flash[:notice] = 'Your entry was saved!'
-        format.html { redirect_to get_redirect_url(@entry) }
+        format.html {
+          if params[:return].present?
+            redirect_to new_admin_entry_path
+          else
+            redirect_to get_redirect_url(@entry)
+          end
+        }
       else
         flash[:alert] = 'Your entry couldn’t be saved…'
         format.html { render :new }
