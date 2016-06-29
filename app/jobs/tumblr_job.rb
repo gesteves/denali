@@ -14,7 +14,8 @@ class TumblrJob < ApplicationJob
       slug: entry.slug,
       caption: entry.formatted_content,
       link: entry.permalink_url,
-      data: entry.photos.map { |p| open(p.original_url).path }
+      data: entry.photos.map { |p| open(p.original_url).path },
+      state: 'queue'
     }
 
     tumblr.photo(ENV['tumblr_domain'], opts) if Rails.env.production?
