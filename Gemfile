@@ -8,14 +8,14 @@ gem 'omniauth-google-oauth2'
 
 # Uploads
 gem 'aws-sdk', '~> 2.0'
-gem 'paperclip', '~> 5.0.0.beta1'
+gem 'paperclip', '~> 5.0'
 
 # Front-end things
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'autoprefixer-rails'
-gem 'turbolinks'
+gem 'turbolinks', '~> 2.0'
 gem 'htmlcompressor'
 gem 'imgix'
 
