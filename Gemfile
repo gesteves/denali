@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.3.1'
 
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 5.0'
 
 # Auth
 gem 'omniauth-google-oauth2'
@@ -26,7 +26,7 @@ gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr'
-gem 'acts-as-taggable-on', '~> 3.0'
+gem 'acts-as-taggable-on', :git => 'git@github.com:mbleigh/acts-as-taggable-on.git'
 gem 'httparty'
 gem 'httmultiparty'
 gem 'kaminari'
