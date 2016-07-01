@@ -72,4 +72,5 @@ end
 group :test do
   gem 'codeclimate-test-reporter', require: nil
   gem 'mock_redis'
+  gem 'rails-controller-testing'
 end
