@@ -18,22 +18,20 @@ Denali.Map = (function () {
       return;
     }
     loading = document.querySelector('.js-loading');
-    loadMapbox();
+    if (typeof map === 'undefined') {
+      loadMapbox();
+    } else {
+      map.remove();
+      initMap(opts.default_latitude, opts.default_longitude);
+    }
   };
 
   var loadMapbox = function () {
-    loadJS('https://api.tiles.mapbox.com/mapbox.js/v2.3.0/mapbox.js', function () {
-      loadMarkerCluster();
+    loadJS('https://api.tiles.mapbox.com/mapbox.js/v2.4.0/mapbox.js', function () {
+      loadJS('https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js', function () {
+        initMap(opts.default_latitude, opts.default_longitude);
+      });
     });
-    loadCSS('https://api.tiles.mapbox.com/mapbox.js/v2.3.0/mapbox.css');
-  };
-
-  var loadMarkerCluster = function () {
-    loadJS('https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js', function () {
-      initMap(opts.default_latitude, opts.default_longitude);
-    });
-    loadCSS('https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css');
-    loadCSS('https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css');
   };
 
   var showLoadingSpinner = function () {
@@ -113,6 +111,6 @@ Denali.Map = (function () {
   };
 
   return {
-    init : init,
+    init : init
   };
 })();

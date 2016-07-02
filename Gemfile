@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.3.1'
 
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 5.0'
 
 # Auth
 gem 'omniauth-google-oauth2'
@@ -15,7 +15,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'autoprefixer-rails'
-gem 'turbolinks', '~> 2.0'
+gem 'turbolinks', '~> 5.0'
 gem 'htmlcompressor'
 gem 'imgix'
 
@@ -26,7 +26,7 @@ gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr'
-gem 'acts-as-taggable-on', '~> 3.0'
+gem 'acts-as-taggable-on', :github => 'mbleigh/acts-as-taggable-on'
 gem 'httparty'
 gem 'httmultiparty'
 gem 'kaminari'
@@ -72,4 +72,5 @@ end
 group :test do
   gem 'codeclimate-test-reporter', require: nil
   gem 'mock_redis'
+  gem 'rails-controller-testing'
 end

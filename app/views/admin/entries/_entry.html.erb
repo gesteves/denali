@@ -1,7 +1,7 @@
 <% cache "admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
-  <li class="entry" <% if entry.is_queued? %>data-position="<%= entry.position %>"<% end %>>
+  <li class="entry" <% if entry.is_queued? %>data-position="<%= entry.position %>"<% end %>  data-turbolinks="false">
     <% if entry.is_photo? %>
-      <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.id, entry.slug) %>" <%= aspect_ratio(entry.photos.first) if entry.is_photo? %> data-no-turbolink>
+      <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.id, entry.slug) %>" <%= aspect_ratio(entry.photos.first) if entry.is_photo? %>>
         <%= lazy_responsive_image_tag entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
       </a>
     <% end %>
@@ -26,7 +26,7 @@
             <%= link_to "Published #{entry.published_at.strftime('%A, %B %-d, %Y')}", entry.permalink_url %>
           </div>
         <% elsif entry.is_queued? %>
-          <div class="entry__actions entry__actions--queue" data-no-turbolink>
+          <div class="entry__actions entry__actions--queue">
             <%= link_to 'Move to top', top_admin_entry_path(entry.id), method: :post, data: { queue: 'top' } %>
             <%= link_to 'Move up', up_admin_entry_path(entry.id), method: :post, data: { queue: 'up' } %>
             <%= link_to 'Move down', down_admin_entry_path(entry.id), method: :post, data: { queue: 'down' } %>
