@@ -22,7 +22,9 @@ Denali.LazyLoad = (function () {
       document.addEventListener('scroll', handleScroll);
       loadImages();
     } else {
-      observer = new IntersectionObserver(handleIntersection);
+      if (typeof observer === 'undefined') {
+        observer = new IntersectionObserver(handleIntersection);
+      }
       for (i = 0; i < images.length; i++) {
         image = images[i];
         image.style.opacity = 0;
