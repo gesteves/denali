@@ -32,7 +32,7 @@ class EntriesController < ApplicationController
   def show
     expires_in 24.hours, public: true
     @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
-    if stale?(@entry, public: true)
+    if stale?(@photoblog, public: true)
       respond_to do |format|
         format.html {
           redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
@@ -50,7 +50,7 @@ class EntriesController < ApplicationController
     expires_in 60.minutes, public: true
     request.format = 'html'
     @entry = @photoblog.entries.includes(:photos, :user, :blog).find(params[:id])
-    if stale?(@entry, public: true)
+    if stale?(@photoblog, public: true)
       respond_to do |format|
         format.html {
           if @entry.is_published?
