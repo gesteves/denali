@@ -10,7 +10,7 @@
       <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
     </div>
     <div class="entry__meta">
-      <div>
+      <div data-turbolinks="true">
         <% entry.tags.each do |t| %>
           <span class="entry__tag"><%= link_to t.name, admin_tag_path(t.slug) %></span>
         <% end %>
