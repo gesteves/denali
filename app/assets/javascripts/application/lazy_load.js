@@ -76,7 +76,7 @@ Denali.LazyLoad = (function () {
   };
 
   var loadImage = function (image) {
-    if (image.hasAttribute('data-srcset') && typeof image.srcset !== 'undefined') {
+    if (image.hasAttribute('data-srcset') && typeof image.srcset !== 'undefined' && typeof image.sizes !== 'undefined') {
       image.setAttribute('srcset', image.getAttribute('data-srcset'));
       image.removeAttribute('data-srcset');
     } else if (image.hasAttribute('data-src')) {
