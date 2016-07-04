@@ -1,0 +1,48 @@
+defaults: &defaults
+  site:
+    domain: 'mytheoryontimetravel.org'
+    short_domain: 'mtott.co'
+    name: 'My Theory On Time Travel'
+    description: "Niv's Photoblog"
+    about: "This is a blog"
+    posts_per_page: 36
+    photographer: 'Niv Shah'
+    email: 'contact@mytheoryontimetravel.org'
+    auth_email: "nivshah@gmail.com"
+
+  social:
+    dropbox:
+      enabled: false
+    facebook:
+      enabled: false
+    fivehundredpx:
+      enabled: false
+      username:
+    flickr:
+      enabled: true
+      username: 'niv513'
+    google:
+      enabled: false
+    instagram:
+      enabled: true
+      username: 'nivshah'
+    pinterest:
+      enabled: false
+      username:
+    slack:
+      enabled: false
+    tumblr:
+      enabled: false
+      url:
+    twitter:
+      enabled: true
+      username: 'nivshah'
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+production:
+  <<: *defaults

@@ -14,8 +14,10 @@
     <meta property="og:site_name" content="<%= @photoblog.name %>">
     <meta property="og:locale" content="en_US">
 
-    <meta name="twitter:site" content="@gesteves">
-    <meta name="twitter:creator" content="@gesteves">
+    <% if Rails.application.config.social['twitter']['enabled'] == true %>
+      <meta name="twitter:site" content="@<%= Rails.application.config.social['twitter']['username'] %>">
+      <meta name="twitter:creator" content="@<%= Rails.application.config.social['twitter']['username'] %>">
+    <% end %>
     <meta name="twitter:title" content="<%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>">
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">

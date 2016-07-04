@@ -9,7 +9,6 @@ class SessionsController < ApplicationController
 
   def create
     auth_hash = request.env['omniauth.auth']
-
     if auth_hash.present?
       flash[:notice] = "Welcome, #{auth_hash['info']['name']}!"
       user = User.from_omniauth(env['omniauth.auth'])

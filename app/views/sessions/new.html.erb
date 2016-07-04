@@ -1,7 +1,9 @@
 <% content_for :meta do %>
   <title>Sign in &middot; <%= @photoblog.name %></title>
 <% end %>
-
+<% flash.each do |name, msg| %>
+  <%= content_tag :div, msg, class: "flash flash--#{name}" %>
+<% end %>
 <div class="signin">
   <a href="/auth/google_oauth2" class="button button--danger">Sign in with Google</a>
 </div>
