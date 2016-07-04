@@ -24,7 +24,9 @@ module EntriesHelper
     elsif make =~ /canon/i
       'Canon'
     end
-    "#{make} #{model.gsub(%r{#{make}}i, '')}"
+    if make
+      "#{make} #{model.gsub(%r{#{make}}i, '')}"
+    end
   end
 
   def article(word)

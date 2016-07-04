@@ -6,6 +6,7 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
+<<<<<<< HEAD
 Blog.create(
   name: ENV['site_name'],
   domain: ENV['site_domain'],
@@ -14,3 +15,6 @@ Blog.create(
   posts_per_page: ENV['site_posts_per_page'],
   about: ENV['site_about']
 )
+=======
+Blog.create(name: 'Clif and Allie', domain: 'clifandallie.com', short_domain: 'aetrip.co', description: 'Denver to Durango 2016.', posts_per_page: 12, about: 'Denver to Durango 2016. Previously AT NOBO 2015.', copyright: 'Clif Reeder')
+>>>>>>> e89e776... Change until I can import
