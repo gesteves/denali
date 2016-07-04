@@ -14,9 +14,9 @@
     <meta property="og:site_name" content="<%= @photoblog.name %>">
     <meta property="og:locale" content="en_US">
 
-    <% if Rails.application.config.social['twitter']['enabled'] == true %>
-      <meta name="twitter:site" content="@<%= Rails.application.config.social['twitter']['username'] %>">
-      <meta name="twitter:creator" content="@<%= Rails.application.config.social['twitter']['username'] %>">
+    <% if twitter_username = ENV['twitter_username'] %>
+      <meta name="twitter:site" content="@<%= twitter_username %>">
+      <meta name="twitter:creator" content="@<%= twitter_username %>">
     <% end %>
     <meta name="twitter:title" content="<%= sanitize "Entries tagged “#{@tags.first.name}” &middot; #{@photoblog.name}" %>">
     <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? tag_url(@tags.first.slug) : tag_url(@tags.first.slug, @page) %>">

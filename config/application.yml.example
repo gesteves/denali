@@ -10,20 +10,23 @@ default: &default
   flickr_access_token: abc123
   flickr_consumer_key: abc123
   flickr_consumer_secret: abc123
+  flickr_username:
   google_apps_domain: example.com
   google_client_id: abc123
   google_client_secret: abc123
   imgix_domain: example.imgix.net
   imgix_secure: 'true'
   imgix_token: abc123
+  instagram_username:
   pinterest_board_id: '123456'
   pinterest_token: abc123
+  pinterest_username:
   s3_bucket: www.yerbucket.com
   s3_region: us-east-1
   secret_key_base: abc123
   sentry_dsn: abc123
-  slack_client_id: '123456'
-  slack_client_secret: abc123
+  slack_client_id:
+  slack_client_secret:
   tumblr_access_token_secret: abc123
   tumblr_access_token: abc123
   tumblr_consumer_key: abc123
@@ -33,6 +36,7 @@ default: &default
   twitter_access_token: abc123
   twitter_consumer_key: abc123
   twitter_consumer_secret: abc123
+  twitter_userame:
 
 development:
   <<: *default
@@ -64,8 +68,8 @@ production:
   s3_region: us-east-1
   secret_key_base: abc123
   sentry_dsn: abc123
-  slack_client_id: '123456'
-  slack_client_secret: abc123
+  slack_client_id:
+  slack_client_secret:
   tumblr_access_token_secret: abc123
   tumblr_access_token: abc123
   tumblr_consumer_key: abc123

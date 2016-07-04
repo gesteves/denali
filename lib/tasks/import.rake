@@ -4,7 +4,7 @@ require 'date'
 namespace :import do
   desc 'Import posts from Tumblr'
   task :tumblr => [:environment] do
-    blog = Blog.find_by(domain: Rails.application.config.site['domain'])
+    blog = Blog.find_by(domain: ENV['site_domain'])
     user = User.first
     posts = get_tumblr_posts({ tag: ENV['TAG'], id: ENV['POST_ID'] }).sort{ |a, b| a['timestamp'] <=> b['timestamp'] }
     posts.each_with_index do |post, i|
