@@ -28,6 +28,5 @@
 
 # Ignore application configuration
 /config/application.yml
-/config/config.yml
 
 *.rdb
