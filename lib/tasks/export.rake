@@ -41,16 +41,6 @@ namespace :export do
     end
   end
 
-  task :fivehundredpx => [:environment] do
-    if ENV['ENTRY_ID'].present?
-      entry = Entry.find(ENV['ENTRY_ID'])
-      if entry.present?
-        FiveHundredJob.perform_later(entry)
-        puts "Entry \"#{entry.title}\" queued for export to 500px."
-      end
-    end
-  end
-
   task :pinterest => [:environment] do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])

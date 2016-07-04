@@ -1,12 +1,15 @@
 class OembedController < ApplicationController
-  before_action :set_max_age, :load_entry, :set_request_format
+  before_action :load_entry, :set_request_format
 
   def show
+    expires_in 24.hours, public: true
     @url, @width, @height = get_photo(@entry, 1200, params[:maxwidth], params[:maxheight])
     @thumb_url, @thumb_width, @thumb_height = get_photo(@entry, 300, params[:maxwidth], params[:maxheight])
-    respond_to do |format|
-      format.json
-      format.xml
+    if stale?(@entry, public: true)
+      respond_to do |format|
+        format.json
+        format.xml
+      end
     end
   end
 

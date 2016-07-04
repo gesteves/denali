@@ -108,19 +108,6 @@
   justify-content: flex-end;
 }
 
-.form__select-container {
-  position: relative;
-
-  &:after {
-    color: $color-gray-medium;
-    content: '▼';
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: scaleY(0.8) translateY(-50%);
-  }
-}
-
 .form__inline {
   align-items: center;
   display: flex;

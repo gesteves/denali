@@ -1,4 +1,4 @@
-class Photo < ActiveRecord::Base
+class Photo < ApplicationRecord
   include Formattable
 
   belongs_to :entry, touch: true, counter_cache: true
@@ -7,6 +7,7 @@ class Photo < ActiveRecord::Base
     s3_credentials: { access_key_id: ENV['aws_access_key_id'],
                       secret_access_key: ENV['aws_secret_access_key'],
                       bucket: ENV['s3_bucket'] },
+    s3_region: ENV['s3_region'],
     url: ':s3_domain_url',
     path: 'photos/:hash.:extension',
     hash_secret: ENV['secret_key_base'],
@@ -20,6 +21,10 @@ class Photo < ActiveRecord::Base
 
   before_create :set_image
   after_image_post_process :save_exif, :save_dimensions
+
+  def self.oldest
+    order('taken_at ASC').limit(1).try(:first)
+  end
 
   def original_url
     self.image.url

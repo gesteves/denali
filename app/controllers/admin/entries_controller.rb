@@ -1,14 +1,12 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :preview]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_crop_options, only: [:edit, :photo]
-
-  after_action :update_position, only: [:publish, :queue, :draft, :create]
-
-  skip_before_action :require_login, only: [:preview]
+  after_action :update_position, only: [:create]
+  after_action :enqueue_invalidation, only: [:update]
 
   # GET /admin/entries
   def index
@@ -43,6 +41,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/new
   def new
     @entry = @photoblog.entries.new
+    @entry.status = 'queued'
     @entry.photos.build
     @page_title = 'New entry'
   end
@@ -90,7 +89,13 @@ class Admin::EntriesController < AdminController
     respond_to do |format|
       if @entry.save
         flash[:notice] = 'Your entry was saved!'
-        format.html { redirect_to get_redirect_url(@entry) }
+        format.html {
+          if params[:return].present?
+            redirect_to new_admin_entry_path
+          else
+            redirect_to get_redirect_url(@entry)
+          end
+        }
       else
         flash[:alert] = 'Your entry couldn’t be saved…'
         format.html { render :new }
@@ -151,18 +156,6 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def preview
-    respond_to do |format|
-      format.html {
-        if @entry.is_published?
-          redirect_to @entry.permalink_url
-        else
-          render 'entries/show', layout: 'application'
-        end
-      }
-    end
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
@@ -174,11 +167,13 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_500px, :post_to_facebook, :post_to_slack, :post_to_pinterest, :tweet_text, :show_in_map, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :crop])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_facebook, :post_to_slack, :post_to_pinterest, :tweet_text, :show_in_map, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :crop])
     end
 
     def update_position
-      @entry.update_position
+      if !@entry.is_queued?
+        @entry.remove_from_list
+      end
     end
 
     def redirect_entry
@@ -216,7 +211,18 @@ class Admin::EntriesController < AdminController
     def respond_to_reposition
       respond_to do |format|
         format.html { redirect_to queued_admin_entries_path }
-        format.js { render text: 'ok' }
+        format.json {
+          response = {
+            status: 200,
+            entry_id: @entry.id,
+            entry_position: @entry.position
+          }
+          render json: response
+        }
       end
+    end
+
+    def enqueue_invalidation
+      CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && @entry.is_published? && entry_params[:invalidate_cloudfront] == "1"
     end
 end

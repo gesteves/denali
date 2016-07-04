@@ -10,8 +10,10 @@
     <link href="<%= image_path 'icon-120.png' %>" rel="apple-touch-icon" sizes="120x120">
     <link href="<%= image_path 'icon-76.png' %>" rel="apple-touch-icon" sizes="76x76">
     <link href="<%= image_path "favicon.png" %>" rel="icon" type="image/png">
-    <%= render partial: 'entries/entry_meta.html.erb', locals: { entry: @entry } %>
-    <% cache "amp/styles/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+    <% cache "entry/amp/meta/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+      <%= render partial: 'entries/entry_meta.html.erb', locals: { entry: @entry } %>
+    <% end %>
+    <% cache "amp/styles" do %>
       <style amp-custom>
         <%= Rails.application.assets['amp.css'].to_s.gsub('@charset "UTF-8";', '').html_safe %>
       </style>
@@ -21,14 +23,14 @@
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
   </head>
   <body>
-    <header class="header">
+    <header class="header" role="banner">
       <a href="/" class="header__link">
         <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
       </a>
     </header>
 
     <% cache "entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
-      <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>">
+      <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
         <% @entry.photos.each do |photo| %>
           <figure class="entry__photo">
             <%= amp_image_tag photo,
@@ -40,12 +42,12 @@
         <div class="entry__body">
           <h1 class="entry__headline">
             <% if @entry.is_text? %>
-              <%= link_to raw(@entry.plain_title), @entry.permalink_url %>
+              <%= link_to sanitize(@entry.plain_title), @entry.permalink_url %>
             <% else %>
-              <%= raw(@entry.plain_title) %>
+              <%= sanitize(@entry.plain_title) %>
             <% end %>
           </h1>
-          <%= raw(@entry.formatted_body) unless @entry.body.blank? %>
+          <%= sanitize(@entry.formatted_body) unless @entry.body.blank? %>
         </div>
 
         <div class="entry__meta">
@@ -55,12 +57,9 @@
         </div>
       </article>
     <% end %>
-    
-    <%= render partial: 'entries/entry_pagination.html.erb', object: @entry %>
 
-    <footer class="footer">
-        <p>&copy; 2009-<%= Time.now.strftime('%Y') %> <a href="http://www.gesteves.com" rel="me">Guillermo Esteves</a>. <a href="<%= @entry.permalink_url %>">View the full site</a>.</p>
-    </footer>
+    <%= render partial: 'entries/entry_pagination.html.erb', object: @entry %>
+    <%= render partial: 'partials/footer.html.erb' %>
 
     <amp-analytics type="googleanalytics" id="analytics">
     <script type="application/json">

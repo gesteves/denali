@@ -1,5 +1,5 @@
 <p class="tags">
-  <% tags.each do |tag| %>
+  <% tags.reject { |t| t.taggings_count < 12 }.sort { |a, b| a.slug <=> b.slug }.each do |tag| %>
     <%= link_to tag.name, tag_path(tag.slug), { rel: 'tag' } %>
   <% end %>
 </p>

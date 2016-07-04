@@ -1,23 +1,23 @@
 <% cache "admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
-  <li class="entry">
-    <%= link_to entry.is_published? ? entry.permalink_url : preview_admin_entry_path(entry) do %>
-      <% entry.photos.each do |p| %>
-        <%= responsive_image_tag p, 'admin_entry', { class: 'entry__thumb' } %>
-      <% end %>
+  <li class="entry" <% if entry.is_queued? %>data-position="<%= entry.position %>"<% end %>  data-turbolinks="false">
+    <% if entry.is_photo? %>
+      <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.id, entry.slug) %>" <%= aspect_ratio(entry.photos.first) if entry.is_photo? %>>
+        <%= lazy_responsive_image_tag entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
+      </a>
     <% end %>
     <div class="entry__content <% if entry.is_text? %>entry__content--text<% end %>">
-      <h2><%= raw(entry.plain_title) %></h2>
-      <%= raw(entry.formatted_body) unless entry.body.blank? %>
+      <h2><%= sanitize(entry.plain_title) %></h2>
+      <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
     </div>
     <div class="entry__meta">
-      <div>
+      <div data-turbolinks="true">
         <% entry.tags.each do |t| %>
           <span class="entry__tag"><%= link_to t.name, admin_tag_path(t.slug) %></span>
         <% end %>
       </div>
       <% if entry.is_queued? %>
         <div class="entry__timestamp">
-          Queued for <%= publish_date_for_queued(entry, entry_counter) %>
+          Queued for <%= publish_date_for_queued(entry) %>
         </div>
       <% end %>
       <div class="entry__meta-bottom">
@@ -35,7 +35,7 @@
         <% end %>
         <div class="entry__actions">
           <% unless entry.is_published? %>
-            <%= link_to 'Preview', preview_admin_entry_path(entry) %>
+            <%= link_to 'Preview', preview_entry_path(entry.id, entry.slug) %>
           <% end %>
           <%= link_to 'Edit', edit_admin_entry_path(entry) %>
           <% if entry.is_draft? %>

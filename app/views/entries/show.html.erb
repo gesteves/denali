@@ -1,7 +1,9 @@
 <% content_for :meta do %>
-  <%= render partial: 'entries/entry_meta', locals: { entry: @entry } %>
+  <% cache "entry/meta/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+    <%= render partial: 'entries/entry_meta', locals: { entry: @entry } %>
+  <% end %>
 <% end %>
 
 <%= render partial: 'entries/entry', object: @entry %>
 <%= render partial: 'entries/entry_pagination', object: @entry %>
-<%= render partial: 'entries/related', object: @entry if ENV['show_related_entries'].present? %>
+<%= render partial: 'entries/related', object: @entry if @photoblog.show_related_entries? %>

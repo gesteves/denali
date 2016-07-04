@@ -1,21 +1,21 @@
 source 'https://rubygems.org'
-ruby '2.3.0'
+ruby '2.3.1'
 
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 5.0'
 
 # Auth
 gem 'omniauth-google-oauth2'
 
 # Uploads
-gem 'aws-sdk', '~> 1.64.0'
-gem 'paperclip', '~> 4.3'
+gem 'aws-sdk', '~> 2.0'
+gem 'paperclip', '~> 5.0'
 
 # Front-end things
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'autoprefixer-rails'
-gem 'turbolinks'
+gem 'turbolinks', '~> 5.0'
 gem 'htmlcompressor'
 gem 'imgix'
 
@@ -26,13 +26,15 @@ gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr'
-gem 'acts-as-taggable-on', '~> 3.4'
+gem 'acts-as-taggable-on', :github => 'mbleigh/acts-as-taggable-on'
 gem 'httparty'
 gem 'httmultiparty'
 gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
 gem 'htmlentities'
+gem 'sentry-raven'
+gem 'cloudfront-invalidator'
 
 # Caching
 gem 'dalli'
@@ -55,7 +57,7 @@ group :production do
 end
 
 group :development do
-  gem 'web-console', '~> 2.1'
+  gem 'web-console', '~> 3.0'
 end
 
 group :development, :test do
@@ -64,9 +66,11 @@ group :development, :test do
   gem 'byebug'
   gem 'spring'
   gem 'sqlite3'
+  gem 'brakeman', require: nil
 end
 
 group :test do
   gem 'codeclimate-test-reporter', require: nil
   gem 'mock_redis'
+  gem 'rails-controller-testing'
 end

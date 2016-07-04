@@ -18,9 +18,7 @@ class BufferJob < ApplicationJob
   end
 
   def build_text(entry)
-    caption = entry.tweet_text.blank? ? entry.title : entry.tweet_text
-    caption = truncate(caption, length: 90, omission: '…', escape: false)
-    "#{caption} #{entry.permalink_url}"
+    "#{entry.plain_title} #{entry.permalink_url}"
   end
 
   def build_media(entry)

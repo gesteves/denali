@@ -5,12 +5,13 @@ cache "entries/atom/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.
       xml.id atom_tag(root_url, @photoblog.updated_at)
       xml.title @photoblog.name
       xml.link rel: 'alternate', type: 'text/html', href: root_url
+      xml.link rel: 'self', type: 'application/atom+xml', href: simple_feed_url
     else
       xml.id atom_tag(entries_url(page: @page), @photoblog.updated_at)
       xml.title "#{@photoblog.name} - Page #{@page}"
       xml.link rel: 'alternate', type: 'text/html', href: entries_url(page: @page)
+      xml.link rel: 'self', type: 'application/atom+xml', href: entries_url(page: @page, format: 'atom')
     end
-    xml.link rel: 'self', type: 'application/atom+xml', href: entries_url(page: @page, format: 'atom')
     xml.updated @photoblog.updated_at.utc.strftime('%FT%TZ')
 
     @entries.each do |e|
@@ -23,8 +24,7 @@ cache "entries/atom/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.
           xml.title e.plain_title
           body = ''
           e.photos.each do |p|
-            body += image_tag p.url(w: 1280)
-            body += p.formatted_caption unless p.caption.blank?
+            body += image_tag p.url(w: 1280), alt: p.caption.blank? ? e.title : p.plain_caption
           end
           body += e.formatted_body unless e.body.blank?
           xml.content body, type: 'html'

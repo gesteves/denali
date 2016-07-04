@@ -13,31 +13,26 @@ class EntriesControllerTest < ActionController::TestCase
   end
 
   test "should generate index json" do
-    get :index, format: 'json'
+    get :index, params: { format: 'json' }
     assert_template :index
     assert_response :success
   end
 
   test "should generate sitemap" do
-    get :sitemap, format: 'xml'
+    get :sitemap, params: { format: 'xml' }
     assert_template :sitemap
     assert_response :success
   end
 
-  test "should redirect old feed url" do
-    get :rss
-    assert_redirected_to entries_url page: 1, format: 'atom'
-  end
-
   test "should generate feed" do
-    get :index, page: 1, format: 'atom'
+    get :index, params: { page: 1, format: 'atom' }
     assert_template :index
     assert_response :success
   end
 
   test 'photo page should render correctly' do
     entry = entries(:peppers)
-    get :show, year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug
+    get :show, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug }
     assert_response :success
     assert_not_nil assigns(:entry)
     assert_template layout: 'layouts/application'
@@ -48,9 +43,22 @@ class EntriesControllerTest < ActionController::TestCase
     assert_select '.entry__headline', 1
   end
 
+  test 'should preview page' do
+    panda = entries(:panda)
+    get :preview, params: { id: panda.id, slug: panda.slug }
+    assert_response :success
+    assert_template :show
+  end
+
+  test 'should redirect published photos from preview page' do
+    entry = entries(:peppers)
+    get :preview, params: { id: entry.id, slug: entry.slug }
+    assert_redirected_to entry.permalink_url
+  end
+
   test 'photo amp page should render correctly' do
     entry = entries(:peppers)
-    get :show, year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug, format: 'amp'
+    get :show, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug, format: 'amp' }
     assert_response :success
     assert_not_nil assigns(:entry)
     assert_template layout: nil
@@ -61,7 +69,7 @@ class EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should redirect from tumblr url' do
-    get :tumblr, tumblr_id: '17444976847'
+    get :tumblr, params: { tumblr_id: '17444976847' }
     entry = entries(:peppers)
     assert_not_nil assigns(:entry)
     assert_equal assigns(:entry), entry
@@ -72,7 +80,7 @@ class EntriesControllerTest < ActionController::TestCase
     entry = entries(:peppers)
     entry.tag_list = 'washington'
     entry.save
-    get :tagged, tag: 'washington'
+    get :tagged, params: { tag: 'washington' }
     assert_response :success
     assert_not_nil assigns(:entries)
     assert_template layout: 'layouts/application'
@@ -86,7 +94,7 @@ class EntriesControllerTest < ActionController::TestCase
     entry = entries(:peppers)
     entry.tag_list = 'washington'
     entry.save
-    get :tagged, tag: 'washington', format: 'json'
+    get :tagged, params: { tag: 'washington', format: 'json' }
     assert_template :tagged
     assert_response :success
   end
@@ -95,7 +103,7 @@ class EntriesControllerTest < ActionController::TestCase
     entry = entries(:peppers)
     entry.tag_list = 'washington'
     entry.save
-    get :tagged, tag: 'washington', format: 'atom'
+    get :tagged, params: { tag: 'washington', format: 'atom' }
     assert_template :tagged
     assert_response :success
   end

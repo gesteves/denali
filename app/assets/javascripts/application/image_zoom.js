@@ -11,6 +11,8 @@ Denali.ImageZoom = (function () {
   };
 
   var zoomable_images;
+  var requested_animation_frame = false;
+
   var init = function () {
     zoomable_images = [];
     var images = document.querySelectorAll(opts.images);
@@ -39,6 +41,7 @@ Denali.ImageZoom = (function () {
         image.removeEventListener('click', toggleZoom);
       }
     }
+    requested_animation_frame = false;
   };
 
   var toggleZoom = function (e) {
@@ -48,7 +51,16 @@ Denali.ImageZoom = (function () {
     }
   };
 
+  var handleResize = function () {
+    if (requested_animation_frame) {
+      return;
+    }
+    requested_animation_frame = true;
+    requestAnimationFrame(init);
+  };
+
   return {
-    init : init
+    init : init,
+    handleResize: handleResize
   };
 })();

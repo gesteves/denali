@@ -63,6 +63,7 @@
 
 .entry-list__image {
   height: 100%;
+  transition: opacity $fadein-duration linear;
   width: 100%;
 
   &.noscript {
@@ -123,6 +124,7 @@
 
 .entry-list__photo-caption {
   align-items: center;
+  backdrop-filter: blur(20px);
   background-color: rgba(0, 0, 0, 0.65);
   bottom: 0;
   display: flex;
@@ -137,10 +139,6 @@
   transition: opacity 150ms linear;
   width: 100%;
   z-index: 1;
-
-  @supports (backdrop-filter: none) {
-    backdrop-filter: blur(20px);
-  }
 }
 
 .entry-list__photo-title {

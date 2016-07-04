@@ -1,4 +1,4 @@
-class Blog < ActiveRecord::Base
+class Blog < ApplicationRecord
   include Formattable
 
   has_many :entries, dependent: :destroy

@@ -1,19 +1,16 @@
-development:
+default: &default
   analytics_id: UA-123
   aws_access_key_id: abc123
   aws_cloudfront_distribution_id: abc123
   aws_secret_access_key: abc123
   buffer_access_token: abc123
-  default_max_age: '5'
+  denali_secret: abc123
   dropbox_key: abc123
-  fivehundredpx_access_token_secret: abc123
-  fivehundredpx_access_token: abc123
-  fivehundredpx_consumer_key: abc123
-  fivehundredpx_consumer_secret: abc123
   flickr_access_token_secret: abc123
   flickr_access_token: abc123
   flickr_consumer_key: abc123
   flickr_consumer_secret: abc123
+  google_apps_domain: example.com
   google_client_id: abc123
   google_client_secret: abc123
   imgix_domain: example.imgix.net
@@ -22,8 +19,9 @@ development:
   pinterest_board_id: '123456'
   pinterest_token: abc123
   s3_bucket: www.yerbucket.com
+  s3_region: us-east-1
   secret_key_base: abc123
-  show_related_photos: true
+  sentry_dsn: abc123
   slack_client_id: '123456'
   slack_client_secret: abc123
   tumblr_access_token_secret: abc123
@@ -35,42 +33,11 @@ development:
   twitter_consumer_key: abc123
   twitter_consumer_secret: abc123
 
+development:
+  <<: *default
+
 test:
-  analytics_id: UA-123
-  aws_access_key_id: abc123
-  aws_cloudfront_distribution_id: abc123
-  aws_secret_access_key: abc123
-  buffer_access_token: abc123
-  default_max_age: '5'
-  dropbox_key: abc123
-  fivehundredpx_access_token_secret: abc123
-  fivehundredpx_access_token: abc123
-  fivehundredpx_consumer_key: abc123
-  fivehundredpx_consumer_secret: abc123
-  flickr_access_token_secret: abc123
-  flickr_access_token: abc123
-  flickr_consumer_key: abc123
-  flickr_consumer_secret: abc123
-  google_client_id: abc123
-  google_client_secret: abc123
-  imgix_domain: example.imgix.net
-  imgix_secure: 'true'
-  imgix_token: abc123
-  pinterest_board_id: '123456'
-  pinterest_token: abc123
-  s3_bucket: www.yerbucket.com
-  secret_key_base: abc123
-  show_related_photos: true
-  slack_client_id: '123456'
-  slack_client_secret: abc123
-  tumblr_access_token_secret: abc123
-  tumblr_access_token: abc123
-  tumblr_consumer_key: abc123
-  tumblr_consumer_secret: abc123
-  twitter_access_token_secret: abc123
-  twitter_access_token: abc123
-  twitter_consumer_key: abc123
-  twitter_consumer_secret: abc123
+  <<: *default
 
 production:
   analytics_id: UA-123
@@ -78,16 +45,13 @@ production:
   aws_cloudfront_distribution_id: abc123
   aws_secret_access_key: abc123
   buffer_access_token: abc123
-  default_max_age: '5'
+  denali_secret: abc123
   dropbox_key: abc123
-  fivehundredpx_access_token_secret: abc123
-  fivehundredpx_access_token: abc123
-  fivehundredpx_consumer_key: abc123
-  fivehundredpx_consumer_secret: abc123
   flickr_access_token_secret: abc123
   flickr_access_token: abc123
   flickr_consumer_key: abc123
   flickr_consumer_secret: abc123
+  google_apps_domain: example.com
   google_client_id: abc123
   google_client_secret: abc123
   imgix_domain: example.imgix.net
@@ -96,8 +60,9 @@ production:
   pinterest_board_id: '123456'
   pinterest_token: abc123
   s3_bucket: www.yerbucket.com
+  s3_region: us-east-1
   secret_key_base: abc123
-  show_related_photos: true
+  sentry_dsn: abc123
   slack_client_id: '123456'
   slack_client_secret: abc123
   tumblr_access_token_secret: abc123

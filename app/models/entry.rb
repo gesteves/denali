@@ -1,4 +1,4 @@
-class Entry < ActiveRecord::Base
+class Entry < ApplicationRecord
   include Rails.application.routes.url_helpers
   include Formattable
 
@@ -16,6 +16,8 @@ class Entry < ActiveRecord::Base
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
+  attr_accessor :invalidate_cloudfront
+
   def self.published(order = 'published_at DESC')
     where(status: 'published').order(order)
   end
@@ -29,7 +31,7 @@ class Entry < ActiveRecord::Base
   end
 
   def self.mapped
-    where(show_in_map: true)
+    photo_entries.published.joins(:photos).includes(:photos).where(entries: { show_in_map: true }).where.not(photos: { latitude: nil, longitude: nil })
   end
 
   def self.text_entries
@@ -65,12 +67,14 @@ class Entry < ActiveRecord::Base
   end
 
   def publish
+    self.remove_from_list
     self.status = 'published'
     self.save && self.enqueue_jobs
   end
 
   def queue
     unless status == 'published'
+      self.insert_at(Entry.queued.size)
       self.status = 'queued'
       self.save
     end
@@ -78,6 +82,7 @@ class Entry < ActiveRecord::Base
 
   def draft
     unless status == 'published'
+      self.remove_from_list
       self.status = 'draft'
       self.save
     end
@@ -92,15 +97,8 @@ class Entry < ActiveRecord::Base
   end
 
   def related(count = 12)
-    Entry.includes(:photos).tagged_with(self.tag_list, any: true, order_by_matching_tag_count: true).where('entries.id != ? AND entries.status = ?', self.id, 'published').limit(count)
-  end
-
-  def update_position
-    if self.is_queued?
-      self.insert_at(Entry.last_queued_position + 1)
-    else
-      self.remove_from_list
-    end
+    earliest_date = (self.published_at || self.created_at) - 2.years
+    Entry.includes(:photos).tagged_with(self.tag_list, any: true, order_by_matching_tag_count: true).where('entries.id != ? AND entries.status = ? AND published_at > ?', self.id, 'published', earliest_date).limit(count)
   end
 
   def formatted_body
@@ -119,15 +117,6 @@ class Entry < ActiveRecord::Base
     content = self.title
     content += "\n\n#{self.body}" unless self.body.blank?
     markdown_to_html(content)
-  end
-
-  def self.last_queued_position
-    queue = Entry.queued
-    if queue.blank? || queue.last.position.nil?
-      0
-    else
-      queue.last.position
-    end
   end
 
   def slug_params
@@ -161,7 +150,6 @@ class Entry < ActiveRecord::Base
     self.enqueue_tumblr
     self.enqueue_facebook
     self.enqueue_flickr
-    self.enqueue_500px
     self.enqueue_pinterest
     self.enqueue_slack
     true
@@ -181,10 +169,6 @@ class Entry < ActiveRecord::Base
 
   def enqueue_flickr
     FlickrJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_flickr
-  end
-
-  def enqueue_500px
-    FiveHundredJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_500px
   end
 
   def enqueue_slack

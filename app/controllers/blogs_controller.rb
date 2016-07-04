@@ -1,6 +1,7 @@
 class BlogsController < ApplicationController
-  before_action :set_max_age
-  
+
   def about
+    expires_in 24.hours, public: true
+    fresh_when @photoblog, public: true
   end
 end

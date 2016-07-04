@@ -9,9 +9,9 @@
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>
-<%= render partial: 'partials/icons.svg.erb' %>
 <%= render partial: 'partials/header.html.erb' %>
 <%= yield %>
 <%= render partial: 'partials/footer.html.erb' %>
+<%= render partial: 'partials/icons.svg.erb' %>
 </body>
 </html>

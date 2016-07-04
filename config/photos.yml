@@ -22,6 +22,7 @@ entry: &entry
   sizes:
     - "(min-width: 1440px) 1440px"
     - 100vw
+  quality: 90
 entry_amp:
   <<: *entry
   auto: 'format,compress'
@@ -47,7 +48,6 @@ entry_list_item:
     - "(min-width: 600px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
   square: Yes
-  auto: 'format,compress'
 admin_entry:
   src: 560
   srcset:
@@ -60,6 +60,7 @@ admin_entry:
   sizes:
     - "(min-width: 840px) 800px"
     - calc(100vw - 40px)
+  quality: 90
 admin_edit:
   src: 300
   srcset:

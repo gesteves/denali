@@ -28,7 +28,7 @@
   <article class="entry entry--text">
     <div class="entry__body">
       <h1 class="entry__headline">About <%= @photoblog.name %></h1>
-      <%= raw @photoblog.formatted_about %>
+      <%= sanitize @photoblog.formatted_about %>
     </div>
   </article>
 <% end %>

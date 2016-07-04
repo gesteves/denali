@@ -34,9 +34,10 @@
   <div class="form__options">
     <h2>Entry options</h2>
     <%= f.label :show_in_map, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_in_map %> Show in map<% end %>
-  <% unless @entry.is_published? %>
+    <% if @entry.is_published? %>
+    <%= f.label :invalidate_cloudfront, class: 'form__label form__label--checkbox' do %><%= f.check_box :invalidate_cloudfront, { checked: true } %> Send CloudFront invalidation request<% end %>
+    <% else %>
     <h2>Sharing options</h2>
-    <%= f.label :post_to_500px, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_500px %> Post to 500px<% end %>
     <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_facebook %> Post to Facebook<% end %>
     <%= f.label :post_to_flickr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_flickr %> Post to Flickr<% end %>
     <%= f.label :post_to_pinterest, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_pinterest %> Post to Pinterest<% end %>

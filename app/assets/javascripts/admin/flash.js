@@ -30,5 +30,3 @@ Denali.Flash = (function ($) {
     init: init
   };
 })(jQuery);
-
-Denali.Flash.init();

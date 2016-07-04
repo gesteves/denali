@@ -14,7 +14,6 @@ peppers:
   post_to_tumblr: true
   post_to_facebook: true
   post_to_flickr: true
-  post_to_500px: true
   post_to_slack: true
 
 potomac:
@@ -39,7 +38,6 @@ panda:
   post_to_tumblr: true
   post_to_facebook: true
   post_to_flickr: true
-  post_to_500px: true
   post_to_slack: true
   post_to_pinterest: true
   position: 1
@@ -56,5 +54,4 @@ franklin:
   post_to_tumblr: true
   post_to_facebook: true
   post_to_flickr: true
-  post_to_500px: true
   post_to_slack: true
