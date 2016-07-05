@@ -3,19 +3,19 @@
   <a href="<%= map_path %>" class="follow__link" title="Map"><%= inline_svg 'map', 'follow__icon' %></a>
   <a href="mailto:<%= ENV['site_email'] %>" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
   <a href="<%= simple_feed_path %>" class="follow__link" title="Subscribe to Feed"><%= inline_svg 'feed', 'follow__icon' %></a>
-  <% if flickr_username = ENV['flickr_username'] %>
+  <% if ENV['flickr_username'].present? %>
     <a href="https://www.flickr.com/photos/<%= ENV['flickr_username'] %>" class="follow__link" rel="me" title="Follow on Flickr"><%= inline_svg 'flickr', 'follow__icon' %></a>
   <% end %>
   <% if instagram_username = ENV['instagram_username'] %>
     <a href="https://www.instagram.com/<%= instagram_username %>/" class="follow__link" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>
   <% end %>
-  <% if ENV['slack_client_secret'] %>
+  <% if ENV['slack_client_secret'].present? %>
     <a href="<%= slack_path %>" class="follow__link" title="Add to Slack"><%= inline_svg 'slack', 'follow__icon' %></a>
   <% end %>
   <% if tumblr_url = ENV['tumblr_url'] %>
     <a href="http://<%= tumblr_url %>" class="follow__link" rel="me" title="Follow on Tumblr"><%= inline_svg 'tumblr', 'follow__icon' %></a>
   <% end %>
-  <% if twitter_username = ENV['twitter_username'] %>
-    <a href="https://twitter.com/<%= twitter_username %>" class="follow__link" rel="me" title="Follow on Twitter"><%= inline_svg 'twitter', 'follow__icon' %></a>
+  <% if ENV['twitter_username'].present? %>
+    <a href="https://twitter.com/<%= %ENV['twitter_username']>" class="follow__link" rel="me" title="Follow on Twitter"><%= inline_svg 'twitter', 'follow__icon' %></a>
   <% end %>
 </div>
