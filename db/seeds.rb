@@ -11,6 +11,6 @@ Blog.create(
   domain: ENV['site_domain'],
   short_domain: ENV['site_short_domain'],
   description: ENV['site_description'],
-  posts_per_page: ENV['site_posts_per_page']
+  posts_per_page: ENV['site_posts_per_page'],
   about: ENV['site_about']
 )
