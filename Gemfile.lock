@@ -241,6 +241,7 @@ GEM
       redis (~> 3.3)
       resque (~> 1.26)
       rufus-scheduler (~> 3.2)
+    rmagick (2.15.4)
     ruby-hmac (0.4.0)
     rufus-scheduler (3.2.1)
     sanitize (4.0.1)
@@ -359,6 +360,7 @@ DEPENDENCIES
   redcarpet
   resque
   resque-scheduler
+  rmagick
   sanitize
   sass-rails (~> 5.0)
   scss-lint
