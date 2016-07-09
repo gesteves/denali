@@ -34,8 +34,8 @@ gem 'figaro'
 gem 'oauth'
 gem 'htmlentities'
 gem 'sentry-raven'
-gem 'cloudfront-invalidator'
-gem 'rmagick'
+gem 'cloudfront-invalidator', require: nil
+gem 'rmagick', require: nil
 
 # Caching
 gem 'dalli'
@@ -45,9 +45,9 @@ gem 'resque'
 gem 'resque-scheduler'
 
 # Social Networks
-gem 'tumblr_client'
-gem 'flickraw'
-gem 'twitter'
+gem 'tumblr_client', require: nil
+gem 'flickraw', require: nil
+gem 'twitter', require: nil
 
 group :production do
   gem 'passenger'

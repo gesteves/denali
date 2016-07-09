@@ -1,4 +1,5 @@
 class TwitterJob < ApplicationJob
+  require 'twitter'
   queue_as :default
 
   def perform(entry)
