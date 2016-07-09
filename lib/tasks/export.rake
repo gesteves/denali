@@ -1,4 +1,4 @@
-task :export => ['export:twitter', 'export:tumblr', 'export:facebook', 'export:flickr', 'export:fivehundredpx', 'export:pinterest']
+task :export => ['export:twitter', 'export:tumblr', 'export:facebook', 'export:flickr', 'export:pinterest']
 
 namespace :export do
   task :twitter => [:environment] do
