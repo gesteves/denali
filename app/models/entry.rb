@@ -146,12 +146,14 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_jobs
-    self.enqueue_twitter
-    self.enqueue_tumblr
-    self.enqueue_facebook
-    self.enqueue_flickr
-    self.enqueue_pinterest
-    self.enqueue_slack
+    if Rails.env.production?
+      self.enqueue_twitter
+      self.enqueue_tumblr
+      self.enqueue_facebook
+      self.enqueue_flickr
+      self.enqueue_pinterest
+      self.enqueue_slack
+    end
     true
   end
 

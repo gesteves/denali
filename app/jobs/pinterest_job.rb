@@ -8,11 +8,9 @@ class PinterestJob < ApplicationJob
       link: entry.permalink_url,
       image_url: entry.photos.first.original_url
     }
-    if Rails.env.production?
-      response = HTTParty.post('https://api.pinterest.com/v1/pins/', query: opts, headers: { 'Authorization' => "BEARER #{ENV['pinterest_token']}" })
-      if response.code >= 400
-        raise response.body
-      end
+    response = HTTParty.post('https://api.pinterest.com/v1/pins/', query: opts, headers: { 'Authorization' => "BEARER #{ENV['pinterest_token']}" })
+    if response.code >= 400
+      raise response.body
     end
   end
 end

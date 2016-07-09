@@ -18,7 +18,7 @@ class TumblrJob < ApplicationJob
       state: 'queue'
     }
 
-    tumblr.photo(ENV['tumblr_domain'], opts) if Rails.env.production?
+    tumblr.photo(ENV['tumblr_domain'], opts)
   end
 
   # Use rmagick instead of imgix to resize images for Tumblr,
