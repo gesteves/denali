@@ -1,5 +1,5 @@
 class TumblrJob < ApplicationJob
-  require 'RMagick'
+  require 'rmagick'
   require 'tumblr_client'
   queue_as :default
 
