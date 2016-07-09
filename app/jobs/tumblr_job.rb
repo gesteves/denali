@@ -21,15 +21,15 @@ class TumblrJob < ApplicationJob
     tumblr.photo(ENV['tumblr_domain'], opts) if Rails.env.production?
   end
 
-  # Use rmagick instead of imgix to resize images for Tumblr.
+  # Use rmagick instead of imgix to resize images for Tumblr,
   # because imgix strips exif data, and I still want the exif
   # displayed in the Tumblr theme.
   # Also Tumblr has a 10MB file size limit, so uploading the original
   # full-size image doesn't always work.
   def resized_photo_path(photo)
     file = Tempfile.new([photo.id.to_s, '.jpg'])
-    image = Magick::Image::from_blob(open(photo.original_url).read).first
-    image.resize_to_fit(2560)
+    original = Magick::Image::from_blob(open(photo.original_url).read).first
+    image = original.resize_to_fit(2560)
     image.write(file.path)
     file.path
   end
