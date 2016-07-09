@@ -146,7 +146,7 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_jobs
-    if Rails.env.production?
+    unless Rails.env.development?
       self.enqueue_twitter
       self.enqueue_tumblr
       self.enqueue_facebook
