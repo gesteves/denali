@@ -1,5 +1,4 @@
 class CloudfrontInvalidationJob < ApplicationJob
-  require 'cloudfront-invalidator'
   queue_as :default
 
   def perform(entry)

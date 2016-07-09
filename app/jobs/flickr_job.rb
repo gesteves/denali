@@ -1,5 +1,4 @@
 class FlickrJob < ApplicationJob
-  require 'flickraw'
   queue_as :default
 
   def perform(entry)

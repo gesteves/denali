@@ -1,6 +1,4 @@
 class TumblrJob < ApplicationJob
-  require 'rmagick'
-  require 'tumblr_client'
   queue_as :default
 
   def perform(entry)
