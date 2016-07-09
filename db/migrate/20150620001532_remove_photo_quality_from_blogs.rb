@@ -1,4 +1,4 @@
-class RemovePhotoQualityFromBlogs < ActiveRecord::Migration
+class RemovePhotoQualityFromBlogs < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :blogs, :photo_quality
   end

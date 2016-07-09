@@ -1,4 +1,4 @@
-class RemoveMaxAgeFromBlog < ActiveRecord::Migration
+class RemoveMaxAgeFromBlog < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :blogs, :max_age
   end

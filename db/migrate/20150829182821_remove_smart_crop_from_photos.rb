@@ -1,4 +1,4 @@
-class RemoveSmartCropFromPhotos < ActiveRecord::Migration
+class RemoveSmartCropFromPhotos < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :photos, :use_smart_cropping
   end
