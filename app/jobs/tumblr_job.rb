@@ -29,7 +29,7 @@ class TumblrJob < ApplicationJob
   def resized_photo_path(photo)
     file = Tempfile.new([photo.id.to_s, '.jpg'])
     original = Magick::Image::from_blob(open(photo.original_url).read).first
-    image = original.resize_to_fit(1280)
+    image = original.resize_to_fit(2560)
     image.write(file.path)
     file.path
   end
