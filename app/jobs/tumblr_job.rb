@@ -18,7 +18,8 @@ class TumblrJob < ApplicationJob
       state: 'queue'
     }
 
-    tumblr.photo(ENV['tumblr_domain'], opts)
+    response = tumblr.photo(ENV['tumblr_domain'], opts)
+    logger.info response.to_s
   end
 
   # Use rmagick instead of imgix to resize images for Tumblr,
