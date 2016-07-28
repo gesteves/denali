@@ -1,5 +1,5 @@
 namespace :s3 do
-  desc "Updates entry meta data"
+  desc "Updates photos metadata in S3"
   task :update_metadata => :environment do
     bucket_name = ENV['s3_bucket']
     client = Aws::S3::Client.new(access_key_id: ENV['aws_access_key_id'], secret_access_key: ENV['aws_secret_access_key'], region: ENV['s3_region'])
