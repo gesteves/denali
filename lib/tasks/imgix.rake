@@ -2,10 +2,10 @@ namespace :imgix do
   desc "Purges photos from imgix"
   task :purge => :environment do
     if ENV['ENTRY_ID'].present?
-      entry = Entry.find(ENV['ENTRY_ID'])
+      entry = Entry.published.find(ENV['ENTRY_ID'])
       purge_imgix(entry)
     elsif ENV['OLDEST_ENTRY_ID'].present?
-      entries = Entry.where('id >= ?', ENV['OLDEST_ENTRY_ID']).order('id DESC')
+      entries = Entry.published.where('id >= ?', ENV['OLDEST_ENTRY_ID']).order('id DESC')
       entries.each do |e|
         purge_imgix(e)
       end
