@@ -5,7 +5,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        entry.enqueue_twitter
+        TwitterJob.perform_later(entry)
         puts "Entry \"#{entry.title}\" queued for export to Twitter."
       end
     end
@@ -15,7 +15,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        entry.enqueue_tumblr
+        TumblrJob.perform_later(entry)
         puts "Entry \"#{entry.title}\" queued for export to Tumblr."
       end
     end
@@ -25,7 +25,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        entry.enqueue_facebook
+        BufferJob.perform_later(entry, 'facebook')
         puts "Entry \"#{entry.title}\" queued for export to Facebook."
       end
     end
@@ -35,7 +35,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        entry.enqueue_flickr
+        FlickrJob.perform_later(entry)
         puts "Entry \"#{entry.title}\" queued for export to Flickr."
       end
     end
@@ -45,7 +45,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        entry.enqueue_pinterest
+        PinterestJob.perform_later(entry)
         puts "Entry \"#{entry.title}\" queued for export to Pinterest."
       end
     end
@@ -55,7 +55,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        entry.enqueue_slack
+        SlackIncomingWebhook.post_all(entry)
         puts "Entry \"#{entry.title}\" queued for export to Slack."
       end
     end
