@@ -41,8 +41,6 @@ namespace :export do
     end
   end
 
-
-
   task :pinterest => [:environment] do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
