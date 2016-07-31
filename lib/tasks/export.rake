@@ -60,4 +60,8 @@ namespace :export do
       end
     end
   end
+
+  task :info => [:environment] do
+    puts Resque.info.to_s
+  end
 end
