@@ -48,9 +48,8 @@ module ApplicationHelper
     PHOTOS[photo_key]['sizes'].join(', ')
   end
 
-  def inline_svg(svg_id, svg_class = "icon")
-    svg_id = svg_id.gsub("#", "")
-    "<svg viewBox=\"0 0 100 100\" class=\"#{svg_class} #{svg_class}--#{svg_id}\"><use xlink:href=\"#svg-#{svg_id}\"></use></svg>".html_safe
+  def inline_svg(icon, svg_class = "icon")
+    render partial: "partials/svg/#{icon}.html.erb", locals: { svg_class: "#{svg_class} #{svg_class}--#{icon}" }
   end
 
   def aspect_ratio(photo)
