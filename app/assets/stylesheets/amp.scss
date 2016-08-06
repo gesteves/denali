@@ -2,6 +2,8 @@
 @import 'base/variables';
 @import 'base/functions';
 @import 'base/mixins';
+@import 'blocks/header';
+@import 'blocks/follow';
 @import 'blocks/entry';
 @import 'blocks/footer';
 @import 'blocks/tags';
@@ -32,38 +34,8 @@ a:active {
   text-decoration: underline;
 }
 
-.header {
-  align-items: center;
-  display: flex;
-  flex-flow: row nowrap;
-  margin: 24px auto;
-  max-width: $bp-xxl;
-  width: 100%;
-
-  @media (min-width: $bp-m) {
-    margin: 72px auto;
-  }
-}
-
-.header__link {
-  display: block;
-  margin: 0 auto 12px;
-  max-width: 320px;
-  width: 50vw;
-
-  &:hover,
-  &:active {
-    path {
-      fill: $color-links;
-    }
-  }
-
-  @media (min-width: $bp-xs) {
-    width: 100%;
-  }
-
-  @media (min-width: $bp-l) {
-    margin: 0 auto;
-    padding: 0 20px;
-  }
+.amp .header__tagline,
+.amp.entry__meta p,
+.amp.footer p {
+  font-size: 14px;
 }

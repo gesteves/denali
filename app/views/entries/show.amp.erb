@@ -23,11 +23,8 @@
     <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
   </head>
   <body>
-    <header class="header" role="banner">
-      <a href="/" class="header__link">
-        <%= render partial: 'partials/allencompassingtrip.svg.erb', locals: { classes: 'header__icon' } %>
-      </a>
-    </header>
+
+    <%= render partial: 'partials/header.html.erb', locals: { additional_classes: 'amp' } %>
 
     <% cache "entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
       <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
@@ -50,7 +47,7 @@
           <%= sanitize(@entry.formatted_body) unless @entry.body.blank? %>
         </div>
 
-        <div class="entry__meta">
+        <div class="entry__meta amp">
           <%= render partial: 'entries/byline.html.erb', locals: { entry: @entry } %>
           <%= render partial: 'entries/exif.html.erb', locals: { photo: @entry.photos.first } if @entry.photos.count == 1 %>
           <%= render partial: 'entries/tags.html.erb', object: @entry.tags unless @entry.tags.blank? %>
@@ -59,7 +56,7 @@
     <% end %>
 
     <%= render partial: 'entries/entry_pagination.html.erb', object: @entry %>
-    <%= render partial: 'partials/footer.html.erb' %>
+    <%= render partial: 'partials/footer.html.erb', locals: { additional_classes: 'amp' } %>
 
     <amp-analytics type="googleanalytics" id="analytics">
     <script type="application/json">
