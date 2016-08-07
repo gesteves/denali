@@ -7,7 +7,14 @@
             { class: "entry__image entry__image--fit",
               alt: photo.caption.blank? ? entry.title : photo.plain_caption,
               'data-width-original': photo.width,
-              'data-height-original': photo.height } %>
+              'data-height-original': photo.height,
+              onload: "if (typeof performance.mark !== 'undefined') { performance.clearMarks('mark_entry_photo_rendered'); performance.mark('mark_entry_photo_rendered'); }" } %>
+        <script>
+          if (typeof performance.mark !== 'undefined') {
+            performance.clearMarks('mark_entry_photo_rendered');
+            performance.mark('mark_entry_photo_rendered');
+          }
+        </script>
       </figure>
     <% end %>
 
