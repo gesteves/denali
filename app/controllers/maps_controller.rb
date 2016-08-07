@@ -1,5 +1,6 @@
 class MapsController < ApplicationController
   layout false
+  before_action :check_if_user_has_visited, only: [:index]
 
   def index
     expires_in 24.hours, public: true

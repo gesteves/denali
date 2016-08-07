@@ -1,4 +1,5 @@
 class ErrorsController < ApplicationController
+  before_action :check_if_user_has_visited
 
   def file_not_found
     expires_in 24.hours, public: true

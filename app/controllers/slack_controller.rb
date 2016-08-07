@@ -1,5 +1,6 @@
 class SlackController < ApplicationController
   before_action :no_cache
+  before_action :check_if_user_has_visited
 
   def index
     if params[:code].present? && params[:state] == session[:slack_state]
