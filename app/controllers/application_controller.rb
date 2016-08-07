@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   before_action :get_photoblog
   before_action :domain_redirect
+  before_action :set_app_version
 
   helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?
 
@@ -62,8 +63,8 @@ class ApplicationController < ActionController::Base
   end
 
   def check_if_user_has_visited
-    @has_visited = cookies[:has_visited].present?
-    cookies[:has_visited] = { value: true, expires: 1.year.from_now }
+    @has_visited = cookies[:has_visited] == @app_version
+    cookies[:has_visited] = { value: @app_version, expires: 1.year.from_now }
   end
 
   def set_app_version
