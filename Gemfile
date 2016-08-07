@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 ruby '2.3.1'
 
 gem 'rails', '~> 5.0'
-gem 'puma', '~> 3.0'
 
 # Auth
 gem 'omniauth-google-oauth2'
@@ -51,6 +50,7 @@ gem 'flickraw'
 gem 'twitter'
 
 group :production do
+  gem 'passenger'
   gem 'pg'
   gem 'newrelic_rpm'
   gem 'lograge'

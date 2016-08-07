@@ -174,9 +174,11 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (~> 0.3.0)
+    passenger (5.0.30)
+      rack
+      rake (>= 0.8.1)
     pg (0.18.4)
     pkg-config (1.1.7)
-    puma (3.6.0)
     rack (2.0.1)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -338,8 +340,8 @@ DEPENDENCIES
   oauth
   omniauth-google-oauth2
   paperclip (~> 5.0)
+  passenger
   pg
-  puma (~> 3.0)
   rails (~> 5.0)
   rails-controller-testing
   redcarpet
