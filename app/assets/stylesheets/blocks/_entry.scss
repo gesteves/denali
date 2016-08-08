@@ -21,9 +21,7 @@
 
 .entry__headline {
   font-family: 'kepler-std-display', 'kepler-std', 'Georgia', serif;
-  font-feature-settings: 'liga', 'clig';
   font-size: 20px;
-  font-variant-ligatures: common-ligatures;
   line-height: (24/20);
   margin: (2.4rem/2) 0;
 
@@ -137,9 +135,7 @@
 .entry__related {
   border-top: 4px solid $color-border;
   font-family: 'kepler-std-display', 'kepler-std', 'Georgia', serif;
-  font-feature-settings: 'liga', 'clig';
   font-size: 18px;
-  font-variant-ligatures: common-ligatures;
   line-height: (24/18);
   margin: 0 auto;
   max-width: $bp-m;
