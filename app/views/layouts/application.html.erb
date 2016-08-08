@@ -13,7 +13,7 @@
     </noscript>
   <% end %>
   <%= javascript_include_tag 'application', async: true %>
-  <script src="https://use.typekit.net/vtp0iqq.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
+  <script src="https://use.typekit.net/<%= ENV['typekit_id'] %>.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>
