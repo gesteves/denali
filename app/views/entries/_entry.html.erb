@@ -1,15 +1,15 @@
 <% cache "entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
     <% entry.photos.each do |photo| %>
-      <figure class="entry__photo">
-        <%= responsive_image_tag photo,
-            'entry',
-            { class: "entry__image entry__image--fit",
-              alt: photo.caption.blank? ? entry.title : photo.plain_caption,
-              'data-width-original': photo.width,
-              'data-height-original': photo.height,
-              onload: "'undefined'!=typeof performance.mark&&(performance.clearMarks('mark_entry_photo_rendered'),performance.mark('mark_entry_photo_rendered'));".html_safe } %>
-      </figure>
+        <figure class="entry__figure">
+          <%= responsive_image_tag photo,
+              'entry',
+              { class: "entry__photo entry__photo--fit",
+                alt: photo.caption.blank? ? entry.title : photo.plain_caption,
+                'data-width-original': photo.width,
+                'data-height-original': photo.height,
+                onload: "'undefined'!=typeof performance.mark&&(performance.clearMarks('mark_entry_photo_rendered'),performance.mark('mark_entry_photo_rendered'));".html_safe } %>
+        </figure>
     <% end %>
 
     <% if entry.is_photo? %>
