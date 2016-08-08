@@ -11,7 +11,7 @@
               onload: "if (typeof performance.mark !== 'undefined') { performance.clearMarks('mark_entry_photo_rendered'); performance.mark('mark_entry_photo_rendered'); }".html_safe } %>
       </figure>
     <% end %>
-    
+
     <% if entry.is_photo? %>
       <script>
         if (typeof performance.mark !== 'undefined') {
@@ -36,7 +36,6 @@
       <%= render partial: 'entries/byline', locals: { entry: entry } %>
       <%= render partial: 'entries/exif', locals: { photo: entry.photos.first } if entry.photos.count == 1 %>
       <%= render partial: 'entries/tags', object: entry.tags unless entry.tags.blank? %>
-      <%= render partial: 'entries/share', locals: { entry: entry } if entry.is_photo? %>
     </div>
   </article>
 <% end %>

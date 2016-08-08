@@ -57,47 +57,6 @@ module ApplicationHelper
     "style=padding-top:#{padding}%"
   end
 
-  def facebook_share_url(entry)
-    params = {
-      u: entry.permalink_url
-    }
-
-    "https://www.facebook.com/sharer/sharer.php?#{params.to_query}"
-  end
-
-  def twitter_share_url(entry)
-    params = {
-      text: entry.tweet_text.blank? ? truncate(entry.plain_title, length: 120, omission: '…') : entry.tweet_text,
-      url: entry.permalink_url,
-      via: 'gesteves'
-    }
-
-    "https://twitter.com/intent/tweet?#{params.to_query}"
-  end
-
-  def tumblr_share_url(entry)
-    params = {
-      posttype: 'link',
-      title: entry.plain_title,
-      content: entry.permalink_url,
-      canonicalUrl: entry.permalink_url
-    }
-
-    params[:tags] = entry.tag_list.join(',') unless entry.tag_list.blank?
-
-    "https://www.tumblr.com/widgets/share/tool?#{params.to_query}"
-  end
-
-  def pinterest_share_url(entry)
-    params = {
-      url: entry.permalink_url,
-      media: entry.photos.first.url(w: 2560),
-      description: entry.plain_title
-    }
-
-    "https://www.pinterest.com/pin/create/button/?#{params.to_query}"
-  end
-
   def publish_date_for_queued(entry, format = '%A, %B %-d')
     days = if Time.now.utc.hour < 17
       entry.position - 1

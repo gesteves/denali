@@ -8,14 +8,12 @@
 // I need to init these scripts directly, because the `turbolinks:load`
 // event has already fired.
 if (document.readyState !== 'loading') {
-  Denali.SocialShare.init();
   Denali.ImageZoom.init();
   Denali.LazyLoad.init();
   Denali.Map.init();
   Denali.Analytics.sendPageview();
 }
 
-document.addEventListener('turbolinks:load', Denali.SocialShare.init);
 document.addEventListener('turbolinks:load', Denali.ImageZoom.init);
 document.addEventListener('turbolinks:load', Denali.LazyLoad.init);
 document.addEventListener('turbolinks:load', Denali.Map.init);
