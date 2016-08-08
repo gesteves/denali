@@ -21,6 +21,7 @@ Denali.ImageZoom = (function () {
         original_height,
         image_ratio,
         max_width,
+        min_height,
         height;
     for (var i = 0; i < images.length; i++) {
       image = images[i];
@@ -29,6 +30,8 @@ Denali.ImageZoom = (function () {
       image_ratio = original_height/original_width;
       max_width = Math.min(original_width, document.documentElement.clientWidth, opts.max_width);
       height = max_width * image_ratio;
+      min_height = Math.min(document.documentElement.clientHeight, height);
+      image.style.minHeight = min_height + 'px';
       if (height > document.documentElement.clientHeight) {
         image.classList.add(opts.zoomable_class);
         image.addEventListener('click', toggleZoom);
