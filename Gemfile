@@ -53,6 +53,7 @@ gem 'twitter'
 group :production do
   gem 'pg'
   gem 'lograge'
+  gem 'puma_worker_killer'
 end
 
 group :development do
