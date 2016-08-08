@@ -52,7 +52,6 @@ gem 'twitter'
 group :production do
   gem 'passenger'
   gem 'pg'
-  gem 'newrelic_rpm'
   gem 'lograge'
 end
 

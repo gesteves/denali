@@ -143,7 +143,6 @@ GEM
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     naught (1.1.0)
-    newrelic_rpm (3.16.0.318)
     nio4r (1.2.1)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
@@ -336,7 +335,6 @@ DEPENDENCIES
   kaminari
   lograge
   mock_redis
-  newrelic_rpm
   oauth
   omniauth-google-oauth2
   paperclip (~> 5.0)
