@@ -1,5 +1,7 @@
 //= require turbolinks
 //= require ./vendors/loadjs
+//= require ./vendors/loadcss
+//= require ./vendors/cssrelpreload
 //= require_tree ./application
 
 'use strict';
