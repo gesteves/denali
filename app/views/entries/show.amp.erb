@@ -29,7 +29,7 @@
     <% cache "entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
       <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
         <% @entry.photos.each do |photo| %>
-          <figure class="entry__photo">
+          <figure class="entry__figure">
             <%= amp_image_tag photo,
                 'entry_amp',
                 { alt: photo.caption.blank? ? @entry.title : photo.plain_caption, width: photo.width, height: photo.height } %>

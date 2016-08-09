@@ -26,12 +26,16 @@ img {
   max-width: 100%;
 }
 
-.twitter-tweet {
   // scss-lint:disable ImportantRule
-  // Needed to override inline styles injected by Twitter in embedded tweets
+.twitter-tweet {
   margin: 24px auto 0 !important;
 
   @media (min-width: $bp-s) {
     margin: 36px auto 0 !important;
   }
 }
+
+.entry__photo-container--zoom {
+  width: auto !important;
+}
+// scss-lint:enable ImportantRule
