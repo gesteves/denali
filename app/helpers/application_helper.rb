@@ -52,9 +52,14 @@ module ApplicationHelper
     render partial: "partials/svg/#{icon}.html.erb", locals: { svg_class: "#{svg_class} #{svg_class}--#{icon}" }
   end
 
-  def aspect_ratio(photo)
+  def intrinsic_ratio_padding(photo)
     padding = (photo.height.to_f/photo.width.to_f) * 100
     "style=padding-top:#{padding}%"
+  end
+
+  def intrinsic_ratio_width(photo)
+    width = (photo.width.to_f/photo.height.to_f) * 100
+    "style=width:#{width}vh"
   end
 
   def publish_date_for_queued(entry, format = '%A, %B %-d')

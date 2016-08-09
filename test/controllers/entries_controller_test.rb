@@ -39,7 +39,7 @@ class EntriesControllerTest < ActionController::TestCase
     assert_template :show
     assert_select '.entry', 1
     assert_select '.entry__photo', 1
-    assert_select '.entry__image', 1
+    assert_select '.entry__figure', 1
     assert_select '.entry__headline', 1
   end
 
