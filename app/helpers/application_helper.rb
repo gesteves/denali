@@ -70,4 +70,17 @@ module ApplicationHelper
     end
     (Time.now + days.days).strftime(format)
   end
+
+  def inline_asset(filename, opts = {})
+    opts.reverse_merge!(strip_charset: false)
+    if opts[:strip_charset]
+      Rails.application.assets[filename].to_s.gsub('@charset "UTF-8";', '').html_safe
+    else
+      Rails.application.assets[filename].to_s.html_safe
+    end
+  end
+
+  def inline_asset_hash(filename)
+    Digest::MD5.hexdigest(inline_asset(filename))
+  end
 end
