@@ -98,9 +98,9 @@
 }
 
 .entry__photo--zoomable {
-  cursor: zoom-out;
+  cursor: zoom-in;
 }
 
 .entry__photo-container--zoom .entry__photo--zoomable {
-  cursor: zoom-in;
+  cursor: zoom-out;
 }
