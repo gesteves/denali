@@ -1,4 +1,29 @@
-@import 'vendors/reset';
+html,
+body,
+div,
+h1,
+p,
+a,
+article,
+header,
+img,
+figure {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+article,
+figure {
+  display: block;
+}
+
+body {
+  line-height: 1;
+}
 
 @import 'base/variables';
 @import 'base/functions';

@@ -1,4 +1,30 @@
-@import 'vendors/reset';
+html,
+body,
+div,
+span,
+a,
+img,
+ol,
+li,
+article,
+figure,
+figcaption,
+header {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+
+body {
+  line-height: 1;
+}
+
+ol {
+  list-style: none;
+}
 
 @import 'base/variables';
 @import 'base/functions';
