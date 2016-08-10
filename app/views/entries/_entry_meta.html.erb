@@ -33,7 +33,9 @@
     <link rel="amphtml" href="<%= entry.permalink_url(format: 'amp') %>">
   <% end %>
   <link rel="canonical" href="<%= entry.permalink_url %>">
-  <script type="application/ld+json">
-    <%= sanitize render partial: 'entries/entry_schema.json.jbuilder', locals: { entry: entry } %>
-  </script>
+  <% if @is_amp %>
+    <script type="application/ld+json">
+      <%= sanitize render partial: 'entries/entry_schema.json.jbuilder', locals: { entry: entry } %>
+    </script>
+  <% end %>
 <% end %>
