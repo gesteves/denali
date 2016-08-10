@@ -91,11 +91,3 @@
 .entry--photo #{&}__body {
   border-top: 1px solid $color-border;
 }
-
-.entry__photo--zoomable {
-  cursor: zoom-in;
-}
-
-.entry__photo-container--zoom .entry__photo--zoomable {
-  cursor: zoom-out;
-}

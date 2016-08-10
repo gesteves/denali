@@ -69,6 +69,14 @@
   @include aspect-ratio(560, 315);
 }
 
+.entry__photo--zoomable {
+  cursor: zoom-in;
+}
+
+.entry__photo-container--zoom .entry__photo--zoomable {
+  cursor: zoom-out;
+}
+
 %default-entry-styles {
   p,
   ul,
