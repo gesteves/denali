@@ -44,7 +44,7 @@ GEM
       activerecord (>= 3.0)
     addressable (2.4.0)
     arel (7.1.1)
-    autoprefixer-rails (6.4.0.1)
+    autoprefixer-rails (6.4.0.2)
       execjs
     aws-sdk (2.5.3)
       aws-sdk-resources (= 2.5.3)
