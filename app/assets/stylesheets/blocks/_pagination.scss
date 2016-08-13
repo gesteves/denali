@@ -55,6 +55,23 @@
 
 .pagination__icon {
   fill: $color-gray-light;
+  height: 16px;
+  width: 12px;
+
+  @media (min-width: $bp-xs) {
+    height: 20px;
+    width: 15px;
+  }
+
+  @media (min-width: $bp-s) {
+    height: 28px;
+    width: 21px;
+  }
+
+  @media (min-width: $bp-m) {
+    height: 32px;
+    width: 24px;
+  }
 }
 
 .pagination__icon--active {
