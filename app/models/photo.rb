@@ -76,10 +76,10 @@ class Photo < ApplicationRecord
 
   def color_palette
     if self.color_palette_json.present?
-      JSON.parse(self.color_palette_json).symbolize_keys
+      JSON.parse(self.color_palette_json).symbolize_keys.reverse_merge!(fallback: '#eeeeee')
     else
       PaletteExtractionJob.perform_later(self)
-      { default: '#eeeeee' }
+      { fallback: '#eeeeee' }
     end
   end
 
@@ -94,7 +94,7 @@ class Photo < ApplicationRecord
     elsif palette[:muted]
       palette[:muted]
     else
-      palette[:default]
+      palette[:fallback]
     end
   end
 
