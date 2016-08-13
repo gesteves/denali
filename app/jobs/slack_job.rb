@@ -8,7 +8,7 @@ class SlackJob < ApplicationJob
       title: entry.plain_title,
       title_link: entry.permalink_url,
       image_url: entry.photos.first.url(w: 800),
-      color: '#BF0222'
+      color: entry.photos.first.dominant_color
     }
     attachment[:text] = entry.plain_body if entry.body.present?
     payload[:attachments] = [attachment]

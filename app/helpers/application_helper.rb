@@ -54,12 +54,16 @@ module ApplicationHelper
 
   def intrinsic_ratio_padding(photo)
     padding = (photo.height.to_f/photo.width.to_f) * 100
-    "style=padding-top:#{padding}%"
+    "padding-top:#{padding}%"
   end
 
   def intrinsic_ratio_width(photo)
     width = (photo.width.to_f/photo.height.to_f) * 100
-    "style=width:#{width}vh"
+    "width:#{width}vh"
+  end
+
+  def dominant_background_color(photo)
+    "background-color:#{photo.dominant_color}"
   end
 
   def publish_date_for_queued(entry, format = '%A, %B %-d')
