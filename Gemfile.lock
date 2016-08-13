@@ -52,7 +52,7 @@ GEM
       jmespath (~> 1.0)
     aws-sdk-resources (2.5.3)
       aws-sdk-core (= 2.5.3)
-    brakeman (3.3.3)
+    brakeman (3.3.5)
     buftok (0.2.0)
     builder (3.2.2)
     byebug (9.0.5)
