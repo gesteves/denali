@@ -1,19 +1,24 @@
 <% cache "entry/pagination/#{@photoblog.id}/#{@photoblog.updated_at.to_i}/#{entry_pagination.id}/#{entry_pagination.updated_at.to_i}" do %>
-  <nav class="pagination" role="navigation">
-    <span class="pagination__link">
-      <% if entry_pagination.newer.nil? %>
-        <span class="pagination__prev"><%= t('views.pagination.newer').html_safe %></span>
-      <% else %>
-        <%= link_to t('views.pagination.newer').html_safe, entry_pagination.newer.permalink_url, rel: 'prev', class: 'pagination__prev' %>
-      <% end %>
-    </span>
+  <nav class="pagination pagination--entry" role="navigation">
+    <% if entry_pagination.newer.nil? %>
+      <span class="pagination__arrow"><%= inline_svg 'chevron_left', 'pagination__icon' %></span>
+    <% else %>
+      <a href="<%= entry_pagination.newer.permalink_url %>" rel="prev" class="pagination__arrow">
+        <%= inline_svg 'chevron_left', 'pagination__icon pagination__icon--active' %>
+      </a>
+    <% end %>
+    <% unless entry_pagination.around.blank? %>
+      <ol class="pagination__thumbnails">
+        <%= render partial: 'entries/entry_pagination_thumbnail', collection: entry_pagination.around, locals: { active_id: entry_pagination.id } %>
+      </ol>
+    <% end %>
+    <% if entry_pagination.older.nil? %>
+      <span class="pagination__arrow"><%= inline_svg 'chevron_right', 'pagination__icon' %></span>
+    <% else %>
+      <a href="<%= entry_pagination.older.permalink_url %>" rel="next" class="pagination__arrow">
+        <%= inline_svg 'chevron_right', 'pagination__icon pagination__icon--active' %>
+      </a>
+    <% end %>
 
-    <span class="pagination__link pagination__link--next">
-      <% if entry_pagination.older.nil? %>
-        <span class="pagination__next"><%= t('views.pagination.older').html_safe %></span>
-      <% else %>
-        <%= link_to t('views.pagination.older').html_safe, entry_pagination.older.permalink_url, rel: 'next', class: 'pagination__next' %>
-      <% end %>
-    </span>
   </nav>
 <% end %>
