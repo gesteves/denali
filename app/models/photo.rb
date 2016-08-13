@@ -74,30 +74,6 @@ class Photo < ApplicationRecord
     ((self.width.to_f * height.to_f)/self.height.to_f).round
   end
 
-  def color_palette
-    if self.color_palette_json.present?
-      JSON.parse(self.color_palette_json).symbolize_keys.reverse_merge!(fallback: '#eeeeee')
-    else
-      PaletteExtractionJob.perform_later(self)
-      { fallback: '#eeeeee' }
-    end
-  end
-
-  def dominant_color
-    palette = self.color_palette
-    if palette[:vibrant].present?
-      palette[:vibrant]
-    elsif palette[:vibrant_light]
-      palette[:vibrant_light]
-    elsif palette[:muted_light]
-      palette[:muted_light]
-    elsif palette[:muted]
-      palette[:muted]
-    else
-      palette[:fallback]
-    end
-  end
-
   private
   def set_image
     if self.source_url.present?

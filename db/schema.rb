@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160813191141) do
+ActiveRecord::Schema.define(version: 20160717144843) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -77,7 +77,6 @@ ActiveRecord::Schema.define(version: 20160813191141) do
     t.string   "film_make"
     t.string   "film_type"
     t.string   "crop"
-    t.text     "color_palette_json"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
   end
 

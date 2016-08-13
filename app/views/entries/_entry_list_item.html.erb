@@ -1,7 +1,7 @@
 <% lazy_load = !local_assigns[:lazy_load_start_index] || entry_list_item_counter >= lazy_load_start_index %>
 <% cache "entry/list/#{lazy_load ? 'lazy' : 'nolazy'}/#{entry_list_item.id}/#{entry_list_item.updated_at.to_i}" do %>
   <li class="entry-list__item" role="article">
-    <a class="entry-list__link <%= entry_list_item.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= entry_list_item.permalink_url %>" <% if entry_list_item.is_photo? %>style="<%= dominant_background_color(entry_list_item.photos.first) %>;"<% end %>>
+    <a class="entry-list__link <%= entry_list_item.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= entry_list_item.permalink_url %>">
       <% if entry_list_item.is_photo? %>
         <figure class="entry-list__photo">
           <% if lazy_load %>

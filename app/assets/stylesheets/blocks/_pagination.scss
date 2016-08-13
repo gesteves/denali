@@ -107,3 +107,7 @@
     border-color: $color-links;
   }
 }
+
+.pagination__thumbnail--active {
+  border: 2px solid $color-links;
+}

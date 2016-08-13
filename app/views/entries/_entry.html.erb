@@ -1,8 +1,8 @@
 <% cache "entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
     <% entry.photos.each do |photo| %>
-      <div class="entry__photo-container" style="<%= intrinsic_ratio_width photo %>">
-        <figure class="entry__figure" style="<%= "#{intrinsic_ratio_padding(photo)};#{dominant_background_color(photo)};" %>">
+      <div class="entry__photo-container" <%= intrinsic_ratio_width photo %>>
+        <figure class="entry__figure" <%= intrinsic_ratio_padding photo %>>
           <%= responsive_image_tag photo,
               'entry',
               { class: "entry__photo",
