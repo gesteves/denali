@@ -3,7 +3,7 @@
     <aside role="complementary">
       <h2 class="entry__related">Related Photos You Might Like</h2>
       <ol class="entry-list entry-list--related">
-        <%= render partial: 'entries/entry_list_item', collection: @entry.related %>
+        <%= render partial: 'entries/entry_list_item', collection: @entry.related, as: :entry %>
       </ol>
     </aside>
   <% end %>

@@ -1,25 +1,25 @@
-<% lazy_load = !local_assigns[:lazy_load_start_index] || entry_list_item_counter >= lazy_load_start_index %>
-<% cache "entry/list/#{lazy_load ? 'lazy' : 'nolazy'}/#{entry_list_item.id}/#{entry_list_item.updated_at.to_i}" do %>
+<% lazy_load = !local_assigns[:lazy_load_start_index] || entry_counter >= lazy_load_start_index %>
+<% cache "entry/list/#{lazy_load ? 'lazy' : 'nolazy'}/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <li class="entry-list__item" role="article">
-    <a class="entry-list__link <%= entry_list_item.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= entry_list_item.permalink_url %>">
-      <% if entry_list_item.is_photo? %>
+    <a class="entry-list__link <%= entry.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= entry.permalink_url %>">
+      <% if entry.is_photo? %>
         <figure class="entry-list__photo">
           <% if lazy_load %>
-            <%= lazy_responsive_image_tag entry_list_item.photos.first,
+            <%= lazy_responsive_image_tag entry.photos.first,
                   'entry_list_item',
-                  { class: 'entry-list__image', alt: entry_list_item.photos.first.caption.blank? ? entry_list_item.title : entry_list_item.photos.first.plain_caption } %>
+                  { class: 'entry-list__image', alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption } %>
           <% else %>
-            <%= responsive_image_tag entry_list_item.photos.first,
+            <%= responsive_image_tag entry.photos.first,
                   'entry_list_item',
-                  { class: 'entry-list__image', alt: entry_list_item.photos.first.caption.blank? ? entry_list_item.title : entry_list_item.photos.first.plain_caption } %>
+                  { class: 'entry-list__image', alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption } %>
           <% end %>
           <figcaption class="entry-list__photo-caption">
-            <p class="entry-list__photo-title"><%= sanitize truncate(entry_list_item.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
-            <p class="entry-list__photo-meta">Published on <%= entry_list_item.published_at.strftime('%B %-d, %Y') %></p>
-            <% if entry_list_item.is_photoset? %>
-              <p class="entry-list__photo-meta"><%= pluralize(entry_list_item.photos_count, 'photo') %></p>
+            <p class="entry-list__photo-title"><%= sanitize truncate(entry.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
+            <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
+            <% if entry.is_photoset? %>
+              <p class="entry-list__photo-meta"><%= pluralize(entry.photos_count, 'photo') %></p>
             <% else %>
-              <% photo = entry_list_item.photos.first %>
+              <% photo = entry.photos.first %>
               <p class="entry-list__photo-meta">
                 <span class="exif__field">
                   <%= camera photo.make, photo.model %>
@@ -50,8 +50,8 @@
           </figcaption>
         </figure>
       <% else %>
-        <h2><%= entry_list_item.plain_title %></h2>
-        <%= simple_format(truncate(entry_list_item.plain_body, length: 1200, omission: '…')) %>
+        <h2><%= entry.plain_title %></h2>
+        <%= simple_format(truncate(entry.plain_body, length: 1200, omission: '…')) %>
       <% end %>
     </a>
   </li>
