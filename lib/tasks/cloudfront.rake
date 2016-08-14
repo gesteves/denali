@@ -14,7 +14,7 @@ namespace :cloudfront do
       count = ENV['COUNT'].to_i
       entries = Entry.published.limit(count).map { |e| e.permalink_path }
       invalidator.invalidate(entries)
-      puts "Invalidation request for the most recent #{pluralize(count, 'entry')} has been sent."
+      puts "Invalidation request for the most recent #{count} entries has been sent."
     else
       puts 'Please specify an `ENTRY_ID` or a `COUNT`.'
     end
