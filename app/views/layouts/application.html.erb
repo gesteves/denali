@@ -4,12 +4,12 @@
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
   <% if @has_visited || !content_for?(:inline_css) %>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
   <% else %>
     <%= yield :inline_css %>
     <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
   <% end %>
-  <%= javascript_include_tag 'application', async: true %>
+  <%= javascript_include_tag 'application', async: true, 'data-turbolinks-track': 'reload' %>
   <script src="https://use.typekit.net/<%= ENV['typekit_id'] %>.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
