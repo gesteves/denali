@@ -8,7 +8,7 @@
       </a>
     <% end %>
     <ol class="pagination__thumbnails">
-      <%= render partial: 'entries/entry_pagination_thumbnail', collection: entry_pagination.around, locals: { active_id: entry_pagination.id } %>
+      <%= render partial: 'entries/entry_pagination_thumbnail', collection: entry_pagination.around, as: :entry, locals: { active_id: entry_pagination.id } %>
     </ol>
     <% if entry_pagination.older.nil? %>
       <span class="pagination__arrow"><%= inline_svg 'chevron_right', 'pagination__icon' %></span>

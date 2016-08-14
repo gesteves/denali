@@ -1,9 +1,9 @@
-<% cache "entry/pagination/thumbnail/#{active_id}/#{entry_pagination_thumbnail.id}/#{entry_pagination_thumbnail.updated_at.to_i}" do %>
+<% cache "entry/pagination/thumbnail/active:#{entry.id == active_id}/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <li class="pagination__thumbnail-item">
-    <a class="pagination__thumbnail-link" href="<%= entry_pagination_thumbnail.permalink_url %>">
-      <%= lazy_responsive_image_tag entry_pagination_thumbnail.photos.first,
+    <a class="pagination__thumbnail-link" href="<%= entry.permalink_url %>">
+      <%= lazy_responsive_image_tag entry.photos.first,
             'entry_pagination',
-            { class: "pagination__thumbnail #{'pagination__thumbnail--active' if entry_pagination_thumbnail.id == active_id}", alt: entry_pagination_thumbnail.photos.first.caption.blank? ? entry_pagination_thumbnail.title : entry_pagination_thumbnail.photos.first.plain_caption } %>
+            { class: "pagination__thumbnail #{'pagination__thumbnail--active' if entry.id == active_id}", alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption } %>
     </a>
   </li>
 <% end %>
