@@ -30,8 +30,8 @@
     </div>
 
     <div class="entry__meta">
-      <%= render partial: 'entries/byline', locals: { entry: entry } %>
-      <%= render partial: 'entries/exif', locals: { photo: entry.photos.first } if entry.photos.count == 1 %>
+      <%= render partial: 'entries/byline', object: entry, as: :entry %>
+      <%= render partial: 'entries/exif', object: entry.photos.first, as: :photo if entry.photos.count == 1 %>
       <%= render partial: 'entries/tags', object: entry.tags unless entry.tags.blank? %>
     </div>
   </article>

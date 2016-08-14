@@ -48,13 +48,13 @@
         </div>
 
         <div class="entry__meta amp">
-          <%= render partial: 'entries/byline.html.erb', locals: { entry: @entry } %>
-          <%= render partial: 'entries/exif.html.erb', locals: { photo: @entry.photos.first } if @entry.photos.count == 1 %>
+          <%= render partial: 'entries/byline.html.erb', object: @entry, as: :entry %>
+          <%= render partial: 'entries/exif.html.erb', object: @entry.photos.first, as: :photo if @entry.photos.count == 1 %>
           <%= render partial: 'entries/tags.html.erb', object: @entry.tags unless @entry.tags.blank? %>
         </div>
       </article>
     <% end %>
-    
+
     <%= render partial: 'partials/footer.html.erb', locals: { additional_classes: 'amp' } %>
 
     <amp-analytics type="googleanalytics" id="analytics">
