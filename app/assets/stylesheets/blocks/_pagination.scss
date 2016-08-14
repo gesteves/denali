@@ -78,7 +78,7 @@
   fill: $color-text;
 }
 
-.pagination__arrow .pagination__icon--active:hover {
+.pagination__arrow:hover .pagination__icon--active {
   fill: $color-links;
 }
 
@@ -107,9 +107,9 @@
 }
 
 .pagination__thumbnail--active {
-  box-shadow: 0 2px 0 $color-links;
+  box-shadow: 0 4px 0 $color-links;
 
   &:hover {
-    box-shadow: 0 4px 0 $color-links;
+    box-shadow: 0 6px 0 $color-links;
   }
 }
