@@ -10,8 +10,14 @@ namespace :cloudfront do
       else
         puts 'That entry wasn\'t found.'
       end
+    elsif ENV['COUNT'].present?
+      count = ENV['COUNT'].to_i
+      entries = Entry.published.limit(count).map { |e| e.permalink_path }
+      invalidator = CloudfrontInvalidator.new(ENV['aws_access_key_id'], ENV['aws_secret_access_key'], ENV['aws_cloudfront_distribution_id'])
+      invalidator.invalidate(entries)
+      puts "Invalidation request for the most recent #{pluralize(count, 'entry')} has been sent."
     else
-      puts 'Please specify an ENTRY_ID.'
+      puts 'Please specify an `ENTRY_ID` or a `COUNT`.'
     end
   end
 end
