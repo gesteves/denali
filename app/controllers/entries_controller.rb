@@ -5,9 +5,9 @@ class EntriesController < ApplicationController
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :load_entries, only: [:index]
   before_action :check_if_user_has_visited, only: [:index, :tagged, :show, :preview]
+  before_action :set_max_age, only: [:index, :tagged, :show, :preview]
 
   def index
-    expires_in 60.minutes, public: true
     raise ActiveRecord::RecordNotFound if @entries.empty?
     if stale?(@photoblog, public: true)
       respond_to do |format|
@@ -19,7 +19,6 @@ class EntriesController < ApplicationController
   end
 
   def tagged
-    expires_in 60.minutes, public: true
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     if stale?(@photoblog, public: true)
       respond_to do |format|
@@ -31,7 +30,6 @@ class EntriesController < ApplicationController
   end
 
   def show
-    expires_in 24.hours, public: true
     @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
     if stale?(@photoblog, public: true)
       respond_to do |format|
@@ -48,7 +46,6 @@ class EntriesController < ApplicationController
   end
 
   def preview
-    expires_in 60.minutes, public: true
     request.format = 'html'
     @entry = @photoblog.entries.includes(:photos, :user, :blog).find(params[:id])
     if stale?(@photoblog, public: true)
