@@ -91,23 +91,25 @@
 
 .pagination__thumbnail-item {
   @include aspect-ratio(1, 1, '.pagination__thumbnail-link');
+  background-color: $color-photo-background;
   display: block;
   flex-basis: calc(100% / 7);
-}
-
-.pagination__thumbnail-link {
-  padding: 1px;
+  margin: 0 2px;
 }
 
 .pagination__thumbnail {
-  border: 2px solid transparentize($color-links, 1);
-  transition: opacity $fadein-duration linear, border-color 100ms ease-in-out;
+  box-shadow: 0 0 0 $color-links;
+  transition: opacity $fadein-duration linear, box-shadow 100ms ease-in-out;
 
   &:hover {
-    border-color: $color-links;
+    box-shadow: 0 2px 0 $color-links;
   }
 }
 
 .pagination__thumbnail--active {
-  border: 2px solid $color-links;
+  box-shadow: 0 2px 0 $color-links;
+
+  &:hover {
+    box-shadow: 0 4px 0 $color-links;
+  }
 }

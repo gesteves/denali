@@ -39,17 +39,17 @@ entry_list_item:
 entry_pagination:
   src: 100
   srcset:
-    - 59
-    - 75
-    - 129
-    - 260
-    - 187
-    - 358
-    - 121
-    - 242
+    - 55
+    - 71
+    - 123
+    - 256
+    - 183
+    - 354
+    - 119
+    - 238
   sizes:
-    - "(min-width: 960px) 121px"
-    - calc(((100vw - 100px)/7) - 2px)
+    - "(min-width: 960px) 119px"
+    - calc(((100vw - 100px)/7) - 4px)
   square: Yes
 admin_entry:
   src: 560
