@@ -22,3 +22,21 @@
     padding: 0;
   }
 }
+
+.footer__links {
+  display: block;
+
+  @media (min-width: $bp-s) {
+    display: inline;
+  }
+}
+
+.footer__link::before {
+  content: ' · ';
+}
+
+.footer__link:first-of-type::before {
+  @media (max-width: $bp-s) {
+    display: none;
+  }
+}

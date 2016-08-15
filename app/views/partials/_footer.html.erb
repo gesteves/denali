@@ -1,5 +1,14 @@
 <footer class="footer <%= additional_classes if local_assigns[:additional_classes] %>" role="contentinfo">
   <% cache "blog/copyright/#{Time.now.strftime('%Y')}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-    <p>&copy; <%= Photo.oldest.try(:taken_at).try(:strftime, '%Y') %>-<%= Time.now.strftime('%Y') %> <%= sanitize @photoblog.copyright %></p>
+    <p>
+      &copy; <%= Photo.oldest.try(:taken_at).try(:strftime, '%Y') %>-<%= Time.now.strftime('%Y') %> <%= sanitize @photoblog.copyright %>
+      <span class="footer__links">
+        <%= link_to 'Home', root_path, class: 'footer__link' %>
+        <%= link_to 'About', about_path, class: 'footer__link' %>
+        <%= link_to 'Map', map_path, class: 'footer__link' %>
+        <%= link_to 'Contact', 'mailto:contact@allencompassingtrip.com', class: 'footer__link' %>
+        <%= link_to 'Feed', simple_feed_path, class: 'footer__link' %>
+      </span>
+    </p>
   <% end %>
 </footer>
