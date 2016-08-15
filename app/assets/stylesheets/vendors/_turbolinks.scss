@@ -1,4 +1,6 @@
 .turbolinks-progress-bar {
-  background-color: #bf0222 !important;
-  height: 2px !important;
+  background-color: #bf0222;
+  border-bottom-right-radius: 2px;
+  border-top-right-radius: 2px;
+  height: 4px;
 }
