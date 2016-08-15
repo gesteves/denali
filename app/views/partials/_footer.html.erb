@@ -3,12 +3,11 @@
     <p>
       &copy; <%= Photo.oldest.try(:taken_at).try(:strftime, '%Y') %>-<%= Time.now.strftime('%Y') %> <%= sanitize @photoblog.copyright %>
       <span class="footer__links">
-        <%= link_to 'Home', root_path, class: 'footer__link' %>
-        <%= link_to 'About', about_path, class: 'footer__link' %>
-        <%= link_to 'Map', map_path, class: 'footer__link' %>
-        <%= link_to 'Contact', 'mailto:contact@allencompassingtrip.com', class: 'footer__link' %>
-        <%= link_to 'Feed', simple_feed_path, class: 'footer__link' %>
-      </span>
+        <%= link_to 'Home', root_path %> &middot;
+        <%= link_to 'About', about_path %> &middot;
+        <%= link_to 'Map', map_path %> &middot;
+        <%= link_to 'Contact', 'mailto:contact@allencompassingtrip.com' %> &middot;
+        <%= link_to 'Feed', simple_feed_path %></span>
     </p>
   <% end %>
 </footer>
