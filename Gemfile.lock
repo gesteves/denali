@@ -40,7 +40,7 @@ GEM
       tzinfo (~> 1.1)
     acts-as-taggable-on (4.0.0)
       activerecord (>= 4.0)
-    acts_as_list (0.8.0)
+    acts_as_list (0.7.7)
       activerecord (>= 3.0)
     addressable (2.4.0)
     arel (7.1.1)
@@ -313,7 +313,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on (~> 4.0)
-  acts_as_list
+  acts_as_list (~> 0.7.0)
   autoprefixer-rails
   aws-sdk (~> 2.0)
   brakeman
