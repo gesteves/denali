@@ -28,7 +28,7 @@ class TumblrJob < ApplicationJob
   # full-size image doesn't always work.
   def resized_photo_path(photo)
     file = Tempfile.new([photo.id.to_s, '.jpg'])
-    original = Magick::Image::from_blob(HTTParty.get(photo.original_url).body).first
+    original = Magick::Image::from_blob(open(photo.original_url).read).first
     image = original.resize_to_fit(2560)
     image.write(file.path)
     file.path

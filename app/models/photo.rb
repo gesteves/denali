@@ -9,6 +9,7 @@ class Photo < ApplicationRecord
                       bucket: ENV['s3_bucket'] },
     s3_headers: { 'Cache-Control': 'max-age=31536000, public' },
     s3_region: ENV['s3_region'],
+    s3_protocol: 'http',
     url: ':s3_domain_url',
     path: 'photos/:hash.:extension',
     hash_secret: ENV['secret_key_base'],
