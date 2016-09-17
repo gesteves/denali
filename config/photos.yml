@@ -11,8 +11,10 @@ entry: &entry
     - 1440
     - 2560
     - 2880
+    - 1600
+    - 3200
   sizes:
-    - "(min-width: 1440px) 1440px"
+    - "(min-width: 1600px) 1600px"
     - 100vw
   quality: 90
 entry_amp:
