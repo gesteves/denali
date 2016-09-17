@@ -33,8 +33,11 @@ entry_list_item:
     - 844
     - 355
     - 710
+    - 395
+    - 790
   sizes:
-    - "(min-width: 1440px) 355px"
+    - "(min-width: 1600px) 395px"
+    - "(min-width: 1440px) calc((100vw - 20px)/4)"
     - "(min-width: 600px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
   square: Yes
