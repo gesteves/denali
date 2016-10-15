@@ -5,9 +5,6 @@
 <% if ENV['imgix_domain'].present? %>
   <link href="<%= ENV['imgix_secure'].present? ? 'https' : 'http' %>://<%= ENV['imgix_domain'] %>" rel="preconnect" crossorigin>
 <% end %>
-<link href="https://use.typekit.net" rel="preconnect" crossorigin>
-<link href="https://p.typekit.net" rel="preconnect" crossorigin>
-<link href="https://fonts.typekit.net" rel="preconnect" crossorigin>
 <link href="https://www.google-analytics.com" rel="preconnect" crossorigin>
 <link href="<%= image_path 'favicon.svg' %>" rel="mask-icon" color="#000000">
 <link href="<%= image_path 'icon-192.png' %>" rel="icon" sizes="192x192">

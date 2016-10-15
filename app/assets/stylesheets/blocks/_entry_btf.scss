@@ -17,11 +17,6 @@
     line-height: (24/14);
     margin: 0;
     text-align: center;
-
-    @media (min-width: $bp-s) {
-      font-size: 16px;
-      line-height: (36/16);
-    }
   }
 
   a:link,
@@ -42,7 +37,6 @@
 
 .entry__related {
   border-top: 4px solid $color-border;
-  font-family: 'kepler-std-display', 'kepler-std', 'Georgia', serif;
   font-size: 18px;
   line-height: (24/18);
   margin: 0 auto;
@@ -99,7 +93,6 @@
   h4,
   h5,
   h6 {
-    font-family: 'kepler-std-display', 'kepler-std', 'Georgia', serif;
     font-size: 18px;
     font-weight: 300;
     line-height: (24/18);

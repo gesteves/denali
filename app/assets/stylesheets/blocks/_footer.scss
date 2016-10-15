@@ -10,11 +10,6 @@
     line-height: (24/14);
     margin: 0;
     text-align: center;
-
-    @media (min-width: $bp-s) {
-      font-size: 16px;
-      line-height: (36/16);
-    }
   }
 
   @media (min-width: $bp-s) {
