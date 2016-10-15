@@ -1,23 +1,13 @@
 <p>
-  <%= entry.user.name %>
   <% if entry.is_published? %>
-    published
+    Published
   <% elsif entry.is_queued? %>
-    queued
+    Queued
   <% elsif entry.is_draft? %>
-    drafted
+    Drafted
   <% else %>
-    updated
+    Updated
   <% end %>
-
-  <% if entry.is_text? %>
-    this article
-  <% elsif entry.is_photoset? %>
-    these photos
-  <% elsif entry.is_photo? %>
-    this photo
-  <% end %>
-
   <% if entry.is_published? %>
     on <%= link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url %>
   <% elsif entry.is_queued? %>
