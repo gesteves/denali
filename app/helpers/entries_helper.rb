@@ -6,8 +6,7 @@ module EntriesHelper
   def exposure(exposure)
     exposure = exposure.to_r
     formatted = exposure >= 1 ? "%g" % ("%.2f" % exposure) : exposure
-    unit = exposure == 1 ? 'second' : 'seconds'
-    "#{formatted} #{unit}"
+    "#{formatted}″"
   end
 
   def film(make, model)
