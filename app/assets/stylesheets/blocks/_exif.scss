@@ -6,8 +6,7 @@
   white-space: nowrap;
 
   &::after {
-    content: ' • ';
-    margin-right: 2px;
+    content: ' · ';
   }
 
   &:last-of-type::after {
