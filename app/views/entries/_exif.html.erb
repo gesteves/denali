@@ -1,26 +1,26 @@
 <p class="exif">
-  <% unless photo.make.blank? || photo.model.blank? %>
+  <% if photo.make.present? && photo.model.present? %>
     <span class="exif__field">
       Taken with <%= article photo.make %> <%= camera photo.make, photo.model %>
-      <% unless photo.film_make.blank? || photo.film_type.blank? %>
+      <% if photo.film_make.present? && photo.film_type.present? %>
         on <%= film photo.film_make, photo.film_type %>
       <% end %>
     </span>
   <% end %>
-  <% unless photo.focal_length.blank? %>
-    <span class="exif__field"><%= photo.focal_length %> mm focal length</span>
+
+  <% if photo.focal_length.present? %>
+    <span class="exif__field"><%= photo.focal_length %> mm <span class="exif__optional">focal length</span></span>
   <% end %>
-  <% unless photo.exposure.blank? && photo.f_number.blank? %>
-    <span class="exif__field">
-      <% unless photo.exposure.blank? %>
-        <%= exposure photo.exposure %>
-      <% end %>
-      <% unless photo.f_number.blank? %>
-        at f/<%= aperture photo.f_number %>
-      <% end %>
-    </span>
+
+  <% if photo.exposure.present? && photo.f_number.present? %>
+    <span class="exif__field"><%= exposure photo.exposure %> at f/<%= aperture photo.f_number %></span>
+  <% elsif photo.exposure.present? %>
+    <span class="exif__field"><%= exposure photo.exposure %></span>
+  <% elsif photo.f_number.present? %>
+    <span class="exif__field">f/<%= aperture photo.f_number %></span>
   <% end %>
-  <% unless photo.iso.blank? %>
+
+  <% if photo.iso.present? %>
     <span class="exif__field">ISO <%= photo.iso %></span>
   <% end %>
 </p>
