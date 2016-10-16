@@ -17,7 +17,7 @@
 html {
   background-color: $color-background;
   color: $color-text;
-  font-family: $font-default;
+  font-family: $font-sans;
   font-size: 62.5%;
   font-weight: 300;
 }
@@ -32,4 +32,10 @@ a:hover,
 a:active {
   color: $color-links;
   text-decoration: underline;
+}
+
+.amp .header__tagline,
+.amp.entry__meta p,
+.amp.footer p {
+  font-size: 14px;
 }
