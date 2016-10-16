@@ -48,9 +48,7 @@ gulp.task('svg', function () {
       parserOptions: { xmlMode: true }
     }))
     .pipe(cheerio({
-      run: function ($, file) {
-        var path = file.path.split('/');
-        var name = path[path.length - 1].split('.')[0];
+      run: function ($) {
         $('svg').attr({
           'class': '{{{%= svg_class %}}}'
         });
