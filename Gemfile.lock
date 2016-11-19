@@ -45,14 +45,16 @@ GEM
     addressable (2.5.0)
       public_suffix (~> 2.0, >= 2.0.2)
     arel (7.1.4)
-    autoprefixer-rails (6.5.1.1)
+    autoprefixer-rails (6.5.3)
       execjs
-    aws-sdk (2.6.18)
-      aws-sdk-resources (= 2.6.18)
-    aws-sdk-core (2.6.18)
+    aws-sdk (2.6.26)
+      aws-sdk-resources (= 2.6.26)
+    aws-sdk-core (2.6.26)
+      aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.6.18)
-      aws-sdk-core (= 2.6.18)
+    aws-sdk-resources (2.6.26)
+      aws-sdk-core (= 2.6.26)
+    aws-sigv4 (1.0.0)
     brakeman (3.4.1)
     buftok (0.2.0)
     builder (3.2.2)
@@ -135,7 +137,7 @@ GEM
     mimemagic (0.3.2)
     mini_portile2 (2.1.0)
     minitest (5.9.1)
-    mock_redis (0.17.0)
+    mock_redis (0.17.1)
     mono_logger (1.1.0)
     multi_json (1.12.1)
     multi_xml (0.5.5)
@@ -174,7 +176,7 @@ GEM
       rack
       rake (>= 0.8.1)
     pg (0.19.0)
-    public_suffix (2.0.3)
+    public_suffix (2.0.4)
     rack (2.0.1)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -209,7 +211,7 @@ GEM
     rake (11.3.0)
     rdoc (4.3.0)
     redcarpet (3.3.4)
-    redis (3.3.1)
+    redis (3.3.2)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
     resque (1.26.0)
@@ -243,7 +245,7 @@ GEM
     sdoc (0.4.2)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
-    sentry-raven (2.1.2)
+    sentry-raven (2.1.4)
       faraday (>= 0.7.6, < 0.10.x)
     simple_oauth (0.3.1)
     sinatra (1.0)
@@ -354,4 +356,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.12.5
+   1.13.6
