@@ -29,7 +29,7 @@
   overflow: hidden;
   padding: 2px;
 
-  @media (min-width: $bp-xs) {
+  @media (min-width: $bp-xxss) {
     flex-basis: calc(100%/3);
     flex-grow: 0;
     flex-shrink: 0;

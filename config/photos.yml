@@ -25,7 +25,7 @@ entry_list_item:
   srcset:
     - 308
     - 363
-    - 603
+    - 398
     - 502
     - 672
     - 900
@@ -38,7 +38,7 @@ entry_list_item:
   sizes:
     - "(min-width: 1600px) 395px"
     - "(min-width: 1440px) calc((100vw - 20px)/4)"
-    - "(min-width: 600px) calc((100vw - 16px)/3)"
+    - "(min-width: 400px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
   square: Yes
 entry_pagination:
