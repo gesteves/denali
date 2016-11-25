@@ -27,7 +27,7 @@
 <% end %>
 
 <% content_for :inline_css do %>
-  <% cache "entries/styles/#{inline_asset_hash 'entry_list.css'}" do %>
+  <% cache "entries/styles/#{@app_version}" do %>
     <style><%= inline_asset 'entry_list.css' %></style>
   <% end %>
 <% end %>

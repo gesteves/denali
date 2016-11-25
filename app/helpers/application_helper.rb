@@ -79,8 +79,4 @@ module ApplicationHelper
       Rails.application.assets[filename].to_s.html_safe
     end
   end
-
-  def inline_asset_hash(filename)
-    Digest::MD5.hexdigest(inline_asset(filename))
-  end
 end
