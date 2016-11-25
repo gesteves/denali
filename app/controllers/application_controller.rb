@@ -72,11 +72,6 @@ class ApplicationController < ActionController::Base
     expires_in max_age.minutes, public: true
   end
 
-  def check_if_user_has_visited
-    @has_visited = cookies[:has_visited] == @app_version
-    cookies[:has_visited] = { value: @app_version, expires: 1.year.from_now }
-  end
-
   def set_app_version
     # Requires enabling dyno metadata with `heroku labs:enable runtime-dyno-metadata`
     # See: https://devcenter.heroku.com/articles/dyno-metadata

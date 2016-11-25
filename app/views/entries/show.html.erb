@@ -4,12 +4,6 @@
   <% end %>
 <% end %>
 
-<% content_for :inline_css do %>
-  <% cache "entry/styles/#{@app_version}" do %>
-    <style><%= inline_asset 'entry.css' %></style>
-  <% end %>
-<% end %>
-
 <%= render partial: 'entries/entry', object: @entry %>
 <%= render partial: 'entries/entry_pagination', object: @entry if @entry.is_published? %>
 <%= render partial: 'entries/related', object: @entry if @photoblog.show_related_entries? && @entry.is_published? %>

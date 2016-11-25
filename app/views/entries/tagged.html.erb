@@ -26,12 +26,6 @@
   <% end %>
 <% end %>
 
-<% content_for :inline_css do %>
-  <% cache "entries/styles/#{@app_version}" do %>
-    <style><%= inline_asset 'entry_list.css' %></style>
-  <% end %>
-<% end %>
-
 <% cache "entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <ol class="entry-list" role="main">
     <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { lazy_load_start_index: 12 } %>

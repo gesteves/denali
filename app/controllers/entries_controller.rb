@@ -4,7 +4,6 @@ class EntriesController < ApplicationController
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :load_entries, only: [:index]
-  before_action :check_if_user_has_visited, only: [:index, :tagged, :show, :preview]
   before_action :set_max_age, only: [:index, :tagged]
   before_action :set_entry_max_age, only: [:show, :preview]
 

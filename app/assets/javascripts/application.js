@@ -1,5 +1,4 @@
 //= require turbolinks
-//= require ./vendors/cssrelpreload
 //= require ./application/analytics
 //= require ./application/image_zoom
 //= require ./application/lazy_load
