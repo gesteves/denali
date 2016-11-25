@@ -89,10 +89,6 @@ GEM
     hashie (3.4.6)
     htmlcompressor (0.3.1)
     htmlentities (4.3.4)
-    httmultiparty (0.3.16)
-      httparty (>= 0.7.3)
-      mimemagic
-      multipart-post
     http (1.0.4)
       addressable (~> 2.3)
       http-cookie (~> 1.0)
@@ -320,7 +316,6 @@ DEPENDENCIES
   foreman
   htmlcompressor
   htmlentities
-  httmultiparty
   httparty
   imgix
   jbuilder (~> 2.3)
