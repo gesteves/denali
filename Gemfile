@@ -16,7 +16,6 @@ gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'autoprefixer-rails'
 gem 'turbolinks', '~> 5.0'
-gem 'htmlcompressor'
 gem 'imgix'
 
 # Misc

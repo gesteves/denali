@@ -87,7 +87,6 @@ GEM
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     hashie (3.4.6)
-    htmlcompressor (0.3.1)
     htmlentities (4.3.4)
     http (1.0.4)
       addressable (~> 2.3)
@@ -314,7 +313,6 @@ DEPENDENCIES
   figaro
   flickraw
   foreman
-  htmlcompressor
   htmlentities
   httparty
   imgix
