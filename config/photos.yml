@@ -24,20 +24,20 @@ entry_list_item:
   src: 355
   srcset:
     - 308
+    - 315
+    - 355
     - 363
+    - 395
     - 398
     - 502
+    - 630
     - 672
-    - 900
-    - 422
-    - 844
-    - 355
+    - 673
     - 710
-    - 395
     - 790
   sizes:
     - "(min-width: 1600px) 395px"
-    - "(min-width: 1440px) calc((100vw - 20px)/4)"
+    - "(min-width: 1280px) calc((100vw - 20px)/4)"
     - "(min-width: 400px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
   square: Yes
