@@ -13,6 +13,8 @@ entry: &entry
     - 2880
     - 1600
     - 3200
+    - 1680
+    - 3360
   sizes:
     - "(min-width: 1600px) 1600px"
     - 100vw
