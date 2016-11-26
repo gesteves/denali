@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160717144843) do
+ActiveRecord::Schema.define(version: 20161126233934) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -48,6 +48,10 @@ ActiveRecord::Schema.define(version: 20160717144843) do
     t.boolean  "post_to_slack"
     t.boolean  "post_to_pinterest"
     t.index ["blog_id"], name: "index_entries_on_blog_id"
+    t.index ["photos_count"], name: "index_entries_on_photos_count"
+    t.index ["published_at"], name: "index_entries_on_published_at"
+    t.index ["show_in_map"], name: "index_entries_on_show_in_map"
+    t.index ["status"], name: "index_entries_on_status"
     t.index ["tumblr_id"], name: "index_entries_on_tumblr_id"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
@@ -78,6 +82,8 @@ ActiveRecord::Schema.define(version: 20160717144843) do
     t.string   "film_type"
     t.string   "crop"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
+    t.index ["latitude"], name: "index_photos_on_latitude"
+    t.index ["longitude"], name: "index_photos_on_longitude"
   end
 
   create_table "slack_incoming_webhooks", force: :cascade do |t|
