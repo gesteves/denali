@@ -30,13 +30,12 @@ entry_list_item:
     - 398
     - 502
     - 630
-    - 672
     - 673
     - 710
     - 415
     - 830
   sizes:
-    - "(min-width: 1680px) 395px"
+    - "(min-width: 1680px) 415px"
     - "(min-width: 1280px) calc((100vw - 20px)/4)"
     - "(min-width: 400px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
