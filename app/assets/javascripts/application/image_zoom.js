@@ -7,7 +7,7 @@ Denali.ImageZoom = (function () {
     images          : '.entry__photo',
     zoomable_class  : 'entry__photo--zoomable',
     zoom_class      : 'entry__photo-container--zoom',
-    max_width       : 1600
+    max_width       : 1680
   };
 
   var zoomable;
