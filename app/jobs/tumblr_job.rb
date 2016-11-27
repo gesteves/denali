@@ -15,7 +15,8 @@ class TumblrJob < ApplicationJob
       caption: entry.formatted_content(link_title: true),
       link: entry.permalink_url,
       data: entry.photos.map { |p| resized_photo_path(p) },
-      state: 'queue'
+      state: 'queue',
+      source_url: entry.permalink_url
     }
 
     tumblr.photo(ENV['tumblr_domain'], opts)
