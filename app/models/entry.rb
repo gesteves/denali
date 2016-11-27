@@ -102,8 +102,8 @@ class Entry < ApplicationRecord
   end
 
   def around(limit = 3)
-    older = Entry.photo_entries.published.where('published_at < ?', self.published_at).where.not(id: self.id).limit(limit * 2).to_a
-    newer = Entry.photo_entries.published('published_at ASC').where('published_at > ?', self.published_at).where.not(id: self.id).limit(limit * 2).to_a
+    older = Entry.photo_entries.published.includes(:photos).where('published_at < ?', self.published_at).where.not(id: self.id).limit(limit * 2).to_a
+    newer = Entry.photo_entries.published('published_at ASC').includes(:photos).where('published_at > ?', self.published_at).where.not(id: self.id).limit(limit * 2).to_a
 
     if older.size < limit
       newer = newer.shift((limit * 2) - older.size)
