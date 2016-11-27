@@ -12,7 +12,7 @@ class TumblrJob < ApplicationJob
     opts = {
       tags: entry.tag_list.join(', '),
       slug: entry.slug,
-      caption: entry.formatted_content,
+      caption: entry.formatted_content(link_title: true),
       link: entry.permalink_url,
       data: entry.photos.map { |p| resized_photo_path(p) },
       state: 'queue'
