@@ -8,8 +8,10 @@ class MapsController < ApplicationController
 
   def photos
     expires_in 24.hours, public: true
-    @entries = @photoblog.entries.mapped
     if stale?(@photoblog, public: true)
+      @entries = Rails.cache.fetch("map/query/#{@photoblog.id}/#{@photoblog.updated_at}") do
+        @photoblog.entries.mapped
+      end
       respond_to do |format|
         format.json
       end
