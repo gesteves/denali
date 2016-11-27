@@ -27,3 +27,6 @@ en:
       newer: "Newer"
       older: "Older"
       truncate: "&hellip;"
+    entry_pagination:
+      next: "Next"
+      previous: "Previous"

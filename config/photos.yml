@@ -40,21 +40,6 @@ entry_list_item:
     - "(min-width: 400px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
   square: Yes
-entry_pagination:
-  src: 100
-  srcset:
-    - 55
-    - 71
-    - 123
-    - 256
-    - 183
-    - 354
-    - 119
-    - 238
-  sizes:
-    - "(min-width: 960px) 119px"
-    - calc(((100vw - 100px)/7) - 4px)
-  square: Yes
 admin_entry:
   src: 560
   srcset:

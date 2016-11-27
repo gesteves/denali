@@ -101,23 +101,6 @@ class Entry < ApplicationRecord
     Entry.includes(:photos).tagged_with(self.tag_list, any: true, order_by_matching_tag_count: true).where('entries.id != ? AND entries.status = ? AND published_at > ?', self.id, 'published', earliest_date).limit(count)
   end
 
-  def around(limit = 3)
-    older = Entry.photo_entries.published.includes(:photos).where('published_at < ?', self.published_at).where.not(id: self.id).limit(limit * 2).to_a
-    newer = Entry.photo_entries.published('published_at ASC').includes(:photos).where('published_at > ?', self.published_at).where.not(id: self.id).limit(limit * 2).to_a
-
-    if older.size < limit
-      newer = newer.shift((limit * 2) - older.size)
-    elsif newer.size < limit
-      older = older.shift((limit * 2) - newer.size)
-    else
-      newer = newer.shift(limit)
-      older = older.shift(limit)
-    end
-
-    newer.reverse!.push(self)
-    newer + older
-  end
-
   def formatted_body
     markdown_to_html(self.body)
   end
