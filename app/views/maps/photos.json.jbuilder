@@ -1,5 +1,5 @@
 json.cache! "maps/photos/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
-  json.array! @entries do |e|
+  json.array! @photoblog.entries.mapped do |e|
     e.photos.each do |p|
       json.type 'Feature'
       json.geometry do
