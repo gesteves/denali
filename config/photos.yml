@@ -86,7 +86,6 @@ map:
   srcset:
     - 300
     - 600
-    - 900
   sizes:
     - 300px
   square: Yes
