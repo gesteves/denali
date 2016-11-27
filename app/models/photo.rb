@@ -40,9 +40,11 @@ class Photo < ApplicationRecord
     opts.reverse_merge!(w: 1200, auto: 'format', square: false)
     if opts[:square]
       opts[:h] = opts[:w]
+      opts.delete(:square)
+    end
+    if opts[:w].present? && opts[:h].present?
       opts[:fit] = 'crop'
       opts[:crop] = self.crop if self.crop.present?
-      opts.delete(:square)
     end
     Ix.path(self.original_path).to_url(opts.reject { |k,v| v.blank? })
   end
