@@ -185,8 +185,8 @@ Denali.Entries = (function ($) {
     var $marker = $element.find(opts.focal_point_marker);
     if (focal_x !== '' && focal_y !== '') {
       $marker.css({
-        top: ($thumbnail.height() * focal_y) - 25,
-        left: ($thumbnail.width() * focal_x) - 25
+        top: ($thumbnail.height() * focal_y) - $marker.width()/2,
+        left: ($thumbnail.width() * focal_x) - $marker.width()/2
       }).show();
     }
   };
