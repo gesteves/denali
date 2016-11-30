@@ -44,7 +44,11 @@ class Photo < ApplicationRecord
     end
     if opts[:w].present? && opts[:h].present?
       opts[:fit] = 'crop'
-      opts[:crop] = self.crop if self.crop.present?
+      if self.focal_x.present? && self.focal_y.present?
+        opts[:crop] = 'focalpoint'
+        opts['fp-x'] = self.focal_x
+        opts['fp-y'] = self.focal_y
+      end
     end
     Ix.path(self.original_path).to_url(opts.reject { |k,v| v.blank? })
   end

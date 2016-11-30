@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161126233934) do
+ActiveRecord::Schema.define(version: 20161130001423) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -80,7 +80,8 @@ ActiveRecord::Schema.define(version: 20161126233934) do
     t.integer  "focal_length"
     t.string   "film_make"
     t.string   "film_type"
-    t.string   "crop"
+    t.float    "focal_x"
+    t.float    "focal_y"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["latitude"], name: "index_photos_on_latitude"
     t.index ["longitude"], name: "index_photos_on_longitude"

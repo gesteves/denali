@@ -179,9 +179,29 @@
 }
 
 .form__photo-thumb {
+  overflow: hidden;
+  position: relative;
+
   @media (min-width: $bp-admin-m) {
     width: 300px;
   }
+
+  &:hover,
+  &:active {
+    cursor: crosshair;
+  }
+}
+
+.form__photo-img {
+  display: block;
+}
+
+.form__photo-focal-point {
+  border-radius: 50px;
+  box-shadow: 0 0 0 2px red;
+  height: 50px;
+  position: absolute;
+  width: 50px;
 }
 
 .form__photo-fields {

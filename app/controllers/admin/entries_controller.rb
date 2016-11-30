@@ -4,7 +4,6 @@ class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
-  before_action :set_crop_options, only: [:edit, :photo]
   after_action :update_position, only: [:create]
   after_action :enqueue_invalidation, only: [:update]
 
@@ -167,7 +166,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_facebook, :post_to_slack, :post_to_pinterest, :tweet_text, :show_in_map, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :crop])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_facebook, :post_to_slack, :post_to_pinterest, :tweet_text, :show_in_map, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :focal_x, :focal_y])
     end
 
     def update_position
@@ -195,17 +194,6 @@ class Admin::EntriesController < AdminController
     def load_tagged_entries
       @page = params[:page] || 1
       @entries = @photoblog.entries.includes(:photos).tagged_with(@tag_list, any: true).order('created_at DESC').page(@page)
-    end
-
-    def set_crop_options
-      @crop_options = [
-        ['Center', ''],
-        ['Detect faces', 'faces'],
-        ['Top', 'top'],
-        ['Right', 'right'],
-        ['Bottom', 'bottom'],
-        ['Left', 'left']
-      ]
     end
 
     def respond_to_reposition
