@@ -211,7 +211,7 @@ Denali.Entries = (function ($) {
     $photos_container.on('change', opts.source_file_field, addFromFile);
     $photos_container.on('keyup', opts.source_url_field, addFromUrl);
     $photo_list.on('sortstop', updatePositions);
-    $photo_list.sortable();
+    $photo_list.sortable({ delay: 100 });
   };
 
   var init = function () {
