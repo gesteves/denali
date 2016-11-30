@@ -81,6 +81,6 @@ class ApplicationController < ActionController::Base
 
   def set_cache_version
     # Bump this env variable to bust all the caches
-    @cache_version = ENV['CACHE_VERSION'] || "1"
+    @cache_version = ENV['CACHE_VERSION'] || '1'
   end
 end
