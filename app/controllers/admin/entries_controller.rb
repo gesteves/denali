@@ -48,6 +48,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/1/edit
   def edit
     @page_title = "Editing “#{@entry.title}”"
+    @max_age = ENV['config_entry_max_age'].try(:to_i) || 5
   end
 
   # PATCH /admin/entries/1/publish
