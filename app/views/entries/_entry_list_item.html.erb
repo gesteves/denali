@@ -1,5 +1,5 @@
 <% lazy_load = !local_assigns[:lazy_load_start_index] || entry_counter >= lazy_load_start_index %>
-<% cache "entry/list/lazy_load:#{lazy_load}/#{entry.id}/#{entry.updated_at.to_i}" do %>
+<% cache "#{@cache_version}/entry/list/lazy_load:#{lazy_load}/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <li class="entry-list__item" role="article">
     <a class="entry-list__link <%= entry.is_photo? ? 'entry-list__link--photo' : 'entry-list__link--text' %>" href="<%= entry.permalink_url %>">
       <% if entry.is_photo? %>

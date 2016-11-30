@@ -1,5 +1,5 @@
 <footer class="footer <%= additional_classes if local_assigns[:additional_classes] %>" role="contentinfo">
-  <% cache "blog/copyright/#{Time.now.strftime('%Y')}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% cache "#{@cache_version}/blog/copyright/#{Time.now.strftime('%Y')}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <p>
       &copy; <%= Photo.oldest.try(:taken_at).try(:strftime, '%Y') %>-<%= Time.now.strftime('%Y') %> <%= sanitize @photoblog.copyright %>
       <span class="footer__links">

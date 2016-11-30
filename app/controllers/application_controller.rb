@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :get_photoblog
   before_action :domain_redirect
   before_action :set_app_version
+  before_action :set_cache_version
 
   helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?
 
@@ -76,5 +77,10 @@ class ApplicationController < ActionController::Base
     # Requires enabling dyno metadata with `heroku labs:enable runtime-dyno-metadata`
     # See: https://devcenter.heroku.com/articles/dyno-metadata
     @app_version = ENV['HEROKU_RELEASE_VERSION'] || 'v1'
+  end
+
+  def set_cache_version
+    # Bump this env variable to bust all the caches
+    @cache_version = ENV['CACHE_VERSION'] || "1"
   end
 end

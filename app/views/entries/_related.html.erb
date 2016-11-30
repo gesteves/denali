@@ -1,4 +1,4 @@
-<% cache "entry/related/#{@entry.id}/#{@entry.updated_at.to_i}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "#{@cache_version}/entry/related/#{@entry.id}/#{@entry.updated_at.to_i}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <% if @entry.related.size >= 4 %>
     <aside role="complementary">
       <h2 class="entry__related">Related Photos You Might Like</h2>
