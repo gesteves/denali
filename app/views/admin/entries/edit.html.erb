@@ -36,18 +36,19 @@
     <%= f.label :show_in_map, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_in_map %> Show in map<% end %>
     <% if @entry.is_published? && @max_age >= 15 %>
       <%= f.label :invalidate_cloudfront, class: 'form__label form__label--checkbox' do %><%= f.check_box :invalidate_cloudfront, { checked: true } %> Send CloudFront invalidation request<% end %>
-    <% else %>
-    <h2>Sharing options</h2>
-    <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_facebook %> Post to Facebook<% end %>
-    <%= f.label :post_to_flickr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_flickr %> Post to Flickr<% end %>
-    <%= f.label :post_to_pinterest, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_pinterest %> Post to Pinterest<% end %>
-    <%= f.label :post_to_slack, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_slack %> Post to Slack<% end %>
-    <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_tumblr %> Post to Tumblr<% end %>
-    <%= f.label :post_to_twitter, class: 'form__label form__label--checkbox' do %>
-      <%= f.check_box(:post_to_twitter) %> Post to Twitter
     <% end %>
-    <%= f.text_area :tweet_text, placeholder: 'Your tweet here…', maxlength: 90, class: 'form__input form__input--textarea form__input--short' %>
-  <% end %>
+    <% if !@entry.is_published? %>
+      <h2>Sharing options</h2>
+      <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_facebook %> Post to Facebook<% end %>
+      <%= f.label :post_to_flickr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_flickr %> Post to Flickr<% end %>
+      <%= f.label :post_to_pinterest, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_pinterest %> Post to Pinterest<% end %>
+      <%= f.label :post_to_slack, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_slack %> Post to Slack<% end %>
+      <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_tumblr %> Post to Tumblr<% end %>
+      <%= f.label :post_to_twitter, class: 'form__label form__label--checkbox' do %>
+        <%= f.check_box(:post_to_twitter) %> Post to Twitter
+      <% end %>
+      <%= f.text_area :tweet_text, placeholder: 'Your tweet here…', maxlength: 90, class: 'form__input form__input--textarea form__input--short' %>
+    <% end %>
   </div>
 
   <div class="form__actions">
