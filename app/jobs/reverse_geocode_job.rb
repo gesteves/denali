@@ -7,8 +7,8 @@ class ReverseGeocodeJob < ApplicationJob
       if p.latitude.present? && p.longitude.present? && entry.show_in_map?
         tags << geocode(p.latitude, p.longitude)
       end
-      tags.flatten!
     end
+    tags.flatten!
     entry.location_list = tags
     entry.save
   end

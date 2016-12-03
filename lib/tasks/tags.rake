@@ -7,7 +7,6 @@ namespace :tags do
           tags << p.formatted_camera
           tags << p.formatted_film if p.film_make.present? && p.film_type.present?
         end
-        puts "Adding #{tags.to_s} to entry ##{e.id}"
         e.equipment_list.add(tags)
         e.save
       end
@@ -16,6 +15,12 @@ namespace :tags do
     task :locations => [:environment] do
       Entry.find_each do |e|
         ReverseGeocodeJob.perform_later(e)
+      end
+    end
+
+    task :objects => [:environment] do
+      Entry.find_each do |e|
+        ImageAnalysisJob.perform_later(e)
       end
     end
   end

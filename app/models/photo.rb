@@ -36,7 +36,7 @@ class Photo < ApplicationRecord
     self.image.path
   end
 
-  def url(opts)
+  def url(opts = {})
     opts.reverse_merge!(w: 1200, auto: 'format', square: false)
     if opts[:square]
       opts[:h] = opts[:w]

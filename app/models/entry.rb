@@ -11,7 +11,7 @@ class Entry < ApplicationRecord
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
 
-  acts_as_taggable_on :tags, :equipment, :locations
+  acts_as_taggable_on :tags, :equipment, :locations, :objects
   acts_as_list scope: :blog
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
@@ -98,7 +98,7 @@ class Entry < ApplicationRecord
 
   def related(count = 12)
     earliest_date = (self.published_at || self.created_at) - 2.years
-    tags = self.tag_list + self.equipment_list + self.location_list
+    tags = self.tag_list + self.equipment_list + self.location_list + self.object_list
     Entry.includes(:photos).tagged_with(tags, any: true, order_by_matching_tag_count: true).where('entries.id != ? AND entries.status = ? AND published_at > ?', self.id, 'published', earliest_date).limit(count)
   end
 
