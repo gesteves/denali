@@ -29,6 +29,7 @@ namespace :tags do
     Entry.find_each do |e|
       e.tag_list.remove(e.equipment_list)
       e.tag_list.remove(e.location_list)
+      e.tag_list.remove(e.object_list)
       e.save
     end
   end

@@ -13,10 +13,13 @@
       <div data-turbolinks="true">
         <% entry.tags.each do |t| %>
           <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
-        <% end %>
+        <% end %> &middot;
+        <% entry.equipment.each do |t| %>
+          <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
+        <% end %> &middot;
         <% entry.locations.each do |t| %>
           <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
-        <% end %>
+        <% end %> &middot;
         <% entry.objects.each do |t| %>
           <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
         <% end %>
