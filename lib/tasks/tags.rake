@@ -14,7 +14,7 @@ namespace :tags do
 
     task :locations => [:environment] do
       Entry.find_each do |e|
-        ReverseGeocodeJob.perform_later(e)
+        ReverseGeocodeJob.perform_later(e) if e.location_list.blank?
       end
     end
 
