@@ -9,23 +9,6 @@ module EntriesHelper
     "#{formatted}″"
   end
 
-  def film(make, model)
-    model.match(make) ? model : "#{make} #{model}"
-  end
-
-  def camera(make, model)
-    make = if make =~ /olympus/i
-      'Olympus'
-    elsif make =~ /nikon/i
-      'Nikon'
-    elsif make =~ /fuji/i
-      'Fujifilm'
-    elsif make =~ /canon/i
-      'Canon'
-    end
-    "#{make} #{model.gsub(%r{#{make}}i, '')}"
-  end
-
   def article(word)
     %w(a e i o u).include?(word[0].downcase) ? 'an' : 'a'
   end

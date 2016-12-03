@@ -50,7 +50,7 @@
         <div class="entry__meta amp">
           <%= render partial: 'entries/byline.html.erb', object: @entry, as: :entry %>
           <%= render partial: 'entries/exif.html.erb', object: @entry.photos.first, as: :photo if @entry.photos.count == 1 %>
-          <%= render partial: 'entries/tags.html.erb', object: @entry.tags unless @entry.tags.blank? %>
+          <%= render partial: 'entries/tags.html.erb', object: @entry.tags + @entry.equipment %>
         </div>
       </article>
     <% end %>

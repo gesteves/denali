@@ -1,9 +1,9 @@
 <p class="exif">
   <% if photo.make.present? && photo.model.present? %>
     <span class="exif__field">
-      Taken with <%= article photo.make %> <%= camera photo.make, photo.model %>
+      Taken with <%= article photo.make %> <%= photo.formatted_camera %>
       <% if photo.film_make.present? && photo.film_type.present? %>
-        on <%= film photo.film_make, photo.film_type %>
+        on <%= photo.formatted_film %>
       <% end %>
     </span>
   <% end %>

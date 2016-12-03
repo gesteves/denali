@@ -5,6 +5,7 @@ class Admin::EntriesController < AdminController
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   after_action :update_position, only: [:create]
+  after_action :update_tags, only: [:create, :update]
   after_action :enqueue_invalidation, only: [:update]
 
   # GET /admin/entries
@@ -214,5 +215,15 @@ class Admin::EntriesController < AdminController
 
     def enqueue_invalidation
       CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && @entry.is_published? && entry_params[:invalidate_cloudfront] == "1"
+    end
+
+    def update_tags
+      tags = []
+      @entry.photos.each do |p|
+        tags << p.formatted_camera
+        tags << p.formatted_film if p.film_make.present? && p.film_type.present?
+      end
+      @entry.equipment_list.add(tags)
+      @entry.save
     end
 end

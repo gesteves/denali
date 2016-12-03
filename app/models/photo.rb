@@ -81,6 +81,25 @@ class Photo < ApplicationRecord
     ((self.width.to_f * height.to_f)/self.height.to_f).round
   end
 
+  def formatted_camera
+    formatted_make = if self.make =~ /olympus/i
+      'Olympus'
+    elsif self.make =~ /nikon/i
+      'Nikon'
+    elsif self.make =~ /fuji/i
+      'Fujifilm'
+    elsif self.make =~ /canon/i
+      'Canon'
+    else
+      self.make.titlecase
+    end
+    "#{formatted_make} #{self.model.gsub(%r{#{formatted_make}}i, '').strip}"
+  end
+
+  def formatted_film
+    self.film_type.match(self.film_make) ? self.film_type : "#{self.film_make} #{self.film_type}"
+  end
+
   private
   def set_image
     if self.source_url.present?

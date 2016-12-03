@@ -11,7 +11,8 @@
     </div>
     <div class="entry__meta">
       <div data-turbolinks="true">
-        <% entry.tags.each do |t| %>
+        <% tags = entry.tags + entry.equipment %>
+        <% tags.each do |t| %>
           <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
         <% end %>
       </div>
