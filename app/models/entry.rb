@@ -189,6 +189,11 @@ class Entry < ApplicationRecord
     PinterestJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_pinterest
   end
 
+  def combined_tags
+    tags = self.tags + self.equipment + self.locations
+    tags.uniq { |t| t.slug }
+  end
+
   private
 
   def url_opts(opts)

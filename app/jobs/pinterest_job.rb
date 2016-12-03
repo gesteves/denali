@@ -2,11 +2,10 @@ class PinterestJob < ApplicationJob
   queue_as :default
 
   def perform(entry)
-    all_tags = entry.tag_list + entry.equipment_list + entry.location_list
-    all_tags.map! { |t| "##{t.gsub(/[\s-]/, '')}" }
+    all_tags = entry.combined_tags.uniq { |t| t.slug }.map { |t| "##{t.slug.gsub(/-/, '')}" }.join(' ')
     opts = {
       board: ENV['pinterest_board_id'],
-      note: "#{entry.plain_title} #{all_tags.join(' ')}",
+      note: "#{entry.plain_title} #{all_tags}",
       link: entry.permalink_url,
       image_url: entry.photos.first.url(w: 2048)
     }

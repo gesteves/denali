@@ -17,11 +17,7 @@ class FlickrJob < ApplicationJob
       body = entry.permalink_url
     end
 
-    tags = entry.tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }
-    equipment = entry.equipment_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }
-    locations = entry.location_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }
-
-    all_tags = (tags + equipment + locals).join(' ')
+    all_tags = entry.combined_tags.uniq { |t| t.slug }.map { |t| "\"#{t.name.gsub(/["']/, '')}\"" }.join(' ')
 
     entry.photos.each do |p|
       flickr.upload_photo open(p.original_url).path, title: title, description: body, tags: all_tags
