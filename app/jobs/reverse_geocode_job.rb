@@ -14,12 +14,11 @@ class ReverseGeocodeJob < ApplicationJob
   end
 
   def geocode(lat, lon)
-    url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=#{lat},#{lon}&key=#{ENV['google_maps_api_key']}"
-    response = JSON.parse(HTTParty.get(url).body)
-    if response['status'] == 'OK'
-       response['results'][0]['address_components'].select { |c| c['types'].include? 'political' }.map { |c| c['long_name']}
-    else
-      []
+    url = "https://api.mapbox.com/geocoding/v5/mapbox.places/#{lon},#{lat}.json?access_token=#{ENV['mapbox_api_token']}"
+    request = HTTParty.get(url)
+    if request.code == 200
+      response = JSON.parse(request.body)
+      response['features'][0]['context'].reject { |c| c['id'] =~ /postcode/ }.map { |c| c['text'] }
     end
   end
 end
