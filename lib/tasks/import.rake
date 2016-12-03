@@ -28,7 +28,6 @@ namespace :import do
         entry.blog = blog
         entry.user = user
         entry.save
-        entry.update_position
       end
     end
   end

@@ -13,6 +13,7 @@ default: &default
   google_apps_domain: example.com
   google_client_id: abc123
   google_client_secret: abc123
+  google_maps_api_key: abc123
   imgix_domain: example.imgix.net
   imgix_secure: 'true'
   imgix_token: abc123
@@ -55,6 +56,7 @@ production:
   google_apps_domain: example.com
   google_client_id: abc123
   google_client_secret: abc123
+  google_maps_api_key: abc123
   imgix_domain: example.imgix.net
   imgix_secure: 'true'
   imgix_token: abc123

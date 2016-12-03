@@ -12,5 +12,19 @@ namespace :tags do
         e.save
       end
     end
+
+    task :locations => [:environment] do
+      Entry.find_each do |e|
+        ReverseGeocodeJob.perform_later(e)
+      end
+    end
+  end
+
+  task :cleanup => [:environment] do
+    Entry.find_each do |e|
+      e.tag_list.remove(e.equipment_list)
+      e.tag_list.remove(e.location_list)
+      e.save
+    end
   end
 end
