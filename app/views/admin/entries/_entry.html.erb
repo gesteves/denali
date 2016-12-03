@@ -12,7 +12,7 @@
     <div class="entry__meta">
       <div data-turbolinks="true">
         <% entry.tags.each do |t| %>
-          <span class="entry__tag"><%= link_to t.name, admin_tag_path(t.slug) %></span>
+          <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
         <% end %>
       </div>
       <% if entry.is_queued? %>
