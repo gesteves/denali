@@ -20,9 +20,8 @@ class FlickrJob < ApplicationJob
     tags = entry.tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }
     equipment = entry.equipment_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }
     locations = entry.location_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }
-    objects = entry.object_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }
 
-    all_tags = (tags + equipment + locals + objects).join(' ')
+    all_tags = (tags + equipment + locals).join(' ')
 
     entry.photos.each do |p|
       flickr.upload_photo open(p.original_url).path, title: title, description: body, tags: all_tags
