@@ -15,15 +15,15 @@
         </div>
         <div class="form__fields form__fields--hidden">
           <div class="form__photo-thumb">
-            <img class="js-photo-thumb" />
+            <img class="js-photo-thumb form__photo-img" />
+            <div class="form__photo-focal-point js-photo-focal-point" style="display:none"></div>
           </div>
           <div class="form__photo-fields">
             <%= p.text_area :caption, required: true, placeholder: 'Write a caption for this photo…', class: 'form__input form__input--caption' %>
-            <%= p.label :crop, class: 'form__label' do %>
-              Crop mode <%= p.select(:crop, options_for_select(@crop_options)) %>
-            <% end %>
             <%= link_to 'Remove', '#', class: 'button button--danger form__photo-delete js-photo-delete' %>
             <%= p.hidden_field :position, class: 'js-photo-position' %>
+            <%= p.hidden_field :focal_x, class: 'js-photo-focal-x' %>
+            <%= p.hidden_field :focal_y, class: 'js-photo-focal-y' %>
           </div>
         </div>
       </div>

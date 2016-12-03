@@ -1,4 +1,4 @@
-class AddExifToPhotos < ActiveRecord::Migration
+class AddExifToPhotos < ActiveRecord::Migration[4.2]
   def change
     add_column :photos, :make, :string
     add_column :photos, :model, :string

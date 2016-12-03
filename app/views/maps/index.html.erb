@@ -23,11 +23,15 @@
   <meta name="twitter:description" content="<%= @photoblog.name %> photos, mapped.">
   <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
   <meta name="twitter:card" content="summary_large_image">
-  <link href="https://api.tiles.mapbox.com" rel="preconnect">
-  <link href="https://api.mapbox.com" rel="preconnect">
+  <link href="https://api.tiles.mapbox.com" rel="preconnect" crossorigin>
+  <link href="https://api.mapbox.com" rel="preconnect" crossorigin>
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_include_tag 'application', async: true %>
-  <script src="https://use.typekit.net/vtp0iqq.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
+  <%= javascript_include_tag 'map', async: true, 'data-turbolinks-track': 'reload' %>
+  <script src="https://use.typekit.net/<%= ENV['typekit_id'] %>.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
+  <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/v2.4.0/mapbox.css" media="all">
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" media="all">
+  <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" media="all">
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>
@@ -36,6 +40,5 @@
   <div class="map__loading js-loading">
     <%= inline_svg 'spinner', 'map__loading-spinner' %>
   </div>
-  <%= render partial: 'partials/icons.svg.erb' %>
 </body>
 </html>

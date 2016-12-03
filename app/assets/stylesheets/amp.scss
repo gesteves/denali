@@ -2,11 +2,12 @@
 @import 'base/variables';
 @import 'base/functions';
 @import 'base/mixins';
+@import 'blocks/header';
+@import 'blocks/follow';
 @import 'blocks/entry';
 @import 'blocks/footer';
 @import 'blocks/tags';
 @import 'blocks/exif';
-@import 'blocks/pagination';
 
 * {
   box-sizing: border-box;
@@ -15,9 +16,9 @@
 html {
   background-color: $color-background;
   color: $color-text;
-  font-family: 'kepler-std', 'Georgia', serif;
+  font-family: $font-sans;
   font-size: 62.5%;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 a:link,
@@ -32,45 +33,8 @@ a:active {
   text-decoration: underline;
 }
 
-.header {
-  align-items: center;
-  display: flex;
-  flex-flow: row nowrap;
-  margin: 24px auto;
-  max-width: $bp-xxl;
-  width: 100%;
-
-  @media (min-width: $bp-m) {
-    margin: 72px auto;
-  }
-}
-
-.header__link {
-  display: block;
-  margin: 0 auto 12px;
-  max-width: 320px;
-  width: 50vw;
-
-  &:hover,
-  &:active {
-    path {
-      fill: $color-links;
-    }
-  }
-
-  @media (min-width: $bp-s) {
-    width: 33vw;
-  }
-
-  @media (min-width: $bp-m) {
-    margin: 0 auto;
-  }
-
-  @media (min-width: $bp-xxl) {
-    max-width: 360px;
-  }
-
-  @media (min-width: $bp-max) {
-    max-width: 420px;
-  }
+.amp .header__tagline,
+.amp.entry__meta p,
+.amp.footer p {
+  font-size: 14px;
 }

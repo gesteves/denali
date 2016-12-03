@@ -1,39 +1,39 @@
 source 'https://rubygems.org'
 ruby '2.3.1'
 
-gem 'rails', '~> 4.2'
+gem 'rails', '~> 5.0'
 
 # Auth
 gem 'omniauth-google-oauth2'
 
 # Uploads
 gem 'aws-sdk', '~> 2.0'
-gem 'paperclip', '~> 5.0.0.beta1'
+gem 'paperclip', '~> 5.0'
 
 # Front-end things
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'autoprefixer-rails'
-gem 'turbolinks'
-gem 'htmlcompressor'
+gem 'turbolinks', '~> 5.0'
 gem 'imgix'
 
 # Misc
 gem 'jbuilder', '~> 2.3'
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'acts_as_list'
+gem 'acts_as_list', '~> 0.7.0'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr'
-gem 'acts-as-taggable-on', '~> 3.4'
+gem 'acts-as-taggable-on', '~> 4.0'
 gem 'httparty'
-gem 'httmultiparty'
 gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
 gem 'htmlentities'
 gem 'sentry-raven'
+gem 'cloudfront-invalidator'
+gem 'rmagick'
 
 # Caching
 gem 'dalli'
@@ -50,8 +50,6 @@ gem 'twitter'
 group :production do
   gem 'passenger'
   gem 'pg'
-  gem 'rails_12factor'
-  gem 'newrelic_rpm'
   gem 'lograge'
 end
 
@@ -69,6 +67,6 @@ group :development, :test do
 end
 
 group :test do
-  gem 'codeclimate-test-reporter', require: nil
   gem 'mock_redis'
+  gem 'rails-controller-testing'
 end

@@ -4,3 +4,4 @@
 # Mime::Type.register "text/richtext", :rtf
 
 Mime::Type.register 'text/html', :amp
+Mime::Type.register 'text/plain', :txt

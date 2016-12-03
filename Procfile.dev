@@ -1,4 +1,4 @@
-rails: rails s
+rails: rails s -p 3000
 memcached: memcached
 redis: redis-server
-worker: bundle exec rake jobs:work
+worker: bundle exec rails jobs:work

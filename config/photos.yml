@@ -3,24 +3,19 @@ entry: &entry
   srcset:
     - 640
     - 750
-    - 1014
     - 1242
-    - 2048
     - 1536
-    - 1388
-    - 1014
-    - 876
+    - 2048
     - 2732
-    - 1962
-    - 1356
-    - 1278
     - 1280
     - 1440
     - 2560
     - 2880
+    - 1680
+    - 3360
     - 2304
   sizes:
-    - "(min-width: 1440px) 1440px"
+    - "(min-width: 1680px) 1680px"
     - 100vw
   quality: 90
 entry_amp:
@@ -30,22 +25,21 @@ entry_list_item:
   src: 355
   srcset:
     - 308
-    - 333
-    - 363
-    - 603
-    - 336
-    - 251
-    - 672
-    - 502
-    - 758
-    - 422
-    - 844
+    - 315
     - 355
+    - 363
+    - 379
+    - 398
+    - 502
+    - 630
+    - 673
     - 710
-    - 900
+    - 415
+    - 830
   sizes:
-    - "(min-width: 1440px) 355px"
-    - "(min-width: 600px) calc((100vw - 16px)/3)"
+    - "(min-width: 1680px) 415px"
+    - "(min-width: 1280px) calc((100vw - 20px)/4)"
+    - "(min-width: 400px) calc((100vw - 16px)/3)"
     - calc((100vw - 12px)/2)
   square: Yes
 admin_entry:
@@ -74,13 +68,3 @@ admin_edit:
   sizes:
     - "(min-width: 800px) 300px"
     - calc(100vw - 60px)
-map:
-  src: 300
-  srcset:
-    - 300
-    - 600
-    - 900
-  sizes:
-    - 300px
-  square: Yes
-  auto: 'format,compress'

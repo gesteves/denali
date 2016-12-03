@@ -1,5 +1,5 @@
 <% content_for :meta do %>
-  <% cache "#{@app_version}/entries/meta/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% cache "#{@cache_version}/entries/meta/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <title><%= @photoblog.name %><%= sanitize " &middot; Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <link rel="canonical" href="<%= root_url %>">
@@ -19,22 +19,15 @@
     <meta name="twitter:title" content="<%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>">
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
-    <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
-    <meta name="twitter:card" content="summary_large_image">
-    <%= auto_discovery_link_tag :atom, entries_url(page: 1, format: 'atom'), title: @photoblog.name %>
+    <meta name="twitter:card" content="summary">
+    <%= auto_discovery_link_tag :atom, simple_feed_url, title: @photoblog.name %>
     <link rel="alternate" type="application/vnd.api+json" href="<%= @page == 1 ? entries_url : entries_url(page: @page) %>" %>
   <% end %>
 <% end %>
 
-<% content_for :inline_css do %>
-  <% cache "#{@app_version}/entries/styles" do %>
-    <style><%= Rails.application.assets['entry_list.css'].to_s.html_safe %></style>
-  <% end %>
-<% end %>
-
-<% cache "#{@app_version}/entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "#{@cache_version}/entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <ol class="entry-list" role="main">
-    <%= render partial: 'entries/entry_list_item', collection: @entries, locals: { lazy_load_start_index: 12 } %>
+    <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { lazy_load_start_index: 12 } %>
   </ol>
   <%= paginate @entries %>
 <% end %>

@@ -1,20 +1,22 @@
-cache "#{@app_version}/entries/tagged/atom/#{@tag_slug}/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+cache "#{@cache_version}/entries/tagged/atom/#{@tag_slug}/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
   xml.instruct!
   xml.feed xmlns: 'http://www.w3.org/2005/Atom' do
     if @page.nil? || @page == 1
       xml.id atom_tag(tag_url(tag: @tag_slug), @photoblog.updated_at)
       xml.title "#{@photoblog.name} - Entries tagged “#{@tags.first.name}”"
       xml.link rel: 'alternate', type: 'text/html', href: tag_url(tag: @tag_slug)
+      xml.link rel: 'self', type: 'application/atom+xml', href: tag_url(format: 'atom', tag: @tag_slug)
     else
       xml.id atom_tag(tag_url(tag: @tag_slug, page: @page), @photoblog.updated_at)
       xml.title "#{@photoblog.name} - Entries tagged “#{@tags.first.name}” - Page #{@page}"
       xml.link rel: 'alternate', type: 'text/html', href: tag_url(tag: @tag_slug, page: @page)
+      xml.link rel: 'self', type: 'application/atom+xml', href: tag_url(page: @page, format: 'atom', tag: @tag_slug)
     end
-    xml.link rel: 'self', type: 'application/atom+xml', href: tag_url(page: @page, format: 'atom', tag: @tag_slug)
+
     xml.updated @photoblog.updated_at.utc.strftime('%FT%TZ')
 
     @entries.each do |e|
-      cache "#{@app_version}/entry/atom/#{e.id}/#{e.updated_at.to_i}" do
+      cache "#{@cache_version}/entry/atom/#{e.id}/#{e.updated_at.to_i}" do
         xml.entry do
           xml.id atom_tag(e.permalink_url, e.updated_at)
           xml.published e.published_at.utc.strftime('%FT%TZ')

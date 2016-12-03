@@ -7,7 +7,9 @@ class Photo < ApplicationRecord
     s3_credentials: { access_key_id: ENV['aws_access_key_id'],
                       secret_access_key: ENV['aws_secret_access_key'],
                       bucket: ENV['s3_bucket'] },
+    s3_headers: { 'Cache-Control': 'max-age=31536000, public' },
     s3_region: ENV['s3_region'],
+    s3_protocol: 'http',
     url: ':s3_domain_url',
     path: 'photos/:hash.:extension',
     hash_secret: ENV['secret_key_base'],
@@ -38,9 +40,15 @@ class Photo < ApplicationRecord
     opts.reverse_merge!(w: 1200, auto: 'format', square: false)
     if opts[:square]
       opts[:h] = opts[:w]
-      opts[:fit] = 'crop'
-      opts[:crop] = self.crop if self.crop.present?
       opts.delete(:square)
+    end
+    if opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w])
+      opts[:fit] = 'crop'
+      if self.focal_x.present? && self.focal_y.present?
+        opts[:crop] = 'focalpoint'
+        opts['fp-x'] = self.focal_x
+        opts['fp-y'] = self.focal_y
+      end
     end
     Ix.path(self.original_path).to_url(opts.reject { |k,v| v.blank? })
   end

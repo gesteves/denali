@@ -3,7 +3,7 @@
   flex-flow: row wrap;
   justify-content: center;
   margin: 24px auto;
-  max-width: $bp-xxl;
+  max-width: $bp-max;
   padding: 0 2px;
 
   @media (min-width: $bp-l) {
@@ -29,13 +29,13 @@
   overflow: hidden;
   padding: 2px;
 
-  @media (min-width: $bp-xs) {
+  @media (min-width: $bp-xxxs) {
     flex-basis: calc(100%/3);
     flex-grow: 0;
     flex-shrink: 0;
   }
 
-  @media (min-width: $bp-xxl) {
+  @media (min-width: $bp-xl) {
     flex-basis: 25%;
     flex-grow: 0;
     flex-shrink: 0;
@@ -58,12 +58,12 @@
 }
 
 .entry-list__item--map {
-  font-family: 'kepler-std', 'Georgia', serif;
+  font-family: $font-sans;
 }
 
 .entry-list__image {
   height: 100%;
-  transition: opacity $fadein_duration linear;
+  transition: opacity $fadein-duration linear;
   width: 100%;
 
   &.noscript {
@@ -86,7 +86,6 @@
   p {
     color: $color-text;
     font-size: 14px;
-    font-weight: 400;
     line-height: 1.5;
   }
 
@@ -109,7 +108,7 @@
 }
 
 .entry-list__link--photo {
-  background-color: $color-gray-very-light;
+  background-color: $color-photo-background;
 }
 
 .entry-list__photo {
@@ -124,6 +123,7 @@
 
 .entry-list__photo-caption {
   align-items: center;
+  backdrop-filter: blur(20px);
   background-color: rgba(0, 0, 0, 0.65);
   bottom: 0;
   display: flex;
@@ -138,16 +138,10 @@
   transition: opacity 150ms linear;
   width: 100%;
   z-index: 1;
-
-  @supports (backdrop-filter: none) {
-    backdrop-filter: blur(20px);
-  }
 }
 
 .entry-list__photo-title {
   color: #FFF;
-  font-family: 'kepler-std-display', 'Georgia', serif;
-  font-weight: 400;
   line-height: 1.2;
   margin: 1.2rem 0;
   text-align: center;
@@ -165,14 +159,6 @@
     font-size: 24px;
   }
 
-  @media (min-width: $bp-xl) {
-    font-size: 32px;
-  }
-
-  @media (min-width: $bp-xxl) {
-    font-size: 24px;
-  }
-
   .entry-list__item--map & {
     font-size: 18px;
     line-height: 1.2;
@@ -183,7 +169,7 @@
 .entry-list__photo-meta,
 .entry-list__item--map .entry-list__photo-meta {
   color: #FFF;
-  font-size: 12px;
+  font-size: 14px;
   font-style: italic;
   line-height: 1.5;
   text-align: center;

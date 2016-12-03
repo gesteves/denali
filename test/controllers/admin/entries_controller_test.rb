@@ -9,19 +9,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     @entry.save
   end
 
-  test 'should render preview page' do
-    panda = entries(:panda)
-    get :preview, id: panda.id
-    assert_response :success
-    assert_template layout: 'layouts/application'
-    assert_template :show
-  end
-
-  test 'should redirect published photos from preview page' do
-    get :preview, id: @entry.id
-    assert_redirected_to @entry.permalink_url
-  end
-
   test 'should render entries page' do
     get :index
     assert_response :success
@@ -51,7 +38,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should render tag page' do
-    get :tagged, tag: 'washington'
+    get :tagged, params: { tag: 'washington' }
     assert_response :success
     assert_not_nil assigns(:entries)
     assert_template layout: 'layouts/admin'
@@ -66,7 +53,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should render edit entry page' do
-    get :edit, id: @entry.id
+    get :edit, params: { id: @entry.id }
     assert_not_nil assigns(:entry)
     assert_response :success
     assert_template layout: 'layouts/admin'
@@ -82,7 +69,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
 
   test 'should queue entries' do
     entry = entries(:franklin)
-    patch :queue, id: entry.id
+    patch :queue, params: { id: entry.id }
     assert assigns(:entry).is_queued?
     assert_not_nil assigns(:entry).position
     assert_redirected_to queued_admin_entries_path
@@ -90,7 +77,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
 
   test 'should draft entries' do
     entry = entries(:franklin)
-    patch :draft, id: entry.id
+    patch :draft, params: { id: entry.id }
     assert assigns(:entry).is_draft?
     assert_nil assigns(:entry).position
     assert_redirected_to drafts_admin_entries_path
@@ -98,24 +85,24 @@ class Admin::EntriesControllerTest < ActionController::TestCase
 
   test 'should publish entries' do
     entry = entries(:franklin)
-    patch :publish, id: entry.id
+    patch :publish, params: { id: entry.id }
     assert assigns(:entry).is_published?
     assert_nil assigns(:entry).position
     assert_redirected_to assigns(:entry).permalink_url
   end
 
   test 'should create entries' do
-    post :create, entry: { title: 'Published', status: 'published' }
+    post :create, params: { entry: { title: 'Published', status: 'published' } }
     assert assigns(:entry).is_published?
     assert_nil assigns(:entry).position
     assert_redirected_to assigns(:entry).permalink_url
 
-    post :create, entry: { title: 'Draft', status: 'draft' }
+    post :create, params: { entry: { title: 'Draft', status: 'draft' } }
     assert assigns(:entry).is_draft?
     assert_nil assigns(:entry).position
     assert_redirected_to drafts_admin_entries_path
 
-    post :create, entry: { title: 'Queued', status: 'queued' }
+    post :create, params: { entry: { title: 'Queued', status: 'queued' } }
     assert assigns(:entry).is_queued?
     assert_not_nil assigns(:entry).position
     assert_redirected_to queued_admin_entries_path
@@ -123,7 +110,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
 
   test 'should update entries' do
     entry = entries(:peppers)
-    patch :update, id: entry.id, entry: { id: entry.id }
+    patch :update, params: { id: entry.id, entry: { id: entry.id } }
     assert_redirected_to assigns(:entry).permalink_url
   end
 
@@ -136,19 +123,19 @@ class Admin::EntriesControllerTest < ActionController::TestCase
 
     entry = entries(:panda)
 
-    post :down, id: entry.id
+    post :down, params: { id: entry.id }
     assert_equal assigns(:entry).position, 2
     assert_redirected_to queued_admin_entries_path
 
-    post :up, id: entry.id
+    post :up, params: { id: entry.id }
     assert_equal assigns(:entry).position, 1
     assert_redirected_to queued_admin_entries_path
 
-    post :bottom, id: entry.id
+    post :bottom, params: { id: entry.id }
     assert_equal assigns(:entry).position, 3
     assert_redirected_to queued_admin_entries_path
 
-    post :top, id: entry.id
+    post :top, params: { id: entry.id }
     assert_equal assigns(:entry).position, 1
     assert_redirected_to queued_admin_entries_path
   end

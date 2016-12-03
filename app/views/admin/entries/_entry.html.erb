@@ -1,7 +1,7 @@
-<% cache "#{@app_version}/admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
-  <li class="entry" <% if entry.is_queued? %>data-position="<%= entry.position %>"<% end %>>
+<% cache "#{@cache_version}/admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+  <li class="entry" <% if entry.is_queued? %>data-position="<%= entry.position %>"<% end %>  data-turbolinks="false">
     <% if entry.is_photo? %>
-      <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : preview_admin_entry_path(entry) %>" <%= aspect_ratio(entry.photos.first) if entry.is_photo? %> data-no-turbolink>
+      <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.id, entry.slug) %>" <%= intrinsic_ratio_padding(entry.photos.first) if entry.is_photo? %>>
         <%= lazy_responsive_image_tag entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
       </a>
     <% end %>
@@ -10,14 +10,14 @@
       <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
     </div>
     <div class="entry__meta">
-      <div>
+      <div data-turbolinks="true">
         <% entry.tags.each do |t| %>
           <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
         <% end %>
       </div>
       <% if entry.is_queued? %>
         <div class="entry__timestamp">
-          Queued for <%= publish_date_for_queued(entry, entry_counter) %>
+          Queued for <%= publish_date_for_queued(entry) %>
         </div>
       <% end %>
       <div class="entry__meta-bottom">
@@ -26,7 +26,7 @@
             <%= link_to "Published #{entry.published_at.strftime('%A, %B %-d, %Y')}", entry.permalink_url %>
           </div>
         <% elsif entry.is_queued? %>
-          <div class="entry__actions entry__actions--queue" data-no-turbolink>
+          <div class="entry__actions entry__actions--queue">
             <%= link_to 'Move to top', top_admin_entry_path(entry.id), method: :post, data: { queue: 'top' } %>
             <%= link_to 'Move up', up_admin_entry_path(entry.id), method: :post, data: { queue: 'up' } %>
             <%= link_to 'Move down', down_admin_entry_path(entry.id), method: :post, data: { queue: 'down' } %>
@@ -35,7 +35,7 @@
         <% end %>
         <div class="entry__actions">
           <% unless entry.is_published? %>
-            <%= link_to 'Preview', preview_admin_entry_path(entry) %>
+            <%= link_to 'Preview', preview_entry_path(entry.id, entry.slug) %>
           <% end %>
           <%= link_to 'Edit', edit_admin_entry_path(entry) %>
           <% if entry.is_draft? %>

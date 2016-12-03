@@ -6,10 +6,6 @@ default: &default
   buffer_access_token: abc123
   denali_secret: abc123
   dropbox_key: abc123
-  fivehundredpx_access_token_secret: abc123
-  fivehundredpx_access_token: abc123
-  fivehundredpx_consumer_key: abc123
-  fivehundredpx_consumer_secret: abc123
   flickr_access_token_secret: abc123
   flickr_access_token: abc123
   flickr_consumer_key: abc123
@@ -52,10 +48,6 @@ production:
   buffer_access_token: abc123
   denali_secret: abc123
   dropbox_key: abc123
-  fivehundredpx_access_token_secret: abc123
-  fivehundredpx_access_token: abc123
-  fivehundredpx_consumer_key: abc123
-  fivehundredpx_consumer_secret: abc123
   flickr_access_token_secret: abc123
   flickr_access_token: abc123
   flickr_consumer_key: abc123

@@ -36,7 +36,8 @@ json.relationships do
           end
           json.(p, :width)
           json.(p, :height)
-          json.(p, :crop)
+          json.(p, :focal_x)
+          json.(p, :focal_y)
           json.(p, :taken_at)
           json.(p, :updated_at)
           json.(p, :created_at)

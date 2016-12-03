@@ -6,7 +6,7 @@
       "fingerprint": "2a5db2d1e524117ffcd3d3efa02578006ca7af74b33e5a4c43d9416a6499cb07",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 44,
+      "line": 61,
       "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Blog.first.entries.published.where(:tumblr_id => params[:tumblr_id]).order(\"published_at ASC\").first.permalink_url, :status => 301)",
       "render_path": null,
@@ -25,7 +25,7 @@
       "fingerprint": "905b61aa597cd16f9ef0383c1a9455236f41c08587bf0929a42cbc67a77c3224",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 23,
+      "line": 33,
       "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Blog.first.entries.includes(:photos, :user, :blog).published.find(params[:id]).permalink_url, :status => 301)",
       "render_path": null,
@@ -41,10 +41,29 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
+      "fingerprint": "a8f8652d42a0c0efa54bc92540c1b0fb03157c5d277138226a914939871a5043",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/entries_controller.rb",
+      "line": 47,
+      "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Blog.first.entries.includes(:photos, :user, :blog).find(params[:id]).permalink_url)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EntriesController",
+        "method": "preview"
+      },
+      "user_input": "Blog.first.entries.includes(:photos, :user, :blog).find(params[:id]).permalink_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
       "fingerprint": "beb6783fdf80fd11f2d67c4947da43aa901f016e75837a0d18b8c22101ad462b",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/application_controller.rb",
-      "line": 46,
+      "line": 56,
       "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(\"#{(\"https\" or \"http\")}://#{Blog.first.domain}#{request.fullpath}\", :status => 301)",
       "render_path": null,
@@ -77,6 +96,6 @@
       "note": ""
     }
   ],
-  "updated": "2016-04-27 10:23:38 -0400",
-  "brakeman_version": "3.2.1"
+  "updated": "2016-06-20 12:28:29 -0400",
+  "brakeman_version": "3.3.2"
 }

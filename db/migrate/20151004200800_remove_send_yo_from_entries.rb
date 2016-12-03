@@ -1,4 +1,4 @@
-class RemoveSendYoFromEntries < ActiveRecord::Migration
+class RemoveSendYoFromEntries < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :entries, :send_yo
   end

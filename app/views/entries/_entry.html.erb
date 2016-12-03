@@ -1,14 +1,21 @@
-<% cache "#{@app_version}/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+<% cache "#{@cache_version}/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
     <% entry.photos.each do |photo| %>
-      <figure class="entry__photo">
-        <%= responsive_image_tag photo,
-            'entry',
-            { class: "entry__image entry__image--fit",
-              alt: photo.caption.blank? ? entry.title : photo.plain_caption,
-              'data-width-original': photo.width,
-              'data-height-original': photo.height } %>
-      </figure>
+      <div class="entry__photo-container" <%= intrinsic_ratio_width photo %>>
+        <figure class="entry__figure" <%= intrinsic_ratio_padding photo %>>
+          <%= responsive_image_tag photo,
+              'entry',
+              { class: "entry__photo",
+                alt: photo.caption.blank? ? entry.title : photo.plain_caption,
+                'data-width-original': photo.width,
+                'data-height-original': photo.height,
+                onload: "'undefined'!=typeof performance.mark&&(performance.clearMarks('mark_entry_photo_rendered'),performance.mark('mark_entry_photo_rendered'));".html_safe } %>
+        </figure>
+      </div>
+    <% end %>
+
+    <% if entry.is_photo? %>
+      <script>'undefined'!=typeof performance.mark&&(performance.clearMarks('mark_entry_photo_rendered'),performance.mark('mark_entry_photo_rendered'));</script>
     <% end %>
 
     <div class="entry__body">
@@ -23,10 +30,9 @@
     </div>
 
     <div class="entry__meta">
-      <%= render partial: 'entries/byline', locals: { entry: entry } %>
-      <%= render partial: 'entries/exif', locals: { photo: entry.photos.first } if entry.photos.count == 1 %>
+      <%= render partial: 'entries/byline', object: entry, as: :entry %>
+      <%= render partial: 'entries/exif', object: entry.photos.first, as: :photo if entry.photos.count == 1 %>
       <%= render partial: 'entries/tags', object: entry.tags unless entry.tags.blank? %>
-      <%= render partial: 'entries/share', locals: { entry: entry } if entry.is_photo? %>
     </div>
   </article>
 <% end %>

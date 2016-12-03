@@ -1,15 +1,15 @@
-<% cache "#{@app_version}/admin/nav/#{active_nav || 'none'}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "#{@cache_version}/admin/nav/#{active_nav || 'none'}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <nav class="nav">
     <div class="nav__group">
-      <a href="<%= new_admin_entry_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'new' %>">Post a new entry</a>
+      <a href="<%= new_admin_entry_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'new' %>" data-turbolinks="false">Post a new entry</a>
       <a href="<%= admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'published' %>">Published <%= published_count %></a>
       <a href="<%= queued_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'queued' %>">Queued <%= queued_count %></a>
       <a href="<%= drafts_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'drafts' %>">Drafts <%= drafts_count %></a>
       <a href="<%= imported_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'imported' %>">Imported <%= imported_count %></a>
     </div>
-    <a href="<%= root_path %>" class="nav__link" data-no-turbolink>View site</a>
+    <a href="<%= root_path %>" class="nav__link" data-turbolinks="false">View site</a>
     <a href="<%= admin_slack_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'slack' %>">Slack</a>
     <a href="<%= admin_settings_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'settings' %>">Settings</a>
-    <a href="<%= signout_path %>" class="nav__link" data-no-turbolink>Sign out</a>
+    <a href="<%= signout_path %>" class="nav__link" data-turbolinks="false">Sign out</a>
   </nav>
 <% end %>

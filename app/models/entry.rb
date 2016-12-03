@@ -16,6 +16,8 @@ class Entry < ApplicationRecord
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
+  attr_accessor :invalidate_cloudfront
+
   def self.published(order = 'published_at DESC')
     where(status: 'published').order(order)
   end
@@ -29,7 +31,7 @@ class Entry < ApplicationRecord
   end
 
   def self.mapped
-    where(show_in_map: true)
+    photo_entries.published.joins(:photos).includes(:photos).where(entries: { show_in_map: true }).where.not(photos: { latitude: nil, longitude: nil })
   end
 
   def self.text_entries
@@ -87,11 +89,11 @@ class Entry < ApplicationRecord
   end
 
   def newer
-    Entry.published('published_at ASC').where('published_at > ?', self.published_at).limit(1).first
+    Entry.published('published_at ASC').where('published_at > ?', self.published_at).where.not(id: self.id).limit(1).first
   end
 
   def older
-    Entry.published.where('published_at < ?', self.published_at).limit(1).first
+    Entry.published.where('published_at < ?', self.published_at).where.not(id: self.id).limit(1).first
   end
 
   def related(count = 12)
@@ -111,8 +113,15 @@ class Entry < ApplicationRecord
     markdown_to_plaintext(self.title)
   end
 
-  def formatted_content
-    content = self.title
+  def formatted_content(opts = {})
+    opts.reverse_merge!(link_title: false)
+
+    content = if opts[:link_title]
+      "[#{self.title}](#{self.permalink_url})"
+    else
+      self.title
+    end
+
     content += "\n\n#{self.body}" unless self.body.blank?
     markdown_to_html(content)
   end
@@ -144,13 +153,14 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_jobs
-    self.enqueue_twitter
-    self.enqueue_tumblr
-    self.enqueue_facebook
-    self.enqueue_flickr
-    self.enqueue_500px
-    self.enqueue_pinterest
-    self.enqueue_slack
+    unless Rails.env.development?
+      self.enqueue_twitter
+      self.enqueue_tumblr
+      self.enqueue_facebook
+      self.enqueue_flickr
+      self.enqueue_pinterest
+      self.enqueue_slack
+    end
     true
   end
 
@@ -168,10 +178,6 @@ class Entry < ApplicationRecord
 
   def enqueue_flickr
     FlickrJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_flickr
-  end
-
-  def enqueue_500px
-    FiveHundredJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_500px
   end
 
   def enqueue_slack

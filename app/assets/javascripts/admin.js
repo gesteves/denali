@@ -8,8 +8,6 @@
 
 'use strict';
 
-Turbolinks.enableProgressBar();
-
 if (document.readyState !== 'loading') {
   Denali.Entries.init();
   Denali.Flash.init();
@@ -17,7 +15,7 @@ if (document.readyState !== 'loading') {
   Denali.LazyLoad.init();
 }
 
-document.addEventListener('page:change', Denali.Entries.init);
-document.addEventListener('page:change', Denali.Flash.init);
-document.addEventListener('page:change', Denali.Queue.init);
-document.addEventListener('page:change', Denali.LazyLoad.init);
+document.addEventListener('turbolinks:load', Denali.Entries.init);
+document.addEventListener('turbolinks:load', Denali.Flash.init);
+document.addEventListener('turbolinks:load', Denali.Queue.init);
+document.addEventListener('turbolinks:load', Denali.LazyLoad.init);

@@ -80,6 +80,20 @@ class EntryTest < ActiveSupport::TestCase
     assert_not_nil entry.published_at
   end
 
+  test 'queuing should set a position' do
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    entry.save
+    assert_not_nil entry.position
+  end
+
+  test 'publishing a queued post should clear the position' do
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    entry.save
+    assert_not_nil entry.position
+    entry.publish
+    assert_nil entry.position
+  end
+
   test 'draft should not set published_at' do
     entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
     entry.save

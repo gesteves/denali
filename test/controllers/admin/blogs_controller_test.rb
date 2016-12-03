@@ -16,7 +16,7 @@ class Admin::BlogsControllerTest < ActionController::TestCase
 
   test 'should update blog' do
     session[:user_id] = users(:guille).id
-    patch :update, blog: { id: blogs(:allencompassingtrip).id }
+    patch :update, params: { blog: { id: blogs(:allencompassingtrip).id } }
     assert_redirected_to admin_settings_path
   end
 end

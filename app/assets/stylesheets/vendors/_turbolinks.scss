@@ -1,4 +1,6 @@
-html.turbolinks-progress-bar::before {
-  background-color: #bf0222 !important;
-  height: 2px !important;
+.turbolinks-progress-bar {
+  background-color: #bf0222;
+  border-bottom-right-radius: 2px;
+  border-top-right-radius: 2px;
+  height: 4px;
 }

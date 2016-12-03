@@ -11,7 +11,7 @@
 
     <%= content_tag :img, nil, src: image_url('slack.png'), srcset: "#{image_url('slack.png')} 1x, #{image_url('slack@2x.png')} 2x" %>
     <p>Get notifications in your team’s <a href="https://slack.com/">Slack</a> whenever new photos are published! Just tap this button to get&nbsp;started:</p>
-    <a class="follow__slack" href="https://slack.com/oauth/authorize?scope=incoming-webhook&amp;client_id=<%= @client_id %>&amp;state=<%= @state %>&amp;redirect_uri=<%= slack_url %>"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"></a>
+    <a class="slack-button" href="https://slack.com/oauth/authorize?scope=incoming-webhook&amp;client_id=<%= @client_id %>&amp;state=<%= @state %>&amp;redirect_uri=<%= slack_url %>"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"></a>
     <p class="entry__disclaimer">Adding <i><%= @photoblog.name %></i> to your Slack will only give it permission to post to a single channel of your choice. No private information (such as your messages, channels, or users) will be accessed or&nbsp;stored.</p>
 
   </div>

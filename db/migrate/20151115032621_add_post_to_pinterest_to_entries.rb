@@ -1,4 +1,4 @@
-class AddPostToPinterestToEntries < ActiveRecord::Migration
+class AddPostToPinterestToEntries < ActiveRecord::Migration[4.2]
   def change
     add_column :entries, :post_to_pinterest, :boolean
   end

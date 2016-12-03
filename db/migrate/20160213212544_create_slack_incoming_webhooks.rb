@@ -1,4 +1,4 @@
-class CreateSlackIncomingWebhooks < ActiveRecord::Migration
+class CreateSlackIncomingWebhooks < ActiveRecord::Migration[4.2]
   def change
     create_table :slack_incoming_webhooks do |t|
       t.string :team_name

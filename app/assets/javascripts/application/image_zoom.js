@@ -4,24 +4,23 @@ Denali.ImageZoom = (function () {
   'use strict';
 
   var opts = {
-    images          : '.entry__image',
-    zoomable_class  : 'entry__image--zoomable',
-    zoom_class      : 'entry__image--fit',
-    max_width       : 1440
+    images          : '.entry__photo',
+    zoomable_class  : 'entry__photo--zoomable',
+    zoom_class      : 'entry__photo-container--zoom',
+    max_width       : 1680
   };
 
-  var zoomable_images;
+  var zoomable;
   var requested_animation_frame = false;
 
   var init = function () {
-    zoomable_images = [];
+    zoomable = [];
     var images = document.querySelectorAll(opts.images);
     var image,
         original_width,
         original_height,
         image_ratio,
         max_width,
-        min_height,
         height;
     for (var i = 0; i < images.length; i++) {
       image = images[i];
@@ -30,12 +29,10 @@ Denali.ImageZoom = (function () {
       image_ratio = original_height/original_width;
       max_width = Math.min(original_width, document.documentElement.clientWidth, opts.max_width);
       height = max_width * image_ratio;
-      min_height = Math.min(document.documentElement.clientHeight, height);
-      image.style.minHeight = min_height + 'px';
       if (height > document.documentElement.clientHeight) {
         image.classList.add(opts.zoomable_class);
         image.addEventListener('click', toggleZoom);
-        zoomable_images.push(image);
+        zoomable.push(image.parentNode.parentNode);
       } else {
         image.classList.remove(opts.zoomable_class);
         image.removeEventListener('click', toggleZoom);
@@ -46,8 +43,8 @@ Denali.ImageZoom = (function () {
 
   var toggleZoom = function (e) {
     e.preventDefault();
-    for (var i = 0; i < zoomable_images.length; i++) {
-      zoomable_images[i].classList.toggle(opts.zoom_class);
+    for (var i = 0; i < zoomable.length; i++) {
+      zoomable[i].classList.toggle(opts.zoom_class);
     }
   };
 

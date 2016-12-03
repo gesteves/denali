@@ -6,11 +6,18 @@
   white-space: nowrap;
 
   &::after {
-    content: ' • ';
-    margin-right: 2px;
+    content: ' · ';
   }
 
   &:last-of-type::after {
     content: none;
+  }
+}
+
+.exif__optional {
+  display: none;
+
+  @media (min-width: $bp-m) {
+    display: inline;
   }
 }

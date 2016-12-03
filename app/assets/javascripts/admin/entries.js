@@ -17,8 +17,11 @@ Denali.Entries = (function ($) {
     destroy_field     : '.js-photo-destroy',
     file_button       : '.js-photo-file-button',
     position_field    : '.js-photo-position',
+    focal_x_field     : '.js-photo-focal-x',
+    focal_y_field     : '.js-photo-focal-y',
     single_tag        : '.js-tags-single',
     multiple_tags     : '.js-tags-multiple',
+    focal_point_marker: '.js-photo-focal-point',
     add_photo_endpoint: '/admin/entries/photo',
     photo_container   : '.form__photo'
   };
@@ -156,13 +159,47 @@ Denali.Entries = (function ($) {
     });
   };
 
+  var initFocalPoints = function () {
+    $photo_list.each(function () {
+      showFocalPoint($(this));
+    });
+  };
+
+  var setFocalPoint = function (e) {
+    var $image = $(this);
+    var $parent = $image.parents(opts.photo_container);
+    var focal_x = (e.pageX - $image.offset().left)/$image.width();
+    var focal_y = (e.pageY - $image.offset().top)/$image.height();
+
+    $parent.find(opts.focal_x_field).val(focal_x);
+    $parent.find(opts.focal_y_field).val(focal_y);
+
+    showFocalPoint($parent);
+    return false;
+  };
+
+  var showFocalPoint = function ($element) {
+    var $thumbnail = $element.find('img');
+    var focal_x = $element.find(opts.focal_x_field).val();
+    var focal_y = $element.find(opts.focal_y_field).val();
+    var $marker = $element.find(opts.focal_point_marker);
+    if (focal_x !== '' && focal_y !== '') {
+      $marker.css({
+        top: ($thumbnail.height() * focal_y) - $marker.width()/2,
+        left: ($thumbnail.width() * focal_x) - $marker.width()/2
+      }).show();
+    }
+  };
+
   var initPhotos = function () {
     var $photos_container = $(opts.photos_container_selector);
 
     if ($photos_container.length === 0) {
       return;
     }
+
     $photo_list = $(opts.photo_list_selector);
+    $(window).on('load', initFocalPoints);
     $photos_container.on('click', opts.add_button, addPhotoFields);
     $photos_container.on('click', opts.delete_button, deletePhoto);
     $photos_container.on('click', opts.dropbox_button, addFromDropbox);
@@ -170,11 +207,11 @@ Denali.Entries = (function ($) {
     $photos_container.on('click', opts.source_file_field, function (e) {
       e.stopPropagation();
     });
+    $photos_container.on('click', 'img', setFocalPoint);
     $photos_container.on('change', opts.source_file_field, addFromFile);
     $photos_container.on('keyup', opts.source_url_field, addFromUrl);
     $photo_list.on('sortstop', updatePositions);
-
-    $photo_list.sortable();
+    $photo_list.sortable({ delay: 100 });
   };
 
   var init = function () {

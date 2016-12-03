@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160403222415) do
+ActiveRecord::Schema.define(version: 20161130001423) do
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
@@ -23,11 +22,9 @@ ActiveRecord::Schema.define(version: 20160403222415) do
     t.string   "short_domain"
     t.text     "about"
     t.string   "copyright"
-    t.integer  "max_age",              default: 5
     t.boolean  "show_related_entries", default: true
+    t.index ["domain"], name: "index_blogs_on_domain"
   end
-
-  add_index "blogs", ["domain"], name: "index_blogs_on_domain"
 
   create_table "entries", force: :cascade do |t|
     t.string   "title"
@@ -47,15 +44,17 @@ ActiveRecord::Schema.define(version: 20160403222415) do
     t.string   "tweet_text"
     t.boolean  "post_to_facebook"
     t.boolean  "post_to_flickr"
-    t.boolean  "post_to_500px"
     t.boolean  "show_in_map",       default: true
     t.boolean  "post_to_slack"
     t.boolean  "post_to_pinterest"
+    t.index ["blog_id"], name: "index_entries_on_blog_id"
+    t.index ["photos_count"], name: "index_entries_on_photos_count"
+    t.index ["published_at"], name: "index_entries_on_published_at"
+    t.index ["show_in_map"], name: "index_entries_on_show_in_map"
+    t.index ["status"], name: "index_entries_on_status"
+    t.index ["tumblr_id"], name: "index_entries_on_tumblr_id"
+    t.index ["user_id"], name: "index_entries_on_user_id"
   end
-
-  add_index "entries", ["blog_id"], name: "index_entries_on_blog_id"
-  add_index "entries", ["tumblr_id"], name: "index_entries_on_tumblr_id"
-  add_index "entries", ["user_id"], name: "index_entries_on_user_id"
 
   create_table "photos", force: :cascade do |t|
     t.text     "caption"
@@ -81,10 +80,12 @@ ActiveRecord::Schema.define(version: 20160403222415) do
     t.integer  "focal_length"
     t.string   "film_make"
     t.string   "film_type"
-    t.string   "crop"
+    t.float    "focal_x"
+    t.float    "focal_y"
+    t.index ["entry_id"], name: "index_photos_on_entry_id"
+    t.index ["latitude"], name: "index_photos_on_latitude"
+    t.index ["longitude"], name: "index_photos_on_longitude"
   end
-
-  add_index "photos", ["entry_id"], name: "index_photos_on_entry_id"
 
   create_table "slack_incoming_webhooks", force: :cascade do |t|
     t.string   "team_name"
@@ -95,9 +96,8 @@ ActiveRecord::Schema.define(version: 20160403222415) do
     t.integer  "blog_id"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
+    t.index ["blog_id"], name: "index_slack_incoming_webhooks_on_blog_id"
   end
-
-  add_index "slack_incoming_webhooks", ["blog_id"], name: "index_slack_incoming_webhooks_on_blog_id"
 
   create_table "taggings", force: :cascade do |t|
     t.integer  "tag_id"
@@ -107,19 +107,24 @@ ActiveRecord::Schema.define(version: 20160403222415) do
     t.string   "tagger_type"
     t.string   "context",       limit: 128
     t.datetime "created_at"
+    t.index ["context"], name: "index_taggings_on_context"
+    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
+    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy"
+    t.index ["taggable_id"], name: "index_taggings_on_taggable_id"
+    t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
+    t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
+    t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
   end
-
-  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
 
   create_table "tags", force: :cascade do |t|
     t.string  "name"
     t.integer "taggings_count", default: 0
     t.string  "slug"
+    t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["slug"], name: "index_tags_on_slug"
   end
-
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true
-  add_index "tags", ["slug"], name: "index_tags_on_slug"
 
   create_table "users", force: :cascade do |t|
     t.string   "provider"
