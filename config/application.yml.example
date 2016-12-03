@@ -16,6 +16,7 @@ default: &default
   imgix_domain: example.imgix.net
   imgix_secure: 'true'
   imgix_token: abc123
+  mapbox_api_token: abc123
   pinterest_board_id: '123456'
   pinterest_token: abc123
   s3_bucket: www.yerbucket.com
@@ -58,6 +59,7 @@ production:
   imgix_domain: example.imgix.net
   imgix_secure: 'true'
   imgix_token: abc123
+  mapbox_api_token: abc123
   pinterest_board_id: '123456'
   pinterest_token: abc123
   s3_bucket: www.yerbucket.com

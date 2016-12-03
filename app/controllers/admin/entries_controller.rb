@@ -5,6 +5,9 @@ class Admin::EntriesController < AdminController
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   after_action :update_position, only: [:create]
+  after_action :update_equipment_tags, only: [:create, :update]
+  after_action :update_location_tags, only: [:create, :update]
+  after_action :update_object_tags, only: [:create, :update]
   after_action :enqueue_invalidation, only: [:update]
 
   # GET /admin/entries
@@ -214,5 +217,23 @@ class Admin::EntriesController < AdminController
 
     def enqueue_invalidation
       CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && @entry.is_published? && entry_params[:invalidate_cloudfront] == "1"
+    end
+
+    def update_equipment_tags
+      tags = []
+      @entry.photos.each do |p|
+        tags << p.formatted_camera
+        tags << p.formatted_film if p.film_make.present? && p.film_type.present?
+      end
+      @entry.equipment_list = tags
+      @entry.save
+    end
+
+    def update_location_tags
+      ReverseGeocodeJob.perform_later(@entry) if ENV['mapbox_api_token'].present?
+    end
+
+    def update_object_tags
+      ImageAnalysisJob.perform_later(@entry)
     end
 end

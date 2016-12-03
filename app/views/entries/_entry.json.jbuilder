@@ -55,7 +55,7 @@ json.relationships do
   end
   json.tags do
     json.data do
-      json.array! entry.tags do |t|
+      json.array! entry.tags + entry.equipment + entry.locations do |t|
         json.type 'tag'
         json.id t.id.to_s
         json.attributes do

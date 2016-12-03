@@ -49,12 +49,13 @@ gem 'twitter'
 
 group :production do
   gem 'passenger'
-  gem 'pg'
   gem 'lograge'
+  gem 'pg'
 end
 
 group :development do
   gem 'web-console', '~> 3.0'
+  gem 'pg'
 end
 
 group :development, :test do
@@ -62,11 +63,11 @@ group :development, :test do
   gem 'foreman'
   gem 'byebug'
   gem 'spring'
-  gem 'sqlite3'
   gem 'brakeman', require: nil
 end
 
 group :test do
+  gem 'sqlite3'
   gem 'mock_redis'
   gem 'rails-controller-testing'
 end
