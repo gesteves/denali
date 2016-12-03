@@ -13,10 +13,10 @@ default: &default
   google_apps_domain: example.com
   google_client_id: abc123
   google_client_secret: abc123
+  google_maps_api_key: abc123
   imgix_domain: example.imgix.net
   imgix_secure: 'true'
   imgix_token: abc123
-  mapbox_api_token: abc123
   pinterest_board_id: '123456'
   pinterest_token: abc123
   s3_bucket: www.yerbucket.com
@@ -56,10 +56,10 @@ production:
   google_apps_domain: example.com
   google_client_id: abc123
   google_client_secret: abc123
+  google_maps_api_key: abc123
   imgix_domain: example.imgix.net
   imgix_secure: 'true'
   imgix_token: abc123
-  mapbox_api_token: abc123
   pinterest_board_id: '123456'
   pinterest_token: abc123
   s3_bucket: www.yerbucket.com
