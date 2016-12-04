@@ -10,6 +10,7 @@ class ReverseGeocodeJob < ApplicationJob
     end
     tags.flatten!
     entry.location_list = tags
+    entry.tag_list.remove(tags)
     entry.save
   end
 
