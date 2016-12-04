@@ -13,9 +13,11 @@ if (document.readyState !== 'loading') {
   Denali.Flash.init();
   Denali.Queue.init();
   Denali.LazyLoad.init();
+  Denali.Tags.init();
 }
 
 document.addEventListener('turbolinks:load', Denali.Entries.init);
 document.addEventListener('turbolinks:load', Denali.Flash.init);
 document.addEventListener('turbolinks:load', Denali.Queue.init);
 document.addEventListener('turbolinks:load', Denali.LazyLoad.init);
+document.addEventListener('turbolinks:load', Denali.Tags.init);

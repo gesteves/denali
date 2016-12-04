@@ -5,6 +5,15 @@ class Admin::TagsController < AdminController
 
   def destroy
     @tag = ActsAsTaggableOn::Tag.find(params[:id]).destroy
-    redirect_to admin_tags_path
+    respond_to do |format|
+      format.html { redirect_to admin_tags_path }
+      format.json {
+        response = {
+          status: 200,
+          message: 'Tag deleted'
+        }
+        render json: response
+      }
+    end
   end
 end

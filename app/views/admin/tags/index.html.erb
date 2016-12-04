@@ -10,7 +10,7 @@
       <tr>
       <td><%= link_to t.name, admin_tagged_entries_path(t.slug) %></td>
       <td><%= pluralize(Entry.tagged_with(t.name).size, 'item') %></td>
-      <td><%= link_to 'Delete', admin_tag_path(t.id), method: :delete, data: { confirm: "Are you sure you want to delete the \"#{t.name}\" tag?" } %></td>
+      <td data-turbolinks="false"><%= link_to 'Delete', admin_tag_path(t.id), class: 'js-delete-tag', 'data-tag-name': t.name %></td>
       </tr>
   <% end %>
   </tbody>
