@@ -230,7 +230,7 @@ class Admin::EntriesController < AdminController
     end
 
     def update_location_tags
-      ReverseGeocodeJob.perform_later(@entry) if ENV['google_maps_api_key'].present?
+      ReverseGeocodeJob.perform_later(@entry) if ENV['google_maps_api_key'].present? && @entry.show_in_map?
     end
 
     def update_object_tags

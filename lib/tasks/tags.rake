@@ -20,7 +20,7 @@ namespace :tags do
 
     task :locations => [:environment] do
       Entry.find_each do |e|
-        ReverseGeocodeJob.perform_later(e)
+        ReverseGeocodeJob.perform_later(e) if e.show_in_map?
       end
     end
   end

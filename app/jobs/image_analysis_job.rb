@@ -2,12 +2,7 @@ class ImageAnalysisJob < ApplicationJob
   queue_as :default
 
   def perform(entry)
-    tags = []
-    entry.photos.each do |p|
-      tags << rekognize(p)
-    end
-    tags.flatten!
-    entry.object_list = tags
+    entry.object_list = entry.photos.map { |p| rekognize(p) }.flatten.uniq
     entry.save
   end
 

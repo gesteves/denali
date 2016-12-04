@@ -2,14 +2,7 @@ class ReverseGeocodeJob < ApplicationJob
   queue_as :default
 
   def perform(entry)
-    tags = []
-    entry.photos.each do |p|
-      if p.latitude.present? && p.longitude.present? && entry.show_in_map?
-        tags << geocode(p.latitude, p.longitude)
-      end
-    end
-    tags.flatten!
-    entry.location_list = tags
+    entry.location_list = entry.photos.select { |p| p.latitude.present? && p.longitude.present? }.map { |p| geocode(p.latitude, p.longitude) }.flatten.uniq
     entry.save
   end
 
