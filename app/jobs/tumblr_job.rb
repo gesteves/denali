@@ -9,8 +9,10 @@ class TumblrJob < ApplicationJob
       oauth_token_secret: ENV['tumblr_access_token_secret']
     })
 
+    tags = entry.combined_tag_list
+    tags += ENV['tumblr_tags'].split(/,\s*/) if ENV['tumblr_tags'].present?
     opts = {
-      tags: entry.combined_tag_list.join(', '),
+      tags: tags.join(', '),
       slug: entry.slug,
       caption: entry.formatted_content(link_title: true),
       link: entry.permalink_url,
