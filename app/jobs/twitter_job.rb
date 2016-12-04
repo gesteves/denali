@@ -11,7 +11,7 @@ class TwitterJob < ApplicationJob
     config = twitter.configuration
     tweet = build_tweet(entry, config)
     width = config.photo_sizes[:large].w
-    opts = set_coordinates(entry.photos.first)
+    opts = set_coordinates(entry)
     twitter.update_with_media(tweet, File.new(open(entry.photos.first.url(w: width)).path), opts)
   end
 
@@ -24,9 +24,10 @@ class TwitterJob < ApplicationJob
     "#{truncate(text, length: max_length, omission: '…')} #{entry.permalink_url}"
   end
 
-  def set_coordinates(photo)
+  def set_coordinates(entry)
     opts = {}
-    if photo.latitude.present? && photo.longitude.present?
+    photo = entry.photos.first
+    if entry.show_in_map? && photo.latitude.present? && photo.longitude.present?
       opts[:lat] = photo.latitude
       opts[:long] = photo.longitude
       opts[:display_coordinates] = true
