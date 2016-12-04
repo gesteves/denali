@@ -194,6 +194,10 @@ class Entry < ApplicationRecord
     tags.uniq { |t| t.slug }
   end
 
+  def combined_tag_list
+    self.combined_tags.map(&:name)
+  end
+
   private
 
   def url_opts(opts)

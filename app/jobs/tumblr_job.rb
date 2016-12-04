@@ -9,9 +9,8 @@ class TumblrJob < ApplicationJob
       oauth_token_secret: ENV['tumblr_access_token_secret']
     })
 
-    all_tags = entry.combined_tags.uniq { |t| t.slug }.map(&:name).join(', ')
     opts = {
-      tags: all_tags,
+      tags: entry.combined_tag_list.join(', '),
       slug: entry.slug,
       caption: entry.formatted_content(link_title: true),
       link: entry.permalink_url,
