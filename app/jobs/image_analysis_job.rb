@@ -8,7 +8,6 @@ class ImageAnalysisJob < ApplicationJob
     end
     tags.flatten!
     entry.object_list = tags
-    entry.tag_list.remove(tags)
     entry.save
   end
 

@@ -226,7 +226,6 @@ class Admin::EntriesController < AdminController
         tags << p.formatted_film if p.film_make.present? && p.film_type.present?
       end
       @entry.equipment_list = tags
-      @entry.tag_list.remove(tags)
       @entry.save
     end
 
