@@ -7,7 +7,6 @@ class Admin::EntriesController < AdminController
   after_action :update_position, only: [:create]
   after_action :update_equipment_tags, only: [:create, :update]
   after_action :update_location_tags, only: [:create, :update]
-  after_action :update_object_tags, only: [:create, :update]
   after_action :enqueue_invalidation, only: [:update]
 
   # GET /admin/entries
@@ -231,9 +230,5 @@ class Admin::EntriesController < AdminController
 
     def update_location_tags
       ReverseGeocodeJob.perform_later(@entry) if ENV['google_maps_api_key'].present? && @entry.show_in_map?
-    end
-
-    def update_object_tags
-      ImageAnalysisJob.perform_later(@entry)
     end
 end
