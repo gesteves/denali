@@ -25,6 +25,29 @@ namespace :tags do
     end
   end
 
+  namespace :clear do
+    task :equipment => [:environment] do
+      Entry.find_each do |e|
+        e.equipment_list = []
+        e.save
+      end
+    end
+
+    task :locations => [:environment] do
+      Entry.find_each do |e|
+        e.location_list = []
+        e.save
+      end
+    end
+
+    task :objects => [:environment] do
+      Entry.find_each do |e|
+        e.object_list = []
+        e.save
+      end
+    end
+  end
+
   task :cleanup => [:environment] do
     Entry.find_each do |e|
       e.tag_list.remove(e.equipment_list)
