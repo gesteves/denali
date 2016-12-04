@@ -14,7 +14,7 @@
               <div class="form__photo-focal-point js-photo-focal-point" style="display:none"></div>
             </div>
             <div class="form__photo-fields">
-              <%= p.text_area :caption, required: true, placeholder: 'Write the caption of the photo here…', class: 'form__input form__input--caption' %>
+              <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'form__input form__input--caption' %>
               <%= link_to 'Remove', '#', class: 'button button--danger form__photo-delete js-photo-delete' %>
               <%= p.hidden_field :id %>
               <%= p.hidden_field :position, class: 'js-photo-position' %>
