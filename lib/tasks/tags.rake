@@ -12,6 +12,12 @@ namespace :tags do
       end
     end
 
+    task :objects => [:environment] do
+      Entry.find_each do |e|
+        ImageAnalysisJob.perform_later(e)
+      end
+    end
+
     task :locations => [:environment] do
       Entry.find_each do |e|
         ReverseGeocodeJob.perform_later(e)
