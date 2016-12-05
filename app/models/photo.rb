@@ -24,6 +24,13 @@ class Photo < ApplicationRecord
   before_create :set_image
   after_image_post_process :save_exif, :save_dimensions
 
+  # Workaround for https://github.com/rails/rails/issues/26726
+  after_save :touch_entry
+
+  def touch_entry
+    self.entry.touch
+  end
+
   def self.oldest
     order('taken_at ASC').limit(1).try(:first)
   end
