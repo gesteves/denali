@@ -17,14 +17,15 @@ class PhotoTest < ActiveSupport::TestCase
   end
 
   test 'updating a photo should update entry' do
-    photo = photos(:peppers)
+    entry = entries(:peppers)
 
-    old_time = photo.entry.updated_at
+    original_updated_at = entry.updated_at
 
-    photo.caption = 'Foobar'
-    photo.save
+    entry.update! photos_attributes: { '0': { caption: 'Foo', id: entry.photos.first.id } }
 
-    new_time = photo.entry.updated_at
-    assert_not_equal new_time, old_time
+    entry.reload
+
+    new_updated_at = entry.updated_at
+    assert_not_equal original_updated_at, new_updated_at
   end
 end
