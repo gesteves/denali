@@ -6,6 +6,7 @@
       <a href="<%= queued_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'queued' %>">Queued <%= queued_count %></a>
       <a href="<%= drafts_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'drafts' %>">Drafts <%= drafts_count %></a>
       <a href="<%= imported_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'imported' %>">Imported <%= imported_count %></a>
+      <a href="<%= admin_tags_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'tags' %>">Tags <%= tag_count %></a>
     </div>
     <a href="<%= root_path %>" class="nav__link" data-turbolinks="false">View site</a>
     <a href="<%= admin_slack_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'slack' %>">Slack</a>
