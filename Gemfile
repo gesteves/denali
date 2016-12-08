@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 ruby '2.3.1'
 
 gem 'rails', '~> 5.0'
+gem 'pg'
 
 # Auth
 gem 'omniauth-google-oauth2'
@@ -50,12 +51,10 @@ gem 'twitter'
 group :production do
   gem 'passenger'
   gem 'lograge'
-  gem 'pg'
 end
 
 group :development do
   gem 'web-console', '~> 3.0'
-  gem 'pg'
 end
 
 group :development, :test do
@@ -67,7 +66,6 @@ group :development, :test do
 end
 
 group :test do
-  gem 'sqlite3'
   gem 'mock_redis'
   gem 'rails-controller-testing'
 end
