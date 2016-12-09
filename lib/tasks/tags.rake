@@ -13,8 +13,17 @@ namespace :tags do
     end
 
     task :locations => [:environment] do
-      Entry.find_each do |e|
-        ReverseGeocodeJob.perform_later(e) if e.show_in_map?
+      if ENV['TAG'].present?
+        Entry.tagged_with(ENV['TAG']).each do |e|
+          ReverseGeocodeJob.perform_later(e) if e.show_in_map?
+        end
+      elsif ENV['ENTRY_ID'].present?
+        e = Entry.find(ENV['ENTRY_ID'])
+        ReverseGeocodeJob.perform_later(e) if e.present? && e.show_in_map?
+      else
+        Entry.find_each do |e|
+          ReverseGeocodeJob.perform_later(e) if e.show_in_map?
+        end
       end
     end
   end
