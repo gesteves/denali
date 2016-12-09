@@ -1,11 +1,15 @@
 .error {
-  margin: 96px 0;
+  padding: 6rem 0;
   text-align: center;
 }
 
 .error__hed {
-  font-size: 196px;
+  font-size: 96px;
   line-height: 1;
+
+  @media (min-width: $bp-l) {
+    font-size: 196px;
+  }
 }
 
 .error__dek {
