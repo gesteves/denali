@@ -61,3 +61,11 @@ Denali.ImageZoom = (function () {
     handleResize: handleResize
   };
 })();
+
+if (document.readyState !== 'loading') {
+  Denali.ImageZoom.init();
+} else {
+  document.addEventListener('DOMContentLoaded', Denali.ImageZoom.init);
+}
+document.addEventListener('orientationchange', Denali.ImageZoom.init);
+window.addEventListener('resize', Denali.ImageZoom.handleResize);

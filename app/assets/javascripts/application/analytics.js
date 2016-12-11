@@ -18,3 +18,9 @@ Denali.Analytics = (function () {
     sendPageview: sendPageview
   };
 })();
+
+if (document.readyState !== 'loading') {
+  Denali.Analytics.sendPageview();
+} else {
+  document.addEventListener('DOMContentLoaded', Denali.Analytics.sendPageview);
+}

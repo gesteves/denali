@@ -26,5 +26,8 @@ Rails.application.config.assets.precompile += %w(
   components/pagination.css
   components/signin.css
   components/tags.css
-  map.js
+  application/analytics.js
+  application/image_zoom.js
+  application/lazy_load.js
+  application/map.js
 )

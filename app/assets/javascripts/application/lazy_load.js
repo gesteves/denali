@@ -102,3 +102,9 @@ Denali.LazyLoad = (function () {
     init : init
   };
 })();
+
+if (document.readyState !== 'loading') {
+  Denali.LazyLoad.init();
+} else {
+  document.addEventListener('DOMContentLoaded', Denali.LazyLoad.init);
+}

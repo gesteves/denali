@@ -1,3 +1,5 @@
+//= require ../vendors/loadjs
+
 var Denali = Denali || {};
 
 Denali.Map = (function () {
@@ -115,3 +117,9 @@ Denali.Map = (function () {
     init : init
   };
 })();
+
+if (document.readyState !== 'loading') {
+  Denali.Map.init();
+} else {
+  document.addEventListener('DOMContentLoaded', Denali.Map.init);
+}
