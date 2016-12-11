@@ -11,8 +11,8 @@
   <%= stylesheet_link_tag 'components/entry', media: 'all' %>
   <%= stylesheet_link_tag 'components/exif', media: 'all' %>
   <%= stylesheet_link_tag 'components/tags', media: 'all' %>
-  <%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
-  <%= stylesheet_link_tag 'components/pagination', media: 'all' %>
+  <%= stylesheet_link_tag 'components/entry_list', media: 'all' if @photoblog.show_related_entries? && @entry.is_published? %>
+  <%= stylesheet_link_tag 'components/pagination', media: 'all' if @entry.is_published?  %>
   <%= stylesheet_link_tag 'components/footer', media: 'all' %>
 <% end %>
 
