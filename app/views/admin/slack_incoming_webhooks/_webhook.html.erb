@@ -1,4 +1,4 @@
-<% cache "#{@app_version}/admin/slack_incoming_webhook/#{webhook.id}/#{webhook.updated_at.to_i}" do %>
+<% cache "admin/slack_incoming_webhook/#{webhook.id}/#{webhook.updated_at.to_i}" do %>
   <tr>
     <td><%= webhook.team_name %></td>
     <td><%= webhook.channel %></td>

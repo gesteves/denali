@@ -1,4 +1,4 @@
-cache "#{@app_version}/entries/atom/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+cache "entries/atom/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
   xml.instruct!
   xml.feed xmlns: 'http://www.w3.org/2005/Atom' do
     if @page.nil? || @page == 1
@@ -15,7 +15,7 @@ cache "#{@app_version}/entries/atom/page/#{@page}/count/#{@count}/#{@photoblog.i
     xml.updated @photoblog.updated_at.utc.strftime('%FT%TZ')
 
     @entries.each do |e|
-      cache "#{@app_version}/entry/atom/#{e.id}/#{e.updated_at.to_i}" do
+      cache "entry/atom/#{e.id}/#{e.updated_at.to_i}" do
         xml.entry do
           xml.id atom_tag(e.permalink_url, e.updated_at)
           xml.published e.published_at.utc.strftime('%FT%TZ')

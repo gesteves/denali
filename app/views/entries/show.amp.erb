@@ -10,10 +10,10 @@
     <link href="<%= image_path 'icon-120.png' %>" rel="apple-touch-icon" sizes="120x120">
     <link href="<%= image_path 'icon-76.png' %>" rel="apple-touch-icon" sizes="76x76">
     <link href="<%= image_path "favicon.png" %>" rel="icon" type="image/png">
-    <% cache "#{@app_version}/entry/amp/meta/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+    <% cache "entry/amp/meta/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
       <%= render partial: 'entries/entry_meta.html.erb', locals: { entry: @entry } %>
     <% end %>
-    <% cache "#{@app_version}/entry/amp/styles/#{@app_version}" do %>
+    <% cache "entry/amp/styles/#{@app_version}" do %>
       <style amp-custom>
         <%= inline_asset 'amp.css', strip_charset: true %>
       </style>
@@ -26,7 +26,7 @@
 
     <%= render partial: 'partials/header.html.erb', locals: { additional_classes: 'amp' } %>
 
-    <% cache "#{@app_version}/entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+    <% cache "entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
       <article class="entry <% if @entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
         <% @entry.photos.each do |photo| %>
           <figure class="entry__figure">
