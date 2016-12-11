@@ -6,7 +6,7 @@
   <%= javascript_include_tag 'application/analytics', async: true %>
   <%= javascript_include_tag 'application/image_zoom', async: true %>
   <%= javascript_include_tag 'application/lazy_load', async: true %>
-  <script src="https://use.typekit.net/<%= ENV['typekit_id'] %>.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
+  <%= render partial: 'partials/typekit', locals: { kit_id: ENV['typekit_id'] } if ENV['typekit_id'].present? %>
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>

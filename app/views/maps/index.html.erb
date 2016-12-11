@@ -23,13 +23,11 @@
   <meta name="twitter:description" content="<%= @photoblog.name %> photos, mapped.">
   <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
   <meta name="twitter:card" content="summary_large_image">
-  <link href="https://api.tiles.mapbox.com" rel="preconnect" crossorigin>
-  <link href="https://api.mapbox.com" rel="preconnect" crossorigin>
-  <%= javascript_include_tag 'application/map', async: true %>
-  <script src="https://use.typekit.net/<%= ENV['typekit_id'] %>.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
   <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/v2.4.0/mapbox.css" media="all">
   <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" media="all">
   <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" media="all">
+  <%= javascript_include_tag 'application/map', async: true %>
+  <%= render partial: 'partials/typekit', locals: { kit_id: ENV['typekit_id'] } if ENV['typekit_id'].present? %>
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>
