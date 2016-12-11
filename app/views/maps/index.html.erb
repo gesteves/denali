@@ -25,7 +25,6 @@
   <meta name="twitter:card" content="summary_large_image">
   <link href="https://api.tiles.mapbox.com" rel="preconnect" crossorigin>
   <link href="https://api.mapbox.com" rel="preconnect" crossorigin>
-  <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= javascript_include_tag 'application', async: true %>
   <%= javascript_include_tag 'map', async: true %>
   <script src="https://use.typekit.net/<%= ENV['typekit_id'] %>.js" onload="try{Typekit.load({async:true});}catch(e){}" async></script>
@@ -35,7 +34,9 @@
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>
-  <%= render partial: 'partials/header.html.erb', locals: { additional_classes: 'header--map' } %>
+  <%= stylesheet_link_tag 'base', media: 'all' %>
+  <%= render partial: 'partials/header.html.erb', locals: { is_map: true } %>
+  <%= stylesheet_link_tag 'components/map', media: 'all' %>
   <div id="map" class="map" role="main"></div>
   <div class="map__loading js-loading">
     <%= inline_svg 'spinner', 'map__loading-spinner' %>

@@ -1,4 +1,4 @@
-<% cache "#{@cache_version}/admin/nav/#{active_nav || 'none'}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "#{@app_version}/admin/nav/#{active_nav || 'none'}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <nav class="nav">
     <div class="nav__group">
       <a href="<%= new_admin_entry_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'new' %>">Post a new entry</a>

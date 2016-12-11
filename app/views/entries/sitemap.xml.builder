@@ -1,4 +1,4 @@
-cache "#{@cache_version}/sitemap/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+cache "#{@app_version}/sitemap/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
   xml.instruct!
   xml.urlset xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9' do
     xml.url do

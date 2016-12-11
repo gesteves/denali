@@ -1,4 +1,5 @@
-<% cache "#{@cache_version}/entry/pagination/#{@photoblog.id}/#{@photoblog.updated_at.to_i}/#{entry.id}/#{entry.updated_at.to_i}" do %>
+<% cache "#{@app_version}/entry/pagination/#{@photoblog.id}/#{@photoblog.updated_at.to_i}/#{entry.id}/#{entry.updated_at.to_i}" do %>
+  <%= stylesheet_link_tag 'components/pagination', media: 'all' %>
   <nav class="pagination" role="navigation">
     <span class="pagination__link">
       <% if entry.newer.nil? %>

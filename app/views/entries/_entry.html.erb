@@ -1,4 +1,5 @@
-<% cache "#{@cache_version}/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+<% cache "#{@app_version}/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+  <%= stylesheet_link_tag 'components/entry', media: 'all' %>
   <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
     <% entry.photos.each do |photo| %>
       <div class="entry__photo-container" <%= intrinsic_ratio_width photo %>>

@@ -1,5 +1,5 @@
 <% content_for :meta do %>
-  <% cache "#{@cache_version}/entries/meta/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% cache "#{@app_version}/entries/meta/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <title><%= sanitize "Entries tagged “#{@tags.first.name}” &middot; #{@photoblog.name}" %><%= sanitize " &middot Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <link rel="canonical" href="<%= tag_url(@tags.first.slug) %>">
@@ -25,7 +25,8 @@
   <% end %>
 <% end %>
 
-<% cache "#{@cache_version}/entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "#{@app_version}/entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
   <ol class="entry-list" role="main">
     <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { lazy_load_start_index: 12 } %>
   </ol>

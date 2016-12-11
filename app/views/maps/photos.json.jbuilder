@@ -1,4 +1,4 @@
-json.cache! "#{@cache_version}/maps/photos/#{@dpr}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+json.cache! "#{@app_version}/maps/photos/#{@dpr}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
   json.array! @photoblog.entries.mapped do |e|
     e.photos.each do |p|
       json.type 'Feature'

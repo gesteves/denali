@@ -1,4 +1,6 @@
-<header role="banner" class="header <%= additional_classes if local_assigns[:additional_classes] %>">
+<%= stylesheet_link_tag 'components/header', media: 'all' %>
+<%= stylesheet_link_tag 'components/map-header', media: 'all' if local_assigns[:is_map] %>
+<header role="banner" class="header <%= 'header--map' if local_assigns[:is_map] %>">
   <div class="header__section">
     <p class="header__tagline"><%= sanitize @photoblog.description %></p>
   </div>
