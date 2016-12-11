@@ -1,4 +1,3 @@
-//= require turbolinks
 //= require ./vendors/jquery
 //= require ./vendors/jquery_ui
 //= require ./vendors/awesomplete
@@ -16,8 +15,8 @@ if (document.readyState !== 'loading') {
   Denali.Tags.init();
 }
 
-document.addEventListener('turbolinks:load', Denali.Entries.init);
-document.addEventListener('turbolinks:load', Denali.Flash.init);
-document.addEventListener('turbolinks:load', Denali.Queue.init);
-document.addEventListener('turbolinks:load', Denali.LazyLoad.init);
-document.addEventListener('turbolinks:load', Denali.Tags.init);
+document.addEventListener('DOMContentLoaded', Denali.Entries.init);
+document.addEventListener('DOMContentLoaded', Denali.Flash.init);
+document.addEventListener('DOMContentLoaded', Denali.Queue.init);
+document.addEventListener('DOMContentLoaded', Denali.LazyLoad.init);
+document.addEventListener('DOMContentLoaded', Denali.Tags.init);

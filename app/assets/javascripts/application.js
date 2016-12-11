@@ -1,4 +1,3 @@
-//= require turbolinks
 //= require ./application/analytics
 //= require ./application/image_zoom
 //= require ./application/lazy_load
@@ -11,8 +10,8 @@ if (document.readyState !== 'loading') {
   Denali.Analytics.sendPageview();
 }
 
-document.addEventListener('turbolinks:load', Denali.ImageZoom.init);
-document.addEventListener('turbolinks:load', Denali.LazyLoad.init);
-document.addEventListener('turbolinks:load', Denali.Analytics.sendPageview);
+document.addEventListener('DOMContentLoaded', Denali.ImageZoom.init);
+document.addEventListener('DOMContentLoaded', Denali.LazyLoad.init);
+document.addEventListener('DOMContentLoaded', Denali.Analytics.sendPageview);
 document.addEventListener('orientationchange', Denali.ImageZoom.init);
 window.addEventListener('resize', Denali.ImageZoom.handleResize);
