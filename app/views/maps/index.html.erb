@@ -23,6 +23,10 @@
   <meta name="twitter:description" content="<%= @photoblog.name %> photos, mapped.">
   <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
   <meta name="twitter:card" content="summary_large_image">
+  <%= stylesheet_link_tag 'base', media: 'all' %>
+  <%= stylesheet_link_tag 'components/header', media: 'all' %>
+  <%= stylesheet_link_tag 'components/map-header', media: 'all' %>
+  <%= stylesheet_link_tag 'components/follow', media: 'all' %>
   <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/v2.4.0/mapbox.css" media="all">
   <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" media="all">
   <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" media="all">
@@ -31,7 +35,6 @@
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>
-  <%= stylesheet_link_tag 'base', media: 'all' %>
   <%= render partial: 'partials/header.html.erb', locals: { is_map: true } %>
   <%= stylesheet_link_tag 'components/map', media: 'all' %>
   <div id="map" class="map" role="main"></div>

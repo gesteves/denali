@@ -2,7 +2,14 @@
   <title><%= @errors.first[:message] %> &middot; <%= @photoblog.name %></title>
 <% end %>
 
-<%= stylesheet_link_tag 'components/error', media: 'all' %>
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'base', media: 'all' %>
+  <%= stylesheet_link_tag 'components/header', media: 'all' %>
+  <%= stylesheet_link_tag 'components/follow', media: 'all' %>
+  <%= stylesheet_link_tag 'components/error', media: 'all' %>
+  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
+<% end %>
+
 <div class="error" role="main">
   <h1 class="error__hed"><%= @errors.first[:status] %></h1>
   <h2 class="error__dek"><%= @errors.first[:message] %>.</h2>

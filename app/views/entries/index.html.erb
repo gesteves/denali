@@ -25,8 +25,16 @@
   <% end %>
 <% end %>
 
-<% cache "#{@app_version}/entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'base', media: 'all' %>
+  <%= stylesheet_link_tag 'components/header', media: 'all' %>
+  <%= stylesheet_link_tag 'components/follow', media: 'all' %>
   <%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
+  <%= stylesheet_link_tag 'components/pagination', media: 'all' %>
+  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
+<% end %>
+
+<% cache "#{@app_version}/entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <ol class="entry-list" role="main">
     <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { lazy_load_start_index: 12 } %>
   </ol>
