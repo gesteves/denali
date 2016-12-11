@@ -1,5 +1,5 @@
 <% cache "#{@cache_version}/admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
-  <li class="entry" <% if entry.is_queued? %>data-position="<%= entry.position %>"<% end %>  data-turbolinks="false">
+  <li class="entry" <% if entry.is_queued? %>data-position="<%= entry.position %>"<% end %>>
     <% if entry.is_photo? %>
       <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.id, entry.slug) %>" <%= intrinsic_ratio_padding(entry.photos.first) if entry.is_photo? %>>
         <%= lazy_responsive_image_tag entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
@@ -10,7 +10,7 @@
       <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
     </div>
     <div class="entry__meta">
-      <div data-turbolinks="true">
+      <div>
         <% entry.combined_tags.each do |t| %>
           <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
         <% end %>
