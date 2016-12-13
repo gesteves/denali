@@ -3,4 +3,24 @@
 @import 'base/mixins';
 
 @import '../blocks/entry';
-@import '../blocks/misc';
+
+.slack-button {
+  display: block;
+  height: 40px;
+  margin: 20px auto;
+  width: 139px;
+}
+
+// scss-lint:disable ImportantRule
+.entry__photo-container--zoom {
+  width: auto !important;
+}
+
+.twitter-tweet {
+  margin: 24px auto 0 !important;
+
+  @media (min-width: $bp-s) {
+    margin: 36px auto 0 !important;
+  }
+}
+// scss-lint:enable ImportantRule
