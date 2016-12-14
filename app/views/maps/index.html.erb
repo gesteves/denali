@@ -33,7 +33,7 @@
   <link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.css" media="all">
   <link rel="stylesheet" href="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/MarkerCluster.Default.css" media="all">
   <%= javascript_include_tag 'application/map', async: true %>
-  <%= render partial: 'partials/typekit', locals: { kit_id: ENV['typekit_id'] } if ENV['typekit_id'].present? %>
+  <%= javascript_include_tag "https://use.typekit.net/#{ENV['typekit_id']}.js", async: true, onload: 'try{Typekit.load({async:true})}catch(e){}' if ENV['typekit_id'].present? %>
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
 <body>
