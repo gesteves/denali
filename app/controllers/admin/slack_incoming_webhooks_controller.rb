@@ -4,6 +4,7 @@ class Admin::SlackIncomingWebhooksController < AdminController
     @webhooks = @photoblog.slack_incoming_webhooks.order('created_at DESC').page(@page).per(100)
     @page_title = 'Slack Incoming Webhooks'
     @client_id = ENV['slack_client_id']
+    @redirect_uri = admin_slack_url({ host: request.host_with_port })
     if params[:code].present?
       @webhook = save_webhook(params[:code])
       if @webhook.present?
@@ -27,7 +28,7 @@ class Admin::SlackIncomingWebhooksController < AdminController
   end
 
   def get_access_token(code)
-    response = HTTParty.get("https://slack.com/api/oauth.access?code=#{code}&client_id=#{ENV['slack_client_id']}&client_secret=#{ENV['slack_client_secret']}&redirect_uri=#{slack_url}")
+    response = HTTParty.get("https://slack.com/api/oauth.access?code=#{code}&client_id=#{ENV['slack_client_id']}&client_secret=#{ENV['slack_client_secret']}&redirect_uri=#{admin_slack_url({ host: request.host_with_port })}")
     JSON.parse(response.body)
   end
 end
