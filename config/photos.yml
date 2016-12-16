@@ -68,3 +68,13 @@ admin_edit:
   sizes:
     - "(min-width: 800px) 300px"
     - calc(100vw - 60px)
+map:
+  src: 300
+  srcset:
+    - 300
+    - 600
+    - 900
+  sizes:
+    - 300px
+  square: Yes
+  auto: 'format,compress'

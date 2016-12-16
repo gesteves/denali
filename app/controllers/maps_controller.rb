@@ -7,7 +7,6 @@ class MapsController < ApplicationController
   end
 
   def photos
-    @dpr = params[:dpr]
     expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)
       respond_to do |format|
