@@ -7,6 +7,7 @@ json.cache! "maps/photos/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
         json.coordinates [p.longitude, p.latitude]
       end
       json.properties do
+        json.id e.id
         json.description tooltip_content(p, e)
       end
     end
