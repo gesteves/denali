@@ -12,6 +12,7 @@ class Admin::SlackIncomingWebhooksController < AdminController
       else
         flash[:alert] = 'Welp, the Slack webhook couldn’t be saved.'
       end
+      redirect_to admin_slack_path
     end
   end
 
