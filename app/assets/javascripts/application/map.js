@@ -87,10 +87,11 @@ Denali.Map = (function () {
       marker.on('popupopen', function () {
         var marker = this;
         var request = new XMLHttpRequest();
-        request.open('GET', '/map/photo/' + photo_id, true);
+        request.open('GET', '/map/photo/' + photo_id + '.json', true);
         request.onload = function() {
           if (request.status >= 200 && request.status < 400) {
-            marker.setPopupContent(request.responseText);
+            var response = JSON.parse(request.responseText);
+            marker.setPopupContent(response.html);
             marker.off('popupopen');
           }
         };

@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   get '/preview/:id(/:slug)'           => 'entries#preview', constraints: { id: /\d+/ }, defaults: { format: 'html' }, :as => :preview_entry
   get '/map'                           => 'maps#index', :as => :map
   get '/map/photos.:format'            => 'maps#photos'
-  get '/map/photo/:id'                 => 'maps#photo'
+  get '/map/photo/:id.:format'         => 'maps#photo'
   get '/sitemap.:format'               => 'entries#sitemap', defaults: { format: 'xml' }, :as => :sitemap
   get '/about'                         => 'blogs#about', :as => :about
   get '/oembed'                        => 'oembed#show', :as => :oembed

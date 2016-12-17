@@ -21,7 +21,7 @@ class MapsController < ApplicationController
     raise ActiveRecord::RecordNotFound if @photo.nil?
     if stale?(@photo, public: true)
       respond_to do |format|
-        format.html { render layout: nil }
+        format.json
       end
     end
   end
