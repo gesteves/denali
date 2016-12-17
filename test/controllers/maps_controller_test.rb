@@ -17,8 +17,8 @@ class MapsControllerTest < ActionController::TestCase
   test "should only return mapped images" do
     get :photos, params: { format: 'json' }
     json = JSON.parse(@response.body)
-    assert_not_empty json.select { |e| e['properties']['id'] == entries(:peppers).id }
-    assert_empty json.select { |e| e['properties']['id'] == entries(:potomac).id }
+    assert_not_empty json.select { |e| e['properties']['id'] == photos(:peppers).id }
+    assert_empty json.select { |e| e['properties']['id'] == photos(:potomac).id }
   end
 
 end

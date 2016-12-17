@@ -73,16 +73,28 @@ Denali.Map = (function () {
     layer.on('layeradd', function(e) {
       var marker = e.layer,
           feature = marker.feature;
-      var content = feature.properties.description;
+      var photo_id = feature.properties.id;
       marker.setIcon(L.divIcon({
           className: 'map__marker map__marker--point',
           html: '&bull;',
           iconSize: [10, 10],
           iconAnchor: [5, 5]
         }));
-      marker.bindPopup(content, {
+      this.bindPopup('', {
         closeButton: true,
         minWidth: 300
+      });
+      marker.on('popupopen', function () {
+        var marker = this;
+        var request = new XMLHttpRequest();
+        request.open('GET', '/map/photo/' + photo_id, true);
+        request.onload = function() {
+          if (request.status >= 200 && request.status < 400) {
+            marker.setPopupContent(request.responseText);
+            marker.off('popupopen');
+          }
+        };
+        request.send();
       });
     });
     layer.on('ready', function() {
