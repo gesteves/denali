@@ -9,14 +9,13 @@ Denali.Map = (function () {
 
   var opts = {
     map_container_id  : 'map',
-    default_latitude  : 0,
-    default_longitude : 0
+    default_latitude  : 10.46,
+    default_longitude : -66.96
   };
 
   var map,
       loading,
       hash,
-      zoom,
       show_bar = true;
 
   var init = function () {
@@ -24,8 +23,7 @@ Denali.Map = (function () {
       return;
     }
     loading = document.querySelector('.js-loading');
-    zoom = getZoom();
-    window.location.hash = zoom + '/' + opts.default_latitude + '/' + opts.default_longitude;
+    window.location.hash = 1 + '/' + opts.default_latitude + '/' + opts.default_longitude;
     initMap();
   };
 
@@ -58,7 +56,7 @@ Denali.Map = (function () {
         north_east = L.latLng(90, 180),
         bounds = L.latLngBounds(south_west, north_east);
     L.mapbox.accessToken = 'pk.eyJ1IjoiZ2VzdGV2ZXMiLCJhIjoiY2lrY3EyeDA3MG03Y3Y5a3V6d3MwNHR3cSJ9.qG9UBVJvti71fNvW5iKONA';
-    map = L.mapbox.map(opts.map_container_id, 'gesteves.ce0e3aae', { minZoom: zoom, maxZoom: 18, maxBounds: bounds });
+    map = L.mapbox.map(opts.map_container_id, 'gesteves.ce0e3aae', { minZoom: getZoom(), maxZoom: 18, maxBounds: bounds });
     var layer = L.mapbox.featureLayer();
 
     layer.on('layeradd', function(e) {
