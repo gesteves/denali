@@ -23,6 +23,8 @@
   <meta name="twitter:description" content="<%= @photoblog.name %> photos, mapped.">
   <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://a.tiles.mapbox.com" crossorigin>
+  <link rel="preconnect" href="https://b.tiles.mapbox.com" crossorigin>
   <%= stylesheet_link_tag 'base', media: 'all' %>
   <%= stylesheet_link_tag 'components/header', media: 'all' %>
   <%= stylesheet_link_tag 'components/map-header', media: 'all' %>
