@@ -1,6 +1,6 @@
 <div class="follow">
   <a href="<%= about_path %>" class="follow__link" title="About <%= @photoblog.name %>"><%= inline_svg 'about', 'follow__icon' %></a>
-  <a href="<%= map_path %>" class="follow__link" title="Map"><%= inline_svg 'map', 'follow__icon' %></a>
+  <a href="<%= map_path(trailing_slash: true)  %>" class="follow__link" title="Map"><%= inline_svg 'map', 'follow__icon' %></a>
   <a href="mailto:contact@allencompassingtrip.com" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
   <a href="<%= simple_feed_path %>" class="follow__link" title="Subscribe to Feed"><%= inline_svg 'feed', 'follow__icon' %></a>
   <a href="https://www.instagram.com/gesteves/" class="follow__link" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>
