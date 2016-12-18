@@ -23,7 +23,9 @@ Denali.Map = (function () {
       return;
     }
     loading = document.querySelector('.js-loading');
-    window.location.hash = 1 + '/' + opts.default_latitude + '/' + opts.default_longitude;
+    if (!window.location.hash) {
+      window.location.hash = 1 + '/' + opts.default_latitude + '/' + opts.default_longitude;
+    }
     initMap();
   };
 
