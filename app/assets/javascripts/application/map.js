@@ -52,14 +52,14 @@ Denali.Map = (function () {
     }
   };
 
-  var requestPopup = function (marker, photo_id) {
+  var requestPopup = function () {
+    var marker = this;
     var request = new XMLHttpRequest();
-    request.open('GET', '/map/photo/' + photo_id + '.json', true);
+    request.open('GET', '/map/photo/' + marker.photo_id + '.json', true);
     request.onload = function() {
       if (request.status >= 200 && request.status < 400) {
         var response = JSON.parse(request.responseText);
         marker.setPopupContent(response.html);
-        marker.off('popupopen');
       }
     };
     request.send();
@@ -68,7 +68,7 @@ Denali.Map = (function () {
   var setUpMarker = function (e) {
     var marker = e.layer,
         feature = marker.feature;
-    var photo_id = feature.properties.id;
+    marker.photo_id = feature.properties.id;
     marker.setIcon(L.divIcon({
         className: 'map__marker map__marker--point',
         html: '&bull;',
@@ -79,9 +79,7 @@ Denali.Map = (function () {
       closeButton: true,
       minWidth: 300
     });
-    marker.on('popupopen', function () {
-      requestPopup(this, photo_id);
-    });
+    marker.addOneTimeEventListener('popupopen', requestPopup);
   };
 
   var setUpClusterIcon = function (cluster) {
