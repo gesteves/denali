@@ -5,7 +5,6 @@ class MapsController < ApplicationController
   layout false
 
   def index
-    fresh_when @photoblog, public: true
   end
 
   def photos
