@@ -2,4 +2,8 @@
 @import 'base/functions';
 @import 'base/mixins';
 
+@import 'vendors/mapbox';
+@import 'vendors/markercluster';
+@import 'vendors/markercluster.default';
+
 @import '../blocks/map';

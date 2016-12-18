@@ -1,4 +1,5 @@
-//= require ../vendors/loadjs
+//= require ../vendors/mapbox
+//= require ../vendors/markercluster
 
 var Denali = Denali || {};
 
@@ -20,20 +21,7 @@ Denali.Map = (function () {
       return;
     }
     loading = document.querySelector('.js-loading');
-    if (typeof map === 'undefined') {
-      loadMapbox();
-    } else {
-      map.remove();
-      initMap(opts.default_latitude, opts.default_longitude);
-    }
-  };
-
-  var loadMapbox = function () {
-    loadJS('https://api.tiles.mapbox.com/mapbox.js/v2.4.0/mapbox.js', function () {
-      loadJS('https://api.mapbox.com/mapbox.js/plugins/leaflet-markercluster/v0.4.0/leaflet.markercluster.js', function () {
-        initMap(opts.default_latitude, opts.default_longitude);
-      });
-    });
+    initMap(opts.default_latitude, opts.default_longitude);
   };
 
   var showLoadingSpinner = function () {
