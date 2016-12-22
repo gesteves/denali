@@ -13,18 +13,15 @@ Rails.application.config.assets.precompile += %w(
   admin.js
   amp.css
   base.css
-  components/button.css
   components/entry_list.css
   components/entry.css
   components/error.css
-  components/exif.css
   components/footer.css
   components/header.css
   components/map-header.css
   components/map.css
   components/pagination.css
   components/signin.css
-  components/tags.css
   application/image_zoom.js
   application/lazy_load.js
   application/map.js
