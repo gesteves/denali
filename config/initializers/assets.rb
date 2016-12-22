@@ -18,7 +18,6 @@ Rails.application.config.assets.precompile += %w(
   components/entry.css
   components/error.css
   components/exif.css
-  components/follow.css
   components/footer.css
   components/header.css
   components/map-header.css
