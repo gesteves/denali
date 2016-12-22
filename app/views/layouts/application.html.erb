@@ -4,8 +4,8 @@
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
   <%= yield :stylesheets %>
-  <%= javascript_include_tag 'application/image_zoom', async: true %>
-  <%= javascript_include_tag 'application/lazy_load', async: true %>
+  <%= javascript_include_tag 'application/image_zoom', defer: true %>
+  <%= javascript_include_tag 'application/lazy_load', defer: true %>
   <%= javascript_include_tag "https://use.typekit.net/#{ENV['typekit_id']}.js", async: true, onload: 'try{Typekit.load({async:true})}catch(e){}' if ENV['typekit_id'].present? %>
   <%= render partial: 'partials/analytics' if Rails.env.production? && ENV['analytics_id'].present? %>
 </head>
