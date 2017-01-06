@@ -20,7 +20,7 @@
       box-shadow: 0 0 0 2px shade($color-red, 30%), 0 2px 4px 0 black;
     }
 
-    &.map__marker--point {
+    &.map__marker--bloop {
       box-shadow: 0 0 0 1px shade($color-red, 30%), 0 2px 4px 0 black;
       font-size: 16px;
       font-weight: bold;
@@ -55,7 +55,7 @@
   0% {
     transform: rotate(0deg);
   }
-  
+
   100% {
     transform: rotate(360deg);
   }

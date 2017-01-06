@@ -70,10 +70,10 @@ Denali.Map = (function () {
         feature = marker.feature;
     marker.photo_id = feature.properties.id;
     marker.setIcon(L.divIcon({
-        className: 'map__marker map__marker--point',
+        className: 'map__marker map__marker--bloop',
         html: '&bull;',
-        iconSize: [10, 10],
-        iconAnchor: [5, 5]
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
       }));
     this.bindPopup('', {
       closeButton: true,
@@ -86,8 +86,8 @@ Denali.Map = (function () {
     return L.divIcon({
         className: 'map__marker map__marker--cluster',
         html: cluster.getChildCount(),
-        iconSize: cluster.getChildCount() > 99 ? [30, 30] : [20, 20],
-        iconAnchor: cluster.getChildCount() > 99 ? [15, 15] : [10, 10]
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
       }
     );
   };
