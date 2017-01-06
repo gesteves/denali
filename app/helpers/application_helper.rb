@@ -63,7 +63,7 @@ module ApplicationHelper
   end
 
   def publish_date_for_queued(entry, format = '%A, %B %-d')
-    days = if Time.now.utc.hour < 16
+    days = if Time.now.utc.hour < 14
       entry.position - 1
     else
       entry.position
