@@ -35,7 +35,6 @@
 <% end %>
 
 <% cache "entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
   <ol class="entry-list" role="main">
     <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { lazy_load_start_index: 12 } %>
   </ol>
