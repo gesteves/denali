@@ -25,7 +25,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        BufferJob.perform_later(entry, 'facebook')
+        BufferJob.perform_later(entry, { service: 'facebook' })
         puts "Entry \"#{entry.title}\" queued for export to Facebook."
       end
     end

@@ -174,7 +174,7 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_facebook
-    BufferJob.perform_later(self, 'facebook') if self.is_published? && self.is_photo? && self.post_to_facebook
+    BufferJob.perform_later(self, { service: 'facebook' }) if self.is_published? && self.is_photo? && self.post_to_facebook
   end
 
   def enqueue_flickr
