@@ -31,6 +31,16 @@ namespace :export do
     end
   end
 
+  task :instagram => [:environment] do
+    if ENV['ENTRY_ID'].present?
+      entry = Entry.find(ENV['ENTRY_ID'])
+      if entry.present?
+        BufferJob.perform_later(entry, { service: 'instagram', include_link: false, width: 1080 })
+        puts "Entry \"#{entry.title}\" queued for export to Instagram."
+      end
+    end
+  end
+
   task :flickr => [:environment] do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])

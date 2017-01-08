@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161130001423) do
+ActiveRecord::Schema.define(version: 20170108135342) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,8 +48,9 @@ ActiveRecord::Schema.define(version: 20161130001423) do
     t.boolean  "post_to_facebook"
     t.boolean  "post_to_flickr"
     t.boolean  "show_in_map",       default: true
-    t.boolean  "post_to_slack"
     t.boolean  "post_to_pinterest"
+    t.boolean  "post_to_slack"
+    t.boolean  "post_to_instagram"
     t.index ["blog_id"], name: "index_entries_on_blog_id", using: :btree
     t.index ["photos_count"], name: "index_entries_on_photos_count", using: :btree
     t.index ["published_at"], name: "index_entries_on_published_at", using: :btree

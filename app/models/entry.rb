@@ -159,6 +159,7 @@ class Entry < ApplicationRecord
       self.enqueue_tumblr
       self.enqueue_facebook
       self.enqueue_flickr
+      self.enqueue_instagram
       self.enqueue_pinterest
       self.enqueue_slack
     end
@@ -175,6 +176,10 @@ class Entry < ApplicationRecord
 
   def enqueue_facebook
     BufferJob.perform_later(self, { service: 'facebook' }) if self.is_published? && self.is_photo? && self.post_to_facebook
+  end
+
+  def enqueue_instagram
+    BufferJob.perform_later(self, { service: 'instagram', include_link: false, width: 1080 }) if self.is_published? && self.is_photo? && self.post_to_instagram
   end
 
   def enqueue_flickr
