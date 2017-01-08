@@ -10,11 +10,4 @@ namespace :queue do
       puts 'Queued entry failed to publish.'
     end
   end
-
-  task :instagram => [:environment] do
-    Entry.queued.each do |e|
-      e.post_to_instagram = true
-      e.save
-    end
-  end
 end
