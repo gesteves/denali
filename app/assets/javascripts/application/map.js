@@ -95,7 +95,7 @@ Denali.Map = (function () {
   var setUpMarkerClusters = function (e) {
     var cluster_group = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
-      maxClusterRadius: 60,
+      maxClusterRadius: 45,
       spiderfyDistanceMultiplier: 3,
       iconCreateFunction: setUpClusterIcon
     });
