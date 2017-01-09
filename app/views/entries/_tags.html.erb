@@ -1,5 +1,5 @@
 <p class="tags">
-  <% tags.each do |tag| %>
+  <% tags.sort_by { |t| t.name }.each do |tag| %>
     <%= link_to tag.name, tag_path(tag.slug), { rel: 'tag' } %>
   <% end %>
 </p>
