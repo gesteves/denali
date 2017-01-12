@@ -179,7 +179,7 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_instagram
-    BufferJob.perform_later(self, { service: 'instagram', include_link: false, width: 1080 }) if self.is_published? && self.is_photo? && self.post_to_instagram
+    BufferJob.perform_later(self, { service: 'instagram', include_link: false, width: 1080, include_hashtags: true }) if self.is_published? && self.is_photo? && self.post_to_instagram
   end
 
   def enqueue_flickr

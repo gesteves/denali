@@ -2,12 +2,15 @@ class BufferJob < ApplicationJob
   queue_as :default
 
   def perform(entry, opts)
-    opts.reverse_merge!({ include_link: true, width: 2048, include_hashtags: true })
+    opts.reverse_merge!({ include_link: true, width: 2048, include_hashtags: false })
 
     text = entry.plain_title
     text += " #{entry.permalink_url}" if opts[:include_link]
-    all_tags = entry.combined_tags.sort_by { |t| t.name }.map { |t| "##{t.slug.gsub(/-/, '')}" }.join(' ')
-    text += "\n\n#{all_tags}" if opts[:include_hashtags]
+
+    if opts[:include_hashtags]
+      all_tags = entry.combined_tags.sort_by { |t| t.name }.map { |t| "##{t.slug.gsub(/-/, '')}" }.join(' ')
+      text += "\n\n#{all_tags}"
+    end
 
     media = {
       picture: entry.photos.first.url(w: opts[:width]),
