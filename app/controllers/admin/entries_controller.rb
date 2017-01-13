@@ -221,6 +221,7 @@ class Admin::EntriesController < AdminController
     def update_equipment_tags
       tags = []
       @entry.photos.each do |p|
+        tags << p.formatted_make
         tags << p.formatted_camera
         tags << p.formatted_film if p.film_make.present? && p.film_type.present?
       end

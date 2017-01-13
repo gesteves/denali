@@ -88,8 +88,8 @@ class Photo < ApplicationRecord
     ((self.width.to_f * height.to_f)/self.height.to_f).round
   end
 
-  def formatted_camera
-    formatted_make = if self.make =~ /olympus/i
+  def formatted_make
+    if self.make =~ /olympus/i
       'Olympus'
     elsif self.make =~ /nikon/i
       'Nikon'
@@ -100,7 +100,10 @@ class Photo < ApplicationRecord
     else
       self.make.titlecase
     end
-    "#{formatted_make} #{self.model.gsub(%r{#{formatted_make}}i, '').strip}"
+  end
+
+  def formatted_camera
+    "#{self.formatted_make} #{self.model.gsub(%r{#{formatted_make}}i, '').strip}"
   end
 
   def formatted_film

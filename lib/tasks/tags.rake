@@ -4,6 +4,7 @@ namespace :tags do
       Entry.find_each do |e|
         tags = []
         e.photos.each do |p|
+          tags << p.formatted_make
           tags << p.formatted_camera
           tags << p.formatted_film if p.film_make.present? && p.film_type.present?
         end
