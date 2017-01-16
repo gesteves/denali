@@ -34,12 +34,6 @@ class Admin::EntriesController < AdminController
     @page_title = "Entries tagged \"#{@tag_list.first}\""
   end
 
-  def imported
-    @page = params[:page] || 1
-    @entries = @photoblog.entries.published.joins(:photos).where('photos.width <= ?', 1280).page(@page)
-    @page_title = "Imported"
-  end
-
   # GET /admin/entries/new
   def new
     @entry = @photoblog.entries.new

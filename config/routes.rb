@@ -24,7 +24,6 @@ Rails.application.routes.draw do
         get 'queued'
         get 'drafts'
         get 'photo'
-        get 'imported'
       end
     end
 

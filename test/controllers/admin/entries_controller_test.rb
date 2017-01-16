@@ -30,13 +30,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_template :drafts
   end
 
-  test 'should render imported page' do
-    get :imported
-    assert_response :success
-    assert_template layout: 'layouts/admin'
-    assert_template :imported
-  end
-
   test 'should render tag page' do
     get :tagged, params: { tag: 'washington' }
     assert_response :success
