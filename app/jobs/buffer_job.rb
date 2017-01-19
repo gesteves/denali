@@ -8,8 +8,9 @@ class BufferJob < ApplicationJob
     text += " #{entry.permalink_url}" if opts[:include_link]
 
     if opts[:include_hashtags]
-      all_tags = entry.combined_tags.sort_by { |t| t.name }.map { |t| "##{t.slug.gsub(/-/, '')}" }.join(' ')
-      text += "\n\n#{all_tags}"
+      all_tags = entry.combined_tags.sort_by { |t| t.name }.map { |t| "##{t.slug.gsub(/-/, '')}" }
+      all_tags += ENV['instagram_tags'].split(/,\s*/).map { |t| "##{t}" } if ENV['instagram_tags'].present? && opts[:service] == 'instagram'
+      text += "\n\n#{all_tags.join(' ')}"
     end
 
     media = {
