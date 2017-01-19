@@ -42,10 +42,6 @@ class EntriesController < ApplicationController
           redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
         }
         format.json
-        format.amp {
-          @is_amp = true
-          render layout: nil
-        }
       end
     end
   end

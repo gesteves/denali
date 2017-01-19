@@ -18,9 +18,6 @@ entry: &entry
     - "(min-width: 1680px) 1680px"
     - 100vw
   quality: 90
-entry_amp:
-  <<: *entry
-  auto: 'format,compress'
 entry_list_item:
   src: 355
   srcset:
