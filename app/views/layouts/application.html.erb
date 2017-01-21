@@ -7,7 +7,7 @@
   <%= javascript_include_tag 'application/image_zoom', defer: true %>
   <%= javascript_include_tag 'application/lazy_load', defer: true %>
   <%= javascript_include_tag "https://use.typekit.net/#{ENV['typekit_id']}.js", async: true, onload: 'try{Typekit.load({async:true})}catch(e){}' if ENV['typekit_id'].present? %>
-  <%= @photoblog.analytics_code.html_safe if Rails.env.production? %>
+  <%= @photoblog.analytics_code.try(:html_safe) if Rails.env.production? %>
 </head>
 <body>
 <%= render partial: 'partials/header.html.erb' %>
