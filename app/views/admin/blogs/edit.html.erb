@@ -35,6 +35,9 @@
   <%= f.label :posts_per_page, class: 'form__label' %>
   <%= f.number_field :posts_per_page, min: 1, max: 120, pattern: '\d+', class: 'form__input', required: true %>
 
+  <%= f.label :about, 'Analytics code', class: 'form__label' %>
+  <%= f.text_area :analytics_code, placeholder: 'Snippet for Google Analytics…', class: 'form__input form__input--textarea' %>
+
   <h2>More options</h2>
   <%= f.label :show_related_entries, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_related_entries %> Show related entries<% end %>
 

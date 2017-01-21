@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170108135342) do
+ActiveRecord::Schema.define(version: 20170121213928) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 20170108135342) do
     t.text     "about"
     t.string   "copyright"
     t.boolean  "show_related_entries", default: true
+    t.text     "analytics_code"
     t.index ["domain"], name: "index_blogs_on_domain", using: :btree
   end
 
