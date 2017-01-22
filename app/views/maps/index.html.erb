@@ -32,7 +32,7 @@
   <%= stylesheet_link_tag 'components/map', media: 'all' %>
   <%= javascript_include_tag 'application/map', async: true %>
   <%= javascript_include_tag "https://use.typekit.net/#{ENV['typekit_id']}.js", async: true, onload: 'try{Typekit.load({async:true})}catch(e){}' if ENV['typekit_id'].present? %>
-  <%= @photoblog.analytics_code if Rails.env.production? %>
+  <%= @photoblog.analytics_code.try(:html_safe) if Rails.env.production? %>
 </head>
 <body>
   <%= render partial: 'partials/header.html.erb', locals: { is_map: true } %>
