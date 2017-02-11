@@ -21,7 +21,7 @@ gem 'imgix'
 # Misc
 gem 'jbuilder', '~> 2.3'
 gem 'sdoc', '~> 0.4.0', group: :doc
-gem 'acts_as_list', '~> 0.7.0'
+gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr'
