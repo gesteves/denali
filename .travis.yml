@@ -5,6 +5,8 @@ notifications:
     secure: D/HmCRi5MH7miTew1ybp75pHtF9YOfA3wLfedzcEyXMihVZXCRVHkvR2uOmcR8rL2NgExV+foWoxueIzxWNBgr8ljWi+AiB8OD7ZGQfqn4L5c9JUPAvNgmoZu05M0o7tRGXGnqN+38MydiPxbUPe5LWvo493XkJWYm9smaifrdQ=
 services:
   - postgresql
+before_install:
+  - gem update --system
 before_script:
   - psql -c 'create database denali_test;' -U postgres
 script:
