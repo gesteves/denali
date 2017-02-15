@@ -26,4 +26,5 @@ Rails.application.config.assets.precompile += %w(
   application/image_zoom.js
   application/lazy_load.js
   application/map.js
+  vendors/speedindex.js
 )
