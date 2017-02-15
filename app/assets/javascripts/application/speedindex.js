@@ -24,5 +24,5 @@ Denali.SpeedIndex = (function () {
 if (document.readyState !== 'loading') {
   Denali.SpeedIndex.init();
 } else {
-  document.addEventListener('DOMContentLoaded', Denali.SpeedIndex.init);
+  window.addEventListener('load', Denali.SpeedIndex.init);
 }
