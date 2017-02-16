@@ -27,5 +27,5 @@ Denali.SpeedIndex = (function () {
 if (document.readyState === 'complete') {
   Denali.SpeedIndex.init();
 } else {
-  window.addEventListener('load', Denali.SpeedIndex.init);
+  window.addEventListener('load', Denali.SpeedIndex.init, true);
 }
