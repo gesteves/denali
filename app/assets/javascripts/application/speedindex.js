@@ -7,6 +7,7 @@ Denali.SpeedIndex = (function () {
 
   var init = function () {
     if (typeof ga !== 'undefined' && typeof RUMSpeedIndex() !== 'undefined') {
+      console.log('Speed index: ' + RUMSpeedIndex());
       ga('send', {
         hitType: 'timing',
         timingCategory: 'RUM',
