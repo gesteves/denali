@@ -10,7 +10,7 @@
   <%= javascript_include_tag "https://use.typekit.net/#{ENV['typekit_id']}.js", async: true, onload: 'try{Typekit.load({async:true})}catch(e){}' if ENV['typekit_id'].present? %>
   <%= @photoblog.analytics_code.try(:html_safe) %>
 </head>
-<body>
+<body data-context="<%= "#{controller_name}-#{action_name}" %>">
 <%= render partial: 'partials/header.html.erb' %>
 <%= yield %>
 <%= render partial: 'partials/footer.html.erb' %>
