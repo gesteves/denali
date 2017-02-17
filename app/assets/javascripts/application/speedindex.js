@@ -11,7 +11,7 @@ Denali.SpeedIndex = (function () {
         hitType: 'timing',
         timingCategory: 'RUM',
         timingVar: 'speedindex',
-        timingValue: RUMSpeedIndex()
+        timingValue: Math.round(RUMSpeedIndex())
       });
     }
   };
