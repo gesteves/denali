@@ -4,17 +4,6 @@
   <% end %>
 <% end %>
 
-<% content_for :stylesheets do %>
-  <%= stylesheet_link_tag 'base', media: 'all' %>
-  <%= stylesheet_link_tag 'components/header', media: 'all' %>
-  <%= stylesheet_link_tag 'components/entry', media: 'all' %>
-  <%= stylesheet_link_tag 'components/exif', media: 'all' %>
-  <%= stylesheet_link_tag 'components/tags', media: 'all' %>
-  <%= stylesheet_link_tag 'components/entry_list', media: 'all' if @photoblog.show_related_entries? && @entry.is_published? %>
-  <%= stylesheet_link_tag 'components/pagination', media: 'all' if @entry.is_published?  %>
-  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
-<% end %>
-
 <%= render partial: 'entries/entry', object: @entry %>
 <%= render partial: 'entries/entry_pagination', object: @entry, as: :entry if @entry.is_published? %>
 <%= render partial: 'entries/related', object: @entry if @photoblog.show_related_entries? && @entry.is_published? %>

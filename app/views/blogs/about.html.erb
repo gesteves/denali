@@ -24,14 +24,9 @@
   <% end %>
 <% end %>
 
-<% content_for :stylesheets do %>
-  <%= stylesheet_link_tag 'base', media: 'all' %>
-  <%= stylesheet_link_tag 'components/header', media: 'all' %>
-  <%= stylesheet_link_tag 'components/entry', media: 'all' %>
-  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
-<% end %>
 
-<% cache "blog/about/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "#{@app_version}/blog/about/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <%= stylesheet_link_tag 'components/entry', media: 'all' %>
   <article class="entry entry--text">
     <div class="entry__body">
       <h1 class="entry__headline">About <%= @photoblog.name %></h1>
