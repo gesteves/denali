@@ -1,0 +1,30 @@
+<%= fields_for :entry, @entry do |f| %>
+  <%= f.fields_for :photos, child_index: "#{(Time.now.to_f * 1000).to_i}#{i}" do |p| %>
+    <div class="form__photo">
+      <div class="form__fields form__fields--initial">
+        <%= p.url_field :source_url, placeholder: 'Paste a URL', autocomplete: 'off', class: 'form__input form__input--url js-photo-source-url' %>
+        <% unless ENV['dropbox_key'].nil? %>
+          <%= link_to 'Add from Dropbox', '#', class: 'button js-photo-dropbox' %>
+        <% end %>
+        <div class="button js-photo-file-button">
+          Upload a file
+          <%= p.file_field :source_file, accept: '.jpg,.jpeg', class: 'form__input form__input--file js-photo-source-file' %>
+        </div>
+        <%= link_to 'Close', '#', class: 'button button--danger js-photo-delete' %>
+      </div>
+      <div class="form__fields form__fields--hidden">
+        <div class="form__photo-thumb">
+          <img class="js-photo-thumb form__photo-img" />
+          <div class="form__photo-focal-point js-photo-focal-point" style="display:none"></div>
+        </div>
+        <div class="form__photo-fields">
+          <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'form__input form__input--caption' %>
+          <%= link_to 'Remove', '#', class: 'button button--danger form__photo-delete js-photo-delete' %>
+          <%= p.hidden_field :position, class: 'js-photo-position' %>
+          <%= p.hidden_field :focal_x, class: 'js-photo-focal-x' %>
+          <%= p.hidden_field :focal_y, class: 'js-photo-focal-y' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

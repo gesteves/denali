@@ -6,7 +6,7 @@
 
   <div class="form__photos">
     <ol class="form__photos-list">
-
+      <%= render partial: 'photo_fields', locals: { i: 0 } %>
     </ol>
     <%= link_to 'Add photo', '#', class: 'button js-photo-add' %>
   </div>
