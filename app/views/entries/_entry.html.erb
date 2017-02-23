@@ -9,14 +9,9 @@
               { class: "entry__photo",
                 alt: photo.caption.blank? ? entry.title : photo.plain_caption,
                 'data-width-original': photo.width,
-                'data-height-original': photo.height,
-                onload: "'undefined'!=typeof performance.mark&&(performance.clearMarks('mark_entry_photo_rendered'),performance.mark('mark_entry_photo_rendered'));".html_safe } %>
+                'data-height-original': photo.height } %>
         </figure>
       </div>
-    <% end %>
-
-    <% if entry.is_photo? %>
-      <script>'undefined'!=typeof performance.mark&&(performance.clearMarks('mark_entry_photo_rendered'),performance.mark('mark_entry_photo_rendered'));</script>
     <% end %>
 
     <div class="entry__body">
