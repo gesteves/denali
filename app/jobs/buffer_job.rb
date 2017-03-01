@@ -19,7 +19,7 @@ class BufferJob < ApplicationJob
     }
 
     if opts[:service] == 'instagram' && entry.photos.first.is_vertical?
-      media[:picture] = entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: 000)
+      media[:picture] = entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: '000')
     else
       media[:picture] = entry.photos.first.url(w: opts[:width])
     end
