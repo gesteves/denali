@@ -49,7 +49,7 @@ class Photo < ApplicationRecord
       opts[:h] = opts[:w]
       opts.delete(:square)
     end
-    if opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w])
+    if opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]) && !opts[:fit].present?
       opts[:fit] = 'crop'
       if self.focal_x.present? && self.focal_y.present?
         opts[:crop] = 'focalpoint'

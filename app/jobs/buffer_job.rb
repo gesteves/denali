@@ -15,9 +15,14 @@ class BufferJob < ApplicationJob
     end
 
     media = {
-      picture: entry.photos.first.url(w: opts[:width]),
       thumbnail: entry.photos.first.url(w: 512)
     }
+
+    if opts[:service] == 'instagram' && entry.photos.first.is_vertical?
+      media[:picture] = entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: 000)
+    else
+      media[:picture] = entry.photos.first.url(w: opts[:width])
+    end
 
     body = {
       profile_ids: get_profile_ids(opts[:service]),
