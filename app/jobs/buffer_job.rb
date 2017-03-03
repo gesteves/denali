@@ -18,10 +18,16 @@ class BufferJob < ApplicationJob
       thumbnail: entry.photos.first.url(w: 512)
     }
 
-    if opts[:service] == 'instagram' && entry.photos.first.is_vertical?
-      media[:picture] = entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff')
+    media[:picture] = if opts[:service] == 'instagram'
+      if entry.photos.first.is_vertical?
+        entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff')
+      elsif entry.photos.first.is_horizontal?
+        entry.photos.first.url(w: 1080, h: 1080, fit: 'fill', bg: 'fff')
+      elsif entry.photos.first.is_square?
+        entry.photos.first.url(w: 1080)
+      end
     else
-      media[:picture] = entry.photos.first.url(w: opts[:width])
+      entry.photos.first.url(w: opts[:width])
     end
 
     body = {
