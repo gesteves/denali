@@ -22,7 +22,7 @@ class BufferJob < ApplicationJob
       if entry.photos.first.is_vertical?
         entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff')
       elsif entry.photos.first.is_horizontal?
-        entry.photos.first.url(w: 1080, h: 1080, fit: 'fill', bg: 'fff')
+        entry.photos.first.url(w: 1080, h: 864, fit: 'fill', bg: 'fff')
       elsif entry.photos.first.is_square?
         entry.photos.first.url(w: 1080)
       end
