@@ -5,7 +5,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        BufferJob.perform_later(entry, { service: 'twitter' })
+        BufferJob.perform_later(entry, 'twitter')
         puts "Entry \"#{entry.title}\" queued for export to Twitter."
       end
     end
@@ -25,7 +25,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        BufferJob.perform_later(entry, { service: 'facebook' })
+        BufferJob.perform_later(entry, 'facebook')
         puts "Entry \"#{entry.title}\" queued for export to Facebook."
       end
     end
@@ -35,7 +35,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        BufferJob.perform_later(entry, { service: 'instagram', include_link: false, include_hashtags: true, include_body: true })
+        BufferJob.perform_later(entry, 'instagram')
         puts "Entry \"#{entry.title}\" queued for export to Instagram."
       end
     end
