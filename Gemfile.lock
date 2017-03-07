@@ -82,7 +82,6 @@ GEM
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     hashie (3.5.5)
-    htmlentities (4.3.4)
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
     i18n (0.8.1)
@@ -288,7 +287,6 @@ DEPENDENCIES
   figaro
   flickraw
   foreman
-  htmlentities
   httparty
   imgix
   jbuilder (~> 2.3)
