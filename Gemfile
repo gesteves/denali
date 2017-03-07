@@ -45,7 +45,6 @@ gem 'resque-scheduler'
 # Social Networks
 gem 'tumblr_client'
 gem 'flickraw'
-gem 'twitter', '~> 5.0'
 
 group :production do
   gem 'passenger'

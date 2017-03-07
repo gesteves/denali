@@ -167,7 +167,7 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_twitter
-    TwitterJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_twitter
+    BufferJob.perform_later(self, { service: 'twitter' })  if self.is_published? && self.is_photo? && self.post_to_twitter
   end
 
   def enqueue_tumblr
