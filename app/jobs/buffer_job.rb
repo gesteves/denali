@@ -24,7 +24,8 @@ class BufferJob < ApplicationJob
       access_token: ENV['buffer_access_token']
     }
 
-    HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: body)
+    response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: body)
+    raise response.code if response.code != 200
   end
 
   private
