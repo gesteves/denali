@@ -25,7 +25,7 @@ class BufferJob < ApplicationJob
     }
 
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: body)
-    raise response.code if response.code != 200
+    raise response.code.to_s if response.code != 200
   end
 
   private
