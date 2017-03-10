@@ -5,7 +5,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        BufferJob.perform_later(entry, 'twitter')
+        TwitterJob.perform_later(entry)
         puts "Entry \"#{entry.title}\" queued for export to Twitter."
       end
     end
@@ -25,7 +25,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        BufferJob.perform_later(entry, 'facebook')
+        FacebookJob.perform_later(entry)
         puts "Entry \"#{entry.title}\" queued for export to Facebook."
       end
     end
@@ -35,7 +35,7 @@ namespace :export do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        BufferJob.perform_later(entry, 'instagram')
+        InstagramJob.perform_later(entry)
         puts "Entry \"#{entry.title}\" queued for export to Instagram."
       end
     end

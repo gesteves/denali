@@ -167,7 +167,7 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_twitter
-    BufferJob.perform_later(self, 'twitter')  if self.is_published? && self.is_photo? && self.post_to_twitter
+    TwitterJob.perform_later(self)  if self.is_published? && self.is_photo? && self.post_to_twitter
   end
 
   def enqueue_tumblr
@@ -175,11 +175,11 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_facebook
-    BufferJob.perform_later(self, 'facebook') if self.is_published? && self.is_photo? && self.post_to_facebook
+    FacebookJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_facebook
   end
 
   def enqueue_instagram
-    BufferJob.perform_later(self, 'instagram') if self.is_published? && self.is_photo? && self.post_to_instagram
+    InstagramJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_instagram
   end
 
   def enqueue_flickr

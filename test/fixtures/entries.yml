@@ -40,6 +40,7 @@ panda:
   post_to_flickr: true
   post_to_slack: true
   post_to_pinterest: true
+  post_to_instagram: true
   position: 1
 
 franklin:
