@@ -3,10 +3,7 @@ class FacebookJob < BufferJob
 
   def perform(entry)
     text = "#{entry.plain_title}\n\n#{entry.permalink_url}"
-    media = {
-      thumbnail: entry.photos.first.url(w: 512),
-      picture: entry.photos.first.url(w: 2048)
-    }
-    post_to_buffer('facebook', text, media)
+    image_url = entry.photos.first.url(w: 2048)
+    post_to_buffer('facebook', text, image_url)
   end
 end

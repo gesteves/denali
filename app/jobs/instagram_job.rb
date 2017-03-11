@@ -15,12 +15,7 @@ class InstagramJob < BufferJob
     text_array << all_tags.sort.map { |t| "##{t}"}.join(' ')
 
     text = text_array.join("\n\n")
-
-    media = {
-      thumbnail: entry.photos.first.url(w: 512)
-    }
-
-    media[:picture] = if entry.photos.first.is_vertical?
+    image_url = if entry.photos.first.is_vertical?
       entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff')
     elsif entry.photos.first.is_horizontal?
       entry.photos.first.url(w: 1080, h: 864, fit: 'fill', bg: 'fff')
@@ -28,6 +23,6 @@ class InstagramJob < BufferJob
       entry.photos.first.url(w: 1080)
     end
 
-    post_to_buffer('instagram', text, media)
+    post_to_buffer('instagram', text, image_url)
   end
 end
