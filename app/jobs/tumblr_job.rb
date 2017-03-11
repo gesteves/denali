@@ -20,7 +20,10 @@ class TumblrJob < ApplicationJob
       state: 'queue'
     }
 
-    tumblr.photo(ENV['tumblr_domain'], opts)
+    response = tumblr.photo(ENV['tumblr_domain'], opts)
+    if response['errors'].present?
+      raise response.to_s
+    end
   end
 
   # Use rmagick instead of imgix to resize images for Tumblr,
