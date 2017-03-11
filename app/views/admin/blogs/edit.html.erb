@@ -32,14 +32,34 @@
   <%= f.label :copyright, 'Copyright', class: 'form__label' %>
   <%= f.text_field :copyright, placeholder: 'Your copyright information…', class: 'form__input', required: true, autocomplete: 'off' %>
 
-  <%= f.label :posts_per_page, class: 'form__label' %>
-  <%= f.number_field :posts_per_page, min: 1, max: 120, pattern: '\d+', class: 'form__input', required: true %>
+  <%= f.label :email, 'Email', class: 'form__label' %>
+  <%= f.email_field :email, placeholder: 'Your contact email address…', class: 'form__input', autocomplete: 'off' %>
 
-  <%= f.label :about, 'Analytics code', class: 'form__label' %>
-  <%= f.text_area :analytics_code, placeholder: 'Snippet for Google Analytics…', class: 'form__input form__input--textarea' %>
+  <%= f.label :instagram, 'Instagram', class: 'form__label' %>
+  <%= f.text_field :instagram, placeholder: 'https://www.instagram.com/example', class: 'form__input', autocomplete: 'off' %>
+
+  <%= f.label :twitter, 'Twitter', class: 'form__label' %>
+  <%= f.text_field :twitter, placeholder: 'https://twitter.com/example', class: 'form__input', autocomplete: 'off' %>
+
+  <%= f.label :tumblr, 'Instagram', class: 'form__label' %>
+  <%= f.text_field :tumblr, placeholder: 'https://example.tumblr.com', class: 'form__input', autocomplete: 'off' %>
+
+  <h2>Logos</h2>
+
+  <%= f.label :header_logo_svg, 'Header logo', class: 'form__label' %>
+  <%= f.text_area :header_logo_svg, placeholder: 'SVG for the main logo in the header…', class: 'form__input form__input--textarea' %>
 
   <h2>More options</h2>
   <%= f.label :show_related_entries, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_related_entries %> Show related entries<% end %>
+
+  <%= f.label :posts_per_page, class: 'form__label' %>
+  <%= f.number_field :posts_per_page, min: 1, max: 120, pattern: '\d+', class: 'form__input', required: true %>
+
+  <%= f.label :analytics_code, 'Analytics code', class: 'form__label' %>
+  <%= f.text_area :analytics_code, placeholder: 'Snippet for Google Analytics…', class: 'form__input form__input--textarea' %>
+
+  <%= f.label :additional_meta_tags, 'Additional meta tags', class: 'form__label' %>
+  <%= f.text_area :additional_meta_tags, placeholder: 'For example, Google Webmaster Tools verification tags…', class: 'form__input form__input--textarea' %>
 
   <div class="form__actions">
     <div class="form__buttons">
