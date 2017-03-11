@@ -14,8 +14,10 @@
     <meta property="og:site_name" content="<%= @photoblog.name %>">
     <meta property="og:locale" content="en_US">
 
-    <meta name="twitter:site" content="@gesteves">
-    <meta name="twitter:creator" content="@gesteves">
+    <% if @photoblog.twitter.present? %>
+      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+    <% end %>
     <meta name="twitter:title" content="<%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>">
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">

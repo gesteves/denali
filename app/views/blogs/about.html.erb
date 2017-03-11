@@ -14,8 +14,10 @@
     <meta property="og:site_name" content="<%= @photoblog.name %>">
     <meta property="og:locale" content="en_US">
 
-    <meta name="twitter:site" content="@gesteves">
-    <meta name="twitter:creator" content="@gesteves">
+    <% if @photoblog.twitter.present? %>
+      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+    <% end %>
     <meta name="twitter:title" content="About <%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= about_url %>">
     <meta name="twitter:description" content="<%= truncate @photoblog.plain_about, length: 200 %>">

@@ -15,11 +15,13 @@
 <% end %>
 
 <%# Twitter meta tags %>
+<% if @photoblog.twitter.present? %>
+  <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+  <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+<% end %>
 <meta name="twitter:title" content="<%= entry.plain_title %>">
 <meta name="twitter:description" content="<%= meta_description entry %>">
 <meta name="twitter:url" content="<%= entry.permalink_url %>">
-<meta name="twitter:site" content="@gesteves">
-<meta name="twitter:creator" content="@gesteves">
 <meta name="twitter:card" content="<%= entry.is_text? ? "summary" : "summary_large_image" %>">
 <% if entry.is_photo? %>
   <meta name="twitter:image" content="<%= entry.photos.first.url(w: 1200, h: 628) %>">
