@@ -11,8 +11,8 @@ class BufferJob < ApplicationJob
     end
   end
 
-  def post_to_buffer(service, text, image_url)
-    media = { picture: image_url, thumbnail: image_url }
+  def post_to_buffer(service, text, image_url, thumbnail_url)
+    media = { picture: image_url, thumbnail: thumbnail_url }
     body = {
       profile_ids: get_profile_ids(service),
       text: text,

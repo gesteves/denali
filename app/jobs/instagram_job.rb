@@ -22,7 +22,8 @@ class InstagramJob < BufferJob
     elsif entry.photos.first.is_square?
       entry.photos.first.url(w: 1080)
     end
+    thumbnail_url = entry.photos.first.url(w: 512)
 
-    post_to_buffer('instagram', text, image_url)
+    post_to_buffer('instagram', text, image_url, thumbnail_url)
   end
 end
