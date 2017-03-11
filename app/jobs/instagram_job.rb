@@ -2,13 +2,17 @@ class InstagramJob < BufferJob
   queue_as :default
 
   def perform(entry)
-    all_tags = entry.combined_tags.sort_by { |t| t.name }.map { |t| "##{t.slug.gsub(/-/, '')}" }
-    all_tags += ENV['instagram_tags'].split(/,\s*/).map { |t| "##{t}" } if ENV['instagram_tags'].present?
+    all_tags = entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+
+    # Special tags for Fuji
+    if entry.equipment_list.include? 'fujifilm'
+      all_tags += %w{ fujifeed fujifilmx_us fujiholics fujilove fujifilm_xseries }
+    end
 
     text_array = []
     text_array << entry.plain_title
     text_array << entry.plain_body if entry.body.present?
-    text_array << all_tags.join(' ')
+    text_array << all_tags.sort.map { |t| "##{t}"}.join(' ')
 
     text = text_array.join("\n\n")
 
