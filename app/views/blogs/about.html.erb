@@ -5,7 +5,7 @@
     <link rel="canonical" href="<%= about_url %>">
 
     <meta property="og:title" content="About <%= @photoblog.name %>">
-    <meta property="og:image" content="<%= image_url 'cover.png' %>">
+    <meta property="og:image" content="<%= @photoblog.entries.photo_entries.published.first.photos.first.url(w: 1200, h: 628) %>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="628">
     <meta property="og:description" content="<%= truncate @photoblog.plain_about, length: 200 %>">
@@ -19,8 +19,7 @@
     <meta name="twitter:title" content="About <%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= about_url %>">
     <meta name="twitter:description" content="<%= truncate @photoblog.plain_about, length: 200 %>">
-    <meta name="twitter:image" content="<%= image_url 'cover.png'  %>">
-    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:card" content="summary">
   <% end %>
 <% end %>
 
