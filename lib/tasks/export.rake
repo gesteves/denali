@@ -70,4 +70,6 @@ namespace :export do
       end
     end
   end
+
+  task :buffer => [:twitter, :facebook, :instagram]
 end
