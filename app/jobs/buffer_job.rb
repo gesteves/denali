@@ -18,7 +18,6 @@ class BufferJob < ApplicationJob
       text: text,
       media: media,
       shorten: false,
-      now: true,
       access_token: ENV['buffer_access_token']
     }
 
