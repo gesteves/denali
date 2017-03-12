@@ -196,7 +196,7 @@ class Entry < ApplicationRecord
         color: '#BF0222'
       }
       attachment[:text] = self.plain_body if self.body.present?
-      SlackJob.perform_later('', attachment, ENV['slack_channel_photos'])
+      SlackJob.perform_later('', attachment)
     end
   end
 
