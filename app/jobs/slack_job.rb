@@ -5,9 +5,11 @@ class SlackJob < ApplicationJob
     payload = { text: text }
     payload[:attachments] = [attachment] if attachment.present?
     payload[:channel] = channel if channel.present?
-    response = HTTParty.post(ENV['slack_incoming_webhook'], body: payload.to_json) if !Rails.env.test? && ENV['slack_incoming_webhook'].present?
-    if response.code >= 400
-      raise response.body
+    if !Rails.env.test? && ENV['slack_incoming_webhook'].present?
+      response = HTTParty.post(ENV['slack_incoming_webhook'], body: payload.to_json)
+      if response.code >= 400
+        raise response.body
+      end
     end
   end
 end
