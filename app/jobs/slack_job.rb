@@ -1,21 +1,12 @@
 class SlackJob < ApplicationJob
   queue_as :default
 
-  def perform(entry, webhook)
-    payload = { text: '', channel: webhook.channel }
-    attachment = {
-      fallback: "#{entry.plain_title} #{entry.permalink_url}",
-      title: entry.plain_title,
-      title_link: entry.permalink_url,
-      image_url: entry.photos.first.url(w: 800),
-      color: '#BF0222'
-    }
-    attachment[:text] = entry.plain_body if entry.body.present?
-    payload[:attachments] = [attachment]
-    response = HTTParty.post(webhook.url, body: payload.to_json) unless Rails.env.test?
-    if response.code == 404
-      webhook.destroy
-    elsif response.code >= 400
+  def perform(text = '', attachment = nil, channel = nil)
+    payload = { text: text }
+    payload[:attachments] = [attachment] if attachment.present?
+    payload[:channel] = channel if channel.present?
+    response = HTTParty.post(ENV['slack_incoming_webhook'], body: payload.to_json) if !Rails.env.test? && ENV['slack_incoming_webhook'].present?
+    if response.code >= 400
       raise response.body
     end
   end

@@ -14,7 +14,6 @@ peppers:
   post_to_tumblr: true
   post_to_facebook: true
   post_to_flickr: true
-  post_to_slack: true
 
 potomac:
   title: Potomac Avenue Metro station, Washington, DC. July 3rd, 2011.
@@ -38,7 +37,6 @@ panda:
   post_to_tumblr: true
   post_to_facebook: true
   post_to_flickr: true
-  post_to_slack: true
   post_to_pinterest: true
   post_to_instagram: true
   position: 1
@@ -55,4 +53,3 @@ franklin:
   post_to_tumblr: true
   post_to_facebook: true
   post_to_flickr: true
-  post_to_slack: true

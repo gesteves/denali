@@ -2,7 +2,6 @@ class Blog < ApplicationRecord
   include Formattable
 
   has_many :entries, dependent: :destroy
-  has_many :slack_incoming_webhooks, dependent: :destroy
   validates :name, :description, :about, presence: true
 
   def formatted_description

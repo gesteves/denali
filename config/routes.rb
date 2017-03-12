@@ -8,7 +8,6 @@ Rails.application.routes.draw do
     get '/tagged/:tag(/page/:page)'   => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
     get 'settings'                    => 'blogs#edit'
     patch 'settings/update'           => 'blogs#update'
-    get '/slack(/page/:page)'         => 'slack_incoming_webhooks#index',  constraints: { page: /\d+/ }, :as => :slack
 
     resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable do
       member do

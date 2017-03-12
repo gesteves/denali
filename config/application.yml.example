@@ -23,8 +23,7 @@ default: &default
   s3_region: us-east-1
   secret_key_base: abc123
   sentry_dsn: abc123
-  slack_client_id: '123456'
-  slack_client_secret: abc123
+  slack_incoming_webhook: https://...
   tumblr_access_token_secret: abc123
   tumblr_access_token: abc123
   tumblr_consumer_key: abc123
@@ -62,8 +61,7 @@ production:
   s3_region: us-east-1
   secret_key_base: abc123
   sentry_dsn: abc123
-  slack_client_id: '123456'
-  slack_client_secret: abc123
+  slack_incoming_webhook: https://...
   tumblr_access_token_secret: abc123
   tumblr_access_token: abc123
   tumblr_consumer_key: abc123

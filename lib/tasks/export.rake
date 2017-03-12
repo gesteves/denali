@@ -61,15 +61,5 @@ namespace :export do
     end
   end
 
-  task :slack => [:environment] do
-    if ENV['ENTRY_ID'].present?
-      entry = Entry.find(ENV['ENTRY_ID'])
-      if entry.present?
-        SlackIncomingWebhook.post_all(entry)
-        puts "Entry \"#{entry.title}\" queued for export to Slack."
-      end
-    end
-  end
-
   task :buffer => [:twitter, :facebook, :instagram]
 end

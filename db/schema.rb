@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170311160056) do
+ActiveRecord::Schema.define(version: 20170311235747) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,7 +56,6 @@ ActiveRecord::Schema.define(version: 20170311160056) do
     t.boolean  "post_to_flickr"
     t.boolean  "show_in_map",       default: true
     t.boolean  "post_to_pinterest"
-    t.boolean  "post_to_slack"
     t.boolean  "post_to_instagram"
     t.index ["blog_id"], name: "index_entries_on_blog_id", using: :btree
     t.index ["photos_count"], name: "index_entries_on_photos_count", using: :btree
@@ -96,18 +95,6 @@ ActiveRecord::Schema.define(version: 20170311160056) do
     t.index ["entry_id"], name: "index_photos_on_entry_id", using: :btree
     t.index ["latitude"], name: "index_photos_on_latitude", using: :btree
     t.index ["longitude"], name: "index_photos_on_longitude", using: :btree
-  end
-
-  create_table "slack_incoming_webhooks", force: :cascade do |t|
-    t.string   "team_name"
-    t.string   "team_id"
-    t.string   "url"
-    t.string   "channel"
-    t.string   "configuration_url"
-    t.integer  "blog_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.index ["blog_id"], name: "index_slack_incoming_webhooks_on_blog_id", using: :btree
   end
 
   create_table "taggings", force: :cascade do |t|
@@ -154,5 +141,4 @@ ActiveRecord::Schema.define(version: 20170311160056) do
   add_foreign_key "entries", "blogs"
   add_foreign_key "entries", "users"
   add_foreign_key "photos", "entries"
-  add_foreign_key "slack_incoming_webhooks", "blogs"
 end

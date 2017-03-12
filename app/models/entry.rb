@@ -187,7 +187,17 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_slack
-    SlackIncomingWebhook.post_all(self) if self.is_published? && self.is_photo? && self.post_to_slack
+    if self.is_published? && self.is_photo?
+      attachment = {
+        fallback: "#{self.plain_title} #{self.permalink_url}",
+        title: self.plain_title,
+        title_link: self.permalink_url,
+        image_url: self.photos.first.url(w: 800),
+        color: '#BF0222'
+      }
+      attachment[:text] = self.plain_body if self.body.present?
+      SlackJob.perform_later('', attachment, ENV['slack_channel_photos'])
+    end
   end
 
   def enqueue_pinterest
