@@ -16,10 +16,10 @@ class SessionsController < ApplicationController
       session[:user_id] = user.id
       url = session[:original_url] || admin_entries_path
       session[:original_url] = nil
-      logger.info "[INFO] Successful login by #{auth_hash['info']['email']}"
+      SlackJob.perform_later("Successful login by #{auth_hash['info']['email']}.")
       redirect_to url
     else
-      logger.info "[INFO] Unsuccessful login"
+      SlackJob.perform_later("Unsuccessful login by an unknown user.")
       redirect_to signin_path, alert: 'There was a problem logging you in.'
     end
   end
