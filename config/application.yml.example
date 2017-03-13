@@ -1,5 +1,4 @@
 default: &default
-  analytics_id: UA-123
   aws_access_key_id: abc123
   aws_cloudfront_distribution_id: abc123
   aws_secret_access_key: abc123
@@ -37,7 +36,6 @@ test:
   <<: *default
 
 production:
-  analytics_id: UA-123
   aws_access_key_id: abc123
   aws_cloudfront_distribution_id: abc123
   aws_secret_access_key: abc123
