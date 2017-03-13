@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :delete]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   after_action :update_position, only: [:create]
@@ -114,12 +114,22 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def delete
+  end
+
   # DELETE /admin/entries/1
   def destroy
+    referrer = if @entry.is_published?
+      admin_entries_path
+    elsif @entry.is_queued?
+      queued_admin_entries_path
+    elsif @entry.is_draft?
+      drafts_admin_entries_path
+    end
     @entry.destroy
     respond_to do |format|
       flash[:notice] = 'Your entry was deleted!'
-      format.html { redirect_to request.referrer || admin_entries_path }
+      format.html { redirect_to referrer }
     end
   end
 

@@ -129,6 +129,11 @@
   flex-flow: row;
 }
 
+.entry__actions--right {
+  justify-content: flex-end;
+  width: 100%;
+}
+
 .entry__actions--queue {
   flex-grow: 1;
 }

@@ -48,7 +48,7 @@
             <%= link_to 'Publish', publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry?' }  %>
           <% end %>
           &middot;
-          <%= link_to 'Delete', admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you sure you want to delete this entry?' } %>
+          <%= link_to 'Delete', delete_admin_entry_path(entry.id) %>
         </div>
       </div>
     </div>

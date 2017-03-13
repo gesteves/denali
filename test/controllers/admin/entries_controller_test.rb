@@ -53,6 +53,14 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_template :edit
   end
 
+  test 'should render delete entry page' do
+    get :delete, params: { id: @entry.id }
+    assert_not_nil assigns(:entry)
+    assert_response :success
+    assert_template layout: 'layouts/admin'
+    assert_template :delete
+  end
+
   test 'should render photo fields' do
     get :photo
     assert_response :success
