@@ -6,7 +6,7 @@ class InstagramJob < BufferJob
 
     # Special tags for Fuji
     if entry.equipment_list.include? 'fujifilm'
-      all_tags += %w{ fujifeed fujifilmx_us fujiholics fujilove fujifilm_xseries }
+      all_tags += %w{ fujifeed fujifilmx_us fujilove fujifilm_xseries }
     end
 
     text_array = []
