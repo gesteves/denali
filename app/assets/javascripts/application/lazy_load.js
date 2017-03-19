@@ -14,13 +14,6 @@ Denali.LazyLoad = (function () {
     var image, i;
     var images = document.querySelectorAll('.' + opts.load_class);
     if (typeof IntersectionObserver === 'undefined') {
-      for (i = 0; i < images.length; i++) {
-        image = images[i];
-        image.style.opacity = 0;
-        image.style.willChange = 'opacity';
-        image.addEventListener('load', showImage);
-        image.addEventListener('transitionend', removeHint);
-      }
       document.addEventListener('scroll', handleScroll);
       loadImages();
     } else {
@@ -29,10 +22,6 @@ Denali.LazyLoad = (function () {
       }
       for (i = 0; i < images.length; i++) {
         image = images[i];
-        image.style.opacity = 0;
-        image.style.willChange = 'opacity';
-        image.addEventListener('load', showImage);
-        image.addEventListener('transitionend', removeHint);
         observer.observe(image);
       }
     }
@@ -88,14 +77,6 @@ Denali.LazyLoad = (function () {
       image.removeAttribute('data-src');
     }
     image.classList.remove(opts.load_class);
-  };
-
-  var showImage = function (event) {
-    event.target.style.opacity = 1;
-  };
-
-  var removeHint = function (event) {
-    event.target.style.willChange = 'auto';
   };
 
   return {
