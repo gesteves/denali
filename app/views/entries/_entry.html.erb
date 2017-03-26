@@ -2,7 +2,7 @@
   <%= stylesheet_link_tag 'components/entry', media: 'all' %>
   <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
     <% entry.photos.each do |photo| %>
-      <div class="entry__photo-container" <%= intrinsic_ratio_width photo %>>
+      <div class="entry__photo-container entry__photo-container--zoom" <%= intrinsic_ratio_width photo %>>
         <figure class="entry__figure" <%= intrinsic_ratio_padding photo %>>
           <%= responsive_image_tag photo,
               'entry',
