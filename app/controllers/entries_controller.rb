@@ -10,7 +10,7 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
       @count = (params[:count] || @photoblog.posts_per_page).to_i
-      @entries = @photoblog.entries.includes(:photos).published.page(@page).per(@count)
+      @entries = @photoblog.entries.includes(:photos).published.photo_entries.page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @entries.empty?
       respond_to do |format|
         format.html
@@ -24,7 +24,7 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
       @count = (params[:count] || @photoblog.posts_per_page).to_i
-      @entries = @photoblog.entries.includes(:photos).published.tagged_with(@tag_list, any: true).page(@page).per(@count)
+      @entries = @photoblog.entries.includes(:photos).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
       respond_to do |format|
         format.html

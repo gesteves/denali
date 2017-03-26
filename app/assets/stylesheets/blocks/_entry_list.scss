@@ -72,40 +72,6 @@
   }
 }
 
-.entry-list__link--text {
-  font-size: 14px;
-  padding: 1.5rem;
-
-  h2 {
-    font-size: 16px;
-    line-height: 1.5;
-    margin: 0 0 1.5rem;
-  }
-
-  p {
-    color: $color-text;
-    font-size: 14px;
-    line-height: 1.5;
-  }
-
-  p + p {
-    margin-top: 0;
-    text-indent: 1.5rem;
-  }
-
-  &::after {
-    background-image: linear-gradient(to bottom, transparentize($color-background, 1), $color-background);
-    bottom: 0;
-    content: '';
-    display: block;
-    height: 50%;
-    left: 0;
-    pointer-events: none;
-    position: absolute;
-    width: 100%;
-  }
-}
-
 .entry-list__link--photo {
   background-color: $color-photo-background;
 }
