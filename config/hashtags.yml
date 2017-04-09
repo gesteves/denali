@@ -1,15 +1,49 @@
 instagram:
+  all:
+    - myfeatureshoot
+    - somewheremagazine
   fujifilm:
     - fujifeed
     - fujifilmx_us
     - fujilove
     - fujifilm_xseries
+  blackandwhite:
+    - bnw
+    - bw
+    - blackandwhitephotography
+    - monochrome
   streetphotography:
     - spicollective
     - ig_street
     - everybodystreet
+  scotland:
+    - visitscotland
+    - instascotland
+    - insta_scotland
+    - ig_scotland
   districtofcolumbia:
     - igdc
-  all:
-    - myfeatureshoot
-    - somewheremagazine
+    - washingtondaily
+    - exploredc
+    - igersdc
+  cats:
+    - catsofinstagram
+  mexico:
+    - mextagram
+    - mexigers
+    - ig_mexico
+    - mexico_maravilloso
+  ciudaddemexico:
+    - cdmx
+  newyorkcity:
+    - newyork_instagram
+    - instagramnyc
+    - nycprimeshot
+    - ig_nycity
+  landscape:
+    - landscape_lovers
+    - landscapephotography
+  architecture:
+    - archilovers
+    - architecturelovers
+    - architectureporn
