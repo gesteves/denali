@@ -49,7 +49,7 @@ class EntriesController < ApplicationController
   def preview
     request.format = 'html'
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.includes(:photos, :user, :blog).find(params[:id])
+      @entry = @photoblog.entries.includes(:photos, :user, :blog).where(preview_hash: params[:preview_hash]).limit(1).first
       respond_to do |format|
         format.html {
           if @entry.is_published?

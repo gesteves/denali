@@ -13,6 +13,13 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal title.parameterize, entry.slug
   end
 
+  test 'should set preview hash before saving' do
+    title = 'This is my title'
+    entry = Entry.new(title: title, body: 'Whatever.')
+    entry.save
+    assert_not_nil entry.preview_hash
+  end
+
   test 'should be draft' do
     entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft')
     entry.save

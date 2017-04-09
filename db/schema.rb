@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170311235747) do
+ActiveRecord::Schema.define(version: 20170409005102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -57,8 +57,10 @@ ActiveRecord::Schema.define(version: 20170311235747) do
     t.boolean  "show_in_map",       default: true
     t.boolean  "post_to_pinterest"
     t.boolean  "post_to_instagram"
+    t.string   "preview_hash"
     t.index ["blog_id"], name: "index_entries_on_blog_id", using: :btree
     t.index ["photos_count"], name: "index_entries_on_photos_count", using: :btree
+    t.index ["preview_hash"], name: "index_entries_on_preview_hash", using: :btree
     t.index ["published_at"], name: "index_entries_on_published_at", using: :btree
     t.index ["show_in_map"], name: "index_entries_on_show_in_map", using: :btree
     t.index ["status"], name: "index_entries_on_status", using: :btree

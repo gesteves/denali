@@ -45,14 +45,14 @@ class EntriesControllerTest < ActionController::TestCase
 
   test 'should preview page' do
     panda = entries(:panda)
-    get :preview, params: { id: panda.id, slug: panda.slug }
+    get :preview, params: { preview_hash: panda.preview_hash }
     assert_response :success
     assert_template :show
   end
 
   test 'should redirect published photos from preview page' do
     entry = entries(:peppers)
-    get :preview, params: { id: entry.id, slug: entry.slug }
+    get :preview, params: { preview_hash: entry.preview_hash }
     assert_redirected_to entry.permalink_url
   end
 

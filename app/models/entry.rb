@@ -10,6 +10,7 @@ class Entry < ApplicationRecord
 
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
+  before_create :set_preview_hash
 
   acts_as_taggable_on :tags, :equipment, :locations
   acts_as_list scope: :blog
@@ -236,5 +237,10 @@ class Entry < ApplicationRecord
     else
       self.slug = self.slug.parameterize
     end
+  end
+
+  def set_preview_hash
+    sha256 = Digest::SHA256.new
+    self.preview_hash = sha256.hexdigest(Time.now.to_i.to_s)
   end
 end

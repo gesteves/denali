@@ -1,7 +1,7 @@
 <% cache "admin/delete/entry/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
   <div class="entry">
     <% if @entry.is_photo? %>
-      <a class="entry__link" href="<%= @entry.is_published? ? @entry.permalink_url : preview_entry_path(@entry.id, @entry.slug) %>" <%= intrinsic_ratio_padding(@entry.photos.first) if @entry.is_photo? %>>
+      <a class="entry__link" href="<%= @entry.is_published? ? @entry.permalink_url : preview_entry_path(@entry.preview_hash) %>" <%= intrinsic_ratio_padding(@entry.photos.first) if @entry.is_photo? %>>
         <%= lazy_responsive_image_tag @entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
       </a>
     <% end %>
