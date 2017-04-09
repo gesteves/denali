@@ -9,10 +9,17 @@ class InstagramJob < BufferJob
       all_tags += %w{ fujifeed fujifilmx_us fujilove fujifilm_xseries }
     end
 
+    if entry.tag_list.include? 'street photography'
+      alltags += %w{ spicollective ig_street everybodystreet }
+    end
+
+    # More tags
+    alltags += %w{ myfeatureshoot somewheremagazine }
+
     text_array = []
     text_array << entry.plain_title
     text_array << entry.plain_body if entry.body.present?
-    text_array << all_tags.sort.map { |t| "##{t}"}.join(' ')
+    text_array << all_tags[0, 30].sort.map { |t| "##{t}"}.join(' ')
 
     text = text_array.join("\n\n")
     image_url = if entry.photos.first.is_vertical?
