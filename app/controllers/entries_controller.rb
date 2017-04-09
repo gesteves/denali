@@ -50,6 +50,7 @@ class EntriesController < ApplicationController
     request.format = 'html'
     if stale?(@photoblog, public: true)
       @entry = @photoblog.entries.includes(:photos, :user, :blog).where(preview_hash: params[:preview_hash]).limit(1).first
+      raise ActiveRecord::RecordNotFound if @entry.nil?
       respond_to do |format|
         format.html {
           if @entry.is_published?
