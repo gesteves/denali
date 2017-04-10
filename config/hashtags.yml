@@ -1,7 +1,4 @@
 instagram:
-  all:
-    - myfeatureshoot
-    - somewheremagazine
   fujifilm:
     - fujifeed
     - fujifilmx_us
@@ -30,6 +27,7 @@ instagram:
     - washingtondaily
     - exploredc
     - igersdc
+    - walkwithlocals
   cats:
     - catsofinstagram
   mexico:
@@ -54,3 +52,7 @@ instagram:
     - archilovers
     - architecturelovers
     - architectureporn
+  all:
+    - myfeatureshoot
+    - somewheremagazine
+    - lensculture
