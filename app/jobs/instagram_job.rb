@@ -32,6 +32,6 @@ class InstagramJob < BufferJob
        entry_tags += custom_hashtags[k]
      end
    end
-   entry_tags[0, 30].sort.map { |t| "##{t}"}.join(' ')
+   (["•\n"] * 5).join + entry_tags[0, 30].sort.map { |t| "##{t}"}.join(' ')
  end
 end
