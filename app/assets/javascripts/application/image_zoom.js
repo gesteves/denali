@@ -67,5 +67,5 @@ if (document.readyState !== 'loading') {
 } else {
   document.addEventListener('DOMContentLoaded', Denali.ImageZoom.init);
 }
-document.addEventListener('orientationchange', Denali.ImageZoom.init);
+window.addEventListener('orientationchange', Denali.ImageZoom.init);
 window.addEventListener('resize', Denali.ImageZoom.handleResize);
