@@ -103,7 +103,11 @@ class Photo < ApplicationRecord
   end
 
   def formatted_camera
-    "#{self.formatted_make} #{self.model.gsub(%r{#{formatted_make}}i, '').strip}"
+    if self.model =~ /iphone/i
+      self.model
+    else
+      "#{self.formatted_make} #{self.model.gsub(%r{#{formatted_make}}i, '').strip}"
+    end
   end
 
   def formatted_film
