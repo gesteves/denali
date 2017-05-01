@@ -80,3 +80,9 @@
     width: 320px;
   }
 }
+
+.header__icon {
+  path {
+    transition: fill 150ms ease-in-out;
+  }
+}
