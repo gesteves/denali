@@ -211,15 +211,6 @@
     }
   }
 
-  p + p {
-    margin-top: 0;
-    text-indent: 24px;
-
-    @media (min-width: $bp-s) {
-      text-indent: 36px;
-    }
-  }
-
   ul,
   ol {
     padding: 0;
