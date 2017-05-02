@@ -210,14 +210,14 @@
       margin: (3.6rem/2) 0 0;
     }
   }
-  
+
   p + p {
-   margin-top: 0;
-   text-indent: 24px;
- 
-   @media (min-width: $bp-s) {
-     text-indent: 36px;
-   }
+    margin-top: 0;
+    text-indent: 24px;
+
+    @media (min-width: $bp-s) {
+      text-indent: 36px;
+    }
   }
 
   ul,
