@@ -129,6 +129,7 @@ class Photo < ApplicationRecord
     tempfile = image.queued_for_write[:original]
     unless tempfile.nil?
       geometry = Paperclip::Geometry.from_file(tempfile)
+      geometry.auto_orient
       self.width = geometry.width.to_i
       self.height = geometry.height.to_i
     end
