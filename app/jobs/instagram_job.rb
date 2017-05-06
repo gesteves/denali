@@ -9,11 +9,11 @@ class InstagramJob < BufferJob
 
     text = text_array.join("\n\n")
     image_url = if entry.photos.first.is_vertical?
-      entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff')
+      entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff', fm: 'jpg')
     else
-      entry.photos.first.url(w: 1080)
+      entry.photos.first.url(w: 1080, fm: 'jpg')
     end
-    thumbnail_url = entry.photos.first.url(w: 512)
+    thumbnail_url = entry.photos.first.url(w: 512, fm: 'jpg')
 
     post_to_buffer('instagram', text, image_url, thumbnail_url)
   end

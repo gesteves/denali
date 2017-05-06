@@ -57,6 +57,9 @@ class Photo < ApplicationRecord
         opts['fp-y'] = self.focal_y
       end
     end
+    if opts[:fm].present?
+      opts.delete(:auto)
+    end
     Ix.path(self.original_path).to_url(opts.reject { |k,v| v.blank? })
   end
 
