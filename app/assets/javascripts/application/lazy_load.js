@@ -29,8 +29,10 @@ Denali.LazyLoad = (function () {
 
   var handleIntersection = function (entries) {
     entries.forEach(function (entry) {
-      loadImage(entry.target);
-      observer.unobserve(entry.target);
+      if (entry.intersectionRatio === 1) {
+        loadImage(entry.target);
+        observer.unobserve(entry.target);
+      }
     });
   };
 
