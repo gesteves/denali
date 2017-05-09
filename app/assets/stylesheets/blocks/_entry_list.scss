@@ -77,6 +77,7 @@
 }
 
 .entry-list__photo {
+  height: 100%;
   overflow: hidden;
 
   &:hover .entry-list__photo-caption {
