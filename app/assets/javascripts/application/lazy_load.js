@@ -18,7 +18,7 @@ Denali.LazyLoad = (function () {
       loadImages();
     } else {
       if (typeof observer === 'undefined') {
-        observer = new IntersectionObserver(handleIntersection, { rootMargin: '150px 0 0 0' });
+        observer = new IntersectionObserver(handleIntersection, { rootMargin: '150px 0px 0px 0px' });
       }
       for (i = 0; i < images.length; i++) {
         image = images[i];
