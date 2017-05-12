@@ -4,7 +4,8 @@ Denali.LazyLoad = (function () {
   'use strict';
 
   var opts = {
-    load_class : 'js-lazy-load'
+    load_class : 'js-lazy-load',
+    threshold: 200
   };
 
   var requested_animation_frame = false;
@@ -18,7 +19,7 @@ Denali.LazyLoad = (function () {
       loadImages();
     } else {
       if (typeof observer === 'undefined') {
-        observer = new IntersectionObserver(handleIntersection, { rootMargin: '150px' });
+        observer = new IntersectionObserver(handleIntersection, { rootMargin: opts.threshold + 'px' });
       }
       for (i = 0; i < images.length; i++) {
         image = images[i];
@@ -62,7 +63,7 @@ Denali.LazyLoad = (function () {
     for (var i = 0; i < images.length; i++) {
       image = images[i];
       image_top = image.getBoundingClientRect().top;
-      if (image_top <= viewport_height) {
+      if (image_top <= viewport_height + opts.threshold) {
         loadImage(image);
       }
     }
