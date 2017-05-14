@@ -113,15 +113,16 @@ GEM
       activerecord
       kaminari-core (= 1.0.1)
     kaminari-core (1.0.1)
-    librato-metrics (2.1.2)
+    librato-metrics (1.6.1)
       aggregate (~> 0.2.2)
-      faraday
-    librato-rack (2.0.2)
+      faraday (~> 0.7)
+      multi_json
+    librato-rack (1.1.0)
       hetchy (~> 1.0)
-      librato-metrics (~> 2.1.0)
-    librato-rails (2.1.0)
+      librato-metrics (~> 1.6)
+    librato-rails (1.4.2)
       activesupport (>= 3.0)
-      librato-rack (~> 2.0.0)
+      librato-rack (~> 1.1.0)
       railties (>= 3.0)
     lograge (0.5.1)
       actionpack (>= 4, < 5.2)
@@ -313,7 +314,7 @@ DEPENDENCIES
   jbuilder (~> 2.3)
   jquery-rails
   kaminari
-  librato-rails
+  librato-rails (~> 1.4.2)
   lograge
   mock_redis
   oauth
