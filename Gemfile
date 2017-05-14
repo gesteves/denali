@@ -33,6 +33,7 @@ gem 'oauth'
 gem 'sentry-raven'
 gem 'cloudfront-invalidator'
 gem 'rmagick'
+gem 'librato-rails'
 
 # Caching
 gem 'dalli'
