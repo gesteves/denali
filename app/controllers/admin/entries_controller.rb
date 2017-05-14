@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :delete]
+  before_action :set_entry, only: [:show, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :delete]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   after_action :update_position, only: [:create]
@@ -44,8 +44,18 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/1/edit
   def edit
-    @page_title = "Editing “#{@entry.title}”"
-    @max_age = ENV['config_entry_max_age'].try(:to_i) || 5
+    if params[:url].present?
+      url = Rails.application.routes.recognize_path(params[:url])
+      if url[:controller] != 'entries' || url[:action] != 'show' || url[:id].nil?
+        raise ActiveRecord::RecordNotFound
+      else
+        redirect_to edit_admin_entry_path(url[:id])
+      end
+    else
+      @entry = @photoblog.entries.includes(:photos).find(params[:id])
+      @page_title = "Editing “#{@entry.title}”"
+      @max_age = ENV['config_entry_max_age'].try(:to_i) || 5
+    end
   end
 
   # PATCH /admin/entries/1/publish

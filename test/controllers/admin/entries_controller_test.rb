@@ -53,6 +53,11 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_template :edit
   end
 
+  test 'should redirect to edit entry page' do
+    get :edit, params: { url: @entry.permalink_url }
+    assert_redirected_to edit_admin_entry_path(@entry.id)
+  end
+
   test 'should render delete entry page' do
     get :delete, params: { id: @entry.id }
     assert_not_nil assigns(:entry)
