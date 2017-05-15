@@ -1,6 +1,7 @@
 class EntriesController < ApplicationController
   include TagList
 
+  before_action :check_if_user_has_visited, only: [:index, :tagged, :show, :preview]
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged]
   before_action :set_max_age, only: [:index, :tagged]
