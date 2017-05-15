@@ -9,6 +9,9 @@
 
   @media (min-width: $bp-l) {
     flex-flow: row nowrap;
+  }
+
+  @media (min-width: $bp-xl) {
     margin: 72px auto;
   }
 }
@@ -53,7 +56,7 @@
   margin: 0 auto 12px;
   max-width: 320px;
   order: -1;
-  width: 50vw;
+  width: 180px;
 
   &:hover,
   &:active {
@@ -63,12 +66,17 @@
   }
 
   @media (min-width: $bp-xs) {
-    width: 100%;
+    width: 220px;
   }
 
   @media (min-width: $bp-l) {
     margin: 0 auto;
     order: inherit;
     padding: 0 20px;
+    width: 50vw;
+  }
+
+  @media (min-width: $bp-xl) {
+    width: 100%;
   }
 }
