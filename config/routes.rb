@@ -7,12 +7,14 @@ Rails.application.routes.draw do
   namespace :admin do
     get '/tagged/:tag(/page/:page)'   => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
     get '/entries/edit'               => 'entries#edit'
+    get '/entries/share'              => 'entries#share'
     get 'settings'                    => 'blogs#edit'
     patch 'settings/update'           => 'blogs#update'
 
     resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable do
       member do
         get 'delete'
+        get 'share'
         patch 'publish'
         patch 'queue'
         patch 'draft'
@@ -20,6 +22,9 @@ Rails.application.routes.draw do
         post 'down'
         post 'top'
         post 'bottom'
+        post 'instagram'
+        post 'twitter'
+        post 'facebook'
       end
       collection do
         get 'queued'

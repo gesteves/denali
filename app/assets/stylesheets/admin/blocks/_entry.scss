@@ -134,6 +134,11 @@
   width: 100%;
 }
 
+.entry__actions--left {
+  justify-content: flex-start;
+  width: 100%;
+}
+
 .entry__actions--queue {
   flex-grow: 1;
 }

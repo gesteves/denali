@@ -9,19 +9,12 @@
       <h2><%= sanitize(@entry.plain_title) %></h2>
     </div>
     <div class="entry__meta">
-      <div>
-        <% @entry.combined_tags.each do |t| %>
-          <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
-        <% end %>
-      </div>
-      <% if @entry.is_queued? %>
-        <div class="entry__timestamp">
-          Queued for <%= publish_date_for_queued(@entry) %>
-        </div>
-      <% end %>
       <div class="entry__meta-bottom">
-        <div class="entry__actions entry__actions--right">
-          <span>Are you sure you want to delete this entry?</span> <%= button_to 'Delete', admin_entry_path(@entry.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it? This can’t be undone!' }, class: 'button button--danger' %>
+        <div class="entry__actions entry__actions--left">
+          <span>Share this entry on </span>
+          <%= button_to 'Facebook', facebook_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+          <%= button_to 'Instagram', instagram_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+          <%= button_to 'Twitter', twitter_admin_entry_path(@entry.id), method: :post, class: 'button' %>
         </div>
       </div>
     </div>

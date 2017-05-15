@@ -37,6 +37,10 @@
           <% unless entry.is_published? %>
             <%= link_to 'Preview', preview_entry_path(entry.preview_hash) %>
           <% end %>
+          <% if entry.is_published? && entry.is_photo? %>
+            <%= link_to 'Share', share_admin_entry_path(entry) %>
+            &middot;
+          <% end %>
           <%= link_to 'Edit', edit_admin_entry_path(entry) %>
           <% if entry.is_draft? %>
             <%= link_to 'Queue', queue_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to move this entry to the queue?' }  %>

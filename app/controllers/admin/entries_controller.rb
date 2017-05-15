@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :delete]
+  before_action :set_entry, only: [:show, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :delete, :instagram, :facebook, :twitter]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   after_action :update_position, only: [:create]
@@ -55,6 +55,20 @@ class Admin::EntriesController < AdminController
       @entry = @photoblog.entries.includes(:photos).find(params[:id])
       @page_title = "Editing “#{@entry.title}”"
       @max_age = ENV['config_entry_max_age'].try(:to_i) || 5
+    end
+  end
+
+  def share
+    if params[:url].present?
+      url = Rails.application.routes.recognize_path(params[:url])
+      if url[:controller] != 'entries' || url[:action] != 'show' || url[:id].nil?
+        raise ActiveRecord::RecordNotFound
+      else
+        redirect_to share_admin_entry_path(url[:id])
+      end
+    else
+      @entry = @photoblog.entries.includes(:photos).published.find(params[:id])
+      @page_title = "Share “#{@entry.title}”"
     end
   end
 
@@ -170,6 +184,36 @@ class Admin::EntriesController < AdminController
     request.format = 'html'
     respond_to do |format|
       format.html { render layout: nil }
+    end
+  end
+
+  def instagram
+    if @entry.is_published? && @entry.is_photo?
+      InstagramJob.perform_later(@entry)
+      flash[:notice] = 'Your entry was sent to your Instagram queue in Buffer!'
+      redirect_to share_admin_entry_path(@entry)
+    else
+      raise ActiveRecord::RecordNotFound
+    end
+  end
+
+  def twitter
+    if @entry.is_published? && @entry.is_photo?
+      TwitterJob.perform_later(@entry)
+      flash[:notice] = 'Your entry was sent to your Twitter queue in Buffer!'
+      redirect_to share_admin_entry_path(@entry)
+    else
+      raise ActiveRecord::RecordNotFound
+    end
+  end
+
+  def facebook
+    if @entry.is_published? && @entry.is_photo?
+      FacebookJob.perform_later(@entry)
+      flash[:notice] = 'Your entry was sent to your Facebook queue in Buffer!'
+      redirect_to share_admin_entry_path(@entry)
+    else
+      raise ActiveRecord::RecordNotFound
     end
   end
 
