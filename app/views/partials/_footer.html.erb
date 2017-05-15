@@ -1,4 +1,3 @@
-<%= stylesheet_link_tag 'components/footer', media: 'all' %>
 <footer class="footer <%= additional_classes if local_assigns[:additional_classes] %>" role="contentinfo">
   <% cache "blog/copyright/#{Time.now.strftime('%Y')}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <p>

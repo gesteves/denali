@@ -3,7 +3,15 @@
 <head>
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
-  <%= stylesheet_link_tag 'base', media: 'all' %>
+  <% if !content_for?(:inline_css) %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+  <% else %>
+    <%= yield :inline_css %>
+    <% cache "#{@app_version}/preloadjs" do %>
+      <script><%= inline_asset 'preload.js' %></script>
+    <% end %>
+    <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
+  <% end %>
   <%= javascript_include_tag 'application/image_zoom', defer: true %>
   <%= javascript_include_tag 'application/lazy_load', defer: true %>
   <%= javascript_include_tag "https://use.typekit.net/#{ENV['typekit_id']}.js", async: true, onload: 'try{Typekit.load({async:true})}catch(e){}' if ENV['typekit_id'].present? %>

@@ -11,7 +11,11 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w(
   admin.css
   admin.js
+  application.css
   base.css
+  entry_list.css
+  entry.css
+  preload.js
   components/entry_list.css
   components/entry.css
   components/error.css

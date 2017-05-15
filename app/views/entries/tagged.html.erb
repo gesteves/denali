@@ -27,12 +27,15 @@
   <% end %>
 <% end %>
 
-<% cache "#{@app_version}/entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-<%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
-<%= stylesheet_link_tag 'components/exif', media: 'all' %>
+<% content_for :inline_css do %>
+  <% cache "#{@app_version}/entries/styles" do %>
+    <style><%= inline_asset 'entry_list.css' %></style>
+  <% end %>
+<% end %>
+
+<% cache "entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <ol class="entry-list" role="main">
     <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { lazy_load_start_index: 12 } %>
   </ol>
-  <%= stylesheet_link_tag 'components/pagination', media: 'all' %>
   <%= paginate @entries %>
 <% end %>

@@ -1,4 +1,3 @@
-<%= stylesheet_link_tag 'components/tags', media: 'all' %>
 <p class="tags">
   <% tags.sort_by { |t| t.name }.each do |tag| %>
     <%= link_to tag.name, tag_path(tag.slug), { rel: 'tag' } %>

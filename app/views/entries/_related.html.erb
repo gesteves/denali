@@ -1,6 +1,5 @@
-<% cache "#{@app_version}/entry/related/#{@entry.id}/#{@entry.updated_at.to_i}", expires_in: 1.week do %>
+<% cache "entry/related/#{@entry.id}/#{@entry.updated_at.to_i}", expires_in: 1.week do %>
   <% if @entry.related.size >= 4 %>
-    <%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
     <aside role="complementary">
       <h2 class="entry__related">Related Photos You Might Like</h2>
       <ol class="entry-list entry-list--related">
