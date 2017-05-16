@@ -1,13 +1,3 @@
-.entry {
-  margin: 24px auto;
-  max-width: $bp-max;
-  width: 100%;
-
-  @media (min-width: $bp-xl) {
-    margin: 72px auto;
-  }
-}
-
 .entry__headline {
   font-size: 20px;
   line-height: (24/20);
@@ -20,8 +10,6 @@
   }
 }
 
-// Below the fold
-
 .entry__body {
   margin: 0 auto;
   max-width: $bp-m;
@@ -31,7 +19,6 @@
     padding: 36px 90px;
   }
 }
-
 
 .entry--text {
   .entry__body {
@@ -48,45 +35,6 @@
       padding-top: 36px;
     }
   }
-}
-
-.entry__photo-container {
-  margin: 0 auto;
-  max-width: 100%;
-}
-
-.entry__figure {
-  background-color: $color-photo-background;
-  display: flex;
-  font-size: 0;
-  justify-content: center;
-  margin: 0 0 24px;
-  max-width: 100vw;
-  padding: 0;
-  position: relative;
-  text-align: center;
-  width: 100%;
-
-  a {
-    display: inline-block;
-    font-size: 0;
-    margin: 0;
-    padding: 0;
-  }
-
-  @media (min-width: $bp-s) {
-    margin: 0 0 36px;
-  }
-}
-
-.entry__photo {
-  display: inline-block;
-  left: 0;
-  max-width: 100%;
-  position: absolute;
-  top: 0;
-  width: auto;
-  z-index: 1;
 }
 
 .entry--photo #{&}__body {
