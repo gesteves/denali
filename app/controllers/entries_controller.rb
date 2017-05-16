@@ -38,11 +38,15 @@ class EntriesController < ApplicationController
   def show
     if stale?(@photoblog, public: true)
       @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
-      respond_to do |format|
-        format.html {
-          redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
-        }
-        format.json
+      begin
+        respond_to do |format|
+          format.html {
+            redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
+          }
+          format.json
+        end
+      rescue ActionController::UnknownFormat
+        redirect_to(@entry.permalink_url, status: 301)
       end
     end
   end
