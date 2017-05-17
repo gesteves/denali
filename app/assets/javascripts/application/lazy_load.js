@@ -5,7 +5,7 @@ Denali.LazyLoad = (function () {
 
   var opts = {
     load_class : 'js-lazy-load',
-    threshold: document.documentElement.clientHeight
+    threshold: 0
   };
   var requested_animation_frame = false;
   var observer;
