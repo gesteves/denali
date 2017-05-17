@@ -8,7 +8,14 @@
   <% else %>
     <%= yield :inline_css %>
     <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
-    <%= javascript_include_tag 'preload', async: true %>
+    <script>
+      if (!document.createElement('link').relList.supports('preload')) {
+        var s = document.createElement('script');
+        s.src = '<%= asset_path 'preload' %>';
+        s.async = true;
+        document.head.appendChild(s);
+      }
+    </script>
   <% end %>
   <%= javascript_include_tag 'application/image_zoom', async: true %>
   <%= javascript_include_tag 'application/lazy_load', async: true %>
