@@ -8,10 +8,8 @@
   <% else %>
     <%= yield :inline_css %>
     <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
-    <%= javascript_include_tag 'preload', defer: true %>
   <% end %>
-  <%= javascript_include_tag 'application/image_zoom', defer: true %>
-  <%= javascript_include_tag 'application/lazy_load', defer: true %>
+  <%= javascript_include_tag 'application', defer: true %>
   <% if ENV['typekit_id'].present? %>
     <script>
       (function(d) {

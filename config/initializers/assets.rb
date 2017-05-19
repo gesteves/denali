@@ -12,6 +12,7 @@ Rails.application.config.assets.precompile += %w(
   admin.css
   admin.js
   application.css
+  application.js
   base.css
   entry_list.css
   entry.css
