@@ -24,14 +24,16 @@ class InstagramJob < BufferJob
  # for instagram
  def custom_hashtags(entry)
    entry_tags = entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+   instagram_tags = []
    custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
    custom_hashtags.each do |k, v|
      if k == 'all'
-       entry_tags += custom_hashtags[k]
+       instagram_tags += custom_hashtags[k]
      elsif entry_tags.include? k
-       entry_tags += custom_hashtags[k]
+       instagram_tags += custom_hashtags[k]
      end
    end
-   entry_tags[0, 30].sort.map { |t| "##{t}"}.join(' ')
+   tags = instagram_tags.sort + entry_tags.sort
+   tags.uniq[0, 30].sort.map { |t| "##{t}"}.join(' ')
  end
 end
