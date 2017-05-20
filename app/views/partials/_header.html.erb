@@ -3,7 +3,11 @@
     <p class="header__tagline"><%= sanitize @photoblog.description %></p>
   </div>
   <a href="/" class="header__link">
-    <%= @photoblog.header_logo_svg.try(:html_safe) %>
+    <% if @photoblog.header_logo_svg.present? %>
+      <%= @photoblog.header_logo_svg.html_safe %>
+    <% else %>
+      <%= @photoblog.name %>
+    <% end %>
   </a>
   <div class="header__section">
     <%= render partial: 'partials/follow.html.erb' %>
