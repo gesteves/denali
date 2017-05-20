@@ -59,11 +59,15 @@
   order: -1;
   width: 180px;
 
+  &:link,
+  &:visited {
+    color: $color-text;
+  }
+
   &:hover,
   &:active {
-    path {
-      fill: $color-links;
-    }
+    color: $color-links;
+    text-decoration: none;
   }
 
   @media (min-width: $bp-xs) {
