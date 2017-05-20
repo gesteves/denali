@@ -4,7 +4,6 @@ class MapsController < ApplicationController
   layout false
 
   def index
-    raise ActionController::RoutingError unless ENV['mapbox_api_token'].present?
   end
 
   def photos
