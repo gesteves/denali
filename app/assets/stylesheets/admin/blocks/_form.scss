@@ -48,6 +48,11 @@
     line-height: 1.5;
   }
 
+  &.form__input--tiny {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
   &.form__input--textarea {
     font-size: 14px;
     height: 240px;
