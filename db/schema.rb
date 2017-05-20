@@ -10,22 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170409005102) do
+ActiveRecord::Schema.define(version: 20170520160754) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "blogs", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
     t.string   "domain"
     t.text     "description"
-    t.integer  "posts_per_page",       default: 10
+    t.integer  "posts_per_page",          default: 10
     t.string   "short_domain"
     t.text     "about"
     t.string   "copyright"
-    t.boolean  "show_related_entries", default: true
+    t.boolean  "show_related_entries",    default: true
     t.text     "analytics_code"
     t.string   "instagram"
     t.string   "twitter"
@@ -33,6 +33,14 @@ ActiveRecord::Schema.define(version: 20170409005102) do
     t.string   "email"
     t.text     "header_logo_svg"
     t.text     "additional_meta_tags"
+    t.string   "favicon_file_name"
+    t.string   "favicon_content_type"
+    t.integer  "favicon_file_size"
+    t.datetime "favicon_updated_at"
+    t.string   "touch_icon_file_name"
+    t.string   "touch_icon_content_type"
+    t.integer  "touch_icon_file_size"
+    t.datetime "touch_icon_updated_at"
     t.index ["domain"], name: "index_blogs_on_domain", using: :btree
   end
 
