@@ -1,10 +1,10 @@
 class MapsController < ApplicationController
   before_action :set_max_age, only: [:index, :photos]
   before_action :set_entry_max_age, only: [:photo]
-
   layout false
 
   def index
+    raise ActionController::RoutingError unless ENV['mapbox_api_token'].present?
   end
 
   def photos
