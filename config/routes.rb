@@ -66,6 +66,11 @@ Rails.application.routes.draw do
   get '/signin'                        => 'sessions#new',     :as => :signin
   get '/signout'                       => 'sessions#destroy', :as => :signout
 
+  # PWA
+  get '/service_worker.js'             => 'progressive_web_app#service_worker'
+  get '/manifest.json'                 => 'progressive_web_app#manifest'
+  get '/offline'                       => 'progressive_web_app#offline', :as => :offline
+
   # The rest
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }
   root 'entries#index'
