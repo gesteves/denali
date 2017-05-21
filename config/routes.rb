@@ -49,6 +49,8 @@ Rails.application.routes.draw do
   get '/map/photo/:id.:format'         => 'maps#photo'
   get '/sitemap.:format'               => 'entries#sitemap', defaults: { format: 'xml' }, :as => :sitemap
   get '/about'                         => 'blogs#about', :as => :about
+  get '/offline'                       => 'blogs#offline',  :as => :offline
+  get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
 
   # Redirects
@@ -67,9 +69,7 @@ Rails.application.routes.draw do
   get '/signout'                       => 'sessions#destroy', :as => :signout
 
   # PWA
-  get '/service_worker.js'             => 'progressive_web_app#service_worker'
-  get '/manifest.json'                 => 'progressive_web_app#manifest', :as => :pwa_manifest
-  get '/offline'                       => 'progressive_web_app#offline',  :as => :offline
+  get '/service_worker.js'             => 'service_worker#index'
 
   # The rest
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }
