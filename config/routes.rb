@@ -68,8 +68,8 @@ Rails.application.routes.draw do
 
   # PWA
   get '/service_worker.js'             => 'progressive_web_app#service_worker'
-  get '/manifest.json'                 => 'progressive_web_app#manifest'
-  get '/offline'                       => 'progressive_web_app#offline', :as => :offline
+  get '/manifest.json'                 => 'progressive_web_app#manifest', :as => :pwa_manifest
+  get '/offline'                       => 'progressive_web_app#offline',  :as => :offline
 
   # The rest
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }

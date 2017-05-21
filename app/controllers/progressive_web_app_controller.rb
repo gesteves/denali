@@ -6,6 +6,7 @@ class ProgressiveWebAppController < ApplicationController
   end
 
   def manifest
+    @icons = @photoblog.touch_icon.present? ? [128, 152, 144, 192].map { |size| { sizes: "#{size}x#{size}", type: 'image/png', src: @photoblog.touch_icon_url(w: size) } } : []
   end
 
   def offline
