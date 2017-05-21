@@ -156,7 +156,7 @@ https://www.filamentgroup.com/
           // OFFLINE
           // If the request is for an image, show an offline placeholder
           if (request.headers.get('Accept').indexOf('image') !== -1) {
-            return new Response("<svg role='img' aria-labelledby='offline-title' viewBox='0 0 400 300' xmlns='http://www.w3.org/2000/svg'><title id='offline-title'>Offline</title><g fill='none' fill-rule='evenodd'><path fill='#D8D8D8' d='M0 0h400v300H0z'/><text fill='#9B9B9B' font-family='Helvetica Neue,Arial,Helvetica,sans-serif' font-size='72' font-weight='bold'><tspan x='93' y='172'>offline</tspan></text></g></svg>", { headers: { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'no-store' } });
+            return new Response('<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><title>Offline</title><path d="M55.14 52.86l-2.28 2.28c-.2.2-.52.2-.72 0L50 53l-2.14 2.14c-.2.2-.52.2-.72 0l-2.28-2.28c-.2-.2-.2-.52 0-.72L47 50l-2.14-2.14c-.2-.2-.2-.52 0-.72l2.28-2.28c.2-.2.52-.2.72 0L50 47l2.14-2.14c.2-.2.52-.2.72 0l2.28 2.28c.2.2.2.52 0 .72L53 50l2.14 2.14c.2.2.2.52 0 .72zM58.5 50c0-4.7-3.8-8.5-8.5-8.5s-8.5 3.8-8.5 8.5 3.8 8.5 8.5 8.5 8.5-3.8 8.5-8.5zm3.5 0c0 6.63-5.38 12-12 12-6.63 0-12-5.38-12-12 0-6.63 5.38-12 12-12 6.63 0 12 5.38 12 12z" fill="#CCC"/></svg>', { headers: { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'no-store' } });
           }
         });
       })
