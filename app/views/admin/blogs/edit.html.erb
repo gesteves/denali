@@ -53,13 +53,12 @@
 
 
   <%= f.label :favicon, 'Favicon', class: 'form__label' %>
-
   <% if @blog.favicon.present? %>
     <div><%= image_tag @blog.favicon_url %>  </div>
   <% end %>
   <%= f.file_field :favicon, accept: '.png', class: 'form__input form__input--tiny' %>
 
-  <%= f.label :touch_icon, 'Touch icon', class: 'form__label' %>
+  <%= f.label :touch_icon, 'Icon', class: 'form__label' %>
   <% if @blog.touch_icon.present? %>
     <div><%= image_tag @blog.touch_icon_url %>  </div>
   <% end %>
