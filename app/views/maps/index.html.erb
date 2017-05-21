@@ -26,6 +26,7 @@
   <link rel="preconnect" href="https://a.tiles.mapbox.com" crossorigin>
   <link rel="preconnect" href="https://b.tiles.mapbox.com" crossorigin>
   <%= stylesheet_link_tag 'application', media: 'all' %>
+  <script>mapbox_token = '<%= ENV['mapbox_api_token'] %>';</script>
   <%= javascript_include_tag 'application/map', async: true %>
   <%= javascript_include_tag "https://use.typekit.net/#{ENV['typekit_id']}.js", async: true, onload: 'try{Typekit.load({async:true})}catch(e){}' if ENV['typekit_id'].present? %>
   <%= @photoblog.analytics_code.try(:html_safe) %>
