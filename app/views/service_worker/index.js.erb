@@ -55,7 +55,7 @@ https://www.filamentgroup.com/
       cache.keys()
       .then(keys => {
         if (keys.length > maxItems) {
-          cache.delete(keys[ 0 ])
+          cache.delete(keys[0])
           .then(trimCache(cacheName, maxItems));
         }
       });
@@ -76,8 +76,8 @@ https://www.filamentgroup.com/
   // Events!
   self.addEventListener('message', event => {
     if (event.data.command == 'trimCaches') {
-      trimCache(pagesCacheName, 35);
-      trimCache(imagesCacheName, 20);
+      trimCache(pagesCacheName, 50);
+      trimCache(imagesCacheName, 50);
     }
   });
 
@@ -91,13 +91,6 @@ https://www.filamentgroup.com/
     event.waitUntil(clearOldCaches()
       .then(() => self.clients.claim())
     );
-  });
-
-  self.addEventListener('message', event => {
-    if (event.data.command == 'trimCaches') {
-      trimCache(pagesCacheName, 35);
-      trimCache(imagesCacheName, 20);
-    }
   });
 
   self.addEventListener('fetch', event => {
