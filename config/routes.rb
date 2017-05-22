@@ -69,7 +69,7 @@ Rails.application.routes.draw do
   get '/signout'                       => 'sessions#destroy', :as => :signout
 
   # PWA
-  get '/service_worker.js'             => 'service_worker#index'
+  get '/service_worker.js'             => 'service_worker#index', defaults: { format: 'js' }
 
   # The rest
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }
