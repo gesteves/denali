@@ -13,10 +13,18 @@ class EntriesController < ApplicationController
       @count = (params[:count] || @photoblog.posts_per_page).to_i
       @entries = @photoblog.entries.includes(:photos).published.photo_entries.page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @entries.empty?
-      respond_to do |format|
-        format.html
-        format.json
-        format.atom
+      begin
+        respond_to do |format|
+          format.html
+          format.json
+          format.atom
+        end
+      rescue ActionController::UnknownFormat
+        if @page == 1
+          redirect_to(entries_path, status: 301)
+        else
+          redirect_to(entries_path(page: @page), status: 301)
+        end
       end
     end
   end
@@ -27,10 +35,18 @@ class EntriesController < ApplicationController
       @count = (params[:count] || @photoblog.posts_per_page).to_i
       @entries = @photoblog.entries.includes(:photos).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
-      respond_to do |format|
-        format.html
-        format.json
-        format.atom
+      begin
+        respond_to do |format|
+          format.html
+          format.json
+          format.atom
+        end
+      rescue ActionController::UnknownFormat
+        if @page == 1
+          redirect_to(tag_path(@tag_slug), status: 301)
+        else
+          redirect_to(tag_path(tag: @tag_slug, page: @page), status: 301)
+        end
       end
     end
   end
