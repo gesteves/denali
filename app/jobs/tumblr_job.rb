@@ -15,7 +15,7 @@ class TumblrJob < ApplicationJob
       tags: tags.join(', '),
       slug: entry.slug,
       caption: entry.formatted_content(link_title: true),
-      link: entry.permalink_url,
+      link: entry.permalink_url(utm_source: 'tumblr'),
       data: entry.photos.map { |p| resized_photo_path(p) },
       state: 'queue'
     }
