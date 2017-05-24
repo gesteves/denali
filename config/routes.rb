@@ -53,8 +53,9 @@ Rails.application.routes.draw do
   get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
 
-  # Redirects
+  # Legacy routes & redirects
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
+  get '/rss'                           => 'entries#feed', defaults: { format: 'atom' }
 
   # Feeds
   get '(/page/:page)/feed(.:format)'             => 'entries#feed', constraints: { page: /\d+/ }, defaults: { format: 'atom' }, :as => :feed
