@@ -30,12 +30,6 @@ class EntriesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should generate rss feed" do
-    get :feed, params: { format: 'rss' }
-    assert_template :feed
-    assert_response :success
-  end
-
   test "should generate json feed" do
     get :feed, params: { format: 'json' }
     assert_template :feed
@@ -108,14 +102,6 @@ class EntriesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'should render tag rss feed' do
-    entry = entries(:peppers)
-    entry.tag_list = 'washington'
-    entry.save
-    get :tag_feed, params: { tag: 'washington', format: 'rss' }
-    assert_template :tag_feed
-    assert_response :success
-  end
 
   test 'should render tag json feed' do
     entry = entries(:peppers)

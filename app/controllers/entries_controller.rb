@@ -73,7 +73,6 @@ class EntriesController < ApplicationController
       begin
         respond_to do |format|
           format.atom
-          format.rss
           format.json
         end
       rescue ActionController::UnknownFormat
@@ -90,7 +89,6 @@ class EntriesController < ApplicationController
       begin
         respond_to do |format|
           format.atom
-          format.rss
           format.json
         end
       rescue ActionController::UnknownFormat
