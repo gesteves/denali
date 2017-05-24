@@ -68,7 +68,7 @@ class EntriesController < ApplicationController
   def feed
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
-      @entries = @photoblog.entries.includes(:photos).published.photo_entries.page(@page).per(25)
+      @entries = @photoblog.entries.includes(:photos).published.photo_entries.page(@page).per(@photoblog.posts_per_page)
       raise ActiveRecord::RecordNotFound if @entries.empty?
       begin
         respond_to do |format|
@@ -84,7 +84,7 @@ class EntriesController < ApplicationController
   def tag_feed
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
-      @entries = @photoblog.entries.includes(:photos).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(25)
+      @entries = @photoblog.entries.includes(:photos).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@photoblog.posts_per_page)
       raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
       begin
         respond_to do |format|
