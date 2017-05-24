@@ -1,10 +1,17 @@
-cache "feed/atom/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+cache "feed/atom/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
   xml.instruct!
   xml.feed xmlns: 'http://www.w3.org/2005/Atom' do
-    xml.id atom_tag(root_url, @photoblog.updated_at)
-    xml.title @photoblog.name
-    xml.link rel: 'alternate', type: 'text/html', href: root_url
-    xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(format: 'atom')
+    if @page.nil? || @page == 1
+      xml.id atom_tag(root_url, @photoblog.updated_at)
+      xml.title @photoblog.name
+      xml.link rel: 'alternate', type: 'text/html', href: root_url
+      xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(format: 'atom')
+    else
+      xml.id atom_tag(entries_url(page: @page), @photoblog.updated_at)
+      xml.title "#{@photoblog.name} &middot; Page #{@page}"
+      xml.link rel: 'alternate', type: 'text/html', href: entries_url(page: @page)
+      xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(page: @page, format: 'atom')
+    end
     xml.updated @photoblog.updated_at.utc.strftime('%FT%TZ')
 
     @entries.each do |e|
