@@ -57,9 +57,9 @@ Rails.application.routes.draw do
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
 
   # Feeds
-  get '/feed'                          => 'entries#index', defaults: { format: 'atom' }, :as => :simple_feed
-  get '/rss'                           => 'entries#index', defaults: { format: 'atom' }
-  get '/atom'                          => 'entries#index', defaults: { format: 'atom' }
+  get '/feed'                          => 'entries#feed', defaults: { format: 'atom' }, :as => :feed
+  get '/rss'                           => 'entries#feed', defaults: { format: 'rss' }
+  get '/feed/:tag'                     => 'entries#tag_feed', defaults: { format: 'atom' }, :as => :tag_feed
 
   # Admin
   get '/admin'                         => 'admin#index',      :as => :admin

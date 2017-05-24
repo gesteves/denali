@@ -3,7 +3,7 @@ class EntriesController < ApplicationController
 
   before_action :check_if_user_has_visited, only: [:index, :tagged, :show, :preview]
   before_action :set_request_format, only: [:index, :tagged, :show]
-  before_action :load_tags, only: [:tagged]
+  before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged]
   before_action :set_entry_max_age, only: [:show, :preview]
 
@@ -17,7 +17,6 @@ class EntriesController < ApplicationController
         respond_to do |format|
           format.html
           format.json
-          format.atom
         end
       rescue ActionController::UnknownFormat
         if @page == 1
@@ -39,7 +38,6 @@ class EntriesController < ApplicationController
         respond_to do |format|
           format.html
           format.json
-          format.atom
         end
       rescue ActionController::UnknownFormat
         if @page == 1
@@ -63,6 +61,38 @@ class EntriesController < ApplicationController
         end
       rescue ActionController::UnknownFormat
         redirect_to(@entry.permalink_url, status: 301)
+      end
+    end
+  end
+
+  def feed
+    if stale?(@photoblog, public: true)
+      @entries = @photoblog.entries.includes(:photos).published.photo_entries.limit(25)
+      raise ActiveRecord::RecordNotFound if @entries.empty?
+      begin
+        respond_to do |format|
+          format.atom
+          format.rss
+          format.json
+        end
+      rescue ActionController::UnknownFormat
+        render text: 'Not found', status: 404
+      end
+    end
+  end
+
+  def tag_feed
+    if stale?(@photoblog, public: true)
+      @entries = @photoblog.entries.includes(:photos).published.photo_entries.tagged_with(@tag_list, any: true).limit(25)
+      raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+      begin
+        respond_to do |format|
+          format.atom
+          format.rss
+          format.json
+        end
+      rescue ActionController::UnknownFormat
+        render text: 'Not found', status: 404
       end
     end
   end

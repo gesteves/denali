@@ -24,9 +24,21 @@ class EntriesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should generate feed" do
-    get :index, params: { page: 1, format: 'atom' }
-    assert_template :index
+  test "should generate atom feed" do
+    get :feed, params: { format: 'atom' }
+    assert_template :feed
+    assert_response :success
+  end
+
+  test "should generate rss feed" do
+    get :feed, params: { format: 'rss' }
+    assert_template :feed
+    assert_response :success
+  end
+
+  test "should generate json feed" do
+    get :feed, params: { format: 'json' }
+    assert_template :feed
     assert_response :success
   end
 
@@ -87,12 +99,30 @@ class EntriesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test 'should render tag page feed' do
+  test 'should render tag atom feed' do
     entry = entries(:peppers)
     entry.tag_list = 'washington'
     entry.save
-    get :tagged, params: { tag: 'washington', format: 'atom' }
-    assert_template :tagged
+    get :tag_feed, params: { tag: 'washington', format: 'atom' }
+    assert_template :tag_feed
+    assert_response :success
+  end
+
+  test 'should render tag rss feed' do
+    entry = entries(:peppers)
+    entry.tag_list = 'washington'
+    entry.save
+    get :tag_feed, params: { tag: 'washington', format: 'rss' }
+    assert_template :tag_feed
+    assert_response :success
+  end
+
+  test 'should render tag json feed' do
+    entry = entries(:peppers)
+    entry.tag_list = 'washington'
+    entry.save
+    get :tag_feed, params: { tag: 'washington', format: 'json' }
+    assert_template :tag_feed
     assert_response :success
   end
 
