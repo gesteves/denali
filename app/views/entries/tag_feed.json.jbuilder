@@ -11,7 +11,7 @@ json.cache! "feed/json/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to
   end
   json.description "Photos tagged #{@tags.first.name.titlecase}"
   json.icon @photoblog.touch_icon_url(w: 512) if @photoblog.touch_icon.present?
-  json.favicon @photoblog.favicon_url if @photoblog.favicon.present?
+  json.favicon @photoblog.favicon_url(w: 64) if @photoblog.favicon.present?
   json.items @entries do |e|
     json.partial! 'feed_entry', entry: e
   end
