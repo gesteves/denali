@@ -30,7 +30,8 @@
   <% end %>
 <% end %>
 
-<%= auto_discovery_link_tag :atom, simple_feed_url, title: entry.blog.name %>
+<%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: entry.blog.name %>
+<%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: entry.blog.name, type: 'application/json' %>
 <% if @entry.is_published? %>
   <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
   <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">

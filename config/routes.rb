@@ -53,13 +53,13 @@ Rails.application.routes.draw do
   get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
 
-  # Redirects
+  # Legacy routes & redirects
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
+  get '/rss'                           => 'entries#feed', defaults: { format: 'atom' }
 
   # Feeds
-  get '/feed'                          => 'entries#index', defaults: { format: 'atom' }, :as => :simple_feed
-  get '/rss'                           => 'entries#index', defaults: { format: 'atom' }
-  get '/atom'                          => 'entries#index', defaults: { format: 'atom' }
+  get '(/page/:page)/feed(.:format)'             => 'entries#feed', constraints: { page: /\d+/ }, defaults: { format: 'atom' }, :as => :feed
+  get '/tagged/:tag(/page/:page)/feed(.:format)' => 'entries#tag_feed', constraints: { page: /\d+/ }, defaults: { format: 'atom' }, :as => :tag_feed
 
   # Admin
   get '/admin'                         => 'admin#index',      :as => :admin
