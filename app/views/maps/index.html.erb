@@ -28,7 +28,11 @@
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <script>mapbox_token = '<%= ENV['mapbox_api_token'] %>';</script>
   <%= javascript_include_tag 'application/map', async: true %>
-  <%= javascript_include_tag "https://use.typekit.net/#{ENV['typekit_id']}.js", async: true, onload: 'try{Typekit.load({async:true})}catch(e){}' if ENV['typekit_id'].present? %>
+  <% if ENV['typekit_light_id'].present? %>
+    <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_light_id']} %>
+  <% elsif ENV['typekit_id'].present? %>
+    <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} %>
+  <% end %>
   <%= @photoblog.analytics_code.try(:html_safe) %>
 </head>
 <body>
