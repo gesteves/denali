@@ -23,7 +23,7 @@ Rails.application.config.assets.precompile += %w(
   components/exif.css
   components/footer.css
   components/header.css
-  components/map-header.css
+  components/header_minimal.css
   components/map.css
   components/pagination.css
   components/signin.css

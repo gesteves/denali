@@ -9,8 +9,12 @@
     <%= yield :inline_css %>
     <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
   <% end %>
-  <%= javascript_include_tag 'application', defer: true %>
-  <% if content_for?(:typekit) %>
+  <% if content_for? :javascript %>
+    <%= yield :javascript %>
+  <% else %>
+    <%= javascript_include_tag 'application', defer: true %>
+  <% end %>
+  <% if content_for? :typekit %>
     <%= yield :typekit %>
   <% else %>
     <% if ENV['typekit_light_id'].present? %>
@@ -22,8 +26,8 @@
   <%= @photoblog.analytics_code.try(:html_safe) %>
 </head>
 <body>
-<%= render partial: 'partials/header.html.erb' %>
+<%= render partial: 'partials/header.html.erb', locals: { is_minimal: @minimal_header } %>
 <%= yield %>
-<%= render partial: 'partials/footer.html.erb' %>
+<%= render partial: 'partials/footer.html.erb' unless @hide_footer %>
 </body>
 </html>
