@@ -1,14 +1,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width">
+<% ENV['imgix_domain'].split(',').each do |domain| %>
+  <link rel="preconnect" href="http<%= 's' if ENV['imgix_secure'].present? %>://<%= domain %>">
+<% end %>
+<% if ENV['typekit_light_id'].present? || ENV['typekit_id'].present? %>
+  <link rel="preconnect" href="https://use.typekit.net">
+  <link rel="preconnect" href="https://p.typekit.net">
+<% end %>
 <%= @photoblog.additional_meta_tags.try(:html_safe) %>
 <% if @photoblog.favicon.present? %>
-<link href="<%= @photoblog.favicon_url(w: 96) %>" rel="icon" type="image/png">
+<link rel="icon" href="<%= @photoblog.favicon_url(w: 96) %>" type="image/png">
 <% end %>
 <% if @photoblog.touch_icon.present? %>
-  <link href="<%= @photoblog.touch_icon_url(w: 192) %>" rel="icon" sizes="192x192">
-  <link href="<%= @photoblog.touch_icon_url(w: 180) %>" rel="apple-touch-icon" sizes="180x180">
-  <link href="<%= @photoblog.touch_icon_url(w: 152) %>" rel="apple-touch-icon" sizes="152x152">
-  <link href="<%= @photoblog.touch_icon_url(w: 120) %>" rel="apple-touch-icon" sizes="120x120">
-  <link href="<%= @photoblog.touch_icon_url(w: 76) %>" rel="apple-touch-icon" sizes="76x76">
+  <link rel="icon" href="<%= @photoblog.touch_icon_url(w: 192) %>" sizes="192x192">
+  <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(w: 180) %>" sizes="180x180">
+  <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(w: 152) %>" sizes="152x152">
+  <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(w: 120) %>" sizes="120x120">
+  <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(w: 76) %>" sizes="76x76">
 <% end %>
 <link rel="manifest" href="<%= app_manifest_path %>">
