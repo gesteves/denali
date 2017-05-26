@@ -23,9 +23,6 @@
     <meta name="twitter:card" content="summary">
     <link rel="preconnect" href="https://a.tiles.mapbox.com" crossorigin>
     <link rel="preconnect" href="https://b.tiles.mapbox.com" crossorigin>
-    <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
-    <%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>
-    <link rel="alternate" type="application/vnd.api+json" href="<%= @page == 1 ? entries_url : entries_url(page: @page) %>" %>
   <% end %>
 <% end %>
 
