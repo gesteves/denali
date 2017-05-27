@@ -1,4 +1,4 @@
-cache "feed/rss/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+cache "feed/rss/tagged/#{@tag_slug}/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
   xml.instruct!
   xml.rss version: '2.0',
           'xmlns:atom': 'http://www.w3.org/2005/Atom',
