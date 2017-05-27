@@ -6,6 +6,7 @@ class EntriesController < ApplicationController
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged]
   before_action :set_entry_max_age, only: [:show, :preview]
+  skip_before_action :verify_authenticity_token
 
   def index
     if stale?(@photoblog, public: true)
