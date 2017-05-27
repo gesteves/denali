@@ -24,7 +24,7 @@ cache "feed/atom/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" d
           xml.title e.plain_title
           body = ''
           e.photos.each do |p|
-            body += image_tag p.url(w: 1280), alt: p.caption.blank? ? e.title : p.plain_caption
+            body += image_tag p.url(w: 1280), srcset: "#{p.url(w: 1280)} 1x, #{p.url(w: 2560)} 2x", alt: p.caption.blank? ? e.title : p.plain_caption
           end
           body += e.formatted_body unless e.body.blank?
           xml.content body, type: 'html'
