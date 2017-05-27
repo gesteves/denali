@@ -33,4 +33,8 @@ module EntriesHelper
     end
     truncate body, length: 200
   end
+
+  def get_rss_widths(photo, photo_key)
+    PHOTOS[photo_key]['srcset'].uniq.sort.reject { |width| width > photo.width }
+  end
 end

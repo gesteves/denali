@@ -74,6 +74,7 @@ class EntriesController < ApplicationController
         respond_to do |format|
           format.atom
           format.json
+          format.rss
         end
       rescue ActionController::UnknownFormat
         render text: 'Not found', status: 404
@@ -90,6 +91,7 @@ class EntriesController < ApplicationController
         respond_to do |format|
           format.atom
           format.json
+          format.rss
         end
       rescue ActionController::UnknownFormat
         render text: 'Not found', status: 404

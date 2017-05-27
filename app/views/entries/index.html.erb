@@ -22,8 +22,9 @@
     <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>">
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <meta name="twitter:card" content="summary">
-    <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
-    <%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>
+    <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: 'Atom' %>
+    <%= auto_discovery_link_tag :rss, feed_url(format: 'rss'), title: 'RSS' %>
+    <%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: 'JSON Feed', type: 'application/json' %>
     <link rel="alternate" type="application/vnd.api+json" href="<%= @page == 1 ? entries_url : entries_url(page: @page) %>" %>
   <% end %>
 <% end %>
