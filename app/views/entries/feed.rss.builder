@@ -38,7 +38,7 @@ cache "feed/rss/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
             elsif  e.photos.first.caption.present?
               xml.description e.photos.first.plain_caption
             end
-            e.tags.each do |tag|
+            e.combined_tags.each do |tag|
               xml.category tag.name
             end
             e.photos.each do |photo|
