@@ -36,12 +36,6 @@ class EntriesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should generate rss feed" do
-    get :feed, params: { format: 'rss' }
-    assert_template :feed
-    assert_response :success
-  end
-
   test 'photo page should render correctly' do
     entry = entries(:peppers)
     get :show, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug }
@@ -116,14 +110,4 @@ class EntriesControllerTest < ActionController::TestCase
     assert_template :tag_feed
     assert_response :success
   end
-
-  test 'should render tag rss feed' do
-    entry = entries(:peppers)
-    entry.tag_list = 'washington'
-    entry.save
-    get :tag_feed, params: { tag: 'washington', format: 'rss' }
-    assert_template :tag_feed
-    assert_response :success
-  end
-
 end
