@@ -29,9 +29,8 @@
     <meta name="twitter:image:alt" content="<%= entry.photos.first.plain_caption %>">
   <% end %>
 <% end %>
-
-<%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: entry.blog.name %>
-<%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: entry.blog.name, type: 'application/json' %>
+<%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
+<%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>
 <% if @entry.is_published? %>
   <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
   <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">
