@@ -22,8 +22,8 @@
     <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? tag_url(@tags.first.slug) : tag_url(@tags.first.slug, @page) %>">
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <meta name="twitter:card" content="summary">
-    <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'atom'), title: "#{@tags.first.name.titlecase} &middot; #{@photoblog.name}" %>
-    <%= auto_discovery_link_tag :json, tag_feed_url(format: 'json'), title: "#{@tags.first.name.titlecase} &middot; #{@photoblog.name}", type: 'application/json' %>
+    <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'atom'), title: sanitize("#{@tags.first.name.titlecase} &middot; #{@photoblog.name}") %>
+    <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'json'), title: sanitize("#{@tags.first.name.titlecase} &middot; #{@photoblog.name}"), type: 'application/json' %>
     <link rel="alternate" type="application/vnd.api+json" href="<%= @page == 1 ? tag_url(@tags.first.slug) : tag_url(tag: @tags.first.slug, page: @page) %>" %>
   <% end %>
 <% end %>
