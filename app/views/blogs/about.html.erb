@@ -25,6 +25,13 @@
   <% end %>
 <% end %>
 
+<% content_for :typekit do %>
+  <% if ENV['typekit_light_id'].present? && @photoblog.about.blank? %>
+    <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_light_id']} %>
+  <% elsif ENV['typekit_id'].present? %>
+    <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} %>
+  <% end %>
+<% end %>
 
 <% cache "blog/about/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <article class="entry entry--text">

@@ -6,7 +6,7 @@ class PinterestJob < ApplicationJob
     opts = {
       board: ENV['pinterest_board_id'],
       note: "#{entry.plain_title} #{all_tags}",
-      link: entry.permalink_url,
+      link: entry.permalink_url(utm_source: 'pinterest.com', utm_medium: 'social'),
       image_url: entry.photos.first.url(w: 2048)
     }
     response = HTTParty.post('https://api.pinterest.com/v1/pins/', query: opts, headers: { 'Authorization' => "BEARER #{ENV['pinterest_token']}" })

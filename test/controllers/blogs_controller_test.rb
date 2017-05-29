@@ -7,4 +7,14 @@ class BlogsControllerTest < ActionController::TestCase
     assert_template layout: 'layouts/application'
     assert_template :about
   end
+
+  test "should get manifest" do
+    get :manifest
+    assert_response :success
+  end
+
+  test "should get offline" do
+    get :offline
+    assert_response :success
+  end
 end

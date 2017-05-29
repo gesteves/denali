@@ -1,41 +1,37 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <%= render partial: 'partials/meta_tags' %>
-  <title>Map &middot; <%= @photoblog.name %></title>
-  <meta name="description" content="<%= @photoblog.name %> photos, mapped.">
-  <link rel="canonical" href="<%= map_url %>">
+<% content_for :meta do %>
+  <% cache "maps/meta/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+    <title>Map &middot; <%= @photoblog.name %></title>
+    <meta name="description" content="<%= @photoblog.name %> photos, mapped.">
+    <link rel="canonical" href="<%= map_url %>">
 
-  <meta property="og:title" content="<%= @photoblog.name %>">
-  <meta property="og:image" content="<%= @photoblog.entries.photo_entries.published.first.photos.first.url(w: 1200, h: 628) %>">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="628">
-  <meta property="og:description" content="<%= @photoblog.name %> photos, mapped.">
-  <meta property="og:url" content="<%= map_url %>">
-  <meta property="og:type" content="Website">
-  <meta property="og:site_name" content="<%= @photoblog.name %>">
-  <meta property="og:locale" content="en_US">
-  <% if @photoblog.twitter.present? %>
-    <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
-    <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+    <meta property="og:title" content="<%= @photoblog.name %>">
+    <meta property="og:image" content="<%= @photoblog.entries.photo_entries.published.first.photos.first.url(w: 1200, h: 628) %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="628">
+    <meta property="og:description" content="<%= @photoblog.name %> photos, mapped.">
+    <meta property="og:url" content="<%= map_url %>">
+    <meta property="og:type" content="Website">
+    <meta property="og:site_name" content="<%= @photoblog.name %>">
+    <meta property="og:locale" content="en_US">
+    <% if @photoblog.twitter.present? %>
+      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+    <% end %>
+    <meta name="twitter:title" content="<%= @photoblog.name %>">
+    <meta name="twitter:url" content="<%= map_url %>">
+    <meta name="twitter:description" content="<%= @photoblog.name %> photos, mapped.">
+    <meta name="twitter:card" content="summary">
+    <link rel="preconnect" href="https://a.tiles.mapbox.com" crossorigin>
+    <link rel="preconnect" href="https://b.tiles.mapbox.com" crossorigin>
   <% end %>
-  <meta name="twitter:title" content="<%= @photoblog.name %>">
-  <meta name="twitter:url" content="<%= map_url %>">
-  <meta name="twitter:description" content="<%= @photoblog.name %> photos, mapped.">
-  <meta name="twitter:card" content="summary">
-  <link rel="preconnect" href="https://a.tiles.mapbox.com" crossorigin>
-  <link rel="preconnect" href="https://b.tiles.mapbox.com" crossorigin>
-  <%= stylesheet_link_tag 'application', media: 'all' %>
+<% end %>
+
+<% content_for :javascript do %>
   <script>mapbox_token = '<%= ENV['mapbox_api_token'] %>';</script>
   <%= javascript_include_tag 'application/map', async: true %>
-  <%= javascript_include_tag "https://use.typekit.net/#{ENV['typekit_id']}.js", async: true, onload: 'try{Typekit.load({async:true})}catch(e){}' if ENV['typekit_id'].present? %>
-  <%= @photoblog.analytics_code.try(:html_safe) %>
-</head>
-<body>
-  <%= render partial: 'partials/header.html.erb', locals: { is_map: true } %>
-  <div id="map" class="map" role="main"></div>
-  <div class="map__loading js-loading">
-    <%= inline_svg 'spinner', 'map__loading-spinner' %>
-  </div>
-</body>
-</html>
+<% end %>
+
+<div id="map" class="map" role="main"></div>
+<div class="map__loading js-loading">
+  <%= inline_svg 'spinner', 'map__loading-spinner' %>
+</div>

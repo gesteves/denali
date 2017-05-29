@@ -10,6 +10,14 @@
   <% end %>
 <% end %>
 
+<% content_for :typekit do %>
+  <% if ENV['typekit_light_id'].present? && @entry.body.blank? %>
+    <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_light_id']} %>
+  <% elsif ENV['typekit_id'].present? %>
+    <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} %>
+  <% end %>
+<% end %>
+
 <%= render partial: 'entries/entry', object: @entry %>
 <%= render partial: 'entries/entry_pagination', object: @entry, as: :entry if @entry.is_published? %>
 <%= render partial: 'entries/related', object: @entry if @photoblog.show_related_entries? && @entry.is_published? %>

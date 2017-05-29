@@ -49,15 +49,17 @@ Rails.application.routes.draw do
   get '/map/photo/:id.:format'         => 'maps#photo'
   get '/sitemap.:format'               => 'entries#sitemap', defaults: { format: 'xml' }, :as => :sitemap
   get '/about'                         => 'blogs#about', :as => :about
+  get '/offline'                       => 'blogs#offline',  :as => :offline
+  get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
 
-  # Redirects
+  # Legacy routes & redirects
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
+  get '/rss'                           => 'entries#feed', defaults: { format: 'atom' }
 
   # Feeds
-  get '/feed'                          => 'entries#index', defaults: { format: 'atom' }, :as => :simple_feed
-  get '/rss'                           => 'entries#index', defaults: { format: 'atom' }
-  get '/atom'                          => 'entries#index', defaults: { format: 'atom' }
+  get '(/page/:page)/feed(.:format)'             => 'entries#feed', constraints: { page: /\d+/ }, defaults: { format: 'atom' }, :as => :feed
+  get '/tagged/:tag(/page/:page)/feed(.:format)' => 'entries#tag_feed', constraints: { page: /\d+/ }, defaults: { format: 'atom' }, :as => :tag_feed
 
   # Admin
   get '/admin'                         => 'admin#index',      :as => :admin
@@ -67,9 +69,7 @@ Rails.application.routes.draw do
   get '/signout'                       => 'sessions#destroy', :as => :signout
 
   # PWA
-  get '/service_worker.js'             => 'progressive_web_app#service_worker'
-  get '/manifest.json'                 => 'progressive_web_app#manifest', :as => :pwa_manifest
-  get '/offline'                       => 'progressive_web_app#offline',  :as => :offline
+  get '/service_worker.js'             => 'service_worker#index', defaults: { format: 'js' }
 
   # The rest
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }

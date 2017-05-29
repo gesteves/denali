@@ -9,24 +9,25 @@
     <%= yield :inline_css %>
     <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
   <% end %>
-  <%= javascript_include_tag 'application', defer: true %>
-  <% if ENV['typekit_id'].present? %>
-    <script>
-      (function(d) {
-        var config = {
-          kitId: '<%= ENV['typekit_id'] %>',
-          scriptTimeout: 3000,
-          async: true
-        },
-        h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
-      })(document);
-    </script>
+  <% if content_for? :javascript %>
+    <%= yield :javascript %>
+  <% else %>
+    <%= javascript_include_tag 'application', defer: true %>
+  <% end %>
+  <% if content_for? :typekit %>
+    <%= yield :typekit %>
+  <% else %>
+    <% if ENV['typekit_light_id'].present? %>
+      <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_light_id']} %>
+    <% elsif ENV['typekit_id'].present? %>
+      <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} %>
+    <% end %>
   <% end %>
   <%= @photoblog.analytics_code.try(:html_safe) %>
 </head>
 <body>
-<%= render partial: 'partials/header.html.erb' %>
+<%= render partial: 'partials/header.html.erb', locals: { is_minimal: @minimal_header } %>
 <%= yield %>
-<%= render partial: 'partials/footer.html.erb' %>
+<%= render partial: 'partials/footer.html.erb' unless @hide_footer %>
 </body>
 </html>

@@ -1,4 +1,4 @@
-<header role="banner" class="header <%= 'header--map' if local_assigns[:is_map] %>">
+<header role="banner" class="header <%= 'header--minimal' if local_assigns[:is_minimal] && is_minimal %>">
   <div class="header__section">
     <p class="header__tagline"><%= sanitize @photoblog.description %></p>
   </div>

@@ -33,4 +33,8 @@ module EntriesHelper
     end
     truncate body, length: 200
   end
+
+  def entry_photo_widths(photo, key)
+    PHOTOS[key]['srcset'].uniq.sort.reject { |width| width > photo.width }
+  end
 end
