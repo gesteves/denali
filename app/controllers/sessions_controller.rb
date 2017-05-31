@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
 
     if auth_hash.present?
       flash[:notice] = "Welcome, #{auth_hash['info']['name']}!"
-      user = User.from_omniauth(env['omniauth.auth'])
+      user = User.from_omniauth(auth_hash)
       session[:user_id] = user.id
       url = session[:original_url] || admin_entries_path
       session[:original_url] = nil

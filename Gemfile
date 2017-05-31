@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.4.1'
 
-gem 'rails', '~> 5.0.0'
+gem 'rails', '~> 5.1'
 gem 'pg'
 
 # Auth
@@ -25,7 +25,7 @@ gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr'
-gem 'acts-as-taggable-on', '~> 4.0'
+gem 'acts-as-taggable-on', '~> 5.0'
 gem 'httparty'
 gem 'kaminari'
 gem 'figaro'
