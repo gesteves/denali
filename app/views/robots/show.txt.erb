@@ -1,8 +1,13 @@
 User-agent: *
 Disallow: /admin
+Disallow: /preview
+Disallow: /signin
+
+User-agent: Googlebot
+Disallow: /admin
 Disallow: /page
 Disallow: /preview
 Disallow: /signin
-Disallow: /tagged/*/page
+Disallow: /tagged
 
 Sitemap: <%= sitemap_url %>
