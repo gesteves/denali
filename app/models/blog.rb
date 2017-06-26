@@ -56,4 +56,8 @@ class Blog < ApplicationRecord
     opts.reverse_merge!(w: 32)
     self.touch_icon.present? ? Ix.path(self.touch_icon.path).to_url(opts.reject { |k,v| v.blank? }) : nil
   end
+
+  def page_title
+    "#{self.name} · #{self.plain_description}"
+  end
 end

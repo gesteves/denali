@@ -39,7 +39,7 @@
           <% end %>
           <% if entry.is_published? && entry.is_photo? %>
             <%= link_to 'Share', share_admin_entry_path(entry) %>
-            &middot;
+            ·
           <% end %>
           <%= link_to 'Edit', edit_admin_entry_path(entry) %>
           <% if entry.is_draft? %>
@@ -51,7 +51,7 @@
           <% if entry.is_queued? || entry.is_draft? %>
             <%= link_to 'Publish', publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry?' }  %>
           <% end %>
-          &middot;
+          ·
           <%= link_to 'Delete', delete_admin_entry_path(entry.id) %>
         </div>
       </div>

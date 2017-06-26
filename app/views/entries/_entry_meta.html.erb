@@ -1,4 +1,4 @@
-<title><%= sanitize "#{entry.plain_title} &middot; #{entry.blog.name}" %></title>
+<title><%= sanitize "#{entry.plain_title.gsub(/.$/, '')} · #{entry.blog.page_title}" %></title>
 <meta name="description" content="<%= meta_description entry %>">
 
 <%# Facebook meta tags %>

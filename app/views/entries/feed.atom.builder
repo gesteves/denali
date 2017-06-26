@@ -8,7 +8,7 @@ cache "feed/atom/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" d
       xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(format: 'atom')
     else
       xml.id atom_tag(entries_url(page: @page), @photoblog.updated_at)
-      xml.title "#{@photoblog.name} &middot; Page #{@page}"
+      xml.title "#{@photoblog.name} · Page #{@page}"
       xml.link rel: 'alternate', type: 'text/html', href: entries_url(page: @page)
       xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(page: @page, format: 'atom')
     end

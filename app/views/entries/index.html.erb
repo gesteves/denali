@@ -1,6 +1,6 @@
 <% content_for :meta do %>
   <% cache "entries/meta/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-    <title><%= @photoblog.name %><%= sanitize " &middot; Page #{@page}" unless @page.nil? || @page == 1 %></title>
+    <title><%= @photoblog.page_title %><%= sanitize " · Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <link rel="canonical" href="<%= root_url %>">
 
