@@ -21,10 +21,10 @@ module EntriesHelper
 
   def meta_description(entry)
     body = if entry.is_photo?
-      if entry.body.present?
-        entry.plain_body
-      elsif entry.photos.first.caption.present?
+      if entry.photos.first.caption.present?
         entry.photos.first.plain_caption
+      elsif entry.body.present?
+        entry.plain_body
       else
         Sanitize.fragment(entry.blog.description)
       end
