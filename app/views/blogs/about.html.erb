@@ -1,6 +1,6 @@
 <% content_for :meta do %>
   <% cache "blog/about/meta/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-    <title>About <%= @photoblog.page_title %></title>
+    <title>About <%= @photoblog.name %></title>
     <meta name="description" content="<%= truncate @photoblog.plain_about, length: 200 %>">
     <link rel="canonical" href="<%= about_url %>">
 
