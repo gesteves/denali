@@ -58,6 +58,6 @@ class Blog < ApplicationRecord
   end
 
   def page_title
-    "#{self.name} · #{self.plain_description}"
+    self.name
   end
 end
