@@ -7,7 +7,7 @@ services:
   - postgresql
 before_install:
   - gem update --system
-  - rvm install
+  - nvm install
 before_script:
   - psql -c 'create database denali_test;' -U postgres
 script:
