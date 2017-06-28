@@ -28,7 +28,12 @@
 
 <% content_for :javascript do %>
   <script>mapbox_token = '<%= ENV['mapbox_api_token'] %>';</script>
-  <%= javascript_include_tag 'application/map', async: true %>
+  <%= javascript_include_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js', defer: true %>
+  <%= javascript_include_tag 'application/map', defer: true %>
+<% end %>
+
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css', media: 'all' %>
 <% end %>
 
 <div id="map" class="map" role="main"></div>

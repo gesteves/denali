@@ -9,6 +9,7 @@
     <%= yield :inline_css %>
     <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
   <% end %>
+  <%= yield :stylesheets %>
   <% if content_for? :javascript %>
     <%= yield :javascript %>
   <% else %>

@@ -1,6 +1,5 @@
-//= require ../vendors/mapbox
-//= require ../vendors/leaflet.markercluster
-//= require ../vendors/leaflet.hash
+//= require leaflet.markercluster/dist/leaflet.markercluster
+//= require leaflet-hash/leaflet-hash
 
 var Denali = Denali || {};
 

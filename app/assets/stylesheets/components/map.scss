@@ -2,8 +2,7 @@
 @import 'base/functions';
 @import 'base/mixins';
 
-@import 'vendors/mapbox';
-@import 'vendors/markercluster';
-@import 'vendors/markercluster.default';
+@import 'leaflet.markercluster/dist/MarkerCluster';
+@import 'leaflet.markercluster/dist/MarkerCluster.Default';
 
 @import '../blocks/map';
