@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "A simple, fast photoblogging CMS built in Ruby on Rails which features responsive, high-resolution images. You can see it live at [All-Encompassing Trip](http://www.allencompassingtrip.com).",
   "main": "Gulpfile.js",
+  "engines": {
+    "node": "8.1.2",
+    "yarn": "0.24.5"
+  },
   "dependencies": {
     "intersection-observer": "^0.3.2"
   },
