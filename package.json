@@ -8,6 +8,7 @@
     "yarn": "0.24.5"
   },
   "dependencies": {
+    "awesomplete": "^1.1.1",
     "intersection-observer": "^0.3.2"
   },
   "devDependencies": {
