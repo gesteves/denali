@@ -812,6 +812,10 @@ interpret@^1.0.0:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/interpret/-/interpret-1.0.3.tgz#cbc35c62eeee73f19ab7b10a801511401afc0f90"
 
+intersection-observer@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/intersection-observer/-/intersection-observer-0.3.2.tgz#9ed30021c08b29e9e8565c8d512ed84515727433"
+
 irregular-plurals@^1.0.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/irregular-plurals/-/irregular-plurals-1.2.0.tgz#38f299834ba8c00c30be9c554e137269752ff3ac"

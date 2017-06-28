@@ -7,23 +7,17 @@ Denali.LazyLoad = (function () {
     load_class : 'js-lazy-load',
     threshold: 0
   };
-  var requested_animation_frame = false;
   var observer;
 
   var init = function () {
     var image, i;
     var images = document.querySelectorAll('.' + opts.load_class);
-    if (typeof IntersectionObserver === 'undefined') {
-      document.addEventListener('scroll', handleScroll);
-      loadImages();
-    } else {
-      if (typeof observer === 'undefined') {
-        observer = new IntersectionObserver(handleIntersection, { rootMargin: opts.threshold + 'px' });
-      }
-      for (i = 0; i < images.length; i++) {
-        image = images[i];
-        observer.observe(image);
-      }
+    if (typeof observer === 'undefined') {
+      observer = new IntersectionObserver(handleIntersection, { rootMargin: opts.threshold + 'px' });
+    }
+    for (i = 0; i < images.length; i++) {
+      image = images[i];
+      observer.observe(image);
     }
   };
 
@@ -34,40 +28,6 @@ Denali.LazyLoad = (function () {
         observer.unobserve(entry.target);
       }
     });
-  };
-
-  var handleScroll = function () {
-    if (requested_animation_frame) {
-      return;
-    }
-    requested_animation_frame = true;
-    requestAnimationFrame(loadImages);
-  };
-
-  var loadImages = function () {
-    var image,
-        images,
-        image_top,
-        viewport_height;
-
-    images = document.querySelectorAll('.' + opts.load_class);
-
-    if (images.length === 0) {
-      document.removeEventListener('scroll', handleScroll);
-      return;
-    }
-
-    viewport_height = document.documentElement.clientHeight;
-
-    for (var i = 0; i < images.length; i++) {
-      image = images[i];
-      image_top = image.getBoundingClientRect().top;
-      if (image_top <= viewport_height + opts.threshold) {
-        loadImage(image);
-      }
-    }
-
-    requested_animation_frame = false;
   };
 
   var loadImage = function (image) {

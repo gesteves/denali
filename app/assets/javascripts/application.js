@@ -1,3 +1,4 @@
+//= require intersection-observer/intersection-observer
 //= require ./vendors/loadcss
 //= require ./vendors/cssrelpreload
 //= require ./application/image_zoom
