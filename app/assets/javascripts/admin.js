@@ -1,6 +1,7 @@
 //= require ./vendors/jquery
 //= require ./vendors/jquery_ui
 //= require ./vendors/awesomplete
+//= require intersection-observer/intersection-observer
 //= require jquery_ujs
 //= require_tree ./admin
 //= require ./application/lazy_load
