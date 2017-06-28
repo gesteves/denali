@@ -1,5 +1,5 @@
-//= require ./vendors/jquery
-//= require ./vendors/jquery_ui
+//= require jquery/dist/jquery
+//= require jquery-ui-dist/jquery-ui
 //= require intersection-observer/intersection-observer
 //= require awesomplete/awesomplete
 //= require jquery_ujs
