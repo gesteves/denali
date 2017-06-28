@@ -1,6 +1,6 @@
 //= require intersection-observer/intersection-observer
-//= require ./vendors/loadcss
-//= require ./vendors/cssrelpreload
+//= require fg-loadcss/src/loadCSS
+//= require fg-loadcss/src/cssrelpreload
 //= require ./application/image_zoom
 //= require ./application/lazy_load
 
