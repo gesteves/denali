@@ -1,36 +1,24 @@
-var Denali = Denali || {};
+//= require intersection-observer/intersection-observer
 
-Denali.LazyLoad = (function () {
-  'use strict';
+'use strict';
+class LazyLoad {
+  constructor(elementsClass, threshold = 0) {
+    this.elementsClass = elementsClass;
+    this.observer = new IntersectionObserver(entries => this.handleIntersection(entries), { rootMargin: `${threshold}px` });
+    this.images = document.querySelectorAll(`.${this.elementsClass}`);
+    this.images.forEach(image => this.observer.observe(image));
+  }
 
-  var opts = {
-    load_class : 'js-lazy-load',
-    threshold: 0
-  };
-  var observer;
-
-  var init = function () {
-    var image, i;
-    var images = document.querySelectorAll('.' + opts.load_class);
-    if (typeof observer === 'undefined') {
-      observer = new IntersectionObserver(handleIntersection, { rootMargin: opts.threshold + 'px' });
-    }
-    for (i = 0; i < images.length; i++) {
-      image = images[i];
-      observer.observe(image);
-    }
-  };
-
-  var handleIntersection = function (entries) {
-    entries.forEach(function (entry) {
+  handleIntersection (entries) {
+    entries.forEach(entry => {
       if (entry.intersectionRatio > 0 || entry.isIntersecting) {
-        loadImage(entry.target);
-        observer.unobserve(entry.target);
+        this.loadImage(entry.target);
+        this.observer.unobserve(entry.target);
       }
     });
-  };
+  }
 
-  var loadImage = function (image) {
+  loadImage (image) {
     if (image.hasAttribute('data-srcset') && typeof image.srcset !== 'undefined' && typeof image.sizes !== 'undefined') {
       image.setAttribute('srcset', image.getAttribute('data-srcset'));
       image.removeAttribute('data-srcset');
@@ -38,16 +26,12 @@ Denali.LazyLoad = (function () {
       image.src = image.getAttribute('data-src');
       image.removeAttribute('data-src');
     }
-    image.classList.remove(opts.load_class);
-  };
-
-  return {
-    init : init
-  };
-})();
+    image.classList.remove(this.elementsClass);
+  }
+}
 
 if (document.readyState !== 'loading') {
-  Denali.LazyLoad.init();
+  new LazyLoad('js-lazy-load');
 } else {
-  document.addEventListener('DOMContentLoaded', Denali.LazyLoad.init);
+  document.addEventListener('DOMContentLoaded', () => new LazyLoad('js-lazy-load'));
 }

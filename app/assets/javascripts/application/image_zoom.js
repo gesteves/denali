@@ -1,73 +1,41 @@
-var Denali = Denali || {};
+'use strict';
 
-Denali.ImageZoom = (function () {
-  'use strict';
-
-  var opts = {
-    images          : '.entry__photo',
-    zoomable_class  : 'entry__photo--zoomable',
-    zoom_class      : 'entry__photo-container--zoom',
-    max_width       : 1680
-  };
-
-  var zoomable;
-  var requested_animation_frame = false;
-
-  var init = function () {
-    zoomable = [];
-    var images = document.querySelectorAll(opts.images);
-    var image,
-        original_width,
-        original_height,
-        image_ratio,
-        max_width,
+class ImageZoom {
+  constructor (imagesSelector, zoomableClass, zoomClass, maxWidth) {
+    this.zoomable = [];
+    this.zoomClass = zoomClass;
+    let originalWidth,
+        originalHeight,
+        imageRatio,
         height,
-        client_height = document.documentElement.clientHeight,
-        client_width = document.documentElement.clientWidth;
-    for (var i = 0; i < images.length; i++) {
-      image = images[i];
-      original_height = parseInt(image.getAttribute('data-height-original'));
-      original_width = parseInt(image.getAttribute('data-width-original'));
-      image_ratio = original_height/original_width;
-      max_width = Math.min(original_width, client_width, opts.max_width);
-      height = max_width * image_ratio;
-      if (height > client_height) {
-        image.classList.add(opts.zoomable_class);
-        image.addEventListener('click', toggleZoom);
-        zoomable.push(image.parentNode.parentNode);
-      } else {
-        image.classList.remove(opts.zoomable_class);
-        image.removeEventListener('click', toggleZoom);
+        clientHeight = document.documentElement.clientHeight,
+        clientWidth = document.documentElement.clientWidth,
+        images = document.querySelectorAll(imagesSelector);
+
+    images.forEach(image => {
+      originalHeight = parseInt(image.getAttribute('data-height-original'));
+      originalWidth = parseInt(image.getAttribute('data-width-original'));
+      imageRatio = originalHeight/originalWidth;
+      maxWidth = Math.min(originalWidth, clientWidth, maxWidth);
+      height = maxWidth * imageRatio;
+      if (height > clientHeight) {
+        image.classList.add(zoomableClass);
+        image.addEventListener('click', e => this.toggleZoom(e));
+        this.zoomable.push(image.parentNode.parentNode);
       }
-    }
-    requested_animation_frame = false;
-  };
+    });
+  }
 
-  var toggleZoom = function (e) {
+  toggleZoom (e) {
     e.preventDefault();
-    for (var i = 0; i < zoomable.length; i++) {
-      zoomable[i].classList.toggle(opts.zoom_class);
-    }
-  };
-
-  var handleResize = function () {
-    if (requested_animation_frame) {
-      return;
-    }
-    requested_animation_frame = true;
-    requestAnimationFrame(init);
-  };
-
-  return {
-    init : init,
-    handleResize: handleResize
-  };
-})();
+    this.zoomable.forEach(image => image.classList.toggle(this.zoomClass));
+  }
+}
 
 if (document.readyState !== 'loading') {
-  Denali.ImageZoom.init();
+  new ImageZoom('.entry__photo', 'entry__photo--zoomable', 'entry__photo-container--zoom', 1680);
 } else {
-  document.addEventListener('DOMContentLoaded', Denali.ImageZoom.init);
+  document.addEventListener('DOMContentLoaded', () => {
+    new ImageZoom('.entry__photo', 'entry__photo--zoomable', 'entry__photo-container--zoom', 1680);
+  });
 }
-window.addEventListener('orientationchange', Denali.ImageZoom.init);
-window.addEventListener('resize', Denali.ImageZoom.handleResize);

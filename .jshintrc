@@ -1,4 +1,5 @@
 {
+  "esversion": 6,
   "node": true,
   "curly": true,
   "eqeqeq": true,
@@ -12,13 +13,9 @@
   "strict": true,
   "globals": {
     "jQuery": true,
-    "_": true,
-    "Modernizr": true,
     "Dropbox": true,
     "Awesomplete": true,
     "Denali": true,
-    "Turbolinks": true,
-    "picturefill": true,
-    "FastClick": true
+    "IntersectionObserver": true
   }
 }

@@ -34,6 +34,11 @@
   <% end %>
 <% end %>
 
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'application/lazy_load', defer: true %>
+  <%= javascript_include_tag 'application', defer: true %>
+<% end %>
+
 <% cache "entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <ol class="entry-list" role="main">
     <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { lazy_load_start_index: 12 } %>
