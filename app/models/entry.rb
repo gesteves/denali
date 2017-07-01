@@ -118,7 +118,9 @@ class Entry < ApplicationRecord
   def formatted_content(opts = {})
     opts.reverse_merge!(link_title: false)
 
-    content = if opts[:link_title]
+    content = if opts[:link_title] && opts[:utm].present?
+      "[#{self.title}](#{self.permalink_url(opts[:utm])})"
+    elsif opts[:link_title]
       "[#{self.title}](#{self.permalink_url})"
     else
       self.title

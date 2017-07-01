@@ -12,7 +12,7 @@ class TumblrJob < ApplicationJob
     opts = {
       tags: custom_hashtags(entry),
       slug: entry.slug,
-      caption: entry.formatted_content(link_title: true),
+      caption: entry.formatted_content(link_title: true, utm: { utm_source: 'tumblr.com', utm_medium: 'social' }),
       link: entry.permalink_url(utm_source: 'tumblr.com', utm_medium: 'social'),
       data: entry.photos.map { |p| resized_photo_path(p) },
       state: 'queue'
