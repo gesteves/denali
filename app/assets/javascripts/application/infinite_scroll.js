@@ -8,7 +8,7 @@ class InfiniteScroll {
     this.nextPage = parseInt(this.container.getAttribute('data-next-page'));
     this.observer = new IntersectionObserver(entries => this.handleIntersection(entries), { rootMargin: `${threshold}px` });
     this.sentinel = document.querySelector(sentinel);
-    this.sentinel.style.visibility = 'hidden';
+    this.sentinel.classList.add('sentinel');
     this.observer.observe(this.sentinel);
     this.loading = false;
   }
@@ -30,7 +30,6 @@ class InfiniteScroll {
         window.history.replaceState(null, null, `${this.baseUrl}/page/${this.nextPage}`);
         this.nextPage = this.nextPage + 1;
       } else {
-        this.sentinel.style.display = 'none';
         this.observer.unobserve(this.sentinel);
       }
       this.loading = false;
