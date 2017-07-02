@@ -1,0 +1,3 @@
+<% cache "entries/list/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry %>
+<% end %>

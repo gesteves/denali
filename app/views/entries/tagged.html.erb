@@ -35,13 +35,15 @@
 <% end %>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'application/lazy_load', defer: true %>
+  <%= javascript_include_tag 'application/infinite_scroll', defer: true %>
   <%= javascript_include_tag 'application', defer: true %>
 <% end %>
 
 <% cache "entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <ol class="entry-list" role="main">
-    <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { lazy_load_start_index: 12 } %>
+  <ol class="entry-list" role="main" data-base-url="<%= tag_url(tag: @tag_slug, page: nil) %>" data-next-page="<%= @page + 1%>">
+    <% cache "entries/list/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+      <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry %>
+    <% end %>
   </ol>
   <%= paginate @entries %>
 <% end %>
