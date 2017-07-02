@@ -29,7 +29,7 @@ class InfiniteScroll {
         this.container.insertAdjacentHTML('beforeend', request.responseText);
         window.history.replaceState(null, null, `${this.baseUrl}/page/${this.nextPage}`);
         this.nextPage = this.nextPage + 1;
-        if (ga) {
+        if (typeof ga !== 'undefined') {
           ga('set', 'page', window.location.pathname);
           ga('send', 'pageview');
         }
@@ -44,7 +44,7 @@ class InfiniteScroll {
 }
 
 if (document.readyState !== 'loading') {
-  new InfiniteScroll('.entry-list', '.pagination', 150);
+  new InfiniteScroll('.entry-list', '.pagination');
 } else {
-  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll('.entry-list', '.pagination', 150));
+  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll('.entry-list', '.pagination'));
 }
