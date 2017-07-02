@@ -15,7 +15,7 @@ class InfiniteScroll {
 
   handleIntersection (entries) {
     entries.forEach(entry => {
-      if ((entry.intersectionRatio > 0 || entry.isIntersecting) && !this.loading ){
+      if ((entry.intersectionRatio > 0 || entry.isIntersecting) && !this.loading) {
         this.getNextPage();
       }
     });
