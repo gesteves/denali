@@ -2,15 +2,22 @@
 'use strict';
 
 class InfiniteScroll {
-  constructor (container, sentinel = '.pagination', rootMargin = '50%') {
+  constructor (container, pagination = '.pagination', rootMargin = '50%') {
+    this.sentinel = this.setUpSentinel(pagination);
     this.container = document.querySelector(container);
     this.baseUrl = this.container.getAttribute('data-base-url');
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
-    this.sentinel = document.querySelector(sentinel);
-    this.sentinel.classList.add('sentinel');
     this.observer = new IntersectionObserver(entries => this.handleIntersection(entries), { rootMargin: rootMargin });
     this.observer.observe(this.sentinel);
     this.loading = false;
+  }
+
+  setUpSentinel (selector) {
+    let element = document.querySelector(selector);
+    let parent = element.parentNode;
+    let sentinel = document.createElement('div');
+    parent.replaceChild(sentinel, element);
+    return sentinel;
   }
 
   handleIntersection (entries) {
