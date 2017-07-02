@@ -16,6 +16,7 @@
     "Dropbox": true,
     "Awesomplete": true,
     "Denali": true,
-    "IntersectionObserver": true
+    "IntersectionObserver": true,
+    "L": true
   }
 }

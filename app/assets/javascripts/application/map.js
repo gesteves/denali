@@ -1,45 +1,47 @@
 //= require leaflet.markercluster/dist/leaflet.markercluster
 //= require leaflet-hash/leaflet-hash
 
-var Denali = Denali || {};
-
-Denali.Map = (function () {
-  'use strict';
-
-  var opts = {
-    map_container_id  : 'map',
-    default_latitude  : 10.46,
-    default_longitude : -66.96
-  };
-
-  var map,
-      loading,
-      hash,
-      show_bar = true;
-
-  var init = function () {
-    if (document.getElementById(opts.map_container_id) === null) {
+'use strict';
+class Map {
+  constructor (containerId, latitude, longitude, mapId) {
+    if (document.getElementById(containerId) === null) {
       return;
     }
-    loading = document.querySelector('.js-loading');
+
+    this.loadingSpinner = document.querySelector('.js-loading');
+    this.showBar = true;
+
     if (!window.location.hash) {
-      window.location.hash = 1 + '/' + opts.default_latitude + '/' + opts.default_longitude;
+      window.location.hash = 1 + '/' + latitude + '/' + latitude;
     }
-    initMap();
-  };
 
-  var showLoadingSpinner = function () {
-    if (show_bar) {
-      loading.style.display = 'block';
+    setTimeout(() => this.showLoadingSpinner, 100);
+
+    let southWest = L.latLng(-90, -180),
+        northEast = L.latLng(90, 180),
+        bounds = L.latLngBounds(southWest, northEast),
+        zoom = this.getZoom();
+
+    L.mapbox.accessToken = window.mapboxToken;
+    this.map = L.mapbox.map(containerId, mapId, { minZoom: zoom, maxZoom: 18, maxBounds: bounds });
+
+    let layer = L.mapbox.featureLayer();
+    layer.on('layeradd', e => this.setUpMarker(e));
+    layer.loadURL('/map/photos.json').on('ready', e => this.setUpMarkerClusters(e));
+  }
+
+  showLoadingSpinner () {
+    if (this.showBar) {
+      this.loadingSpinner.style.display = 'block';
     }
-  };
+  }
 
-  var hideLoadingSpinner = function () {
-    loading.style.display = 'none';
-  };
+  hideLoadingSpinner () {
+    this.loadingSpinner.style.display = 'none';
+  }
 
-  var getZoom = function () {
-    var height = document.documentElement.clientHeight,
+  getZoom () {
+    let height = document.documentElement.clientHeight,
         width = document.documentElement.clientWidth;
 
     if ((width >= 2560) || (height >= 1440)) {
@@ -49,39 +51,39 @@ Denali.Map = (function () {
     } else {
       return 2;
     }
-  };
+  }
 
-  var requestPopup = function () {
-    var marker = this;
-    var request = new XMLHttpRequest();
-    request.open('GET', '/map/photo/' + marker.photo_id + '.json', true);
-    request.onload = function() {
+  requestPopup (e) {
+    let marker = e.target;
+    let request = new XMLHttpRequest();
+    request.open('GET', `/map/photo/${marker.photoId}.json`, true);
+    request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
-        var response = JSON.parse(request.responseText);
+        let response = JSON.parse(request.responseText);
         marker.setPopupContent(response.html);
       }
     };
     request.send();
-  };
+  }
 
-  var setUpMarker = function (e) {
-    var marker = e.layer,
+  setUpMarker (e) {
+    let marker = e.layer,
         feature = marker.feature;
-    marker.photo_id = feature.properties.id;
+    marker.photoId = feature.properties.id;
     marker.setIcon(L.divIcon({
         className: 'map__marker map__marker--bloop',
         html: '&bull;',
         iconSize: [20, 20],
         iconAnchor: [10, 10]
       }));
-    this.bindPopup('', {
+    e.target.bindPopup('', {
       closeButton: true,
       minWidth: 300
     });
-    marker.addOneTimeEventListener('popupopen', requestPopup);
-  };
+    marker.addOneTimeEventListener('popupopen', e => this.requestPopup(e));
+  }
 
-  var setUpClusterIcon = function (cluster) {
+  setUpClusterIcon (cluster) {
     return L.divIcon({
         className: 'map__marker map__marker--cluster',
         html: cluster.getChildCount(),
@@ -89,47 +91,27 @@ Denali.Map = (function () {
         iconAnchor: [15, 15]
       }
     );
-  };
+  }
 
-  var setUpMarkerClusters = function (e) {
-    var cluster_group = new L.MarkerClusterGroup({
+  setUpMarkerClusters (e) {
+    let clusterGroup = new L.MarkerClusterGroup({
       showCoverageOnHover: false,
       maxClusterRadius: 45,
       spiderfyDistanceMultiplier: 3,
-      iconCreateFunction: setUpClusterIcon
+      iconCreateFunction: this.setUpClusterIcon
     });
 
-    e.target.eachLayer(function (layer) {
-      cluster_group.addLayer(layer);
-    });
+    e.target.eachLayer(layer => clusterGroup.addLayer(layer));
 
-    hash = new L.hash(map);
-    map.addLayer(cluster_group);
-    show_bar = false;
-    hideLoadingSpinner();
-  };
-
-  var initMap = function () {
-    setTimeout(showLoadingSpinner, 100);
-    var south_west = L.latLng(-90, -180),
-        north_east = L.latLng(90, 180),
-        bounds = L.latLngBounds(south_west, north_east),
-        zoom = getZoom();
-    L.mapbox.accessToken = window.mapbox_token;
-    map = L.mapbox.map(opts.map_container_id, 'gesteves.ce0e3aae', { minZoom: zoom, maxZoom: 18, maxBounds: bounds });
-    var layer = L.mapbox.featureLayer();
-
-    layer.on('layeradd', setUpMarker);
-    layer.loadURL('/map/photos.json').on('ready', setUpMarkerClusters);
-  };
-
-  return {
-    init : init
-  };
-})();
+    this.hash = new L.hash(this.map);
+    this.map.addLayer(clusterGroup);
+    this.showBar = false;
+    this.hideLoadingSpinner();
+  }
+}
 
 if (document.readyState !== 'loading') {
-  Denali.Map.init();
+  new Map('map', 10.46, -66.96, 'gesteves.ce0e3aae');
 } else {
-  document.addEventListener('DOMContentLoaded', Denali.Map.init);
+  document.addEventListener('DOMContentLoaded', () => new Map('map', 10.46, -66.96, 'gesteves.ce0e3aae'));
 }
