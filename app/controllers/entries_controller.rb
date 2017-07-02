@@ -18,6 +18,7 @@ class EntriesController < ApplicationController
         respond_to do |format|
           format.html
           format.json
+          format.js
         end
       rescue ActionController::UnknownFormat
         if @page == 1
@@ -39,6 +40,7 @@ class EntriesController < ApplicationController
         respond_to do |format|
           format.html
           format.json
+          format.js
         end
       rescue ActionController::UnknownFormat
         if @page == 1
