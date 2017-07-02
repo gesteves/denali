@@ -29,6 +29,10 @@ class InfiniteScroll {
         this.container.insertAdjacentHTML('beforeend', request.responseText);
         window.history.replaceState(null, null, `${this.baseUrl}/page/${this.nextPage}`);
         this.nextPage = this.nextPage + 1;
+        if (ga) {
+          ga('set', 'page', window.location.pathname);
+          ga('send', 'pageview');
+        }
       } else {
         this.observer.unobserve(this.sentinel);
       }

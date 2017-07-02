@@ -17,6 +17,7 @@
     "Awesomplete": true,
     "Denali": true,
     "IntersectionObserver": true,
-    "L": true
+    "L": true,
+    "ga": true
   }
 }
