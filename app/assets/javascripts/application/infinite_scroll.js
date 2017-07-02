@@ -30,6 +30,7 @@ class InfiniteScroll {
         window.history.pushState(null, null, `${this.baseUrl}/page/${this.nextPage}`);
         this.nextPage = this.nextPage + 1;
       } else {
+        this.sentinel.style.display = 'none';
         this.observer.unobserve(this.sentinel);
       }
       this.loading = false;
