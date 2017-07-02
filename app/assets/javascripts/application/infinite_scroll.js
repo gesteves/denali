@@ -5,7 +5,7 @@ class InfiniteScroll {
   constructor (container, sentinel, threshold = 0) {
     this.container = document.querySelector(container);
     this.baseUrl = this.container.getAttribute('data-base-url');
-    this.nextPage = this.container.getAttribute('data-next-page');
+    this.nextPage = parseInt(this.container.getAttribute('data-next-page'));
     this.observer = new IntersectionObserver(entries => this.handleIntersection(entries), { rootMargin: `${threshold}px` });
     this.sentinel = document.querySelector(sentinel);
     this.sentinel.style.visibility = 'hidden';
