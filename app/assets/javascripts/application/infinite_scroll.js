@@ -15,7 +15,7 @@ class InfiniteScroll {
 
   handleIntersection (entries) {
     entries.forEach(entry => {
-      if (entry.intersectionRatio > 0 || entry.isIntersecting) {
+      if ((entry.intersectionRatio > 0 || entry.isIntersecting) && !this.loading ){
         this.getNextPage();
       }
     });
@@ -32,7 +32,9 @@ class InfiniteScroll {
       } else {
         this.observer.unobserve(this.sentinel);
       }
+      this.loading = false;
     };
+    this.loading = true;
     request.send();
   }
 }
