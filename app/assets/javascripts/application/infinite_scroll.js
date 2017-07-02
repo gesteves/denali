@@ -40,7 +40,7 @@ class InfiniteScroll {
 }
 
 if (document.readyState !== 'loading') {
-  new InfiniteScroll('.entry-list', '.pagination', 300);
+  new InfiniteScroll('.entry-list', '.pagination', 150);
 } else {
-  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll('.entry-list', '.pagination', 300));
+  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll('.entry-list', '.pagination', 150));
 }
