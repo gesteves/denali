@@ -2,7 +2,7 @@
 'use strict';
 
 class InfiniteScroll {
-  constructor (container, sentinel, rootMargin = '50%') {
+  constructor (container, sentinel = '.pagination', rootMargin = '50%') {
     this.container = document.querySelector(container);
     this.baseUrl = this.container.getAttribute('data-base-url');
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
@@ -45,7 +45,7 @@ class InfiniteScroll {
 }
 
 if (document.readyState !== 'loading') {
-  new InfiniteScroll('.entry-list', '.pagination');
+  new InfiniteScroll('.entry-list');
 } else {
-  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll('.entry-list', '.pagination'));
+  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll('.entry-list'));
 }
