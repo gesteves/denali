@@ -2,14 +2,14 @@
   <% cache "entries/meta/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <title><%= @photoblog.name %><%= sanitize " · Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
-    <link rel="canonical" href="<%= root_url %>">
+    <link rel="canonical" href="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>">
 
     <meta property="og:title" content="<%= @photoblog.name %>">
     <meta property="og:image" content="<%= @entries.first.photos.first.url(w: 1200, h: 628) %>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="628">
     <meta property="og:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
-    <meta property="og:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>">
+    <meta property="og:url" content="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>">
     <meta property="og:type" content="Website">
     <meta property="og:site_name" content="<%= @photoblog.name %>">
     <meta property="og:locale" content="en_US">
@@ -19,12 +19,12 @@
       <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
     <% end %>
     <meta name="twitter:title" content="<%= @photoblog.name %>">
-    <meta name="twitter:url" content="<%= @page.nil? || @page == 1 ? root_url : entries_url(@page) %>">
+    <meta name="twitter:url" content="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>">
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <meta name="twitter:card" content="summary">
-    <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
-    <%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>
-    <link rel="alternate" type="application/vnd.api+json" href="<%= @page == 1 ? entries_url : entries_url(page: @page) %>" %>
+    <%= auto_discovery_link_tag :atom, feed_url(format: 'atom', page: nil), title: @photoblog.name %>
+    <%= auto_discovery_link_tag :atom, feed_url(format: 'json', page: nil), title: @photoblog.name, type: 'application/json' %>
+    <link rel="alternate" type="application/vnd.api+json" href="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>" %>
   <% end %>
 <% end %>
 
