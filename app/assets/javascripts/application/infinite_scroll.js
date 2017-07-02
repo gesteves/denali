@@ -2,7 +2,7 @@
 'use strict';
 
 class InfiniteScroll {
-  constructor (container, pagination = '.pagination', rootMargin = '0%') {
+  constructor (container, pagination = '.pagination', rootMargin = '100px') {
     this.sentinel = this.setUpSentinel(pagination);
     this.container = document.querySelector(container);
     this.baseUrl = this.container.getAttribute('data-base-url');
