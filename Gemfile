@@ -13,7 +13,6 @@ gem 'paperclip', '~> 5.0'
 
 # Front-end things
 gem 'sass-rails', '~> 5.0'
-gem 'uglifier', '>= 1.3.0'
 gem 'jquery-rails'
 gem 'autoprefixer-rails'
 gem 'imgix'
