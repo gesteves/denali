@@ -27,7 +27,7 @@ class InfiniteScroll {
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
         this.container.insertAdjacentHTML('beforeend', request.responseText);
-        window.history.pushState(null, null, `${this.baseUrl}/page/${this.nextPage}`);
+        window.history.replaceState(null, null, `${this.baseUrl}/page/${this.nextPage}`);
         this.nextPage = this.nextPage + 1;
       } else {
         this.sentinel.style.display = 'none';
