@@ -5,7 +5,7 @@ class InfiniteScroll {
   constructor (container, sentinel, rootMargin = '50%') {
     this.container = document.querySelector(container);
     this.baseUrl = this.container.getAttribute('data-base-url');
-    this.nextPage = parseInt(this.container.getAttribute('data-next-page'));
+    this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
     this.sentinel = document.querySelector(sentinel);
     this.sentinel.classList.add('sentinel');
     this.observer = new IntersectionObserver(entries => this.handleIntersection(entries), { rootMargin: rootMargin });
@@ -23,12 +23,13 @@ class InfiniteScroll {
 
   getNextPage () {
     let request = new XMLHttpRequest();
-    request.open('GET', `${this.baseUrl}/page/${this.nextPage}.js`, true);
+    let nextPage = this.currentPage + 1;
+    request.open('GET', `${this.baseUrl}/page/${nextPage}.js`, true);
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
         this.container.insertAdjacentHTML('beforeend', request.responseText);
-        window.history.replaceState(null, null, `${this.baseUrl}/page/${this.nextPage}`);
-        this.nextPage = this.nextPage + 1;
+        window.history.replaceState(null, null, `${this.baseUrl}/page/${nextPage}`);
+        this.currentPage = nextPage;
         if (typeof ga !== 'undefined') {
           ga('set', 'page', window.location.pathname);
           ga('send', 'pageview');

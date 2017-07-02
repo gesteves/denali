@@ -40,7 +40,7 @@
 <% end %>
 
 <% cache "entries/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <ol class="entry-list" role="main" data-base-url="<%= tag_url(tag: @tag_slug, page: nil) %>" data-next-page="<%= @page + 1%>">
+  <ol class="entry-list" role="main" data-base-url="<%= tag_url(tag: @tag_slug, page: nil) %>" data-current-page="<%= @page %>">
     <% cache "entries/list/tagged/#{@tag_slug}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
       <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry %>
     <% end %>
