@@ -43,6 +43,7 @@ class InfiniteScroll {
         }
       } else {
         this.observer.unobserve(this.sentinel);
+        this.footer.style.opacity = 1;
       }
       this.loading = false;
     };
