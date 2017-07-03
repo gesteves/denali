@@ -24,6 +24,22 @@
   }
 }
 
+.pagination--ajax {
+  display: flex;
+  flex-flow: row nowrap;
+  font-size: 24px;
+  justify-content: center;
+  line-height: 1;
+  margin: 24px 0;
+  max-width: $bp-m;
+  text-align: center;
+  width: 100%;
+
+  @media (min-width: $bp-xxs) {
+    margin: 72px auto;
+  }
+}
+
 .pagination__link {
   color: $color-gray-light;
   flex-basis: 50%;
