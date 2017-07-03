@@ -60,6 +60,10 @@ class InfiniteScroll {
     entries.forEach(entry => {
       if ((entry.intersectionRatio > 0 || entry.isIntersecting)) {
         window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
+        if (typeof ga !== 'undefined') {
+          ga('set', 'page', window.location.pathname);
+          ga('send', 'pageview');
+        }
       }
     });
   }
