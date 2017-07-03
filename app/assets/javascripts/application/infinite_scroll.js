@@ -13,7 +13,7 @@ class InfiniteScroll {
     this.footer.style.opacity = 0;
     this.baseUrl = this.container.getAttribute('data-base-url');
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
-    this.loadObserver = new IntersectionObserver(entries => this.checkForNextPage(entries), { rootMargin: '25%' });
+    this.loadObserver = new IntersectionObserver(entries => this.checkForNextPage(entries), { rootMargin: '100%' });
     this.loadObserver.observe(this.sentinel);
     this.pageObserver = new IntersectionObserver(entries => this.checkPagination(entries), { threshold: 1.0 });
     this.updatePageSentinels();
