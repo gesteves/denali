@@ -1,7 +1,7 @@
 'use strict';
 
 class ImageZoom {
-  constructor (imagesSelector, zoomableClass, zoomClass, maxWidth) {
+  constructor (imagesSelector, zoomableClass, zoomClass, maxWidth = 1680) {
     this.zoomable = [];
     this.zoomClass = zoomClass;
     let originalWidth,
@@ -33,9 +33,9 @@ class ImageZoom {
 }
 
 if (document.readyState !== 'loading') {
-  new ImageZoom('.entry__photo', 'entry__photo--zoomable', 'entry__photo-container--zoom', 1680);
+  new ImageZoom('.entry__photo', 'entry__photo--zoomable', 'entry__photo-container--zoom');
 } else {
   document.addEventListener('DOMContentLoaded', () => {
-    new ImageZoom('.entry__photo', 'entry__photo--zoomable', 'entry__photo-container--zoom', 1680);
+    new ImageZoom('.entry__photo', 'entry__photo--zoomable', 'entry__photo-container--zoom');
   });
 }

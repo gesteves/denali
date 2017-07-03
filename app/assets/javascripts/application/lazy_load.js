@@ -2,9 +2,9 @@
 
 'use strict';
 class LazyLoad {
-  constructor(elementsClass, threshold = 0) {
+  constructor(elementsClass) {
     this.elementsClass = elementsClass;
-    this.observer = new IntersectionObserver(entries => this.handleIntersection(entries), { rootMargin: `${threshold}px` });
+    this.observer = new IntersectionObserver(entries => this.handleIntersection(entries), { rootMargin: '0px', threshold: '0' });
     this.images = document.querySelectorAll(`.${this.elementsClass}`);
     this.images.forEach(image => this.observer.observe(image));
   }

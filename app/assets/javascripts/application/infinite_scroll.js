@@ -2,14 +2,14 @@
 'use strict';
 
 class InfiniteScroll {
-  constructor () {
-    this.pagination = document.querySelector('.pagination');
-    if (!this.pagination) {
+  constructor (container, pagination, footer) {
+    this.pagination = document.querySelector(pagination);
+    this.container = document.querySelector(container);
+    if (!this.pagination || !this.container) {
       return;
     }
     this.sentinel = this.setUpSentinel(this.pagination);
-    this.container = document.querySelector('.entry-list');
-    this.footer = document.querySelector('.footer');
+    this.footer = document.querySelector(footer);
     this.footer.style.opacity = 0;
     this.baseUrl = this.container.getAttribute('data-base-url');
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
@@ -66,7 +66,7 @@ class InfiniteScroll {
 }
 
 if (document.readyState !== 'loading') {
-  new InfiniteScroll();
+  new InfiniteScroll('.entry-list', '.pagination', '.footer');
 } else {
-  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll());
+  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll('.entry-list', '.pagination', '.footer'));
 }
