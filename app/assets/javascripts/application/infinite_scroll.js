@@ -2,56 +2,28 @@
 'use strict';
 
 class InfiniteScroll {
-  constructor (containerSelector, paginationSelector, footerSelector) {
-    let pagination = document.querySelector(paginationSelector);
-    this.container = document.querySelector(containerSelector);
-    if (!pagination || !this.container) {
+  constructor (container, pagination, footer) {
+    this.pagination = document.querySelector(pagination);
+    this.container = document.querySelector(container);
+    if (!this.pagination || !this.container) {
       return;
     }
-    this.pagination = this.setUpPagination(pagination);
-    this.button = this.setUpButton();
-    this.footer = document.querySelector(footerSelector);
-    this.hide(this.footer);
+    this.sentinel = this.setUpSentinel(this.pagination);
+    this.footer = document.querySelector(footer);
+    this.footer.style.opacity = 0;
     this.baseUrl = this.container.getAttribute('data-base-url');
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
-    this.loadingObserver = new IntersectionObserver(entries => this.checkForNextPage(entries), { rootMargin: '50%' });
-    this.loadingObserver.observe(this.pagination);
-    this.pageNumberObserver = new IntersectionObserver(entries => this.setPageNumber(entries), { threshold: 1.0 });
-    this.updatePageNumberObserver();
-    this.showButton();
+    this.loadObserver = new IntersectionObserver(entries => this.checkForNextPage(entries), { rootMargin: '25%' });
+    this.loadObserver.observe(this.sentinel);
+    this.pageObserver = new IntersectionObserver(entries => this.checkPagination(entries), { threshold: 1.0 });
+    this.updatePageSentinels();
   }
 
-  setUpPagination (element) {
-    element.innerHTML = '<a href="#" class="button button--danger hidden">Load more</a>';
-    element.classList = 'pagination--ajax';
-    return element;
-  }
-
-  setUpButton () {
-    let button = this.pagination.querySelector('a');
-    button.addEventListener('click', e => {
-      e.preventDefault();
-      this.getNextPage();
-    });
-    return button;
-  }
-
-  showButton () {
-    this.buttonTimeout = setTimeout(() => {
-      this.show(this.button);
-    }, 1000);
-  }
-
-  hide (element) {
-    element.classList.add('hidden');
-  }
-
-  show (element) {
-    element.classList.remove('hidden');
-  }
-
-  remove (element) {
-    element.parentNode.removeChild(element);
+  setUpSentinel (element) {
+    let parent = element.parentNode;
+    let sentinel = document.createElement('div');
+    parent.replaceChild(sentinel, element);
+    return sentinel;
   }
 
   checkForNextPage (entries) {
@@ -65,30 +37,26 @@ class InfiniteScroll {
   getNextPage () {
     let request = new XMLHttpRequest();
     let nextPage = this.currentPage + 1;
-    clearTimeout(this.buttonTimeout);
-    this.hide(this.button);
     request.open('GET', `${this.baseUrl}/page/${nextPage}.js`, true);
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
         this.container.insertAdjacentHTML('beforeend', request.responseText);
         this.currentPage = nextPage;
-        this.updatePageNumberObserver();
-        this.showButton();
+        this.updatePageSentinels();
       } else {
-        this.loadingObserver.unobserve(this.pagination);
-        this.remove(this.pagination);
-        this.show(this.footer);
+        this.loadObserver.unobserve(this.sentinel);
+        this.footer.style.opacity = 1;
       }
     };
     request.send();
   }
 
-  updatePageNumberObserver () {
+  updatePageSentinels () {
     let elements = this.container.querySelectorAll('[data-page-url]');
-    elements.forEach(element => this.pageNumberObserver.observe(element));
+    elements.forEach(element => this.pageObserver.observe(element));
   }
 
-  setPageNumber (entries) {
+  checkPagination (entries) {
     entries.forEach(entry => {
       if ((entry.intersectionRatio > 0 || entry.isIntersecting)) {
         window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
