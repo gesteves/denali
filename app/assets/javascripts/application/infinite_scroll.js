@@ -11,6 +11,7 @@ class InfiniteScroll {
     this.pagination = this.setUpPagination(pagination);
     this.button = this.setUpButton();
     this.footer = document.querySelector(footerSelector);
+    this.hide(this.footer);
     this.baseUrl = this.container.getAttribute('data-base-url');
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
     this.loadingObserver = new IntersectionObserver(entries => this.checkForNextPage(entries), { rootMargin: '50%' });
@@ -18,11 +19,11 @@ class InfiniteScroll {
     this.pageNumberObserver = new IntersectionObserver(entries => this.setPageNumber(entries), { threshold: 1.0 });
     this.updatePageNumberObserver();
     this.showButton();
-    this.hide(this.footer);
   }
 
   setUpPagination (element) {
-    element.innerHTML = '<a href="#" class="hidden">More »</a>';
+    element.innerHTML = '<a href="#" class="button button--danger hidden">Load more</a>';
+    element.classList = 'pagination--ajax';
     return element;
   }
 
@@ -39,6 +40,18 @@ class InfiniteScroll {
     this.buttonTimeout = setTimeout(() => {
       this.show(this.button);
     }, 1000);
+  }
+
+  hide (element) {
+    element.classList.add('hidden');
+  }
+
+  show (element) {
+    element.classList.remove('hidden');
+  }
+
+  remove (element) {
+    element.parentNode.removeChild(element);
   }
 
   checkForNextPage (entries) {
@@ -85,18 +98,6 @@ class InfiniteScroll {
         }
       }
     });
-  }
-
-  hide (element) {
-    element.classList.add('hidden');
-  }
-
-  show (element) {
-    element.classList.remove('hidden');
-  }
-
-  remove (element) {
-    element.parentNode.removeChild(element);
   }
 }
 
