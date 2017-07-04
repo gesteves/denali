@@ -10,10 +10,14 @@ class InfiniteScroll {
     }
     this.container = container;
     this.sentinel = this.setUpSentinel(pagination);
+
     this.footer = document.querySelector(footerSelector);
     this.footer.style.display = 'none';
+
     this.baseUrl = this.container.getAttribute('data-base-url');
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
+
+    IntersectionObserver.prototype.POLL_INTERVAL = 10;
     this.loadingIO = new IntersectionObserver(e => this.loadEntries(e), { rootMargin: '25%' });
     this.loadingIO.observe(this.sentinel);
     this.paginationIO = new IntersectionObserver(e => this.updatePage(e), { threshold: 1.0 });
