@@ -2,21 +2,22 @@
 'use strict';
 
 class InfiniteScroll {
-  constructor (container, pagination, footer) {
-    this.pagination = document.querySelector(pagination);
-    this.container = document.querySelector(container);
-    if (!this.pagination || !this.container) {
+  constructor (containerSelector, paginationSelector, footerSelector) {
+    let pagination = document.querySelector(paginationSelector);
+    let container = document.querySelector(containerSelector);
+    if (!pagination || !container) {
       return;
     }
-    this.sentinel = this.setUpSentinel(this.pagination);
-    this.footer = document.querySelector(footer);
-    this.footer.style.opacity = 0;
+    this.container = container;
+    this.sentinel = this.setUpSentinel(pagination);
+    this.footer = document.querySelector(footerSelector);
+    this.footer.style.display = 'none';
     this.baseUrl = this.container.getAttribute('data-base-url');
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
-    this.loadObserver = new IntersectionObserver(entries => this.checkForNextPage(entries), { rootMargin: '25%' });
-    this.loadObserver.observe(this.sentinel);
-    this.pageObserver = new IntersectionObserver(entries => this.checkPagination(entries), { threshold: 1.0 });
-    this.updatePageSentinels();
+    this.loadingIO = new IntersectionObserver(e => this.loadEntries(e), { rootMargin: '25%' });
+    this.loadingIO.observe(this.sentinel);
+    this.paginationIO = new IntersectionObserver(e => this.updatePage(e), { threshold: 1.0 });
+    this.observePageUrls();
   }
 
   setUpSentinel (element) {
@@ -26,7 +27,7 @@ class InfiniteScroll {
     return sentinel;
   }
 
-  checkForNextPage (entries) {
+  loadEntries (entries) {
     entries.forEach(entry => {
       if ((entry.intersectionRatio > 0 || entry.isIntersecting)) {
         this.getNextPage();
@@ -42,21 +43,21 @@ class InfiniteScroll {
       if (request.status >= 200 && request.status < 400) {
         this.container.insertAdjacentHTML('beforeend', request.responseText);
         this.currentPage = nextPage;
-        this.updatePageSentinels();
+        this.observePageUrls();
       } else {
-        this.loadObserver.unobserve(this.sentinel);
-        this.footer.style.opacity = 1;
+        this.loadingIO.unobserve(this.sentinel);
+        this.footer.style.display = 'block';
       }
     };
     request.send();
   }
 
-  updatePageSentinels () {
+  observePageUrls () {
     let elements = this.container.querySelectorAll('[data-page-url]');
-    elements.forEach(element => this.pageObserver.observe(element));
+    elements.forEach(element => this.paginationIO.observe(element));
   }
 
-  checkPagination (entries) {
+  updatePage (entries) {
     entries.forEach(entry => {
       if ((entry.intersectionRatio > 0 || entry.isIntersecting)) {
         window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
