@@ -12,7 +12,7 @@ class Map {
     this.showBar = true;
 
     if (!window.location.hash) {
-      window.location.hash = `1/${latitude}/${latitude}`;
+      window.location.hash = `1/${latitude}/${longitude}`;
     }
 
     setTimeout(() => this.showLoadingSpinner, 100);
