@@ -133,7 +133,7 @@ class EntriesController < ApplicationController
   def sitemap
     expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)
-      @entries = @photoblog.entries.published
+      @entries = @photoblog.entries.includes(:photos).published
       render format: 'xml'
     end
   end
