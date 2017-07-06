@@ -47,11 +47,14 @@ Rails.application.routes.draw do
   get '/map'                           => 'maps#index', :as => :map
   get '/map/photos.:format'            => 'maps#photos'
   get '/map/photo/:id.:format'         => 'maps#photo'
-  get '/sitemap.:format'               => 'entries#sitemap', defaults: { format: 'xml' }, :as => :sitemap
   get '/about'                         => 'blogs#about', :as => :about
   get '/offline'                       => 'blogs#offline',  :as => :offline
   get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
+
+  # Sitemaps
+  get '/sitemap.:format'               => 'entries#sitemap_index', defaults: { format: 'xml' }, :as => :sitemap_index
+  get '/sitemap/:page.:format'         => 'entries#sitemap', defaults: { format: 'xml' }, :as => :sitemap
 
   # Legacy routes & redirects
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }

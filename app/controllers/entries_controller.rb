@@ -130,10 +130,19 @@ class EntriesController < ApplicationController
     end
   end
 
+  def sitemap_index
+    expires_in 24.hours, public: true
+    if stale?(@photoblog, public: true)
+      @pages = @photoblog.entries.published.page(1).per(100).total_pages
+      render format: 'xml'
+    end
+  end
+
   def sitemap
     expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)
-      @entries = @photoblog.entries.includes(:photos).published
+      @page = params[:page]
+      @entries = @photoblog.entries.includes(:photos).published.page(@page).per(100)
       render format: 'xml'
     end
   end

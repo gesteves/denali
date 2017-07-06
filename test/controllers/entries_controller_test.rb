@@ -19,8 +19,14 @@ class EntriesControllerTest < ActionController::TestCase
   end
 
   test "should generate sitemap" do
-    get :sitemap, params: { format: 'xml' }
+    get :sitemap, params: { format: 'xml', page: 1 }
     assert_template :sitemap
+    assert_response :success
+  end
+
+  test "should generate sitemap index" do
+    get :sitemap_index, params: { format: 'xml' }
+    assert_template :sitemap_index
     assert_response :success
   end
 
