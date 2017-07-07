@@ -6,6 +6,7 @@ class EntriesController < ApplicationController
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged]
   before_action :set_entry_max_age, only: [:show, :preview]
+  before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   skip_before_action :verify_authenticity_token
 
   def index
@@ -133,7 +134,7 @@ class EntriesController < ApplicationController
   def sitemap_index
     expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)
-      @pages = @photoblog.entries.published.page(1).per(100).total_pages
+      @pages = @photoblog.entries.published.page(1).per(@entries_per_sitemap).total_pages
       render format: 'xml'
     end
   end
@@ -142,7 +143,7 @@ class EntriesController < ApplicationController
     expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)
       @page = params[:page]
-      @entries = @photoblog.entries.includes(:photos).published.page(@page).per(100)
+      @entries = @photoblog.entries.includes(:photos).published.page(@page).per(@entries_per_sitemap)
       render format: 'xml'
     end
   end
@@ -163,5 +164,9 @@ class EntriesController < ApplicationController
 
   def set_request_format
     request.format = 'json' if request.headers['Content-Type'].try(:downcase) == 'application/vnd.api+json'
+  end
+
+  def set_sitemap_entry_count
+    @entries_per_sitemap = 100
   end
 end
