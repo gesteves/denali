@@ -1,4 +1,4 @@
-json.cache! "feed/json/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+json.cache! "feed/json/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
   json.version 'https://jsonfeed.org/version/1'
   if @page.nil? || @page == 1
     json.title @photoblog.name
