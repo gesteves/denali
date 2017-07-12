@@ -20,7 +20,7 @@ class EntriesController < ApplicationController
           format.html
           format.json
           format.js
-          format.atom { redirect_to @page == 1 ? feed_url(page: nil) : feed_url(page: @page), status: 301 }
+          format.atom { redirect_to @page == 1 ? feed_url(page: nil, format: 'atom') : feed_url(page: @page, format: 'atom'), status: 301 }
         end
       rescue ActionController::UnknownFormat
         if @page == 1
@@ -43,7 +43,7 @@ class EntriesController < ApplicationController
           format.html
           format.json
           format.js
-          format.atom { redirect_to @page == 1 ? tag_feed_url(tag: @tag_slug, page: nil) : tag_feed_url(tag: @tag_slug, page: @page), status: 301 }
+          format.atom { redirect_to @page == 1 ? tag_feed_url(tag: @tag_slug, page: nil, format: 'atom') : tag_feed_url(tag: @tag_slug, page: @page, format: 'atom'), status: 301 }
         end
       rescue ActionController::UnknownFormat
         if @page == 1

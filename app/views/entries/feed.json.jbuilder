@@ -2,8 +2,8 @@ json.cache! "feed/json/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photobl
   json.version 'https://jsonfeed.org/version/1'
   if @page.nil? || @page == 1
     json.title @photoblog.name
-    json.home_page_url entries_url
-    json.feed_url feed_url(format: 'json')
+    json.home_page_url root_url
+    json.feed_url feed_url(format: 'json', page: nil)
   else
     json.title "#{@photoblog.name} – Page #{@page}"
     json.home_page_url entries_url(page: @page)
