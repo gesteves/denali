@@ -121,13 +121,10 @@ class EntriesController < ApplicationController
   def tumblr
     expires_in 1.year, public: true
     @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
-    raise ActiveRecord::RecordNotFound if @entry.nil?
-    if stale?(@entry, public: true)
-      respond_to do |format|
-        format.html {
-          redirect_to @entry.permalink_url, status: 301
-        }
-      end
+    respond_to do |format|
+      format.html {
+        redirect_to @entry.present? ? @entry.permalink_url : root_path, status: 301
+      }
     end
   end
 
