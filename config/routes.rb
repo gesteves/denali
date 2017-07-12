@@ -58,7 +58,8 @@ Rails.application.routes.draw do
 
   # Legacy routes & redirects
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
-  get '/rss'                           => 'entries#feed', defaults: { format: 'atom' }
+  get '/archive(/:year)(/:month)',     to: redirect('/')
+  get '/rss',                          to: redirect('/feed.atom')
 
   # Feeds
   get '(/page/:page)/feed(.:format)'             => 'entries#feed', constraints: { page: /\d+/ }, defaults: { format: 'atom' }, :as => :feed
