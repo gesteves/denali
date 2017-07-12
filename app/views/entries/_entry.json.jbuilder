@@ -65,7 +65,7 @@ json.cache! "entry/json/#{entry.id}/#{entry.updated_at.to_i}" do
             json.(t, :taggings_count)
           end
           json.links do
-            json.self tag_url(t.slug)
+            json.self tag_url(t.slug, page: nil)
           end
         end
       end
