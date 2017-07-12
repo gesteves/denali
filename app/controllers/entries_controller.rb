@@ -123,7 +123,7 @@ class EntriesController < ApplicationController
     @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
     respond_to do |format|
       format.html {
-        redirect_to @entry.present? ? @entry.permalink_url : root_path, status: 301
+        redirect_to @entry.present? ? @entry.permalink_url : root_url, status: 301
       }
     end
   end
