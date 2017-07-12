@@ -7,7 +7,7 @@
   text-align: center;
   width: 100%;
 
-  @media (min-width: $bp-l) {
+  @media (min-width: $bp-s) {
     flex-flow: row nowrap;
   }
 
@@ -22,7 +22,7 @@
     width: calc(100% - 40px);
   }
 
-  @media (min-width: $bp-l) {
+  @media (min-width: $bp-s) {
     border-bottom: 1px solid $color-border;
     flex-grow: 1;
     margin-bottom: 45px;
@@ -70,14 +70,18 @@
     text-decoration: none;
   }
 
-  @media (min-width: $bp-xs) {
+  @media (min-width: $bp-s) {
+    width: 220px;
+  }
+
+  @media (min-width: $bp-s) {
+    margin: 0 auto;
+    order: inherit;
+    padding: 0 20px;
     width: 220px;
   }
 
   @media (min-width: $bp-l) {
-    margin: 0 auto;
-    order: inherit;
-    padding: 0 20px;
     width: 50vw;
   }
 
