@@ -23,7 +23,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
-gem 'exifr'
+gem 'exifr', require: nil
 gem 'acts-as-taggable-on', '~> 5.0'
 gem 'httparty'
 gem 'kaminari'
