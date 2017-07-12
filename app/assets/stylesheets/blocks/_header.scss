@@ -70,7 +70,7 @@
     text-decoration: none;
   }
 
-  @media (min-width: $bp-s) {
+  @media (min-width: $bp-xs) {
     width: 220px;
   }
 
@@ -78,7 +78,7 @@
     margin: 0 auto;
     order: inherit;
     padding: 0 20px;
-    width: 220px;
+    width: 25vw;
   }
 
   @media (min-width: $bp-l) {
