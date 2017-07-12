@@ -38,9 +38,7 @@ Rails.application.routes.draw do
 
 
   get '/(page/:page)'                  => 'entries#index',   constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :entries
-  get '/count/:count'                  => 'entries#index',   constraints: { count: /\d+/ }, defaults: { format: 'html' }
   get '/tagged/:tag(/page/:page)'      => 'entries#tagged',  constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :tag
-  get '/tagged/:tag(/count/:count)'    => 'entries#tagged',  constraints: { count: /\d+/ }, defaults: { format: 'html' }
   get '/e/:id'                         => 'entries#show',    constraints: { id: /\d+/ }, :as => :entry
   get '/:year/:month/:day/:id(/:slug)' => 'entries#show',    constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_long
   get '/preview/:preview_hash'         => 'entries#preview', defaults: { format: 'html' }, :as => :preview_entry

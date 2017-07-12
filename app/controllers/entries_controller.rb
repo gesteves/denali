@@ -12,7 +12,7 @@ class EntriesController < ApplicationController
   def index
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
-      @count = (params[:count] || @photoblog.posts_per_page).to_i
+      @count = @photoblog.posts_per_page
       @entries = @photoblog.entries.includes(:photos).published.photo_entries.page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @entries.empty?
       begin
@@ -34,7 +34,7 @@ class EntriesController < ApplicationController
   def tagged
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
-      @count = (params[:count] || @photoblog.posts_per_page).to_i
+      @count = @photoblog.posts_per_page
       @entries = @photoblog.entries.includes(:photos).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
       begin
