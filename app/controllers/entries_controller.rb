@@ -14,12 +14,12 @@ class EntriesController < ApplicationController
       @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
       @entries = @photoblog.entries.includes(:photos).published.photo_entries.page(@page).per(@count)
-      raise ActiveRecord::RecordNotFound if @entries.empty?
+      raise ActiveRecord::RecordNotFound if @entries.empty? && request.format != 'js'
       begin
         respond_to do |format|
           format.html
           format.json
-          format.js
+          format.js { render status: @entries.empty? ? 404 : 200 }
           format.atom { redirect_to @page == 1 ? feed_url(page: nil, format: 'atom') : feed_url(page: @page, format: 'atom'), status: 301 }
         end
       rescue ActionController::UnknownFormat
@@ -37,12 +37,12 @@ class EntriesController < ApplicationController
       @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
       @entries = @photoblog.entries.includes(:photos).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
-      raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+      raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
       begin
         respond_to do |format|
           format.html
           format.json
-          format.js
+          format.js { render status: @entries.empty? ? 404 : 200 }
           format.atom { redirect_to @page == 1 ? tag_feed_url(tag: @tag_slug, page: nil, format: 'atom') : tag_feed_url(tag: @tag_slug, page: @page, format: 'atom'), status: 301 }
         end
       rescue ActionController::UnknownFormat
