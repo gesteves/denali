@@ -7,6 +7,9 @@
   <% if @photoblog.email.present? %>
     <a href="mailto:<%= @photoblog.email %>" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
   <% end %>
+  <% if @photoblog.flickr.present? %>
+    <a href="https://www.flickr.com/photos/<%= @photoblog.flickr %>/" class="follow__link" rel="me" title="Follow on Flickr"><%= inline_svg 'flickr', 'follow__icon' %></a>
+  <% end %>
   <% if @photoblog.instagram.present? %>
     <a href="https://www.instagram.com/<%= @photoblog.instagram %>/" class="follow__link" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>
   <% end %>

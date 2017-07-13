@@ -10,142 +10,143 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170520160754) do
+ActiveRecord::Schema.define(version: 20170713135954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "blogs", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
-    t.string   "domain"
-    t.text     "description"
-    t.integer  "posts_per_page",          default: 10
-    t.string   "short_domain"
-    t.text     "about"
-    t.string   "copyright"
-    t.boolean  "show_related_entries",    default: true
-    t.text     "analytics_code"
-    t.string   "instagram"
-    t.string   "twitter"
-    t.string   "tumblr"
-    t.string   "email"
-    t.text     "header_logo_svg"
-    t.text     "additional_meta_tags"
-    t.string   "favicon_file_name"
-    t.string   "favicon_content_type"
-    t.integer  "favicon_file_size"
+  create_table "blogs", id: :serial, force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "domain"
+    t.text "description"
+    t.integer "posts_per_page", default: 10
+    t.string "short_domain"
+    t.text "about"
+    t.string "copyright"
+    t.boolean "show_related_entries", default: true
+    t.text "analytics_code"
+    t.string "instagram"
+    t.string "twitter"
+    t.string "tumblr"
+    t.string "email"
+    t.text "header_logo_svg"
+    t.text "additional_meta_tags"
+    t.string "favicon_file_name"
+    t.string "favicon_content_type"
+    t.integer "favicon_file_size"
     t.datetime "favicon_updated_at"
-    t.string   "touch_icon_file_name"
-    t.string   "touch_icon_content_type"
-    t.integer  "touch_icon_file_size"
+    t.string "touch_icon_file_name"
+    t.string "touch_icon_content_type"
+    t.integer "touch_icon_file_size"
     t.datetime "touch_icon_updated_at"
-    t.index ["domain"], name: "index_blogs_on_domain", using: :btree
+    t.string "flickr"
+    t.index ["domain"], name: "index_blogs_on_domain"
   end
 
-  create_table "entries", force: :cascade do |t|
-    t.string   "title"
-    t.text     "body"
-    t.string   "slug"
-    t.string   "status",            default: "draft"
-    t.integer  "blog_id"
-    t.integer  "user_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+  create_table "entries", id: :serial, force: :cascade do |t|
+    t.string "title"
+    t.text "body"
+    t.string "slug"
+    t.string "status", default: "draft"
+    t.integer "blog_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.datetime "published_at"
-    t.integer  "photos_count"
-    t.integer  "position"
-    t.string   "tumblr_id"
-    t.boolean  "post_to_twitter"
-    t.boolean  "post_to_tumblr"
-    t.string   "tweet_text"
-    t.boolean  "post_to_facebook"
-    t.boolean  "post_to_flickr"
-    t.boolean  "show_in_map",       default: true
-    t.boolean  "post_to_pinterest"
-    t.boolean  "post_to_instagram"
-    t.string   "preview_hash"
-    t.index ["blog_id"], name: "index_entries_on_blog_id", using: :btree
-    t.index ["photos_count"], name: "index_entries_on_photos_count", using: :btree
-    t.index ["preview_hash"], name: "index_entries_on_preview_hash", using: :btree
-    t.index ["published_at"], name: "index_entries_on_published_at", using: :btree
-    t.index ["show_in_map"], name: "index_entries_on_show_in_map", using: :btree
-    t.index ["status"], name: "index_entries_on_status", using: :btree
-    t.index ["tumblr_id"], name: "index_entries_on_tumblr_id", using: :btree
-    t.index ["user_id"], name: "index_entries_on_user_id", using: :btree
+    t.integer "photos_count"
+    t.integer "position"
+    t.string "tumblr_id"
+    t.boolean "post_to_twitter"
+    t.boolean "post_to_tumblr"
+    t.string "tweet_text"
+    t.boolean "post_to_facebook"
+    t.boolean "post_to_flickr"
+    t.boolean "show_in_map", default: true
+    t.boolean "post_to_pinterest"
+    t.boolean "post_to_instagram"
+    t.string "preview_hash"
+    t.index ["blog_id"], name: "index_entries_on_blog_id"
+    t.index ["photos_count"], name: "index_entries_on_photos_count"
+    t.index ["preview_hash"], name: "index_entries_on_preview_hash"
+    t.index ["published_at"], name: "index_entries_on_published_at"
+    t.index ["show_in_map"], name: "index_entries_on_show_in_map"
+    t.index ["status"], name: "index_entries_on_status"
+    t.index ["tumblr_id"], name: "index_entries_on_tumblr_id"
+    t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
-  create_table "photos", force: :cascade do |t|
-    t.text     "caption"
-    t.integer  "position"
-    t.integer  "entry_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
+  create_table "photos", id: :serial, force: :cascade do |t|
+    t.text "caption"
+    t.integer "position"
+    t.integer "entry_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "image_file_name"
+    t.string "image_content_type"
+    t.integer "image_file_size"
     t.datetime "image_updated_at"
-    t.string   "source_url"
-    t.string   "make"
-    t.string   "model"
+    t.string "source_url"
+    t.string "make"
+    t.string "model"
     t.datetime "taken_at"
-    t.string   "exposure"
-    t.float    "f_number"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.integer  "width"
-    t.integer  "height"
-    t.integer  "iso"
-    t.integer  "focal_length"
-    t.string   "film_make"
-    t.string   "film_type"
-    t.float    "focal_x"
-    t.float    "focal_y"
-    t.index ["entry_id"], name: "index_photos_on_entry_id", using: :btree
-    t.index ["latitude"], name: "index_photos_on_latitude", using: :btree
-    t.index ["longitude"], name: "index_photos_on_longitude", using: :btree
+    t.string "exposure"
+    t.float "f_number"
+    t.float "latitude"
+    t.float "longitude"
+    t.integer "width"
+    t.integer "height"
+    t.integer "iso"
+    t.integer "focal_length"
+    t.string "film_make"
+    t.string "film_type"
+    t.float "focal_x"
+    t.float "focal_y"
+    t.index ["entry_id"], name: "index_photos_on_entry_id"
+    t.index ["latitude"], name: "index_photos_on_latitude"
+    t.index ["longitude"], name: "index_photos_on_longitude"
   end
 
-  create_table "taggings", force: :cascade do |t|
-    t.integer  "tag_id"
-    t.string   "taggable_type"
-    t.integer  "taggable_id"
-    t.string   "tagger_type"
-    t.integer  "tagger_id"
-    t.string   "context",       limit: 128
+  create_table "taggings", id: :serial, force: :cascade do |t|
+    t.integer "tag_id"
+    t.string "taggable_type"
+    t.integer "taggable_id"
+    t.string "tagger_type"
+    t.integer "tagger_id"
+    t.string "context", limit: 128
     t.datetime "created_at"
-    t.index ["context"], name: "index_taggings_on_context", using: :btree
-    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
-    t.index ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
-    t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
-    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy", using: :btree
-    t.index ["taggable_id"], name: "index_taggings_on_taggable_id", using: :btree
-    t.index ["taggable_type"], name: "index_taggings_on_taggable_type", using: :btree
-    t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type", using: :btree
-    t.index ["tagger_id"], name: "index_taggings_on_tagger_id", using: :btree
+    t.index ["context"], name: "index_taggings_on_context"
+    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
+    t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context"
+    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy"
+    t.index ["taggable_id"], name: "index_taggings_on_taggable_id"
+    t.index ["taggable_type"], name: "index_taggings_on_taggable_type"
+    t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type"
+    t.index ["tagger_id"], name: "index_taggings_on_tagger_id"
   end
 
-  create_table "tags", force: :cascade do |t|
-    t.string  "name"
+  create_table "tags", id: :serial, force: :cascade do |t|
+    t.string "name"
     t.integer "taggings_count", default: 0
-    t.string  "slug"
-    t.index ["name"], name: "index_tags_on_name", unique: true, using: :btree
-    t.index ["slug"], name: "index_tags_on_slug", using: :btree
+    t.string "slug"
+    t.index ["name"], name: "index_tags_on_name", unique: true
+    t.index ["slug"], name: "index_tags_on_slug"
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string   "provider"
-    t.string   "uid"
-    t.string   "name"
-    t.string   "email"
-    t.string   "oauth_token"
+  create_table "users", id: :serial, force: :cascade do |t|
+    t.string "provider"
+    t.string "uid"
+    t.string "name"
+    t.string "email"
+    t.string "oauth_token"
     t.datetime "oauth_expires_at"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
-    t.string   "first_name"
-    t.string   "last_name"
-    t.string   "avatar_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.string "avatar_url"
   end
 
   add_foreign_key "entries", "blogs"

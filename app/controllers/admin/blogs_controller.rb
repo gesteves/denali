@@ -23,7 +23,7 @@ class Admin::BlogsController < AdminController
     params.require(:blog).permit(:name, :description, :posts_per_page, :domain,
                                  :short_domain, :about, :copyright,
                                  :show_related_entries, :analytics_code,
-                                 :instagram, :twitter, :tumblr, :email,
+                                 :instagram, :twitter, :tumblr, :email, :flickr,
                                  :header_logo_svg, :additional_meta_tags,
                                  :favicon, :touch_icon)
   end
