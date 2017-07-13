@@ -27,10 +27,7 @@
 .elsewhere__list {
   display: flex;
   flex-flow: row wrap;
-
-  @media (min-width: $bp-xs) {
-    justify-content: center;
-  }
+  justify-content: center;
 }
 
 .elsewhere__item {
