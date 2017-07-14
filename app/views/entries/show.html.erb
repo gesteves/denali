@@ -26,5 +26,5 @@
 
 <%= render partial: 'entries/entry', object: @entry %>
 <%= render partial: 'entries/entry_pagination', object: @entry, as: :entry if @entry.is_published? %>
-<%= render partial: 'partials/elsewhere' if @entry.is_published? %>
 <%= render partial: 'entries/related', object: @entry if @photoblog.show_related_entries? && @entry.is_published? %>
+<%= render partial: 'partials/elsewhere' if @entry.is_published? %>
