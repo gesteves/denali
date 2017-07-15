@@ -102,6 +102,8 @@ class Photo < ApplicationRecord
       'Fujifilm'
     elsif self.make =~ /canon/i
       'Canon'
+    elsif self.make =~ /leica/i
+      'Leica'
     else
       self.make.titlecase
     end
@@ -110,6 +112,8 @@ class Photo < ApplicationRecord
   def formatted_camera
     if self.model =~ /iphone/i
       self.model
+    elsif self.model =~ /leica/i
+      self.model.titlecase
     else
       "#{self.formatted_make} #{self.model.gsub(%r{#{formatted_make}}i, '').strip}"
     end
