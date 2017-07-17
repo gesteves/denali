@@ -25,10 +25,10 @@
     flex-grow: 1;
     margin-bottom: 45px;
     padding: 0 20px;
-    width: calc((100vw - 180px - 40px)/2);
+    width: calc((100vw - 160px - 40px)/2);
   }
 
-  @media (min-width: $bp-l) {
+  @media (min-width: $bp-m) {
     width: calc((100vw - 240px - 40px)/2);
   }
 
@@ -52,14 +52,6 @@
   a:active {
     color: $color-links;
   }
-
-  @media (min-width: $bp-s) {
-    font-size: 12px;
-  }
-
-  @media (min-width: $bp-l) {
-    font-size: 16px;
-  }
 }
 
 .header__link {
@@ -68,7 +60,7 @@
   margin: 0 auto 12px;
   max-width: 320px;
   order: -1;
-  width: 180px;
+  width: 200px;
 
   &:link,
   &:visited {
@@ -85,9 +77,10 @@
     margin: 0 auto;
     order: inherit;
     padding: 0 20px;
+    width: 160px;
   }
 
-  @media (min-width: $bp-l) {
+  @media (min-width: $bp-m) {
     width: 240px;
   }
 
