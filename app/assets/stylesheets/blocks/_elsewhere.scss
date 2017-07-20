@@ -26,20 +26,20 @@
 
 .elsewhere__list {
   display: flex;
-  flex-flow: row wrap;
+  flex-flow: row nowrap;
   justify-content: center;
 }
 
 .elsewhere__item {
   display: block;
   flex: 0 0 auto;
-  height: 20px;
   margin: 0 10px 10px;
   text-align: left;
   white-space: nowrap;
 
   a {
-    display: block;
+    align-items: center;
+    display: flex;
     font-size: 1.6rem;
     line-height: 1.5;
 
@@ -55,11 +55,18 @@
   }
 }
 
+.elsewhere__label {
+  display: none;
+
+  @media (min-width: $bp-xxs) {
+    display: inline-block;
+  }
+}
+
 .elsewhere__icon {
   display: inline-block;
   fill: currentColor;
   height: 20px;
   margin-right: 0.5rem;
-  vertical-align: sub;
   width: 20px;
 }
