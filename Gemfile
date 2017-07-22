@@ -32,6 +32,7 @@ gem 'oauth'
 gem 'sentry-raven'
 gem 'cloudfront-invalidator'
 gem 'rmagick'
+gem 'titleize'
 
 # Caching
 gem 'dalli'
