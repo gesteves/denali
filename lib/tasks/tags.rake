@@ -8,6 +8,7 @@ namespace :tags do
           tags << p.formatted_camera
           tags << p.formatted_film if p.film_make.present? && p.film_type.present?
         end
+        puts "Adding the following tags to entry ##{e.id}: #{tags}"
         e.equipment_list.add(tags)
         e.save
       end
@@ -47,6 +48,7 @@ namespace :tags do
 
   task :cleanup => [:environment] do
     Entry.find_each do |e|
+      puts "Removing equipment and location tags from entry ##{e.id}"
       e.tag_list.remove(e.equipment_list)
       e.tag_list.remove(e.location_list)
       e.save
