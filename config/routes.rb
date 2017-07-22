@@ -33,7 +33,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :tags, only: [:index, :destroy], concerns: :paginatable
+    resources :tags, only: [:index, :destroy, :show, :update], concerns: :paginatable
   end
 
 

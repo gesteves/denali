@@ -17,4 +17,20 @@ class Admin::TagsController < AdminController
       }
     end
   end
+
+  def show
+    tag = ActsAsTaggableOn::Tag.find(params[:id])
+    redirect_to admin_tagged_entries_path(tag.slug)
+  end
+
+  def update
+    @tag = ActsAsTaggableOn::Tag.find(params[:id])
+    respond_to do |format|
+      if @tag.update(name: params[:name])
+        format.js
+      else
+        format.js render plain: 'Could not update tag', status: 400
+      end
+    end
+  end
 end
