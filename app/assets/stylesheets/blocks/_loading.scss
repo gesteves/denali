@@ -4,7 +4,6 @@
   justify-content: center;
   margin: 24px auto;
   max-width: $bp-max;
-  visibility: hidden;
 
   @media (min-width: $bp-xl) {
     margin: 72px auto;
@@ -24,10 +23,6 @@
 
 .loading--active {
   display: flex;
-}
-
-.loading--animated {
-  visibility: visible;
 
   .loading__spinner {
     animation: load 1s infinite linear;

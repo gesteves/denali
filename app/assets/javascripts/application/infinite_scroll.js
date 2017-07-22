@@ -8,7 +8,6 @@ class InfiniteScroll {
       paginationSelector: '.pagination',
       sentinelSelector: '.loading',
       footerSelector: '.footer',
-      loadingClass: 'loading--animated',
       activeClass: 'loading--active'
     }, opts);
     let pagination = document.querySelector(options.paginationSelector);
@@ -48,11 +47,9 @@ class InfiniteScroll {
   getNextPage () {
     let request = new XMLHttpRequest();
     let nextPage = this.currentPage + 1;
-    this.sentinel.classList.toggle(this.loadingClass);
     request.open('GET', `${this.baseUrl}/page/${nextPage}.js`, true);
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
-        this.sentinel.classList.toggle(this.loadingClass);
         this.container.insertAdjacentHTML('beforeend', request.responseText);
         this.currentPage = nextPage;
         this.observePageUrls();
