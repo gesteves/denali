@@ -3,12 +3,12 @@ cache "feed/atom/tagged/#{@tag_slug}/page/#{@page}/count/#{@count}/#{@photoblog.
   xml.feed xmlns: 'http://www.w3.org/2005/Atom' do
     if @page.nil? || @page == 1
       xml.id atom_tag(tag_url(tag: @tag_slug), @photoblog.updated_at)
-      xml.title "#{@tags.first.name.titlecase} - #{@photoblog.name}"
+      xml.title "#{@tags.first.name} - #{@photoblog.name}"
       xml.link rel: 'alternate', type: 'text/html', href: tag_url(tag: @tag_slug, page: nil)
       xml.link rel: 'self', type: 'application/atom+xml', href: tag_feed_url(tag: @tag_slug, page: nil, format: 'atom')
     else
       xml.id atom_tag(tag_url(tag: @tag_slug, page: @page), @photoblog.updated_at)
-      xml.title "#{@tags.first.name.titlecase} - #{@photoblog.name} - Page #{@page}"
+      xml.title "#{@tags.first.name} - #{@photoblog.name} - Page #{@page}"
       xml.link rel: 'alternate', type: 'text/html', href: tag_url(tag: @tag_slug, page: @page)
       xml.link rel: 'self', type: 'application/atom+xml', href: tag_feed_url(tag: @tag_slug, page: @page, format: 'atom')
     end
