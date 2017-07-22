@@ -258,7 +258,6 @@ GEM
     thor (0.19.4)
     thread_safe (0.3.6)
     tilt (2.0.7)
-    titleize (1.4.1)
     tumblr_client (0.8.5)
       faraday (~> 0.9.0)
       faraday_middleware (~> 0.9.0)
@@ -319,7 +318,6 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   sentry-raven
   spring
-  titleize
   tumblr_client
   web-console (~> 3.0)
 

@@ -55,12 +55,4 @@ namespace :tags do
       e.save
     end
   end
-
-  task :titleize => [:environment] do
-    ActsAsTaggableOn::Tag.find_each do |tag|
-      puts "Renaming #{tag.name} as #{tag.name.titleize}"
-      tag.name = tag.name.titleize(underscore: false, humanize: false)
-      tag.save
-    end
-  end
 end
