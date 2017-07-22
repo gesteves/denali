@@ -6,7 +6,7 @@
   max-width: $bp-max;
   text-align: center;
 
-  @media (min-width: $bp-s) {
+  @media (min-width: $bp-m) {
     flex-flow: row nowrap;
   }
 
@@ -20,15 +20,11 @@
     border-bottom: 1px solid $color-border;
   }
 
-  @media (min-width: $bp-s) {
+  @media (min-width: $bp-m) {
     border-bottom: 1px solid $color-border;
     flex-grow: 1;
     margin-bottom: 45px;
     padding: 0 20px;
-    width: calc((100vw - 160px - 40px)/2);
-  }
-
-  @media (min-width: $bp-m) {
     width: calc((100vw - 240px - 40px)/2);
   }
 
@@ -73,14 +69,10 @@
     text-decoration: none;
   }
 
-  @media (min-width: $bp-s) {
+  @media (min-width: $bp-m) {
     margin: 0 auto;
     order: inherit;
     padding: 0 20px;
-    width: 160px;
-  }
-
-  @media (min-width: $bp-m) {
     width: 240px;
   }
 
