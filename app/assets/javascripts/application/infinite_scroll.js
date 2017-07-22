@@ -30,7 +30,7 @@ class InfiniteScroll {
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
 
     IntersectionObserver.prototype.POLL_INTERVAL = 50;
-    this.loadingIO = new IntersectionObserver(e => this.loadEntries(e), { rootMargin: '50%' });
+    this.loadingIO = new IntersectionObserver(e => this.loadEntries(e), { rootMargin: '100px' });
     this.loadingIO.observe(this.sentinel);
     this.paginationIO = new IntersectionObserver(e => this.updatePage(e), { threshold: 1.0 });
     this.observePageUrls();
