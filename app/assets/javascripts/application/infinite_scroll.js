@@ -14,7 +14,7 @@ class InfiniteScroll {
     let container = document.querySelector(options.containerSelector);
     let sentinel = document.querySelector(options.sentinelSelector);
 
-    if (!container || !sentinel) {
+    if (!container || !sentinel || !pagination) {
       return;
     }
 
