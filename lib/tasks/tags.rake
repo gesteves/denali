@@ -33,6 +33,7 @@ namespace :tags do
   namespace :clear do
     task :equipment => [:environment] do
       Entry.find_each do |e|
+        puts "Removing equipment tags from entry ##{e.id}"
         e.equipment_list = []
         e.save
       end
@@ -40,6 +41,7 @@ namespace :tags do
 
     task :locations => [:environment] do
       Entry.find_each do |e|
+        puts "Removing location tags from entry ##{e.id}"
         e.location_list = []
         e.save
       end
@@ -48,7 +50,6 @@ namespace :tags do
 
   task :cleanup => [:environment] do
     Entry.find_each do |e|
-      puts "Removing equipment and location tags from entry ##{e.id}"
       e.tag_list.remove(e.equipment_list)
       e.tag_list.remove(e.location_list)
       e.save
