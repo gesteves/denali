@@ -1,0 +1,45 @@
+.loading {
+  display: none;
+  flex-flow: row nowrap;
+  justify-content: center;
+  margin: 24px auto;
+  max-width: $bp-max;
+  visibility: hidden;
+
+  @media (min-width: $bp-xl) {
+    margin: 72px auto;
+  }
+}
+
+.loading__spinner {
+  fill: $color-text-alt;
+  height: 24px;
+  width: 24px;
+
+  @media (min-width: $bp-xl) {
+    height: 36px;
+    width: 36px;
+  }
+}
+
+.loading--active {
+  display: flex;
+}
+
+.loading--animated {
+  visibility: visible;
+
+  .loading__spinner {
+    animation: load 1s infinite linear;
+  }
+}
+
+@keyframes load {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}

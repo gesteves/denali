@@ -2,17 +2,30 @@
 'use strict';
 
 class InfiniteScroll {
-  constructor (containerSelector, paginationSelector, footerSelector) {
-    let pagination = document.querySelector(paginationSelector);
-    let container = document.querySelector(containerSelector);
-    if (!pagination || !container) {
+  constructor (opts = {}) {
+    const options = Object.assign({
+      containerSelector: '.entry-list',
+      paginationSelector: '.pagination',
+      sentinelSelector: '.loading',
+      footerSelector: '.footer',
+      loadingClass: 'loading--animated',
+      activeClass: 'loading--active'
+    }, opts);
+    let pagination = document.querySelector(options.paginationSelector);
+    let container = document.querySelector(options.containerSelector);
+    let sentinel = document.querySelector(options.sentinelSelector);
+
+    if (!container || !sentinel) {
       return;
     }
-    this.container = container;
-    this.sentinel = this.setUpSentinel(pagination);
 
-    this.footer = document.querySelector(footerSelector);
+    this.container = container;
+    this.sentinel = sentinel;
+    this.sentinel.classList.add(options.activeClass);
+    this.footer = document.querySelector(options.footerSelector);
     this.footer.style.display = 'none';
+    this.loadingClass = options.loadingClass;
+    pagination.parentNode.removeChild(pagination);
 
     this.baseUrl = this.container.getAttribute('data-base-url');
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
@@ -22,13 +35,6 @@ class InfiniteScroll {
     this.loadingIO.observe(this.sentinel);
     this.paginationIO = new IntersectionObserver(e => this.updatePage(e), { threshold: 1.0 });
     this.observePageUrls();
-  }
-
-  setUpSentinel (element) {
-    let parent = element.parentNode;
-    let sentinel = document.createElement('div');
-    parent.replaceChild(sentinel, element);
-    return sentinel;
   }
 
   loadEntries (entries) {
@@ -42,15 +48,18 @@ class InfiniteScroll {
   getNextPage () {
     let request = new XMLHttpRequest();
     let nextPage = this.currentPage + 1;
+    this.sentinel.classList.toggle(this.loadingClass);
     request.open('GET', `${this.baseUrl}/page/${nextPage}.js`, true);
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
+        this.sentinel.classList.toggle(this.loadingClass);
         this.container.insertAdjacentHTML('beforeend', request.responseText);
         this.currentPage = nextPage;
         this.observePageUrls();
       } else {
         this.loadingIO.unobserve(this.sentinel);
         this.footer.style.display = 'block';
+        this.sentinel.parentNode.removeChild(this.sentinel);
       }
     };
     request.send();
@@ -75,7 +84,7 @@ class InfiniteScroll {
 }
 
 if (document.readyState !== 'loading') {
-  new InfiniteScroll('.entry-list', '.pagination', '.footer');
+  new InfiniteScroll();
 } else {
-  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll('.entry-list', '.pagination', '.footer'));
+  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll());
 }
