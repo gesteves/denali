@@ -57,7 +57,7 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
+      @entry = @photoblog.entries.includes(:photos, :user, :blog, :tags).published.find(params[:id])
       begin
         respond_to do |format|
           format.html {
