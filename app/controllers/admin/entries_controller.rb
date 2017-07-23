@@ -12,19 +12,19 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries
   def index
     @page = params[:page] || 1
-    @entries = @photoblog.entries.includes(:photos).published.page(@page)
+    @entries = @photoblog.entries.includes(:photos, :tags).published.page(@page)
     @page_title = 'Published'
   end
 
   # GET /admin/entries/queued
   def queued
-    @entries = @photoblog.entries.includes(:photos).queued
+    @entries = @photoblog.entries.includes(:photos, :tags).queued
     @page_title = 'Queued'
   end
 
   # GET /admin/entries/drafts
   def drafts
-    @entries = @photoblog.entries.includes(:photos).drafted
+    @entries = @photoblog.entries.includes(:photos, :tags).drafted
     @page_title = 'Drafts'
   end
 
