@@ -3,6 +3,26 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
+      "fingerprint": "4f55a8dc0b8f7f5667c8be28beaaa4b4c204ff949715921083950195805b6491",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/entries_controller.rb",
+      "line": 116,
+      "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Blog.first.entries.includes(:photos, :user, :blog, :tags).where(:preview_hash => params[:preview_hash]).limit(1).first.permalink_url)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EntriesController",
+        "method": "preview"
+      },
+      "user_input": "Blog.first.entries.includes(:photos, :user, :blog, :tags).where(:preview_hash => params[:preview_hash]).limit(1).first.permalink_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
       "fingerprint": "604de8dd181f41fa2a99e4bd209eebdb211ad2e1a1d8edf68203e2c2a6136ffc",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
@@ -117,28 +137,8 @@
       "user_input": "Blog.first.domain",
       "confidence": "High",
       "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "f81a4508be45dc1e0c96a5d2359fcc5fd4579a916a4cb6c2a525cc1632073a0f",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 116,
-      "link": "http://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Blog.first.entries.includes(:photos, :user, :blog).where(:preview_hash => params[:preview_hash]).limit(1).first.permalink_url)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "preview"
-      },
-      "user_input": "Blog.first.entries.includes(:photos, :user, :blog).where(:preview_hash => params[:preview_hash]).limit(1).first.permalink_url",
-      "confidence": "High",
-      "note": ""
     }
   ],
-  "updated": "2017-07-23 14:09:18 -0400",
+  "updated": "2017-07-23 14:16:44 -0400",
   "brakeman_version": "3.7.0"
 }
