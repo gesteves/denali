@@ -1,4 +1,7 @@
+require 'elasticsearch/model'
 class Entry < ApplicationRecord
+  include Elasticsearch::Model
+  include Elasticsearch::Model::Callbacks
   include Rails.application.routes.url_helpers
   include Formattable
 
@@ -18,6 +21,12 @@ class Entry < ApplicationRecord
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
   attr_accessor :invalidate_cloudfront
+
+  settings index: { number_of_shards: 1 }
+
+  def as_indexed_json(opts = nil)
+    self.as_json(only: [:id, :blog_id, :status], methods: [:plain_body, :plain_title, :es_tags, :es_photo_captions])
+  end
 
   def self.published(order = 'published_at DESC')
     where(status: 'published').order(order)
@@ -217,6 +226,14 @@ class Entry < ApplicationRecord
   end
 
   private
+
+  def es_tags
+    self.combined_tag_list.join(' ')
+  end
+
+  def es_photo_captions
+    self.photos.map { |p| p.plain_caption }.join("\n\n")
+  end
 
   def url_opts(opts)
     if Rails.env.production?
