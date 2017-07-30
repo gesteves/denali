@@ -44,6 +44,10 @@ gem 'resque-scheduler'
 gem 'tumblr_client'
 gem 'flickraw'
 
+# Search
+gem 'elasticsearch-model'
+gem 'elasticsearch-rails'
+
 group :production do
   gem 'passenger'
   gem 'lograge'

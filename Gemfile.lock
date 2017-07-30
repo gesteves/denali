@@ -67,6 +67,19 @@ GEM
     concurrent-ruby (1.0.5)
     crass (1.0.2)
     dalli (2.7.6)
+    elasticsearch (5.0.4)
+      elasticsearch-api (= 5.0.4)
+      elasticsearch-transport (= 5.0.4)
+    elasticsearch-api (5.0.4)
+      multi_json
+    elasticsearch-model (5.0.1)
+      activesupport (> 3)
+      elasticsearch (~> 5)
+      hashie
+    elasticsearch-rails (5.0.1)
+    elasticsearch-transport (5.0.4)
+      faraday
+      multi_json
     erubi (1.6.1)
     et-orbi (1.0.5)
       tzinfo
@@ -290,6 +303,8 @@ DEPENDENCIES
   byebug
   cloudfront-invalidator
   dalli
+  elasticsearch-model
+  elasticsearch-rails
   exifr
   figaro
   flickraw
