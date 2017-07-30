@@ -40,7 +40,7 @@
 
 <% cache "entries/search/#{@query.parameterize}/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <% if @entries.present? %>
-    <h1 class="entry_list--heading">Search results for “<%= @query %>”</h1>
+    <h1 class="entry_list__heading">Search results for “<%= @query %>”</h1>
     <ol class="entry-list" role="main" data-base-url="<%= search_results_url(page: nil).sub(/\/$/, '') %>" data-current-page="<%= @page %>">
       <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? search_results_url(query: @query, page: nil) : search_results_url(query: @query, page: @page) } %>
     </ol>
@@ -48,6 +48,6 @@
     <nav class="pagination" role="navigation"></nav>
     <%= render 'partials/loading' %>
   <% else %>
-    <h1 class="entry_list--heading">No results found for “<%= @query %>”</h1>
+    <h1 class="entry_list__heading entry_list__heading--no-results">No results found for “<%= @query %></i>”. Try searching for something else!</h1>
   <% end %>
 <% end %>
