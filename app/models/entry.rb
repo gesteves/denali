@@ -1,7 +1,6 @@
 require 'elasticsearch/model'
 class Entry < ApplicationRecord
   include Elasticsearch::Model
-  include Elasticsearch::Model::Callbacks
   include Rails.application.routes.url_helpers
   include Formattable
 
@@ -23,6 +22,18 @@ class Entry < ApplicationRecord
   attr_accessor :invalidate_cloudfront
 
   settings index: { number_of_shards: 1 }
+
+  after_commit on: [:create] do
+    ElasticsearchJob.perform_later(self, 'create')
+  end
+
+  after_commit on: [:update] do
+    ElasticsearchJob.perform_later(self, 'update')
+  end
+
+  after_commit on: [:destroy] do
+    ElasticsearchJob.perform_later(self, 'destroy')
+  end
 
   def as_indexed_json(opts = nil)
     self.as_json(only: [:id, :blog_id, :status], methods: [:plain_body, :plain_title, :es_tags, :es_photo_captions])
