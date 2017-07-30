@@ -1,0 +1,3 @@
+<% cache "entries/js/search/#{@query}/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? search_results_url(query: @query, page: nil) : search_results_url(query: @query, page: @page) }  %>
+<% end %>

@@ -55,6 +55,35 @@ class EntriesController < ApplicationController
     end
   end
 
+  def search_results
+    @page = (params[:page] || 1).to_i
+    @count = @photoblog.posts_per_page
+    @query = params[:query]
+    search = {
+      query: {
+        bool: {
+          must: [
+            { term: { blog_id: @photoblog.id } },
+            { term: { status: 'published' } }
+          ],
+          should: {
+            match: { '_all': { query: @query, operator: 'and' }}
+          },
+          minimum_should_match: 1
+        }
+      }
+    }
+    @entries = Entry.search(search).page(@page).per(@count).records.includes(:photos)
+    begin
+      respond_to do |format|
+        format.html
+        format.js { render status: @entries.empty? ? 404 : 200 }
+      end
+    rescue ActionController::UnknownFormat
+      redirect_to search_path, status: 301
+    end
+  end
+
   def show
     if stale?(@photoblog, public: true)
       @entry = @photoblog.entries.includes(:photos, :user, :blog, :tags).published.find(params[:id])
