@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   end
 
   namespace :admin do
-    get '/tagged/:tag(/page/:page)'   => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
-    get '/search/:query(/page/:page)' => 'entries#search', constraints: { page: /\d+/, query: /[\w\s%]+/  }, :as => :search
+    get '/entries/tagged/:tag(/page/:page)'   => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
+    get '/entries/search/:query(/page/:page)' => 'entries#search', constraints: { page: /\d+/, query: /[\w\s%]+/  }, :as => :search
     get '/entries/edit'               => 'entries#edit'
     get '/entries/share'              => 'entries#share'
     get 'settings'                    => 'blogs#edit'
@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   get '/e/:id'                         => 'entries#show',    constraints: { id: /\d+/ }, :as => :entry
   get '/:year/:month/:day/:id(/:slug)' => 'entries#show',    constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_long
   get '/preview/:preview_hash'         => 'entries#preview', defaults: { format: 'html' }, :as => :preview_entry
+  get '/search'                        => 'entries#search', :as => :search
   get '/search/:query(/page/:page)'    => 'entries#search_results',  constraints: { page: /\d+/, query: /[\w\s%]+/  }, defaults: { format: 'html' }, :as => :search_results
   get '/map'                           => 'maps#index', :as => :map
   get '/map/photos.:format'            => 'maps#photos'
