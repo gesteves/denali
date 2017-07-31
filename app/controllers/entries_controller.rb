@@ -64,7 +64,8 @@ class EntriesController < ApplicationController
         bool: {
           must: [
             { term: { blog_id: @photoblog.id } },
-            { term: { status: 'published' } }
+            { term: { status: 'published' } },
+            { range: { photos_count: { gt: 0 } } }
           ],
           should: {
             match: { '_all': { query: @query, operator: 'and' }}
