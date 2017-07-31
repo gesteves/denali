@@ -1,5 +1,5 @@
 <% cache "entry/related/#{@entry.id}/#{@entry.updated_at.to_i}", expires_in: 1.week do %>
-  <% if @entry.related.size >= 12 %>
+  <% if @entry.related.present? && @entry.related.size >= 12 %>
     <aside role="complementary">
       <h2 class="entry__related">Related Photos You Might Like</h2>
       <ol class="entry-list entry-list--related">

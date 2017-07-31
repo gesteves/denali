@@ -118,27 +118,29 @@ class Entry < ApplicationRecord
   end
 
   def related(count = 12)
-    search = {
-      query: {
-        bool: {
-          must: [
-            { term: { blog_id: self.blog_id } },
-            { term: { status: 'published' } },
-            { range: { photos_count: { gt: 0 } } },
-            { range: { published_at: { gte: (self.published_at || self.created_at) - 2.years } } }
-          ],
-          must_not: {
-            match: { id: self.id }
-          },
-          should: {
-            match: { es_tags: { query: self.es_tags } }
-          },
-          minimum_should_match: 1
-        }
-      },
-      size: count
-    }
-    Entry.search(search).records.includes(:photos)
+    unless Rails.env.test?
+      search = {
+        query: {
+          bool: {
+            must: [
+              { term: { blog_id: self.blog_id } },
+              { term: { status: 'published' } },
+              { range: { photos_count: { gt: 0 } } },
+              { range: { published_at: { gte: (self.published_at || self.created_at) - 2.years } } }
+            ],
+            must_not: {
+              match: { id: self.id }
+            },
+            should: {
+              match: { es_tags: { query: self.es_tags } }
+            },
+            minimum_should_match: 1
+          }
+        },
+        size: count
+      }
+      Entry.search(search).records.includes(:photos)
+    end
   end
 
   def formatted_body
