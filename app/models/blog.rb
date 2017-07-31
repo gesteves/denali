@@ -56,4 +56,8 @@ class Blog < ApplicationRecord
     opts.reverse_merge!(w: 32)
     self.touch_icon.present? ? Ix.path(self.touch_icon.path).to_url(opts.reject { |k,v| v.blank? }) : nil
   end
+
+  def has_search?
+    Rails.env.development || ENV['ELASTICSEARCH_URL'].present?
+  end
 end
