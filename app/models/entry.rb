@@ -118,9 +118,25 @@ class Entry < ApplicationRecord
   end
 
   def related(count = 12)
-    earliest_date = (self.published_at || self.created_at) - 2.years
-    tags = self.tag_list + self.equipment_list + self.location_list
-    Entry.includes(:photos).photo_entries.tagged_with(tags, any: true, order_by_matching_tag_count: true).where('entries.id != ? AND entries.status = ? AND published_at > ?', self.id, 'published', earliest_date).limit(count)
+    search = {
+      query: {
+        bool: {
+          must: [
+            { term: { blog_id: self.blog_id } },
+            { term: { status: 'published' } }
+          ],
+          must_not: {
+            match: { id: self.id }
+          },
+          should: {
+            match: { es_tags: { query: self.es_tags } }
+          },
+          minimum_should_match: 1
+        }
+      },
+      size: count
+    }
+    Entry.search(search).records.includes(:photos)
   end
 
   def formatted_body
@@ -236,8 +252,6 @@ class Entry < ApplicationRecord
     self.combined_tags.map(&:name)
   end
 
-  private
-
   def es_tags
     self.combined_tag_list.join(' ')
   end
@@ -245,6 +259,8 @@ class Entry < ApplicationRecord
   def es_photo_captions
     self.photos.map { |p| p.plain_caption }.join("\n\n")
   end
+
+  private
 
   def url_opts(opts)
     if Rails.env.production?
