@@ -36,7 +36,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(methods: [:plain_body, :plain_title, :es_tags, :es_photo_captions])
+    self.as_json(only: [:photos_count, :status, :published_at, :blog_id], methods: [:plain_body, :plain_title, :es_tags, :es_photo_captions])
   end
 
   def self.published(order = 'published_at DESC')
