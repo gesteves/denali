@@ -72,9 +72,14 @@ class EntriesController < ApplicationController
           },
           minimum_should_match: 1
         }
-      }
+      },
+      size: @count,
+      from: (@page.to_i - 1) * @count
     }
-    @entries = Entry.search(search).page(@page).per(@count).records.includes(:photos)
+    results = Entry.search(search)
+    total_count = results.results.total
+    records = results.records.includes(:photos)
+    @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
     begin
       respond_to do |format|
         format.html

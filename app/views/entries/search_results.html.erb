@@ -44,8 +44,7 @@
     <ol class="entry-list" role="main" data-base-url="<%= search_results_url(page: nil).sub(/\/$/, '') %>" data-current-page="<%= @page %>">
       <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? search_results_url(query: @query, page: nil) : search_results_url(query: @query, page: @page) } %>
     </ol>
-    <%# Hardcode pagination, because I need it to hook the infinite scroll JS but kaminari doesn't work here. %>
-    <nav class="pagination" role="navigation"></nav>
+    <%= paginate @entries %>
     <%= render 'partials/loading' %>
   <% else %>
     <h1 class="entry_list__heading entry_list__heading--no-results">No results found for “<%= @query %></i>”. Try searching for something else!</h1>
