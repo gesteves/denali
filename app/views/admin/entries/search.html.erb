@@ -1,0 +1,14 @@
+<% content_for :nav do %>
+  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'search' } %>
+<% end %>
+
+<% cache "admin/entries/search/#{@query.parameterize}/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% if @entries.size == 0 %>
+    <p class="content__message">No results found for “<%= @query %>”.</p>
+  <% else %>
+    <ol class="entry__list">
+      <%= render partial: 'entry', collection: @entries %>
+    </ol>
+    <%= paginate @entries %>
+  <% end %>
+<% end %>

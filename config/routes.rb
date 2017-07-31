@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get '/tagged/:tag(/page/:page)'   => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
+    get '/search/:query(/page/:page)' => 'entries#search', constraints: { page: /\d+/, query: /[\w\s%]+/  }, :as => :search
     get '/entries/edit'               => 'entries#edit'
     get '/entries/share'              => 'entries#share'
     get 'settings'                    => 'blogs#edit'
