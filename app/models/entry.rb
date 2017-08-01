@@ -119,7 +119,6 @@ class Entry < ApplicationRecord
 
   def related(count = 12)
     if Rails.env.development? || (Rails.env.production? && ENV['ELASTICSEARCH_URL'].present?)
-      tags = self.tags + self.locations
       search = {
         query: {
           bool: {
@@ -132,9 +131,10 @@ class Entry < ApplicationRecord
             must_not: {
               match: { id: self.id }
             },
-            should: {
-              match: { es_tags: { query: tags.map(&:name).join(' ') } }
-            },
+            should: [
+              match: { plain_title: { query: self.plain_title, boost: 3 } },
+              match: { es_tags: { query: (self.tags + self.locations).map(&:name).join(' '), boost: 2 } }
+            ],
             minimum_should_match: 1
           }
         },
