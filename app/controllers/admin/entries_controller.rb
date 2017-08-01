@@ -43,6 +43,7 @@ class Admin::EntriesController < AdminController
   end
 
   def search
+    raise ActionController::RoutingError unless @photoblog.has_search?
     @page = (params[:page] || 1).to_i
     @query = params[:query]
     redirect_to admin_entries_path if @query.blank?
