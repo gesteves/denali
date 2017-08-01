@@ -46,26 +46,28 @@ class Admin::EntriesController < AdminController
     raise ActionController::RoutingError unless @photoblog.has_search?
     @page = (params[:page] || 1).to_i
     @query = params[:query]
-    redirect_to admin_entries_path if @query.blank?
-    @page_title = "Search results for \"#{@query}\""
-    search = {
-      query: {
-        bool: {
-          must: [
-            { term: { blog_id: @photoblog.id } }
-          ],
-          should: {
-            match: { '_all': { query: @query, operator: 'and' } }
-          },
-          minimum_should_match: 1
-        }
-      },
-      size: 10,
-      from: (@page.to_i - 1) * 10
-    }
-    results = Entry.search(search)
-    total_count = results.results.total
-    @entries = Kaminari.paginate_array(results.records.includes(:photos), total_count: total_count).page(@page).per(10)
+    @page_title = "Search"
+    if @query.present?
+      @page_title = "Search results for \"#{@query}\""
+      search = {
+        query: {
+          bool: {
+            must: [
+              { term: { blog_id: @photoblog.id } }
+            ],
+            should: {
+              match: { '_all': { query: @query, operator: 'and' } }
+            },
+            minimum_should_match: 1
+          }
+        },
+        size: 10,
+        from: (@page.to_i - 1) * 10
+      }
+      results = Entry.search(search)
+      total_count = results.results.total
+      @entries = Kaminari.paginate_array(results.records.includes(:photos), total_count: total_count).page(@page).per(10)
+    end
   end
 
   # GET /admin/entries/1/edit
