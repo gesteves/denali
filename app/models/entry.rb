@@ -118,7 +118,7 @@ class Entry < ApplicationRecord
   end
 
   def related(count = 12)
-    unless Rails.env.test? || ENV['ELASTICSEARCH_URL'].nil?
+    if Rails.env.development? || (Rails.env.production? && ENV['ELASTICSEARCH_URL'].present?)
       search = {
         query: {
           bool: {
