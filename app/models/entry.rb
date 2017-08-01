@@ -129,11 +129,11 @@ class Entry < ApplicationRecord
               { range: { published_at: { gte: (self.published_at || self.created_at) - 1.year } } }
             ],
             must_not: {
-              match: { id: self.id }
+              term: { id: self.id }
             },
             should: [
-              match: { plain_title: { query: self.plain_title } },
-              match: { es_tags: { query: (self.tags + self.locations).map(&:name).join(' ') } }
+              match: { plain_title: { query: self.plain_title, boost: 2 } },
+              match: { es_tags: { query: (self.tags + self.locations).map(&:name).join(' '), boost: 1 } }
             ],
             minimum_should_match: 1
           }
