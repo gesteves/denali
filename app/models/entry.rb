@@ -137,9 +137,9 @@ class Entry < ApplicationRecord
             minimum_should_match: 1
           }
         },
-        size: count
+        size: count + 1
       }
-      Entry.search(search).records.includes(:photos)
+      Entry.search(search).records.includes(:photos).where.not(id: self.id).limit(count)
     end
   end
 
