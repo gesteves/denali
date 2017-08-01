@@ -132,8 +132,8 @@ class Entry < ApplicationRecord
               match: { id: self.id }
             },
             should: [
-              match: { plain_title: { query: self.plain_title, boost: 3 } },
-              match: { es_tags: { query: (self.tags + self.locations).map(&:name).join(' '), boost: 2 } }
+              match: { plain_title: { query: self.plain_title, boost: 2 } },
+              match: { es_tags: { query: (self.tags + self.locations).map(&:name).join(' '), boost: 1 } }
             ],
             minimum_should_match: 1
           }
