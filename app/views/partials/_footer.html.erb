@@ -7,6 +7,9 @@
         <%= link_to 'About', about_path %> ·
         <%= link_to 'Map', map_path(trailing_slash: true) %> ·
         <%= link_to 'Feed', feed_path %>
+        <% if @photoblog.has_search? %>
+          <%= link_to 'Search', search_path %>
+        <% end %>
         <% if @photoblog.email.present? %>
           · <a href="mailto:<%= @photoblog.email %>">Contact</a>
         <% end %>

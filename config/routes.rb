@@ -44,7 +44,6 @@ Rails.application.routes.draw do
   get '/:year/:month/:day/:id(/:slug)' => 'entries#show',    constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_long
   get '/preview/:preview_hash'         => 'entries#preview', defaults: { format: 'html' }, :as => :preview_entry
   get '/search'                        => 'entries#search', :as => :search
-  get '/search/:query(/page/:page)'    => 'entries#search_results',  constraints: { page: /\d+/, query: /[\w\s%]+/  }, defaults: { format: 'html' }, :as => :search_results
   get '/map'                           => 'maps#index', :as => :map
   get '/map/photos.:format'            => 'maps#photos'
   get '/map/photo/:id.:format'         => 'maps#photo'

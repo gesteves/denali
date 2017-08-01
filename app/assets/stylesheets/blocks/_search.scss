@@ -1,0 +1,33 @@
+.search {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  margin: 24px auto;
+  max-width: $bp-m;
+  padding: 0 20px;
+
+  @media (min-width: $bp-m) {
+    padding: 0;
+  }
+
+  @media (min-width: $bp-xl) {
+    margin: 72px auto;
+  }
+}
+
+.search__input {
+  border: 1px solid $color-gray-light;
+  border-radius: 2px;
+  font-family: $font-sans;
+  font-size: 18px;
+  line-height: 2;
+  margin: (2.4rem/1.8) 0;
+  padding: 0 5px;
+  width: 100%;
+
+  @media (min-width: $bp-s) {
+    font-size: 28px;
+    line-height: 2;
+    margin: (3.6rem/2.8) 0;
+  }
+}

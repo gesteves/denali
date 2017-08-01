@@ -3,12 +3,12 @@
   <% if ENV['mapbox_api_token'].present? %>
     <a href="<%= map_path(trailing_slash: true)  %>" class="follow__link" title="Map"><%= inline_svg 'map', 'follow__icon' %></a>
   <% end %>
+  <% if @photoblog.has_search? %>
+    <a href="<%= search_path %>" class="follow__link" title="Search"><%= inline_svg 'search', 'follow__icon' %></a>
+  <% end %>
   <a href="<%= feed_path %>" class="follow__link" title="Subscribe to Feed"><%= inline_svg 'feed', 'follow__icon' %></a>
   <% if @photoblog.email.present? %>
     <a href="mailto:<%= @photoblog.email %>" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
-  <% end %>
-  <% if @photoblog.flickr.present? %>
-    <a href="https://www.flickr.com/photos/<%= @photoblog.flickr %>/" class="follow__link" rel="me" title="Follow on Flickr"><%= inline_svg 'flickr', 'follow__icon' %></a>
   <% end %>
   <% if @photoblog.instagram.present? %>
     <a href="https://www.instagram.com/<%= @photoblog.instagram %>/" class="follow__link" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>
