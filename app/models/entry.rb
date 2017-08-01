@@ -36,7 +36,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(only: [:photos_count, :status, :published_at, :blog_id], methods: [:plain_body, :plain_title, :es_tags, :es_photo_captions])
+    self.as_json(only: [:photos_count, :status, :published_at, :blog_id, :id], methods: [:plain_body, :plain_title, :es_tags, :es_photo_captions])
   end
 
   def self.published(order = 'published_at DESC')
@@ -132,15 +132,15 @@ class Entry < ApplicationRecord
               term: { id: self.id }
             },
             should: [
-              match: { plain_title: { query: self.title } },
+              match: { plain_title: { query: self.title, boost: 2 } },
               match: { es_tags: { query: (self.tags + self.locations).map(&:name).join(' ') } }
             ],
             minimum_should_match: 1
           }
         },
-        size: count + 1
+        size: count
       }
-      Entry.search(search).records.includes(:photos).where.not(id: self.id).limit(count)
+      Entry.search(search).records.includes(:photos)
     end
   end
 
