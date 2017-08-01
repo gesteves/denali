@@ -118,7 +118,7 @@ class Entry < ApplicationRecord
   end
 
   def related(count = 12)
-    if Rails.env.development? || (Rails.env.production? && ENV['ELASTICSEARCH_URL'].present?)
+    begin
       search = {
         query: {
           bool: {
@@ -141,6 +141,9 @@ class Entry < ApplicationRecord
         size: count
       }
       Entry.search(search).records.includes(:photos)
+    rescue => e
+      logger.error e
+      nil
     end
   end
 
