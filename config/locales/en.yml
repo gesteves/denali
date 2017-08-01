@@ -22,11 +22,5 @@
 en:
   views:
     pagination:
-      newest: "Newest"
-      oldest: "Oldest"
-      newer: "Newer"
-      older: "Older"
-      truncate: "&hellip;"
-    entry_pagination:
       next: "Next"
       previous: "Previous"
