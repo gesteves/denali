@@ -55,9 +55,10 @@ class Admin::EntriesController < AdminController
             must: [
               { term: { blog_id: @photoblog.id } }
             ],
-            should: {
-              match: { '_all': { query: @query, operator: 'and' } }
-            },
+            should: [
+              { match: { '_all': { query: @query, operator: 'and' } } },
+              { range: { published_at: { gte: (self.published_at || self.created_at) - 1.year }, boost: 2 } }
+            ],
             minimum_should_match: 1
           }
         },
