@@ -131,9 +131,10 @@ class Entry < ApplicationRecord
             must_not: {
               term: { id: self.id }
             },
-            should: {
+            should: [
+              match: { plain_title: { query: self.title } },
               match: { es_tags: { query: (self.tags + self.locations).map(&:name).join(' ') } }
-            },
+            ],
             minimum_should_match: 1
           }
         },
