@@ -2,11 +2,12 @@ class ElasticsearchJob < ApplicationJob
   queue_as :default
 
   def perform(object, action)
-    if action == 'create'
+    case action
+    when 'create'
       object.__elasticsearch__.index_document
-    elsif action == 'update'
+    when 'update'
       object.__elasticsearch__.update_document
-    elsif action == 'destroy'
+    when 'delete'
       object.__elasticsearch__.delete_document
     end
   end
