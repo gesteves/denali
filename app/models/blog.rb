@@ -58,6 +58,6 @@ class Blog < ApplicationRecord
   end
 
   def has_search?
-    Rails.env.development || ENV['ELASTICSEARCH_URL'].present?
+    Rails.env.development? || ENV['ELASTICSEARCH_URL'].present?
   end
 end

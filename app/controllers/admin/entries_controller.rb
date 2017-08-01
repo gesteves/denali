@@ -45,6 +45,7 @@ class Admin::EntriesController < AdminController
   def search
     @page = (params[:page] || 1).to_i
     @query = params[:query]
+    redirect_to admin_entries_path if @query.blank?
     @page_title = "Search results for \"#{@query}\""
     search = {
       query: {
