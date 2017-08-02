@@ -67,13 +67,14 @@ class EntriesController < ApplicationController
             must: [
               { term: { blog_id: @photoblog.id } },
               { term: { status: 'published' } },
-              { range: { photos_count: { gt: 0 } } }
+              { range: { photos_count: { gt: 0 } } },
+              { query_string: { query: @query } }
             ],
             should: [
-              { match: { '_all': { query: @query, operator: 'and' } } },
-              { range: { published_at: { gte: (self.published_at || self.created_at) - 1.year }, boost: 2 } }
+              { range: { published_at: { gte: Time.now - 1.year, boost: 4 } } },
+              { range: { published_at: { gte: Time.now - 2.year, boost: 2 } } }
             ],
-            minimum_should_match: 1
+            minimum_should_match: 0
           }
         },
         size: @count,
