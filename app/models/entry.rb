@@ -125,15 +125,15 @@ class Entry < ApplicationRecord
             must: [
               { term: { blog_id: self.blog_id } },
               { term: { status: 'published' } },
-              { range: { photos_count: { gt: 0 } } }
+              { range: { photos_count: { gt: 0 } } },
+              { range: { published_at: { gte: (self.published_at || self.created_at) - 1.year } } }
             ],
             must_not: {
               term: { id: self.id }
             },
             should: [
               { match: { plain_title: { query: self.title } } },
-              { match: { es_tags: { query: (self.tags + self.locations).map(&:name).join(' ') } } },
-              { range: { published_at: { gte: (self.published_at || self.created_at) - 1.year }, boost: 2 } }
+              { match: { es_tags: { query: (self.tags + self.locations).map(&:name).join(' ') } } }
             ],
             minimum_should_match: 1
           }
