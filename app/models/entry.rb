@@ -132,6 +132,7 @@ class Entry < ApplicationRecord
               term: { id: self.id }
             },
             should: [
+              { match: { plain_title: { query: self.title } } },
               { match: { plain_tags: { query: self.plain_tags } } },
               { match: { plain_locations: { query: self.plain_locations } } }
             ],
