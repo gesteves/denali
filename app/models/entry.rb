@@ -36,7 +36,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(only: [:photos_count, :status, :published_at, :blog_id, :id], methods: [:plain_body, :plain_title, :es_tags, :es_photo_captions])
+    self.as_json(only: [:photos_count, :status, :published_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_captions])
   end
 
   def self.published(order = 'published_at DESC')
@@ -133,7 +133,8 @@ class Entry < ApplicationRecord
             },
             should: [
               { match: { plain_title: { query: self.title } } },
-              { match: { es_tags: { query: (self.tags + self.locations).map(&:name).join(' ') } } }
+              { match: { plain_tags: { query: self.plain_tags } } },
+              { match: { plain_locations: { query: self.plain_locations } } }
             ],
             minimum_should_match: 1
           }
@@ -260,11 +261,19 @@ class Entry < ApplicationRecord
     self.combined_tags.map(&:name)
   end
 
-  def es_tags
-    self.combined_tag_list.join(' ')
+  def plain_tags(separator = ' ')
+    self.tag_list.join(separator)
   end
 
-  def es_photo_captions
+  def plain_locations(separator = ' ')
+    self.location_list.join(separator)
+  end
+
+  def plain_equipment(separator = ' ')
+    self.equipment_list.join(separator)
+  end
+
+  def plain_captions
     self.photos.map { |p| p.plain_caption }.join("\n\n")
   end
 
