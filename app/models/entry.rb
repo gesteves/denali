@@ -126,7 +126,7 @@ class Entry < ApplicationRecord
               { term: { blog_id: self.blog_id } },
               { term: { status: 'published' } },
               { range: { photos_count: { gt: 0 } } },
-              { range: { published_at: { gte: (self.published_at || self.created_at) - 1.year } } }
+              { range: { published_at: { gte: (self.published_at || self.created_at) - 1.year, lte: (self.published_at || self.created_at) + 1.year } } }
             ],
             must_not: {
               term: { id: self.id }
