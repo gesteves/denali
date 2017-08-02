@@ -68,9 +68,8 @@ class EntriesController < ApplicationController
               { term: { blog_id: @photoblog.id } },
               { term: { status: 'published' } },
               { range: { photos_count: { gt: 0 } } },
-              { query_string: { query: @query, default_operator: 'AND' } }
-            ],
-            minimum_should_match: 0
+              { multi_match: { query: @query, fields: ['plain_*'], type: 'cross_fields', operator: 'and' } }
+            ]
           }
         },
         sort: [
