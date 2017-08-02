@@ -55,8 +55,7 @@ class Admin::EntriesController < AdminController
             must: [
               { term: { blog_id: @photoblog.id } },
               { query_string: { query: @query, default_operator: 'AND' } }
-            ],
-            minimum_should_match: 0
+            ]
           }
         },
         sort: [
