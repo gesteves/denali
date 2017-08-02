@@ -56,14 +56,13 @@ class Admin::EntriesController < AdminController
               { term: { blog_id: @photoblog.id } },
               { query_string: { query: @query, default_operator: 'AND' } }
             ],
-            should: [
-              { range: { published_at: { gte: Time.now - 1.year, boost: 10 } } },
-              { range: { published_at: { gte: Time.now - 2.year, boost: 5 } } },
-              { range: { published_at: { gte: Time.now - 3.year, boost: 2 } } }
-            ],
             minimum_should_match: 0
           }
         },
+        sort: [
+          { created_at: 'desc' },
+          '_score'
+        ],
         size: 10,
         from: (@page.to_i - 1) * 10
       }

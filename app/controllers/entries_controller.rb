@@ -70,14 +70,13 @@ class EntriesController < ApplicationController
               { range: { photos_count: { gt: 0 } } },
               { query_string: { query: @query, default_operator: 'AND' } }
             ],
-            should: [
-              { range: { published_at: { gte: Time.now - 1.year, boost: 10 } } },
-              { range: { published_at: { gte: Time.now - 2.year, boost: 5 } } },
-              { range: { published_at: { gte: Time.now - 3.year, boost: 2 } } }
-            ],
             minimum_should_match: 0
           }
         },
+        sort: [
+          { published_at: 'desc' },
+          '_score'
+        ],
         size: @count,
         from: (@page.to_i - 1) * @count
       }
