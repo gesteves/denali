@@ -14,7 +14,7 @@ class Entry < ApplicationRecord
   before_save :set_entry_slug
   before_create :set_preview_hash
 
-  acts_as_taggable_on :tags, :equipment, :locations
+  acts_as_taggable_on :tags, :equipment, :locations, :keywords
   acts_as_list scope: :blog
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
@@ -36,7 +36,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_captions])
+    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_keywords, :plain_captions])
   end
 
   def self.published(order = 'published_at DESC')
@@ -132,8 +132,9 @@ class Entry < ApplicationRecord
               term: { id: self.id }
             },
             should: [
-              { match: { plain_tags: { query: self.plain_tags } } },
-              { match: { plain_locations: { query: self.plain_locations } } }
+              { match: { plain_tags: { query: self.plain_tags, boost: 2  } } },
+              { match: { plain_locations: { query: self.plain_locations, boost: 2 } } },
+              { match: { plain_keywords: { query: self.plain_keywords } } }
             ],
             minimum_should_match: 1
           }
@@ -270,6 +271,10 @@ class Entry < ApplicationRecord
 
   def plain_equipment(separator = ' ')
     self.equipment_list.join(separator)
+  end
+
+  def plain_keywords(separator = ' ')
+    self.keyword_list.join(separator)
   end
 
   def plain_captions
