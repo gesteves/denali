@@ -54,7 +54,7 @@ class Admin::EntriesController < AdminController
           bool: {
             must: [
               { term: { blog_id: @photoblog.id } },
-              { query_string: { query: @query, default_operator: 'and' } }
+              { query_string: { query: @query, default_operator: 'AND' } }
             ],
             should: [
               { range: { published_at: { gte: Time.now - 1.year, boost: 10 } } },
