@@ -45,7 +45,7 @@ class Admin::EntriesController < AdminController
   def search
     raise ActionController::RoutingError unless @photoblog.has_search?
     @page = (params[:page] || 1).to_i
-    @query = params[:query]
+    @query = params[:q]
     @page_title = "Search"
     if @query.present?
       @page_title = "Search results for \"#{@query}\""

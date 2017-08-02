@@ -3,7 +3,7 @@
 <% end %>
 
 <%= form_tag(admin_search_path, method: 'get', class: 'form') do %>
-  <%= text_field_tag :query, @query || '', placeholder: "Search…", class: 'form__input' %>
+  <%= text_field_tag :q, @query || '', placeholder: "Search…", class: 'form__input' %>
 <% end %>
 
 <% if @query.present? %>
