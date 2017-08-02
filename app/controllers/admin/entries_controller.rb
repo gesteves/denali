@@ -6,7 +6,6 @@ class Admin::EntriesController < AdminController
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   after_action :update_position, only: [:create]
   after_action :update_equipment_tags, only: [:create, :update]
-  after_action :update_keywords, only: [:create, :update]
   after_action :update_location_tags, only: [:create, :update]
   after_action :enqueue_invalidation, only: [:update]
 
@@ -319,9 +318,5 @@ class Admin::EntriesController < AdminController
 
     def update_location_tags
       ReverseGeocodeJob.perform_later(@entry) if ENV['google_maps_api_key'].present? && @entry.show_in_map?
-    end
-
-    def update_keywords
-      RekognitionJob.perform_later(@entry)
     end
 end
