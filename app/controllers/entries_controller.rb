@@ -68,7 +68,7 @@ class EntriesController < ApplicationController
               { term: { blog_id: @photoblog.id } },
               { term: { status: 'published' } },
               { range: { photos_count: { gt: 0 } } },
-              { query_string: { query: @query } }
+              { query_string: { query: @query, default_operator: 'and' } }
             ],
             should: [
               { range: { published_at: { gte: Time.now - 1.year, boost: 10 } } },
