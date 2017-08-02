@@ -57,8 +57,9 @@ class Admin::EntriesController < AdminController
               { query_string: { query: @query } }
             ],
             should: [
-              { range: { published_at: { gte: Time.now - 1.year, boost: 4 } } },
-              { range: { published_at: { gte: Time.now - 2.year, boost: 2 } } }
+              { range: { published_at: { gte: Time.now - 1.year, boost: 10 } } },
+              { range: { published_at: { gte: Time.now - 2.year, boost: 5 } } },
+              { range: { published_at: { gte: Time.now - 3.year, boost: 2 } } }
             ],
             minimum_should_match: 0
           }
