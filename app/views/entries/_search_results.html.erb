@@ -1,0 +1,52 @@
+<% content_for :meta do %>
+  <% cache "entries/meta/search/#{@query.parameterize}/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+    <title><%= "Search results for “#{@query}” · #{@photoblog.name}" %><%= sanitize " · Page #{@page}" unless @page.nil? || @page == 1 %></title>
+    <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <link rel="canonical" href="<%=  search_url %>">
+
+    <meta property="og:title" content="<%= "Search results for “#{@query}” · #{@photoblog.name}" %>">
+    <% if @entries.present? %>
+      <meta property="og:image" content="<%= @entries.first.photos.first.url(w: 1200, h: 628) %>">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="628">
+    <% end %>
+    <meta property="og:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta property="og:url" content="<%= @page == 1 ? search_url(page: nil) : search_url(query: @query, page: @page) %>">
+    <meta property="og:type" content="Website">
+    <meta property="og:site_name" content="<%= @photoblog.name %>">
+    <meta property="og:locale" content="en_US">
+
+    <% if @photoblog.twitter.present? %>
+      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+    <% end %>
+    <meta name="twitter:title" content="<%= "Search results for “#{@query}” · #{@photoblog.name}" %>">
+    <meta name="twitter:url" content="<%= @page == 1 ? search_url(page: nil) : search_url(query: @query, page: @page) %>">
+    <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta name="twitter:card" content="summary">
+  <% end %>
+<% end %>
+
+<% content_for :inline_css do %>
+  <% cache "#{@app_version}/search/styles" do %>
+    <style><%= inline_asset 'search.css' %></style>
+  <% end %>
+<% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'application', defer: true %>
+<% end %>
+
+<% cache "entries/search/#{@query.parameterize}/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% if @entries.present? %>
+    <%= render partial: 'search_form' %>
+    <ol class="entry-list" role="main" data-base-url="<%= search_url(page: nil).sub(/\/$/, '') %>" data-current-page="<%= @page %>">
+      <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? search_url(query: @query, page: nil) : search_url(query: @query, page: @page) } %>
+    </ol>
+    <%= paginate @entries %>
+    <%= render 'partials/loading' %>
+  <% else %>
+    <%= render partial: 'search_form' %>
+    <h1 class="entry_list__heading">No results found for “<%= @query %></i>”. Try searching for something else, like “film”, “nikon”, or “cats”.</h1>
+  <% end %>
+<% end %>

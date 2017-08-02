@@ -20,6 +20,7 @@ Rails.application.config.assets.precompile += %w(
   entry_list.css
   entry.css
   preload.js
+  search.css
   components/entry_list.css
   components/entry.css
   components/error.css
@@ -29,6 +30,7 @@ Rails.application.config.assets.precompile += %w(
   components/header_minimal.css
   components/map.css
   components/pagination.css
+  components/search.css
   components/signin.css
   components/tags.css
   application/image_zoom.js

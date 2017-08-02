@@ -42,6 +42,35 @@ class Admin::EntriesController < AdminController
     @page_title = 'New entry'
   end
 
+  def search
+    raise ActionController::RoutingError unless @photoblog.has_search?
+    @page = (params[:page] || 1).to_i
+    @query = params[:q]
+    @page_title = "Search"
+    if @query.present?
+      @page_title = "Search results for \"#{@query}\""
+      search = {
+        query: {
+          bool: {
+            must: [
+              { term: { blog_id: @photoblog.id } },
+              { query_string: { query: @query, default_operator: 'AND' } }
+            ]
+          }
+        },
+        sort: [
+          { created_at: 'desc' },
+          '_score'
+        ],
+        size: 10,
+        from: (@page.to_i - 1) * 10
+      }
+      results = Entry.search(search)
+      total_count = results.results.total
+      @entries = Kaminari.paginate_array(results.records.includes(:photos), total_count: total_count).page(@page).per(10)
+    end
+  end
+
   # GET /admin/entries/1/edit
   def edit
     if params[:url].present?

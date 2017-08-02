@@ -1,0 +1,35 @@
+<% content_for :meta do %>
+  <% cache "entries/meta/search/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+    <title><%= "Search · #{@photoblog.name}" %></title>
+    <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <link rel="canonical" href="<%= search_url %>">
+
+    <meta property="og:title" content="<%= "Search · #{@photoblog.name}" %>">
+    <meta property="og:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta property="og:url" content="<%= search_url %>">
+    <meta property="og:type" content="Website">
+    <meta property="og:site_name" content="<%= @photoblog.name %>">
+    <meta property="og:locale" content="en_US">
+
+    <% if @photoblog.twitter.present? %>
+      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+    <% end %>
+    <meta name="twitter:title" content="<%= "Search · #{@photoblog.name}" %>">
+    <meta name="twitter:url" content="<%= search_url %>">
+    <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta name="twitter:card" content="summary">
+  <% end %>
+<% end %>
+
+<% content_for :inline_css do %>
+  <% cache "#{@app_version}/search/styles" do %>
+    <style><%= inline_asset 'search.css' %></style>
+  <% end %>
+<% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'application', defer: true %>
+<% end %>
+
+<%= render partial: 'search_form' %>

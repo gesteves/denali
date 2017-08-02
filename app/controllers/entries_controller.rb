@@ -4,7 +4,7 @@ class EntriesController < ApplicationController
   before_action :check_if_user_has_visited, only: [:index, :tagged, :show, :preview]
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
-  before_action :set_max_age, only: [:index, :tagged]
+  before_action :set_max_age, only: [:index, :tagged, :search]
   before_action :set_entry_max_age, only: [:show, :preview]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   skip_before_action :verify_authenticity_token
@@ -52,6 +52,44 @@ class EntriesController < ApplicationController
           redirect_to(tag_path(tag: @tag_slug, page: @page), status: 301)
         end
       end
+    end
+  end
+
+  def search
+    raise ActionController::RoutingError unless @photoblog.has_search?
+    @page = (params[:page] || 1).to_i
+    @count = 12
+    @query = params[:q]
+    if @query.present?
+      search = {
+        query: {
+          bool: {
+            must: [
+              { term: { blog_id: @photoblog.id } },
+              { term: { status: 'published' } },
+              { range: { photos_count: { gt: 0 } } },
+              { multi_match: { query: @query, fields: ['plain_*'], type: 'cross_fields', operator: 'and' } }
+            ]
+          }
+        },
+        sort: [
+          { published_at: 'desc' },
+          '_score'
+        ],
+        size: @count,
+        from: (@page.to_i - 1) * @count
+      }
+      results = Entry.search(search)
+      total_count = results.results.total
+      records = results.records.includes(:photos)
+      @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
+    end
+    begin
+      respond_to do |format|
+        format.html
+      end
+    rescue ActionController::UnknownFormat
+      redirect_to search_path, status: 301
     end
   end
 

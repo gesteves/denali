@@ -1,4 +1,6 @@
+require 'elasticsearch/model'
 class Entry < ApplicationRecord
+  include Elasticsearch::Model
   include Rails.application.routes.url_helpers
   include Formattable
 
@@ -18,6 +20,24 @@ class Entry < ApplicationRecord
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
   attr_accessor :invalidate_cloudfront
+
+  settings index: { number_of_shards: 1 }
+
+  after_commit on: [:create] do
+    ElasticsearchJob.perform_later(self, 'create')
+  end
+
+  after_commit on: [:update] do
+    ElasticsearchJob.perform_later(self, 'update')
+  end
+
+  after_commit on: [:destroy] do
+    ElasticsearchJob.perform_later(self, 'destroy')
+  end
+
+  def as_indexed_json(opts = nil)
+    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_captions])
+  end
 
   def self.published(order = 'published_at DESC')
     where(status: 'published').order(order)
@@ -98,9 +118,33 @@ class Entry < ApplicationRecord
   end
 
   def related(count = 12)
-    earliest_date = (self.published_at || self.created_at) - 2.years
-    tags = self.tag_list + self.equipment_list + self.location_list
-    Entry.includes(:photos).photo_entries.tagged_with(tags, any: true, order_by_matching_tag_count: true).where('entries.id != ? AND entries.status = ? AND published_at > ?', self.id, 'published', earliest_date).limit(count)
+    begin
+      search = {
+        query: {
+          bool: {
+            must: [
+              { term: { blog_id: self.blog_id } },
+              { term: { status: 'published' } },
+              { range: { photos_count: { gt: 0 } } },
+              { range: { published_at: { gte: (self.published_at || self.created_at) - 1.year, lte: (self.published_at || self.created_at) + 1.year } } }
+            ],
+            must_not: {
+              term: { id: self.id }
+            },
+            should: [
+              { match: { plain_tags: { query: self.plain_tags } } },
+              { match: { plain_locations: { query: self.plain_locations } } }
+            ],
+            minimum_should_match: 1
+          }
+        },
+        size: count
+      }
+      Entry.search(search).records.includes(:photos)
+    rescue => e
+      logger.error e
+      nil
+    end
   end
 
   def formatted_body
@@ -214,6 +258,22 @@ class Entry < ApplicationRecord
 
   def combined_tag_list
     self.combined_tags.map(&:name)
+  end
+
+  def plain_tags(separator = ' ')
+    self.tag_list.join(separator)
+  end
+
+  def plain_locations(separator = ' ')
+    self.location_list.join(separator)
+  end
+
+  def plain_equipment(separator = ' ')
+    self.equipment_list.join(separator)
+  end
+
+  def plain_captions
+    self.photos.map { |p| p.plain_caption }.join("\n\n")
   end
 
   private

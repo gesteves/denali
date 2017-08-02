@@ -1,0 +1,5 @@
+<% if @query.present? %>
+  <%= render partial: 'search_results' %>
+<% else %>
+  <%= render partial: 'search' %>
+<% end %>
