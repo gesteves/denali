@@ -27,10 +27,6 @@
   <% end %>
 <% end %>
 
-<% content_for :javascript do %>
-  <%= javascript_include_tag 'application', defer: true %>
-<% end %>
-
 <% content_for :stylesheets do %>
   <%= stylesheet_link_tag 'components/header', media: 'all' %>
   <%= stylesheet_link_tag 'components/footer', media: 'all' %>

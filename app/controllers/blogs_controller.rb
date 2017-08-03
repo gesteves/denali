@@ -1,13 +1,9 @@
 class BlogsController < ApplicationController
-  before_action :set_entry_max_age, except: [:offline, :manifest]
+  before_action :set_entry_max_age, except: [:manifest]
   skip_before_action :verify_authenticity_token
 
   def about
     fresh_when @photoblog, public: true
-  end
-
-  def offline
-    expires_in 24.hours, public: true
   end
 
   def manifest

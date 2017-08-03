@@ -48,7 +48,6 @@ Rails.application.routes.draw do
   get '/map/photos.:format'            => 'maps#photos'
   get '/map/photo/:id.:format'         => 'maps#photo'
   get '/about'                         => 'blogs#about', :as => :about
-  get '/offline'                       => 'blogs#offline',  :as => :offline
   get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
 
@@ -71,9 +70,6 @@ Rails.application.routes.draw do
   get '/auth/failure'                  => 'sessions#failure'
   get '/signin'                        => 'sessions#new',     :as => :signin
   get '/signout'                       => 'sessions#destroy', :as => :signout
-
-  # PWA
-  get '/service_worker.js'             => 'service_worker#index', defaults: { format: 'js' }
 
   # The rest
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }

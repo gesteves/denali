@@ -14,7 +14,6 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 Rails.application.config.assets.precompile += %w(
   admin.css
   admin.js
-  application.js
   components/base.css
   components/elsewhere.css
   components/entry_list.css

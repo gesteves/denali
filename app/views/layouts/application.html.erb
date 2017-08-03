@@ -5,11 +5,7 @@
   <%= yield :meta %>
   <%= stylesheet_link_tag 'components/base', media: 'all' %>
   <%= yield :stylesheets %>
-  <% if content_for? :javascript %>
-    <%= yield :javascript %>
-  <% else %>
-    <%= javascript_include_tag 'application', defer: true %>
-  <% end %>
+  <%= yield :javascript %>
   <% if content_for? :typekit %>
     <%= yield :typekit %>
   <% else %>
