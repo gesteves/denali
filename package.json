@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "awesomplete": "^1.1.1",
-    "intersection-observer": "^0.3.3",
+    "intersection-observer": "^0.4",
     "jquery": "^3.2.1",
     "jquery-ui-dist": "^1.12.1",
     "leaflet-hash": "^0.2.1",
