@@ -2,6 +2,7 @@ class Admin::TagsController < AdminController
   def index
     @page = params[:page] || 1
     @tags = ActsAsTaggableOn::Tag.order('name asc').page(@page).per(100)
+    @page_title = 'Tags'
   end
 
   def destroy
