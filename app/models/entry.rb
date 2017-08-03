@@ -209,6 +209,7 @@ class Entry < ApplicationRecord
       self.enqueue_instagram
       self.enqueue_pinterest
       self.enqueue_slack
+      self.enqueue_search_engines
     end
     true
   end
@@ -249,6 +250,13 @@ class Entry < ApplicationRecord
 
   def enqueue_pinterest
     PinterestJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_pinterest
+  end
+
+  def enqueue_search_engines
+    if self.is_published?
+      GoogleJob.perform_later
+      BingJob.perform_later
+    end
   end
 
   def combined_tags
