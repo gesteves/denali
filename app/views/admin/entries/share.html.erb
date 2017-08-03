@@ -1,22 +1,20 @@
-<% cache "admin/delete/entry/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
-  <div class="entry">
-    <% if @entry.is_photo? %>
-      <a class="entry__link" href="<%= @entry.is_published? ? @entry.permalink_url : preview_entry_path(@entry.preview_hash) %>" <%= intrinsic_ratio_padding(@entry.photos.first) if @entry.is_photo? %>>
-        <%= lazy_responsive_image_tag @entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
-      </a>
-    <% end %>
-    <div class="entry__content <% if @entry.is_text? %>entry__content--text<% end %>">
-      <h2><%= sanitize(@entry.plain_title) %></h2>
-    </div>
-    <div class="entry__meta">
-      <div class="entry__meta-bottom">
-        <div class="entry__actions entry__actions--left">
-          <span>Share this entry on </span>
-          <%= button_to 'Facebook', facebook_admin_entry_path(@entry.id), method: :post, class: 'button' %>
-          <%= button_to 'Instagram', instagram_admin_entry_path(@entry.id), method: :post, class: 'button' %>
-          <%= button_to 'Twitter', twitter_admin_entry_path(@entry.id), method: :post, class: 'button' %>
-        </div>
+<div class="entry">
+  <% if @entry.is_photo? %>
+    <a class="entry__link" href="<%= @entry.is_published? ? @entry.permalink_url : preview_entry_path(@entry.preview_hash) %>" <%= intrinsic_ratio_padding(@entry.photos.first) if @entry.is_photo? %>>
+      <%= lazy_responsive_image_tag @entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
+    </a>
+  <% end %>
+  <div class="entry__content <% if @entry.is_text? %>entry__content--text<% end %>">
+    <h2><%= sanitize(@entry.plain_title) %></h2>
+  </div>
+  <div class="entry__meta">
+    <div class="entry__meta-bottom">
+      <div class="entry__actions entry__actions--left">
+        <span>Share this entry on </span>
+        <%= button_to 'Facebook', facebook_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+        <%= button_to 'Instagram', instagram_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+        <%= button_to 'Twitter', twitter_admin_entry_path(@entry.id), method: :post, class: 'button' %>
       </div>
     </div>
   </div>
-<% end %>
+</div>
