@@ -22,14 +22,17 @@
   <% end %>
 <% end %>
 
-<% content_for :inline_css do %>
-  <% cache "#{@app_version}/search/styles" do %>
-    <style><%= inline_asset 'search.css' %></style>
-  <% end %>
-<% end %>
-
 <% content_for :javascript do %>
   <%= javascript_include_tag 'application', defer: true %>
+<% end %>
+
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'components/header', media: 'all' %>
+  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
+  <%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
+  <%= stylesheet_link_tag 'components/pagination', media: 'all' %>
+  <%= stylesheet_link_tag 'components/search', media: 'all' %>
+  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
 <% end %>
 
 <%= render partial: 'search_form' %>

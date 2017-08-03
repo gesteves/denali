@@ -2,6 +2,12 @@
   <title>Offline · <%= @photoblog.name %></title>
 <% end %>
 
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'components/header', media: 'all' %>
+  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
+  <%= stylesheet_link_tag 'components/entry', media: 'all' %>
+<% end %>
+
 <article class="entry entry--text">
   <div class="entry__body">
     <h1 class="entry__headline">Uh oh, something went wrong.</h1>

@@ -2,9 +2,8 @@
 @import 'base/functions';
 @import 'base/mixins';
 
-@import '../blocks/entry_atf';
-@import '../blocks/entry_btf';
-@import '../blocks/elsewhere';
+@import 'blocks/entry_atf';
+@import 'blocks/entry_btf';
 
 // scss-lint:disable ImportantRule
 .entry__photo-container--zoom {

@@ -28,15 +28,18 @@
   <% end %>
 <% end %>
 
-<% content_for :inline_css do %>
-  <% cache "#{@app_version}/entries/styles" do %>
-    <style><%= inline_asset 'entry_list.css' %></style>
-  <% end %>
-<% end %>
-
 <% content_for :javascript do %>
   <%= javascript_include_tag 'application/infinite_scroll', defer: true %>
   <%= javascript_include_tag 'application', defer: true %>
+<% end %>
+
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'components/header', media: 'all' %>
+  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
+  <%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
+  <%= stylesheet_link_tag 'components/pagination', media: 'all' %>
+  <%= stylesheet_link_tag 'components/loading', media: 'all' %>
+  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
 <% end %>
 
 <% cache "entries/tagged/#{@tag_slug}/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>

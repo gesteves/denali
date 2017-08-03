@@ -4,12 +4,6 @@
   <% end %>
 <% end %>
 
-<% content_for :inline_css do %>
-  <% cache "#{@app_version}/entry/styles" do %>
-    <style><%= inline_asset 'entry.css' %></style>
-  <% end %>
-<% end %>
-
 <% content_for :typekit do %>
   <% if ENV['typekit_light_id'].present? && @entry.body.blank? %>
     <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_light_id']} %>
@@ -22,6 +16,18 @@
   <%= javascript_include_tag 'application/lazy_load', defer: true if @photoblog.show_related_entries? %>
   <%= javascript_include_tag 'application/image_zoom', defer: true %>
   <%= javascript_include_tag 'application', defer: true %>
+<% end %>
+
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'components/header', media: 'all' %>
+  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
+  <%= stylesheet_link_tag 'components/entry', media: 'all' %>
+  <%= stylesheet_link_tag 'components/exif', media: 'all' %>
+  <%= stylesheet_link_tag 'components/tags', media: 'all' %>
+  <%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
+  <%= stylesheet_link_tag 'components/pagination', media: 'all' %>
+  <%= stylesheet_link_tag 'components/elsewhere', media: 'all' %>
+  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
 <% end %>
 
 <%= render partial: 'entries/entry', object: @entry %>
