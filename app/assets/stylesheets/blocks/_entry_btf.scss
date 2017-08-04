@@ -42,10 +42,11 @@
   width: 100%;
 
   p {
-    text-align: left;
+    color: $color-text-alt;
     font-size: 14px;
     line-height: (24/14);
     padding: 0 1em;
+    text-align: left;
 
     @media (min-width: $bp-s) {
       line-height: (36/14);
