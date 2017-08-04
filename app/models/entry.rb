@@ -209,7 +209,7 @@ class Entry < ApplicationRecord
       self.enqueue_instagram
       self.enqueue_pinterest
       self.enqueue_slack
-      self.enqueue_search_engines
+      self.enqueue_sitemap
     end
     true
   end
@@ -252,10 +252,10 @@ class Entry < ApplicationRecord
     PinterestJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_pinterest
   end
 
-  def enqueue_search_engines
+  def enqueue_sitemap
     if self.is_published?
-      GoogleJob.perform_later
-      BingJob.perform_later
+      SitemapJob.perform_later("https://www.google.com/ping?sitemap=#{CGI.escape sitemap_index_url(host: self.blog.domain)}")
+      SitemapJob.perform_later("https://www.bing.com/ping?sitemap=#{CGI.escape sitemap_index_url(host: self.blog.domain)}")
     end
   end
 

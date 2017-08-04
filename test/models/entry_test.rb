@@ -2,99 +2,114 @@ require 'test_helper'
 
 class EntryTest < ActiveSupport::TestCase
   test 'should not save entry without title' do
-    entry = Entry.new(body: 'Test')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(body: 'Test', blog: blog)
     assert_not entry.save
   end
 
   test 'should set slug before saving' do
+    blog = blogs(:allencompassingtrip)
     title = 'This is my title'
-    entry = Entry.new(title: title, body: 'Whatever.')
+    entry = Entry.new(title: title, body: 'Whatever.', blog: blog)
     entry.save
     assert_equal title.parameterize, entry.slug
   end
 
   test 'should set preview hash before saving' do
+    blog = blogs(:allencompassingtrip)
     title = 'This is my title'
-    entry = Entry.new(title: title, body: 'Whatever.')
+    entry = Entry.new(title: title, body: 'Whatever.', blog: blog)
     entry.save
     assert_not_nil entry.preview_hash
   end
 
   test 'should be draft' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog)
     entry.save
     assert entry.is_draft?
   end
 
   test 'should be queued' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
     assert entry.is_queued?
   end
 
   test 'should be published' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog)
     entry.save
     assert entry.is_published?
   end
 
   test 'should change drafts to published' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog)
     entry.save
     entry.publish
     assert entry.is_published?
   end
 
   test 'should change queued to published' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
     entry.publish
     assert entry.is_published?
   end
 
   test 'should change drafts to queued' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog)
     entry.save
     entry.queue
     assert entry.is_queued?
   end
 
   test 'should change queued to draft' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
     entry.draft
     assert entry.is_draft?
   end
 
   test 'should not change published to queued' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog)
     entry.save
     entry.queue
     assert entry.is_published?
   end
 
   test 'should not change published to draft' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog)
     entry.save
     entry.draft
     assert entry.is_published?
   end
 
   test 'publish should set published_at' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
     entry.publish
     assert_not_nil entry.published_at
   end
 
   test 'queuing should set a position' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
     assert_not_nil entry.position
   end
 
   test 'publishing a queued post should clear the position' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
     assert_not_nil entry.position
     entry.publish
@@ -102,14 +117,16 @@ class EntryTest < ActiveSupport::TestCase
   end
 
   test 'draft should not set published_at' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
     entry.draft
     assert_nil entry.published_at
   end
 
   test 'queue should not set published_at' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog)
     entry.save
     entry.queue
     assert_nil entry.published_at
@@ -117,7 +134,7 @@ class EntryTest < ActiveSupport::TestCase
 
   test 'publish should not set position' do
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog_id: blog.id)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
     entry.publish
     assert_nil entry.position
@@ -125,7 +142,7 @@ class EntryTest < ActiveSupport::TestCase
 
   test 'draft should not set position' do
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog_id: blog.id)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
     entry.draft
     assert_nil entry.position
@@ -133,14 +150,15 @@ class EntryTest < ActiveSupport::TestCase
 
   test 'queue should set position' do
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog_id: blog.id)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog)
     entry.save
     entry.queue
     assert_not_nil entry.position
   end
 
   test 'published_at should not change' do
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
     entry.publish
     published_at = entry.published_at
@@ -149,7 +167,8 @@ class EntryTest < ActiveSupport::TestCase
   end
 
   test 'entry formatting should work' do
-    entry = Entry.new(title: 'This is the *title* you\'re looking for', body: 'This is the *body* you\'re looking for.', status: 'queued')
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'This is the *title* you\'re looking for', body: 'This is the *body* you\'re looking for.', status: 'queued', blog: blog)
     entry.save
     assert_equal entry.plain_title, 'This is the title you’re looking for'
     assert_equal entry.formatted_body, "<p>This is the <em>body</em> you&rsquo;re looking for.</p>\n"
@@ -161,9 +180,9 @@ class EntryTest < ActiveSupport::TestCase
     blog = blogs(:allencompassingtrip)
     entry_1 = entries(:panda)
 
-    entry_2 = Entry.new(title: 'test 1', status: 'queued', blog_id: blog.id)
+    entry_2 = Entry.new(title: 'test 1', status: 'queued', blog: blog)
     entry_2.save
-    entry_3 = Entry.new(title: 'test 2', status: 'queued', blog_id: blog.id)
+    entry_3 = Entry.new(title: 'test 2', status: 'queued', blog: blog)
     entry_3.save
 
     entry_1.move_lower
