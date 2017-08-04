@@ -9,6 +9,11 @@
                 alt: photo.caption.blank? ? entry.title : photo.plain_caption,
                 'data-width-original': photo.width,
                 'data-height-original': photo.height } %>
+          <% if photo.caption.present? %>
+            <figcaption class="entry__photo-caption">
+              <%= sanitize photo.formatted_caption %>
+            </figcaption>
+          <% end %>
         </figure>
       </div>
     <% end %>
@@ -18,10 +23,10 @@
         <% if entry.is_text? %>
           <%= link_to sanitize(entry.plain_title), entry.permalink_url %>
         <% else %>
-          <%= sanitize(entry.plain_title) %>
+          <%= sanitize entry.plain_title %>
         <% end %>
       </h1>
-      <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
+      <%= sanitize entry.formatted_body unless entry.body.blank? %>
     </div>
 
     <div class="entry__meta">
