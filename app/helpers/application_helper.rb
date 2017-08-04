@@ -4,7 +4,6 @@ module ApplicationHelper
     html_options[:srcset] = get_srcset(photo, photo_key)
     html_options[:sizes] = get_sizes(photo_key)
     html_options[:src] = get_src(photo, photo_key) unless PHOTOS[photo_key]['src'].nil?
-    html_options.delete(:'aria-labelledby') if html_options[:'aria-labelledby'].present? && photo.caption.blank?
     content_tag :img, nil, html_options
   end
 
@@ -13,7 +12,6 @@ module ApplicationHelper
     html_options[:sizes] = get_sizes(photo_key)
     html_options[:class] += ' js-lazy-load'
     html_options[:'data-src'] = get_src(photo, photo_key) unless PHOTOS[photo_key]['src'].nil?
-    html_options.delete(:'aria-labelledby') if html_options[:'aria-labelledby'].present? && photo.caption.blank?
     content_tag :img, nil, html_options
   end
 

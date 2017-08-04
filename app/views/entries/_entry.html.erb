@@ -6,15 +6,9 @@
           <%= responsive_image_tag photo,
               'entry',
               { class: "entry__photo",
-                alt: '',
-                'aria-labelledby': "photo-caption-#{photo.id}",
+                alt: photo.plain_caption || '',
                 'data-width-original': photo.width,
                 'data-height-original': photo.height } %>
-          <% if photo.caption.present? %>
-            <figcaption id="photo-caption-<%= photo.id %>" class="entry__photo-caption">
-              <%= sanitize photo.formatted_caption %>
-            </figcaption>
-          <% end %>
         </figure>
       </div>
     <% end %>

@@ -37,23 +37,6 @@
   }
 }
 
-.entry__photo-caption {
-  background-color: $color-caption-background;
-  width: 100%;
-
-  p {
-    color: $color-text-alt;
-    font-size: 14px;
-    line-height: (24/14);
-    padding: 0 1em;
-    text-align: left;
-
-    @media (min-width: $bp-s) {
-      line-height: (36/14);
-    }
-  }
-}
-
 .entry--photo #{&}__body {
   border-top: 1px solid $color-border;
 }
