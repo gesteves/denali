@@ -1,39 +1,41 @@
-<title><%= sanitize "#{entry.plain_title.gsub(/.$/, '')} · #{entry.blog.name}" %></title>
-<meta name="description" content="<%= meta_description entry %>">
+<% cache "entry/meta/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+  <title><%= sanitize "#{entry.plain_title.gsub(/.$/, '')} · #{entry.blog.name}" %></title>
+  <meta name="description" content="<%= meta_description entry %>">
 
-<%# Facebook meta tags %>
-<meta property="og:title" content="<%= entry.plain_title %>">
-<meta property="og:description" content="<%= meta_description entry %>">
-<meta property="og:url" content="<%= entry.permalink_url %>">
-<meta property="og:type" content="Article">
-<meta property="og:site_name" content="<%= @photoblog.name %>">
-<meta property="og:locale" content="en_US">
-<% if entry.is_photo? %>
-  <meta property="og:image" content="<%= entry.photos.first.url(w: 1200) %>">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="<%= entry.photos.first.height_from_width(1200) %>">
-<% end %>
-
-<%# Twitter meta tags %>
-<% if @photoblog.twitter.present? %>
-  <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
-  <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
-<% end %>
-<meta name="twitter:title" content="<%= entry.plain_title %>">
-<meta name="twitter:description" content="<%= meta_description entry %>">
-<meta name="twitter:url" content="<%= entry.permalink_url %>">
-<meta name="twitter:card" content="<%= entry.is_text? ? "summary" : "summary_large_image" %>">
-<% if entry.is_photo? %>
-  <meta name="twitter:image" content="<%= entry.photos.first.url(w: 1200, h: 628) %>">
-  <% if entry.photos.first.caption.present? %>
-    <meta name="twitter:image:alt" content="<%= entry.photos.first.plain_caption %>">
+  <%# Facebook meta tags %>
+  <meta property="og:title" content="<%= entry.plain_title %>">
+  <meta property="og:description" content="<%= meta_description entry %>">
+  <meta property="og:url" content="<%= entry.permalink_url %>">
+  <meta property="og:type" content="Article">
+  <meta property="og:site_name" content="<%= @photoblog.name %>">
+  <meta property="og:locale" content="en_US">
+  <% if entry.is_photo? %>
+    <meta property="og:image" content="<%= entry.photos.first.url(w: 1200) %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="<%= entry.photos.first.height_from_width(1200) %>">
   <% end %>
-<% end %>
-<%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
-<%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>
-<% if @entry.is_published? %>
-  <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
-  <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">
-  <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
-  <link rel="canonical" href="<%= entry.permalink_url %>">
+
+  <%# Twitter meta tags %>
+  <% if @photoblog.twitter.present? %>
+    <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+    <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+  <% end %>
+  <meta name="twitter:title" content="<%= entry.plain_title %>">
+  <meta name="twitter:description" content="<%= meta_description entry %>">
+  <meta name="twitter:url" content="<%= entry.permalink_url %>">
+  <meta name="twitter:card" content="<%= entry.is_text? ? "summary" : "summary_large_image" %>">
+  <% if entry.is_photo? %>
+    <meta name="twitter:image" content="<%= entry.photos.first.url(w: 1200, h: 628) %>">
+    <% if entry.photos.first.caption.present? %>
+      <meta name="twitter:image:alt" content="<%= entry.photos.first.plain_caption %>">
+    <% end %>
+  <% end %>
+  <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
+  <%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>
+  <% if @entry.is_published? %>
+    <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
+    <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">
+    <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
+    <link rel="canonical" href="<%= entry.permalink_url %>">
+  <% end %>
 <% end %>
