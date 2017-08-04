@@ -254,8 +254,12 @@ class Entry < ApplicationRecord
 
   def enqueue_sitemap
     if self.is_published?
-      SitemapJob.perform_later("https://www.google.com/ping?sitemap=#{CGI.escape sitemap_index_url(host: self.blog.domain)}")
-      SitemapJob.perform_later("https://www.bing.com/ping?sitemap=#{CGI.escape sitemap_index_url(host: self.blog.domain)}")
+      opts = {
+        host: self.blog.domain,
+        protocol: Rails.configuration.force_ssl ? 'https' : 'http'
+      }
+      SitemapJob.perform_later("https://www.google.com/ping?sitemap=#{CGI.escape sitemap_index_url(opts)}")
+      SitemapJob.perform_later("https://www.bing.com/ping?sitemap=#{CGI.escape sitemap_index_url(opts)}")
     end
   end
 
