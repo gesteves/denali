@@ -143,7 +143,7 @@ class Entry < ApplicationRecord
       Entry.search(search).records.includes(:photos)
     rescue => e
       logger.error e
-      nil
+      []
     end
   end
 
