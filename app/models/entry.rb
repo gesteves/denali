@@ -63,6 +63,46 @@ class Entry < ApplicationRecord
     where('photos_count > 0')
   end
 
+  def self.full_search(query, page = 1, per_page = 10)
+    search = {
+      query: {
+        bool: {
+          must: [
+            { query_string: { query: query, default_operator: 'AND' } }
+          ]
+        }
+      },
+      sort: [
+        { created_at: 'desc' },
+        '_score'
+      ],
+      size: per_page,
+      from: (page.to_i - 1) * per_page
+    }
+    self.search(search)
+  end
+
+  def self.published_search(query, page = 1, per_page = 10)
+    search = {
+      query: {
+        bool: {
+          must: [
+            { term: { status: 'published' } },
+            { range: { photos_count: { gt: 0 } } },
+            { multi_match: { query: query, fields: ['plain_*'], type: 'cross_fields', operator: 'and' } }
+          ]
+        }
+      },
+      sort: [
+        { published_at: 'desc' },
+        '_score'
+      ],
+      size: per_page,
+      from: (page.to_i - 1) * per_page
+    }
+    self.search(search)
+  end
+
   def is_photo?
     !self.photos_count.blank? && self.photos_count > 0
   end

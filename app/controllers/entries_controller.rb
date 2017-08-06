@@ -60,25 +60,7 @@ class EntriesController < ApplicationController
     @count = 12
     @query = params[:q]
     if @query.present?
-      search = {
-        query: {
-          bool: {
-            must: [
-              { term: { blog_id: @photoblog.id } },
-              { term: { status: 'published' } },
-              { range: { photos_count: { gt: 0 } } },
-              { multi_match: { query: @query, fields: ['plain_*'], type: 'cross_fields', operator: 'and' } }
-            ]
-          }
-        },
-        sort: [
-          { published_at: 'desc' },
-          '_score'
-        ],
-        size: @count,
-        from: (@page.to_i - 1) * @count
-      }
-      results = Entry.search(search)
+      results = Entry.published_search(@query, @page, @count)
       total_count = results.results.total
       records = results.records.includes(:photos)
       @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
