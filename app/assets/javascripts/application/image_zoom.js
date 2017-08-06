@@ -20,7 +20,8 @@ class ImageZoom {
         imageContainer,
         images = document.querySelectorAll(options.imagesSelector);
 
-    images.forEach(image => {
+    for (let i = 0; i < images.length; i++) {
+      let image = images[i];
       originalHeight = parseInt(image.getAttribute('data-height-original'));
       originalWidth = parseInt(image.getAttribute('data-width-original'));
       imageRatio = originalHeight/originalWidth;
@@ -32,12 +33,15 @@ class ImageZoom {
         image.addEventListener('click', e => this.toggleZoom(e));
         this.zoomable.push(imageContainer);
       }
-    });
+    }
   }
 
   toggleZoom (e) {
     e.preventDefault();
-    this.zoomable.forEach(image => image.classList.toggle(this.zoomClass));
+    for (let i = 0; i < this.zoomable.length; i++) {
+      let image = this.zoomable[i];
+      image.classList.toggle(this.zoomClass);
+    }
   }
 }
 

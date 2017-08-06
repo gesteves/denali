@@ -7,16 +7,20 @@ class LazyLoad {
     IntersectionObserver.prototype.POLL_INTERVAL = 50;
     this.observer = new IntersectionObserver(entries => this.handleIntersection(entries), { rootMargin: '25%', threshold: 0 });
     this.images = document.querySelectorAll(`.${this.elementsClass}`);
-    this.images.forEach(image => this.observer.observe(image));
+    for (let i = 0; i < this.images.length; i++) {
+      let image = this.images[i];
+      this.observer.observe(image);
+    }
   }
 
   handleIntersection (entries) {
-    entries.forEach(entry => {
+    for (let i = 0; i < entries.length; i++) {
+      let entry = entries[i];
       if (entry.intersectionRatio > 0 || entry.isIntersecting) {
         this.loadImage(entry.target);
         this.observer.unobserve(entry.target);
       }
-    });
+    }
   }
 
   loadImage (image) {

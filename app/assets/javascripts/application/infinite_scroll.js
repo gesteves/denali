@@ -37,11 +37,12 @@ class InfiniteScroll {
   }
 
   loadEntries (entries) {
-    entries.forEach(entry => {
+    for (let i = 0; i < entries.length; i++) {
+      let entry = entries[i];
       if ((entry.intersectionRatio > 0 || entry.isIntersecting)) {
         this.getNextPage();
       }
-    });
+    }
   }
 
   getNextPage () {
@@ -64,11 +65,15 @@ class InfiniteScroll {
 
   observePageUrls () {
     let elements = this.container.querySelectorAll('[data-page-url]');
-    elements.forEach(element => this.paginationIO.observe(element));
+    for (let i = 0; i < elements.length; i++) {
+      let element = elements[i];
+      this.paginationIO.observe(element);
+    }
   }
 
   updatePage (entries) {
-    entries.forEach(entry => {
+    for (let i = 0; i < entries.length; i++) {
+      let entry = entries[i];
       if ((entry.intersectionRatio > 0 || entry.isIntersecting)) {
         window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
         if (typeof ga !== 'undefined') {
@@ -76,7 +81,7 @@ class InfiniteScroll {
           ga('send', 'pageview');
         }
       }
-    });
+    }
   }
 }
 
