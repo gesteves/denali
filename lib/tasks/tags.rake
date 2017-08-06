@@ -30,6 +30,18 @@ namespace :tags do
     end
   end
 
+  namespace :add do
+    task :tag => [:environment] do
+      if ENV['TAG'].present? && ENV['NEWTAG'].present?
+        Entry.tagged_with(ENV['TAG']).each do |e|
+          puts "Adding tag #{ENV['NEWTAG']} to entry ##{e.id}"
+          e.tag_list.add(ENV['NEWTAG'])
+          e.save
+        end
+      end
+    end
+  end
+
   namespace :clear do
     task :equipment => [:environment] do
       Entry.find_each do |e|
