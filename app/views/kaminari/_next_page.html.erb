@@ -10,6 +10,6 @@
   <% if current_page.last? %>
     <span class="pagination__next"><%= t('views.pagination.next').html_safe %></span>
   <% else %>
-    <%= link_to t('views.pagination.next').html_safe, url, rel: 'next', class: 'pagination__next', title: 'Go to the next page of photos' %>
+    <%= link_to t('views.pagination.next').html_safe, url, class: 'pagination__next', title: 'Go to the next page of photos' %>
   <% end %>
 </span>
