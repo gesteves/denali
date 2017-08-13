@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170713135954) do
+ActiveRecord::Schema.define(version: 20170813025226) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,10 @@ ActiveRecord::Schema.define(version: 20170713135954) do
     t.integer "touch_icon_file_size"
     t.datetime "touch_icon_updated_at"
     t.string "flickr"
+    t.string "logo_file_name"
+    t.string "logo_content_type"
+    t.integer "logo_file_size"
+    t.datetime "logo_updated_at"
     t.index ["domain"], name: "index_blogs_on_domain"
   end
 

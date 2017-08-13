@@ -16,3 +16,19 @@ if entry.is_photo?
     json.height entry.photos.first.height_from_width(1392)
   end
 end
+json.author do
+  json.set! '@type', 'Person'
+  json.name entry.user.name
+end
+json.publisher do
+  json.set! '@type', 'Organization'
+  json.name @photoblog.name
+  if @photoblog.logo.present?
+    json.logo do
+      json.set! '@type', 'ImageObject'
+      json.width 145
+      json.height 60
+      json.url @photoblog.logo_url(w: 145, h: 60, fm: 'png', pad: 6, fit: 'fill', bg: '0fff')
+    end
+  end
+end
