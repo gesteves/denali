@@ -16,11 +16,3 @@ if entry.is_photo?
     json.height entry.photos.first.height_from_width(1392)
   end
 end
-json.author do
-  json.set! '@type', 'Person'
-  json.name entry.user.name
-end
-json.publisher do
-  json.set! '@type', 'Organization'
-  json.name @photoblog.name
-end
