@@ -58,7 +58,7 @@
 .elsewhere__label {
   display: none;
 
-  @media (min-width: $bp-xxs) {
+  @media (min-width: $bp-xs) {
     display: inline-block;
   }
 }

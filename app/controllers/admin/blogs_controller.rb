@@ -25,6 +25,6 @@ class Admin::BlogsController < AdminController
                                  :show_related_entries, :analytics_code,
                                  :instagram, :twitter, :tumblr, :email, :flickr,
                                  :header_logo_svg, :additional_meta_tags,
-                                 :favicon, :touch_icon, :logo)
+                                 :favicon, :touch_icon, :logo, :facebook)
   end
 end

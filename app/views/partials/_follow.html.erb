@@ -10,6 +10,9 @@
   <% if @photoblog.email.present? %>
     <a href="mailto:<%= @photoblog.email %>" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
   <% end %>
+  <% if @photoblog.facebook.present? %>
+    <a href="https://www.facebook.com/<%= @photoblog.facebook %>/" class="follow__link" rel="me" title="Like on Facebook"><%= inline_svg 'facebook', 'follow__icon' %></a>
+  <% end %>
   <% if @photoblog.instagram.present? %>
     <a href="https://www.instagram.com/<%= @photoblog.instagram %>/" class="follow__link" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>
   <% end %>

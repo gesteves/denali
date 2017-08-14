@@ -2,6 +2,9 @@
   <h2 class="elsewhere__heading">Elsewhere on the Web</h2>
   <ul class="elsewhere__list">
     <li class="elsewhere__item"><a href="<%= feed_path %>" title="Subscribe to Feed"><%= inline_svg 'feed', 'elsewhere__icon' %><span class="elsewhere__label">Feed</span></a></li>
+    <% if @photoblog.facebook.present? %>
+      <li class="elsewhere__item"><a href="https://www.facebook.com/<%= @photoblog.facebook %>/" rel="me" title="Like on Facebook"><%= inline_svg 'facebook', 'elsewhere__icon' %><span class="elsewhere__label">Facebook</span></a></li>
+    <% end %>
     <% if @photoblog.flickr.present? %>
       <li class="elsewhere__item"><a href="https://www.flickr.com/photos/<%= @photoblog.flickr %>/" rel="me" title="Follow on Flickr"><%= inline_svg 'flickr', 'elsewhere__icon' %><span class="elsewhere__label">Flickr</span></a></li>
     <% end %>
