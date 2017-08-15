@@ -15,7 +15,8 @@ class InstagramJob < BufferJob
     end
     thumbnail_url = entry.photos.first.url(w: 512, fm: 'jpg')
 
-    post_to_buffer('instagram', text, image_url, thumbnail_url)
+    ids = get_profile_ids('instagram')
+    post_to_buffer(ids, text, image_url, thumbnail_url)
   end
 
  private
