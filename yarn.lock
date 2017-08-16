@@ -688,9 +688,9 @@ gulp-scss-lint-stylish@^1.0:
     text-table "^0.2.0"
     underscore "^1.8.3"
 
-gulp-scss-lint@^0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/gulp-scss-lint/-/gulp-scss-lint-0.4.0.tgz#4a3b688db5d2b113f44f6374681e46f39dc341e7"
+gulp-scss-lint@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/gulp-scss-lint/-/gulp-scss-lint-0.5.0.tgz#4c65f4f030374c4e003b359a64d48476aefbc40c"
   dependencies:
     bluebird "^3.3.5"
     dargs "~4.1.0"
