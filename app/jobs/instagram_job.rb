@@ -10,6 +10,8 @@ class InstagramJob < BufferJob
     text = text_array.join("\n\n")
     image_url = if entry.photos.first.is_vertical?
       entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff', fm: 'jpg')
+    elsif entry.photos.first.is_horizontal?
+      entry.photos.first.url(w: 1080, h: 864, fit: 'fill', bg: 'fff', fm: 'jpg')
     else
       entry.photos.first.url(w: 1080, fm: 'jpg')
     end
