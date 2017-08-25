@@ -182,7 +182,7 @@ class Entry < ApplicationRecord
       }
       Entry.search(search).records.includes(:photos)
     rescue => e
-      logger.error e
+      logger.error "Fetching related entries failed with the following error: #{e}"
       nil
     end
   end
