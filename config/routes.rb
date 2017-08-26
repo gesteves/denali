@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
 
   concern :paginatable do
-    get '(page/:page)', :action => :index, :on => :collection, :as => ''
+    get '(page/:page)', :action => :index, :on => :collection
+    get 'queued(/page/:page)', :action => :queued, :on => :collection
+    get 'drafts(/page/:page)', :action => :drafts, :on => :collection
   end
 
   namespace :admin do
