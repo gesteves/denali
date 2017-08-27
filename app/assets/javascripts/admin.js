@@ -11,11 +11,9 @@
 if (document.readyState !== 'loading') {
   Denali.Entries.init();
   Denali.Flash.init();
-  Denali.Queue.init();
   Denali.Tags.init();
 }
 
 document.addEventListener('DOMContentLoaded', Denali.Entries.init);
 document.addEventListener('DOMContentLoaded', Denali.Flash.init);
-document.addEventListener('DOMContentLoaded', Denali.Queue.init);
 document.addEventListener('DOMContentLoaded', Denali.Tags.init);
