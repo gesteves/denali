@@ -4,7 +4,6 @@
   justify-content: center;
   margin: 24px auto;
   max-width: $bp-max;
-  padding: 0 2px;
 
   @media (min-width: $bp-xl) {
     margin: 72px auto;
@@ -42,7 +41,6 @@
   flex-shrink: 0;
   font-size: 0;
   overflow: hidden;
-  padding: 2px;
 
   @media (min-width: $bp-xxxs) {
     flex-basis: calc(100%/3);
@@ -59,7 +57,6 @@
 
 .entry-list__link {
   display: block;
-  margin: 2px;
   overflow: hidden;
 
   &:hover,

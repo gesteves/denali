@@ -20,23 +20,21 @@ entry: &entry
 entry_list_item:
   src: 355
   srcset:
-    - 308
-    - 315
-    - 355
-    - 363
-    - 379
-    - 398
-    - 502
-    - 630
-    - 673
-    - 710
-    - 415
-    - 830
+    - 320
+    - 376
+    - 414
+    - 420
+    - 512
+    - 640
+    - 682
+    - 684
+    - 720
+    - 840
   sizes:
-    - "(min-width: 1680px) 415px"
-    - "(min-width: 1280px) calc((100vw - 20px)/4)"
-    - "(min-width: 400px) calc((100vw - 16px)/3)"
-    - calc((100vw - 12px)/2)
+    - "(min-width: 1680px) 420px"
+    - "(min-width: 1280px) 25vw"
+    - "(min-width: 400px) calc(100vw/3)"
+    - 50vw
   square: Yes
 admin_entry:
   src: 560
