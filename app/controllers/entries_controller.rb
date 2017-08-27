@@ -90,6 +90,14 @@ class EntriesController < ApplicationController
     end
   end
 
+  def photo
+    if stale?(@photoblog, public: true)
+      entry = @photoblog.entries.joins(:photos).published.where('photos.id = ?', params[:id]).first
+      raise ActiveRecord::RecordNotFound if entry.nil?
+      redirect_to(entry.permalink_url, status: 301)
+    end
+  end
+
   def feed
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i

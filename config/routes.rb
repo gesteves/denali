@@ -43,6 +43,7 @@ Rails.application.routes.draw do
   get '/(page/:page)'                  => 'entries#index',   constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :entries
   get '/tagged/:tag(/page/:page)'      => 'entries#tagged',  constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :tag
   get '/e/:id'                         => 'entries#show',    constraints: { id: /\d+/ }, :as => :entry
+  get '/photo/:id'                     => 'entries#photo',   constraints: { id: /\d+/ }, :as => :photo
   get '/:year/:month/:day/:id(/:slug)' => 'entries#show',    constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_long
   get '/preview/:preview_hash'         => 'entries#preview', defaults: { format: 'html' }, :as => :preview_entry
   get '/search'                        => 'entries#search', :as => :search

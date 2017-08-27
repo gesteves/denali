@@ -76,6 +76,13 @@ class EntriesControllerTest < ActionController::TestCase
     assert_redirected_to entry.permalink_url
   end
 
+  test 'should redirect from photo url' do
+    photo = photos(:peppers)
+    entry = entries(:peppers)
+    get :photo, params: { id: photo.id }
+    assert_redirected_to entry.permalink_url
+  end
+
   test 'should render tag page' do
     entry = entries(:peppers)
     entry.tag_list = 'washington'
