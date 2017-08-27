@@ -66,6 +66,13 @@ class Map {
     request.send();
   }
 
+  trackPopupOpen (e) {
+    let marker = e.target;
+    if (typeof ga !== 'undefined') {
+      ga('send', 'event', 'Map', 'Popup Open', marker.photoId);
+    }
+  }
+
   setUpMarker (e) {
     let marker = e.layer,
         feature = marker.feature;
@@ -81,6 +88,7 @@ class Map {
       minWidth: 300
     });
     marker.addOneTimeEventListener('popupopen', e => this.requestPopup(e));
+    marker.addEventListener('popupopen', e => this.trackPopupOpen(e));
   }
 
   setUpClusterIcon (cluster) {
