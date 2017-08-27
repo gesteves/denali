@@ -3,19 +3,19 @@
   <ul class="elsewhere__list">
     <li class="elsewhere__item"><a href="<%= feed_path %>" title="Subscribe to Feed"><%= inline_svg 'feed', 'elsewhere__icon' %><span class="elsewhere__label">Feed</span></a></li>
     <% if @photoblog.facebook.present? %>
-      <li class="elsewhere__item"><a href="https://www.facebook.com/<%= @photoblog.facebook %>/" rel="me" title="Like on Facebook"><%= inline_svg 'facebook', 'elsewhere__icon' %><span class="elsewhere__label">Facebook</span></a></li>
+      <li class="elsewhere__item"><a href="<%= @photoblog.facebook %>" rel="me" title="Like on Facebook"><%= inline_svg 'facebook', 'elsewhere__icon' %><span class="elsewhere__label">Facebook</span></a></li>
     <% end %>
     <% if @photoblog.flickr.present? %>
-      <li class="elsewhere__item"><a href="https://www.flickr.com/photos/<%= @photoblog.flickr %>/" rel="me" title="Follow on Flickr"><%= inline_svg 'flickr', 'elsewhere__icon' %><span class="elsewhere__label">Flickr</span></a></li>
+      <li class="elsewhere__item"><a href="<%= @photoblog.flickr %>" rel="me" title="Follow on Flickr"><%= inline_svg 'flickr', 'elsewhere__icon' %><span class="elsewhere__label">Flickr</span></a></li>
     <% end %>
     <% if @photoblog.instagram.present? %>
-      <li class="elsewhere__item"><a href="https://www.instagram.com/<%= @photoblog.instagram %>/" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'elsewhere__icon' %><span class="elsewhere__label">Instagram</span></a></li>
+      <li class="elsewhere__item"><a href="<%= @photoblog.instagram %>" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'elsewhere__icon' %><span class="elsewhere__label">Instagram</span></a></li>
     <% end %>
     <% if @photoblog.tumblr.present? %>
-      <li class="elsewhere__item"><a href="https://<%= @photoblog.tumblr %>.tumblr.com" rel="me" title="Follow on Tumblr"><%= inline_svg 'tumblr', 'elsewhere__icon' %><span class="elsewhere__label">Tumblr</span></a></li>
+      <li class="elsewhere__item"><a href="<%= @photoblog.tumblr %>" rel="me" title="Follow on Tumblr"><%= inline_svg 'tumblr', 'elsewhere__icon' %><span class="elsewhere__label">Tumblr</span></a></li>
     <% end %>
     <% if @photoblog.twitter.present? %>
-      <li class="elsewhere__item"><a href="https://twitter.com/<%= @photoblog.twitter.gsub(/^@/, '') %>" rel="me" title="Follow on Twitter"><%= inline_svg 'twitter', 'elsewhere__icon' %><span class="elsewhere__label">Twitter</span></a></li>
+      <li class="elsewhere__item"><a href="<%= @photoblog.twitter %>" rel="me" title="Follow on Twitter"><%= inline_svg 'twitter', 'elsewhere__icon' %><span class="elsewhere__label">Twitter</span></a></li>
     <% end %>
   </ul>
 </aside>
