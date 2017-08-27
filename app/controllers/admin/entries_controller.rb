@@ -4,6 +4,7 @@ class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :delete, :instagram, :facebook, :twitter]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
+  before_action :set_redirect_url, only: [:edit, :new, :up, :down, :top, :bottom, :delete]
   after_action :update_position, only: [:create]
   after_action :update_equipment_tags, only: [:create, :update]
   after_action :update_location_tags, only: [:create, :update]
@@ -95,7 +96,7 @@ class Admin::EntriesController < AdminController
     else
       flash[:alert] = 'Your entry couldn’t be published…'
     end
-    redirect_entry
+    redirect_to session[:redirect_url] || admin_entries_path
   end
 
   # PATCH /admin/entries/1/queue
@@ -105,7 +106,7 @@ class Admin::EntriesController < AdminController
     else
       flash[:alert] = 'Your entry couldn’t be queued…'
     end
-    redirect_entry
+    redirect_to session[:redirect_url] || admin_entries_path
   end
 
   # PATCH /admin/entries/1/draft
@@ -115,7 +116,7 @@ class Admin::EntriesController < AdminController
     else
       flash[:alert] = 'Your entry couldn’t be saved as draft…'
     end
-    redirect_entry
+    redirect_to session[:redirect_url] || admin_entries_path
   end
 
   # POST /admin/entries
@@ -130,7 +131,7 @@ class Admin::EntriesController < AdminController
           if params[:return].present?
             redirect_to new_admin_entry_path
           else
-            redirect_to get_redirect_url(@entry)
+            redirect_to session[:redirect_url] || admin_entries_path
           end
         }
       else
@@ -146,7 +147,7 @@ class Admin::EntriesController < AdminController
       if @entry.update(entry_params)
         logger.info "Entry #{@entry.id} was updated."
         flash[:notice] = 'Your entry was updated!'
-        format.html { redirect_to get_redirect_url(@entry) }
+        format.html { redirect_to session[:redirect_url] || admin_entries_path }
       else
         flash[:alert] = 'Your entry couldn’t be updated…'
         format.html { render :edit }
@@ -159,17 +160,10 @@ class Admin::EntriesController < AdminController
 
   # DELETE /admin/entries/1
   def destroy
-    referrer = if @entry.is_published?
-      admin_entries_path
-    elsif @entry.is_queued?
-      queued_admin_entries_path
-    elsif @entry.is_draft?
-      drafts_admin_entries_path
-    end
     @entry.destroy
     respond_to do |format|
       flash[:notice] = 'Your entry was deleted!'
-      format.html { redirect_to referrer }
+      format.html { redirect_to session[:redirect_url] || admin_entries_path }
     end
   end
 
@@ -253,22 +247,6 @@ class Admin::EntriesController < AdminController
       end
     end
 
-    def redirect_entry
-      respond_to do |format|
-        format.html { redirect_to get_redirect_url(@entry)}
-      end
-    end
-
-    def get_redirect_url(entry)
-      if entry.is_published?
-        entry.permalink_url
-      elsif entry.is_queued?
-        queued_admin_entries_path
-      else
-        drafts_admin_entries_path
-      end
-    end
-
     def load_tagged_entries
       @page = params[:page] || 1
       @entries = @photoblog.entries.includes(:photos).tagged_with(@tag_list, any: true).order('created_at DESC').page(@page)
@@ -276,7 +254,7 @@ class Admin::EntriesController < AdminController
 
     def respond_to_reposition
       respond_to do |format|
-        format.html { redirect_to queued_admin_entries_path }
+        format.html { redirect_to session[:redirect_url] || admin_entries_path }
         format.json {
           response = {
             status: 200,
@@ -286,6 +264,10 @@ class Admin::EntriesController < AdminController
           render json: response
         }
       end
+    end
+
+    def set_redirect_url
+      session[:redirect_url] = request.referer
     end
 
     def enqueue_invalidation
