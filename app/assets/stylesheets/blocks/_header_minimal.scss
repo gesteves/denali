@@ -16,21 +16,29 @@
   }
 
   .header__section {
-    border: 0;
     display: none;
-    flex-grow: 0;
-    margin: 0;
-    padding: 0;
 
-    @media (min-width: $bp-l) {
-      display: block;
-      width: auto;
+    &:first-of-type {
+      justify-content: flex-start;
+    }
+
+    &:last-of-type {
+      justify-content: flex-end;
+    }
+
+    @media (min-width: $bp-s) {
+      border: 0;
+      display: flex;
+      margin: 0;
+      padding: 0;
+      width: calc((100vw - 97px - 40px)/2);
     }
   }
 
   .header__link {
     height: 40px;
     margin: 0;
+    order: 0;
     padding: 0;
     width: 97px;
   }
