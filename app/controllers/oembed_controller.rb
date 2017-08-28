@@ -26,6 +26,7 @@ class OembedController < ApplicationController
       raise ActiveRecord::RecordNotFound
     else
       @entry = @photoblog.entries.includes(:photos, :user).published.find(url[:id])
+      logger.info "oEmbed rendered for entry #{@entry.permalink_url}"
     end
   end
 
