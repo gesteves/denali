@@ -55,15 +55,6 @@ module ApplicationHelper
     "style=width:#{width}vh"
   end
 
-  def publish_date_for_queued(entry, format = '%A, %B %-d')
-    days = if Time.now.utc.hour < 12
-      entry.position - 1
-    else
-      entry.position
-    end
-    (Time.now + days.days).strftime(format)
-  end
-
   def inline_asset(filename, opts = {})
     opts.reverse_merge!(strip_charset: false)
     if opts[:strip_charset]

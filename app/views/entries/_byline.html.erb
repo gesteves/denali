@@ -11,7 +11,7 @@
   <% if entry.is_published? %>
     on <%= link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url %>
   <% elsif entry.is_queued? %>
-    for <%= link_to publish_date_for_queued(entry, '%B %-d, %Y'), preview_entry_url(entry.preview_hash) %>
+    for <%= link_to entry.publish_date_for_queued.strftime('%B %-d, %Y'), preview_entry_url(entry.preview_hash) %>
   <% else %>
     on <%= link_to entry.updated_at.strftime('%B %-d, %Y'), preview_entry_url(entry.preview_hash) %>
   <% end %>

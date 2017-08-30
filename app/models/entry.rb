@@ -157,7 +157,32 @@ class Entry < ApplicationRecord
     Entry.published.where('published_at < ?', self.published_at).where.not(id: self.id).limit(1).first
   end
 
+  def publish_date_for_queued
+    days = if Time.now.utc.hour < 12
+      self.position - 1
+    else
+      self.position
+    end
+    Time.now + days.days
+  end
+
   def related(count = 12)
+    start_date = if self.is_published?
+      self.published_at.beginning_of_day - 1.year
+    elsif self.is_queued?
+      self.publish_date_for_queued.beginning_of_day - 1.year
+    else
+      self.created_at.beginning_of_day - 1.year
+    end
+
+    end_date = if self.is_published?
+      self.published_at.end_of_day + 1.year
+    elsif self.is_queued?
+      self.publish_date_for_queued.end_of_day + 1.year
+    else
+      self.created_at.end_of_day + 1.year
+    end
+
     begin
       search = {
         query: {
@@ -166,7 +191,7 @@ class Entry < ApplicationRecord
               { term: { blog_id: self.blog_id } },
               { term: { status: 'published' } },
               { range: { photos_count: { gt: 0 } } },
-              { range: { published_at: { gte: (self.published_at || self.created_at) - 1.year, lte: (self.published_at || self.created_at) + 1.year } } }
+              { range: { published_at: { gte: start_date, lte: end_date } } }
             ],
             must_not: {
               term: { id: self.id }
