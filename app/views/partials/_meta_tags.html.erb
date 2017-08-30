@@ -3,9 +3,8 @@
 <% ENV['imgix_domain'].split(',').each do |domain| %>
   <link rel="preconnect" href="http<%= 's' if ENV['imgix_secure'].present? %>://<%= domain %>">
 <% end %>
-<% if ENV['typekit_light_id'].present? || ENV['typekit_id'].present? %>
+<% if ENV['typekit_body_id'].present? || ENV['typekit_id'].present? %>
   <link rel="preconnect" href="https://use.typekit.net">
-  <link rel="preconnect" href="https://p.typekit.net">
 <% end %>
 <%= @photoblog.additional_meta_tags.try(:html_safe) %>
 <% if @photoblog.favicon.present? %>

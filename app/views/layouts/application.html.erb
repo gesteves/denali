@@ -5,16 +5,12 @@
   <%= yield :meta %>
   <%= stylesheet_link_tag 'components/base', media: 'all' %>
   <%= yield :stylesheets %>
-  <%= yield :javascript %>
+  <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} if ENV['typekit_id'].present? %>
   <% if content_for? :typekit %>
     <%= yield :typekit %>
-  <% else %>
-    <% if ENV['typekit_light_id'].present? %>
-      <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_light_id']} %>
-    <% elsif ENV['typekit_id'].present? %>
-      <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} %>
-    <% end %>
   <% end %>
+  <%= yield :javascript %>
+  <%= javascript_include_tag 'application/loadcss', defer: true %>
   <%= @photoblog.analytics_code.try(:html_safe) %>
 </head>
 <body>

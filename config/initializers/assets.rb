@@ -32,5 +32,6 @@ Rails.application.config.assets.precompile += %w(
   application/image_zoom.js
   application/infinite_scroll.js
   application/lazy_load.js
+  application/loadcss.js
   application/map.js
 )
