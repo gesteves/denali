@@ -21,7 +21,7 @@ class TumblrJob < ApplicationJob
     response = tumblr.photo(ENV['tumblr_domain'], opts)
     if response['errors'].present?
       raise response['errors']
-    elsif response['status'] != 200
+    elsif response['status'] >= 400
       raise response['msg']
     end
   end
