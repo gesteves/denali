@@ -19,6 +19,7 @@ class TumblrJob < ApplicationJob
     }
 
     response = tumblr.photo(ENV['tumblr_domain'], opts)
+    logger.info response.to_s
     if response['errors'].present?
       raise response.to_s
     end
