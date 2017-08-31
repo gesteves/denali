@@ -198,7 +198,8 @@ class Entry < ApplicationRecord
             },
             should: [
               { match: { plain_tags: { query: self.plain_tags } } },
-              { match: { plain_locations: { query: self.plain_locations } } }
+              { match: { plain_locations: { query: self.plain_locations } } },
+              { match: { plain_captions: { query: self.plain_captions } } }
             ],
             minimum_should_match: 1
           }
