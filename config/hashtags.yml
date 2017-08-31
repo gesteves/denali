@@ -110,7 +110,7 @@ instagram:
     - lasvegasstrip
     - vegasbaby
     - sincity
-  nationalparkservice: &parks
+  findyourpark: &parks
     - findyourpark
     - goparks
   nationalparks: *parks
