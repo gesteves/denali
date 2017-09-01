@@ -4,7 +4,7 @@ class TwitterJob < BufferJob
   def perform(entry)
     max_length = 90 # 140 characters - 25 for the image url - 25 for the permalink url
     caption = entry.tweet_text.present? ? entry.tweet_text : entry.plain_title
-    text = "#{truncate(caption, length: max_length, omission: '…')} #{entry.permalink_url(utm_source: 'twitter.com', utm_medium: 'social')}"
+    text = "#{truncate(caption, length: max_length, omission: '…')} #{entry.permalink_url}"
     image_url = entry.photos.first.url(w: 2048, fm: 'jpg')
     thumbnail_url = entry.photos.first.url(w: 512, fm: 'jpg')
 
