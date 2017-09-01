@@ -5,7 +5,7 @@ class FacebookJob < BufferJob
     text = []
     text << entry.plain_title
     text << entry.plain_body if entry.body.present?
-    text << entry.permalink_url(utm_source: 'facebook.com', utm_medium: 'social')
+    text << entry.permalink_url
     text = text.join("\n\n")
     image_url = entry.photos.first.url(w: 2048, fm: 'jpg')
     thumbnail_url = entry.photos.first.url(w: 512, fm: 'jpg')
