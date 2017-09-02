@@ -71,7 +71,7 @@ class Admin::EntriesController < AdminController
     else
       @entry = @photoblog.entries.includes(:photos).find(params[:id])
       @page_title = "Editing “#{@entry.title}”"
-      @max_age = ENV['config_entry_max_age'].try(:to_i) || 5
+      @max_age = ENV['config_caching_minutes'].try(:to_i) || 5
     end
   end
 

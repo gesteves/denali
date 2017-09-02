@@ -63,12 +63,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_max_age
-    max_age = ENV['config_default_max_age'].try(:to_i) || 5
-    expires_in max_age.minutes, public: true
-  end
-
-  def set_entry_max_age
-    max_age = ENV['config_entry_max_age'].try(:to_i) || 5
+    max_age = ENV['config_caching_minutes'].try(:to_i) || 5
     expires_in max_age.minutes, public: true
   end
 

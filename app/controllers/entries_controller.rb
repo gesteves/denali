@@ -3,8 +3,7 @@ class EntriesController < ApplicationController
 
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
-  before_action :set_max_age, only: [:index, :tagged, :search, :sitemap, :sitemap_index]
-  before_action :set_entry_max_age, only: [:show, :preview]
+  before_action :set_max_age, only: [:index, :tagged, :search, :sitemap, :sitemap_index, :show, :preview]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   skip_before_action :verify_authenticity_token
 
