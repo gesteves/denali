@@ -60,8 +60,6 @@ GEM
     builder (3.2.3)
     byebug (9.1.0)
     climate_control (0.2.0)
-    cloudfront-invalidator (0.2.1)
-      ruby-hmac
     cocaine (0.5.8)
       climate_control (>= 0.0.3, < 1.0)
     concurrent-ruby (1.0.5)
@@ -233,7 +231,6 @@ GEM
       resque (~> 1.26)
       rufus-scheduler (~> 3.2)
     rmagick (2.16.0)
-    ruby-hmac (0.4.0)
     rufus-scheduler (3.4.2)
       et-orbi (~> 1.0)
     sanitize (4.5.0)
@@ -303,7 +300,6 @@ DEPENDENCIES
   aws-sdk (~> 2.0)
   brakeman
   byebug
-  cloudfront-invalidator
   dalli
   elasticsearch-model
   elasticsearch-rails

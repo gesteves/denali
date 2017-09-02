@@ -30,7 +30,6 @@ gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
 gem 'sentry-raven'
-gem 'cloudfront-invalidator'
 gem 'rmagick'
 
 # Caching
