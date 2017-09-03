@@ -10,7 +10,7 @@ class BufferJob < ApplicationJob
         response.body
       end
     end
-    profiles = JSON.parse(response.body)
+    profiles = JSON.parse(profiles)
     profiles.select { |profile| profile['service'].downcase.match(service) && profile['service_type'].downcase.match(service_type) }.map { |profile| profile['id'] }
   end
 
