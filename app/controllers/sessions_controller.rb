@@ -11,6 +11,7 @@ class SessionsController < ApplicationController
     auth_hash = request.env['omniauth.auth']
 
     if auth_hash.present?
+      logger.info "#{auth_hash['info']['name']} (#{auth_hash['info']['email']}) signed in"
       flash[:notice] = "Welcome, #{auth_hash['info']['name']}!"
       user = User.from_omniauth(auth_hash)
       session[:user_id] = user.id
@@ -18,16 +19,16 @@ class SessionsController < ApplicationController
       session[:original_url] = nil
       redirect_to url
     else
-      redirect_to signin_path, alert: 'There was a problem logging you in.'
+      redirect_to signin_path, alert: 'There was a problem signing you in.'
     end
   end
 
   def failure
-    redirect_to signin_path, alert: "There was a problem logging you in: #{params[:message]}."
+    redirect_to signin_path, alert: "There was a problem signing you in: #{params[:message]}."
   end
 
   def destroy
     session[:current_user] = nil
-    redirect_to signin_path, notice: 'You have been logged out.'
+    redirect_to signin_path, notice: 'You have been signed out.'
   end
 end
