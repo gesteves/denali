@@ -15,6 +15,9 @@ entry: &entry
     - 3360
     - 2304
     - 1125
+    - 2224
+    - 1668
+    - 2672
   sizes:
     - "(min-width: 1680px) 1680px"
     - 100vw
@@ -31,6 +34,8 @@ entry_list_item:
     - 684
     - 720
     - 840
+    - 740
+    - 556
   sizes:
     - "(min-width: 1680px) 420px"
     - "(min-width: 1280px) 25vw"
