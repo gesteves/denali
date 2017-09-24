@@ -80,8 +80,8 @@ class InfiniteScroll {
           ga('set', 'page', window.location.pathname);
           ga('send', 'pageview');
         }
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'page_view');
+        if (typeof gtag !== 'undefined' && typeof gaTrackingId !== 'undefined') {
+          gtag('config', gaTrackingId, { 'page_path': window.location.pathname });
         }
       }
     }

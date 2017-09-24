@@ -18,6 +18,8 @@
     "Denali": true,
     "IntersectionObserver": true,
     "L": true,
-    "ga": true
+    "ga": true,
+    "gtag": true,
+    "gaTrackingId": true
   }
 }
