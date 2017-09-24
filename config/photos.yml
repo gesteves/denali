@@ -36,6 +36,7 @@ entry_list_item:
     - 840
     - 740
     - 556
+    - 564
   sizes:
     - "(min-width: 1680px) 420px"
     - "(min-width: 1280px) 25vw"

@@ -1,5 +1,5 @@
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width">
+<meta name="viewport" content="width=device-width, viewport-fit=cover">
 <% ENV['imgix_domain'].split(',').each do |domain| %>
   <link rel="preconnect" href="http<%= 's' if ENV['imgix_secure'].present? %>://<%= domain %>">
 <% end %>
