@@ -71,10 +71,8 @@ class Map {
     if (typeof ga !== 'undefined') {
       ga('send', 'event', 'Map', 'Popup Open', marker.photoId);
     }
-    if (typeof _gs !== 'undefined') {
-      _gs('event', 'Map Popup', {
-        photoId: marker.photoId
-      });
+    if (typeof gtag !== 'undefined') {
+      gtag('event', 'map_popup_open', { 'photo_id': marker.photoId });
     }
   }
 
