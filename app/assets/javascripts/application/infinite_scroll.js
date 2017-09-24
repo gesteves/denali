@@ -75,13 +75,16 @@ class InfiniteScroll {
     for (let i = 0; i < entries.length; i++) {
       let entry = entries[i];
       if ((entry.intersectionRatio > 0 || entry.isIntersecting)) {
+        let previous_path = window.location.pathname;
         window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
-        if (typeof ga !== 'undefined') {
-          ga('set', 'page', window.location.pathname);
-          ga('send', 'pageview');
-        }
-        if (typeof gtag !== 'undefined' && typeof gaTrackingId !== 'undefined') {
-          gtag('config', gaTrackingId, { 'page_path': window.location.pathname });
+        if (previous_path !== window.location.pathname) {
+          if (typeof ga !== 'undefined') {
+            ga('set', 'page', window.location.pathname);
+            ga('send', 'pageview');
+          }
+          if (typeof gtag !== 'undefined' && typeof gaTrackingId !== 'undefined') {
+            gtag('config', gaTrackingId, { 'page_path': window.location.pathname });
+          }
         }
       }
     }
