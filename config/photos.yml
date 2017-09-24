@@ -16,8 +16,8 @@ entry: &entry
     - 2732
     - 2880
     - 3360
-    - 1280
-    - 1440
+    - 2560
+    - 2880
   sizes:
     - "(min-width: 1680px) 1680px"
     - 100vw
@@ -39,8 +39,8 @@ entry_list_item:
     - 682
     - 720
     - 840
-    - 320
-    - 360
+    - 640
+    - 720
   sizes:
     - "(min-width: 1680px) 420px"
     - "(min-width: 1280px) 25vw"
