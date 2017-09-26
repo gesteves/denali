@@ -8,19 +8,21 @@
     </span>
   <% end %>
 
-  <% if photo.focal_length.present? %>
-    <span class="exif__field"><%= photo.focal_length %> mm <span class="exif__optional">focal length</span></span>
-  <% end %>
+  <% unless photo.phone_camera? %>
+    <% if photo.focal_length.present? %>
+      <span class="exif__field"><%= photo.focal_length %> mm <span class="exif__optional">focal length</span></span>
+    <% end %>
 
-  <% if photo.exposure.present? && photo.f_number.present? %>
-    <span class="exif__field"><%= exposure photo.exposure %> at f/<%= aperture photo.f_number %></span>
-  <% elsif photo.exposure.present? %>
-    <span class="exif__field"><%= exposure photo.exposure %></span>
-  <% elsif photo.f_number.present? %>
-    <span class="exif__field">f/<%= aperture photo.f_number %></span>
-  <% end %>
+    <% if photo.exposure.present? && photo.f_number.present? %>
+      <span class="exif__field"><%= exposure photo.exposure %> at f/<%= aperture photo.f_number %></span>
+    <% elsif photo.exposure.present? %>
+      <span class="exif__field"><%= exposure photo.exposure %></span>
+    <% elsif photo.f_number.present? %>
+      <span class="exif__field">f/<%= aperture photo.f_number %></span>
+    <% end %>
 
-  <% if photo.iso.present? %>
-    <span class="exif__field">ISO <%= photo.iso %></span>
+    <% if photo.iso.present? %>
+      <span class="exif__field">ISO <%= photo.iso %></span>
+    <% end %>
   <% end %>
 </p>
