@@ -1,5 +1,5 @@
 <aside class="elsewhere" role="complementary">
-  <h2 class="elsewhere__heading">Elsewhere on the Web</h2>
+  <h2 class="elsewhere__heading">Don’t miss any photos, follow <i><%= @photoblog.name %></i></h2>
   <ul class="elsewhere__list">
     <% if @photoblog.apple_news_url.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.apple_news_url %>" rel="me" title="Subscribe on Apple News"><%= inline_svg 'apple', 'elsewhere__icon' %><span class="elsewhere__label">Apple News</span></a></li>
