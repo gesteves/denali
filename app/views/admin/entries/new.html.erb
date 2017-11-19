@@ -15,9 +15,9 @@
 
   <div class="form__options">
     <h2>Publish status</h2>
-    <%= f.label :status_queued, class: 'form__label form__label--checkbox' do %><%= f.radio_button :status, 'queued' %>Queued<% end %>
-    <%= f.label :status_draft, class: 'form__label form__label--checkbox' do %><%= f.radio_button :status, 'draft' %>Draft<% end %>
-    <%= f.label :status_published, class: 'form__label form__label--checkbox' do %><%= f.radio_button :status, 'published' %>Publish it!<% end %>
+    <%= f.label :status_queued, class: 'form__label form__label--checkbox' do %><%= f.radio_button :status, 'queued' %>Queue for <%= new_queue_date.strftime('%A, %B %-d') %><% end %>
+    <%= f.label :status_draft, class: 'form__label form__label--checkbox' do %><%= f.radio_button :status, 'draft' %>Save as draft<% end %>
+    <%= f.label :status_published, class: 'form__label form__label--checkbox' do %><%= f.radio_button :status, 'published' %>Publish it now!<% end %>
     <h2>Entry options</h2>
     <%= f.label :show_in_map, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_in_map, { checked: true } %> Show in map<% end %>
     <h2>Sharing options</h2>
