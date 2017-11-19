@@ -26,7 +26,7 @@
         </div>
       <% elsif entry.is_queued? && action_name == 'search' %>
         <div class="entry__timestamp">
-          Queued for <%= entry.publish_date_for_queued.strftime('%A, %B %-d') %>
+          Queued for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
         </div>
       <% elsif entry.is_queued? && action_name != 'search' %>
         <div class="entry__actions entry__actions--queue">
