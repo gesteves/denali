@@ -45,15 +45,15 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (8.0.0)
-    autoprefixer-rails (7.1.6)
+    autoprefixer-rails (7.2.2)
       execjs
-    aws-sdk (2.10.95)
-      aws-sdk-resources (= 2.10.95)
-    aws-sdk-core (2.10.95)
+    aws-sdk (2.10.100)
+      aws-sdk-resources (= 2.10.100)
+    aws-sdk-core (2.10.100)
       aws-sigv4 (~> 1.0)
       jmespath (~> 1.0)
-    aws-sdk-resources (2.10.95)
-      aws-sdk-core (= 2.10.95)
+    aws-sdk-resources (2.10.100)
+      aws-sdk-core (= 2.10.100)
     aws-sigv4 (1.0.2)
     bindex (0.5.0)
     brakeman (4.0.1)
@@ -70,11 +70,11 @@ GEM
       elasticsearch-transport (= 5.0.4)
     elasticsearch-api (5.0.4)
       multi_json
-    elasticsearch-model (5.0.1)
+    elasticsearch-model (5.0.2)
       activesupport (> 3)
       elasticsearch (~> 5)
       hashie
-    elasticsearch-rails (5.0.1)
+    elasticsearch-rails (5.0.2)
     elasticsearch-transport (5.0.4)
       faraday
       multi_json
@@ -152,7 +152,7 @@ GEM
       mini_portile2 (~> 2.3.0)
     nokogumbo (1.4.13)
       nokogiri
-    oauth (0.5.3)
+    oauth (0.5.4)
     oauth2 (1.4.0)
       faraday (>= 0.8, < 0.13)
       jwt (~> 1.0)
