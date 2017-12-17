@@ -4,6 +4,7 @@ instagram:
     - fujifilmx_us
     - fujilove
     - fujifilm_xseries
+    - fuji
   blackandwhite:
     - bnw
     - bw
@@ -20,6 +21,7 @@ instagram:
     - streetlife
     - streetphotographers
     - lensculturestreets
+    - magnumphotos
   scotland:
     - visitscotland
     - instascotland
@@ -45,11 +47,16 @@ instagram:
     - mexigers
     - ig_mexico
     - mexico_maravilloso
+    - igersmexico
   ciudaddemexico:
     - cdmx
     - mexicodf
     - mexicocity
     - igerscdmx
+  puebla:
+    - explorapuebla
+    - ig_puebla
+    - igerspuebla
   newyorkcity:
     - newyork_instagram
     - instagramnyc
@@ -57,9 +64,12 @@ instagram:
     - ig_nycity
     - what_i_saw_in_nyc
     - newyork_ig
+    - igersofnyc
   landscape:
     - landscape_lovers
     - landscapephotography
+    - landscapes
+    - landscapelovers
   cityscape:
     - citylife
     - cityview
@@ -94,6 +104,7 @@ instagram:
     - airandspace
   tennessee:
     - instagramtennessee
+    - tn
   chattanooga:
     - noogagram
     - nooga
