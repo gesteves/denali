@@ -48,18 +48,10 @@ entry_list_item:
     - 50vw
   square: Yes
 admin_entry:
-  src: 560
-  srcset:
-    - 560
-    - 670
-    - 800
-    - 1122
-    - 1456
-    - 1600
+  <<: *entry
   sizes:
     - "(min-width: 840px) 840px"
     - 100vw
-  quality: 90
 admin_edit:
   src: 300
   srcset:
