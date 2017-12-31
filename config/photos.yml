@@ -57,8 +57,8 @@ admin_entry:
     - 1456
     - 1600
   sizes:
-    - "(min-width: 840px) 800px"
-    - calc(100vw - 40px)
+    - "(min-width: 840px) 840px"
+    - 100vw
   quality: 90
 admin_edit:
   src: 300

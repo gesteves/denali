@@ -18,7 +18,6 @@
 }
 
 .entry__link {
-  border: 1px solid $color-border;
   border-bottom: 0;
   display: block;
   font-size: 0;
@@ -27,9 +26,6 @@
 }
 
 .entry__content {
-  border: 1px solid $color-border;
-  border-bottom: 0;
-  border-top: 0;
   padding: 12px 20px;
 
   h2,
@@ -56,6 +52,11 @@
       margin-bottom: 0;
     }
   }
+
+  @media (min-width: $bp-admin-m) {
+    border: 1px solid $color-border;
+    border-bottom: 0;
+  }
 }
 
 .entry__content--text {
@@ -79,10 +80,7 @@
 }
 
 .entry__meta {
-  border: 1px solid $color-border;
-  border-bottom-left-radius: 2px;
-  border-bottom-right-radius: 2px;
-  border-top: 0;
+  border-bottom: 1px solid $color-border;
   color: $color-gray-medium;
   font-size: 12px;
   line-height: 2;
@@ -108,6 +106,13 @@
 
   a:last-child {
     margin-right: 0;
+  }
+
+  @media (min-width: $bp-admin-m) {
+    border: 1px solid $color-border;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+    border-top: 0;
   }
 }
 
