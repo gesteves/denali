@@ -56,6 +56,6 @@ class TumblrJob < ApplicationJob
       end
     end
     tags = tumblr_tags + entry.combined_tags.map(&:name)
-    tags.sort.join(', ')
+    tags.sort.map(&:downcase).join(', ')
   end
 end
