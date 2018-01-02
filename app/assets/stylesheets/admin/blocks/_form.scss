@@ -9,6 +9,10 @@
     display: flex;
   }
   // scss-lint:enable SelectorFormat
+
+  @media (min-width: $bp-admin-m) {
+    padding: 0;
+  }
 }
 
 .form__input {
