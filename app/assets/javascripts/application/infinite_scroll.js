@@ -46,12 +46,14 @@ class InfiniteScroll {
   }
 
   getNextPage () {
+    let fragment;
     let request = new XMLHttpRequest();
     let nextPage = this.currentPage + 1;
     request.open('GET', `${this.baseUrl}/page/${nextPage}.js`, true);
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
-        this.container.insertAdjacentHTML('beforeend', request.responseText);
+        fragment = document.createRange().createContextualFragment(request.responseText);
+        salvattore.appendElements(this.container, fragment.children);
         this.currentPage = nextPage;
         this.observePageUrls();
       } else {

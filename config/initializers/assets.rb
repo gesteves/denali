@@ -29,6 +29,7 @@ Rails.application.config.assets.precompile += %w(
   components/search.css
   components/signin.css
   components/tags.css
+  application/grid.js
   application/image_zoom.js
   application/infinite_scroll.js
   application/lazy_load.js

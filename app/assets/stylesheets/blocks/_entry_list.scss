@@ -1,13 +1,48 @@
 .entry-list {
   display: flex;
   flex-flow: row wrap;
-  justify-content: center;
+  justify-content: space-between;
   margin: 24px auto;
   max-width: $bp-max;
+  padding: 0 2px;
 
   @media (min-width: $bp-xl) {
     margin: 72px auto;
+    padding: 0;
   }
+}
+
+.entry-list::before {
+  display: none;
+
+  @media (max-width: $bp-xxxs - 1) {
+    content: '2 .entry-column.entry-column--two';
+  }
+
+  @media (min-width: $bp-xxxs) and (max-width: $bp-xl - 1) {
+    content: '3 .entry-column.entry-column--three';
+  }
+
+  @media (min-width: $bp-xl) {
+    content: '4 .entry-column.entry-column--four';
+  }
+}
+
+.entry-column {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.entry-column--two {
+  flex-basis: calc(50% - 2px);
+}
+
+.entry-column--three {
+  flex-basis: calc(100%/3 - 2px);
+}
+
+.entry-column--four {
+  flex-basis: calc(25% - 2px);
 }
 
 .entry_list__heading {
@@ -34,30 +69,21 @@
 }
 
 .entry-list__item {
-  @include aspect-ratio(1, 1, '.entry-list__link');
   display: block;
-  flex-basis: 50%;
-  flex-grow: 0;
-  flex-shrink: 0;
   font-size: 0;
+  margin-bottom: 2px;
   overflow: hidden;
-
-  @media (min-width: $bp-xxxs) {
-    flex-basis: calc(100%/3);
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
-
-  @media (min-width: $bp-xl) {
-    flex-basis: 25%;
-    flex-grow: 0;
-    flex-shrink: 0;
-  }
+  position: relative;
 }
 
 .entry-list__link {
+  bottom: 0;
   display: block;
+  left: 0;
   overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
 
   &:hover,
   &:active {

@@ -21,7 +21,7 @@ entry: &entry
   sizes:
     - "(min-width: 1680px) 1680px"
     - 100vw
-entry_list_item:
+entry_list_item: &entry_list_item
   src: 355
   srcset:
     - 320
@@ -46,6 +46,8 @@ entry_list_item:
     - "(min-width: 1280px) 25vw"
     - "(min-width: 400px) calc(100vw/3)"
     - 50vw
+related_item:
+  <<: *entry_list_item
   square: Yes
 admin_entry:
   <<: *entry
