@@ -34,7 +34,13 @@ class InfiniteScroll {
     this.masonry = new Masonry(this.container, {
       itemSelector: options.itemSelector,
       percentPosition: true,
-      transitionDuration: 0
+      stagger: 100,
+      hiddenStyle: {
+        opacity: 0
+      },
+      visibleStyle: {
+        opacity: 1
+      }
     });
 
     IntersectionObserver.prototype.POLL_INTERVAL = 50;
