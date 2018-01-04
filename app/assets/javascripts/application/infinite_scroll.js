@@ -34,7 +34,7 @@ class InfiniteScroll {
     this.masonry = new Masonry(this.container, {
       itemSelector: options.itemSelector,
       percentPosition: true,
-      stagger: 100,
+      stagger: 50,
       hiddenStyle: {
         opacity: 0
       },
