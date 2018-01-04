@@ -33,7 +33,6 @@ class InfiniteScroll {
 
     this.masonry = new Masonry(this.container, {
       itemSelector: options.itemSelector,
-      horizontalOrder: true,
       gutter: 2,
       percentPosition: true,
       transitionDuration: 0
