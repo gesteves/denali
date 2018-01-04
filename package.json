@@ -15,7 +15,7 @@
     "jquery-ui-dist": "^1.12.1",
     "leaflet-hash": "^0.2.1",
     "leaflet.markercluster": "^0.4.0",
-    "salvattore": "^1.0.9"
+    "masonry-layout": "^4.2.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

@@ -1,13 +1,25 @@
-//= require salvattore/dist/salvattore.min.js
+//= require masonry-layout/dist/masonry.pkgd.min.js
 'use strict';
 
 class Grid {
   constructor (opts = {}) {
     const options = Object.assign({
-      gridSelector: '.entry-list'
+      containerSelector: '.entry-list',
+      itemSelector: '.entry-list__item'
     }, opts);
-    this.grid = document.querySelector(options.gridSelector);
-    salvattore.registerGrid(this.grid);
+    let container = document.querySelector(options.containerSelector);
+
+    if (!container) {
+      return;
+    }
+
+    this.masonry = new Masonry(container, {
+      itemSelector: options.itemSelector,
+      horizontalOrder: true,
+      gutter: 2,
+      percentPosition: true,
+      transitionDuration: 0
+    });
   }
 }
 
