@@ -12,7 +12,7 @@
                 { class: 'entry-list__image', alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption } %>
         <% else %>
           <%= responsive_image_tag entry.photos.first,
-                'entry_list_item',
+                image_variant,
                 { class: 'entry-list__image', alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption } %>
         <% end %>
         <figcaption class="entry-list__photo-caption">
