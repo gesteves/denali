@@ -1,10 +1,12 @@
 //= require intersection-observer/intersection-observer
+//= require masonry-layout/dist/masonry.pkgd.min.js
 'use strict';
 
 class InfiniteScroll {
   constructor (opts = {}) {
     const options = Object.assign({
       containerSelector: '.entry-list',
+      itemSelector: '.entry-list__item',
       paginationSelector: '.pagination',
       sentinelSelector: '.loading',
       footerSelector: '.footer',
@@ -29,6 +31,18 @@ class InfiniteScroll {
     this.baseUrl = this.container.getAttribute('data-base-url');
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
 
+    this.masonry = new Masonry(this.container, {
+      itemSelector: options.itemSelector,
+      percentPosition: true,
+      stagger: 50,
+      hiddenStyle: {
+        opacity: 0
+      },
+      visibleStyle: {
+        opacity: 1
+      }
+    });
+
     IntersectionObserver.prototype.POLL_INTERVAL = 50;
     this.loadingIO = new IntersectionObserver(e => this.loadEntries(e), { rootMargin: '25%' });
     this.loadingIO.observe(this.sentinel);
@@ -46,12 +60,17 @@ class InfiniteScroll {
   }
 
   getNextPage () {
+    let fragment;
+    let children;
     let request = new XMLHttpRequest();
     let nextPage = this.currentPage + 1;
     request.open('GET', `${this.baseUrl}/page/${nextPage}.js`, true);
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
-        this.container.insertAdjacentHTML('beforeend', request.responseText);
+        fragment = document.createRange().createContextualFragment(request.responseText);
+        children = Array.from(fragment.children);
+        this.container.appendChild(fragment);
+        this.masonry.appended(children);
         this.currentPage = nextPage;
         this.observePageUrls();
       } else {

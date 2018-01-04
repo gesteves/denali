@@ -4,7 +4,7 @@
     <aside role="complementary">
       <h2 class="entry__related">Other Photos You Might Like</h2>
       <ol class="entry-list entry-list--related">
-        <%= render partial: 'entries/entry_list_item', collection: related, as: :entry, locals: { lazy_load: true } %>
+        <%= render partial: 'entries/entry_list_item', collection: related, as: :entry, locals: { lazy_load: true, square: true, image_variant: 'related_item' } %>
       </ol>
     </aside>
   <% end %>

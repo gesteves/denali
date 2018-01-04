@@ -1,7 +1,6 @@
 .entry-list {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: center;
+  @include clearfix;
+  display: block;
   margin: 24px auto;
   max-width: $bp-max;
 
@@ -34,30 +33,30 @@
 }
 
 .entry-list__item {
-  @include aspect-ratio(1, 1, '.entry-list__link');
   display: block;
-  flex-basis: 50%;
-  flex-grow: 0;
-  flex-shrink: 0;
-  font-size: 0;
+  float: left;
   overflow: hidden;
+  margin: 0 1px 2px;
+  position: relative;
+  width: calc(50% - 2px);
 
   @media (min-width: $bp-xxxs) {
-    flex-basis: calc(100%/3);
-    flex-grow: 0;
-    flex-shrink: 0;
+    width: calc(100%/3 - 2px);
   }
 
   @media (min-width: $bp-xl) {
-    flex-basis: 25%;
-    flex-grow: 0;
-    flex-shrink: 0;
+    width: calc(25% - 2px);
   }
 }
 
 .entry-list__link {
+  bottom: 0;
   display: block;
+  left: 0;
   overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 0;
 
   &:hover,
   &:active {
