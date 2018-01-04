@@ -1,4 +1,5 @@
 .entry-list {
+  @include clearfix;
   display: block;
   margin: 24px auto;
   max-width: $bp-max;
