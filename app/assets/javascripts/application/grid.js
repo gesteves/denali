@@ -15,7 +15,6 @@ class Grid {
 
     this.masonry = new Masonry(container, {
       itemSelector: options.itemSelector,
-      gutter: 2,
       percentPosition: true,
       transitionDuration: 0
     });
