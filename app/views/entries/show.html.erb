@@ -7,7 +7,6 @@
 <% end %>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'application/grid', defer: true if @photoblog.show_related_entries? %>
   <%= javascript_include_tag 'application/lazy_load', defer: true if @photoblog.show_related_entries? %>
   <%= javascript_include_tag 'application/image_zoom', defer: true %>
 <% end %>
