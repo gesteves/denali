@@ -69,7 +69,10 @@
 }
 
 .entry-list__item--map {
+  @include aspect-ratio(1, 1, '.entry-list__link');
+  float: none;
   font-family: $font-sans;
+  width: 100%;
 }
 
 .entry-list__image {
