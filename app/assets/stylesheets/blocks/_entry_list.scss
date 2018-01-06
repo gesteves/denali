@@ -71,9 +71,9 @@
 
 .entry-list__item--map {
   @include aspect-ratio(1, 1, '.entry-list__link');
-  border-radius: 0;
   float: none;
   font-family: $font-sans;
+  margin: 0;
   width: 100%;
 }
 
@@ -107,6 +107,7 @@
   align-items: center;
   backdrop-filter: blur(20px);
   background-color: rgba(0, 0, 0, 0.65);
+  border-radius: 4px;
   bottom: 0;
   display: flex;
   flex-flow: column nowrap;
