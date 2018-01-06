@@ -33,19 +33,20 @@
 }
 
 .entry-list__item {
+  border-radius: 4px;
   display: block;
   float: left;
   overflow: hidden;
-  margin: 0 1px 2px;
+  margin: 0 4px 8px;
   position: relative;
-  width: calc(50% - 2px);
+  width: calc(50% - 8px);
 
   @media (min-width: $bp-xxxs) {
-    width: calc(100%/3 - 2px);
+    width: calc(100%/3 - 8px);
   }
 
   @media (min-width: $bp-xl) {
-    width: calc(25% - 2px);
+    width: calc(25% - 8px);
   }
 }
 

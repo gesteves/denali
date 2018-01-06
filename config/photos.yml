@@ -24,27 +24,27 @@ entry: &entry
 entry_list_item: &entry_list_item
   src: 355
   srcset:
-    - 316
-    - 374
-    - 372
-    - 440
-    - 408
-    - 729
-    - 558
-    - 807
-    - 678
-    - 508
-    - 736
-    - 552
-    - 678
-    - 716
-    - 836
-    - 636
-    - 716
+    - 304
+    - 362
+    - 360
+    - 428
+    - 390
+    - 711
+    - 540
+    - 789
+    - 666
+    - 496
+    - 724
+    - 540
+    - 666
+    - 704
+    - 824
+    - 624
+    - 704
   sizes:
-    - "(min-width: 1680px) 418px"
-    - "(min-width: 1280px) calc(25vw - 2px)"
-    - "(min-width: 400px) calc(100vw/3 - 2px)"
+    - "(min-width: 1680px) 412px"
+    - "(min-width: 1280px) calc(25vw - 8px)"
+    - "(min-width: 400px) calc(100vw/3 - 8px)"
     - 50vw
 related_item:
   <<: *entry_list_item
