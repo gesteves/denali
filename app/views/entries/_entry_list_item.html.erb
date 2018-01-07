@@ -27,8 +27,8 @@
                   <%= photo.formatted_camera %>
                 </span>
               <% end %>
-              <% unless photo.phone_camera? %>
-                <% if photo.film_make.present? && photo.film_type.present? %>
+              <% unless photo.is_phone_camera? %>
+                <% if photo.is_film? %>
                   <span class="exif__field">
                     <%= photo.formatted_film %>
                   </span>

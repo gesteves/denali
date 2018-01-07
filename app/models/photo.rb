@@ -123,8 +123,12 @@ class Photo < ApplicationRecord
     self.film_type.match(self.film_make) ? self.film_type : "#{self.film_make} #{self.film_type}"
   end
 
-  def phone_camera?
+  def is_phone_camera?
     self.model =~ /iphone/i
+  end
+
+  def is_film?
+    self.film_make.present? && self.film_type.present?
   end
 
   private

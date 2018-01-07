@@ -2,13 +2,13 @@
   <% if photo.make.present? && photo.model.present? %>
     <span class="exif__field">
       Taken with <%= article photo.make %> <%= photo.formatted_camera %>
-      <% if photo.film_make.present? && photo.film_type.present? %>
+      <% if photo.is_film? %>
         on <%= photo.formatted_film %>
       <% end %>
     </span>
   <% end %>
 
-  <% unless photo.phone_camera? %>
+  <% unless photo.is_phone_camera? %>
     <% if photo.focal_length.present? %>
       <span class="exif__field"><%= photo.focal_length %> mm <span class="exif__optional">focal length</span></span>
     <% end %>
