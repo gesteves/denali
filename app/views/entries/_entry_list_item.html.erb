@@ -1,6 +1,5 @@
 <% lazy = local_assigns[:lazy_load] && lazy_load %>
 <% square = local_assigns[:square] && square %>
-<% image_variant = local_assigns[:image_variant] ? image_variant : 'entry_list_item' %>
 
 <li class="entry-list__item" role="article" <%= "data-page-url=\"#{page_url}\"".html_safe if entry_counter == 0 && local_assigns[:page_url] %>>
   <div class="entry-list__wrapper" <%= square ? "style=padding-top:100%" : intrinsic_ratio_padding(entry.photos.first) %>>
@@ -8,11 +7,11 @@
       <figure class="entry-list__photo">
         <% if lazy %>
           <%= lazy_responsive_image_tag entry.photos.first,
-                image_variant,
+                entry_list_image_variant(square: square),
                 { class: 'entry-list__image', alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption } %>
         <% else %>
           <%= responsive_image_tag entry.photos.first,
-                image_variant,
+                entry_list_image_variant(square: square),
                 { class: 'entry-list__image', alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption } %>
         <% end %>
         <figcaption class="entry-list__photo-caption">

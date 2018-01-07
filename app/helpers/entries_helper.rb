@@ -37,4 +37,13 @@ module EntriesHelper
   def entry_photo_widths(photo, key)
     PHOTOS[key]['srcset'].uniq.sort.reject { |width| width > photo.width }
   end
+
+  def entry_list_image_variant(opts = {})
+    opts.reverse_merge!(square: false)
+    if opts[:square]
+      'entry_list_square'
+    else
+      'entry_list'
+    end
+  end
 end

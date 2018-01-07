@@ -39,7 +39,7 @@
   <% if @entries.present? %>
     <%= render partial: 'search_form' %>
     <ol class="entry-list" role="main" data-base-url="<%= search_url(page: nil).sub(/\/$/, '') %>" data-current-page="<%= @page %>">
-      <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? search_url(query: @query, page: nil) : search_url(query: @query, page: @page) } %>
+      <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? search_url(query: @query, page: nil) : search_url(query: @query, page: @page), square: true } %>
     </ol>
     <%= paginate @entries %>
   <% else %>
