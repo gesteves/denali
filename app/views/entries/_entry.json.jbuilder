@@ -47,7 +47,7 @@ json.cache! "entry/json/#{entry.id}/#{entry.updated_at.to_i}" do
             entry_photo_widths(p, 'entry').each do |w|
               json.set! "width_#{w}", p.url(w: w)
             end
-            entry_photo_widths(p, 'entry_list_item').each do |w|
+            entry_photo_widths(p, 'entry_list').each do |w|
               json.set! "square_#{w}", p.url(w: w, square: true)
             end
           end
