@@ -18,6 +18,7 @@ entry: &entry
     - 3360
     - 2560
     - 2880
+    - 1680
   sizes:
     - "(min-width: 1680px) 1680px"
     - 100vw
