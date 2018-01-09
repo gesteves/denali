@@ -42,6 +42,7 @@ entry_list: &entry_list
     - 824
     - 624
     - 704
+    - 412
   sizes:
     - "(min-width: 1680px) 412px"
     - "(min-width: 1280px) calc(25vw - 8px)"
