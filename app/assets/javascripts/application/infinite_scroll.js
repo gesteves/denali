@@ -108,6 +108,7 @@ class InfiniteScroll {
             clicky.log(window.location.pathname, document.title, 'pageview');
           }
         }
+        break;
       }
     }
   }
