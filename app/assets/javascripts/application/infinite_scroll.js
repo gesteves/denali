@@ -104,9 +104,6 @@ class InfiniteScroll {
           if (typeof gtag !== 'undefined' && typeof gaTrackingId !== 'undefined') {
             gtag('config', gaTrackingId, { 'page_path': window.location.pathname });
           }
-          if (typeof clicky !== 'undefined') {
-            clicky.log(window.location.pathname, document.title, 'pageview');
-          }
         }
         break;
       }
