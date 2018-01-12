@@ -4,6 +4,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
 
   def setup
     session[:user_id] = users(:guille).id
+    @blog = blogs(:allencompassingtrip)
     @entry = entries(:peppers)
     @entry.tag_list = 'washington'
     @entry.save
@@ -79,7 +80,25 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should render delete entry page' do
+    test_1 = Entry.new(title: 'test 1', status: 'queued', blog_id: @blog.id)
+    test_1.save
+    test_2 = Entry.new(title: 'test 2', status: 'draft', blog_id: @blog.id)
+    test_2.save
+
+    # Test published entry
     get :delete, params: { id: @entry.id }
+    assert_not_nil assigns(:entry)
+    assert_response :success
+    assert_template layout: 'layouts/admin'
+    assert_template :delete
+    # Test queued entry
+    get :delete, params: { id: test_1.id }
+    assert_not_nil assigns(:entry)
+    assert_response :success
+    assert_template layout: 'layouts/admin'
+    assert_template :delete
+    # Test draft entry
+    get :delete, params: { id: test_2.id }
     assert_not_nil assigns(:entry)
     assert_response :success
     assert_template layout: 'layouts/admin'
@@ -138,10 +157,9 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should reposition entries' do
-    blog = blogs(:allencompassingtrip)
-    test_1 = Entry.new(title: 'test 1', status: 'queued', blog_id: blog.id)
+    test_1 = Entry.new(title: 'test 1', status: 'queued', blog_id: @blog.id)
     test_1.save
-    test_2 = Entry.new(title: 'test 2', status: 'queued', blog_id: blog.id)
+    test_2 = Entry.new(title: 'test 2', status: 'queued', blog_id: @blog.id)
     test_2.save
 
     entry = entries(:panda)
