@@ -9,13 +9,12 @@ class Map {
     }
 
     this.loadingSpinner = document.querySelector('.js-loading');
-    this.showBar = true;
 
     if (!window.location.hash) {
       window.location.hash = `1/${latitude}/${longitude}`;
     }
 
-    setTimeout(() => this.showLoadingSpinner, 100);
+    this.showLoadingSpinner();
 
     let southWest = L.latLng(-90, -180),
         northEast = L.latLng(90, 180),
@@ -24,16 +23,13 @@ class Map {
 
     L.mapbox.accessToken = window.mapboxToken;
     this.map = L.mapbox.map(containerId, mapId, { minZoom: zoom, maxZoom: 18, maxBounds: bounds });
-
     let layer = L.mapbox.featureLayer();
     layer.on('layeradd', e => this.setUpMarker(e));
     layer.loadURL('/map/photos.json').on('ready', e => this.setUpMarkerClusters(e));
   }
 
   showLoadingSpinner () {
-    if (this.showBar) {
-      this.loadingSpinner.style.display = 'block';
-    }
+    this.loadingSpinner.style.display = 'block';
   }
 
   hideLoadingSpinner () {
@@ -116,7 +112,6 @@ class Map {
 
     this.hash = new L.hash(this.map);
     this.map.addLayer(clusterGroup);
-    this.showBar = false;
     this.hideLoadingSpinner();
   }
 }
