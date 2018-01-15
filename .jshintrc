@@ -17,6 +17,8 @@
     "Awesomplete": true,
     "Denali": true,
     "IntersectionObserver": true,
+    "requestAnimationFrame": true,
+    "Masonry": true,
     "L": true,
     "ga": true,
     "gtag": true,
