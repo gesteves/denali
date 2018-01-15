@@ -45,9 +45,9 @@ class InfiniteScroll {
     });
     this.masonry.once('layoutComplete', () => {
       IntersectionObserver.prototype.POLL_INTERVAL = 50;
-      this.loadingIO = new IntersectionObserver(e => this.loadEntries(e), { rootMargin: '25%' });
-      this.loadingIO.observe(this.sentinel);
-      this.paginationIO = new IntersectionObserver(e => this.updatePage(e), { threshold: 1.0 });
+      this.loadingObserver = new IntersectionObserver(e => this.loadEntries(e), { rootMargin: '25%' });
+      this.loadingObserver.observe(this.sentinel);
+      this.paginationObserver = new IntersectionObserver(e => this.updatePage(e), { threshold: 1.0 });
       this.observePageUrls();
     });
     this.masonry.layout();
@@ -57,27 +57,31 @@ class InfiniteScroll {
     for (let i = 0; i < entries.length; i++) {
       let entry = entries[i];
       if ((entry.intersectionRatio > 0 || entry.isIntersecting)) {
-        this.getNextPage();
+        let nextPage = this.currentPage + 1;
+        if ('requestAnimationFrame' in window) {
+          requestAnimationFrame(() => this.getPage(nextPage));
+        } else {
+          this.getPage(nextPage);
+        }
       }
     }
   }
 
-  getNextPage () {
+  getPage (page) {
     let fragment;
     let children;
     let request = new XMLHttpRequest();
-    let nextPage = this.currentPage + 1;
-    request.open('GET', `${this.baseUrl}/page/${nextPage}.js`, true);
+    request.open('GET', `${this.baseUrl}/page/${page}.js`, true);
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
         fragment = document.createRange().createContextualFragment(request.responseText);
         children = Array.from(fragment.children);
         this.container.appendChild(fragment);
         this.masonry.appended(children);
-        this.currentPage = nextPage;
+        this.currentPage = page;
         this.observePageUrls();
       } else {
-        this.loadingIO.unobserve(this.sentinel);
+        this.loadingObserver.unobserve(this.sentinel);
         this.footer.style.display = 'block';
         this.sentinel.parentNode.removeChild(this.sentinel);
       }
@@ -89,7 +93,7 @@ class InfiniteScroll {
     let elements = this.container.querySelectorAll('[data-page-url]');
     for (let i = 0; i < elements.length; i++) {
       let element = elements[i];
-      this.paginationIO.observe(element);
+      this.paginationObserver.observe(element);
     }
   }
 
