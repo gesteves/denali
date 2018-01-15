@@ -32,6 +32,7 @@ class InfiniteScroll {
     this.currentPage = parseInt(this.container.getAttribute('data-current-page'));
 
     this.masonry = new Masonry(this.container, {
+      initLayout: false,
       itemSelector: options.itemSelector,
       percentPosition: true,
       stagger: 50,
@@ -42,12 +43,14 @@ class InfiniteScroll {
         opacity: 1
       }
     });
-
-    IntersectionObserver.prototype.POLL_INTERVAL = 50;
-    this.loadingIO = new IntersectionObserver(e => this.loadEntries(e), { rootMargin: '25%' });
-    this.loadingIO.observe(this.sentinel);
-    this.paginationIO = new IntersectionObserver(e => this.updatePage(e), { threshold: 1.0 });
-    this.observePageUrls();
+    this.masonry.once('layoutComplete', () => {
+      IntersectionObserver.prototype.POLL_INTERVAL = 50;
+      this.loadingIO = new IntersectionObserver(e => this.loadEntries(e), { rootMargin: '25%' });
+      this.loadingIO.observe(this.sentinel);
+      this.paginationIO = new IntersectionObserver(e => this.updatePage(e), { threshold: 1.0 });
+      this.observePageUrls();
+    });
+    this.masonry.layout();
   }
 
   loadEntries (entries) {
