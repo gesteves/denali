@@ -54,14 +54,11 @@ class InfiniteScroll {
   }
 
   loadEntries (entries) {
-    let entry,
-        nextPage;
     let intersecting = entries.filter(entry => {
       return (entry.intersectionRatio > 0 || entry.isIntersecting);
     });
     if (intersecting.length > 0) {
-      entry = intersecting[0];
-      nextPage = this.currentPage + 1;
+      let nextPage = this.currentPage + 1;
       if ('requestAnimationFrame' in window) {
         requestAnimationFrame(() => this.getPage(nextPage));
       } else {
