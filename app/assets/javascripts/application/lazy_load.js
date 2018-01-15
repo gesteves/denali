@@ -14,12 +14,23 @@ class LazyLoad {
   }
 
   handleIntersection (entries) {
-    for (let i = 0; i < entries.length; i++) {
-      let entry = entries[i];
-      if (entry.intersectionRatio > 0 || entry.isIntersecting) {
-        this.loadImage(entry.target);
-        this.observer.unobserve(entry.target);
+    let intersecting = entries.filter(entry => {
+      return (entry.intersectionRatio > 0 || entry.isIntersecting);
+    });
+    if (intersecting.length > 0) {
+      if ('requestAnimationFrame' in window) {
+        requestAnimationFrame(() => this.loadIntersectingImages(intersecting));
+      } else {
+        this.loadIntersectingImages(intersecting);
       }
+    }
+  }
+
+  loadIntersectingImages (images) {
+    for (let i = 0; i < images.length; i++) {
+      let image = images[i];
+      this.loadImage(image.target);
+      this.observer.unobserve(image.target);
     }
   }
 
