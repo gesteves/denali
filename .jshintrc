@@ -18,6 +18,7 @@
     "Denali": true,
     "IntersectionObserver": true,
     "requestAnimationFrame": true,
+    "requestIdleCallback": true,
     "Masonry": true,
     "L": true,
     "ga": true,
