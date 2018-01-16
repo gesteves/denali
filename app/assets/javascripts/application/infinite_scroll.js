@@ -35,7 +35,6 @@ class InfiniteScroll {
       initLayout: false,
       itemSelector: options.itemSelector,
       percentPosition: true,
-      stagger: 50,
       hiddenStyle: {
         opacity: 0
       },
