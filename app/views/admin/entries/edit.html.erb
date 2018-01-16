@@ -34,7 +34,7 @@
   <div class="form__options">
     <h2>Entry options</h2>
     <%= f.label :show_in_map, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_in_map %> Show in map<% end %>
-    <% if @entry.is_published? && @max_age >= 15 %>
+    <% if @max_age >= 15 %>
       <%= f.label :invalidate_cloudfront, class: 'form__label form__label--checkbox' do %><%= f.check_box :invalidate_cloudfront, { checked: true } %> Send CloudFront invalidation request<% end %>
     <% end %>
     <% if !@entry.is_published? %>

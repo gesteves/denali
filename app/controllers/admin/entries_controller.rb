@@ -271,7 +271,7 @@ class Admin::EntriesController < AdminController
     end
 
     def enqueue_invalidation
-      CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && @entry.is_published? && entry_params[:invalidate_cloudfront] == "1"
+      CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && entry_params[:invalidate_cloudfront] == "1"
     end
 
     def update_equipment_tags
