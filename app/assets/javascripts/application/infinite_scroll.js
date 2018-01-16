@@ -44,15 +44,15 @@ class InfiniteScroll {
     });
     this.masonry.once('layoutComplete', () => {
       IntersectionObserver.prototype.POLL_INTERVAL = 50;
-      this.loadingObserver = new IntersectionObserver(e => this.loadEntries(e), { rootMargin: '25%' });
+      this.loadingObserver = new IntersectionObserver(e => this.handlePageBottom(e), { rootMargin: '25%' });
       this.loadingObserver.observe(this.sentinel);
-      this.paginationObserver = new IntersectionObserver(e => this.updatePage(e), { threshold: 1.0 });
+      this.paginationObserver = new IntersectionObserver(e => this.updatePagePath(e), { threshold: 1.0 });
       this.observePageUrls();
     });
     this.masonry.layout();
   }
 
-  loadEntries (entries) {
+  handlePageBottom (entries) {
     let intersecting = entries.filter(entry => {
       return (entry.intersectionRatio > 0 || entry.isIntersecting);
     });
@@ -98,7 +98,7 @@ class InfiniteScroll {
     }
   }
 
-  updatePage (entries) {
+  updatePagePath (entries) {
     let entry,
         previous_path;
     let intersecting = entries.filter(entry => {
@@ -110,15 +110,15 @@ class InfiniteScroll {
       window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
       if (previous_path !== window.location.pathname) {
         if ('requestIdleCallback' in window) {
-          requestIdleCallback(() => this.sendAnalytics());
+          requestIdleCallback(() => this.trackPageView());
         } else {
-          this.sendAnalytics();
+          this.trackPageView();
         }
       }
     }
   }
 
-  sendAnalytics () {
+  trackPageView () {
     if (typeof ga !== 'undefined') {
       ga('set', 'page', window.location.pathname);
       ga('send', 'pageview');
