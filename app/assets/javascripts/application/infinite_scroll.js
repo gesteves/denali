@@ -110,7 +110,7 @@ class InfiniteScroll {
       window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
       if (previous_path !== window.location.pathname) {
         if ('requestIdleCallback' in window) {
-          requestIdleCallback(() => this.trackPageView());
+          requestIdleCallback(this.trackPageView);
         } else {
           this.trackPageView();
         }
