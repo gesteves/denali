@@ -58,34 +58,36 @@ class InfiniteScroll {
     });
     if (intersecting.length > 0) {
       let nextPage = this.currentPage + 1;
-      if ('requestAnimationFrame' in window) {
-        requestAnimationFrame(() => this.getPage(nextPage));
-      } else {
-        this.getPage(nextPage);
-      }
+      this.getPage(nextPage);
     }
   }
 
   getPage (page) {
-    let fragment;
-    let children;
     let request = new XMLHttpRequest();
     request.open('GET', `${this.baseUrl}/page/${page}.js`, true);
     request.onload = () => {
       if (request.status >= 200 && request.status < 400) {
-        fragment = document.createRange().createContextualFragment(request.responseText);
-        children = Array.from(fragment.children);
-        this.container.appendChild(fragment);
-        this.masonry.appended(children);
-        this.currentPage = page;
-        this.observePageUrls();
+        requestAnimationFrame(() => this.appendPage(page, request.responseText));
       } else {
-        this.loadingObserver.unobserve(this.sentinel);
-        this.footer.style.display = 'block';
-        this.sentinel.parentNode.removeChild(this.sentinel);
+        requestAnimationFrame(() => this.endInfiniteScroll());
       }
     };
     request.send();
+  }
+
+  appendPage (page, html) {
+    let fragment = document.createRange().createContextualFragment(html);
+    let children = Array.from(fragment.children);
+    this.currentPage = page;
+    this.container.appendChild(fragment);
+    this.masonry.appended(children);
+    this.observePageUrls();
+  }
+
+  endInfiniteScroll () {
+    this.loadingObserver.unobserve(this.sentinel);
+    this.footer.style.display = 'block';
+    this.sentinel.parentNode.removeChild(this.sentinel);
   }
 
   observePageUrls () {
