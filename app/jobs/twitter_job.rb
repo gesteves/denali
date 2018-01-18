@@ -7,7 +7,7 @@ class TwitterJob < BufferJob
     text = "#{truncate(caption, length: max_length, omission: '…')} #{entry.permalink_url}"
 
     ids = get_profile_ids('twitter')
-    media = media_hash(entry.photos.first)
+    media = media_hash(entry.photos.first, alt_text: true)
     post_to_buffer(ids, text, media)
   end
 end

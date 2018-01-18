@@ -44,8 +44,7 @@ class InstagramJob < BufferJob
 
    {
      photo: image_url,
-     thumbnail: photo.url(w: 512, fm: 'jpg'),
-     description: photo.plain_caption
+     thumbnail: photo.url(w: 512, fm: 'jpg')
    }
  end
 end
