@@ -37,6 +37,6 @@ class InstagramJob < BufferJob
      end
    end
    tags = instagram_tags.sort + entry_tags.sort
-   tags.uniq[0, 30].sort.map { |t| "##{t}"}.join(' ')
+   tags.sample(rand(5..10)).map { |t| "##{t}"}.join(' ')
  end
 end

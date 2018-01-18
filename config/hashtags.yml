@@ -1,5 +1,6 @@
 instagram:
   fujifilm:
+    - fujifilm
     - fujifeed
     - fujifilmx_us
     - fujilove
@@ -54,10 +55,6 @@ instagram:
     - mexicodf
     - mexicocity
     - igerscdmx
-  puebla:
-    - explorapuebla
-    - ig_puebla
-    - igerspuebla
   newyorkcity:
     - newyork_instagram
     - instagramnyc
