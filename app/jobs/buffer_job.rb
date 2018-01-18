@@ -14,8 +14,7 @@ class BufferJob < ApplicationJob
     profiles.select { |profile| profile['service'].downcase.match(service) && profile['service_type'].downcase.match(service_type) }.map { |profile| profile['id'] }
   end
 
-  def post_to_buffer(profile_ids, text, image_url, thumbnail_url)
-    media = { picture: image_url, thumbnail: thumbnail_url }
+  def post_to_buffer(profile_ids, text, media)
     body = {
       profile_ids: profile_ids,
       text: text,
@@ -28,5 +27,13 @@ class BufferJob < ApplicationJob
     if response.code >= 400
       raise response.body
     end
+  end
+
+  def media_hash(photo)
+    {
+      picture: photo.url(w: 2048, fm: 'jpg'),
+      thumbnail: photo.url(w: 512, fm: 'jpg'),
+      description: photo.plain_caption
+    }
   end
 end

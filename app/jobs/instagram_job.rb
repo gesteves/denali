@@ -8,17 +8,10 @@ class InstagramJob < BufferJob
     text_array << custom_hashtags(entry)
 
     text = text_array.join("\n\n")
-    image_url = if entry.photos.first.is_vertical?
-      entry.photos.first.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff', fm: 'jpg')
-    elsif entry.photos.first.is_horizontal?
-      entry.photos.first.url(w: 1080, h: 864, fit: 'fill', bg: 'fff', fm: 'jpg')
-    else
-      entry.photos.first.url(w: 1080, fm: 'jpg')
-    end
-    thumbnail_url = entry.photos.first.url(w: 512, fm: 'jpg')
 
     ids = get_profile_ids('instagram')
-    post_to_buffer(ids, text, image_url, thumbnail_url)
+    media = media_hash(entry.photos.first)
+    post_to_buffer(ids, text, media)
   end
 
  private
@@ -38,5 +31,21 @@ class InstagramJob < BufferJob
    end
    tags = instagram_tags.sort + entry_tags.sort
    tags.sample(rand(5..10)).map { |t| "##{t}"}.join(' ')
+ end
+
+ def media_hash(photo)
+   image_url = if photo.is_vertical?
+     photo.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff', fm: 'jpg')
+   elsif photo.is_horizontal?
+     photo.url(w: 1080, h: 864, fit: 'fill', bg: 'fff', fm: 'jpg')
+   else
+     photo.url(w: 1080, fm: 'jpg')
+   end
+
+   {
+     photo: image_url,
+     thumbnail: photo.url(w: 512, fm: 'jpg'),
+     description: photo.plain_caption
+   }
  end
 end
