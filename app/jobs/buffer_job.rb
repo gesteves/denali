@@ -31,7 +31,7 @@ class BufferJob < ApplicationJob
 
   def media_hash(photo)
     {
-      picture: photo.url(w: 2048, fm: 'jpg'),
+      photo: photo.url(w: 2048, fm: 'jpg'),
       thumbnail: photo.url(w: 512, fm: 'jpg'),
       description: photo.plain_caption
     }
