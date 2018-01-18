@@ -35,7 +35,7 @@ class BufferJob < ApplicationJob
       photo: photo.url(w: opts[:w], fm: 'jpg'),
       thumbnail: photo.url(w: 512, fm: 'jpg')
     }
-    media[:alt_text] = photo.plain_caption if opts[:alt_text]
+    media[:alt_text] = photo.plain_caption if opts[:alt_text] && photo.caption.present?
     media
   end
 end
