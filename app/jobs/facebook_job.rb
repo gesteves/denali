@@ -12,9 +12,5 @@ class FacebookJob < BufferJob
     # Post to facebook profiles
     ids = get_profile_ids('facebook')
     post_to_buffer(ids, text, media)
-
-    # Post to facebook pages
-    ids = get_profile_ids('facebook', 'page')
-    post_to_buffer(ids, text, media)
   end
 end
