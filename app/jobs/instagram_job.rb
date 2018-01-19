@@ -29,7 +29,7 @@ class InstagramJob < BufferJob
        instagram_tags += custom_hashtags[k]
      end
    end
-   tags = instagram_tags.sort + entry_tags.sort
+   tags = instagram_tags.sort
    tags.sample(rand(5..10)).map { |t| "##{t}"}.join(' ')
  end
 
