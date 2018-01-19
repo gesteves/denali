@@ -15,9 +15,6 @@ class InstagramJob < BufferJob
   end
 
  private
- # Checks the entry's tags; if it includes any of the keys in the hashtags.yml
- # as a tag, then it appends the list under that key as additional hashtags
- # for instagram
  def custom_hashtags(entry)
    entry_tags = entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }
    instagram_tags = []
