@@ -1,11 +1,13 @@
 instagram:
   fujifilm:
     - fujifilm
-    - fujifeed
-    - fujifilmx_us
-    - fujilove
     - fujifilm_xseries
     - fuji
+    - fujifeed
+    - fujixseries
+    - myfujifilm
+    - fujifilmx_us
+    - fujilove
   blackandwhite:
     - bnw
     - bw
@@ -14,21 +16,45 @@ instagram:
     - bnw_society
     - bnw_captures
     - bnw_life
+    - bw_lover
+    - blackandwhitephoto
+    - bnw_planet
+    - monoart
+    - blancoynegro
+    - bw_photooftheday
+    - bw_society
+    - instablackandwhite
+    - igersbnw
+    - monochromatic
+    - bnw_demand
+    - insta_bw
+    - bnwmood
+    - bwstyles_gf
+    - noiretblanc
   streetphotography:
-    - spicollective
-    - ig_street
-    - everybodystreet
     - streetphoto
     - streetlife
     - streetphotographers
+    - streetphotographer
+    - urbanandstreet
+    - everybodystreet
+    - lensculture
+    - ig_street
+    - streetlife_award
+    - streetshot
+    - street_photo_club
+    - spicollective
     - lensculturestreets
     - magnumphotos
+    - streetart
   scotland:
     - visitscotland
     - instascotland
     - insta_scotland
     - ig_scotland
   districtofcolumbia:
+    - districtofcolumbia
+    - washingtondc
     - igdc
     - washingtondaily
     - exploredc
@@ -41,40 +67,67 @@ instagram:
     - exposeddc
     - fotodc
   cats:
+    - cats
     - catsofinstagram
     - catstagram
     - instacat
+    - catlover
+    - catoftheday
+    - catsagram
+    - catlovers
+    - ilovemycat
+    - cats_of_instagram
+    - instagramcats
+    - catsofig
+    - instacats
   mexico:
+    - mexico
     - mextagram
+    - mexico_maravilloso
     - mexigers
     - ig_mexico
-    - mexico_maravilloso
+    - vive_mexico
     - igersmexico
   ciudaddemexico:
-    - cdmx
+    - ciudaddemexico
     - mexicodf
     - mexicocity
+    - cdmx
+    - df
     - igerscdmx
   newyorkcity:
+    - newyorkcity
     - newyork_instagram
-    - instagramnyc
-    - nycprimeshot
-    - ig_nycity
     - what_i_saw_in_nyc
+    - nycprimeshot
+    - instagramnyc
+    - ig_nycity
+    - ny
+    - icapture_nyc
+    - made_in_ny
+    - newyorknewyork
     - newyork_ig
     - igersofnyc
   landscape:
     - landscape_lovers
     - landscapephotography
     - landscapes
+    - landscape_captures
     - landscapelovers
   cityscape:
+    - cityscape
     - citylife
     - cityview
+    - skyline
+    - cityphotography
   architecture:
     - archilovers
     - architecturelovers
     - architectureporn
+    - architecturephotography
+    - archidaily
+    - architexture
+    - archdaily
   apple:
     - shotoniphone
   pittsburgh:
@@ -83,6 +136,7 @@ instagram:
     - steelcitygrammers
     - pghcreative
   leica:
+    - leica
     - leicacamera
     - leicam
     - leicaphoto
