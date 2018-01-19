@@ -24,13 +24,12 @@ class InstagramJob < BufferJob
    custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
    custom_hashtags.each do |k, v|
      if k == 'all'
-       instagram_tags += custom_hashtags[k]
+       instagram_tags << custom_hashtags[k].sample(3)
      elsif entry_tags.include? k
-       instagram_tags += custom_hashtags[k]
+       instagram_tags << custom_hashtags[k].sample(3)
      end
    end
-
-   instagram_tags.uniq.sample(rand(5..10)).map { |t| "##{t}"}.join(' ')
+   instagram_tags.flatten.uniq.sample(rand(8..10)).map { |t| "##{t}"}.join(' ')
  end
 
  def media_hash(photo)
