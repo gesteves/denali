@@ -11,7 +11,7 @@
     "awesomplete": "^1.1.1",
     "fg-loadcss": "^2.0.0",
     "intersection-observer": "^0.5.0",
-    "jquery": "^3.2.1",
+    "jquery": "^3.0.0",
     "jquery-ui-dist": "^1.12.1",
     "leaflet-hash": "^0.2.1",
     "leaflet.markercluster": "^0.4.0",
