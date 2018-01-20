@@ -26,7 +26,7 @@ class InstagramJob < BufferJob
        instagram_tags << custom_hashtags[k].sample(3)
      end
    end
-   instagram_tags.flatten.uniq.sample(rand(10..20)).map { |t| "##{t}"}.join(' ')
+   instagram_tags.flatten.uniq.sample(rand(15..20)).map { |t| "##{t}"}.join(' ')
  end
 
  def media_hash(photo)
