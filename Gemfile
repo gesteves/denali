@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '2.4.2'
 
 gem 'rails', '~> 5.1'
-gem 'pg'
+gem 'pg', '~> 0.21'
 
 # Auth
 gem 'omniauth-google-oauth2'
