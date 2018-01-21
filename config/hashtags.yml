@@ -1,197 +1,210 @@
 instagram:
-  fujifilm:
-    - fujifilm
-    - fujifilm_xseries
-    - fuji
-    - fujifeed
-    - fujixseries
-    - myfujifilm
-    - fujifilmx_us
-    - fujilove
-  blackandwhite:
-    - bnw
-    - bw
-    - blackandwhitephotography
-    - monochrome
-    - bnw_society
-    - bnw_captures
-    - bnw_life
-    - bw_lover
-    - blackandwhitephoto
-    - bnw_planet
-    - monoart
-    - blancoynegro
-    - bw_photooftheday
-    - bw_society
-    - instablackandwhite
-    - igersbnw
-    - monochromatic
-    - bnw_demand
-    - insta_bw
-    - bnwmood
-    - bwstyles_gf
-    - noiretblanc
-  streetphotography:
-    - streetphoto
-    - streetlife
-    - streetphotographers
-    - streetphotographer
-    - urbanandstreet
-    - everybodystreet
+  all:
     - lensculture
-    - ig_street
-    - streetlife_award
-    - streetshot
-    - street_photo_club
-    - spicollective
-    - lensculturestreets
-    - magnumphotos
-    - streetart
-  scotland:
-    - visitscotland
-    - instascotland
-    - insta_scotland
-    - ig_scotland
-  districtofcolumbia:
-    - districtofcolumbia
-    - washingtondc
-    - igdc
-    - washingtondaily
-    - exploredc
-    - igersdc
-    - walkwithlocals
-    - mydccool
-    - fotodc
-    - dcitystyle
-    - acreativedc
-    - exposeddc
-    - fotodc
-  cats:
-    - cats
-    - catsofinstagram
-    - catstagram
-    - instacat
-    - catlover
-    - catoftheday
-    - catsagram
-    - catlovers
-    - ilovemycat
-    - cats_of_instagram
-    - instagramcats
-    - catsofig
-    - instacats
-  mexico:
-    - mexico
-    - mextagram
-    - mexico_maravilloso
-    - mexigers
-    - ig_mexico
-    - vive_mexico
-    - igersmexico
-  ciudaddemexico:
-    - ciudaddemexico
-    - mexicodf
-    - mexicocity
-    - cdmx
-    - df
-    - igerscdmx
-  newyorkcity:
-    - newyorkcity
-    - newyork_instagram
-    - what_i_saw_in_nyc
-    - nycprimeshot
-    - instagramnyc
-    - ig_nycity
-    - ny
-    - icapture_nyc
-    - made_in_ny
-    - newyorknewyork
-    - newyork_ig
-    - igersofnyc
-  landscape:
-    - landscape_lovers
-    - landscapephotography
-    - landscapes
-    - landscape_captures
-    - landscapelovers
-  cityscape:
-    - cityscape
-    - citylife
-    - cityview
-    - skyline
-    - cityphotography
+    - myfeatureshoot
+    - somewheremagazine
+  apple:
+    - iphoneography
+    - iphoneonly
+    - iphonephotography
+    - shotoniphone
   architecture:
+    - archdaily
+    - archidaily
     - archilovers
     - architecturelovers
-    - architectureporn
     - architecturephotography
-    - archidaily
+    - architectureporn
     - architexture
-    - archdaily
-  apple:
-    - shotoniphone
-  pittsburgh:
-    - '412'
-    - pgh
-    - steelcitygrammers
-    - pghcreative
+  blackandwhite:
+    - blackandwhitephoto
+    - blackandwhitephotography
+    - blancoynegro
+    - bnw
+    - bnw_captures
+    - bnw_demand
+    - bnw_life
+    - bnw_magazine
+    - bnw_planet
+    - bnw_society
+    - bnwmood
+    - bw
+    - bw_lover
+    - bw_photooftheday
+    - bw_society
+    - bwstyles_gf
+    - igersbnw
+    - insta_bw
+    - instablackandwhite
+    - monoart
+    - monochromatic
+    - monochrome
+    - noiretblanc
+  caracas:
+    - ccs
+    - ig_caracas
+  cars:
+    - carinstagram
+    - carporn
+    - carsofinstagram
+    - carstagram
+    - igcars
+    - instacars
+  cats:
+    - catlover
+    - catlovers
+    - catoftheday
+    - cats
+    - cats_of_instagram
+    - catsagram
+    - catsofig
+    - catsofinstagram
+    - catstagram
+    - ilovemycat
+    - instacat
+    - instacats
+    - instagramcats
+  chattanooga:
+    - nooga
+    - noogagram
+  cityscape:
+    - citylife
+    - cityphotography
+    - cityscape
+    - cityview
+    - skyline
+  ciudaddemexico:
+    - cdmx
+    - ciudaddemexico
+    - df
+    - igerscdmx
+    - mexicocity
+    - mexicodf
+  classiccars:
+    - drivetastefully
+    - retrocars
+    - vintagecars
+  districtofcolumbia:
+    - acreativedc
+    - dcitystyle
+    - districtofcolumbia
+    - exploredc
+    - exposeddc
+    - fotodc
+    - igdc
+    - igersdc
+    - mydccool
+    - streetmeetdc
+    - walkwithlocals
+    - washingtondaily
+    - washingtondc
+  film:
+    - analogphotography
+    - believeinfilm
+    - filmisnotdead
+    - filmphotography
+    - ishootfilm
+    - shootfilm
+    - thefilmcommunity
+  findyourpark: &findyourpark
+    - findyourpark
+    - goparks
+  fujifilm:
+    - fuji
+    - fujifeed
+    - fujifilm
+    - fujifilm_xseries
+    - fujifilmx_us
+    - fujifilmxseries
+    - fujiframez
+    - fujilove
+    - fujixclub
+    - fujixseries
+    - myfujifilm
+  landscape:
+    - landscape_captures
+    - landscape_lovers
+    - landscapelovers
+    - landscapephotography
+    - landscapes
+  lasvegas:
+    - lasvegasstrip
+    - sincity
+    - vegas
+    - vegasbaby
   leica:
+    - 🔴
     - leica
     - leicacamera
     - leicam
     - leicaphoto
     - leicaphotography
-    - 🔴
-  caracas:
-    - ccs
-    - ig_caracas
-  venezuela:
-    - igersvenezuela
-    - vzla
-    - elnacionalweb
-    - instavenezuela
-  nationalgalleryofart:
-    - myngadc
+  mexico:
+    - ig_mexico
+    - igersmexico
+    - mexico
+    - mexico_maravilloso
+    - mexigers
+    - mextagram
+    - vive_mexico
   nationalairandspacemuseum:
     - airandspace
+  nationalgalleryofart:
+    - myngadc
+  nationalparks: *findyourpark
+  newyorkcity:
+    - icapture_nyc
+    - ig_great_shots_nyc
+    - ig_nycity
+    - igersofnyc
+    - instagramnyc
+    - made_in_ny
+    - newyork_ig
+    - newyork_instagram
+    - newyorkcity
+    - newyorknewyork
+    - ny
+    - nycprimeshot
+    - unlimitednewyork
+    - what_i_saw_in_nyc
+  pittsburgh:
+    - '412'
+    - pgh
+    - pghcreative
+    - steelcitygrammers
+  scotland:
+    - ig_scotland
+    - insta_scotland
+    - instascotland
+    - visitscotland
+  streetphotography:
+    - everybodystreet
+    - ig_street
+    - lensculture
+    - lensculturestreets
+    - magnumphotos
+    - seemycity
+    - spicollective
+    - street_photo_club
+    - streetart
+    - streetlife
+    - streetlife_award
+    - streetmagazine
+    - streetmagazines
+    - streetphoto
+    - streetphotographer
+    - streetphotographers
+    - streets_vision
+    - streetshot
+    - urbanandstreet
   tennessee:
     - instagramtennessee
     - tn
-  chattanooga:
-    - noogagram
-    - nooga
-  cars:
-    - carporn
-    - carsofinstagram
-    - carstagram
-    - carinstagram
-    - instacars
-    - igcars
-  classiccars:
-    - vintagecars
-    - retrocars
-    - drivetastefully
-  film:
-    - filmphotography
-    - filmisnotdead
-    - ishootfilm
-    - believeinfilm
-    - analogphotography
-    - thefilmcommunity
-    - shootfilm
-  lasvegas:
-    - vegas
-    - lasvegasstrip
-    - vegasbaby
-    - sincity
-  findyourpark: &parks
-    - findyourpark
-    - goparks
-  nationalparks: *parks
-  all:
-    - myfeatureshoot
-    - somewheremagazine
-    - lensculture
+  venezuela:
+    - elnacionalweb
+    - igersvenezuela
+    - instavenezuela
+    - vzla
 tumblr:
   all:
     - 'original photographers'
