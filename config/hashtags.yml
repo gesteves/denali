@@ -51,19 +51,31 @@ instagram:
     - igcars
     - instacars
   cats:
+    - animalsofinstagram
+    - cat_features
+    - catlove
     - catlover
     - catlovers
     - catoftheday
-    - cats
     - cats_of_instagram
+    - cats_of_world
     - catsagram
     - catsofig
     - catsofinstagram
     - catstagram
+    - caturday
+    - catvalentine
+    - catwalk
+    - cutecat
     - ilovemycat
     - instacat
     - instacats
     - instagramcats
+    - katze
+    - kitten
+    - kittylove
+    - lovecats
+    - meow
   chattanooga:
     - nooga
     - noogagram
@@ -98,6 +110,29 @@ instagram:
     - walkwithlocals
     - washingtondaily
     - washingtondc
+  dogs:
+    - barkbox
+    - bestwoof
+    - dog_features
+    - doglife
+    - doglover
+    - doglovers
+    - dogoftheday
+    - dogs_of_instagram
+    - dogscorner
+    - dogslife
+    - dogsofig
+    - instagramdogs
+    - instapet
+    - lovepuppies
+    - petsagram
+    - petsofinstagram
+    - petstagram
+    - pup
+    - puppies
+    - puppiesofinstagram
+    - puppylove
+    - weeklyfluff
   film:
     - analogphotography
     - believeinfilm
