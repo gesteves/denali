@@ -57,6 +57,8 @@ class Photo < ApplicationRecord
         opts[:crop] = 'focalpoint'
         opts['fp-x'] = self.focal_x
         opts['fp-y'] = self.focal_y
+      else
+        opts[:crop] = 'faces,edges'
       end
     end
     if opts[:fm].present?
