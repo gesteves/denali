@@ -22,12 +22,7 @@ cache "feed/atom/tagged/#{@tag_slug}/page/#{@page}/count/#{@count}/#{@photoblog.
           xml.updated e.updated_at.utc.strftime('%FT%TZ')
           xml.link rel: 'alternate', type: 'text/html', href: e.permalink_url
           xml.title e.plain_title
-          body = ''
-          e.photos.each do |p|
-            body += image_tag p.url(w: 1280), srcset: "#{p.url(w: 1280)} 1x, #{p.url(w: 2560)} 2x", alt: p.caption.blank? ? e.title : p.plain_caption
-          end
-          body += e.formatted_body unless e.body.blank?
-          xml.content body, type: 'html'
+          xml.content render(partial: 'feed_entry_body.html.erb', locals: { entry: e }), type: 'html'
           xml.author do |author|
             author.name e.user.name
           end

@@ -46,4 +46,30 @@ module EntriesHelper
       'entry_list'
     end
   end
+
+  def plain_exif(photo)
+    fields = []
+    if photo.make.present? && photo.model.present?
+      camera = "Taken with #{article photo.make} #{photo.formatted_camera}"
+      if photo.is_film?
+        camera += "on #{photo.formatted_film}"
+      end
+      fields << camera
+
+      unless photo.is_phone_camera?
+        fields << "#{photo.focal_length} mm focal length"
+        if photo.exposure.present? && photo.f_number.present?
+          fields << "#{exposure photo.exposure} at f/#{aperture photo.f_number}"
+        elsif photo.exposure.present?
+          fields << exposure(photo.exposure)
+        elsif photo.f_number.present?
+          fields << "f/#{aperture photo.f_number}"
+        end
+        if photo.iso.present?
+          fields << "ISO #{photo.iso}"
+        end
+      end
+    end
+    fields.join(' · ')
+  end
 end
