@@ -67,15 +67,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_template :share
   end
 
-  test 'should render share on ello page' do
-    get :ello, params: { id: @entry.id }
-    assert_not_nil assigns(:entry)
-    assert_not_nil assigns(:text)
-    assert_response :success
-    assert_template layout: 'layouts/admin'
-    assert_template :ello
-  end
-
   test 'should not render share entry page if entry not published' do
     entry = entries(:panda)
     assert_raise ActiveRecord::RecordNotFound do

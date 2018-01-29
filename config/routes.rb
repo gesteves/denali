@@ -28,7 +28,6 @@ Rails.application.routes.draw do
         post 'instagram'
         post 'twitter'
         post 'facebook'
-        get 'ello'
       end
       collection do
         get 'queued'

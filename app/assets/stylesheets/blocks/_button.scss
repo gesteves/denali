@@ -46,6 +46,10 @@
   @include button($color-facebook);
 }
 
+.button--instagram {
+  @include button($color-instagram);
+}
+
 .button--pad-right {
   padding-right: 20px;
 }

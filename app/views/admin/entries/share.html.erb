@@ -1,8 +1,6 @@
 <div class="entry">
-  <% if @entry.is_photo? %>
-    <a class="entry__link" href="<%= @entry.permalink_url %>" <%= intrinsic_ratio_padding(@entry.photos.first) %>>
-      <%= lazy_responsive_image_tag @entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
-    </a>
+  <% @entry.photos.each do |photo| %>
+    <%= image_tag photo.url(w: 1200, fm: 'jpg'), class: 'entry__thumb--block' %>
   <% end %>
   <div class="entry__content <% if @entry.is_text? %>entry__content--text<% end %>">
     <h2><%= sanitize(@entry.plain_title) %></h2>
@@ -19,10 +17,15 @@
     </div>
     <div class="entry__meta-bottom">
       <div class="entry__actions entry__actions--share">
-        <%= button_to 'Share on Ello', ello_admin_entry_path(@entry.id), method: :get, class: 'button button--margin-bottom' %>
-        <%= button_to 'Share on Facebook', facebook_admin_entry_path(@entry.id), method: :post, class: 'button button--margin-bottom' %>
-        <%= button_to 'Share on Instagram', instagram_admin_entry_path(@entry.id), method: :post, class: 'button button--margin-bottom' %>
-        <%= button_to 'Share on Twitter', twitter_admin_entry_path(@entry.id), method: :post, class: 'button button--margin-bottom' %>
+        <form class="form form--no-padding">
+          <textarea id="share_text" class="form__input form__input--textarea-short" readonly="readonly"><%= @text %></textarea>
+          <div><button class="button button--margin-bottom js-clipboard" data-clipboard-target="#share_text">Copy to clipboard</button></div>
+        </form>
+        <div class="entry__share-buttons">
+          <%= button_to 'Send to Facebook', facebook_admin_entry_path(@entry.id), method: :post, class: 'button button--facebook' %>
+          <%= button_to 'Send to Instagram', instagram_admin_entry_path(@entry.id), method: :post, class: 'button button--instagram' %>
+          <%= button_to 'Send to Twitter', twitter_admin_entry_path(@entry.id), method: :post, class: 'button button--twitter' %>
+        </div>
       </div>
     </div>
   </div>
