@@ -1,13 +1,5 @@
 <% entry.photos.each do |photo| %>
   <%= link_to image_tag(photo.url(w: 1280), srcset: "#{photo.url(w: 1280)} 1x, #{photo.url(w: 2560)} 2x", alt: photo.plain_caption), entry.permalink_url %>
+  <small><%= photo.plain_caption %></small>
 <% end %>
 <%= sanitize entry.formatted_body unless entry.body.blank? %>
-<p>Published on <%= link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url %><br>
-<% if entry.photos.count == 1 %>
-  <%= plain_exif entry.photos.first %><br>
-<% end %>
-
-  <% entry.combined_tags.sort_by { |t| t.name }.each do |tag| %>
-    <%= link_to "##{tag.slug.gsub(/-/, '')}", tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”" } %>
-  <% end %>
-</p>
