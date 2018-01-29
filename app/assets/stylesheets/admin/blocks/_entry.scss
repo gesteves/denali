@@ -143,6 +143,16 @@
   width: 100%;
 }
 
+.entry__actions--share {
+  align-items: flex-start;
+  border-top: 1px solid $color-border;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  width: 100%;
+}
+
 .entry__actions--queue {
   flex-grow: 1;
 }

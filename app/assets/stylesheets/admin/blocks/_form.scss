@@ -15,6 +15,10 @@
   }
 }
 
+.form--no-padding {
+  padding: 0;
+}
+
 .form__input {
   border: 1px solid $color-border;
   border-radius: 2px;

@@ -3,9 +3,9 @@
     <%= image_tag photo.url(w: 2048, fm: 'jpg') %>
   <% end %>
   <div class="entry__meta">
-    <form class="form">
+    <form class="form form--no-padding">
       <textarea id="ello" class="form__input form__input--textarea" readonly="readonly"><%= @text %></textarea>
-      <button class="button js-clipboard" data-clipboard-target="#ello">Copy to clipboard</button>
+      <button class="button button--no-margin js-clipboard" data-clipboard-target="#ello">Copy to clipboard</button>
     </form>
   </div>
 </div>

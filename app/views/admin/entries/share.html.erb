@@ -6,15 +6,23 @@
   <% end %>
   <div class="entry__content <% if @entry.is_text? %>entry__content--text<% end %>">
     <h2><%= sanitize(@entry.plain_title) %></h2>
+    <%= sanitize(@entry.formatted_body) unless @entry.body.blank? %>
   </div>
   <div class="entry__meta">
+    <div>
+      <% @entry.combined_tags.each do |t| %>
+        <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
+      <% end %>
+    </div>
+    <div class="entry__timestamp">
+      <%= link_to "Published #{@entry.published_at.strftime('%A, %B %-d, %Y')}", @entry.permalink_url %>
+    </div>
     <div class="entry__meta-bottom">
-      <div class="entry__actions entry__actions--left">
-        <span>Share this entry on </span>
-        <%= button_to 'Ello', ello_admin_entry_path(@entry.id), method: :get, class: 'button' %>
-        <%= button_to 'Facebook', facebook_admin_entry_path(@entry.id), method: :post, class: 'button' %>
-        <%= button_to 'Instagram', instagram_admin_entry_path(@entry.id), method: :post, class: 'button' %>
-        <%= button_to 'Twitter', twitter_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+      <div class="entry__actions entry__actions--share">
+        <%= button_to 'Share on Ello', ello_admin_entry_path(@entry.id), method: :get, class: 'button button--margin-bottom' %>
+        <%= button_to 'Share on Facebook', facebook_admin_entry_path(@entry.id), method: :post, class: 'button button--margin-bottom' %>
+        <%= button_to 'Share on Instagram', instagram_admin_entry_path(@entry.id), method: :post, class: 'button button--margin-bottom' %>
+        <%= button_to 'Share on Twitter', twitter_admin_entry_path(@entry.id), method: :post, class: 'button button--margin-bottom' %>
       </div>
     </div>
   </div>
