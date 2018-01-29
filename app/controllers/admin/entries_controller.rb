@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :delete, :instagram, :facebook, :twitter]
+  before_action :set_entry, only: [:show, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :delete, :instagram, :facebook, :twitter, :ello]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url, only: [:edit, :new, :up, :down, :top, :bottom, :delete]
@@ -222,6 +222,30 @@ class Admin::EntriesController < AdminController
       FacebookJob.perform_later(@entry)
       flash[:notice] = 'Your entry was sent to your Facebook queue in Buffer!'
       redirect_to share_admin_entry_path(@entry)
+    else
+      raise ActiveRecord::RecordNotFound
+    end
+  end
+
+  def ello
+    if @entry.is_published? && @entry.is_photo?
+      @page_title = "Share “#{@entry.title}” on Ello"
+      text = ["[#{@entry.title}](#{@entry.permalink_url})"]
+      text << @entry.body unless @entry.body.blank?
+
+      entry_tags = @entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+      ello_tags = []
+      custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['ello']
+      custom_hashtags.each do |k, v|
+        if k == 'all'
+          ello_tags += custom_hashtags[k]
+        elsif entry_tags.include? k
+          ello_tags += custom_hashtags[k]
+        end
+      end
+      tags = ello_tags + entry_tags
+      text << tags.uniq.sort.map { |t| t =~ /^@/ ? t : "##{t}" }.join(' ')
+      @text = text.join("\n\n")
     else
       raise ActiveRecord::RecordNotFound
     end

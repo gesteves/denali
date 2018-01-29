@@ -1,6 +1,6 @@
 <div class="entry">
   <% if @entry.is_photo? %>
-    <a class="entry__link" href="<%= @entry.is_published? ? @entry.permalink_url : preview_entry_path(@entry.preview_hash) %>" <%= intrinsic_ratio_padding(@entry.photos.first) if @entry.is_photo? %>>
+    <a class="entry__link" href="<%= @entry.permalink_url %>" <%= intrinsic_ratio_padding(@entry.photos.first) %>>
       <%= lazy_responsive_image_tag @entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
     </a>
   <% end %>
@@ -11,6 +11,7 @@
     <div class="entry__meta-bottom">
       <div class="entry__actions entry__actions--left">
         <span>Share this entry on </span>
+        <%= button_to 'Ello', ello_admin_entry_path(@entry.id), method: :get, class: 'button' %>
         <%= button_to 'Facebook', facebook_admin_entry_path(@entry.id), method: :post, class: 'button' %>
         <%= button_to 'Instagram', instagram_admin_entry_path(@entry.id), method: :post, class: 'button' %>
         <%= button_to 'Twitter', twitter_admin_entry_path(@entry.id), method: :post, class: 'button' %>
