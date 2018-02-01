@@ -17,14 +17,17 @@
   transition: opacity $fadein-duration linear;
 }
 
-.entry__thumb--small {
-  display: inline-block;
-  font-size: 0;
-  width: 25%;
+.entry__thumbs {
+  display: flex;
+  flex-flow: row wrap;
+  padding: 12px 0;
 }
 
-.entry__thumbs {
-  padding: 12px 0;
+.entry__thumb--small {
+  display: block;
+  flex-basis: calc(50% - 5px);
+  font-size: 0;
+  margin-right: 5px;
 }
 
 .entry__link {

@@ -16,7 +16,7 @@
       <p class="entry__help">Formats images for Instagram’s optimal size and aspect ratio; randomizes Instagram hashtags.</p>
       <div class="entry__thumbs">
         <% @entry.photos.each do |photo| %>
-          <%= image_tag photo.instagram_url, class: 'entry__thumb--small' %>
+          <div class="entry__thumb--small"><%= image_tag photo.instagram_url, class: 'entry__thumb--small' %></div>
         <% end %>
       </div>
       <form class="form form--no-padding">
@@ -33,7 +33,7 @@
       <p class="entry__help">Resizes images to 1200px wide; includes the entry’s hashtags and permalink.</p>
       <div class="entry__thumbs">
         <% @entry.photos.each do |photo| %>
-          <%= image_tag photo.url(w: 1200, fm: 'jpg'), class: 'entry__thumb--small' %>
+          <div class="entry__thumb--small"><%= image_tag photo.url(w: 1200, fm: 'jpg') %></div>
         <% end %>
       </div>
       <form class="form form--no-padding">
