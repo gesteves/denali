@@ -179,10 +179,9 @@
 }
 
 .entry__content-buttons {
-  border-top: 1px solid $color-border;
   display: flex;
   flex-flow: column;
-  padding-top: 20px;
+  padding-top: 12px;
 
   @media (min-width: $bp-admin-m) {
     flex-flow: row;
