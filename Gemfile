@@ -3,7 +3,6 @@ ruby '2.5.0'
 
 gem 'rails', '~> 5.1'
 gem 'pg', '~> 0.21'
-gem 'puma', '~> 3.0'
 
 # Auth
 gem 'omniauth-google-oauth2'
@@ -48,6 +47,7 @@ gem 'elasticsearch-model'
 gem 'elasticsearch-rails'
 
 group :production do
+  gem 'passenger'
   gem 'lograge'
 end
 
