@@ -14,7 +14,7 @@ class TumblrJob < ApplicationJob
       slug: entry.slug,
       caption: entry.formatted_content(link_title: true),
       link: entry.permalink_url,
-      data: entry.photos.map { |p| resized_photo_path(p) },
+      data: entry.photos.map { |p| open(p.url(w: 2560, fm: 'jpg')).path },
       state: 'queue'
     }
 
@@ -27,19 +27,6 @@ class TumblrJob < ApplicationJob
   end
 
   private
-
-  # Use rmagick instead of imgix to resize images for Tumblr,
-  # because imgix strips exif data, and I still want the exif
-  # displayed in the Tumblr theme.
-  # Also Tumblr has a 10MB file size limit, so uploading the original
-  # full-size image doesn't always work.
-  def resized_photo_path(photo)
-    file = Tempfile.new([photo.id.to_s, '.jpg'])
-    original = Magick::Image::from_blob(open(photo.original_url).read).first
-    image = original.resize_to_fit(2560)
-    image.write(file.path)
-    file.path
-  end
 
   # Checks the entry's tags; if it includes any of the keys in the hashtags.yml
   # as a tag, then it appends the list under that key as additional hashtags

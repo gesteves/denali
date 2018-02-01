@@ -31,7 +31,6 @@ gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
 gem 'sentry-raven'
-gem 'rmagick'
 
 # Caching
 gem 'dalli'
