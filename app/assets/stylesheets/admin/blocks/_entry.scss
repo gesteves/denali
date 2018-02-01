@@ -17,9 +17,14 @@
   transition: opacity $fadein-duration linear;
 }
 
-.entry__thumb--block {
-  display: block;
+.entry__thumb--small {
+  display: inline-block;
   font-size: 0;
+  width: 25%;
+}
+
+.entry__thumbs {
+  padding: 12px 0;
 }
 
 .entry__link {
@@ -64,6 +69,13 @@
   }
 }
 
+.entry__content .entry__help {
+  color: $color-gray-medium;
+  font-size: 12px;
+  line-height: 2;
+}
+
+
 .entry__content--text {
   border-top: 1px solid $color-border;
   border-top-left-radius: 2px;
@@ -82,6 +94,10 @@
   h6 {
     font-weight: 600;
   }
+}
+
+.entry__content--misc {
+  border: 1px solid $color-border;
 }
 
 .entry__meta {
@@ -148,15 +164,6 @@
   width: 100%;
 }
 
-.entry__actions--share {
-  align-items: stretch;
-  border-top: 1px solid $color-border;
-  flex-flow: column nowrap;
-  margin-top: 10px;
-  padding-top: 20px;
-  width: 100%;
-}
-
 .entry__actions--queue {
   flex-grow: 1;
 }
@@ -171,7 +178,7 @@
   }
 }
 
-.entry__share-buttons {
+.entry__content-buttons {
   border-top: 1px solid $color-border;
   display: flex;
   flex-flow: column;

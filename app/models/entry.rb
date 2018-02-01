@@ -354,6 +354,35 @@ class Entry < ApplicationRecord
     self.photos.map { |p| p.plain_caption }.join("\n\n")
   end
 
+  def instagram_hashtags
+    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    instagram_tags = []
+    custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
+    custom_hashtags.each do |k, v|
+      if k == 'all'
+        instagram_tags << custom_hashtags[k].sample(5)
+      elsif entry_tags.include? k
+        instagram_tags << custom_hashtags[k].sample(5)
+      end
+    end
+    instagram_tags.flatten.uniq.sample(25).map { |t| "##{t}"}.join(' ')
+  end
+
+  def tumblr_hashtags
+    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    tumblr_tags = []
+    custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['tumblr']
+    custom_hashtags.each do |k, v|
+      if k == 'all'
+        tumblr_tags += custom_hashtags[k]
+      elsif entry_tags.include? k
+        tumblr_tags += custom_hashtags[k]
+      end
+    end
+    tags = tumblr_tags + entry.combined_tags.map(&:name)
+    tags.sort.map(&:downcase).join(', ')
+  end
+
   private
 
   def url_opts(opts)

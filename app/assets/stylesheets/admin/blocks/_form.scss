@@ -113,6 +113,10 @@
   }
 }
 
+.form__actions--no-padding {
+  padding: 0;
+}
+
 .form__buttons {
   display: flex;
   flex-flow: column nowrap;

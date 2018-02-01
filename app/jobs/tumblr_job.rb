@@ -10,7 +10,7 @@ class TumblrJob < ApplicationJob
     })
 
     opts = {
-      tags: custom_hashtags(entry),
+      tags: entry.tumblr_hashtags,
       slug: entry.slug,
       caption: entry.formatted_content(link_title: true),
       link: entry.permalink_url,
@@ -26,23 +26,4 @@ class TumblrJob < ApplicationJob
     end
   end
 
-  private
-
-  # Checks the entry's tags; if it includes any of the keys in the hashtags.yml
-  # as a tag, then it appends the list under that key as additional hashtags
-  # for tumblr
-  def custom_hashtags(entry)
-    entry_tags = entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }
-    tumblr_tags = []
-    custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['tumblr']
-    custom_hashtags.each do |k, v|
-      if k == 'all'
-        tumblr_tags += custom_hashtags[k]
-      elsif entry_tags.include? k
-        tumblr_tags += custom_hashtags[k]
-      end
-    end
-    tags = tumblr_tags + entry.combined_tags.map(&:name)
-    tags.sort.map(&:downcase).join(', ')
-  end
 end

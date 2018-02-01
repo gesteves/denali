@@ -6,7 +6,7 @@
   font-family: 'proxima-nova', 'Helvetica Neue', sans-serif;
   font-size: 16px;
   line-height: 1.5;
-  margin: 5px 0;
+  margin: 5px 10px 5px 0;
   padding: 6px 10px;
   position: relative;
   text-align: center;
@@ -21,7 +21,7 @@
   }
 
   @media (min-width: $bp-admin-m) {
-    margin: 0 5px;
+    margin: 0 10px 0 0;
     width: auto;
   }
 }

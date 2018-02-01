@@ -5,7 +5,7 @@ class InstagramJob < BufferJob
     text_array = []
     text_array << entry.plain_title
     text_array << entry.plain_body if entry.body.present?
-    text_array << custom_hashtags(entry)
+    text_array << entry.instagram_hashtags
 
     text = text_array.join("\n\n")
 
@@ -15,19 +15,6 @@ class InstagramJob < BufferJob
   end
 
  private
- def custom_hashtags(entry)
-   entry_tags = entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }
-   instagram_tags = []
-   custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
-   custom_hashtags.each do |k, v|
-     if k == 'all'
-       instagram_tags << custom_hashtags[k].sample(5)
-     elsif entry_tags.include? k
-       instagram_tags << custom_hashtags[k].sample(5)
-     end
-   end
-   instagram_tags.flatten.uniq.sample(25).map { |t| "##{t}"}.join(' ')
- end
 
  def media_hash(photo)
    {

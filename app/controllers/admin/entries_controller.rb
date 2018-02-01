@@ -89,7 +89,14 @@ class Admin::EntriesController < AdminController
       text = ["[#{@entry.title}](#{@entry.permalink_url})"]
       text << @entry.body unless @entry.body.blank?
       text << @entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }.uniq.sort.map { |t| "##{t}" }.join(' ')
-      @text = text.join("\n\n")
+      @markdown = text.join("\n\n")
+
+      text = [@entry.plain_title]
+      text << @entry.plain_body if @entry.body.present?
+      text << @entry.instagram_hashtags
+      @instagram_text = text.join("\n\n")
+
+      @title_only = @entry.plain_title
     end
   end
 
