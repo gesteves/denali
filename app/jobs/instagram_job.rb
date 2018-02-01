@@ -30,16 +30,8 @@ class InstagramJob < BufferJob
  end
 
  def media_hash(photo)
-   image_url = if photo.is_vertical?
-     photo.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff', fm: 'jpg')
-   elsif photo.is_horizontal?
-     photo.url(w: 1080, h: 864, fit: 'fill', bg: 'fff', fm: 'jpg')
-   else
-     photo.url(w: 1080, fm: 'jpg')
-   end
-
    {
-     photo: image_url,
+     photo: photo.instagram_url,
      thumbnail: photo.url(w: 512, fm: 'jpg')
    }
  end

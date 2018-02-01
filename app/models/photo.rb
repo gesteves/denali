@@ -67,6 +67,18 @@ class Photo < ApplicationRecord
     Ix.path(self.original_path).to_url(opts.reject { |k,v| v.blank? })
   end
 
+  # Returns the url of the image, formatted & sized fit to into instagram's
+  # 5:4 ratio
+  def instagram_url
+    if self.is_vertical?
+      self.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff', fm: 'jpg')
+    elsif self.is_horizontal?
+      self.url(w: 1080, h: 864, fit: 'fill', bg: 'fff', fm: 'jpg')
+    else
+      self.url(w: 1080, fm: 'jpg')
+    end
+  end
+
   def formatted_caption
     markdown_to_html(self.caption)
   end
