@@ -275,7 +275,6 @@ class Entry < ApplicationRecord
       self.enqueue_instagram
       self.enqueue_pinterest
       self.enqueue_slack
-      self.enqueue_sitemap
     end
     true
   end
@@ -316,17 +315,6 @@ class Entry < ApplicationRecord
 
   def enqueue_pinterest
     PinterestJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_pinterest
-  end
-
-  def enqueue_sitemap
-    if self.is_published?
-      opts = {
-        host: self.blog.domain,
-        protocol: Rails.configuration.force_ssl ? 'https' : 'http'
-      }
-      SitemapJob.perform_later("https://www.google.com/ping?sitemap=#{CGI.escape sitemap_index_url(opts)}")
-      SitemapJob.perform_later("https://www.bing.com/ping?sitemap=#{CGI.escape sitemap_index_url(opts)}")
-    end
   end
 
   def combined_tags
