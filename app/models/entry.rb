@@ -379,7 +379,7 @@ class Entry < ApplicationRecord
         tumblr_tags += custom_hashtags[k]
       end
     end
-    tags = tumblr_tags + entry.combined_tags.map(&:name)
+    tags = tumblr_tags + self.combined_tags.map(&:name)
     tags.sort.map(&:downcase).join(', ')
   end
 
