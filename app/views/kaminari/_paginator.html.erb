@@ -9,7 +9,9 @@
 
 <%= paginator.render do -%>
   <nav class="pagination" role="navigation">
+    <%= first_page_tag if is_admin? %>
     <%= prev_page_tag %>
     <%= next_page_tag %>
+    <%= last_page_tag if is_admin? %>
   </nav>
 <% end -%>

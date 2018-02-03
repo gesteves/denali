@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :domain_redirect
   before_action :set_app_version
 
-  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?
+  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?
 
   def default_url_options
     if Rails.env.production?
@@ -30,6 +30,10 @@ class ApplicationController < ActionController::Base
 
   def logged_out?
     !logged_in?
+  end
+
+  def is_admin?
+    false
   end
 
   def is_cloudfront?

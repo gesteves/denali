@@ -1,0 +1,16 @@
+<%# Link to the "First" page
+  - available local variables
+    url:           url to the first page
+    current_page:  a page object for the currently displayed page
+    total_pages:   total number of pages
+    per_page:      number of items to fetch per page
+    remote:        data-remote
+-%>
+
+<span class="pagination__link pagination__link--first">
+  <% if current_page.first? %>
+    <span class="pagination__first"><%= t('views.pagination.first').html_safe %></span>
+  <% else %>
+    <%= link_to t('views.pagination.first').html_safe, url, class: 'pagination__first', title: 'Go to the first page of photos' %>
+  <% end %>
+</span>

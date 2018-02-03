@@ -23,11 +23,21 @@
 }
 
 .pagination__prev::before {
-  content: '«';
+  content: '‹';
   padding: 0 0.5rem;
 }
 
 .pagination__next::after {
+  content: '›';
+  padding: 0 0.5rem;
+}
+
+.pagination__first::before {
+  content: '«';
+  padding: 0 0.5rem;
+}
+
+.pagination__last::after {
   content: '»';
   padding: 0 0.5rem;
 }
