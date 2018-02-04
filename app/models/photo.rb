@@ -99,6 +99,10 @@ class Photo < ApplicationRecord
     self.width < self.height
   end
 
+  def has_location?
+    self.longitude.present? && self.latitude.present?
+  end
+
   def height_from_width(width)
     ((self.height.to_f * width.to_f)/self.width.to_f).round
   end
@@ -155,7 +159,7 @@ class Photo < ApplicationRecord
   end
 
   def geocode
-    GeocodeJob.perform_later(self) if ENV['google_maps_api_key'].present? && self.latitude.present? && self.longitude.present?
+    GeocodeJob.perform_later(self) if ENV['google_maps_api_key'].present? && self.has_location?
   end
 
   private

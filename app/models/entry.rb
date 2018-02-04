@@ -115,6 +115,10 @@ class Entry < ApplicationRecord
     self.photos_count.blank? || self.photos_count == 0
   end
 
+  def is_single_photo?
+    !self.photos_count.blank? && self.photos_count == 1
+  end
+
   def is_queued?
     self.status == 'queued'
   end
