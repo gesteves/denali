@@ -11,7 +11,7 @@ cache "sitemap/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
             xml.image :loc, p.url(w: 1200)
             xml.image :caption, p.plain_caption
             xml.image :title, e.plain_title
-            xml.image :geo_location, e.location_list if e.show_in_map? && p.latitude.present? && p.longitude.present? && e.location_list.present?
+            xml.image :geo_location, p.long_address if e.show_in_map? && p.latitude.present? && p.longitude.present?
           end
         end
       end

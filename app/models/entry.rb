@@ -371,6 +371,18 @@ class Entry < ApplicationRecord
     tags.sort.map(&:downcase).join(', ')
   end
 
+  def update_tags
+    equipment_tags = []
+    location_tags = []
+    self.photos.each do |p|
+      equipment_tags += [p.formatted_make, p.formatted_camera, p.formatted_film]
+      location_tags  += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area] if self.show_in_map?
+    end
+    self.equipment_list = equipment_tags.flatten.uniq.reject(&:blank?)
+    self.location_list = location_tags.flatten.uniq.reject(&:blank?)
+    self.save!
+  end
+
   private
 
   def url_opts(opts)

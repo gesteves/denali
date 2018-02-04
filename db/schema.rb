@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171009182502) do
+ActiveRecord::Schema.define(version: 20180204172924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,12 @@ ActiveRecord::Schema.define(version: 20171009182502) do
     t.string "film_type"
     t.float "focal_x"
     t.float "focal_y"
+    t.string "geocoded_address"
+    t.string "country"
+    t.string "locality"
+    t.string "sublocality"
+    t.string "neighborhood"
+    t.string "administrative_area"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["latitude"], name: "index_photos_on_latitude"
     t.index ["longitude"], name: "index_photos_on_longitude"
