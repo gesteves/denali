@@ -115,6 +115,10 @@ class Entry < ApplicationRecord
     self.photos_count.blank? || self.photos_count == 0
   end
 
+  def is_single_photo?
+    !self.photos_count.blank? && self.photos_count == 1
+  end
+
   def is_queued?
     self.status == 'queued'
   end
@@ -369,6 +373,18 @@ class Entry < ApplicationRecord
     end
     tags = tumblr_tags + self.combined_tags.map(&:name)
     tags.sort.map(&:downcase).join(', ')
+  end
+
+  def update_tags
+    equipment_tags = []
+    location_tags = []
+    self.photos.each do |p|
+      equipment_tags += [p.formatted_make, p.formatted_camera, p.formatted_film]
+      location_tags  += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area] if self.show_in_map?
+    end
+    self.equipment_list = equipment_tags.flatten.uniq.reject(&:blank?)
+    self.location_list = location_tags.flatten.uniq.reject(&:blank?)
+    self.save!
   end
 
   private

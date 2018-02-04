@@ -16,7 +16,7 @@ Rails.application.routes.draw do
 
     resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable do
       member do
-        get 'delete'
+        get 'more'
         get 'share'
         patch 'publish'
         patch 'queue'
@@ -28,6 +28,8 @@ Rails.application.routes.draw do
         post 'instagram'
         post 'twitter'
         post 'facebook'
+        post 'geotag'
+        post 'invalidate'
       end
       collection do
         get 'queued'

@@ -31,9 +31,14 @@ json.cache! "entry/json/#{entry.id}/#{entry.updated_at.to_i}" do
             json.(p, :focal_length)
             json.(p, :film_make)
             json.(p, :film_type)
-            if entry.show_in_map
+            if entry.show_in_map && p.has_location?
               json.(p, :latitude)
               json.(p, :longitude)
+              json.(p, :neighborhood)
+              json.(p, :locality)
+              json.(p, :sublocality)
+              json.(p, :administrative_area)
+              json.(p, :country)
             end
             json.(p, :width)
             json.(p, :height)

@@ -1,13 +1,12 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :delete, :instagram, :facebook, :twitter]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :geotag, :invalidate]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
-  before_action :set_redirect_url, only: [:edit, :new, :up, :down, :top, :bottom, :delete]
+  before_action :set_redirect_url, only: [:edit, :new, :up, :down, :top, :bottom, :more]
   after_action :update_position, only: [:create]
-  after_action :update_equipment_tags, only: [:create, :update]
-  after_action :update_location_tags, only: [:create, :update]
+  after_action :geocode_photos, only: [:create, :update]
   after_action :enqueue_invalidation, only: [:update]
 
   # GET /admin/entries
@@ -61,43 +60,23 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/1/edit
   def edit
-    if params[:url].present?
-      url = Rails.application.routes.recognize_path(params[:url])
-      if url[:controller] != 'entries' || url[:action] != 'show' || url[:id].nil?
-        raise ActiveRecord::RecordNotFound
-      else
-        redirect_to edit_admin_entry_path(url[:id])
-      end
-    else
-      @entry = @photoblog.entries.includes(:photos).find(params[:id])
-      @page_title = "Editing “#{@entry.title}”"
-      @max_age = ENV['config_entry_caching_minutes'].try(:to_i) || ENV['config_caching_minutes'].try(:to_i) || 5
-    end
+    @page_title = "Editing “#{@entry.title}”"
+    @max_age = ENV['config_entry_caching_minutes'].try(:to_i) || ENV['config_caching_minutes'].try(:to_i) || 5
   end
 
   def share
-    if params[:url].present?
-      url = Rails.application.routes.recognize_path(params[:url])
-      if url[:controller] != 'entries' || url[:action] != 'show' || url[:id].nil?
-        raise ActiveRecord::RecordNotFound
-      else
-        redirect_to share_admin_entry_path(url[:id])
-      end
-    else
-      @entry = @photoblog.entries.includes(:photos).published.find(params[:id])
-      @page_title = "Share “#{@entry.title}”"
-      text = ["[#{@entry.title}](#{@entry.permalink_url})"]
-      text << @entry.body unless @entry.body.blank?
-      text << @entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }.uniq.sort.map { |t| "##{t}" }.join(' ')
-      @markdown = text.join("\n\n")
+    @page_title = "Share “#{@entry.title}”"
+    text = [@entry.is_published? ? "[#{@entry.title}](#{@entry.permalink_url})" : @entry.title]
+    text << @entry.body unless @entry.body.blank?
+    text << @entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }.uniq.sort.map { |t| "##{t}" }.join(' ')
+    @markdown = text.join("\n\n")
 
-      text = [@entry.plain_title]
-      text << @entry.plain_body if @entry.body.present?
-      text << @entry.instagram_hashtags
-      @instagram_text = text.join("\n\n")
+    text = [@entry.plain_title]
+    text << @entry.plain_body if @entry.body.present?
+    text << @entry.instagram_hashtags
+    @instagram_text = text.join("\n\n")
 
-      @title_only = @entry.plain_title
-    end
+    @title_only = @entry.plain_title
   end
 
   # PATCH /admin/entries/1/publish
@@ -166,7 +145,9 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def delete
+  def more
+    @page_title = "More options for “#{@entry.title}”"
+    @max_age = ENV['config_entry_caching_minutes'].try(:to_i) || ENV['config_caching_minutes'].try(:to_i) || 5
   end
 
   # DELETE /admin/entries/1
@@ -209,33 +190,36 @@ class Admin::EntriesController < AdminController
   end
 
   def instagram
-    if @entry.is_published? && @entry.is_photo?
-      InstagramJob.perform_later(@entry)
-      flash[:notice] = 'Your entry was sent to your Instagram queue in Buffer!'
-      redirect_to share_admin_entry_path(@entry)
-    else
-      raise ActiveRecord::RecordNotFound
-    end
+    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
+    InstagramJob.perform_later(@entry)
+    flash[:notice] = 'Your entry was sent to your Instagram queue in Buffer!'
+    redirect_to share_admin_entry_path(@entry)
   end
 
   def twitter
-    if @entry.is_published? && @entry.is_photo?
-      TwitterJob.perform_later(@entry)
-      flash[:notice] = 'Your entry was sent to your Twitter queue in Buffer!'
-      redirect_to share_admin_entry_path(@entry)
-    else
-      raise ActiveRecord::RecordNotFound
-    end
+    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
+    TwitterJob.perform_later(@entry)
+    flash[:notice] = 'Your entry was sent to your Twitter queue in Buffer!'
+    redirect_to share_admin_entry_path(@entry)
   end
 
   def facebook
-    if @entry.is_published? && @entry.is_photo?
-      FacebookJob.perform_later(@entry)
-      flash[:notice] = 'Your entry was sent to your Facebook queue in Buffer!'
-      redirect_to share_admin_entry_path(@entry)
-    else
-      raise ActiveRecord::RecordNotFound
-    end
+    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
+    FacebookJob.perform_later(@entry)
+    flash[:notice] = 'Your entry was sent to your Facebook queue in Buffer!'
+    redirect_to share_admin_entry_path(@entry)
+  end
+
+  def geotag
+    @entry.photos.map(&:geocode)
+    flash[:notice] = 'Your entry is currently being geotagged. This may take a minute.'
+    redirect_to more_admin_entry_path(@entry)
+  end
+
+  def invalidate
+    CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production?
+    flash[:notice] = 'Your entry is currently being invalidated in CloudFront. This may take up to 15 minutes.'
+    redirect_to more_admin_entry_path(@entry)
   end
 
   private
@@ -285,18 +269,7 @@ class Admin::EntriesController < AdminController
       CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && entry_params[:invalidate_cloudfront] == "1"
     end
 
-    def update_equipment_tags
-      tags = []
-      @entry.photos.each do |p|
-        tags << p.formatted_make
-        tags << p.formatted_camera
-        tags << p.formatted_film if p.film_make.present? && p.film_type.present?
-      end
-      @entry.equipment_list = tags
-      @entry.save
-    end
-
-    def update_location_tags
-      ReverseGeocodeJob.perform_later(@entry) if ENV['google_maps_api_key'].present? && @entry.show_in_map?
+    def geocode_photos
+      @entry.photos.map(&:geocode)
     end
 end

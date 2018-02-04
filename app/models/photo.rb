@@ -26,11 +26,11 @@ class Photo < ApplicationRecord
   before_create :set_image
   after_image_post_process :save_exif, :save_dimensions
 
-  # Workaround for https://github.com/rails/rails/issues/26726
-  after_save :touch_entry
+  after_save :update_entry
 
-  def touch_entry
+  def update_entry
     self.entry.touch
+    self.entry.update_tags
   end
 
   def self.oldest
@@ -99,6 +99,10 @@ class Photo < ApplicationRecord
     self.width < self.height
   end
 
+  def has_location?
+    self.longitude.present? && self.latitude.present?
+  end
+
   def height_from_width(width)
     ((self.height.to_f * width.to_f)/self.width.to_f).round
   end
@@ -134,6 +138,7 @@ class Photo < ApplicationRecord
   end
 
   def formatted_film
+    return '' if self.film_type.blank? || self.film_make.blank?
     self.film_type.match(self.film_make) ? self.film_type : "#{self.film_make} #{self.film_type}"
   end
 
@@ -143,6 +148,18 @@ class Photo < ApplicationRecord
 
   def is_film?
     self.film_make.present? && self.film_type.present?
+  end
+
+  def long_address
+    [self.neighborhood, self.sublocality, self.locality, self.administrative_area, self.country].uniq.reject(&:blank?).join(', ')
+  end
+
+  def short_address
+    [self.locality, self.administrative_area, self.country].uniq.reject(&:blank?).reject { |a| a.match? /^united (states|kingdom)/i }.join(', ')
+  end
+
+  def geocode
+    GeocodeJob.perform_later(self) if ENV['google_maps_api_key'].present? && self.has_location?
   end
 
   private

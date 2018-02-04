@@ -54,55 +54,54 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_template :edit
   end
 
-  test 'should redirect to edit entry page' do
-    get :edit, params: { url: @entry.permalink_url }
-    assert_redirected_to edit_admin_entry_path(@entry.id)
-  end
-
   test 'should render share entry page' do
-    get :share, params: { id: @entry.id }
-    assert_not_nil assigns(:entry)
-    assert_response :success
-    assert_template layout: 'layouts/admin'
-    assert_template :share
-  end
-
-  test 'should not render share entry page if entry not published' do
-    entry = entries(:panda)
-    assert_raise ActiveRecord::RecordNotFound do
-      get :share, params: { id: entry.id }
-    end
-  end
-
-  test 'should redirect to share entry page' do
-    get :share, params: { url: @entry.permalink_url }
-    assert_redirected_to share_admin_entry_path(@entry.id)
-  end
-
-  test 'should render delete entry page' do
     test_1 = Entry.new(title: 'test 1', status: 'queued', blog_id: @blog.id)
     test_1.save
     test_2 = Entry.new(title: 'test 2', status: 'draft', blog_id: @blog.id)
     test_2.save
 
     # Test published entry
-    get :delete, params: { id: @entry.id }
+    get :share, params: { id: @entry.id }
     assert_not_nil assigns(:entry)
     assert_response :success
     assert_template layout: 'layouts/admin'
-    assert_template :delete
+    assert_template :share
     # Test queued entry
-    get :delete, params: { id: test_1.id }
     assert_not_nil assigns(:entry)
     assert_response :success
     assert_template layout: 'layouts/admin'
-    assert_template :delete
+    assert_template :share
     # Test draft entry
-    get :delete, params: { id: test_2.id }
     assert_not_nil assigns(:entry)
     assert_response :success
     assert_template layout: 'layouts/admin'
-    assert_template :delete
+    assert_template :share
+  end
+
+  test 'should render more options page' do
+    test_1 = Entry.new(title: 'test 1', status: 'queued', blog_id: @blog.id)
+    test_1.save
+    test_2 = Entry.new(title: 'test 2', status: 'draft', blog_id: @blog.id)
+    test_2.save
+
+    # Test published entry
+    get :more, params: { id: @entry.id }
+    assert_not_nil assigns(:entry)
+    assert_response :success
+    assert_template layout: 'layouts/admin'
+    assert_template :more
+    # Test queued entry
+    get :more, params: { id: test_1.id }
+    assert_not_nil assigns(:entry)
+    assert_response :success
+    assert_template layout: 'layouts/admin'
+    assert_template :more
+    # Test draft entry
+    get :more, params: { id: test_2.id }
+    assert_not_nil assigns(:entry)
+    assert_response :success
+    assert_template layout: 'layouts/admin'
+    assert_template :more
   end
 
   test 'should render photo fields' do
