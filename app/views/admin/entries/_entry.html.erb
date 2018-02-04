@@ -28,7 +28,7 @@
         <div class="entry__timestamp">
           Queued for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
         </div>
-      <% elsif entry.is_queued? && action_name != 'search' %>
+      <% elsif entry.is_queued? && action_name == 'queued' %>
         <div class="entry__actions entry__actions--queue">
           <%= link_to 'Move to top', top_admin_entry_path(entry.id), method: :post, data: { queue: 'top' } %>
           <%= link_to 'Move up', up_admin_entry_path(entry.id), method: :post, data: { queue: 'up' } %>
@@ -37,25 +37,12 @@
         </div>
       <% end %>
       <div class="entry__actions">
-        <% unless entry.is_published? %>
-          <%= link_to 'Preview', preview_entry_path(entry.preview_hash) %>
-        <% end %>
-        <% if entry.is_published? && entry.is_photo? %>
+        <% if entry.is_photo? %>
           <%= link_to 'Share', share_admin_entry_path(entry) %>
           ·
         <% end %>
-        <%= link_to 'Edit', edit_admin_entry_path(entry) %>
-        <% if entry.is_draft? %>
-          <%= link_to 'Queue', queue_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to move this entry to the queue?' }  %>
-        <% end %>
-        <% if entry.is_queued? %>
-          <%= link_to 'Draft', draft_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to move this entry to the drafts?' }  %>
-        <% end %>
-        <% if entry.is_queued? || entry.is_draft? %>
-          <%= link_to 'Publish', publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry?' }  %>
-        <% end %>
-        ·
-        <%= link_to 'Delete', delete_admin_entry_path(entry.id) %>
+        <%= link_to 'Edit', edit_admin_entry_path(entry) %> ·
+        <%= link_to 'More', more_admin_entry_path(entry.id) %>
       </div>
     </div>
   </div>

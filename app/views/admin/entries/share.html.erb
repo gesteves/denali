@@ -1,5 +1,6 @@
 <ol class="entry-list">
   <%= render partial: 'entry', object: @entry %>
+  <% if @entry.is_published? %>
   <li class="entry">
     <div class="entry__content entry__content--misc">
       <h2>Buffer</h2>
@@ -10,6 +11,7 @@
       </div>
     </div>
   </li>
+  <% end %>
   <li class="entry">
     <div class="entry__content entry__content--misc">
       <h2>Instagram</h2>
