@@ -402,7 +402,7 @@ class Entry < ApplicationRecord
     self.equipment_list = equipment_tags
     self.location_list = location_tags
     self.style_list = style_tags
-    self.tag_list.remove(equipment_tags + location_tags + style_tags)
+    self.tag_list.remove(equipment_tags + location_tags + ['Color', 'Black and White'])
     self.save!
   end
 

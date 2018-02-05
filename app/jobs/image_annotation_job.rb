@@ -8,7 +8,7 @@ class ImageAnnotationJob < ApplicationJob
 
     photo.keywords = labels(response_labels)
     photo.dominant_color = dominant_color(response_colors)
-    photo.color = is_color?(response_labels)
+    photo.color = is_color?(response_colors)
     photo.save
   end
 
@@ -57,8 +57,8 @@ class ImageAnnotationJob < ApplicationJob
     "##{red}#{green}#{blue}".upcase
   end
 
-  def is_color?(labels, opts = {})
-    return false if labels.blank?
-    labels.select { |l| l['description'].match? /(black and white|monochrome)/i }.empty?
+  def is_color?(colors, opts = {})
+    return false if colors.blank?
+    colors.reject { |c| c['color']['red'] == c['color']['green'] && c['color']['red'] == c['color']['blue'] }.size > 0
   end
 end
