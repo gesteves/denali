@@ -156,7 +156,7 @@ class Admin::EntriesController < AdminController
     @entry.destroy
     respond_to do |format|
       flash[:notice] = 'Your entry was deleted!'
-      format.html { redirect_to session[:redirect_url] || admin_entries_path }
+      format.html { redirect_to admin_entries_path }
     end
   end
 
