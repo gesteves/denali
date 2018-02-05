@@ -45,9 +45,11 @@ module ApplicationHelper
     render partial: "partials/svg/#{icon}.html.erb", locals: { svg_class: "#{svg_class} #{svg_class}--#{icon}" }
   end
 
-  def intrinsic_ratio_padding(photo)
-    padding = (photo.height.to_f/photo.width.to_f) * 100
-    "style=padding-top:#{padding}%"
+  def intrinsic_ratio_padding(photo, opts = {})
+    opts.reverse_merge!(square: false)
+    padding = opts[:square] ? 100 : ((photo.height.to_f/photo.width.to_f) * 100)
+    color = photo.dominant_color.present? ? photo.dominant_color : '#EEEEEE'
+    "style=padding-top:#{padding}%;background-color:#{color}"
   end
 
   def intrinsic_ratio_width(photo)

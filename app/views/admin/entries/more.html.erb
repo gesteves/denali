@@ -23,6 +23,16 @@
   </li>
   <% end %>
 
+  <li class="entry">
+    <div class="entry__content entry__content--misc">
+      <h2>Refresh annotation data</h2>
+      <p class="entry__help">Retrieves image metadata from Google Vision, and uses that to populate search keywords.</p>
+      <div class="entry__content-buttons">
+        <%= button_to 'Refresh annotation data', annotate_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+      </div>
+    </div>
+  </li>
+
   <% if !@entry.is_published? %>
   <li class="entry">
     <div class="entry__content entry__content--misc">

@@ -25,7 +25,7 @@ default: &default
   google_client_secret:
 
   # Optional. Used for auto-tagging entries with location info.
-  google_maps_api_key:
+  google_api_key:
 
   # Required.
   imgix_domain:
@@ -96,7 +96,7 @@ production:
   google_client_secret:
 
   # Optional. Used for auto-tagging entries with location info.
-  google_maps_api_key:
+  google_api_key:
 
   # Required.
   imgix_domain:

@@ -14,7 +14,7 @@ class Entry < ApplicationRecord
   before_save :set_entry_slug
   before_create :set_preview_hash
 
-  acts_as_taggable_on :tags, :equipment, :locations
+  acts_as_taggable_on :tags, :equipment, :locations, :styles
   acts_as_list scope: :blog
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
@@ -36,7 +36,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_captions])
+    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_captions, :plain_styles, :plain_keywords, :plain_colors])
   end
 
   def self.published(order = 'published_at DESC')
@@ -310,7 +310,7 @@ class Entry < ApplicationRecord
         title: self.plain_title,
         title_link: self.permalink_url,
         image_url: self.photos.first.url(w: 800),
-        color: '#BF0222'
+        color: self.photos.first.dominant_color.present? ? self.photos.first.dominant_color : '#BF0222'
       }
       attachment[:text] = self.plain_body if self.body.present?
       SlackJob.perform_later('', attachment)
@@ -322,7 +322,7 @@ class Entry < ApplicationRecord
   end
 
   def combined_tags
-    tags = self.tags + self.equipment + self.locations
+    tags = self.tags + self.equipment + self.locations + self.styles
     tags.uniq { |t| t.slug }
   end
 
@@ -342,8 +342,20 @@ class Entry < ApplicationRecord
     self.equipment_list.join(separator)
   end
 
+  def plain_styles(separator = ' ')
+    self.style_list.join(separator)
+  end
+
   def plain_captions
     self.photos.map { |p| p.plain_caption }.join("\n\n")
+  end
+
+  def plain_keywords
+    self.photos.map { |p| p.keywords }.join(', ')
+  end
+
+  def plain_colors
+    self.photos.map { |p| p.dominant_color }.join(', ')
   end
 
   def instagram_hashtags
@@ -378,12 +390,19 @@ class Entry < ApplicationRecord
   def update_tags
     equipment_tags = []
     location_tags = []
+    style_tags = []
     self.photos.each do |p|
-      equipment_tags += [p.formatted_make, p.formatted_camera, p.formatted_film]
-      location_tags  += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area] if self.show_in_map?
+      equipment_tags << [p.formatted_make, p.formatted_camera, p.formatted_film]
+      style_tags << (p.color? ? "Color" : "Black and White")
+      location_tags  << [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area] if self.show_in_map?
     end
-    self.equipment_list = equipment_tags.flatten.uniq.reject(&:blank?)
-    self.location_list = location_tags.flatten.uniq.reject(&:blank?)
+    equipment_tags = equipment_tags.flatten.uniq.reject(&:blank?)
+    location_tags = location_tags.flatten.uniq.reject(&:blank?)
+    style_tags = style_tags.flatten.uniq
+    self.equipment_list = equipment_tags
+    self.location_list = location_tags
+    self.style_list = style_tags
+    self.tag_list.remove(equipment_tags + location_tags + style_tags)
     self.save!
   end
 

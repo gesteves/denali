@@ -159,7 +159,11 @@ class Photo < ApplicationRecord
   end
 
   def geocode
-    GeocodeJob.perform_later(self) if ENV['google_maps_api_key'].present? && self.has_location?
+    GeocodeJob.perform_later(self) if ENV['google_api_key'].present? && self.has_location?
+  end
+
+  def annotate
+    ImageAnnotationJob.perform_later(self) if ENV['google_api_key'].present?
   end
 
   private

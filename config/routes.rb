@@ -30,6 +30,7 @@ Rails.application.routes.draw do
         post 'facebook'
         post 'geotag'
         post 'invalidate'
+        post 'annotate'
       end
       collection do
         get 'queued'
