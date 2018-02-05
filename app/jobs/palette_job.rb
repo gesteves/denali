@@ -9,7 +9,7 @@ class PaletteJob < ApplicationJob
     photo.color_muted         = palette.dig('dominant_colors', 'muted', 'hex')
     photo.color_muted_light   = palette.dig('dominant_colors', 'muted_light', 'hex')
     photo.color_muted_dark    = palette.dig('dominant_colors', 'muted_dark', 'hex')
-    photo.color               = is_color?(json.dig('colors'))
+    photo.color               = is_color?(palette.dig('colors'))
     photo.save
   end
 
