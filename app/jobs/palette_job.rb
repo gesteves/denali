@@ -15,7 +15,7 @@ class PaletteJob < ApplicationJob
 
   private
   def request_palette(photo)
-    request = HTTParty.get(Ix.path(photo.original_path).to_url(palette: 'json', colors: 6))
+    request = HTTParty.get(photo.palette_url)
     JSON.parse(request.body)
   end
 

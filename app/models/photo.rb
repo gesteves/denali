@@ -79,6 +79,11 @@ class Photo < ApplicationRecord
     end
   end
 
+  def palette_url(opts = {})
+    opts.reverse_merge!(palette: 'json', colors: 6)
+    Ix.path(self.original_path).to_url(opts)
+  end
+
   def formatted_caption
     markdown_to_html(self.caption)
   end
