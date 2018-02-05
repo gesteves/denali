@@ -170,7 +170,7 @@ class Photo < ApplicationRecord
     !self.color?
   end
 
-  def dominant_color
+  def prominent_color
     self.color_vibrant || self.color_vibrant_dark || self.color_vibrant_light || self.color_muted || self.color_muted_light || self.color_muted_dark || '#EEEEEE'
   end
 

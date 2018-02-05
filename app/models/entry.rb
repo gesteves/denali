@@ -310,7 +310,7 @@ class Entry < ApplicationRecord
         title: self.plain_title,
         title_link: self.permalink_url,
         image_url: self.photos.first.url(w: 800),
-        color: self.photos.first.dominant_color
+        color: self.photos.first.prominent_color
       }
       attachment[:text] = self.plain_body if self.body.present?
       SlackJob.perform_later('', attachment)

@@ -2,7 +2,7 @@ module MapsHelper
   def tooltip_content(photo, entry)
     content_tag :div, class: 'entry-list__item entry-list__item--map' do
       content_tag :div, class: 'entry-list__wrapper' do
-        link_to entry.permalink_url, { class: 'entry-list__link entry-list__link--photo', target: 'blank', style: "background-color:#{photo.dominant_color};" } do
+        link_to entry.permalink_url, { class: 'entry-list__link entry-list__link--photo', target: 'blank', style: "background-color:#{photo.prominent_color};" } do
           content_tag :figure, class: 'entry-list__photo' do
             img = responsive_image_tag(photo, 'map', { class: 'entry-list__image' })
             caption = content_tag :figcaption, class: 'entry-list__photo-caption' do
