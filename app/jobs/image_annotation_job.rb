@@ -59,6 +59,6 @@ class ImageAnnotationJob < ApplicationJob
 
   def is_color?(colors, opts = {})
     return false if colors.blank?
-    colors.reject { |c| c['color']['red'] == c['color']['green'] && c['color']['red'] == c['color']['blue'] }.size > 0
+    !colors.reject { |c| (c['color']['red'] - c['color']['green']).abs <= 1 && ((c['color']['red'] - c['color']['blue']).abs <= 1) && ((c['color']['green'] - c['color']['blue']).abs <= 1) }.empty?
   end
 end
