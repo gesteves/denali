@@ -45,6 +45,10 @@ json.cache! "entry/json/#{entry.id}/#{entry.updated_at.to_i}" do
             json.(p, :focal_x)
             json.(p, :focal_y)
             json.(p, :taken_at)
+            json.(p, :keywords)
+            json.(p, :dominant_color)
+            json.(p, :color?)
+            json.(p, :black_and_white?)
             json.(p, :updated_at)
             json.(p, :created_at)
           end

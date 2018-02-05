@@ -166,6 +166,10 @@ class Photo < ApplicationRecord
     ImageAnnotationJob.perform_later(self) if ENV['google_api_key'].present?
   end
 
+  def black_and_white?
+    !self.color?
+  end
+
   private
   def set_image
     if self.source_url.present?
