@@ -16,7 +16,6 @@ class PaletteJob < ApplicationJob
   private
   def request_palette(photo)
     request = HTTParty.get(Ix.path(photo.original_path).to_url(palette: 'json', colors: 6))
-    raise request.code if request.code != 200
     JSON.parse(request.body)
   end
 
