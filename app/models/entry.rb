@@ -351,11 +351,11 @@ class Entry < ApplicationRecord
   end
 
   def plain_keywords
-    self.photos.map { |p| p.keywords }.join(', ')
+    self.photos.map { |p| p.keywords }.reject(&:blank?).join(', ')
   end
 
   def plain_colors
-    self.photos.map { |p| p.dominant_color }.join(', ')
+    self.photos.map { |p| p.dominant_color }.reject(&:blank?).join(', ')
   end
 
   def instagram_hashtags
