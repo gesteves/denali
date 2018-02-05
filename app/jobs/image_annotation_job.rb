@@ -34,6 +34,7 @@ class ImageAnnotationJob < ApplicationJob
       ]
     }
     request = HTTParty.post("https://vision.googleapis.com/v1/images:annotate?key=#{ENV['google_api_key']}", body: payload.to_json, headers: { 'Content-Type' => 'application/json' }, timeout: 120)
+    raise response.code if response.code != 200
     JSON.parse(request.body)
   end
 
