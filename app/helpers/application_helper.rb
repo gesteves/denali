@@ -48,7 +48,7 @@ module ApplicationHelper
   def intrinsic_ratio_padding(photo, opts = {})
     opts.reverse_merge!(square: false)
     padding = opts[:square] ? 100 : ((photo.height.to_f/photo.width.to_f) * 100)
-    color = photo.dominant_color.present? ? photo.dominant_color : '#EEEEEE'
+    color = photo.dominant_color
     "style=padding-top:#{padding}%;background-color:#{color}"
   end
 

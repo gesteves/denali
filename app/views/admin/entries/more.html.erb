@@ -25,10 +25,10 @@
 
   <li class="entry">
     <div class="entry__content entry__content--misc">
-      <h2>Refresh annotation data</h2>
-      <p class="entry__help">Retrieves image metadata from Google Vision, and uses that to populate search keywords.</p>
+      <h2>Refresh palette data</h2>
+      <p class="entry__help">Retrieves the color palette data for the photos. This sets the placeholder color for the photos, and the “black and white” & “color” tags.</p>
       <div class="entry__content-buttons">
-        <%= button_to 'Refresh annotation data', annotate_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+        <%= button_to 'Refresh palette data', palette_admin_entry_path(@entry.id), method: :post, class: 'button' %>
       </div>
     </div>
   </li>

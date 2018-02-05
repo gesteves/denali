@@ -36,7 +36,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_captions, :plain_styles, :plain_keywords])
+    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_captions, :plain_styles])
   end
 
   def self.published(order = 'published_at DESC')
@@ -310,7 +310,7 @@ class Entry < ApplicationRecord
         title: self.plain_title,
         title_link: self.permalink_url,
         image_url: self.photos.first.url(w: 800),
-        color: self.photos.first.dominant_color.present? ? self.photos.first.dominant_color : '#BF0222'
+        color: self.photos.first.dominant_color
       }
       attachment[:text] = self.plain_body if self.body.present?
       SlackJob.perform_later('', attachment)
@@ -348,10 +348,6 @@ class Entry < ApplicationRecord
 
   def plain_captions
     self.photos.map { |p| p.plain_caption }.join("\n\n")
-  end
-
-  def plain_keywords
-    self.photos.map { |p| p.keywords }.reject(&:blank?).join(', ')
   end
 
   def instagram_hashtags

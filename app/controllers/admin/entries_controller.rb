@@ -1,13 +1,13 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :geotag, :invalidate, :annotate]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :geotag, :invalidate, :palette]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url, only: [:edit, :new, :up, :down, :top, :bottom, :more]
   after_action :update_position, only: [:create]
   after_action :geocode_photos, only: [:create, :update]
-  after_action :annotate_photos, only: [:create, :update]
+  after_action :extract_palette, only: [:create, :update]
   after_action :enqueue_invalidation, only: [:update]
 
   # GET /admin/entries
@@ -224,9 +224,9 @@ class Admin::EntriesController < AdminController
     redirect_to more_admin_entry_path(@entry)
   end
 
-  def annotate
-    @entry.photos.map(&:annotate)
-    flash[:notice] = 'Your entry is currently being annotated. This may take a minute.'
+  def palette
+    @entry.photos.map(&:update_palette)
+    flash[:notice] = 'Your palette is currently being updated. This may take a minute.'
     redirect_to more_admin_entry_path(@entry)
   end
 
@@ -281,7 +281,7 @@ class Admin::EntriesController < AdminController
       @entry.photos.map(&:geocode)
     end
 
-    def annotate_photos
-      @entry.photos.map(&:annotate)
+    def extract_palette
+      @entry.photos.map(&:update_palette)
     end
 end

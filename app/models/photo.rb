@@ -162,12 +162,16 @@ class Photo < ApplicationRecord
     GeocodeJob.perform_later(self) if ENV['google_api_key'].present? && self.has_location?
   end
 
-  def annotate
-    ImageAnnotationJob.perform_later(self) if ENV['google_api_key'].present?
+  def update_palette
+    PaletteJob.perform_later(self)
   end
 
   def black_and_white?
     !self.color?
+  end
+
+  def dominant_color
+    self.color_vibrant || self.color_vibrant_dark || self.color_vibrant_light || self.color_muted || self.color_muted_light || self.color_muted_dark || '#EEEEEE'
   end
 
   private
