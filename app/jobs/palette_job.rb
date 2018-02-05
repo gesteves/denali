@@ -9,18 +9,11 @@ class PaletteJob < ApplicationJob
     photo.color_muted         = palette.dig('dominant_colors', 'muted', 'hex')
     photo.color_muted_light   = palette.dig('dominant_colors', 'muted_light', 'hex')
     photo.color_muted_dark    = palette.dig('dominant_colors', 'muted_dark', 'hex')
-    photo.color               = is_color?(palette.dig('colors'))
     photo.save
   end
 
-  private
   def request_palette(photo)
     request = HTTParty.get(photo.palette_url)
     JSON.parse(request.body)
-  end
-
-  def is_color?(colors, opts = {})
-    return false if colors.blank?
-    !colors.reject { |c| c['red'] == c['green'] && c['red'] == c['blue'] }.empty?
   end
 end

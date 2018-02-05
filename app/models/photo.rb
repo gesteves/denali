@@ -171,6 +171,12 @@ class Photo < ApplicationRecord
     PaletteJob.perform_later(self)
   end
 
+  def color?
+    colors = [self.color_vibrant, self.color_vibrant_dark, self.color_vibrant_light, self.color_muted, self.color_muted_light, self.color_muted_dark].reject(&:blank?)
+    return if colors.empty?
+    !colors.map { |c| c.gsub('#', '') }.reject { |c| c.scan(/../).uniq.size == 1 }.empty?
+  end
+
   def black_and_white?
     !self.color?
   end

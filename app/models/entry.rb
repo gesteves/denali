@@ -385,12 +385,12 @@ class Entry < ApplicationRecord
     style_tags = []
     self.photos.each do |p|
       equipment_tags << [p.formatted_make, p.formatted_camera, p.formatted_film]
-      style_tags << (p.color? ? "Color" : "Black and White")
+      style_tags << (p.color? ? "Color" : "Black and White") unless p.color?.nil?
       location_tags  << [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area] if self.show_in_map?
     end
     equipment_tags = equipment_tags.flatten.uniq.reject(&:blank?)
     location_tags = location_tags.flatten.uniq.reject(&:blank?)
-    style_tags = style_tags.flatten.uniq
+    style_tags = style_tags.flatten.uniq.reject(&:blank?)
     self.equipment_list = equipment_tags
     self.location_list = location_tags
     self.style_list = style_tags
