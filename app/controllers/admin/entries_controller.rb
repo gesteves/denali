@@ -7,7 +7,7 @@ class Admin::EntriesController < AdminController
   before_action :set_redirect_url, only: [:edit, :new, :up, :down, :top, :bottom, :more]
   after_action :update_position, only: [:create]
   after_action :geocode_photos, only: [:create, :update]
-  after_action :extract_palette, only: [:create, :update]
+  after_action :update_palette, only: [:create, :update]
   after_action :enqueue_invalidation, only: [:update]
 
   # GET /admin/entries
@@ -281,7 +281,7 @@ class Admin::EntriesController < AdminController
       @entry.photos.map(&:geocode)
     end
 
-    def extract_palette
+    def update_palette
       @entry.photos.map(&:update_palette)
     end
 end
