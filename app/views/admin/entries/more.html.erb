@@ -14,10 +14,10 @@
   <% if @entry.show_in_map? %>
   <li class="entry">
     <div class="entry__content entry__content--misc">
-      <h2>Refresh location data</h2>
+      <h2>Update location data</h2>
       <p class="entry__help">Retrieves geographical information from Google Maps using the photos’ geotags, and uses that to autotag the entry.</p>
       <div class="entry__content-buttons">
-        <%= button_to 'Refresh location data', geotag_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+        <%= button_to 'Update location data', geotag_admin_entry_path(@entry.id), method: :post, class: 'button' %>
       </div>
     </div>
   </li>
@@ -25,10 +25,10 @@
 
   <li class="entry">
     <div class="entry__content entry__content--misc">
-      <h2>Refresh palette data</h2>
-      <p class="entry__help">Retrieves the color palette data for the photos. This sets the placeholder color for the photos, and the “black and white” & “color” tags.</p>
+      <h2>Update palette data</h2>
+      <p class="entry__help">Retrieves the color palette data for the photos. This sets the placeholder colors for the photos, and the “black and white” & “color” tags.</p>
       <div class="entry__content-buttons">
-        <%= button_to 'Refresh palette data', palette_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+        <%= button_to 'Update palette data', palette_admin_entry_path(@entry.id), method: :post, class: 'button' %>
       </div>
     </div>
   </li>
