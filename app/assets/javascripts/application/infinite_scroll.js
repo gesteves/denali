@@ -25,8 +25,8 @@ class InfiniteScroll {
     this.pagination = document.querySelector(options.paginationSelector);
     this.sentinel = document.querySelector(options.sentinelSelector);
 
-    // Early return if none of these elements are present for some reason
-    if (!this.container || !this.sentinel || !this.pagination) {
+    // No point in doing anything if there's no container
+    if (!this.container) {
       return;
     }
 
@@ -43,7 +43,7 @@ class InfiniteScroll {
       }
     });
 
-    // If for some reason there's no sentinel, there's nothing to observe.
+    // If there's no sentinel, there's nothing to observe.
     // If there's no pagination, it means there are no more pages to load.
     // In either of these cases, return early but init the masonry layout first.
     if (!this.sentinel || !this.pagination) {
