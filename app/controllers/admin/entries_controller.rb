@@ -220,7 +220,7 @@ class Admin::EntriesController < AdminController
   def invalidate
     @entry.touch
     CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production?
-    flash[:notice] = 'Your entry is currently being invalidated in CloudFront. This may take up to 15 minutes.'
+    flash[:notice] = 'Your entry is currently being invalidated in CloudFront. This may take a few minutes.'
     redirect_to more_admin_entry_path(@entry)
   end
 

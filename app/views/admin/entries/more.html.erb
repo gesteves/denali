@@ -1,6 +1,5 @@
 <ol class="entry-list">
   <%= render partial: 'entry', object: @entry %>
-  <% if @max_age >= 15 %>
   <li class="entry">
     <div class="entry__content entry__content--misc">
       <h2>Invalidate entry in CloudFront</h2>
@@ -10,7 +9,6 @@
       </div>
     </div>
   </li>
-  <% end %>
   <% if @entry.show_in_map? %>
   <li class="entry">
     <div class="entry__content entry__content--misc">
