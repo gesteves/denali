@@ -28,7 +28,7 @@ class BufferJob < ApplicationJob
 
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: body)
     if response.code >= 400
-      raise response.body
+      raise JSON.parse(response.body)['message']
     end
   end
 
