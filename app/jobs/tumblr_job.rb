@@ -2,7 +2,7 @@ class TumblrJob < ApplicationJob
   queue_as :default
 
   def perform(entry)
-    return if !entry.is_published? || !entry.is_photo? || !Rails.env.production?
+    return if !entry.is_published? || !Rails.env.production?
     tumblr = Tumblr::Client.new({
       consumer_key: ENV['tumblr_consumer_key'],
       consumer_secret: ENV['tumblr_consumer_secret'],
@@ -15,11 +15,16 @@ class TumblrJob < ApplicationJob
       slug: entry.slug,
       caption: entry.formatted_content(link_title: true),
       link: entry.permalink_url,
-      data: entry.photos.map { |p| open(p.url(w: 2560, fm: 'jpg')).path },
       state: 'queue'
     }
 
-    response = tumblr.photo(ENV['tumblr_domain'], opts)
+    response = if entry.is_photo?
+      opts[:data] = entry.photos.map { |p| open(p.url(w: 2560, fm: 'jpg')).path }
+      tumblr.photo(ENV['tumblr_domain'], opts)
+    else
+      tumblr.text(ENV['tumblr_domain'], opts)
+    end
+
     if response['errors'].present?
       raise response['errors']
     elsif response['status'].present? && response['status'] >= 400

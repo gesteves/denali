@@ -15,7 +15,7 @@ class BufferJob < ApplicationJob
     profiles.select { |profile| profile['service'].downcase.match(service) }.map { |profile| profile['id'] }
   end
 
-  def post_to_buffer(profile_ids, text, media)
+  def post_to_buffer(profile_ids, text, media = nil)
     body = {
       profile_ids: profile_ids,
       text: text,
@@ -23,6 +23,8 @@ class BufferJob < ApplicationJob
       shorten: false,
       access_token: ENV['buffer_access_token']
     }
+
+    body[:media] = media if media.present?
 
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: body)
     if response.code >= 400
