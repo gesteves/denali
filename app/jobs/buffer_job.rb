@@ -2,6 +2,7 @@ class BufferJob < ApplicationJob
   private
 
   def get_profile_ids(service)
+    return if ENV['buffer_access_token'].blank? || !Rails.env.production?
     profiles = Rails.cache.fetch('buffer:profiles', expires_in: 1.hour) do
       response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}")
       if response.code >= 400

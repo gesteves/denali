@@ -2,6 +2,7 @@ class FlickrJob < ApplicationJob
   queue_as :default
 
   def perform(entry)
+    return if !entry.is_published? || !entry.is_photo? || !Rails.env.production?
     FlickRaw.api_key = ENV['flickr_consumer_key']
     FlickRaw.shared_secret = ENV['flickr_consumer_secret']
 

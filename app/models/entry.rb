@@ -134,7 +134,7 @@ class Entry < ApplicationRecord
   def publish
     self.remove_from_list
     self.status = 'published'
-    self.save && self.enqueue_jobs
+    self.save && self.enqueue_sharing_jobs
   end
 
   def queue
@@ -270,55 +270,27 @@ class Entry < ApplicationRecord
     entry_url(self.id, url_opts(opts))
   end
 
-  def enqueue_jobs
-    unless Rails.env.development?
-      self.enqueue_twitter
-      self.enqueue_tumblr
-      self.enqueue_facebook
-      self.enqueue_flickr
-      self.enqueue_instagram
-      self.enqueue_pinterest
-      self.enqueue_slack
-    end
+  def enqueue_sharing_jobs
+    TwitterJob.perform_later(self) if self.post_to_twitter
+    TumblrJob.perform_later(self) if self.post_to_tumblr
+    FacebookJob.perform_later(self) if self.post_to_facebook
+    FlickrJob.perform_later(self) if self.post_to_flickr
+    InstagramJob.perform_later(self) if self.post_to_instagram
+    PinterestJob.perform_later(self) if self.post_to_pinterest
+    self.enqueue_slack
     true
   end
 
-  def enqueue_twitter
-    TwitterJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_twitter
-  end
-
-  def enqueue_tumblr
-    TumblrJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_tumblr
-  end
-
-  def enqueue_facebook
-    FacebookJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_facebook
-  end
-
-  def enqueue_instagram
-    InstagramJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_instagram
-  end
-
-  def enqueue_flickr
-    FlickrJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_flickr
-  end
-
   def enqueue_slack
-    if self.is_published? && self.is_photo?
-      attachment = {
-        fallback: "#{self.plain_title} #{self.permalink_url}",
-        title: self.plain_title,
-        title_link: self.permalink_url,
-        image_url: self.photos.first.url(w: 800),
-        color: self.photos.first.prominent_color
-      }
-      attachment[:text] = self.plain_body if self.body.present?
-      SlackJob.perform_later('', attachment)
-    end
-  end
-
-  def enqueue_pinterest
-    PinterestJob.perform_later(self) if self.is_published? && self.is_photo? && self.post_to_pinterest
+    attachment = {
+      fallback: "#{self.plain_title} #{self.permalink_url}",
+      title: self.plain_title,
+      title_link: self.permalink_url
+    }
+    attachment[:image_url] = self.photos.first.url(w: 800) if self.is_photo?
+    attachment[:color] = self.photos.first.prominent_color if self.is_photo?
+    attachment[:text] = self.plain_body if self.body.present?
+    SlackJob.perform_later('', attachment)
   end
 
   def combined_tags

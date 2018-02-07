@@ -2,6 +2,7 @@ class FacebookJob < BufferJob
   queue_as :default
 
   def perform(entry)
+    return if !entry.is_published? || !entry.is_photo?
     text = []
     text << entry.plain_title
     text << entry.plain_body if entry.body.present?
