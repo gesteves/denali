@@ -28,4 +28,16 @@ class PhotoTest < ActiveSupport::TestCase
     new_updated_at = entry.updated_at
     assert_not_equal original_updated_at, new_updated_at
   end
+
+  test 'color detection' do
+    photo = photos(:peppers)
+    assert photo.color?
+    assert_not photo.black_and_white?
+  end
+
+  test 'b&w detection' do
+    photo = photos(:franklin)
+    assert_not photo.color?
+    assert photo.black_and_white?
+  end
 end

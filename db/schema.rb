@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180205222512) do
+ActiveRecord::Schema.define(version: 20180207141907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,11 +116,8 @@ ActiveRecord::Schema.define(version: 20180205222512) do
     t.string "neighborhood"
     t.string "administrative_area"
     t.string "color_vibrant"
-    t.string "color_vibrant_dark"
-    t.string "color_vibrant_light"
     t.string "color_muted"
-    t.string "color_muted_light"
-    t.string "color_muted_dark"
+    t.string "color_palette"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["latitude"], name: "index_photos_on_latitude"
     t.index ["longitude"], name: "index_photos_on_longitude"
