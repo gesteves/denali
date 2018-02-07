@@ -11,4 +11,10 @@ namespace :photos do
       p.update_palette
     end
   end
+  task :annotate => [:environment] do
+    Photo.find_each do |p|
+      puts "Updating annotation data for photo ##{p.id}"
+      p.annotate
+    end
+  end
 end

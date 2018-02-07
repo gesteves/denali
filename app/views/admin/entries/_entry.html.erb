@@ -1,7 +1,7 @@
 <li class="entry" <% if entry.is_queued? %>data-position="<%= entry.position %>"<% end %>>
   <% if entry.is_photo? %>
     <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.preview_hash) %>" <%= intrinsic_ratio_padding(entry.photos.first) if entry.is_photo? %>>
-      <%= lazy_responsive_image_tag entry.photos.first, 'admin_entry', { class: 'entry__thumb' } %>
+      <%= lazy_responsive_image_tag entry.photos.first, 'admin_entry', { class: 'entry__thumb', alt: entry.photos.first.alt_text } %>
     </a>
   <% end %>
   <div class="entry__content <% if entry.is_text? %>entry__content--text<% end %>">

@@ -8,11 +8,11 @@
         <% if lazy %>
           <%= lazy_responsive_image_tag entry.photos.first,
                 entry_list_image_variant(square: square),
-                { class: 'entry-list__image', alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption } %>
+                { class: 'entry-list__image', alt: entry.photos.first.alt_text } %>
         <% else %>
           <%= responsive_image_tag entry.photos.first,
                 entry_list_image_variant(square: square),
-                { class: 'entry-list__image', alt: entry.photos.first.caption.blank? ? entry.title : entry.photos.first.plain_caption } %>
+                { class: 'entry-list__image', alt: entry.photos.first.alt_text } %>
         <% end %>
         <figcaption class="entry-list__photo-caption">
           <p class="entry-list__photo-title"><%= sanitize truncate(entry.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>

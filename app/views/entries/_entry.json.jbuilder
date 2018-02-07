@@ -23,6 +23,7 @@ json.cache! "entry/json/#{entry.id}/#{entry.updated_at.to_i}" do
             json.(p, :caption)
             json.(p, :formatted_caption)
             json.(p, :plain_caption)
+            json.(p, :keywords)
             json.(p, :make)
             json.(p, :model)
             json.(p, :exposure)

@@ -167,6 +167,10 @@ class Photo < ApplicationRecord
     GeocodeJob.perform_later(self)
   end
 
+  def annotate
+    ImageAnnotationJob.perform_later(self)
+  end
+
   def update_palette
     PaletteJob.perform_later(self)
   end
@@ -183,6 +187,16 @@ class Photo < ApplicationRecord
   def black_and_white?
     return if self.color_palette.blank?
     !self.color?
+  end
+
+  def alt_text
+    if self.caption.present?
+      self.plain_caption
+    elsif self.keywords.present?
+      "Objects in photo: #{self.keywords}"
+    else
+      self.entry.plain_title
+    end
   end
 
   private

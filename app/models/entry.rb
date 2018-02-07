@@ -36,7 +36,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_captions, :plain_styles])
+    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_captions, :plain_styles, :plain_keywords])
   end
 
   def self.published(order = 'published_at DESC')
@@ -318,8 +318,12 @@ class Entry < ApplicationRecord
     self.style_list.join(separator)
   end
 
-  def plain_captions
-    self.photos.map { |p| p.plain_caption }.join("\n\n")
+  def plain_captions(separator = "\n\n")
+    self.photos.map { |p| p.plain_caption }.reject(&:blank?).join(separator)
+  end
+
+  def plain_keywords(separator = ', ')
+    self.photos.map { |p| p.keywords }.reject(&:blank?).join(separator)
   end
 
   def instagram_hashtags

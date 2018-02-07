@@ -6,7 +6,7 @@
           <%= responsive_image_tag photo,
               'entry',
               { class: "entry__photo",
-                alt: photo.plain_caption || '',
+                alt: photo.alt_text,
                 'data-width-original': photo.width,
                 'data-height-original': photo.height } %>
         </figure>

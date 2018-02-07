@@ -1,5 +1,5 @@
 <% entry.photos.each do |photo| %>
-  <%= link_to image_tag(photo.url(w: 1280), srcset: "#{photo.url(w: 1280)} 1x, #{photo.url(w: 2560)} 2x", alt: photo.plain_caption), entry.permalink_url %>
+  <%= link_to image_tag(photo.url(w: 1280), srcset: "#{photo.url(w: 1280)} 1x, #{photo.url(w: 2560)} 2x", alt: photo.alt_text), entry.permalink_url %>
   <small><%= photo.plain_caption %></small>
 <% end %>
 <%= sanitize entry.formatted_body unless entry.body.blank? %>
