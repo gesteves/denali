@@ -3,6 +3,7 @@ class CloudfrontInvalidationJob < ApplicationJob
   queue_as :default
 
   def perform(entry)
+    return if !Rails.env.production?
     client = Aws::CloudFront::Client.new(access_key_id: ENV['aws_access_key_id'], secret_access_key: ENV['aws_secret_access_key'], region: ENV['s3_region'])
     paths = if entry.is_published?
       [entry.permalink_path]

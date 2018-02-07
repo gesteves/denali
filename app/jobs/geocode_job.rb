@@ -2,6 +2,7 @@ class GeocodeJob < ApplicationJob
   queue_as :default
 
   def perform(photo)
+    return if ENV['google_api_key'].blank? || !photo.has_location?
     url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=#{photo.latitude},#{photo.longitude}&key=#{ENV['google_api_key']}"
     response = JSON.parse(HTTParty.get(url).body)
     raise response['error_message'] || response['status'] if response['status'] != 'OK'

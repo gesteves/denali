@@ -219,7 +219,7 @@ class Admin::EntriesController < AdminController
 
   def invalidate
     @entry.touch
-    CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production?
+    CloudfrontInvalidationJob.perform_later(@entry)
     flash[:notice] = 'Your entry is currently being invalidated in CloudFront. This may take a few minutes.'
     redirect_to more_admin_entry_path(@entry)
   end
@@ -274,7 +274,7 @@ class Admin::EntriesController < AdminController
     end
 
     def enqueue_invalidation
-      CloudfrontInvalidationJob.perform_later(@entry) if Rails.env.production? && entry_params[:invalidate_cloudfront] == "1"
+      CloudfrontInvalidationJob.perform_later(@entry) if entry_params[:invalidate_cloudfront] == "1"
     end
 
     def geocode_photos
