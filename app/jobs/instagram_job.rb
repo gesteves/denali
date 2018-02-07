@@ -2,7 +2,7 @@ class InstagramJob < BufferJob
   queue_as :default
 
   def perform(entry)
-    return if !self.is_published? || !self.is_photo?
+    return if !self.is_photo?
     text_array = []
     text_array << entry.plain_title
     text_array << entry.plain_body if entry.body.present?
