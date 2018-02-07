@@ -6,7 +6,7 @@
   <% if @photoblog.has_search? %>
     <a href="<%= search_path %>" class="follow__link" title="Search"><%= inline_svg 'search', 'follow__icon' %></a>
   <% end %>
-  <a href="<%= feed_path %>" class="follow__link" title="Subscribe to Feed"><%= inline_svg 'feed', 'follow__icon' %></a>
+  <a href="<%= feed_path(format: 'atom', page: nil) %>" class="follow__link" title="Subscribe to Feed"><%= inline_svg 'feed', 'follow__icon' %></a>
   <% if @photoblog.email.present? %>
     <a href="mailto:<%= @photoblog.email %>" class="follow__link" title="Contact"><%= inline_svg 'email', 'follow__icon' %></a>
   <% end %>

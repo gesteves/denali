@@ -1,19 +1,19 @@
 <footer class="footer <%= additional_classes if local_assigns[:additional_classes] %>" role="contentinfo">
-  <% cache "blog/copyright/#{Time.now.strftime('%Y')}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-    <p>
+  <p>
+    <% cache "blog/copyright/#{Time.now.strftime('%Y')}" do %>
       &copy; <%= Photo.oldest.try(:taken_at).try(:strftime, '%Y') %>-<%= Time.now.strftime('%Y') %> <%= sanitize @photoblog.copyright %>
-      <span class="footer__links">
-        <%= link_to 'Home', root_path %> ·
-        <%= link_to 'About', about_path %> ·
-        <%= link_to 'Map', map_path(trailing_slash: true) %> ·
-        <% if @photoblog.has_search? %>
-          <%= link_to 'Search', search_path %> ·
-        <% end %>
-        <%= link_to 'Feed', feed_path %>
-        <% if @photoblog.email.present? %>
-          · <a href="mailto:<%= @photoblog.email %>">Contact</a>
-        <% end %>
-      </span>
-    </p>
-  <% end %>
+    <% end %>
+    <span class="footer__links">
+      <%= link_to 'Home', root_path %> ·
+      <%= link_to 'About', about_path %> ·
+      <%= link_to 'Map', map_path(trailing_slash: true) %> ·
+      <% if @photoblog.has_search? %>
+        <%= link_to 'Search', search_path %> ·
+      <% end %>
+      <%= link_to 'Feed', feed_path(format: 'atom', page: nil) %>
+      <% if @photoblog.email.present? %>
+        · <a href="mailto:<%= @photoblog.email %>">Contact</a>
+      <% end %>
+    </span>
+  </p>
 </footer>
