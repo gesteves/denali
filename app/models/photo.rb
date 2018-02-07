@@ -193,7 +193,7 @@ class Photo < ApplicationRecord
     if self.caption.present?
       self.plain_caption
     elsif self.keywords.present?
-      "Objects in photo: #{self.keywords}"
+      "Photo may contain: #{self.keywords}"
     else
       self.entry.plain_title
     end
