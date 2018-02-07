@@ -3,7 +3,6 @@ class ImageAnnotationJob < ApplicationJob
 
   def perform(photo)
     labels = rekognize(photo)
-    puts labels.map(&:name).join(', ')
     photo.keywords = labels.map(&:name).join(', ')
     photo.save
   end
