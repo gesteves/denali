@@ -48,8 +48,12 @@ module ApplicationHelper
   def intrinsic_ratio_padding(photo, opts = {})
     opts.reverse_merge!(square: false)
     padding = opts[:square] ? 100 : ((photo.height.to_f/photo.width.to_f) * 100)
-    color = photo.prominent_color
-    "style=padding-top:#{padding}%;background-color:#{color}"
+    if photo.color_palette.blank?
+      "style=padding-top:#{padding}%;"
+    else
+      palette = photo.color_palette.split(',').sample(2).join(',')
+      "style=padding-top:#{padding}%;background:linear-gradient(#{palette});"
+    end
   end
 
   def intrinsic_ratio_width(photo)
