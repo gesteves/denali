@@ -45,24 +45,26 @@ module ApplicationHelper
     render partial: "partials/svg/#{icon}.html.erb", locals: { svg_class: "#{svg_class} #{svg_class}--#{icon}" }
   end
 
-  def image_placeholder(photo, opts = {})
-    opts.reverse_merge!(square: false)
-    padding = opts[:square] ? 100 : ((photo.height.to_f/photo.width.to_f) * 100)
-    style = "padding-top:#{padding}%;"
-    style += if photo.thumbnail.present?
+  def image_placeholder(photo)
+    return '' if photo.thumbnail.blank? || photo.color_palette.blank?
+    style = if photo.thumbnail.present?
       "background-image: url(data:image/jpg;base64,#{photo.thumbnail});"
     elsif photo.color_palette.present?
       palette = photo.color_palette.split(',').sample(2).join(',')
       "background:linear-gradient(#{palette});"
-    else
-      ''
     end
     style.html_safe
   end
 
+  def intrinsic_ratio_padding(photo, opts = {})
+    opts.reverse_merge!(square: false)
+    padding = opts[:square] ? 100 : ((photo.height.to_f/photo.width.to_f) * 100)
+    "padding-top:#{padding}%;"
+  end
+
   def intrinsic_ratio_width(photo)
     width = (photo.width.to_f/photo.height.to_f) * 100
-    "style=width:#{width}vh"
+    "width:#{width}vh;"
   end
 
   def inline_asset(filename, opts = {})

@@ -1,7 +1,7 @@
 module MapsHelper
   def tooltip_content(photo, entry)
     content_tag :div, class: 'entry-list__item entry-list__item--map' do
-      content_tag :div, class: 'entry-list__wrapper', style: image_placeholder(photo, square: true) do
+      content_tag :div, class: 'entry-list__wrapper', style: "#{intrinsic_ratio_padding(photo, { square: true })};#{image_placeholder(photo)}" do
         link_to entry.permalink_url, { class: 'entry-list__link entry-list__link--photo', target: 'blank' } do
           content_tag :figure, class: 'entry-list__photo' do
             img = responsive_image_tag(photo, 'map', { class: 'entry-list__image' })
