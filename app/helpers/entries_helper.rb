@@ -21,8 +21,8 @@ module EntriesHelper
 
   def meta_description(entry)
     body = if entry.is_photo?
-      if entry.photos.first.caption.present?
-        entry.photos.first.plain_caption
+      if entry.photos.first.alt_text.present?
+        entry.photos.first.alt_text
       elsif entry.body.present?
         entry.plain_body
       else
@@ -45,5 +45,13 @@ module EntriesHelper
     else
       'entry_list'
     end
+  end
+
+  def json_schema_images(photo)
+    [
+      photo.url(w: 1200, h: 675, fm: 'jpg'),
+      photo.url(w: 1200, h: 900, fm: 'jpg'),
+      photo.url(w: 1200, square: true)
+    ]
   end
 end

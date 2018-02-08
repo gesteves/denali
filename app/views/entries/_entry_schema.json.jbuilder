@@ -9,12 +9,7 @@ json.description meta_description(entry)
 json.set! 'datePublished', entry.published_at
 json.set! 'dateModified', entry.updated_at
 if entry.is_photo?
-  json.image do
-    json.set! '@type', 'ImageObject'
-    json.url entry.photos.first.url(w: 1392, fm: 'jpg')
-    json.width 1392
-    json.height entry.photos.first.height_from_width(1392)
-  end
+  json.image json_schema_images(entry.photos.first)
 end
 json.author do
   json.set! '@type', 'Person'
