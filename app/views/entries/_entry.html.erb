@@ -2,13 +2,21 @@
   <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
     <% entry.photos.each do |photo| %>
       <div class="entry__photo-container" style="<%= intrinsic_ratio_width(photo) %>">
-        <figure class="entry__figure" style="<%= "#{intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}" %>">
+        <figure class="entry__figure" style="<%= "#{intrinsic_ratio_padding(photo)};#{image_placeholder(photo)};" %>">
           <%= responsive_image_tag photo,
               'entry',
               { class: "entry__photo",
                 alt: photo.alt_text,
                 'data-width-original': photo.width,
-                'data-height-original': photo.height } %>
+                'data-height-original': photo.height,
+                style: 'opacity:0;',
+                onload: 'this.style.opacity=1;' } %>
+          <noscript>
+            <%= responsive_image_tag photo,
+                'entry',
+                { class: "entry__photo",
+                  alt: photo.alt_text } %>
+          </noscript>
         </figure>
       </div>
     <% end %>

@@ -59,6 +59,7 @@
   max-width: 100%;
   position: absolute;
   top: 0;
+  transition: opacity $fadein-duration linear;
   width: auto;
   z-index: 1;
 }
