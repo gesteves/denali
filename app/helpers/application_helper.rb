@@ -51,7 +51,8 @@ module ApplicationHelper
     if photo.color_palette.blank?
       "style=padding-top:#{padding}%;"
     else
-      palette = photo.color_palette.split(',').sample(2).join(',')
+      palette = photo.color_palette.split(',')
+      palette = photo.color? ? palette[0, 2].join(',') : palette.sample(2).join(',')
       "style=padding-top:#{padding}%;background:linear-gradient(#{palette});"
     end
   end
