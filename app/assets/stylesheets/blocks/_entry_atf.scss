@@ -40,7 +40,7 @@
 
   &::before {
     @supports (backdrop-filter: none) {
-      backdrop-filter: blur(50px);
+      backdrop-filter: blur(25px);
       content: '';
       height: 100%;
       width: 100%;
