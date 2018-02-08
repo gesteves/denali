@@ -16,6 +16,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'jquery-rails'
 gem 'autoprefixer-rails'
 gem 'imgix'
+gem 'uglifier'
 
 # Misc
 gem 'jbuilder', '~> 2.3'

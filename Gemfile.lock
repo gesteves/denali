@@ -281,6 +281,8 @@ GEM
       simple_oauth
     tzinfo (1.2.4)
       thread_safe (~> 0.1)
+    uglifier (4.1.6)
+      execjs (>= 0.3.0, < 3)
     vegas (0.1.11)
       rack (>= 1.0.0)
     web-console (3.5.1)
@@ -333,6 +335,7 @@ DEPENDENCIES
   sentry-raven
   spring
   tumblr_client
+  uglifier
   web-console (~> 3.0)
 
 RUBY VERSION
