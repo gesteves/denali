@@ -48,10 +48,10 @@ module ApplicationHelper
   def image_placeholder(photo)
     return '' if photo.thumbnail.blank? || photo.color_palette.blank?
     style = if photo.thumbnail.present?
-      "background-image: url(data:image/jpg;base64,#{photo.thumbnail});"
+      "background-image: url(data:image/jpg;base64,#{photo.thumbnail})"
     elsif photo.color_palette.present?
       palette = photo.color_palette.split(',').sample(2).join(',')
-      "background:linear-gradient(#{palette});"
+      "background:linear-gradient(#{palette})"
     end
     style.html_safe
   end
@@ -59,12 +59,12 @@ module ApplicationHelper
   def intrinsic_ratio_padding(photo, opts = {})
     opts.reverse_merge!(square: false)
     padding = opts[:square] ? 100 : ((photo.height.to_f/photo.width.to_f) * 100)
-    "padding-top:#{padding}%;"
+    "padding-top:#{padding}%"
   end
 
   def intrinsic_ratio_width(photo)
     width = (photo.width.to_f/photo.height.to_f) * 100
-    "width:#{width}vh;"
+    "width:#{width}vh"
   end
 
   def inline_asset(filename, opts = {})
