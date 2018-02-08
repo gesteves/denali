@@ -2,12 +2,13 @@ class ImageAnnotationJob < ApplicationJob
   queue_as :default
 
   def perform(photo)
-    labels = rekognize(photo)
+    labels = detect_labels(photo)
     photo.keywords = labels.map(&:name).join(', ')
     photo.save
   end
 
-  def rekognize(photo)
+  private
+  def detect_labels(photo)
     credentials = Aws::Credentials.new(ENV['aws_access_key_id'], ENV['aws_secret_access_key'])
     client = Aws::Rekognition::Client.new(credentials: credentials, region: 'us-east-1')
     opts = {

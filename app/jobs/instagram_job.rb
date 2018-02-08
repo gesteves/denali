@@ -15,12 +15,11 @@ class InstagramJob < BufferJob
     post_to_buffer(ids, text, media)
   end
 
- private
-
- def media_hash(photo)
-   {
-     photo: photo.instagram_url,
-     thumbnail: photo.url(w: 512, fm: 'jpg')
-   }
+  private
+  def media_hash(photo)
+    {
+      photo: photo.instagram_url,
+      thumbnail: photo.url(w: 512, fm: 'jpg')
+    }
  end
 end

@@ -9,6 +9,7 @@ class PaletteJob < ApplicationJob
     photo.save
   end
 
+  private
   def request_palette(photo)
     request = HTTParty.get(photo.palette_url)
     JSON.parse(request.body)
