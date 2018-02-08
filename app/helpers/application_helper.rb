@@ -45,15 +45,19 @@ module ApplicationHelper
     render partial: "partials/svg/#{icon}.html.erb", locals: { svg_class: "#{svg_class} #{svg_class}--#{icon}" }
   end
 
-  def intrinsic_ratio_padding(photo, opts = {})
+  def image_placeholder(photo, opts = {})
     opts.reverse_merge!(square: false)
     padding = opts[:square] ? 100 : ((photo.height.to_f/photo.width.to_f) * 100)
-    if photo.color_palette.blank?
-      "style=padding-top:#{padding}%;"
-    else
+    style = "padding-top:#{padding}%;"
+    style += if photo.thumbnail.present?
+      "background-image: url(data:image/jpg;base64,#{photo.thumbnail});"
+    elsif photo.color_palette.present?
       palette = photo.color_palette.split(',').sample(2).join(',')
-      "style=padding-top:#{padding}%;background:linear-gradient(#{palette});"
+      "background:linear-gradient(#{palette});"
+    else
+      ''
     end
+    style.html_safe
   end
 
   def intrinsic_ratio_width(photo)
