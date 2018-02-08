@@ -195,7 +195,7 @@ class Photo < ApplicationRecord
     elsif self.keywords.present?
       "Photo may contain: #{self.keywords}"
     else
-      self.entry.plain_title
+      ''
     end
   end
 
