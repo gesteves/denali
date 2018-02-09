@@ -95,7 +95,6 @@ GEM
     globalid (0.4.1)
       activesupport (>= 4.2.0)
     hashie (3.5.7)
-    htmlcompressor (0.4.0)
     httparty (0.15.7)
       multi_xml (>= 0.5.2)
     i18n (0.9.3)
@@ -312,7 +311,6 @@ DEPENDENCIES
   figaro
   flickraw
   foreman
-  htmlcompressor
   httparty
   imgix
   jbuilder (~> 2.3)

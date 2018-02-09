@@ -17,7 +17,6 @@ gem 'jquery-rails'
 gem 'autoprefixer-rails'
 gem 'imgix'
 gem 'uglifier'
-gem 'htmlcompressor'
 
 # Misc
 gem 'jbuilder', '~> 2.3'
