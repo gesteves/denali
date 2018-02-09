@@ -9,7 +9,6 @@
                 alt: photo.alt_text,
                 'data-width-original': photo.width,
                 'data-height-original': photo.height,
-                style: 'opacity:0;',
                 onload: 'this.style.opacity=1;' } %>
           <noscript>
             <%= responsive_image_tag photo,
