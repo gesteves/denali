@@ -15,7 +15,6 @@
   left: 0;
   position: absolute;
   top: 0;
-  transition: opacity $fadein-duration linear;
   width: 100%;
 }
 
@@ -33,7 +32,7 @@
 }
 
 .entry__link {
-  background-color: $color-gray-very-light;
+  background-color: $color-photo-background;
   background-repeat: no-repeat;
   background-size: cover;
   border-bottom: 0;

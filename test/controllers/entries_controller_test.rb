@@ -50,7 +50,7 @@ class EntriesControllerTest < ActionController::TestCase
     assert_template layout: 'layouts/application'
     assert_template :show
     assert_select '.entry', 1
-    assert_select '.entry__photo', 2
+    assert_select '.entry__photo', 1
     assert_select '.entry__figure', 1
     assert_select '.entry__headline', 1
   end
