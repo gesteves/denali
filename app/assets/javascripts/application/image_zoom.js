@@ -45,10 +45,4 @@ class ImageZoom {
   }
 }
 
-if (document.readyState !== 'loading') {
-  new ImageZoom();
-} else {
-  document.addEventListener('DOMContentLoaded', () => {
-    new ImageZoom();
-  });
-}
+new ImageZoom();

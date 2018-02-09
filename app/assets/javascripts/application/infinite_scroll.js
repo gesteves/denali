@@ -177,8 +177,4 @@ class InfiniteScroll {
   }
 }
 
-if (document.readyState !== 'loading') {
-  new InfiniteScroll();
-} else {
-  document.addEventListener('DOMContentLoaded', () => new InfiniteScroll());
-}
+new InfiniteScroll();

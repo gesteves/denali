@@ -116,8 +116,4 @@ class Map {
   }
 }
 
-if (document.readyState !== 'loading') {
-  new Map('map', 10.46, -66.96, 'gesteves.ce0e3aae');
-} else {
-  document.addEventListener('DOMContentLoaded', () => new Map('map', 10.46, -66.96, 'gesteves.ce0e3aae'));
-}
+new Map('map', 10.46, -66.96, 'gesteves.ce0e3aae');

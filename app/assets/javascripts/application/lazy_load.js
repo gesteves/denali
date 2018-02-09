@@ -46,8 +46,4 @@ class LazyLoad {
   }
 }
 
-if (document.readyState !== 'loading') {
-  new LazyLoad('js-lazy-load');
-} else {
-  document.addEventListener('DOMContentLoaded', () => new LazyLoad('js-lazy-load'));
-}
+new LazyLoad('js-lazy-load');
