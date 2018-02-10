@@ -41,7 +41,7 @@
     <ol class="entry-list" role="main" data-target="entry-list.container">
       <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page) } %>
     </ol>
-    <%= paginate @entries, data_target: 'entry-list.paginator' %>
+    <%= paginate @entries, target: 'entry-list.paginator' %>
     <%= render partial: 'partials/loading', locals: { target: 'entry-list.sentinel' } %>
   </div>
 <% end %>

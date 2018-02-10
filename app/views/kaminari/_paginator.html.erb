@@ -8,7 +8,7 @@
 -%>
 
 <%= paginator.render do -%>
-  <nav class="pagination" role="navigation" <% if data_target.present? %>data-target="<%= data_target %>"<% end %>>
+  <nav class="pagination" role="navigation" <% if target.present? %>data-target="<%= target %>"<% end %>>
     <%= first_page_tag if is_admin? %>
     <%= prev_page_tag %>
     <%= next_page_tag %>
