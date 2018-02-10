@@ -72,13 +72,15 @@ class InfiniteScroll {
     this.masonry.layout();
   }
 
+  // Checks if an IO entry intersects the root
+  isIntersecting (entry) {
+    return (entry.intersectionRatio > 0 || entry.isIntersecting);
+  }
+
   // Handler for the intersection observer that observes the sentinel at the
   // bottom of the page. If it's visible, loads the next page.
   handlePageBottom (entries) {
-    let intersecting = entries.filter(entry => {
-      return (entry.intersectionRatio > 0 || entry.isIntersecting);
-    });
-    if (intersecting.length > 0) {
+    if (entries.filter(this.isIntersecting).length) {
       let nextPage = this.currentPage + 1;
       this.getPage(nextPage);
     }
@@ -136,10 +138,8 @@ class InfiniteScroll {
   updatePagePath (entries) {
     let entry,
         previous_path;
-    let intersecting = entries.filter(entry => {
-      return (entry.intersectionRatio > 0 || entry.isIntersecting);
-    });
-    if (intersecting.length > 0) {
+    let intersecting = entries.filter(this.isIntersecting);
+    if (intersecting.length) {
       entry = intersecting[0];
       previous_path = window.location.pathname;
       window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
