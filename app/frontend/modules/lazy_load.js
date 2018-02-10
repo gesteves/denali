@@ -4,7 +4,7 @@ class LazyLoad {
   constructor(elementsClass) {
     this.elementsClass = elementsClass;
     IntersectionObserver.prototype.POLL_INTERVAL = 50;
-    this.observer = new IntersectionObserver(entries => this.handleIntersection(entries), { rootMargin: '25%', threshold: 0 });
+    this.observer = new IntersectionObserver(e => this.handleIntersection(e), { rootMargin: '25%', threshold: 0 });
     this.images = document.querySelectorAll(`.${this.elementsClass}`);
     for (let i = 0; i < this.images.length; i++) {
       let image = this.images[i];
@@ -17,11 +17,7 @@ class LazyLoad {
       return (entry.intersectionRatio > 0 || entry.isIntersecting);
     });
     if (intersecting.length > 0) {
-      if ('requestAnimationFrame' in window) {
-        requestAnimationFrame(() => this.loadIntersectingImages(intersecting));
-      } else {
-        this.loadIntersectingImages(intersecting);
-      }
+      this.loadIntersectingImages(intersecting);
     }
   }
 
