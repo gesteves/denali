@@ -1,6 +1,5 @@
-//= require intersection-observer/intersection-observer
+import 'intersection-observer';
 
-'use strict';
 class LazyLoad {
   constructor(elementsClass) {
     this.elementsClass = elementsClass;
@@ -46,4 +45,4 @@ class LazyLoad {
   }
 }
 
-new LazyLoad('js-lazy-load');
+export default LazyLoad;

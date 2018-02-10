@@ -1,7 +1,6 @@
-//= require leaflet.markercluster/dist/leaflet.markercluster
-//= require leaflet-hash/leaflet-hash
+import 'leaflet.markercluster';
+import 'leaflet-hash';
 
-'use strict';
 class Map {
   constructor (containerId, latitude, longitude, mapId) {
     if (document.getElementById(containerId) === null) {
@@ -116,4 +115,4 @@ class Map {
   }
 }
 
-new Map('map', 10.46, -66.96, 'gesteves.ce0e3aae');
+export default Map;

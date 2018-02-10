@@ -7,8 +7,7 @@
 <% end %>
 
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'application/lazy_load', defer: true if @photoblog.show_related_entries? %>
-  <%= javascript_include_tag 'application/image_zoom', defer: true %>
+  <%= javascript_pack_tag 'entries/show', defer: true %>
 <% end %>
 
 <% content_for :stylesheets do %>
