@@ -10,7 +10,7 @@
     <%= yield :typekit %>
   <% end %>
   <%= yield :javascript %>
-  <%= javascript_include_tag 'application/loadcss', defer: true %>
+  <%= javascript_include_tag 'vendor/loadcss', defer: true %>
   <%= @photoblog.analytics_code.try(:html_safe) %>
 </head>
 <body>
