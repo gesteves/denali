@@ -28,10 +28,6 @@
   <% end %>
 <% end %>
 
-<% content_for :javascript do %>
-  <%= javascript_pack_tag 'entries/index', defer: true %>
-<% end %>
-
 <% content_for :stylesheets do %>
   <%= stylesheet_link_tag 'components/header', media: 'all' %>
   <%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
@@ -41,9 +37,11 @@
 <% end %>
 
 <% cache "entries/tagged/#{@tag_slug}/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <ol class="entry-list" role="main" data-base-url="<%= tag_url(tag: @tag_slug, page: nil) %>" data-current-page="<%= @page %>">
-    <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) }  %>
-  </ol>
-  <%= paginate @entries %>
-  <%= render 'partials/loading' %>
+  <div data-controller="entry-list" data-entry-list-base-url="<%= tag_url(tag: @tag_slug, page: nil) %>" data-entry-list-current-page="<%= @page %>">
+    <ol class="entry-list" role="main" data-target="entry-list.container">
+      <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) }  %>
+    </ol>
+    <%= paginate @entries, data_target: 'entry-list.paginator' %>
+    <%= render partial: 'partials/loading', locals: { target: 'entry-list.sentinel' } %>
+  </div>
 <% end %>

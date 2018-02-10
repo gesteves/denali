@@ -6,10 +6,6 @@
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @entry.body.present? %>
 <% end %>
 
-<% content_for :javascript do %>
-  <%= javascript_pack_tag 'entries/show', defer: true %>
-<% end %>
-
 <% content_for :stylesheets do %>
   <%= stylesheet_link_tag 'components/header', media: 'all' %>
   <%= stylesheet_link_tag 'components/entry', media: 'all' %>
