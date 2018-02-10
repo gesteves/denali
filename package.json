@@ -11,13 +11,13 @@
     "@rails/webpacker": "^3.2.1",
     "awesomplete": "^1.1.1",
     "clipboard": "^1.7.1",
-    "fg-loadcss": "^2.0.0",
     "intersection-observer": "^0.5.0",
     "jquery": "^3.0.0",
     "jquery-ui-dist": "^1.12.1",
     "leaflet-hash": "^0.2.1",
     "leaflet.markercluster": "^0.4.0",
-    "masonry-layout": "^4.2.1"
+    "masonry-layout": "^4.2.1",
+    "stimulus": "^1.0.1"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

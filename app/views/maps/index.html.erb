@@ -27,9 +27,8 @@
 <% end %>
 
 <% content_for :javascript do %>
-  <script>mapboxToken = '<%= ENV['mapbox_api_token'] %>';</script>
   <%= javascript_include_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js', defer: true %>
-  <%= javascript_pack_tag 'map/index', defer: true %>
+  <%= javascript_include_tag 'vendor/map', defer: true %>
 <% end %>
 
 <% content_for :stylesheets do %>
@@ -40,7 +39,9 @@
   <%= stylesheet_link_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css', media: 'all' %>
 <% end %>
 
-<div id="map" class="map" role="main"></div>
-<div class="map__loading js-loading">
-  <%= inline_svg 'spinner', 'map__loading-spinner' %>
+<div data-controller="map" data-map-api-token="<%= ENV['mapbox_api_token'] %>" data-map-markers-url="<%= map_markers_path(format: 'json') %>">
+  <div id="map" class="map" role="main" data-target="map.container"></div>
+  <div class="map__loading" data-target="map.spinner">
+    <%= inline_svg 'spinner', 'map__loading-spinner' %>
+  </div>
 </div>
