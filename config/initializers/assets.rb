@@ -29,6 +29,5 @@ Rails.application.config.assets.precompile += %w(
   components/search.css
   components/signin.css
   components/tags.css
-  vendor/loadcss.js
   vendor/map.js
 )
