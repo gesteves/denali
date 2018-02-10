@@ -29,13 +29,6 @@
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @photoblog.about.present? %>
 <% end %>
 
-<% content_for :stylesheets do %>
-  <%= stylesheet_link_tag 'components/header', media: 'all' %>
-  <%= stylesheet_link_tag 'components/entry', media: 'all' %>
-  <%= stylesheet_link_tag 'components/elsewhere', media: 'all' %>
-  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
-<% end %>
-
 <% cache "blog/about/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <article class="entry entry--text">
     <div class="entry__body">

@@ -27,14 +27,6 @@
   <% end %>
 <% end %>
 
-<% content_for :stylesheets do %>
-  <%= stylesheet_link_tag 'components/header', media: 'all' %>
-  <%= stylesheet_link_tag 'components/entry_list', media: 'all' %>
-  <%= stylesheet_link_tag 'components/pagination', media: 'all' %>
-  <%= stylesheet_link_tag 'components/search', media: 'all' %>
-  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
-<% end %>
-
 <% cache "entries/search/#{@query.parameterize}/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <% if @entries.present? %>
     <%= render partial: 'search_form' %>

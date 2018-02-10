@@ -6,13 +6,6 @@
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? %>
 <% end %>
 
-<% content_for :stylesheets do %>
-  <%= stylesheet_link_tag 'components/header', media: 'all' %>
-  <%= stylesheet_link_tag 'components/entry', media: 'all' %>
-  <%= stylesheet_link_tag 'components/error', media: 'all' %>
-  <%= stylesheet_link_tag 'components/footer', media: 'all' %>
-<% end %>
-
 <div class="error" role="main">
   <h1 class="error__hed"><%= @errors.first[:status] %></h1>
   <h2 class="error__dek"><%= @errors.first[:message] %>.</h2>

@@ -2439,6 +2439,10 @@ faye-websocket@~0.11.0:
   dependencies:
     websocket-driver ">=0.5.1"
 
+fg-loadcss@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/fg-loadcss/-/fg-loadcss-2.0.1.tgz#71c00e470a57f7739d0736124dfc8791995e8af1"
+
 file-loader@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-1.1.6.tgz#7b9a8f2c58f00a77fddf49e940f7ac978a3ea0e8"

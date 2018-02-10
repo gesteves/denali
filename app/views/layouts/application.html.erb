@@ -3,11 +3,19 @@
 <head>
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
-  <%= stylesheet_link_tag 'components/base', media: 'all' %>
   <%= yield :stylesheets %>
+  <% if @has_visited || !content_for?(:inline_css) %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
+  <% else %>
+    <%= yield :inline_css %>
+    <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
+  <% end %>
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} if ENV['typekit_id'].present? %>
   <% if content_for? :typekit %>
     <%= yield :typekit %>
+  <% end %>
+  <% cache "#{@app_version}/loadcss/" do %>
+      <script><%= inline_asset "vendor/loadcss.js" %></script>
   <% end %>
   <%= yield :javascript %>
   <%= javascript_pack_tag 'application', defer: true %>

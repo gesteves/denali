@@ -14,20 +14,8 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 Rails.application.config.assets.precompile += %w(
   admin.css
   admin.js
-  components/base.css
-  components/elsewhere.css
-  components/entry_list.css
-  components/entry.css
-  components/error.css
-  components/exif.css
-  components/footer.css
-  components/header_minimal.css
-  components/header.css
-  components/loading.css
-  components/map.css
-  components/pagination.css
-  components/search.css
-  components/signin.css
-  components/tags.css
+  application.css
+  entry.css
+  vendor/loadcss.js
   vendor/map.js
 )
