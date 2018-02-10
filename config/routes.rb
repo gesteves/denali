@@ -52,7 +52,7 @@ Rails.application.routes.draw do
   get '/preview/:preview_hash'         => 'entries#preview', defaults: { format: 'html' }, :as => :preview_entry
   get '/search'                        => 'entries#search', :as => :search
   get '/map'                           => 'maps#index', :as => :map
-  get '/map/photos.:format'            => 'maps#photos'
+  get '/map/photos.:format'            => 'maps#photos', :as => :map_markers
   get '/map/photo/:id.:format'         => 'maps#photo'
   get '/about'                         => 'blogs#about', :as => :about
   get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
