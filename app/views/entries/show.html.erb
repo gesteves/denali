@@ -21,7 +21,8 @@
   <%= stylesheet_link_tag 'components/footer', media: 'all' %>
 <% end %>
 
-<%= render partial: 'entries/entry', object: @entry %>
+<%= render partial: 'entries/entry_photo', object: @entry, as: :entry if @entry.is_photo? %>
+<%= render partial: 'entries/entry_text', object: @entry, as: :entry if @entry.is_text? %>
 <%= render partial: 'entries/entry_pagination', object: @entry, as: :entry %>
 <%= render partial: 'entries/related', object: @entry if @photoblog.show_related_entries? %>
 <%= render partial: 'partials/elsewhere' %>
