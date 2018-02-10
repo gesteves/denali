@@ -1,5 +1,5 @@
 <% cache "entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
-  <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
+  <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main" data-controller="photo" data-photo-max-width="1680">
     <% entry.photos.each do |photo| %>
       <div class="entry__photo-container" style="<%= intrinsic_ratio_width(photo) %>">
         <figure class="entry__figure" style="<%= "#{intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}" %>">
@@ -7,8 +7,10 @@
               'entry',
               { class: "entry__photo",
                 alt: photo.alt_text,
-                'data-width-original': photo.width,
-                'data-height-original': photo.height } %>
+                'data-photo-width': photo.width,
+                'data-photo-height': photo.height,
+                'data-action': 'click->photo#zoom',
+                'data-target': 'photo.photo' } %>
         </figure>
       </div>
     <% end %>
