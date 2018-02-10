@@ -5,7 +5,6 @@
 //= require clipboard/dist/clipboard
 //= require jquery_ujs
 //= require_tree ./admin
-//= require ./application/lazy_load
 
 'use strict';
 
