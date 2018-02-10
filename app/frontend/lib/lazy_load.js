@@ -4,7 +4,9 @@ let _observer;
 
 export default class LazyLoad {
   static observe (element) {
-    observer().observe(element);
+    if (!element.getAttribute('data-lazy-loaded')) {
+      observer().observe(element);
+    }
   }
 }
 
@@ -40,4 +42,5 @@ function loadImage (image) {
     image.src = image.getAttribute('data-src');
     image.removeAttribute('data-src');
   }
+  image.setAttribute('data-lazy-loaded', '');
 }
