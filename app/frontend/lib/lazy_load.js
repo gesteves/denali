@@ -14,6 +14,8 @@ function observer () {
   if (!_observer) {
     IntersectionObserver.prototype.POLL_INTERVAL = 50;
     _observer = new IntersectionObserver((entries, observer) => handleIntersection(entries, observer), { rootMargin: '25%', threshold: 0 });
+    // Enable polling on the polyfill to work around some Safari weirdness
+    _observer.POLL_INTERVAL = 50;
   }
   return _observer;
 }
