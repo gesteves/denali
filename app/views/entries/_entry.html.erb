@@ -2,7 +2,7 @@
   <article class="entry <% if entry.is_text? %>entry--text<% else %>entry--photo<% end %>" role="main">
     <% entry.photos.each do |photo| %>
       <div class="entry__photo-container" style="<%= intrinsic_ratio_width(photo) %>">
-        <figure class="entry__figure" style="<%= intrinsic_ratio_padding(photo) %>">
+        <figure class="entry__figure" style="<%= "#{intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}" %>">
           <%= responsive_image_tag photo,
               'entry',
               { class: "entry__photo",

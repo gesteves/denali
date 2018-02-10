@@ -57,6 +57,15 @@ module ApplicationHelper
     "width:#{width}vh"
   end
 
+  def image_placeholder(photo)
+    return '' if photo.color_palette.blank?
+    style = if photo.color_palette.present?
+      palette = photo.color_palette.split(',').sample(2).join(',')
+      "background:linear-gradient(to bottom right, #{palette})"
+    end
+    style.html_safe
+  end
+
   def inline_asset(filename, opts = {})
     opts.reverse_merge!(strip_charset: false)
     if opts[:strip_charset]
