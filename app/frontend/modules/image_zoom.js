@@ -1,13 +1,5 @@
-'use strict';
-
 class ImageZoom {
-  constructor (opts = {}) {
-    const options = Object.assign({
-      imagesSelector: '.entry__photo',
-      zoomableClass: 'entry__photo--zoomable',
-      zoomClass: 'entry__photo-container--zoom',
-      maxWidth: 1680
-    }, opts);
+  constructor (options) {
     this.zoomable = [];
     this.zoomClass = options.zoomClass;
     let originalWidth,
@@ -25,7 +17,7 @@ class ImageZoom {
       originalHeight = parseInt(image.getAttribute('data-height-original'));
       originalWidth = parseInt(image.getAttribute('data-width-original'));
       imageRatio = originalHeight/originalWidth;
-      maxWidth = Math.min(originalWidth, clientWidth, options.maxWidth);
+      maxWidth = Math.min(originalWidth, clientWidth, options.maxImageWidth);
       height = maxWidth * imageRatio;
       imageContainer = image.parentNode.parentNode;
       if (height > clientHeight) {
@@ -45,4 +37,4 @@ class ImageZoom {
   }
 }
 
-new ImageZoom();
+export default ImageZoom;

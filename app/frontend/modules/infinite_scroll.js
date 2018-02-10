@@ -1,17 +1,8 @@
-//= require intersection-observer/intersection-observer
-//= require masonry-layout/dist/masonry.pkgd.min.js
-'use strict';
+import 'intersection-observer';
+import Masonry from 'masonry-layout';
 
 class InfiniteScroll {
-  constructor (opts = {}) {
-    const options = Object.assign({
-      containerSelector: '.entry-list',
-      itemSelector: '.entry-list__item',
-      paginationSelector: '.pagination',
-      sentinelSelector: '.loading',
-      footerSelector: '.footer',
-      activeClass: 'loading--active'
-    }, opts);
+  constructor (options) {
 
     // These elements are required for the infinite scroll to function:
     // - `container` is the list of entries on the page.
@@ -177,4 +168,4 @@ class InfiniteScroll {
   }
 }
 
-new InfiniteScroll();
+export default InfiniteScroll;
