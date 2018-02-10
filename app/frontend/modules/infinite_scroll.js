@@ -84,20 +84,17 @@ class InfiniteScroll {
     }
   }
 
-  // Makes an Ajax request for the next page of results, and either inserts it
+  // Fetches the next page of results, and either inserts it
   // into the DOM, or ends the infinite scroll process if there are no
   // more results (if so, server returns 404).
   getPage (page) {
-    let request = new XMLHttpRequest();
-    request.open('GET', `${this.baseUrl}/page/${page}.js`, true);
-    request.onload = () => {
-      if (request.status >= 200 && request.status < 400) {
-        requestAnimationFrame(() => this.appendPage(page, request.responseText));
+    fetch(`${this.baseUrl}/page/${page}.js`).then(response => {
+      if (response.ok) {
+        return response.text();
       } else {
-        requestAnimationFrame(() => this.endInfiniteScroll());
+        this.endInfiniteScroll();
       }
-    };
-    request.send();
+    }).then(text => { this.appendPage(page, text); });
   }
 
   // Creates an HTML fragment from a string of markup, appends it to the container,
