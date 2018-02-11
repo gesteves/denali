@@ -6,9 +6,11 @@
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @entry.body.present? %>
 <% end %>
 
-<% content_for :inline_css do %>
-  <% cache "#{@app_version}/entry/styles" do %>
-      <style><%= inline_asset "entry.css" %></style>
+<% if !@has_visited %>
+  <% content_for :inline_css do %>
+    <% cache "#{@app_version}/entry/styles" do %>
+        <style><%= inline_asset "entry.css" %></style>
+    <% end %>
   <% end %>
 <% end %>
 

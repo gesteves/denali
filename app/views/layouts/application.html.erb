@@ -4,11 +4,11 @@
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :meta %>
   <%= yield :stylesheets %>
-  <% if @has_visited || !content_for?(:inline_css) %>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-  <% else %>
+  <% if content_for?(:inline_css) %>
     <%= yield :inline_css %>
     <%= content_tag :link, nil, href: asset_url('application.css'), as: :style, rel: :preload, onload: "this.rel='stylesheet'".html_safe %>
+  <% else %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
   <% end %>
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} if ENV['typekit_id'].present? %>
   <% if content_for? :typekit %>
