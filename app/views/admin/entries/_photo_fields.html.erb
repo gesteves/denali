@@ -3,9 +3,6 @@
     <div class="form__photo">
       <div class="form__fields form__fields--initial">
         <%= p.url_field :source_url, placeholder: 'Paste a URL', autocomplete: 'off', class: 'form__input form__input--url js-photo-source-url' %>
-        <% unless ENV['dropbox_key'].nil? %>
-          <%= link_to 'Add from Dropbox', '#', class: 'button js-photo-dropbox' %>
-        <% end %>
         <div class="button js-photo-file-button">
           Upload a file
           <%= p.file_field :source_file, accept: '.jpg,.jpeg', class: 'form__input form__input--file js-photo-source-file' %>
