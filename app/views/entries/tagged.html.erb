@@ -34,6 +34,6 @@
       <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) }  %>
     </ol>
     <%= paginate @entries, target: 'entry-list.paginator' %>
-    <%= render partial: 'partials/loading', locals: { target: 'entry-list.sentinel' } %>
+    <%= render partial: 'partials/loading', locals: { target: 'entry-list.spinner' } %>
   </div>
 <% end %>

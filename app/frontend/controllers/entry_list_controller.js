@@ -5,7 +5,7 @@ import { trackPageView }          from '../lib/analytics';
 import { Controller }             from 'stimulus';
 
 export default class extends Controller {
-  static targets = ['container', 'paginator', 'sentinel'];
+  static targets = ['container', 'paginator', 'spinner'];
 
   connect () {
     // Set up basic masonry layout
@@ -21,17 +21,17 @@ export default class extends Controller {
       }
     });
 
-    // If there's no sentinel, there's nothing to observe.
+    // If there's no loading spinner, there's nothing to observe.
     // If there's no paginator, it means there are no more pages to load.
     // In either of these cases, return early but init the masonry layout first.
-    if (!this.hasSentinelTarget || !this.hasPaginatorTarget) {
+    if (!this.hasSpinnerTarget || !this.hasPaginatorTarget) {
       this.masonry.layout();
       return;
     }
 
-    // Set up the bottom of the page for lazy loading: show the sentinel,
+    // Set up the bottom of the page for lazy loading: show the spinner,
     // hide the footer, remove the pagination links.
-    this.sentinelTarget.classList.add('loading--active');
+    this.spinnerTarget.classList.add('loading--active');
     this.footer = document.querySelector('.footer');
     this.footer.style.display = 'none';
     this.paginatorTarget.parentNode.removeChild(this.paginatorTarget);
@@ -46,15 +46,15 @@ export default class extends Controller {
 
   /**
    * Sets up two separate intersection observers:
-   * `loadingObserver` observes the sentinel at the bottom of the page, and loads more pages;
+   * `spinnerObserver` observes the spinner at the bottom of the page, and loads more pages;
    * `paginationObserver` observes the first item of each page, which updates the URL in the address bar
    */
   initObservers () {
-    this.loadingObserver = new IntersectionObserver(e => this.handleLoadingIntersect(e), { rootMargin: '25%' });
-    this.loadingObserver.observe(this.sentinelTarget);
+    this.spinnerObserver = new IntersectionObserver(e => this.handleSpinnerIntersect(e), { rootMargin: '25%' });
+    this.spinnerObserver.observe(this.spinnerTarget);
     this.paginationObserver = new IntersectionObserver(e => this.handlePaginationIntersect(e), { threshold: 1.0 });
     // Enable polling on the polyfill to work around some Safari weirdness
-    this.loadingObserver.POLL_INTERVAL = 50;
+    this.spinnerObserver.POLL_INTERVAL = 50;
     this.paginationObserver.POLL_INTERVAL = 50;
     // Watch page numbers
     this.observePageUrls();
@@ -78,11 +78,11 @@ export default class extends Controller {
   }
 
   /**
-   * Handler for the intersection observer that observes the loading sentinel at the
+   * Handler for the intersection observer that observes the loading spinner at the
    * bottom of the page. If it's visible, loads the next page.
    * @param {Object} entries A list of intersection observer entries
    */
-  handleLoadingIntersect (entries) {
+  handleSpinnerIntersect (entries) {
     if (!entries.filter(this.isIntersecting).length) {
       return;
     }
@@ -112,13 +112,13 @@ export default class extends Controller {
   }
 
   /**
-   * If there are no more entries to be fetched, unobserves the sentinel,
-   * shows the footer again, and removes the sentinel from the page.
+   * If there are no more entries to be fetched, unobserves the spinner,
+   * shows the footer again, and removes the spinner from the page.
    */
   endInfiniteScroll () {
-    this.loadingObserver.unobserve(this.sentinelTarget);
+    this.spinnerObserver.unobserve(this.spinnerTarget);
     this.footer.style.display = 'block';
-    this.sentinelTarget.parentNode.removeChild(this.sentinelTarget);
+    this.spinnerTarget.parentNode.removeChild(this.spinnerTarget);
   }
 
   /**
