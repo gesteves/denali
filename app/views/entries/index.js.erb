@@ -5,6 +5,7 @@
       locals: {
         page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page),
         lazy_load: true,
-        square: false
+        square: false,
+        observe: true
       } %>
 <% end %>

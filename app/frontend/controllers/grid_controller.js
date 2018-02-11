@@ -1,7 +1,6 @@
 import 'intersection-observer';
 import Masonry                    from 'masonry-layout';
 import { fetchStatus, fetchText } from '../lib/utils';
-import { trackPageView }          from '../lib/analytics';
 import { Controller }             from 'stimulus';
 
 /**
@@ -44,36 +43,22 @@ export default class extends Controller {
     this.paginatorTarget.parentNode.removeChild(this.paginatorTarget);
 
     // Set up an event handler so that once the masonry layout is in place,
-    // it sets up the intersection observers:
-    this.masonry.once('layoutComplete', () => this.initObservers());
+    // it sets up the intersection observer:
+    this.masonry.once('layoutComplete', () => this.initObserver());
 
     // Finally, init the masonry layout.
     this.masonry.layout();
   }
 
   /**
-   * Sets up two separate intersection observers:
-   * `spinnerObserver` observes the spinner at the bottom of the page, and loads more pages;
-   * `paginationObserver` observes the first item of each page, which updates the URL in the address bar
+   * Sets up `observer` intersection observer, which observes the spinner at the
+   * bottom of the page, and loads more pages when it's in view
    */
-  initObservers () {
-    this.spinnerObserver = new IntersectionObserver(e => this.handleSpinnerIntersect(e), { rootMargin: '25%' });
-    this.spinnerObserver.observe(this.spinnerTarget);
-    this.paginationObserver = new IntersectionObserver(e => this.handlePaginationIntersect(e), { threshold: 1.0 });
+  initObserver () {
+    this.observer = new IntersectionObserver(e => this.handleSpinnerIntersect(e), { rootMargin: '25%' });
+    this.observer.observe(this.spinnerTarget);
     // Enable polling on the polyfill to work around some Safari weirdness
-    this.spinnerObserver.POLL_INTERVAL = 50;
-    this.paginationObserver.POLL_INTERVAL = 50;
-    // Watch page numbers
-    this.observePageUrls();
-  }
-
-  /**
-   * Convenience function to check if an IO entry intersects the root
-   * @param {IntersectionObserverEntry} entry An intersection observer entry
-   * @return {boolean} Whether or not it intersects
-   */
-  isIntersecting (entry) {
-    return (entry.intersectionRatio > 0 || entry.isIntersecting);
+    this.observer.POLL_INTERVAL = 50;
   }
 
   /**
@@ -90,7 +75,9 @@ export default class extends Controller {
    * @param {IntersectionObserverEntry[]} entries An array of intersection observer entries
    */
   handleSpinnerIntersect (entries) {
-    if (!entries.filter(this.isIntersecting).length) {
+    if (!entries.filter(entry => {
+      return (entry.intersectionRatio > 0 || entry.isIntersecting);
+    }).length) {
       return;
     }
     const nextPage = this.getCurrentPage() + 1;
@@ -103,7 +90,7 @@ export default class extends Controller {
 
   /**
    * Creates an HTML fragment from a string of markup, appends it to the container,
-   * adjusts the masonry, and observes the new elements.
+   * and adjusts the masonry
    * @param {string} html The html to be inserted into the DOM
    */
   appendPage (html, page) {
@@ -115,7 +102,6 @@ export default class extends Controller {
     this.data.set('currentPage', page);
     this.containerTarget.appendChild(fragment);
     this.masonry.appended(children);
-    this.observePageUrls();
   }
 
   /**
@@ -123,38 +109,8 @@ export default class extends Controller {
    * shows the footer again, and removes the spinner from the page.
    */
   endInfiniteScroll () {
-    this.spinnerObserver.unobserve(this.spinnerTarget);
+    this.observer.unobserve(this.spinnerTarget);
     this.footer.style.display = 'block';
     this.spinnerTarget.parentNode.removeChild(this.spinnerTarget);
-  }
-
-  /**
-    * Adds the first element of each page to the `paginationObserver`.
-    * These are used to update the URL in the address bar.
-    */
-  observePageUrls () {
-    const elements = this.containerTarget.querySelectorAll('[data-page-url]');
-    elements.forEach(element => this.paginationObserver.observe(element));
-  }
-
-  /**
-    * Handler for the `paginationObserver`, which observes the first
-    * element of each new page and checks their `data-page-url` data attribute.
-    * As each element is in view, this function uses that data attribute to
-    * update the URL in the browser address bar using the History API, and
-    * tracks the page view in Analytics if the page changes.
-    * @param {IntersectionObserverEntry[]} entries An array of intersection observer entries
-    */
-  handlePaginationIntersect (entries) {
-    const intersecting = entries.filter(this.isIntersecting);
-    if (!intersecting.length) {
-      return;
-    }
-    const entry = intersecting[0];
-    const previous_path = window.location.pathname;
-    window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
-    if (previous_path !== window.location.pathname) {
-      trackPageView();
-    }
   }
 }

@@ -1,4 +1,4 @@
-<li class="entry-list__item" role="article" <%= "data-page-url=\"#{page_url}\"".html_safe if entry_counter == 0 && local_assigns[:page_url] %>>
+<li class="entry-list__item" role="article" <%= entry_list_item_observer(page_url) if observe && entry_counter == 0 %>>
   <div class="entry-list__wrapper" style="<%= "#{intrinsic_ratio_padding(entry.photos.first, { square: square })};#{image_placeholder(entry.photos.first)}" %>">
     <a class="entry-list__link entry-list__link--photo" href="<%= entry.permalink_url %>">
       <figure class="entry-list__photo">

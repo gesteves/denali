@@ -37,7 +37,8 @@
           locals: {
             page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page),
             lazy_load: false,
-            square: false
+            square: false,
+            observe: true
           } %>
     </ol>
     <%= paginate @entries, target: 'grid.paginator' %>

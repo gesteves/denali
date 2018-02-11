@@ -54,4 +54,8 @@ module EntriesHelper
       photo.url(w: 1200, square: true)
     ]
   end
+
+  def entry_list_item_observer(url)
+    "data-controller=\"pagination\" data-pagination-page-url=\"#{url}\"".html_safe
+  end
 end

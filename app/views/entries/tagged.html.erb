@@ -37,7 +37,8 @@
           locals: {
             page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page),
             lazy_load: false,
-            square: false
+            square: false,
+            observe: true
           } %>
     </ol>
     <%= paginate @entries, target: 'grid.paginator' %>
