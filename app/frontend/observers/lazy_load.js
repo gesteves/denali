@@ -11,6 +11,10 @@ export default class LazyLoad {
       observer().observe(element);
     }
   }
+
+  static unobserve (element) {
+    observer().unobserve(element);
+  }
 }
 
 /**

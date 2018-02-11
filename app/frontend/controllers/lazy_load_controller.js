@@ -9,4 +9,8 @@ export default class extends Controller {
   connect () {
     LazyLoad.observe(this.element);
   }
+
+  disconnect () {
+    LazyLoad.unobserve(this.element);
+  }
 }

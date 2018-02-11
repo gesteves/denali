@@ -10,6 +10,10 @@ export default class Pagination {
   static observe (element) {
     observer().observe(element);
   }
+
+  static unobserve (element) {
+    observer().unobserve(element);
+  }
 }
 
 /**

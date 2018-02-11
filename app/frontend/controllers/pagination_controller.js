@@ -9,4 +9,8 @@ export default class extends Controller {
   connect () {
     Pagination.observe(this.element);
   }
+
+  disconnect () {
+    Pagination.unobserve(this.element);
+  }
 }
