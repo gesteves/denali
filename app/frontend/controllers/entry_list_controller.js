@@ -1,7 +1,8 @@
 import 'intersection-observer';
-import Masonry from 'masonry-layout';
-import { trackPageView } from '../lib/analytics';
-import { Controller } from 'stimulus';
+import Masonry                    from 'masonry-layout';
+import { fetchStatus, fetchText } from '../lib/utils';
+import { trackPageView }          from '../lib/analytics';
+import { Controller }             from 'stimulus';
 
 export default class extends Controller {
   static targets = ['container', 'paginator', 'sentinel'];
@@ -82,26 +83,15 @@ export default class extends Controller {
    * @param {Object} entries A list of intersection observer entries
    */
   handleLoadingIntersect (entries) {
-    if (entries.filter(this.isIntersecting).length) {
-      this.fetchPage(this.getCurrentPage() + 1);
+    if (!entries.filter(this.isIntersecting).length) {
+      return;
     }
-  }
-
-  /**
-   * Fetches the next page of results, and either inserts it
-   * into the DOM, or ends the infinite scroll process if there are no
-   * more results (if so, server returns 404).
-   * @param {int} page The page number to fetch
-   */
-  fetchPage (page) {
-    fetch(`${this.data.get('baseUrl')}/page/${page}.js`).then(response => {
-      if (response.ok) {
-        this.data.set('currentPage', page);
-        return response.text();
-      } else {
-        this.endInfiniteScroll();
-      }
-    }).then(text => { this.appendPage(text); });
+    const nextPage = this.getCurrentPage() + 1;
+    fetch(`${this.data.get('baseUrl')}/page/${nextPage}.js`)
+    .then(fetchStatus)
+    .then(fetchText)
+    .then(text => this.appendPage(text, nextPage))
+    .catch(() => this.endInfiniteScroll());
   }
 
   /**
@@ -109,12 +99,13 @@ export default class extends Controller {
    * adjusts the masonry, and observes the new elements.
    * @param {string} html The html to be inserted into the DOM
    */
-  appendPage (html) {
+  appendPage (html, page) {
     if (!html) {
       return;
     }
     const fragment = document.createRange().createContextualFragment(html);
     const children = Array.from(fragment.children);
+    this.data.set('currentPage', page);
     this.containerTarget.appendChild(fragment);
     this.masonry.appended(children);
     this.observePageUrls();
@@ -149,13 +140,14 @@ export default class extends Controller {
     */
   handlePaginationIntersect (entries) {
     const intersecting = entries.filter(this.isIntersecting);
-    if (intersecting.length) {
-      const entry = intersecting[0];
-      const previous_path = window.location.pathname;
-      window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
-      if (previous_path !== window.location.pathname) {
-        trackPageView();
-      }
+    if (!intersecting.length) {
+      return;
+    }
+    const entry = intersecting[0];
+    const previous_path = window.location.pathname;
+    window.history.replaceState(null, null, entry.target.getAttribute('data-page-url'));
+    if (previous_path !== window.location.pathname) {
+      trackPageView();
     }
   }
 }

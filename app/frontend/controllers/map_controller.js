@@ -1,4 +1,5 @@
-import { Controller } from 'stimulus';
+import { fetchStatus, fetchJson } from '../lib/utils';
+import { Controller }             from 'stimulus';
 
 export default class extends Controller {
   static targets = ['container', 'spinner'];
@@ -62,11 +63,10 @@ export default class extends Controller {
 
   requestPopup (e) {
     const marker = e.target;
-    fetch(`/map/photo/${marker.photoId}.json`).then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-    }).then(json => marker.setPopupContent(json.html));
+    fetch(`/map/photo/${marker.photoId}.json`)
+    .then(fetchStatus)
+    .then(fetchJson)
+    .then(json => marker.setPopupContent(json.html));
   }
 
   setUpMarkerClusters (e) {

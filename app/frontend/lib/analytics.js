@@ -5,7 +5,6 @@ export function trackPageView () {
   } else {
     trackPage();
   }
-
 }
 
 // Makes the actual page view tracking call, in GA or GTM
