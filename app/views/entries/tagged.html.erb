@@ -31,7 +31,14 @@
 <% cache "entries/tagged/#{@tag_slug}/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <div data-controller="grid" data-grid-base-url="<%= tag_url(tag: @tag_slug, page: nil) %>" data-grid-current-page="<%= @page %>">
     <ol class="entry-list" role="main" data-target="grid.container">
-      <%= render partial: 'entries/entry_list_item', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) }  %>
+      <%= render partial: 'entries/entry_list_item',
+          collection: @entries,
+          as: :entry,
+          locals: {
+            page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page),
+            lazy_load: false,
+            square: false
+          } %>
     </ol>
     <%= paginate @entries, target: 'grid.paginator' %>
     <%= render partial: 'partials/loading', locals: { target: 'grid.spinner' } %>
