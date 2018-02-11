@@ -20,7 +20,7 @@ export default class LazyLoad {
 function observer () {
   if (!_observer) {
     IntersectionObserver.prototype.POLL_INTERVAL = 50;
-    _observer = new IntersectionObserver(e => handleIntersection(e), { rootMargin: '25%', threshold: 0 });
+    _observer = new IntersectionObserver(handleIntersection, { rootMargin: '25%', threshold: 0 });
     // Enable polling on the polyfill to work around some Safari weirdness
     _observer.POLL_INTERVAL = 50;
   }
