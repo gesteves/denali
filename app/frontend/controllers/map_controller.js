@@ -1,6 +1,12 @@
 import { fetchStatus, fetchJson } from '../lib/utils';
 import { Controller }             from 'stimulus';
 
+/**
+ * Controls the Map view, setting up the map, the markers, and the popups.
+ * TODO: This is kinda messy, you should clean this shit up.
+ * TODO: It'd also be nice to switch to Google Maps.
+ * @extends Controller
+ */
 export default class extends Controller {
   static targets = ['container', 'spinner'];
 

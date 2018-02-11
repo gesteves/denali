@@ -2,6 +2,9 @@ import 'intersection-observer';
 
 let _observer;
 
+/**
+ * Controls the lazy loading of images on the page.
+ */
 export default class LazyLoad {
   static observe (element) {
     if (!element.getAttribute('data-lazy-loaded')) {
@@ -10,32 +13,39 @@ export default class LazyLoad {
   }
 }
 
+/**
+ * Return or instantiate an IntersectionObserver to use in the static function.
+ * @return {IntersectionObserver} An intersection observer.
+ */
 function observer () {
   if (!_observer) {
     IntersectionObserver.prototype.POLL_INTERVAL = 50;
-    _observer = new IntersectionObserver((entries, observer) => handleIntersection(entries, observer), { rootMargin: '25%', threshold: 0 });
+    _observer = new IntersectionObserver(e => handleIntersection(e), { rootMargin: '25%', threshold: 0 });
     // Enable polling on the polyfill to work around some Safari weirdness
     _observer.POLL_INTERVAL = 50;
   }
   return _observer;
 }
 
-function handleIntersection (entries, observer) {
+/**
+ * Handler for the class's IntersectionObserver.
+ * @param  {IntersectionObserverEntry[]} entries An array of photos.
+ */
+function handleIntersection (entries) {
   const intersecting = entries.filter(entry => {
     return (entry.intersectionRatio > 0 || entry.isIntersecting);
   });
-  if (intersecting.length > 0) {
-    loadIntersectingImages(intersecting, observer);
-  }
-}
-
-function loadIntersectingImages (images, observer) {
-  images.forEach(image => {
-    loadImage(image.target);
-    observer.unobserve(image.target);
+  intersecting.forEach(entry => {
+    loadImage(entry.target);
+    observer().unobserve(entry.target);
   });
 }
 
+/**
+ * Lazy load the image, by replacing the srcset or src attributes with the
+ * data-srcset or data-src attributes on the element.
+ * @param  {Element} image The <img> element for the image.
+ */
 function loadImage (image) {
   if (image.hasAttribute('data-srcset') && typeof image.srcset !== 'undefined' && typeof image.sizes !== 'undefined') {
     image.setAttribute('srcset', image.getAttribute('data-srcset'));

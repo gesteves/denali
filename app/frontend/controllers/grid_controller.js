@@ -4,6 +4,13 @@ import { fetchStatus, fetchText } from '../lib/utils';
 import { trackPageView }          from '../lib/analytics';
 import { Controller }             from 'stimulus';
 
+/**
+ * Controls the Masonry grid and infinite loading of entries on the
+ * entries#index and entries#tagged views.
+ * TODO: It'd be nice to split the Masonry and infinite loading functionality
+ * into separate controllers, and make the infinite loading generic.
+ * @extends Controller
+ */
 export default class extends Controller {
   static targets = ['container', 'paginator', 'spinner'];
 
@@ -62,7 +69,7 @@ export default class extends Controller {
 
   /**
    * Convenience function to check if an IO entry intersects the root
-   * @param {Object} entry An intersection observer entry
+   * @param {IntersectionObserverEntry} entry An intersection observer entry
    * @return {boolean} Whether or not it intersects
    */
   isIntersecting (entry) {
@@ -80,7 +87,7 @@ export default class extends Controller {
   /**
    * Handler for the intersection observer that observes the loading spinner at the
    * bottom of the page. If it's visible, loads the next page.
-   * @param {Object} entries A list of intersection observer entries
+   * @param {IntersectionObserverEntry[]} entries An array of intersection observer entries
    */
   handleSpinnerIntersect (entries) {
     if (!entries.filter(this.isIntersecting).length) {
@@ -136,7 +143,7 @@ export default class extends Controller {
     * As each element is in view, this function uses that data attribute to
     * update the URL in the browser address bar using the History API, and
     * tracks the page view in Analytics if the page changes.
-    * @param {Object} entries A list of intersection observer entries
+    * @param {IntersectionObserverEntry[]} entries An array of intersection observer entries
     */
   handlePaginationIntersect (entries) {
     const intersecting = entries.filter(this.isIntersecting);
