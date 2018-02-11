@@ -1,6 +1,6 @@
 import 'intersection-observer';
 import Masonry                    from 'masonry-layout';
-import { fetchStatus, fetchText } from '../lib/utils';
+import { fetchStatus, fetchText } from '../../lib/utils';
 import { Controller }             from 'stimulus';
 
 /**

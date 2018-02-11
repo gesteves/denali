@@ -1,5 +1,5 @@
 import { Controller } from 'stimulus';
-import LazyLoad from '../observers/lazy_load';
+import LazyLoad from '../../observers/lazy_load';
 
 /**
  * Controls the lazy loading of images on the page.
