@@ -9,14 +9,14 @@ import Awesomplete from 'awesomplete';
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['photos', 'tags'];
+  static targets = ['photos', 'tags', 'datalist'];
 
   /**
    * Sets up the tag autocomplete, and the drag-and-drop of photos.
    */
   connect () {
     new Awesomplete(this.tagsTarget, {
-      list: '#datalist-tags',
+      list: this.datalistTarget,
       filter: function (text, input) {
         return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
       },

@@ -66,6 +66,5 @@
     <%= f.submit 'Save changes', class: 'button button--success' %>
     </div>
   </div>
+  <%= render partial: 'tag_datalists', locals: { tags: @tags } %>
 <% end %>
-
-<%= render partial: 'tag_datalists', locals: { tags: @tags } %>
