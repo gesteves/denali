@@ -21,8 +21,7 @@ export default class extends Controller {
    */
   checkIfZoomable (photo) {
     // Get the viewport dimensions.
-    const clientHeight = document.documentElement.clientHeight;
-    const clientWidth = document.documentElement.clientWidth;
+    const { clientWidth, clientHeight } = document.documentElement;
 
     // Get the full size of the original photo (stored as data attributes in the DOM)
     const originalHeight = parseInt(photo.getAttribute('data-photo-height'));

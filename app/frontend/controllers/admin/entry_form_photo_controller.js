@@ -19,10 +19,9 @@ export default class extends Controller {
       return;
     }
 
-    const image_width  = this.thumbnailTarget.offsetWidth;
-    const image_height = this.thumbnailTarget.offsetHeight;
-    this.focalmarkerTarget.style.top  = `${(image_height * parseFloat(this.data.get('focal-y'))) - 50}px`;
-    this.focalmarkerTarget.style.left = `${(image_width  * parseFloat(this.data.get('focal-x'))) - 50}px`;
+    const { offsetWidth, offsetHeight } = this.thumbnailTarget;
+    this.focalmarkerTarget.style.top  = `${(offsetHeight * parseFloat(this.data.get('focal-y'))) - 50}px`;
+    this.focalmarkerTarget.style.left = `${(offsetWidth  * parseFloat(this.data.get('focal-x'))) - 50}px`;
     this.focalmarkerTarget.style.display = 'block';
   }
 
@@ -33,13 +32,15 @@ export default class extends Controller {
    */
   setFocalPoint (event) {
     event.preventDefault();
-    const focal_x = (event.pageX - this.thumbnailTarget.getBoundingClientRect().left)/this.thumbnailTarget.offsetWidth;
-    const focal_y = (event.pageY - this.thumbnailTarget.getBoundingClientRect().top)/this.thumbnailTarget.offsetHeight;
+    const { top, left } = this.thumbnailTarget.getBoundingClientRect();
+    const { offsetWidth, offsetHeight} = this.thumbnailTarget;
+    const focalX = (event.pageX - left)/offsetWidth;
+    const focalY = (event.pageY - top)/offsetHeight;
 
-    this.data.set('focal-x', focal_x);
-    this.data.set('focal-y', focal_y);
-    this.focalxTarget.value = focal_x;
-    this.focalyTarget.value = focal_y;
+    this.data.set('focal-x', focalX);
+    this.data.set('focal-y', focalY);
+    this.focalxTarget.value = focalX;
+    this.focalyTarget.value = focalY;
 
     this.showFocalPoint();
   }
