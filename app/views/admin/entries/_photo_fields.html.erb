@@ -1,6 +1,6 @@
 <%= fields_for :entry, @entry do |f| %>
   <%= f.fields_for :photos, child_index: "#{(Time.now.to_f * 1000).to_i}#{i}" do |p| %>
-    <li class="form__photo" data-controller="entry-form-photo" data-entry-form-photo-empty="1">
+    <li class="form__photo draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="1">
       <div class="form__fields form__fields--initial" data-target="entry-form-photo.fields">
         <%= p.url_field :source_url, placeholder: 'Paste a URL', autocomplete: 'off', class: 'form__input form__input--url', 'data-action': 'keyup->entry-form-photo#addFromUrl' %>
         <div class="button" data-action="click->entry-form-photo#triggerFileInput">

@@ -7,7 +7,7 @@
   <div class="form__photos">
     <ol class="form__photos-list" data-target="entry-form.photos">
       <%= f.fields_for :photos do |p| %>
-        <li class="form__photo" data-controller="entry-form-photo" data-entry-form-photo-empty="0" data-entry-form-photo-focal-x="<%= p.object.focal_x %>" data-entry-form-photo-focal-y="<%= p.object.focal_y %>">
+        <li class="form__photo draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="0" data-entry-form-photo-focal-x="<%= p.object.focal_x %>" data-entry-form-photo-focal-y="<%= p.object.focal_y %>">
           <div class="form__fields" data-target="entry-form-photo.fields">
             <div class="form__photo-thumb">
               <%= responsive_image_tag p.object, 'admin_edit', { class: 'form__photo-img', 'data-action': 'click->entry-form-photo#setFocalPoint', 'data-target': 'entry-form-photo.thumbnail' } %>

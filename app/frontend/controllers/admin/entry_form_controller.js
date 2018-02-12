@@ -27,7 +27,6 @@ export default class extends Controller {
     });
 
     new Sortable(this.photosTarget, {
-      draggable: 'li',
       delay: 100,
       classes: {
         'source:dragging': 'form__photo--dragging',
