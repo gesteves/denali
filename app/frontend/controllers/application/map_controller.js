@@ -1,3 +1,4 @@
+/* global L */
 import { fetchStatus, fetchJson } from '../../lib/utils';
 import { Controller }             from 'stimulus';
 
@@ -55,11 +56,11 @@ export default class extends Controller {
     const feature = marker.feature;
     marker.photoId = feature.properties.id;
     marker.setIcon(L.divIcon({
-        className: 'map__marker map__marker--bloop',
-        html: '&bull;',
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
-      }));
+      className: 'map__marker map__marker--bloop',
+      html: '&bull;',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
+    }));
     e.target.bindPopup('', {
       closeButton: true,
       minWidth: 300
@@ -70,9 +71,9 @@ export default class extends Controller {
   requestPopup (e) {
     const marker = e.target;
     fetch(`/map/photo/${marker.photoId}.json`)
-    .then(fetchStatus)
-    .then(fetchJson)
-    .then(json => marker.setPopupContent(json.html));
+      .then(fetchStatus)
+      .then(fetchJson)
+      .then(json => marker.setPopupContent(json.html));
   }
 
   setUpMarkerClusters (e) {
@@ -82,7 +83,6 @@ export default class extends Controller {
       spiderfyDistanceMultiplier: 3,
       iconCreateFunction: this.setUpClusterIcon
     });
-
     e.target.eachLayer(layer => clusterGroup.addLayer(layer));
 
     this.hash = new L.hash(this.map);
@@ -92,11 +92,10 @@ export default class extends Controller {
 
   setUpClusterIcon (cluster) {
     return L.divIcon({
-        className: 'map__marker map__marker--cluster',
-        html: cluster.getChildCount(),
-        iconSize: [30, 30],
-        iconAnchor: [15, 15]
-      }
-    );
+      className: 'map__marker map__marker--cluster',
+      html: cluster.getChildCount(),
+      iconSize: [30, 30],
+      iconAnchor: [15, 15]
+    });
   }
 }

@@ -1,3 +1,4 @@
+/* global ga, gtag, gaTrackingId */
 /**
  * Checks if `requestIdleCallback` is supported before making a call to track
  * the current page in analytics.

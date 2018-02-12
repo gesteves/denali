@@ -38,9 +38,9 @@ export default class extends Controller {
     };
 
     fetch(`${url}.js`, fetchOpts)
-    .then(fetchStatus)
-    .then(fetchText)
-    .then(html => $(this.element).replaceWith(html));
+      .then(fetchStatus)
+      .then(fetchText)
+      .then(html => $(this.element).replaceWith(html));
   }
 
   /**
@@ -67,7 +67,7 @@ export default class extends Controller {
     };
 
     fetch(`${url}.json`, fetchOpts)
-    .then(fetchStatus)
-    .then(() => this.element.parentNode.removeChild(this.element));
+      .then(fetchStatus)
+      .then(() => this.element.parentNode.removeChild(this.element));
   }
 }

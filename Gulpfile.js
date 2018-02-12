@@ -2,8 +2,6 @@
 
 var cheerio     = require('gulp-cheerio');
 var gulp        = require('gulp');
-var jshint      = require('gulp-jshint');
-var jsstylish   = require('jshint-stylish');
 var rename      = require('gulp-rename');
 var rename      = require('gulp-rename');
 var scsslint    = require('gulp-scss-lint');
@@ -12,17 +10,9 @@ var svgmin      = require('gulp-svgmin');
 var replace     = require('gulp-replace');
 
 var paths = {
-  js: ['Gulpfile.js', 'app/assets/javascripts/**/*.js', '!app/assets/javascripts/vendors/*.js'],
   svg: ['app/assets/images/svg/*.svg'],
   sass: ['app/assets/stylesheets/**/*.scss', '!app/assets/stylesheets/vendors/*.scss']
 };
-
-// Lint JS
-gulp.task('js', function () {
-  return gulp.src(paths.js)
-    .pipe(jshint())
-    .pipe(jshint.reporter(jsstylish));
-});
 
 // Lint Sass
 gulp.task('sass', function() {
@@ -63,7 +53,6 @@ gulp.task('svg', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(paths.js, ['js']);
   gulp.watch(paths.svg, ['svg']);
   gulp.watch(paths.sass, ['sass']);
 });

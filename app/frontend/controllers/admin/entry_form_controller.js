@@ -55,9 +55,9 @@ export default class extends Controller {
     };
 
     fetch(`${url}`, fetchOpts)
-    .then(fetchStatus)
-    .then(fetchText)
-    .then(html => $(this.photosTarget).append(html));
+      .then(fetchStatus)
+      .then(fetchText)
+      .then(html => $(this.photosTarget).append(html));
   }
 
   /**

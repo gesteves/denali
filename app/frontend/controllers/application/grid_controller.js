@@ -82,10 +82,10 @@ export default class extends Controller {
     }
     const nextPage = this.getCurrentPage() + 1;
     fetch(`${this.data.get('baseUrl')}/page/${nextPage}.js`)
-    .then(fetchStatus)
-    .then(fetchText)
-    .then(text => this.appendPage(text, nextPage))
-    .catch(() => this.endInfiniteScroll());
+      .then(fetchStatus)
+      .then(fetchText)
+      .then(text => this.appendPage(text, nextPage))
+      .catch(() => this.endInfiniteScroll());
   }
 
   /**

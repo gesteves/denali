@@ -101,7 +101,7 @@ export default class extends Controller {
     const input = event.target;
     const files = input.files;
 
-    if (!files[0].type.match(/\jpe?g$/)) {
+    if (!files[0].type.match(/jpe?g$/)) {
       return;
     }
 

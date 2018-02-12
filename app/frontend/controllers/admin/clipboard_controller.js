@@ -19,7 +19,7 @@ export default class extends Controller {
     if (copied) {
       event.target.innerHTML = 'Copied to clipboard!';
     } else {
-      event.target.innerHTML = 'Whoops, something went wrong ¯\_(ツ)_/¯';
+      event.target.innerHTML = 'Whoops, something went wrong ¯\\_(ツ)_/¯';
     }
   }
 }
