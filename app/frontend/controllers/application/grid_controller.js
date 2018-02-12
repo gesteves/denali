@@ -11,10 +11,10 @@ export default class extends Controller {
    * place any new inserted nodes into the layout.
    */
   connect () {
-    const selector = this.data.get('selector') ? this.data.get('selector') : 'li';
+    const itemSelector = this.data.get('item-selector') ? this.data.get('item-selector') : 'li';
     this.masonry = new Masonry(this.element, {
       initLayout: false,
-      itemSelector: selector,
+      itemSelector: itemSelector,
       percentPosition: true,
       hiddenStyle: {
         opacity: 0
