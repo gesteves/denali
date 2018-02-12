@@ -14,9 +14,7 @@
   <% if content_for? :typekit %>
     <%= yield :typekit %>
   <% end %>
-  <% cache "#{@app_version}/loadcss/" do %>
-      <script><%= inline_asset "vendor/loadcss.js" %></script>
-  <% end %>
+  <%= render partial: 'partials/inline_script', locals: { filename: 'vendor/loadcss.js' } %>
   <%= yield :javascript %>
   <%= javascript_pack_tag 'application', defer: true %>
   <%= @photoblog.analytics_code.try(:html_safe) %>

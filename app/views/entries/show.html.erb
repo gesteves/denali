@@ -8,9 +8,7 @@
 
 <% if !@has_visited %>
   <% content_for :inline_css do %>
-    <% cache "#{@app_version}/entry/styles" do %>
-        <style><%= inline_asset "entry.css" %></style>
-    <% end %>
+    <%= render partial: 'partials/inline_style', locals: { filename: 'entry.css' } %>
   <% end %>
 <% end %>
 
