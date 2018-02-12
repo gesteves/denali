@@ -10,6 +10,9 @@ import Awesomplete from 'awesomplete';
 export default class extends Controller {
   static targets = ['photos', 'tags'];
 
+  /**
+   * Sets up the tag autocomplete, and the drag-and-drop of photos.
+   */
   connect () {
     new Awesomplete(this.tagsTarget, {
       list: '#datalist-tags',
@@ -32,6 +35,11 @@ export default class extends Controller {
     });
   }
 
+  /**
+   * Fetches a new set of fields to add another photo to the entry,
+   * add appends it to the form.
+   * @param {Event} e A click event from the add photo button.
+   */
   addPhoto (e) {
     e.preventDefault();
     const url = this.data.get('photo-endpoint');
@@ -50,6 +58,11 @@ export default class extends Controller {
     .then(html => $(this.photosTarget).append(html));
   }
 
+  /**
+   * Updates all the position fields on the photos before submitting the form,
+   * setting them to their order in the DOM (which may change due to drag and drop).
+   * @param {Event} e A submit event from the form.
+   */
   submit (e) {
     e.preventDefault();
     this.element.querySelectorAll('[data-position]').forEach((e, i) => {

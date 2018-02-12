@@ -8,9 +8,17 @@ import $ from 'jquery';
  */
 export default class extends Controller {
   connect () {
+    // Grab the CSRF token from the document head so we can send it in Fetch requests
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
   }
 
+
+  /**
+   * Edits a tag. Sends the new tag name to the server via Fetch, receives
+   * the updated tag's markup, and replaces it on the page.
+   * TODO: Remove the jQuery dependency.
+   * @param {Event} e A click event from the edit link.
+   */
   edit (e) {
     e.preventDefault();
     const prompt = window.prompt('What do you want to replace the “' + this.data.get('name') +  '” tag with?', this.data.get('name'));
@@ -36,6 +44,11 @@ export default class extends Controller {
     .then(html => $(this.element).replaceWith(html));
   }
 
+  /**
+   * Deletes a tag. If the DELETE request is successful, simply removes the
+   * tag's element from the page.
+   * @param {Event} e A click event from the delete link.
+   */
   delete (e) {
     e.preventDefault();
     if (!window.confirm('Are you sure you want to delete the “' + this.data.get('name') +  '” tag?')) {
@@ -56,7 +69,6 @@ export default class extends Controller {
 
     fetch(`${url}.json`, fetchOpts)
     .then(fetchStatus)
-    .then(fetchText)
-    .then(() => $(this.element).fadeOut());
+    .then(() => this.element.parentNode.removeChild(this.element));
   }
 }

@@ -10,6 +10,11 @@ export default class extends Controller {
     this.showFocalPoint();
   }
 
+
+  /**
+   * Positions the focal point marker on the correct position on top of the photo,
+   * and displays it.
+   */
   showFocalPoint () {
     if (!this.data.get('focal-x') || !this.data.get('focal-y')) {
       return;
@@ -22,6 +27,12 @@ export default class extends Controller {
     this.focalmarkerTarget.style.display = 'block';
   }
 
+
+  /**
+   * Calculates the focal point for the photo based on where the user clicked on
+   * the thumbnail.
+   * @param {Event} e A click event from the photo's thumbnail.
+   */
   setFocalPoint (e) {
     e.preventDefault();
     const focal_x = (e.pageX - this.thumbnailTarget.getBoundingClientRect().left)/this.thumbnailTarget.offsetWidth;
@@ -35,6 +46,11 @@ export default class extends Controller {
     this.showFocalPoint();
   }
 
+
+  /**
+   * Removes the photo form from the page.
+   * @param {Event} e A click event from the delete button.
+   */
   delete (e) {
     e.preventDefault();
     if (parseInt(this.data.get('empty')) || window.confirm('Are you sure you want to remove this photo?')) {
@@ -47,11 +63,20 @@ export default class extends Controller {
     }
   }
 
+  /**
+   * Triggers the file input, which is hidden on the page.
+   * @param {Event} e A click event from a button (not the file input).
+   */
   triggerFileInput (e) {
     e.preventDefault();
     this.fileinputTarget.click();
   }
 
+  /**
+   * Checks if the text entered on the input is an image, and if so, renders
+   * is as a thumbnail.
+   * @param {Event} e A keyup event from a text input.
+   */
   addFromUrl (e) {
     const url = e.target.value;
     if (url.match(/\.jpe?g$/)) {
@@ -59,12 +84,22 @@ export default class extends Controller {
     }
   }
 
+  /**
+   * Sets the passed url as the src of the thumbnail img tag, and toggles the
+   * fields to enter a caption. Marks the form as not empty so we can ask
+   * for confirmation before deleting it.
+   * @param {string} url An image's url.
+   */
   setThumbnail (url) {
     this.thumbnailTarget.src = url;
     this.fieldsTargets.forEach(e => e.classList.toggle('form__fields--hidden'));
     this.data.set('empty', 0);
   }
 
+  /**
+   * Reads the file selected in the file picker, and sets it as the thumbnail image.
+   * @param {Event} e A change event from the file picker.
+   */
   addFromFile (e) {
     const input = e.target;
     const files = input.files;
@@ -78,6 +113,10 @@ export default class extends Controller {
     reader.readAsDataURL(files[0]);
   }
 
+  /**
+   * Convenient, self-explanatory function.
+   * @param  {Event} e A click event
+   */
   stopPropagation (e) {
     e.stopPropagation();
   }

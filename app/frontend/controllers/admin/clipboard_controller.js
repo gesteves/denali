@@ -7,6 +7,10 @@ import { Controller } from 'stimulus';
 export default class extends Controller {
   static targets = ['source'];
 
+  /**
+   * Copies the target's contents to the clipboard.
+   * @param {Event} e A click event from the copy button.
+   */
   copy (e) {
     e.preventDefault();
     this.sourceTarget.select();
