@@ -2,12 +2,12 @@
   <%= render partial: 'partials/admin/nav', locals: { active_nav: nil } %>
 <% end %>
 
-<%= form_for([:admin, @entry], html: { multipart: true, class: 'form' }) do |f| %>
+<%= form_for([:admin, @entry], html: { multipart: true, class: 'form', 'data-controller': 'entry-form', 'data-entry-form-photo-endpoint': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
 
   <div class="form__photos">
-    <ol class="form__photos-list">
+    <ol class="form__photos-list" data-target="entry-form.photos">
       <%= f.fields_for :photos do |p| %>
-        <div class="form__photo" data-controller="entry-form-photo" data-entry-form-photo-empty="0" data-entry-form-photo-focal-x="<%= p.object.focal_x %>" data-entry-form-photo-focal-y="<%= p.object.focal_y %>">
+        <li class="form__photo" data-controller="entry-form-photo" data-entry-form-photo-empty="0" data-entry-form-photo-focal-x="<%= p.object.focal_x %>" data-entry-form-photo-focal-y="<%= p.object.focal_y %>">
           <div class="form__fields" data-target="entry-form-photo.fields">
             <div class="form__photo-thumb">
               <%= responsive_image_tag p.object, 'admin_edit', { class: 'form__photo-img', 'data-action': 'click->entry-form-photo#setFocalPoint', 'data-target': 'entry-form-photo.thumbnail' } %>
@@ -17,16 +17,16 @@
               <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'form__input form__input--caption' %>
               <%= link_to 'Remove', '#', class: 'button button--danger form__photo-delete', 'data-action': 'click->entry-form-photo#delete' %>
               <%= p.hidden_field :id %>
-              <%= p.hidden_field :position, 'data-target': 'entry-form-photo.position' %>
+              <%= p.hidden_field :position, 'data-position': '' %>
               <%= p.hidden_field :_destroy, 'data-target': 'entry-form-photo.destroy' %>
               <%= p.hidden_field :focal_x, 'data-target': 'entry-form-photo.focalx' %>
               <%= p.hidden_field :focal_y, 'data-target': 'entry-form-photo.focaly' %>
             </div>
           </div>
-        </div>
+        </li>
       <% end %>
     </ol>
-    <%= link_to 'Add photo', '#', class: 'button button--default js-photo-add' %>
+    <%= link_to 'Add photo', '#', class: 'button button--default', 'data-action': 'click->entry-form#addPhoto' %>
   </div>
 
   <%= render partial: 'entry_fields', locals: { f: f } %>

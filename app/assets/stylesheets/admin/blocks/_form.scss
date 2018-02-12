@@ -190,7 +190,7 @@
   margin: 0 0 24px;
 
   @supports (backdrop-filter: none) {
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(25px);
   }
 
   &:hover {
@@ -199,6 +199,16 @@
 
   &:active {
     cursor: grabbing;
+  }
+
+  &.form__photo--dragging {
+    visibility: hidden;
+  }
+
+  &.form__photo--mirror {
+    max-width: 840px;
+    width: 100%;
+    z-index: 100;
   }
 }
 
