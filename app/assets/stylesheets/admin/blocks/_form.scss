@@ -291,6 +291,8 @@
 }
 
 .form__drag {
+  align-items: center;
+  display: flex;
   fill: $color-gray-light;
   padding: 0 10px 0 0;
 
