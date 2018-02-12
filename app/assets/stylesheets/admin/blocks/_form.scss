@@ -190,7 +190,7 @@
   margin: 0 0 24px;
 
   @supports (backdrop-filter: none) {
-    backdrop-filter: blur(25px);
+    backdrop-filter: blur(10px);
   }
 
   &.form__photo--dragging {

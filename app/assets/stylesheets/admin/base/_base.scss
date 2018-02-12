@@ -24,3 +24,7 @@ a:active {
 img {
   max-width: 100%;
 }
+
+.draggable--is-dragging {
+  cursor: grabbing;
+}
