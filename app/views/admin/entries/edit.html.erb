@@ -10,7 +10,7 @@
         <li class="form__photo draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="0" data-entry-form-photo-focal-x="<%= p.object.focal_x %>" data-entry-form-photo-focal-y="<%= p.object.focal_y %>">
           <div class="form__fields" data-target="entry-form-photo.fields">
             <div class="form__photo-thumb">
-              <%= responsive_image_tag p.object, 'admin_edit', { class: 'form__photo-img', 'data-action': 'click->entry-form-photo#setFocalPoint', 'data-target': 'entry-form-photo.thumbnail' } %>
+              <%= responsive_image_tag p.object, 'admin_edit', { class: 'form__photo-img', 'data-action': 'click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint', 'data-target': 'entry-form-photo.thumbnail' } %>
               <div class="form__photo-focal-point" data-target="entry-form-photo.focalmarker"></div>
             </div>
             <div class="form__photo-fields" data-target="entry-form-photo.fields">
