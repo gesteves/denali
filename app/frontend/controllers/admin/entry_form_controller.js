@@ -31,7 +31,8 @@ export default class extends Controller {
       classes: {
         'source:dragging': 'form__photo--dragging',
         'mirror': 'form__photo--mirror'
-      }
+      },
+      handle: '.draggable-handle'
     });
   }
 

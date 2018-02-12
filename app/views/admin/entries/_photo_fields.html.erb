@@ -2,6 +2,9 @@
   <%= f.fields_for :photos, child_index: "#{(Time.now.to_f * 1000).to_i}#{i}" do |p| %>
     <li class="form__photo draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="1">
       <div class="form__fields form__fields--initial" data-target="entry-form-photo.fields">
+        <div class="form__drag draggable-handle">
+          <%= inline_svg 'drag', 'form__drag-icon' %>
+        </div>
         <%= p.url_field :source_url, placeholder: 'Paste a URL', autocomplete: 'off', class: 'form__input form__input--url', 'data-action': 'keyup->entry-form-photo#addFromUrl' %>
         <div class="button" data-action="click->entry-form-photo#triggerFileInput">
           Upload a file
@@ -10,6 +13,9 @@
         <%= link_to 'Close', '#', class: 'button button--danger', 'data-action': 'click->entry-form-photo#delete' %>
       </div>
       <div class="form__fields form__fields--hidden" data-target="entry-form-photo.fields">
+        <div class="form__drag draggable-handle">
+          <%= inline_svg 'drag', 'form__drag-icon' %>
+        </div>
         <div class="form__photo-thumb">
           <img class="form__photo-img" data-target="entry-form-photo.thumbnail" data-action="click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint" />
           <div class="form__photo-focal-point" data-target="entry-form-photo.focalmarker"></div>

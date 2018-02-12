@@ -93,7 +93,7 @@
   &.form__input--url {
     font-size: 14px;
     line-height: (24/14);
-    margin: 0 10px 0;
+    margin: 0 10px 0 0;
     padding: 6px 2px;
     width: 100%;
 
@@ -193,14 +193,6 @@
     backdrop-filter: blur(25px);
   }
 
-  &:hover {
-    cursor: grab;
-  }
-
-  &:active {
-    cursor: grabbing;
-  }
-
   &.form__photo--dragging {
     visibility: hidden;
   }
@@ -295,5 +287,18 @@
 
   input {
     width: 100%;
+  }
+}
+
+.form__drag {
+  fill: $color-gray-light;
+  padding: 0 10px 0 0;
+
+  &:hover {
+    cursor: grab;
+  }
+
+  &:active {
+    cursor: grabbing;
   }
 }
