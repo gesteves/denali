@@ -7,7 +7,7 @@
   <title><%= @page_title.nil? ? '' : sanitize("#{@page_title} · ") %><%= @photoblog.name %></title>
   <%= stylesheet_link_tag 'admin', media: 'all' %>
   <%= csrf_meta_tags %>
-  <%= javascript_pack_tag 'admin', async: true %>
+  <%= javascript_pack_tag 'admin', defer: true %>
 </head>
 <body>
 
