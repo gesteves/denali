@@ -3,6 +3,7 @@ import { fetchStatus, fetchText } from '../../lib/utils';
 import $ from 'jquery';
 import { Sortable } from '@shopify/draggable';
 import Awesomplete from 'awesomplete';
+
 /**
  * Controls the entry form.
  * @extends Controller
@@ -38,6 +39,7 @@ export default class extends Controller {
   /**
    * Fetches a new set of fields to add another photo to the entry,
    * add appends it to the form.
+   * TODO: Remove jQuery dependency.
    * @param {Event} e A click event from the add photo button.
    */
   addPhoto (e) {
