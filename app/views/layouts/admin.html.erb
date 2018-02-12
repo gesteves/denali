@@ -7,10 +7,7 @@
   <title><%= @page_title.nil? ? '' : sanitize("#{@page_title} · ") %><%= @photoblog.name %></title>
   <%= stylesheet_link_tag 'admin', media: 'all' %>
   <%= csrf_meta_tags %>
-  <%= javascript_include_tag 'admin', async: true %>
-  <% unless ENV['dropbox_key'].nil? %>
-    <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="<%= ENV['dropbox_key'] %>" async></script>
-  <% end %>
+  <%= javascript_pack_tag 'admin', defer: true %>
 </head>
 <body>
 
@@ -22,9 +19,9 @@
 
 <div class="content">
   <% flash.each do |name, message| -%>
-    <div class="flash flash--<%= name %>">
+    <div class="flash flash--<%= name %>" data-controller="flash" data-flash-timeout="5000">
       <p class="flash__message"><%= message %></p>
-      <a href="#" class="flash__close js-flash-close">&times;</a>
+      <a href="#" class="flash__close" data-action="click->flash#close">&times;</a>
     </div>
   <% end %>
   <%= yield %>

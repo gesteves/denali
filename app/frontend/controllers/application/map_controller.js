@@ -1,4 +1,4 @@
-import { fetchStatus, fetchJson } from '../lib/utils';
+import { fetchStatus, fetchJson } from '../../lib/utils';
 import { Controller }             from 'stimulus';
 
 /**

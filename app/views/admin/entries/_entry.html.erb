@@ -37,11 +37,11 @@
         </div>
       <% end %>
       <div class="entry__actions">
+        <%= link_to 'Edit', edit_admin_entry_path(entry) %> ·
         <% if entry.is_photo? %>
           <%= link_to 'Share', share_admin_entry_path(entry) %>
           ·
         <% end %>
-        <%= link_to 'Edit', edit_admin_entry_path(entry) %> ·
         <%= link_to 'More', more_admin_entry_path(entry.id) %>
       </div>
     </div>

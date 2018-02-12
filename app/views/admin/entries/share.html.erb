@@ -21,10 +21,10 @@
           <div class="entry__thumb--small"><%= image_tag photo.instagram_url, class: 'entry__thumb--small' %></div>
         <% end %>
       </div>
-      <form class="form form--no-padding">
-        <textarea id="instagram_text" class="form__input form__input--textarea-short" readonly="readonly"><%= @instagram_text %></textarea>
+      <form class="form form--no-padding" data-controller="clipboard">
+        <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= @instagram_text %></textarea>
         <div class="form__actions form__actions--no-padding">
-          <button class="button js-clipboard" data-clipboard-target="#instagram_text">Copy to clipboard</button>
+          <button class="button" data-action="clipboard#copy">Copy to clipboard</button>
         </div>
       </form>
     </div>
@@ -38,10 +38,10 @@
           <div class="entry__thumb--small"><%= image_tag photo.url(w: 1200, fm: 'jpg') %></div>
         <% end %>
       </div>
-      <form class="form form--no-padding">
-        <textarea id="markdown" class="form__input form__input--textarea-short" readonly="readonly"><%= @markdown %></textarea>
+      <form class="form form--no-padding" data-controller="clipboard">
+        <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= @markdown %></textarea>
         <div class="form__actions form__actions--no-padding">
-          <button class="button js-clipboard" data-clipboard-target="#markdown">Copy to clipboard</button>
+          <button class="button" data-action="clipboard#copy">Copy to clipboard</button>
         </div>
       </form>
     </div>

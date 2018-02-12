@@ -93,7 +93,7 @@
   &.form__input--url {
     font-size: 14px;
     line-height: (24/14);
-    margin: 0;
+    margin: 0 10px 0;
     padding: 6px 2px;
     width: 100%;
 
@@ -190,7 +190,7 @@
   margin: 0 0 24px;
 
   @supports (backdrop-filter: none) {
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(25px);
   }
 
   &:hover {
@@ -199,6 +199,16 @@
 
   &:active {
     cursor: grabbing;
+  }
+
+  &.form__photo--dragging {
+    visibility: hidden;
+  }
+
+  &.form__photo--mirror {
+    max-width: 840px;
+    width: 100%;
+    z-index: 100;
   }
 }
 
@@ -223,6 +233,7 @@
 .form__photo-focal-point {
   border-radius: 100px;
   box-shadow: 0 0 0 2px red;
+  display: none;
   height: 100px;
   pointer-events: none;
   position: absolute;

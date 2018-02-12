@@ -1,5 +1,5 @@
 import { Controller } from 'stimulus';
-import Pagination from '../observers/pagination';
+import Pagination from '../../observers/pagination';
 
 /**
  * Controls updating the browser bar while scrolling through a list of entries.
