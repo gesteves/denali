@@ -6,12 +6,10 @@ import Masonry        from 'masonry-layout';
  * @extends Controller
  */
 export default class extends Controller {
-  /**
-   * Initializes a Masonry layout, and instantiates a MutationObserver to
-   * place any new inserted nodes into the layout.
-   */
   connect () {
     const itemSelector = this.data.get('item-selector') ? this.data.get('item-selector') : 'li';
+
+    // Initialize Masonry.
     this.masonry = new Masonry(this.element, {
       initLayout: false,
       itemSelector: itemSelector,
@@ -24,7 +22,11 @@ export default class extends Controller {
       }
     });
     this.masonry.layout();
-    this.observer = new MutationObserver(e => this.placeAddedNodes(e));
+
+    // Set up a mutation observer to observe the grid container for any
+    // changes in the `childList`, so that if any nodes get added to the container,
+    // they get placed in the Masonry layout.
+    this.observer = new MutationObserver(e => this.handleMutations(e));
     this.observer.observe(this.element, { childList: true });
   }
 
@@ -33,7 +35,7 @@ export default class extends Controller {
    * Masonry layout.
    * @param {MutationRecord[]} mutations An array of mutations.
    */
-  placeAddedNodes (mutations) {
+  handleMutations (mutations) {
     mutations
       .filter(mutation => mutation.type === 'childList')
       .forEach(mutation => this.masonry.appended(mutation.addedNodes));
