@@ -29,8 +29,8 @@
 <% end %>
 
 <% cache "entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <div data-controller="grid" data-grid-base-url="<%= entries_url(page: nil).sub(/\/$/, '') %>" data-grid-current-page="<%= @page %>">
-    <ol class="entry-list" role="main" data-target="grid.container">
+  <div data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= entries_url(page: nil).sub(/\/$/, '') %>" data-infinite-scroll-current-page="<%= @page %>">
+    <ol class="entry-list" role="main" data-target="infinite-scroll.container" data-controller="grid">
       <%= render partial: 'entries/entry_list_item',
           collection: @entries,
           as: :entry,
@@ -41,7 +41,7 @@
             observe: true
           } %>
     </ol>
-    <%= paginate @entries, target: 'grid.paginator' %>
-    <%= render partial: 'partials/loading', locals: { target: 'grid.spinner' } %>
+    <%= paginate @entries, target: 'infinite-scroll.paginator' %>
+    <%= render partial: 'partials/loading', locals: { target: 'infinite-scroll.spinner' } %>
   </div>
 <% end %>
