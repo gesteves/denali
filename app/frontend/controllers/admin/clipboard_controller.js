@@ -1,25 +1,44 @@
 import { Controller } from 'stimulus';
+import Clipboard from 'clipboard';
 
 /**
  * Controls copy-to-clipboard functionality.
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['source'];
+  static targets = ['source', 'button'];
+
+  // Set up a clipboard.js instance
+  connect () {
+    const clipboard = new Clipboard(this.buttonTarget, {
+      target: () => this.sourceTarget
+    });
+    clipboard.on('success', e => this.successfulCopy(e));
+    clipboard.on('error',   e => this.unsuccessfulCopy(e));
+  }
 
   /**
-   * Copies the target's contents to the clipboard.
-   * @param {Event} event A click event from the copy button.
+   * Convenience method to stop the button from doing its thing.
+   * @param  {Event} event Click event from the button.
    */
-  copy (event) {
+  preventDefault (event) {
     event.preventDefault();
-    this.sourceTarget.select();
-    const copied = document.execCommand('copy');
-    this.sourceTarget.setSelectionRange(0,0);
-    if (copied) {
-      event.target.innerHTML = 'Copied to clipboard!';
-    } else {
-      event.target.innerHTML = 'Whoops, something went wrong ¯\\_(ツ)_/¯';
-    }
+  }
+
+  /**
+   * Turn the button into a success message if the copy is successful
+   * @param  {Event} event Success event from the clipboard instance.
+   */
+  successfulCopy (event) {
+    event.clearSelection();
+    this.buttonTarget.innerHTML = 'Copied to clipboard!';
+  }
+
+  /**
+   * Turn the button into an error message if the copy is successful
+   * @param  {Event} event Error event from the clipboard instance.
+   */
+  unsuccessfulCopy (event) {
+    this.buttonTarget.innerHTML = 'Press Ctrl+C to copy!';
   }
 }

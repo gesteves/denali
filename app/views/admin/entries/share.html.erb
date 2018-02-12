@@ -24,7 +24,7 @@
       <form class="form form--no-padding" data-controller="clipboard">
         <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= @instagram_text %></textarea>
         <div class="form__actions form__actions--no-padding">
-          <button class="button" data-action="clipboard#copy">Copy to clipboard</button>
+          <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">Copy to clipboard</button>
         </div>
       </form>
     </div>
@@ -41,7 +41,7 @@
       <form class="form form--no-padding" data-controller="clipboard">
         <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= @markdown %></textarea>
         <div class="form__actions form__actions--no-padding">
-          <button class="button" data-action="clipboard#copy">Copy to clipboard</button>
+          <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">Copy to clipboard</button>
         </div>
       </form>
     </div>
