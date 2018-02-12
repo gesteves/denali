@@ -12,20 +12,19 @@ export default class extends Controller {
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
   }
 
-
   /**
    * Edits a tag. Sends the new tag name to the server via Fetch, receives
    * the updated tag's markup, and replaces it on the page.
    * TODO: Remove the jQuery dependency.
-   * @param {Event} e A click event from the edit link.
+   * @param {Event} event A click event from the edit link.
    */
-  edit (e) {
-    e.preventDefault();
+  edit (event) {
+    event.preventDefault();
     const prompt = window.prompt('What do you want to replace the “' + this.data.get('name') +  '” tag with?', this.data.get('name'));
     if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
       return;
     }
-    const link = e.target;
+    const link = event.target;
     const url = link.href;
 
     const fetchOpts = {
@@ -47,15 +46,15 @@ export default class extends Controller {
   /**
    * Deletes a tag. If the DELETE request is successful, simply removes the
    * tag's element from the page.
-   * @param {Event} e A click event from the delete link.
+   * @param {Event} event A click event from the delete link.
    */
-  delete (e) {
-    e.preventDefault();
+  delete (event) {
+    event.preventDefault();
     if (!window.confirm('Are you sure you want to delete the “' + this.data.get('name') +  '” tag?')) {
       return;
     }
 
-    const link = e.target;
+    const link = event.target;
     const url = link.href;
 
     const fetchOpts = {

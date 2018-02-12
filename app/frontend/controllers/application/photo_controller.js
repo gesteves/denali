@@ -13,7 +13,6 @@ export default class extends Controller {
     this.photoTargets.forEach(p => this.checkIfZoomable(p));
   }
 
-
   /**
    * Checks if an image is zoomable, and adds the appropriate CSS classes to make
    * it so. Images are sized to fit the viewport; an image is zoomable if it would
@@ -46,7 +45,6 @@ export default class extends Controller {
       photo.setAttribute('data-photo-zoomable', 1);
     }
   }
-
 
   /**
    * Click handler that zooms in all zoomable images on the page.

@@ -14,17 +14,15 @@ export default class extends Controller {
     this.timeout_id = setTimeout(() => this.removeSelf(), parseInt(this.data.get('timeout')));
   }
 
-
   /**
    * Closes the flash aler.
-   * @param {Event} e Click event from the close button.
+   * @param {Event} event Click event from the close button.
    */
-  close (e) {
-    e.preventDefault();
+  close (event) {
+    event.preventDefault();
     this.removeSelf();
     clearTimeout(this.timeout_id);
   }
-
 
   /**
    * Physically removes the flash alert from the document.

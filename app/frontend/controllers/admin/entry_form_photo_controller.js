@@ -10,7 +10,6 @@ export default class extends Controller {
     this.showFocalPoint();
   }
 
-
   /**
    * Positions the focal point marker on the correct position on top of the photo,
    * and displays it.
@@ -27,16 +26,15 @@ export default class extends Controller {
     this.focalmarkerTarget.style.display = 'block';
   }
 
-
   /**
    * Calculates the focal point for the photo based on where the user clicked on
    * the thumbnail.
-   * @param {Event} e A click event from the photo's thumbnail.
+   * @param {Event} event A click event from the photo's thumbnail.
    */
-  setFocalPoint (e) {
-    e.preventDefault();
-    const focal_x = (e.pageX - this.thumbnailTarget.getBoundingClientRect().left)/this.thumbnailTarget.offsetWidth;
-    const focal_y = (e.pageY - this.thumbnailTarget.getBoundingClientRect().top)/this.thumbnailTarget.offsetHeight;
+  setFocalPoint (event) {
+    event.preventDefault();
+    const focal_x = (event.pageX - this.thumbnailTarget.getBoundingClientRect().left)/this.thumbnailTarget.offsetWidth;
+    const focal_y = (event.pageY - this.thumbnailTarget.getBoundingClientRect().top)/this.thumbnailTarget.offsetHeight;
 
     this.data.set('focal-x', focal_x);
     this.data.set('focal-y', focal_y);
@@ -46,13 +44,12 @@ export default class extends Controller {
     this.showFocalPoint();
   }
 
-
   /**
    * Removes the photo form from the page.
-   * @param {Event} e A click event from the delete button.
+   * @param {Event} event A click event from the delete button.
    */
-  delete (e) {
-    e.preventDefault();
+  delete (event) {
+    event.preventDefault();
     if (parseInt(this.data.get('empty')) || window.confirm('Are you sure you want to remove this photo?')) {
       if (this.hasDestroyTarget) {
         this.destroyTarget.value = 'true';
@@ -65,20 +62,20 @@ export default class extends Controller {
 
   /**
    * Triggers the file input, which is hidden on the page.
-   * @param {Event} e A click event from a button (not the file input).
+   * @param {Event} event A click event from a button (not the file input).
    */
-  triggerFileInput (e) {
-    e.preventDefault();
+  triggerFileInput (event) {
+    event.preventDefault();
     this.fileinputTarget.click();
   }
 
   /**
    * Checks if the text entered on the input is an image, and if so, renders
    * is as a thumbnail.
-   * @param {Event} e A keyup event from a text input.
+   * @param {Event} event A keyup event from a text input.
    */
-  addFromUrl (e) {
-    const url = e.target.value;
+  addFromUrl (event) {
+    const url = event.target.value;
     if (url.match(/\.jpe?g$/)) {
       this.setThumbnail(url);
     }
@@ -92,16 +89,16 @@ export default class extends Controller {
    */
   setThumbnail (url) {
     this.thumbnailTarget.src = url;
-    this.fieldsTargets.forEach(e => e.classList.toggle('form__fields--hidden'));
+    this.fieldsTargets.forEach(element => element.classList.toggle('form__fields--hidden'));
     this.data.set('empty', 0);
   }
 
   /**
    * Reads the file selected in the file picker, and sets it as the thumbnail image.
-   * @param {Event} e A change event from the file picker.
+   * @param {Event} event A change event from the file picker.
    */
-  addFromFile (e) {
-    const input = e.target;
+  addFromFile (event) {
+    const input = event.target;
     const files = input.files;
 
     if (!files[0].type.match(/\jpe?g$/)) {
@@ -115,9 +112,9 @@ export default class extends Controller {
 
   /**
    * Convenient, self-explanatory function.
-   * @param  {Event} e A click event
+   * @param  {Event} event A click event
    */
-  stopPropagation (e) {
-    e.stopPropagation();
+  stopPropagation (event) {
+    event.stopPropagation();
   }
 }

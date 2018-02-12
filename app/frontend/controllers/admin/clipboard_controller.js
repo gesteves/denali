@@ -9,17 +9,17 @@ export default class extends Controller {
 
   /**
    * Copies the target's contents to the clipboard.
-   * @param {Event} e A click event from the copy button.
+   * @param {Event} event A click event from the copy button.
    */
-  copy (e) {
-    e.preventDefault();
+  copy (event) {
+    event.preventDefault();
     this.sourceTarget.select();
     const copied = document.execCommand('copy');
     this.sourceTarget.setSelectionRange(0,0);
     if (copied) {
-      e.target.innerHTML = 'Copied to clipboard!';
+      event.target.innerHTML = 'Copied to clipboard!';
     } else {
-      e.target.innerHTML = "Whoops, something went wrong ¯\_(ツ)_/¯";
+      event.target.innerHTML = "Whoops, something went wrong ¯\_(ツ)_/¯";
     }
   }
 }

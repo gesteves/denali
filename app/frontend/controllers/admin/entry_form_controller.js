@@ -40,10 +40,10 @@ export default class extends Controller {
    * Fetches a new set of fields to add another photo to the entry,
    * add appends it to the form.
    * TODO: Remove jQuery dependency.
-   * @param {Event} e A click event from the add photo button.
+   * @param {Event} event A click event from the add photo button.
    */
-  addPhoto (e) {
-    e.preventDefault();
+  addPhoto (event) {
+    event.preventDefault();
     const url = this.data.get('photo-endpoint');
 
     const fetchOpts = {
@@ -63,13 +63,13 @@ export default class extends Controller {
   /**
    * Updates all the position fields on the photos before submitting the form,
    * setting them to their order in the DOM (which may change due to drag and drop).
-   * @param {Event} e A submit event from the form.
+   * @param {Event} event A submit event from the form.
    */
-  submit (e) {
-    e.preventDefault();
-    this.element.querySelectorAll('[data-position]').forEach((e, i) => {
-      e.value = i + 1;
+  submit (event) {
+    event.preventDefault();
+    this.element.querySelectorAll('[data-position]').forEach((element, index) => {
+      element.value = index + 1;
     });
-    e.target.submit();
+    event.target.submit();
   }
 }
