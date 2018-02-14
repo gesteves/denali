@@ -1,8 +1,8 @@
 namespace :queue do
   desc 'Publish the first entry in the queue'
   task :publish => [:environment] do
-    if Time.now - Entry.published.first.published_at < 1.hour
-      puts 'Last entry was published less than an hour ago. Aborting.'
+    if Entry.published.first.published_at.beginning_of_day == Time.now.beginning_of_day
+      puts 'An entry was already published today!'
     else
       entry = Entry.queued.first
       if entry.nil?
