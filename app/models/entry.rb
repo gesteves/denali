@@ -130,7 +130,7 @@ class Entry < ApplicationRecord
   end
 
   def publish
-    self.published_at = Time.now
+    self.published_at = Time.now if self.published_at.blank?
     self.remove_from_list
     self.status = 'published'
     self.save && self.enqueue_sharing_jobs
@@ -138,13 +138,14 @@ class Entry < ApplicationRecord
 
   def queue
     self.insert_at(Entry.queued.size)
-    self.published_at = nil
+    self.published_at = nil if self.published_at.present?
     self.status = 'queued'
     self.save
   end
 
   def draft
     self.remove_from_list
+    self.published_at = nil if self.published_at.present?
     self.status = 'draft'
     self.save
   end
