@@ -9,8 +9,6 @@ class Entry < ApplicationRecord
   belongs_to :user
 
   validates :title, presence: true
-
-  before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
   before_create :set_preview_hash
 
@@ -132,6 +130,7 @@ class Entry < ApplicationRecord
   end
 
   def publish
+    self.published_at = Time.now
     self.remove_from_list
     self.status = 'published'
     self.save && self.enqueue_sharing_jobs
@@ -380,12 +379,6 @@ class Entry < ApplicationRecord
       opts.reverse_merge!(only_path: true)
     end
     opts
-  end
-
-  def set_published_date
-    if self.is_published? && self.published_at.nil?
-      self.published_at = Time.now
-    end
   end
 
   def set_entry_slug
