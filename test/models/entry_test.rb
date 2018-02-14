@@ -76,20 +76,20 @@ class EntryTest < ActiveSupport::TestCase
     assert entry.is_draft?
   end
 
-  test 'should change published to queued' do
+  test 'should not change published to queued' do
     blog = blogs(:allencompassingtrip)
     entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog)
     entry.save
     entry.queue
-    assert entry.is_queued?
+    assert entry.is_published?
   end
 
-  test 'should change published to draft' do
+  test 'should not change published to draft' do
     blog = blogs(:allencompassingtrip)
     entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog)
     entry.save
     entry.draft
-    assert entry.is_draft?
+    assert entry.is_published?
   end
 
   test 'publish should set published_at' do

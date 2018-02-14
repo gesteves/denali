@@ -1,6 +1,5 @@
 <ol class="entry-list">
   <%= render partial: 'entry', object: @entry %>
-
   <li class="entry">
     <div class="entry__content entry__content--misc">
       <h2>Invalidate entry in CloudFront</h2>
@@ -10,7 +9,6 @@
       </div>
     </div>
   </li>
-
   <% if @entry.show_in_map? %>
   <li class="entry">
     <div class="entry__content entry__content--misc">
@@ -43,22 +41,22 @@
     </div>
   </li>
 
+  <% if !@entry.is_published? %>
   <li class="entry">
     <div class="entry__content entry__content--misc">
       <h2>Publishing status</h2>
       <div class="entry__content-buttons">
-        <% unless @entry.is_draft? %>
+        <% if @entry.is_queued? %>
           <%= button_to 'Send it to the drafts', draft_admin_entry_path(@entry), method: :patch, data: { confirm: 'Are you sure you want to send this entry to the drafts?' }, class: 'button' %>
-        <% end %>
-        <% unless @entry.is_queued? %>
+        <% elsif @entry.is_draft? %>
           <%= button_to 'Send it to the queue', queue_admin_entry_path(@entry), method: :patch, data: { confirm: 'Are you sure you want to send this entry to the queue?' }, class: 'button' %>
         <% end %>
-        <% unless @entry.is_published? %>
-          <%= button_to 'Publish it!', publish_admin_entry_path(@entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry? This can’t be undone!' }, class: 'button button--danger' %>
-        <% end %>
+
+        <%= button_to 'Publish it!', publish_admin_entry_path(@entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry? This can’t be undone!' }, class: 'button button--danger' %>
       </div>
     </div>
   </li>
+  <% end %>
   <li class="entry">
     <div class="entry__content entry__content--misc">
       <h2>Danger zone!</h2>

@@ -9,6 +9,8 @@ class Entry < ApplicationRecord
   belongs_to :user
 
   validates :title, presence: true
+
+  before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
   before_create :set_preview_hash
 
@@ -130,24 +132,25 @@ class Entry < ApplicationRecord
   end
 
   def publish
-    self.published_at = Time.now if self.published_at.blank?
     self.remove_from_list
     self.status = 'published'
     self.save && self.enqueue_sharing_jobs
   end
 
   def queue
-    self.insert_at(Entry.queued.size)
-    self.published_at = nil if self.published_at.present?
-    self.status = 'queued'
-    self.save
+    unless status == 'published'
+      self.insert_at(Entry.queued.size)
+      self.status = 'queued'
+      self.save
+    end
   end
 
   def draft
-    self.remove_from_list
-    self.published_at = nil if self.published_at.present?
-    self.status = 'draft'
-    self.save
+    unless status == 'published'
+      self.remove_from_list
+      self.status = 'draft'
+      self.save
+    end
   end
 
   def newer
@@ -380,6 +383,12 @@ class Entry < ApplicationRecord
       opts.reverse_merge!(only_path: true)
     end
     opts
+  end
+
+  def set_published_date
+    if self.is_published? && self.published_at.nil?
+      self.published_at = Time.now
+    end
   end
 
   def set_entry_slug
