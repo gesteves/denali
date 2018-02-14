@@ -15,17 +15,15 @@ cache "feed/atom/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.upd
     xml.updated @photoblog.updated_at.utc.strftime('%FT%TZ')
 
     @entries.each do |e|
-      cache "feed/atom/entry/#{e.id}/#{e.updated_at.to_i}" do
-        xml.entry do
-          xml.id atom_tag(e.permalink_url, e.updated_at)
-          xml.published e.published_at.utc.strftime('%FT%TZ')
-          xml.updated e.updated_at.utc.strftime('%FT%TZ')
-          xml.link rel: 'alternate', type: 'text/html', href: e.permalink_url
-          xml.title e.plain_title
-          xml.content render(partial: 'feed_entry_body.html.erb', locals: { entry: e }), type: 'html'
-          xml.author do |author|
-            author.name e.user.name
-          end
+      xml.entry do
+        xml.id atom_tag(e.permalink_url, e.updated_at)
+        xml.published e.published_at.utc.strftime('%FT%TZ')
+        xml.updated e.updated_at.utc.strftime('%FT%TZ')
+        xml.link rel: 'alternate', type: 'text/html', href: e.permalink_url
+        xml.title e.plain_title
+        xml.content render(partial: 'feed_entry_body.html.erb', locals: { entry: e }), type: 'html'
+        xml.author do |author|
+          author.name e.user.name
         end
       end
     end
