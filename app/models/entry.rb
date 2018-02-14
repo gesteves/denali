@@ -138,19 +138,16 @@ class Entry < ApplicationRecord
   end
 
   def queue
-    unless status == 'published'
-      self.insert_at(Entry.queued.size)
-      self.status = 'queued'
-      self.save
-    end
+    self.insert_at(Entry.queued.size)
+    self.published_at = nil
+    self.status = 'queued'
+    self.save
   end
 
   def draft
-    unless status == 'published'
-      self.remove_from_list
-      self.status = 'draft'
-      self.save
-    end
+    self.remove_from_list
+    self.status = 'draft'
+    self.save
   end
 
   def newer
