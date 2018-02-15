@@ -18,12 +18,7 @@ export default class extends Controller {
       return;
     }
 
-    // Set up the bottom of the page for lazy loading: show the spinner,
-    // hide the footer, remove the pagination links.
-    this.spinnerTarget.classList.add('loading--active');
-    this.footer = document.querySelector('.footer');
-    this.footer.style.display = 'none';
-    this.paginatorTarget.parentNode.removeChild(this.paginatorTarget);
+    this.preparePage();
 
     // Set up an intersection observer to observe the loading spinner at the bottom.
     // When it's in view, fetch the next page.
@@ -39,6 +34,17 @@ export default class extends Controller {
    */
   getCurrentPage () {
     return parseInt(this.data.get('currentPage'));
+  }
+
+  /**
+   * Sets up the bottom of the page for lazy loading: show the spinner,
+   * hide the footer, remove the pagination links.
+   */
+  preparePage () {
+    this.spinnerTarget.classList.add('loading--active');
+    this.footer = document.querySelector('.footer');
+    this.footer.style.display = 'none';
+    this.paginatorTarget.parentNode.removeChild(this.paginatorTarget);
   }
 
   /**
