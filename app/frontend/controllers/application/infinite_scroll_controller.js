@@ -78,7 +78,7 @@ export default class extends Controller {
       return;
     }
     const fragment = document.createRange().createContextualFragment(html);
-    requestAnimationFrame(() => this.containerTarget.appendChild(fragment));
+    this.containerTarget.appendChild(fragment);
   }
 
   /**
