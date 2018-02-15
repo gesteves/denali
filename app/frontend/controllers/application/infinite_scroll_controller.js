@@ -18,7 +18,7 @@ export default class extends Controller {
       return;
     }
 
-    this.preparePage();
+    requestAnimationFrame(() => this.preparePage());
 
     // Set up an intersection observer to observe the loading spinner at the bottom.
     // When it's in view, fetch the next page.
@@ -66,7 +66,7 @@ export default class extends Controller {
         this.data.set('currentPage', nextPage);
         this.appendPage(text);
       })
-      .catch(() => this.endInfiniteScroll());
+      .catch(() => requestAnimationFrame(() => this.endInfiniteScroll()));
   }
 
   /**
@@ -78,7 +78,7 @@ export default class extends Controller {
       return;
     }
     const fragment = document.createRange().createContextualFragment(html);
-    this.containerTarget.appendChild(fragment);
+    requestAnimationFrame(() => this.containerTarget.appendChild(fragment));
   }
 
   /**

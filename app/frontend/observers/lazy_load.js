@@ -39,9 +39,11 @@ function handleIntersection (entries) {
   const intersecting = entries.filter(entry => {
     return (entry.intersectionRatio > 0 || entry.isIntersecting);
   });
-  intersecting.forEach(entry => {
-    loadImage(entry.target);
-    observer().unobserve(entry.target);
+  requestAnimationFrame(() => {
+    intersecting.forEach(entry => {
+      loadImage(entry.target);
+      observer().unobserve(entry.target);
+    });
   });
 }
 
