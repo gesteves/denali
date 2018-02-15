@@ -38,6 +38,6 @@ export default class extends Controller {
   handleMutations (mutations) {
     mutations
       .filter(mutation => mutation.type === 'childList')
-      .forEach(mutation => requestAnimationFrame(() => this.masonry.appended(mutation.addedNodes)));
+      .forEach(mutation => this.masonry.appended(mutation.addedNodes));
   }
 }
