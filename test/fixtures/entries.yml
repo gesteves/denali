@@ -7,6 +7,7 @@ peppers:
   blog: allencompassingtrip
   user: guille
   published_at: 2012-02-11 21:00:00.000000
+  modified_at: 2012-02-11 21:00:00.000000
   show_in_map: true
   photos_count: 1
   tumblr_id: 17444976847
@@ -23,6 +24,7 @@ potomac:
   blog: allencompassingtrip
   user: guille
   published_at: 2012-02-11 23:00:00.000000
+  modified_at: 2012-02-11 21:00:00.000000
   show_in_map: false
   photos_count: 1
 

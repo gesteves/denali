@@ -155,6 +155,14 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_redirected_to admin_entries_path
   end
 
+  test 'update should change modified_at' do
+    entry = entries(:peppers)
+    modified = entry.modified_at
+    patch :update, params: { id: entry.id, entry: { id: entry.id } }
+    entry.reload
+    assert_not_equal modified, entry.modified_at
+  end
+
   test 'should reposition entries' do
     test_1 = Entry.new(title: 'test 1', status: 'queued', blog_id: @blog.id)
     test_1.save

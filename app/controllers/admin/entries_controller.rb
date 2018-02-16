@@ -136,6 +136,7 @@ class Admin::EntriesController < AdminController
   # PATCH/PUT /admin/entries/1
   def update
     respond_to do |format|
+      @entry.modified_at = Time.now if @entry.is_published?
       if @entry.update(entry_params)
         logger.info "Entry #{@entry.id} was updated."
         flash[:notice] = 'Your entry was updated!'

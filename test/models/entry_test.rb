@@ -92,12 +92,15 @@ class EntryTest < ActiveSupport::TestCase
     assert entry.is_published?
   end
 
-  test 'publish should set published_at' do
+  test 'publish should set published_at & modified_at' do
     blog = blogs(:allencompassingtrip)
     entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog)
     entry.save
+    assert_nil entry.published_at
+    assert_nil entry.modified_at
     entry.publish
     assert_not_nil entry.published_at
+    assert_not_nil entry.modified_at
   end
 
   test 'queuing should set a position' do
