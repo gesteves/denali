@@ -5,7 +5,7 @@ cache "sitemap/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
     @entries.each do |e|
       xml.url do
         xml.loc e.permalink_url
-        xml.lastmod e.updated_at.strftime('%Y-%m-%dT%H:%M:%S%:z')
+        xml.lastmod e.published_at.strftime('%Y-%m-%dT%H:%M:%S%:z')
         e.photos.each do |p|
           xml.image :image do
             xml.image :loc, p.url(w: 1200)
