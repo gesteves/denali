@@ -7,7 +7,7 @@ end
 json.headline entry.plain_title
 json.description meta_description(entry)
 json.set! 'datePublished', entry.published_at
-json.set! 'dateModified', entry.updated_at
+json.set! 'dateModified', entry.modified_at
 if entry.is_photo?
   json.image json_schema_images(entry.photos.first)
 end
