@@ -22,7 +22,7 @@ export default class extends Controller {
       },
       replace: function (text) {
         var before = this.input.value.match(/^.+,\s*|/)[0];
-        this.input.value = before + text + ', ';
+        this.input.value = `${before}${text}, `;
       }
     });
 

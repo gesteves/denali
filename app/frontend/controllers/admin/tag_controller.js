@@ -20,7 +20,7 @@ export default class extends Controller {
    */
   edit (event) {
     event.preventDefault();
-    const prompt = window.prompt('What do you want to replace the “' + this.data.get('name') +  '” tag with?', this.data.get('name'));
+    const prompt = window.prompt(`What do you want to replace the “${this.data.get('name')}” tag with?`, this.data.get('name'));
     if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
       return;
     }
@@ -50,7 +50,7 @@ export default class extends Controller {
    */
   delete (event) {
     event.preventDefault();
-    if (!window.confirm('Are you sure you want to delete the “' + this.data.get('name') +  '” tag?')) {
+    if (!window.confirm(`Are you sure you want to delete the “${this.data.get('name')}” tag?`)) {
       return;
     }
 
