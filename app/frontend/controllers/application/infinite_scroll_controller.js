@@ -22,7 +22,7 @@ export default class extends Controller {
 
     // Set up an intersection observer to observe the loading spinner at the bottom.
     // When it's in view, fetch the next page.
-    this.observer = new IntersectionObserver(e => this.handleIntersect(e), { rootMargin: '25%' });
+    this.observer = new IntersectionObserver(e => this.handleIntersect(e), { rootMargin: '50%' });
     this.observer.observe(this.spinnerTarget);
     // Enable polling on the polyfill to work around some Safari weirdness
     this.observer.POLL_INTERVAL = 50;
