@@ -2,17 +2,17 @@ cache "feed/atom/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.upd
   xml.instruct!
   xml.feed xmlns: 'http://www.w3.org/2005/Atom' do
     if @page.nil? || @page == 1
-      xml.id atom_tag(root_url, @photoblog.published.first.published_at)
+      xml.id atom_tag(root_url, @photoblog.entries.published.first.published_at)
       xml.title @photoblog.name
       xml.link rel: 'alternate', type: 'text/html', href: root_url
       xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(format: 'atom', page: nil)
     else
-      xml.id atom_tag(entries_url(page: @page), @photoblog.published.first.published_at)
+      xml.id atom_tag(entries_url(page: @page), @photoblog.entries.published.first.published_at)
       xml.title "#{@photoblog.name} · Page #{@page}"
       xml.link rel: 'alternate', type: 'text/html', href: entries_url(page: @page)
       xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(page: @page, format: 'atom')
     end
-    xml.updated @photoblog.published.first.published_at.utc.strftime('%FT%TZ')
+    xml.updated @photoblog.entries.published.first.published_at.utc.strftime('%FT%TZ')
 
     @entries.each do |e|
       xml.entry do
