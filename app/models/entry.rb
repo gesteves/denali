@@ -154,11 +154,13 @@ class Entry < ApplicationRecord
   end
 
   def newer
-    Entry.published('published_at ASC').where('published_at > ?', self.published_at).where.not(id: self.id).limit(1).first
+    date = self.published_at || self.publish_date_for_queued
+    Entry.published('published_at ASC').where('published_at > ?', date).where.not(id: self.id).limit(1).first
   end
 
   def older
-    Entry.published.where('published_at < ?', self.published_at).where.not(id: self.id).limit(1).first
+    date = self.published_at || self.publish_date_for_queued
+    Entry.published.where('published_at < ?', date).where.not(id: self.id).limit(1).first
   end
 
   def publish_date_for_queued
