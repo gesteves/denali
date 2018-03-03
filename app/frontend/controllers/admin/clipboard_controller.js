@@ -1,5 +1,5 @@
 import { Controller } from 'stimulus';
-import Clipboard from 'clipboard';
+import ClipboardJS from 'clipboard';
 
 /**
  * Controls copy-to-clipboard functionality.
@@ -10,7 +10,7 @@ export default class extends Controller {
 
   // Set up a clipboard.js instance
   connect () {
-    const clipboard = new Clipboard(this.buttonTarget, {
+    const clipboard = new ClipboardJS(this.buttonTarget, {
       target: () => this.sourceTarget
     });
     clipboard.on('success', e => this.successfulCopy(e));
