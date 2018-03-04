@@ -17,7 +17,7 @@
   <%= render partial: 'partials/inline_script', locals: { filename: 'vendor/loadcss.js' } %>
   <%= yield :javascript %>
   <%= javascript_pack_tag 'application', defer: true %>
-  <%= @photoblog.analytics_code.try(:html_safe) %>
+  <%= render partial: 'partials/analytics' %>
 </head>
 <body>
 <%= render partial: 'partials/header.html.erb', locals: { is_minimal: @minimal_header } %>

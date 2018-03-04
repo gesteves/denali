@@ -86,9 +86,6 @@
   <%= f.label :posts_per_page, class: 'form__label' %>
   <%= f.number_field :posts_per_page, min: 1, max: 120, pattern: '\d+', class: 'form__input', required: true %>
 
-  <%= f.label :analytics_code, 'Analytics code', class: 'form__label' %>
-  <%= f.text_area :analytics_code, placeholder: 'Snippet for Google Analytics…', class: 'form__input form__input--textarea' %>
-
   <%= f.label :additional_meta_tags, 'Additional meta tags', class: 'form__label' %>
   <%= f.text_area :additional_meta_tags, placeholder: 'For example, Google Webmaster Tools verification tags…', class: 'form__input form__input--textarea' %>
 

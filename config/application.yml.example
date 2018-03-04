@@ -24,6 +24,9 @@ default: &default
   # Optional. Used for auto-tagging entries with location info.
   google_api_key:
 
+  # Optional.
+  google_analytics_id:
+
   # Required.
   imgix_domain:
   imgix_secure: 'true'
@@ -83,6 +86,9 @@ production:
   flickr_access_token:
   flickr_consumer_key:
   flickr_consumer_secret:
+
+  # Optional.
+  google_analytics_id:
 
   # Required.
   google_apps_domain:

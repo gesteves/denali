@@ -1,0 +1,10 @@
+<% if ENV['google_analytics_id'].present? %>
+<script async src="https://www.googletagmanager.com/gtag/js?id=<%= ENV['google_analytics_id'] %>"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gaTrackingId = "<%= ENV['google_analytics_id'] %>";
+  gtag('js', new Date());
+  gtag('config', gaTrackingId);
+</script>
+<% end %>

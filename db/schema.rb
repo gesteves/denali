@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180216230703) do
+ActiveRecord::Schema.define(version: 20180304171025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,7 +26,6 @@ ActiveRecord::Schema.define(version: 20180216230703) do
     t.text "about"
     t.string "copyright"
     t.boolean "show_related_entries", default: true
-    t.text "analytics_code"
     t.string "instagram"
     t.string "twitter"
     t.string "tumblr"
