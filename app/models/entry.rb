@@ -290,7 +290,6 @@ class Entry < ApplicationRecord
     }
     attachment[:image_url] = self.photos.first.url(w: 800) if self.is_photo?
     attachment[:color] = '#BF0222'
-    attachment[:text] = self.plain_body if self.body.present?
     SlackJob.perform_later(attachments: [attachment])
   end
 
