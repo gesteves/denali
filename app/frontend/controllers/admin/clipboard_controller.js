@@ -36,9 +36,8 @@ export default class extends Controller {
 
   /**
    * Turn the button into an error message if the copy is successful
-   * @param  {Event} event Error event from the clipboard instance.
    */
-  unsuccessfulCopy (event) {
+  unsuccessfulCopy () {
     this.buttonTarget.innerHTML = 'Press Ctrl+C to copy!';
   }
 }
