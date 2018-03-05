@@ -304,19 +304,19 @@ class Entry < ApplicationRecord
   end
 
   def es_tags
-    self.tags.map { |t| t.slug.gsub(/-/, '') }.join(' ')
+    self.tag_list.join(' ')
   end
 
   def es_locations
-    self.locations.map { |t| t.slug.gsub(/-/, '') }.join(' ')
+    self.location_list.join(' ')
   end
 
   def es_equipment
-    self.equipment.map { |t| t.slug.gsub(/-/, '') }.join(' ')
+    self.equipment_list.join(' ')
   end
 
   def es_styles
-    self.styles.map { |t| t.slug.gsub(/-/, '') }.join(' ')
+    self.style_list.join(' ')
   end
 
   def es_captions
