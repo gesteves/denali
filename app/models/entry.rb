@@ -36,7 +36,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :plain_tags, :plain_locations, :plain_equipment, :plain_captions, :plain_styles, :plain_keywords])
+    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :es_tags, :es_locations, :es_equipment, :es_captions, :es_styles, :es_keywords])
   end
 
   def self.published(order = 'published_at DESC')
@@ -203,9 +203,9 @@ class Entry < ApplicationRecord
               term: { id: self.id }
             },
             should: [
-              { match: { plain_tags: { query: self.plain_tags } } },
-              { match: { plain_locations: { query: self.plain_locations } } },
-              { match: { plain_styles: { query: self.plain_styles } } }
+              { match: { es_tags: { query: self.es_tags } } },
+              { match: { es_locations: { query: self.es_locations } } },
+              { match: { es_styles: { query: self.es_styles } } }
             ],
             minimum_should_match: 1
           }
@@ -303,28 +303,28 @@ class Entry < ApplicationRecord
     self.combined_tags.map(&:name)
   end
 
-  def plain_tags(separator = ' ')
-    self.tag_list.join(separator)
+  def es_tags
+    self.tags.map { |t| t.slug.gsub(/-/, '') }.join(' ')
   end
 
-  def plain_locations(separator = ' ')
-    self.location_list.join(separator)
+  def es_locations
+    self.locations.map { |t| t.slug.gsub(/-/, '') }.join(' ')
   end
 
-  def plain_equipment(separator = ' ')
-    self.equipment_list.join(separator)
+  def es_equipment
+    self.equipment.map { |t| t.slug.gsub(/-/, '') }.join(' ')
   end
 
-  def plain_styles(separator = ' ')
-    self.style_list.join(separator)
+  def es_styles
+    self.styles.map { |t| t.slug.gsub(/-/, '') }.join(' ')
   end
 
-  def plain_captions(separator = "\n\n")
-    self.photos.map { |p| p.plain_caption }.reject(&:blank?).join(separator)
+  def es_captions
+    self.photos.map { |p| p.plain_caption }.reject(&:blank?).join(' ')
   end
 
-  def plain_keywords(separator = ', ')
-    self.photos.map { |p| p.keywords }.reject(&:blank?).join(separator)
+  def es_keywords
+    self.photos.map { |p| p.keywords }.reject(&:blank?).join(', ')
   end
 
   def instagram_hashtags
