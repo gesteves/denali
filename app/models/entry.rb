@@ -89,7 +89,7 @@ class Entry < ApplicationRecord
           must: [
             { term: { status: 'published' } },
             { range: { photos_count: { gt: 0 } } },
-            { multi_match: { query: query, fields: ['plain_*'], type: 'cross_fields', operator: 'and' } }
+            { multi_match: { query: query, fields: ['plain_*', 'es_*'], type: 'cross_fields', operator: 'and' } }
           ]
         }
       },
