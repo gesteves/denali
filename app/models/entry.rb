@@ -174,19 +174,19 @@ class Entry < ApplicationRecord
 
   def related(count = 12)
     start_date = if self.is_published?
-      self.published_at.beginning_of_day - 2.year
+      self.published_at.beginning_of_day - 1.year
     elsif self.is_queued?
-      self.publish_date_for_queued.beginning_of_day - 2.year
+      self.publish_date_for_queued.beginning_of_day - 1.year
     else
-      self.created_at.beginning_of_day - 2.year
+      self.created_at.beginning_of_day - 1.year
     end
 
     end_date = if self.is_published?
-      self.published_at.end_of_day + 2.year
+      self.published_at.end_of_day + 1.year
     elsif self.is_queued?
-      self.publish_date_for_queued.end_of_day + 2.year
+      self.publish_date_for_queued.end_of_day + 1.year
     else
-      self.created_at.end_of_day + 2.year
+      self.created_at.end_of_day + 1.year
     end
 
     begin
