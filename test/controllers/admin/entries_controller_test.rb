@@ -136,17 +136,17 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     post :create, params: { entry: { title: 'Published', status: 'published' } }
     assert assigns(:entry).is_published?
     assert_nil assigns(:entry).position
-    assert_redirected_to admin_entries_path
+    assert_redirected_to new_admin_entry_path
 
     post :create, params: { entry: { title: 'Draft', status: 'draft' } }
     assert assigns(:entry).is_draft?
     assert_nil assigns(:entry).position
-    assert_redirected_to admin_entries_path
+    assert_redirected_to new_admin_entry_path
 
     post :create, params: { entry: { title: 'Queued', status: 'queued' } }
     assert assigns(:entry).is_queued?
     assert_not_nil assigns(:entry).position
-    assert_redirected_to admin_entries_path
+    assert_redirected_to new_admin_entry_path
   end
 
   test 'should update entries' do
