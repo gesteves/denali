@@ -68,11 +68,6 @@ class Admin::EntriesController < AdminController
 
   def share
     @page_title = "Share “#{@entry.title}”"
-    text = [@entry.is_published? ? "[#{@entry.title}](#{@entry.permalink_url})" : @entry.title]
-    text << @entry.body unless @entry.body.blank?
-    text << @entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }.uniq.sort.map { |t| "##{t}" }.join(' ')
-    @markdown = text.join("\n\n")
-    @title_only = @entry.plain_title
   end
 
   # PATCH /admin/entries/1/publish

@@ -39,7 +39,24 @@
         <% end %>
       </div>
       <form class="form form--no-padding" data-controller="clipboard">
-        <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= @markdown %></textarea>
+        <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= share_markdown @entry %></textarea>
+        <div class="form__actions form__actions--no-padding">
+          <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">Copy to clipboard</button>
+        </div>
+      </form>
+    </div>
+  </li>
+  <li class="entry">
+    <div class="entry__content entry__content--misc">
+      <h2>Title only</h2>
+      <p class="entry__help">Resizes images to 1200px wide; includes just the entry’s title.</p>
+      <div class="entry__thumbs">
+        <% @entry.photos.each do |photo| %>
+          <div class="entry__thumb--small"><%= image_tag photo.url(w: 1200, fm: 'jpg') %></div>
+        <% end %>
+      </div>
+      <form class="form form--no-padding" data-controller="clipboard">
+        <input type="text" class="form__input form__input--text form__input--small" readonly="readonly" data-target="clipboard.source" value="<%= share_title @entry %>">
         <div class="form__actions form__actions--no-padding">
           <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">Copy to clipboard</button>
         </div>
