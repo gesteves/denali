@@ -3,13 +3,7 @@ class InstagramJob < BufferJob
 
   def perform(entry)
     return if !entry.is_photo?
-    text_array = []
-    text_array << entry.plain_title
-    text_array << entry.plain_body if entry.body.present?
-    text_array << entry.instagram_hashtags
-
-    text = text_array.join("\n\n")
-
+    text = entry.instagram_caption
     ids = get_profile_ids('instagram')
     media = media_hash(entry.photos.first)
     post_to_buffer(ids, text, media)

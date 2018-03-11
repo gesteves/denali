@@ -42,13 +42,12 @@
       <h2>Sharing options</h2>
       <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_facebook %> Post to Facebook<% end %>
       <%= f.label :post_to_flickr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_flickr %> Post to Flickr<% end %>
-      <%= f.label :post_to_instagram, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_instagram %> Post to Instagram<% end %>
       <%= f.label :post_to_pinterest, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_pinterest %> Post to Pinterest<% end %>
       <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_tumblr %> Post to Tumblr<% end %>
-      <%= f.label :post_to_twitter, class: 'form__label form__label--checkbox' do %>
-        <%= f.check_box(:post_to_twitter) %> Post to Twitter
-      <% end %>
-      <%= f.text_area :tweet_text, placeholder: 'Your tweet here…', maxlength: 230, class: 'form__input form__input--textarea form__input--short' %>
+      <%= f.label :post_to_twitter, class: 'form__label form__label--checkbox' do %><%= f.check_box(:post_to_twitter) %> Post to Twitter<% end %>
+      <%= f.text_area :tweet_text, placeholder: 'Your tweet…', maxlength: 230, class: 'form__input form__input--textarea form__input--short' %>
+      <%= f.label :post_to_instagram, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_instagram %> Post to Instagram<% end %>
+      <%= f.text_area :instagram_text, placeholder: 'Your Instagram caption…', class: 'form__input form__input--textarea form__input--short' %>
     <% end %>
   </div>
 

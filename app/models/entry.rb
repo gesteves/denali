@@ -341,6 +341,18 @@ class Entry < ApplicationRecord
     instagram_tags.flatten.uniq.sample(25).map { |t| "##{t}"}.join(' ')
   end
 
+  def instagram_caption
+    text = []
+    if self.instagram_text.present?
+      text << self.instagram_text
+    else
+      text << self.plain_title
+      text << self.plain_body
+    end
+    text << self.instagram_hashtags
+    text.reject(&:blank?).join("\n\n")
+  end
+
   def tumblr_hashtags
     entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
     tumblr_tags = []

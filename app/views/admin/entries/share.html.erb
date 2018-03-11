@@ -22,7 +22,7 @@
         <% end %>
       </div>
       <form class="form form--no-padding" data-controller="clipboard">
-        <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= @instagram_text %></textarea>
+        <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= @entry.instagram_caption %></textarea>
         <div class="form__actions form__actions--no-padding">
           <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">Copy to clipboard</button>
         </div>
