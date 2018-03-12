@@ -7,9 +7,13 @@ gem 'pg', '~> 0.21'
 # Auth
 gem 'omniauth-google-oauth2'
 
+# AWS
+gem 'aws-sdk-cloudfront', '~> 1'
+gem 'aws-sdk-s3', '~> 1'
+gem 'aws-sdk-rekognition', '~> 1'
+
 # Uploads
-gem 'aws-sdk', '~> 2.0'
-gem 'paperclip', '~> 5.0'
+gem 'paperclip', '~> 6.0'
 
 # Front-end things
 gem 'sass-rails', '~> 5.0'
