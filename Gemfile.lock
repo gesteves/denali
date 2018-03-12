@@ -45,7 +45,7 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (8.0.0)
-    autoprefixer-rails (8.1.0)
+    autoprefixer-rails (8.1.0.1)
       execjs
     aws-partitions (1.70.0)
     aws-sdk-cloudfront (1.1.0)
