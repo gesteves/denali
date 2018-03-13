@@ -327,6 +327,20 @@ class Entry < ApplicationRecord
     self.photos.map { |p| p.keywords }.reject(&:blank?).join(', ')
   end
 
+  def instagram_hashtags
+    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    instagram_tags = []
+    custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
+    custom_hashtags.each do |k, v|
+      if k == 'all'
+        instagram_tags << custom_hashtags[k].sample(5)
+      elsif entry_tags.include? k
+        instagram_tags << custom_hashtags[k].sample(5)
+      end
+    end
+    instagram_tags.flatten.uniq.sample(29).map { |t| "##{t}"}.join(' ')
+  end
+
   def instagram_caption
     text = []
     if self.instagram_text.present?
@@ -335,6 +349,7 @@ class Entry < ApplicationRecord
       text << self.plain_title
       text << self.plain_body
     end
+    text << self.instagram_hashtags
     text.reject(&:blank?).join("\n\n")
   end
 
