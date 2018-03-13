@@ -327,20 +327,6 @@ class Entry < ApplicationRecord
     self.photos.map { |p| p.keywords }.reject(&:blank?).join(', ')
   end
 
-  def instagram_hashtags
-    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
-    instagram_tags = []
-    custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
-    custom_hashtags.each do |k, v|
-      if k == 'all'
-        instagram_tags << custom_hashtags[k].sample(5)
-      elsif entry_tags.include? k
-        instagram_tags << custom_hashtags[k].sample(5)
-      end
-    end
-    instagram_tags.flatten.uniq.sample(25).map { |t| "##{t}"}.join(' ')
-  end
-
   def instagram_caption
     text = []
     if self.instagram_text.present?
@@ -350,21 +336,6 @@ class Entry < ApplicationRecord
       text << self.plain_body
     end
     text.reject(&:blank?).join("\n\n")
-  end
-
-  def tumblr_hashtags
-    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
-    tumblr_tags = []
-    custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['tumblr']
-    custom_hashtags.each do |k, v|
-      if k == 'all'
-        tumblr_tags += custom_hashtags[k]
-      elsif entry_tags.include? k
-        tumblr_tags += custom_hashtags[k]
-      end
-    end
-    tags = tumblr_tags + self.combined_tags.map(&:name)
-    tags.sort.map(&:downcase).join(', ')
   end
 
   def update_tags

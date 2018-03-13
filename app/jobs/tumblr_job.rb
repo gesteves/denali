@@ -11,7 +11,7 @@ class TumblrJob < ApplicationJob
     })
 
     opts = {
-      tags: entry.tumblr_hashtags,
+      tags: entry.combined_tags.map(&:name).uniq.sort.map(&:downcase).join(', '),
       slug: entry.slug,
       caption: entry.formatted_content(link_title: true),
       link: entry.permalink_url,
