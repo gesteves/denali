@@ -328,39 +328,26 @@ class Entry < ApplicationRecord
   end
 
   def instagram_hashtags
-    instagram_tags = []
-    locations = self.locations.map { |t| t.slug.gsub(/-/, '') }
-    equipment = self.equipment.map { |t| t.slug.gsub(/-/, '') }
-    tags = self.tags.map { |t| t.slug.gsub(/-/, '') }
-    styles = self.styles.map { |t| t.slug.gsub(/-/, '') }
-
+    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    tags = []
+    extra_tags = []
     custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
-
     custom_hashtags.each do |k, v|
-      if locations.include? k
-        instagram_tags << custom_hashtags[k].shuffle
+      if entry_tags.include? k
+        tags << custom_hashtags[k].sample(5)
       end
     end
+    extra_tags << custom_hashtags['magazines'].sample(5)
 
     custom_hashtags.each do |k, v|
-      if equipment.include? k
-        instagram_tags << custom_hashtags[k].shuffle
+      if entry_tags.include? k
+        extra_tags << custom_hashtags[k]
       end
     end
+    extra_tags << custom_hashtags['magazines']
 
-    custom_hashtags.each do |k, v|
-      if tags.include? k
-        instagram_tags << custom_hashtags[k].shuffle
-      end
-    end
-
-    custom_hashtags.each do |k, v|
-      if styles.include? k
-        instagram_tags << custom_hashtags[k].shuffle
-      end
-    end
-
-    instagram_tags.flatten.uniq[0, 30].shuffle.map { |t| "##{t}"}.join(' ')
+    instagram_tags = tags.flatten + extra_tags.flatten.shuffle
+    instagram_tags.uniq[0, 30].shuffle.map { |t| "##{t}"}.join(' ')
   end
 
   def instagram_caption
