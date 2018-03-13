@@ -337,7 +337,7 @@ class Entry < ApplicationRecord
         tags << custom_hashtags[k].sample(5)
       end
     end
-    extra_tags << custom_hashtags['magazines'].sample(5)
+    tags << custom_hashtags['magazines'].sample(5)
 
     custom_hashtags.each do |k, v|
       if entry_tags.include? k
@@ -346,7 +346,7 @@ class Entry < ApplicationRecord
     end
     extra_tags << custom_hashtags['magazines']
 
-    instagram_tags = tags.flatten + extra_tags.flatten.shuffle
+    instagram_tags = tags.flatten.shuffle + extra_tags.flatten.shuffle
     instagram_tags.uniq[0, 30].shuffle.map { |t| "##{t}"}.join(' ')
   end
 
