@@ -328,17 +328,39 @@ class Entry < ApplicationRecord
   end
 
   def instagram_hashtags
-    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
     instagram_tags = []
+    locations = self.locations.map { |t| t.slug.gsub(/-/, '') }
+    equipment = self.equipment.map { |t| t.slug.gsub(/-/, '') }
+    tags = self.tags.map { |t| t.slug.gsub(/-/, '') }
+    styles = self.styles.map { |t| t.slug.gsub(/-/, '') }
+
     custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
+
     custom_hashtags.each do |k, v|
-      if k == 'all'
-        instagram_tags << custom_hashtags[k].sample(5)
-      elsif entry_tags.include? k
-        instagram_tags << custom_hashtags[k].sample(5)
+      if locations.include? k
+        instagram_tags << custom_hashtags[k].shuffle
       end
     end
-    instagram_tags.flatten.uniq.sample(29).map { |t| "##{t}"}.join(' ')
+
+    custom_hashtags.each do |k, v|
+      if equipment.include? k
+        instagram_tags << custom_hashtags[k].shuffle
+      end
+    end
+
+    custom_hashtags.each do |k, v|
+      if tags.include? k
+        instagram_tags << custom_hashtags[k].shuffle
+      end
+    end
+
+    custom_hashtags.each do |k, v|
+      if styles.include? k
+        instagram_tags << custom_hashtags[k].shuffle
+      end
+    end
+
+    instagram_tags.flatten.uniq[0, 30].shuffle.map { |t| "##{t}"}.join(' ')
   end
 
   def instagram_caption
