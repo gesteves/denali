@@ -334,7 +334,7 @@ class Entry < ApplicationRecord
     custom_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
     custom_hashtags.each do |k, v|
       if entry_tags.include? k
-        tags << custom_hashtags[k].sample(10)
+        tags << custom_hashtags[k].sample(5)
       end
     end
     tags << custom_hashtags['magazines'].sample(5)
