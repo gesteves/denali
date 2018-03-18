@@ -218,7 +218,7 @@ instagram:
   nationalgalleryofart:
     - myngadc
   nationalparks: *findyourpark
-  newyork:
+  newyorkcity: &nyc
     - icapture_nyc
     - ig_great_shots_nyc
     - ig_nycity
@@ -233,6 +233,10 @@ instagram:
     - nycprimeshot
     - unlimitednewyork
     - what_i_saw_in_nyc
+  manhattan: *nyc
+  brooklyn: *nyc
+  queens: *nyc
+  bronx: *nyc
   philadelphia:
     - discoverphl
     - explore215
