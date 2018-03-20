@@ -12,6 +12,37 @@ instagram:
     - architecturephotography
     - architectureporn
     - architexture
+  astrophotography:
+    - astrophoto
+    - astrophotography
+    - ig_astrophotography
+    - ig_nightphotography
+    - milkywaychasers
+    - milkywaygalaxy
+    - natgeospace
+    - nightimages
+    - nightscape
+    - nightscaper
+    - nightshooters
+    - nightsky
+    - rsa_night
+    - skymasters
+    - stargazing
+    - starrynight
+  birds:
+    - birdextreme
+    - birdfreaks
+    - birding
+    - birdlover
+    - birdlovers
+    - birdphotography
+    - birdstagram
+    - eye_spy_birds
+    - igbirds
+    - instabird
+    - instabirds
+    - nuts_about_birds
+    - your_best_birds
   caracas:
     - ccs
     - ig_caracas
@@ -131,6 +162,7 @@ instagram:
     - shootfilm
     - thefilmcommunity
   findyourpark: &findyourpark
+    - americasbestidea
     - findyourpark
     - goparks
   fujifilm:
@@ -144,12 +176,31 @@ instagram:
     - fujixclub
     - fujixseries
     - myfujifilm
+  grandtetonnationalpark:
+    - grandtetonnationalpark
+    - jacksonhole
+    - tetons
   landscape:
+    - allnatureshots
+    - earth_deluxe
+    - EarthVisuals
+    - fantastic_earth
+    - ic_landscapes
+    - instanaturelover
     - landscape_captures
     - landscape_lovers
+    - landscapehunter
     - landscapelovers
     - landscapephotography
     - landscapes
+    - nature_brilliance
+    - nature_prefection
+    - nature_shooters
+    - nature_wizards
+    - naturediversity
+    - ourplanetdaily
+    - special_shots
+    - welivetoexplore
   lasvegas:
     - lasvegasstrip
     - sincity
@@ -162,6 +213,17 @@ instagram:
     - leicam
     - leicaphoto
     - leicaphotography
+  longexposure:
+    - amazing_longexpo
+    - fs_longexpo
+    - ic_longexpo
+    - longexpo
+    - longexpohunter
+    - longexposure
+    - longexposure_shots
+    - longexposureoftheday
+    - longexposurephotography
+    - splendid_xposure
   magazines:
     - lensculture
     - myfeatureshoot
@@ -189,6 +251,14 @@ instagram:
     - mexigers
     - mextagram
     - vive_mexico
+  mountain:
+    - mountainlove
+    - instamountain
+    - ig_mountains
+    - mountainlife
+    - mountainaddict
+    - mountaingram
+    - igersmountain
   nationalairandspacemuseum:
     - airandspace
   nationalgalleryofart:
@@ -268,3 +338,26 @@ instagram:
     - igersvenezuela
     - instavenezuela
     - vzla
+  wildlife:
+    - animal_in_world
+    - animales
+    - animallovers
+    - animalofinstagram
+    - animalsaddict
+    - animalsmood
+    - animalsofinstagram
+    - animalworld
+    - anmlsworld
+    - exclusive_animals
+    - fantastic_earth
+    - planet_of_animals
+    - thecritterhaven
+    - wildlife
+    - wildlife_seekers
+    - wildlifeonearth
+    - wildlifephoto
+    - wildlifephotography
+    - wildlifeplanet
+  wyoming:
+    - visitwyoming
+    - wyoming
