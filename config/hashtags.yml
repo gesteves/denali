@@ -43,6 +43,25 @@ instagram:
     - instabirds
     - nuts_about_birds
     - your_best_birds
+  blackandwhite:
+    - blackandwhitephoto
+    - blackandwhitephotography
+    - blancoynegro
+    - bnw_captures
+    - bnw_city
+    - bnw_demand
+    - bnw_globe
+    - bnw_life
+    - bnw_magazine
+    - bnw_planet
+    - bnw_rose
+    - bnw_society
+    - bnwmood
+    - bw_divine
+    - bw_lover
+    - bw_photooftheday
+    - ig_energy_bw
+    - monochrome
   caracas:
     - ccs
     - ig_caracas
@@ -101,6 +120,7 @@ instagram:
     - ciudaddemexico
     - df
     - igerscdmx
+    - igersdf
     - mexicocity
     - mexicodf
   classiccars:
@@ -108,22 +128,22 @@ instagram:
     - retrocars
     - vintagecars
   concert:
-    - livemusic
-    - rocknroll
+    - bandphotographer
     - concertphoto
+    - concertphotographer
+    - concertphotography
+    - concertphotos
+    - liveconcertphotography
+    - livemusic
+    - livemusicphotographer
+    - livemusicphotography
     - livephotography
     - musiclife
-    - rockphotography
-    - concertphotography
-    - musicphotography
     - musicphoto
-    - livemusicphotography
-    - concertphotographer
-    - bandphotographer
     - musicphotographer
-    - concertphotos
-    - livemusicphotographer
-    - liveconcertphotography
+    - musicphotography
+    - rocknroll
+    - rockphotography
   districtofcolumbia:
     - acreativedc
     - dcitystyle
@@ -259,7 +279,7 @@ instagram:
     - mexigers
     - mextagram
     - vive_mexico
-  mountain:
+  mountains:
     - mountainlove
     - instamountain
     - ig_mountains
