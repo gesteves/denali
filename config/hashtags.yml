@@ -207,7 +207,7 @@ instagram:
     - grandtetonnationalpark
     - jacksonhole
     - tetons
-  landscapes:
+  landscapes: &landscapes
     - allnatureshots
     - earth_deluxe
     - EarthVisuals
@@ -228,6 +228,7 @@ instagram:
     - ourplanetdaily
     - special_shots
     - welivetoexplore
+  telephotolandscapes: *landscapes
   lasvegas:
     - lasvegasstrip
     - sincity
