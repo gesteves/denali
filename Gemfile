@@ -21,7 +21,7 @@ gem 'jquery-rails'
 gem 'autoprefixer-rails'
 gem 'imgix'
 gem 'uglifier'
-gem 'webpacker', '~> 3.2'
+gem 'webpacker', '~> 3.2.0'
 
 # Misc
 gem 'jbuilder', '~> 2.3'
