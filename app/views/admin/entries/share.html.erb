@@ -1,5 +1,16 @@
 <ol class="entry-list">
   <%= render partial: 'entry', object: @entry %>
+  <li class="entry">
+    <div class="entry__content entry__content--misc">
+      <h2>Source Images</h2>
+      <p class="entry__help">Tap to download the original, full-size source image.</p>
+      <div class="entry__thumbs">
+        <% @entry.photos.each do |photo| %>
+          <div class="entry__thumb--small"><%= link_to responsive_image_tag(photo, 'admin_share'), photo.original_url %></div>
+        <% end %>
+      </div>
+    </div>
+  </li>
   <% if @entry.is_published? %>
   <li class="entry">
     <div class="entry__content entry__content--misc">
