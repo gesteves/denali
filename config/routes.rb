@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       member do
         get 'more'
         get 'share'
+        post 'resize_photos'
         patch 'publish'
         patch 'queue'
         patch 'draft'

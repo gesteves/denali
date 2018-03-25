@@ -70,16 +70,6 @@ admin_edit:
   sizes:
     - "(min-width: 800px) 300px"
     - calc(100vw - 60px)
-admin_share:
-  src: 300
-  srcset:
-    - 394
-    - 543
-    - 788
-    - 1182
-  sizes:
-    - "(min-width: 800px) 394px"
-    - calc((100vw - 42px)/2 - 5px)
 map:
   src: 300
   srcset:

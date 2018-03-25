@@ -1,16 +1,5 @@
 <ol class="entry-list">
   <%= render partial: 'entry', object: @entry %>
-  <li class="entry">
-    <div class="entry__content entry__content--misc">
-      <h2>Source Images</h2>
-      <p class="entry__help">Tap to download the original, full-size source image.</p>
-      <div class="entry__thumbs">
-        <% @entry.photos.each do |photo| %>
-          <div class="entry__thumb--small"><%= link_to responsive_image_tag(photo, 'admin_share'), photo.original_url %></div>
-        <% end %>
-      </div>
-    </div>
-  </li>
   <% if @entry.is_published? %>
   <li class="entry">
     <div class="entry__content entry__content--misc">
@@ -24,14 +13,17 @@
   </li>
   <% end %>
   <li class="entry">
+    <div class="entry__content entry__content--misc" data-controller="photo-resizer">
+      <h2>Images</h2>
+      <%= form_tag(resize_photos_admin_entry_url, method: 'get', class: 'form', 'data-target': 'photo-resizer.form', 'data-action': 'change->photo-resizer#fetch') do %>
+        <%= select_tag(:size, options_for_select([['Original', 'original'], ['Instagram (Feed)', 'instagram_feed'], ['Instagram (Story)', 'instagram_story']] + @sizes.map { |s| ["#{number_with_delimiter s}px wide", s] } + [['Other', 'other']]), prompt: 'Choose a size', class: 'form__dropdown', 'data-target': 'photo-resizer.select') %>
+      <% end %>
+      <div class="entry__thumbs" data-target="photo-resizer.thumbnails"></div>
+    </div>
+  </li>
+  <li class="entry">
     <div class="entry__content entry__content--misc">
       <h2>Instagram</h2>
-      <p class="entry__help">Formats images for Instagram’s optimal size and aspect ratio; randomizes Instagram hashtags.</p>
-      <div class="entry__thumbs">
-        <% @entry.photos.each do |photo| %>
-          <div class="entry__thumb--small"><%= image_tag photo.instagram_url, class: 'entry__thumb--small' %></div>
-        <% end %>
-      </div>
       <form class="form form--no-padding" data-controller="clipboard">
         <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= @entry.instagram_caption %></textarea>
         <div class="form__actions form__actions--no-padding">
@@ -43,12 +35,6 @@
   <li class="entry">
     <div class="entry__content entry__content--misc">
       <h2>Markdown</h2>
-      <p class="entry__help">Resizes images to 1200px wide; includes the entry’s hashtags and permalink.</p>
-      <div class="entry__thumbs">
-        <% @entry.photos.each do |photo| %>
-          <div class="entry__thumb--small"><%= image_tag photo.url(w: 1200, fm: 'jpg') %></div>
-        <% end %>
-      </div>
       <form class="form form--no-padding" data-controller="clipboard">
         <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= share_markdown @entry %></textarea>
         <div class="form__actions form__actions--no-padding">
@@ -60,12 +46,6 @@
   <li class="entry">
     <div class="entry__content entry__content--misc">
       <h2>Title only</h2>
-      <p class="entry__help">Resizes images to 1200px wide; includes just the entry’s title.</p>
-      <div class="entry__thumbs">
-        <% @entry.photos.each do |photo| %>
-          <div class="entry__thumb--small"><%= image_tag photo.url(w: 1200, fm: 'jpg') %></div>
-        <% end %>
-      </div>
       <form class="form form--no-padding" data-controller="clipboard">
         <input type="text" class="form__input form__input--text form__input--small" readonly="readonly" data-target="clipboard.source" value="<%= share_title @entry %>">
         <div class="form__actions form__actions--no-padding">

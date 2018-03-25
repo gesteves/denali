@@ -103,6 +103,15 @@
   }
 }
 
+.form__dropdown {
+  color: $color-text;
+  display: block;
+  flex-grow: 1;
+  font-size: 24px;
+  line-height: 1.5;
+  margin: 6px 0;
+}
+
 .form__actions {
   display: flex;
   flex-flow: column nowrap;

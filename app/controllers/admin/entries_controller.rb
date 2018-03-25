@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :geotag, :invalidate, :palette, :annotate]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :geotag, :invalidate, :palette, :annotate, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url, only: [:edit, :new, :up, :down, :top, :bottom, :more]
@@ -68,6 +68,7 @@ class Admin::EntriesController < AdminController
 
   def share
     @page_title = "Share “#{@entry.title}”"
+    @sizes = [1200]
   end
 
   # PATCH /admin/entries/1/publish
@@ -219,6 +220,13 @@ class Admin::EntriesController < AdminController
     @entry.photos.map(&:annotate)
     flash[:notice] = 'Annotation data is currently being updated. This may take a minute.'
     redirect_to more_admin_entry_path(@entry)
+  end
+
+  def resize_photos
+    @size = params[:size]
+    respond_to do |format|
+      format.js
+    end
   end
 
   private
