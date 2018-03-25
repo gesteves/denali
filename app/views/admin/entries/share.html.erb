@@ -14,7 +14,7 @@
   <% end %>
   <li class="entry">
     <div class="entry__content entry__content--misc" data-controller="photo-resizer">
-      <h2>Images</h2>
+      <h2>Images & crops</h2>
       <%= form_tag(resize_photos_admin_entry_path, method: 'get', class: 'form', 'data-target': 'photo-resizer.form', 'data-action': 'change->photo-resizer#fetch') do %>
         <%= select_tag(:size, options_for_select([['Original', 'original'], ['Instagram (Feed)', 'instagram_feed'], ['Instagram (Story)', 'instagram_story']] + @sizes.map { |s| ["#{number_with_delimiter s}px wide", s] } + [['Other', 'other']]), prompt: 'Choose a size', class: 'form__dropdown', 'data-target': 'photo-resizer.select') %>
       <% end %>
