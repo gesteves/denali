@@ -21,12 +21,12 @@
 .entry__thumbs {
   display: flex;
   flex-flow: row wrap;
-  padding: 12px 0;
 }
 
 .entry__thumb--small {
   display: block;
   font-size: 0;
+  margin: 12px 0;
 }
 
 .entry__link {
