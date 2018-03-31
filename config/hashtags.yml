@@ -220,6 +220,7 @@ instagram:
   grandtetonnationalpark:
     - grandtetonnationalpark
     - jacksonhole
+    - mygrandteton
     - tetons
   landscapes: &landscapes
     - allnatureshots
@@ -402,3 +403,10 @@ instagram:
   wyoming:
     - visitwyoming
     - wyoming
+    - wyomingphotographer
+    - wyomingexplored
+    - wyomingphotography
+    - naturalwyoming
+  yellowstonenationalpark:
+    - yellowstone
+    - YellowstonePledge
