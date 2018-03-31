@@ -8,3 +8,16 @@
   gtag('config', gaTrackingId);
 </script>
 <% end %>
+<% if ENV['clicky_id'].present? %>
+<script type="text/javascript">
+var clicky_site_ids = clicky_site_ids || [];
+clicky_site_ids.push(<%= click_id %>);
+(function() {
+  var s = document.createElement('script');
+  s.type = 'text/javascript';
+  s.async = true;
+  s.src = '//static.getclicky.com/js';
+  ( document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0] ).appendChild( s );
+})();
+</script>
+<% end %>

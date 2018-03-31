@@ -1,4 +1,4 @@
-/* global ga, gtag, gaTrackingId */
+/* global ga, gtag, gaTrackingId, clicky */
 /**
  * Product-agnostic function to make a page view tracking call.
  * Currently supports GA, either directly or as part of GTM.
@@ -11,5 +11,8 @@ export function trackPageView (path) {
   }
   if (typeof gtag !== 'undefined' && typeof gaTrackingId !== 'undefined') {
     gtag('config', gaTrackingId, { 'page_path': path });
+  }
+  if (typeof clicky !== 'undefined') {
+    clicky.log(path, document.title, 'pageview');
   }
 }
