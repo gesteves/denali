@@ -11,7 +11,7 @@
 <% if ENV['clicky_id'].present? %>
 <script type="text/javascript">
 var clicky_site_ids = clicky_site_ids || [];
-clicky_site_ids.push(<%= click_id %>);
+clicky_site_ids.push(<%= ENV['clicky_id'] %>);
 (function() {
   var s = document.createElement('script');
   s.type = 'text/javascript';
