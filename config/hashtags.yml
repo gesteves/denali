@@ -225,7 +225,7 @@ instagram:
   landscapes: &landscapes
     - allnatureshots
     - earth_deluxe
-    - EarthVisuals
+    - earthvisuals
     - fantastic_earth
     - ic_landscapes
     - instanaturelover
@@ -286,7 +286,7 @@ instagram:
     - somewheremagazine
     - subjectivelyobjective
     - yetmagazine
-    - YourShotPhotographer
+    - yourshotphotographer
   mexico:
     - ig_mexico
     - igersmexico
@@ -410,4 +410,4 @@ instagram:
     - naturalwyoming
   yellowstonenationalpark:
     - yellowstone
-    - YellowstonePledge
+    - yellowstonepledge
