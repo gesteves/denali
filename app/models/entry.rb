@@ -328,14 +328,27 @@ class Entry < ApplicationRecord
   end
 
   def instagram_hashtags(count = 30)
-    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    combined_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    entry_tags = self.tags.map { |t| t.slug.gsub(/-/, '') }
+    equipment_tags = self.equipment.map { |t| t.slug.gsub(/-/, '') }
+    location_tags = self.locations.map { |t| t.slug.gsub(/-/, '') }
+    style_tags = self.styles.map { |t| t.slug.gsub(/-/, '') }
     instagram_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
 
-    # Build an array with at least 5 random Instagram tags for each entry tag
+    # Build an array with random Instagram tags for each entry tag
     tags = []
     instagram_hashtags.each do |k, v|
       if entry_tags.include? k
         tags << instagram_hashtags[k].sample(5)
+      end
+      if location_tags.include? k
+        tags << instagram_hashtags[k].sample(5)
+      end
+      if equipment_tags.include? k
+        tags << instagram_hashtags[k].sample(2)
+      end
+      if style_tags.include? k
+        tags << instagram_hashtags[k].sample(2)
       end
     end
     tags << instagram_hashtags['magazines'].sample(5)
@@ -344,7 +357,7 @@ class Entry < ApplicationRecord
     # every Instagram tag that matches this entry.
     extra_tags = []
     instagram_hashtags.each do |k, v|
-      if entry_tags.include? k
+      if combined_tags.include? k
         extra_tags << instagram_hashtags[k]
       end
     end
@@ -352,7 +365,7 @@ class Entry < ApplicationRecord
 
     # Add them up, remove the duplicates, and grab the first `count`.
     # That way we end up with `count` Instagram hashtags, guaranteeing there are
-    # at least 5 for each matching tag.
+    # at least a few of each matching tag.
     instagram_tags = tags.flatten.shuffle + extra_tags.flatten.shuffle
     instagram_tags.uniq[0, count].shuffle.map { |t| "##{t}"}.join(' ')
   end
