@@ -201,8 +201,10 @@ instagram:
     - thefilmcommunity
   findyourpark: &findyourpark
     - americasbestidea
+    - encuentratuparque
     - findyourpark
     - goparks
+    - optoutside
   fujifilm:
     - fuji
     - fujifeed
@@ -214,7 +216,7 @@ instagram:
     - fujixclub
     - fujixseries
     - myfujifilm
-  grandtetonnationalpark:
+  grandtetonnationalpark: *findyourpark
     - grandtetonnationalpark
     - jacksonhole
     - mygrandteton
@@ -405,6 +407,6 @@ instagram:
     - wyomingexplored
     - wyomingphotography
     - naturalwyoming
-  yellowstonenationalpark:
+  yellowstonenationalpark: *findyourpark
     - yellowstone
     - yellowstonepledge
