@@ -25,7 +25,7 @@
     <div class="entry__content entry__content--misc">
       <h2>Instagram</h2>
       <form class="form form--no-padding" data-controller="clipboard">
-        <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= @entry.instagram_caption %></textarea>
+        <textarea class="form__input form__input--textarea" readonly="readonly" data-target="clipboard.source"><%= @entry.instagram_caption %></textarea>
         <div class="form__actions form__actions--no-padding">
           <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">Copy to clipboard</button>
         </div>
@@ -36,7 +36,7 @@
     <div class="entry__content entry__content--misc">
       <h2>Markdown</h2>
       <form class="form form--no-padding" data-controller="clipboard">
-        <textarea class="form__input form__input--textarea-short" readonly="readonly" data-target="clipboard.source"><%= share_markdown @entry %></textarea>
+        <textarea class="form__input form__input--textarea" readonly="readonly" data-target="clipboard.source"><%= share_markdown @entry %></textarea>
         <div class="form__actions form__actions--no-padding">
           <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">Copy to clipboard</button>
         </div>
