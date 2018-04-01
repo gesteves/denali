@@ -216,7 +216,7 @@ instagram:
     - fujixclub
     - fujixseries
     - myfujifilm
-  grandtetonnationalpark: *findyourpark
+  grandtetonnationalpark:
     - grandtetonnationalpark
     - jacksonhole
     - mygrandteton
@@ -407,6 +407,6 @@ instagram:
     - wyomingexplored
     - wyomingphotography
     - naturalwyoming
-  yellowstonenationalpark: *findyourpark
+  yellowstonenationalpark:
     - yellowstone
     - yellowstonepledge
