@@ -344,7 +344,7 @@ class Entry < ApplicationRecord
 
     # We may have room for more Instagram tags, so build a second array with
     # every Instagram tag that matches this entry.
-    if tags.size < count
+    if tags.uniq.size < count
       instagram_hashtags.each do |k, v|
         if entry_tags.include? k
           extra_tags << instagram_hashtags[k]
