@@ -5,7 +5,6 @@
     <link rel="canonical" href="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>">
 
     <meta property="og:title" content="<%= @photoblog.name %>">
-    <meta property="og:image" content="<%= @entries.first.photos.first.url(w: 1200, h: 628) %>">
     <% if @photoblog.logo.present? %>
       <meta property="og:image" content="<%= @photoblog.logo_url(w: 1200, h: 628, fm: 'png', pad: 50, fit: 'fill', bg: 'fff') %>">
     <% else %>
