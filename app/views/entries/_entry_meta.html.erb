@@ -23,12 +23,17 @@
   <meta name="twitter:title" content="<%= entry.plain_title %>">
   <meta name="twitter:description" content="<%= meta_description entry %>">
   <meta name="twitter:url" content="<%= entry.permalink_url %>">
-  <meta name="twitter:card" content="<%= entry.is_text? ? "summary" : "summary_large_image" %>">
   <% if entry.is_photo? %>
     <meta name="twitter:image" content="<%= entry.photos.first.url(w: 1200, h: 628) %>">
     <% if entry.photos.first.caption.present? %>
       <meta name="twitter:image:alt" content="<%= entry.photos.first.plain_caption %>">
     <% end %>
+    <meta name="twitter:card" content="summary_large_image">
+  <% else %>
+    <% if @photoblog.touch_icon.present? %>
+      <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
+    <% end %>
+    <meta name="twitter:card" content="summary">
   <% end %>
   <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
   <%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>

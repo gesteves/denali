@@ -21,6 +21,9 @@
     <meta name="twitter:title" content="About <%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= about_url %>">
     <meta name="twitter:description" content="<%= truncate @photoblog.plain_about, length: 200 %>">
+    <% if @photoblog.touch_icon.present? %>
+      <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
+    <% end %>
     <meta name="twitter:card" content="summary">
   <% end %>
 <% end %>

@@ -20,6 +20,9 @@
     <meta name="twitter:title" content="<%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= map_url %>">
     <meta name="twitter:description" content="<%= @photoblog.name %> photos, mapped.">
+    <% if @photoblog.touch_icon.present? %>
+      <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
+    <% end %>
     <meta name="twitter:card" content="summary">
     <link rel="preconnect" href="https://a.tiles.mapbox.com" crossorigin>
     <link rel="preconnect" href="https://b.tiles.mapbox.com" crossorigin>

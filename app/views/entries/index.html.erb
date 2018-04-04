@@ -21,6 +21,9 @@
     <meta name="twitter:title" content="<%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>">
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <% if @photoblog.touch_icon.present? %>
+      <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
+    <% end %>
     <meta name="twitter:card" content="summary">
     <%= auto_discovery_link_tag :atom, feed_url(format: 'atom', page: nil), title: @photoblog.name %>
     <%= auto_discovery_link_tag :atom, feed_url(format: 'json', page: nil), title: @photoblog.name, type: 'application/json' %>
