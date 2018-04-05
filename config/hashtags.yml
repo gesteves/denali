@@ -307,6 +307,8 @@ instagram:
   nationalgalleryofart:
     - myngadc
   nationalparks: *findyourpark
+  nationalportraitgallery:
+    - mynpg
   newyorkcity: &nyc
     - icapture_nyc
     - ig_great_shots_nyc
