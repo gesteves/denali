@@ -34,4 +34,21 @@ class Admin::TagsController < AdminController
       end
     end
   end
+
+  def add
+    new_tags = params[:tags]
+    tag = ActsAsTaggableOn::Tag.find(params[:id])
+    entries = @photoblog.entries.tagged_with(tag.name)
+    entries.map { |e| e.add_tags(new_tags) }
+    respond_to do |format|
+      format.html { redirect_to admin_tags_path }
+      format.json {
+        response = {
+          status: 200,
+          message: "#{entries.size} entries with the tag #{tag.name} updated with the tag #{new_tags}"
+        }
+        render json: response
+      }
+    end
+  end
 end

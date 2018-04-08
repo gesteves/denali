@@ -13,6 +13,36 @@ export default class extends Controller {
   }
 
   /**
+   * Adds a tag to the entries with the currebt tag. Sends the new tag name to the
+   * server via Fetch, receives the updated tag's markup, and replaces it on the page.
+   * TODO: Remove the jQuery dependency.
+   * @param {Event} event A click event from the add link.
+   */
+  add (event) {
+    event.preventDefault();
+    const prompt = window.prompt(`Which tag do you want to add to entries tagged with “${this.data.get('name')}”?`);
+    if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
+      return;
+    }
+    const link = event.target;
+    const url = link.href;
+
+    const fetchOpts = {
+      method: 'POST',
+      body: JSON.stringify({ tags: prompt }),
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'X-CSRF-Token': this.csrfToken
+      }),
+      credentials: 'include'
+    };
+
+    fetch(`${url}.json`, fetchOpts)
+      .then(fetchStatus)
+      .then(() => window.location.reload(true));
+  }
+
+  /**
    * Edits a tag. Sends the new tag name to the server via Fetch, receives
    * the updated tag's markup, and replaces it on the page.
    * TODO: Remove the jQuery dependency.

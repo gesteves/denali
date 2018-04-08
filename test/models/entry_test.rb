@@ -202,7 +202,26 @@ class EntryTest < ActiveSupport::TestCase
   end
 
   test 'instagram hashtags should work' do
-    entry_1 = entries(:panda)
-    assert_not_empty entry_1.instagram_hashtags
+    entry = entries(:panda)
+    assert_not_empty entry.instagram_hashtags
+  end
+
+  test 'adding tags' do
+    entry = entries(:panda)
+    entry.tag_list = 'Panda'
+    entry.location_list = 'Washington'
+    entry.equipment_list = 'Nikon'
+    entry.style_list = 'Black & White'
+    entry.save
+    entry.reload
+
+    entry.add_tags('Panda, Washington, Mammal')
+
+    assert entry.tag_list.include?('Panda')
+    assert entry.location_list.include?('Washington')
+    assert entry.style_list.include?('Black & White')
+
+    assert entry.tag_list.include?('Mammal')
+    assert !entry.tag_list.include?('Washington')
   end
 end

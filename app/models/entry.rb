@@ -391,6 +391,12 @@ class Entry < ApplicationRecord
     self.save!
   end
 
+  def add_tags(new_tags)
+    self.tag_list.add(new_tags, parse: true)
+    self.tag_list.remove(self.equipment_list + self.location_list + ['Color', 'Black and White'])
+    self.save!
+  end
+
   private
 
   def url_opts(opts)

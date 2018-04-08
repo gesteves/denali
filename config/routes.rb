@@ -41,7 +41,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :tags, only: [:index, :destroy, :show, :update], concerns: :paginatable
+    resources :tags, only: [:index, :destroy, :show, :update], concerns: :paginatable do
+      member do
+        post 'add'
+      end
+    end
   end
 
 
