@@ -199,12 +199,6 @@ instagram:
     - ishootfilm
     - shootfilm
     - thefilmcommunity
-  findyourpark: &findyourpark
-    - americasbestidea
-    - encuentratuparque
-    - findyourpark
-    - goparks
-    - optoutside
   fujifilm:
     - fuji
     - fujifeed
@@ -217,9 +211,14 @@ instagram:
     - fujixseries
     - myfujifilm
   grandtetonnationalpark:
+    - americasbestidea
+    - encuentratuparque
+    - findyourpark
+    - goparks
     - grandtetonnationalpark
     - jacksonhole
     - mygrandteton
+    - optoutside
     - tetons
   landscapes: &landscapes
     - allnatureshots
@@ -306,7 +305,18 @@ instagram:
     - airandspace
   nationalgalleryofart:
     - myngadc
-  nationalparks: *findyourpark
+  nationalmall:
+    - americasbestidea
+    - encuentratuparque
+    - findyourpark
+    - goparks
+    - optoutside
+  nationalparks:
+    - americasbestidea
+    - encuentratuparque
+    - findyourpark
+    - goparks
+    - optoutside
   nationalportraitgallery:
     - mynpg
   newyorkcity: &nyc
@@ -410,5 +420,16 @@ instagram:
     - wyomingphotography
     - naturalwyoming
   yellowstonenationalpark:
+    - americasbestidea
+    - encuentratuparque
+    - findyourpark
+    - goparks
+    - optoutside
     - yellowstone
     - yellowstonepledge
+  yosemitenationalpark:
+    - americasbestidea
+    - encuentratuparque
+    - findyourpark
+    - goparks
+    - optoutside
