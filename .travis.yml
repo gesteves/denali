@@ -1,4 +1,7 @@
 language: ruby
+cache:
+  - bundler
+  - yarn
 notifications:
   email: false
   slack:
