@@ -210,16 +210,6 @@ instagram:
     - fujixclub
     - fujixseries
     - myfujifilm
-  grandtetonnationalpark:
-    - americasbestidea
-    - encuentratuparque
-    - findyourpark
-    - goparks
-    - grandtetonnationalpark
-    - jacksonhole
-    - mygrandteton
-    - optoutside
-    - tetons
   landscapes: &landscapes
     - allnatureshots
     - earth_deluxe
@@ -305,18 +295,22 @@ instagram:
     - airandspace
   nationalgalleryofart:
     - myngadc
-  nationalmall:
+  nationalparks: &nationalparks
     - americasbestidea
     - encuentratuparque
     - findyourpark
     - goparks
     - optoutside
-  nationalparks:
-    - americasbestidea
-    - encuentratuparque
-    - findyourpark
-    - goparks
-    - optoutside
+  nationalmall: *nationalparks
+  yosemitenationalpark: *nationalparks
+  grandtetonnationalpark:
+    - grandtetonnationalpark
+    - jacksonhole
+    - mygrandteton
+    - tetons
+  yellowstonenationalpark:
+    - yellowstone
+    - yellowstonepledge
   nationalportraitgallery:
     - mynpg
   newyorkcity: &nyc
@@ -419,17 +413,3 @@ instagram:
     - wyomingexplored
     - wyomingphotography
     - naturalwyoming
-  yellowstonenationalpark:
-    - americasbestidea
-    - encuentratuparque
-    - findyourpark
-    - goparks
-    - optoutside
-    - yellowstone
-    - yellowstonepledge
-  yosemitenationalpark:
-    - americasbestidea
-    - encuentratuparque
-    - findyourpark
-    - goparks
-    - optoutside
