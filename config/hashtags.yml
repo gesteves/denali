@@ -303,6 +303,7 @@ instagram:
     - optoutside
   nationalmall: *nationalparks
   yosemitenationalpark: *nationalparks
+  greatfallspark: *nationalparks
   grandtetonnationalpark:
     - grandtetonnationalpark
     - jacksonhole
