@@ -18,8 +18,8 @@
     <meta property="og:site_name" content="<%= @photoblog.name %>">
     <meta property="og:locale" content="en_US">
     <% if @photoblog.twitter.present? %>
-      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
-      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
+      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
     <% end %>
     <meta name="twitter:title" content="<%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= map_url %>">
