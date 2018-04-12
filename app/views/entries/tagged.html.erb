@@ -19,8 +19,8 @@
     <meta property="og:locale" content="en_US">
 
     <% if @photoblog.twitter.present? %>
-      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
-      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
+      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
+      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
     <% end %>
     <meta name="twitter:title" content="<%= sanitize "#{@tags.first.name} · #{@photoblog.name}" %>">
     <meta name="twitter:url" content="<%= @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) %>">
