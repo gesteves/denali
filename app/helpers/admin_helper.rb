@@ -18,6 +18,6 @@ module AdminHelper
 
   private
   def render_count(entries, opts = {})
-    entries > 0 ? content_tag(:span, "· #{number_with_delimiter entries}".html_safe, opts) : ''
+    entries > 0 ? content_tag(:span, "&nbsp;·&nbsp;#{number_with_delimiter entries}".html_safe, opts) : ''
   end
 end

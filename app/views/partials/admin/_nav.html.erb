@@ -1,17 +1,32 @@
 <% cache "admin/nav/#{active_nav || 'none'}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <nav class="nav">
-    <div class="nav__group">
-      <a href="<%= new_admin_entry_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'new' %>">Post a new entry</a>
-      <a href="<%= admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'published' %>">Published <%= published_count %></a>
-      <a href="<%= queued_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'queued' %>">Queued <%= queued_count %></a>
-      <a href="<%= drafts_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'drafts' %>">Drafts <%= drafts_count %></a>
-      <a href="<%= admin_tags_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'tags' %>">Tags <%= tag_count %></a>
-      <% if @photoblog.has_search? %>
-        <a href="<%= admin_search_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'search' %>">Search</a>
-      <% end %>
+  <nav class="navbar" data-controller="nav">
+    <% if @photoblog.header_logo_svg.present? %>
+      <div class="navbar-brand">
+        <a href="<%= root_path %>" class="navbar-item logo">
+          <%= @photoblog.header_logo_svg.html_safe %>
+        </a>
+        <a role="button" class="navbar-burger" data-action="click->nav#toggle" data-target="nav.burger">
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+    <% end %>
+    <div class="navbar-menu" data-target="nav.menu">
+      <div class="navbar-start">
+        <a href="<%= new_admin_entry_path %>" class="navbar-item">New entry</a>
+        <a href="<%= admin_entries_path %>" class="navbar-item">Published <%= published_count %></a>
+        <a href="<%= queued_admin_entries_path %>" class="navbar-item">Queued <%= queued_count %></a>
+        <a href="<%= drafts_admin_entries_path %>" class="navbar-item">Drafts <%= drafts_count %></a>
+        <a href="<%= admin_tags_path %>" class="navbar-item">Tags <%= tag_count %></a>
+        <% if @photoblog.has_search? %>
+          <a href="<%= admin_search_path %>" class="navbar-item">Search</a>
+        <% end %>
+      </div>
+      <div class="navbar-end">
+        <a href="<%= admin_settings_path %>" class="navbar-item">Settings</a>
+        <a href="<%= signout_path %>" class="navbar-item">Sign out</a>
+      </div>
     </div>
-    <a href="<%= root_path %>" class="nav__link">View site</a>
-    <a href="<%= admin_settings_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'settings' %>">Settings</a>
-    <a href="<%= signout_path %>" class="nav__link">Sign out</a>
   </nav>
 <% end %>
