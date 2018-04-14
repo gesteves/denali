@@ -1,7 +1,3 @@
-<% content_for :nav do %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'settings' } %>
-<% end %>
-
 <%= form_for(@blog, url: admin_settings_update_path, html: { class: 'form' }) do |f| %>
   <% if @blog.errors.any? %>
     <div class="flash flash--danger">

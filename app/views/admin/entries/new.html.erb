@@ -1,7 +1,3 @@
-<% content_for :nav do %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'new' } %>
-<% end %>
-
 <%= form_for([:admin, @entry], html: { multipart: true, class: 'form', 'data-controller': 'entry-form', 'data-entry-form-photo-endpoint': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
 
   <div class="form__photos">

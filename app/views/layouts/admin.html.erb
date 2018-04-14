@@ -11,12 +11,7 @@
   <%= javascript_include_tag 'https://use.fontawesome.com/releases/v5.0.10/js/all.js', defer: true %>
 </head>
 <body>
-
-<% if content_for? :nav %>
-  <%= yield :nav %>
-<% else %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'none' } %>
-<% end %>
+  <%= render partial: 'partials/admin/nav' %>
 
 <div class="content">
   <% flash.each do |name, message| -%>

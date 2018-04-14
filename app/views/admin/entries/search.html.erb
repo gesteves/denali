@@ -1,7 +1,3 @@
-<% content_for :nav do %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'search' } %>
-<% end %>
-
 <%= form_tag(admin_search_path, method: 'get', class: 'form') do %>
   <%= text_field_tag :q, @query || '', placeholder: "Search…", class: 'form__input' %>
 <% end %>

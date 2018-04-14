@@ -1,7 +1,3 @@
-<% content_for :nav do %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'queued' } %>
-<% end %>
-
 <% if @entries.size == 0 %>
   <p class="content__message">You haven’t queued any entries. Why don’t you <a href="<%= new_admin_entry_path %>">write one</a>?</p>
 <% else %>
