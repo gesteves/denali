@@ -16,10 +16,12 @@
   <section class="section">
     <div class="container">
       <% flash.each do |name, message| -%>
-      <div class="notification is-<%= name %>" data-controller="flash">
-        <button class="delete" data-action="click->flash#close"></button>
-        <%= message %>
-      </div>
+      <article class="message is-<%= name %>">
+        <div class="message-body">
+          <%= message %>
+        </div>
+      </article>
+      <hr class="hr">
       <% end %>
       <%= yield %>
     </div>
