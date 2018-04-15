@@ -1,7 +1,3 @@
-<%= form_tag(admin_search_path, method: 'get', class: 'form') do %>
-  <%= text_field_tag :q, @query || '', placeholder: "Search…", class: 'form__input' %>
-<% end %>
-
 <% if @query.present? %>
   <% if @entries.size == 0 %>
     <p class="content__message">No results found for “<%= @query %>”.</p>
