@@ -5,6 +5,7 @@ import { Controller } from 'stimulus';
  * @extends Controller
  */
 export default class extends Controller {
+  static targets = ['icon'];
 
   /**
    * Toggles the dropdown menu
@@ -13,5 +14,7 @@ export default class extends Controller {
   toggle (event) {
     event.preventDefault();
     this.element.classList.toggle('is-active');
+    this.iconTarget.classList.toggle('fa-angle-up');
+    this.iconTarget.classList.toggle('fa-angle-down');
   }
 }
