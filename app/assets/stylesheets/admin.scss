@@ -1,17 +1,27 @@
 @import 'vendors/reset';
 @import 'awesomplete/awesomplete';
 
-@import 'base/variables';
-@import 'base/functions';
-@import 'base/mixins';
-@import 'admin/base/base';
+@import 'admin/blocks/logo';
+@import 'admin/blocks/card';
+@import 'admin/blocks/share_image';
+@import 'admin/blocks/focal_marker';
 
-@import 'blocks/button';
-@import 'blocks/flash';
+.awesomplete {
+  width: 100%;
+}
 
-@import 'admin/blocks/content';
-@import 'admin/blocks/entry';
-@import 'admin/blocks/form';
-@import 'admin/blocks/nav';
-@import 'admin/blocks/pagination';
-@import 'admin/blocks/table';
+.draggable-handle {
+  &:hover {
+    cursor: grab;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.draggable-mirror {
+  z-index: 100;
+}
+
+@import 'bulma/bulma';

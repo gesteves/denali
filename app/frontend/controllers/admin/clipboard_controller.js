@@ -6,7 +6,7 @@ import ClipboardJS from 'clipboard';
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['source', 'button'];
+  static targets = ['source', 'button', 'icon', 'label'];
 
   // Set up a clipboard.js instance
   connect () {
@@ -31,13 +31,14 @@ export default class extends Controller {
    */
   successfulCopy (event) {
     event.clearSelection();
-    this.buttonTarget.innerHTML = 'Copied to clipboard!';
+    this.iconTarget.classList.replace('fa-clipboard', 'fa-clipboard-check');
+    this.labelTarget.innerHTML = 'Copied to clipboard!';
   }
 
   /**
    * Turn the button into an error message if the copy is successful
    */
   unsuccessfulCopy () {
-    this.buttonTarget.innerHTML = 'Press Ctrl+C to copy!';
+    this.labelTarget.innerHTML = 'Press Ctrl+C to copy!';
   }
 }

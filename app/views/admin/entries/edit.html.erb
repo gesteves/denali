@@ -1,68 +1,207 @@
-<% content_for :nav do %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: nil } %>
-<% end %>
+<h1 class="title is-size-5-mobile">Editing entry</h1>
+<hr class="hr">
 
-<%= form_for([:admin, @entry], html: { multipart: true, class: 'form', 'data-controller': 'entry-form', 'data-entry-form-photo-endpoint': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
+<%= form_for([:admin, @entry], html: { multipart: true, 'data-controller': 'entry-form', 'data-entry-form-photo-endpoint': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
 
-  <div class="form__photos">
-    <ol class="form__photos-list" data-target="entry-form.photos">
-      <%= f.fields_for :photos do |p| %>
-        <li class="form__photo draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="0" data-entry-form-photo-focal-x="<%= p.object.focal_x %>" data-entry-form-photo-focal-y="<%= p.object.focal_y %>">
-          <div class="form__fields" data-target="entry-form-photo.fields">
-            <div class="form__drag draggable-handle">
-              <%= inline_svg 'drag', 'form__drag-icon' %>
-            </div>
-            <div class="form__photo-thumb">
-              <%= responsive_image_tag p.object, 'admin_edit', { class: 'form__photo-img', 'data-action': 'click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint', 'data-target': 'entry-form-photo.thumbnail' } %>
-              <div class="form__photo-focal-point" data-target="entry-form-photo.focalmarker"></div>
-            </div>
-            <div class="form__photo-fields" data-target="entry-form-photo.fields">
-              <%= p.text_area :caption, placeholder: 'Write the caption of the photo here…', class: 'form__input form__input--caption' %>
-              <%= link_to 'Remove', '#', class: 'button button--danger form__photo-delete', 'data-action': 'click->entry-form-photo#delete' %>
-              <%= p.hidden_field :id %>
-              <%= p.hidden_field :position, 'data-position': '' %>
-              <%= p.hidden_field :_destroy, 'data-target': 'entry-form-photo.destroy' %>
-              <%= p.hidden_field :focal_x, 'data-target': 'entry-form-photo.focalx' %>
-              <%= p.hidden_field :focal_y, 'data-target': 'entry-form-photo.focaly' %>
+<div class="field is-horizontal">
+  <div class="field-label">
+    <%= f.label :photos, 'Photos', class: 'label' %>
+    <%= link_to 'Add', '#', class: 'button', 'data-action': 'click->entry-form#addPhoto' %>
+  </div>
+  <div class="field-body">
+    <div class="field is-extended">
+      <div data-target="entry-form.photos">
+        <%= f.fields_for :photos do |p| %>
+          <div class="box draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="0" data-entry-form-photo-focal-x="<%= p.object.focal_x %>" data-entry-form-photo-focal-y="<%= p.object.focal_y %>">
+            <div class="media" data-target="entry-form-photo.fields">
+              <div class="media-left">
+                <span class="icon is-small has-text-grey-light draggable-handle">
+                  <i class="fas fa-arrows-alt-v"></i>
+                </span>
+              </div>
+              <div class="media-content">
+                <div class="field is-grouped is-grouped-multiline">
+                  <div class="control">
+                    <%= responsive_image_tag p.object, 'admin_edit', { width: 300, 'data-action': 'click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint', 'data-target': 'entry-form-photo.thumbnail' } %>
+                    <span class="icon is-large draggable-handle has-text-danger is-hidden focal-marker" data-target="entry-form-photo.focalmarker">
+                      <i class="far fa-3x fa-circle"></i>
+                    </span>
+                  </div>
+                  <div class="control is-expanded">
+                    <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'textarea' %>
+                    <%= p.hidden_field :id %>
+                    <%= p.hidden_field :position, 'data-position': '' %>
+                    <%= p.hidden_field :_destroy, 'data-target': 'entry-form-photo.destroy' %>
+                    <%= p.hidden_field :focal_x, 'data-target': 'entry-form-photo.focalx' %>
+                    <%= p.hidden_field :focal_y, 'data-target': 'entry-form-photo.focaly' %>
+                  </div>
+                </div>
+              </div>
+              <div class="media-right">
+                <a class="delete" data-action="click->entry-form-photo#delete"></a>
+              </div>
             </div>
           </div>
-        </li>
-      <% end %>
-    </ol>
-    <%= link_to 'Add photo', '#', class: 'button button--default', 'data-action': 'click->entry-form#addPhoto' %>
+        <% end %>
+      </div>
+    </div>
   </div>
+</div>
 
   <%= render partial: 'entry_fields', locals: { f: f } %>
 
-  <div class="form__options">
-    <h2>Entry options</h2>
-    <%= f.label :show_in_map, class: 'form__label form__label--checkbox' do %><%= f.check_box :show_in_map %> Show in map<% end %>
-    <%= f.label :invalidate_cloudfront, class: 'form__label form__label--checkbox' do %><%= f.check_box :invalidate_cloudfront, { checked: false } %> Send CloudFront invalidation request<% end %>
-    <% if !@entry.is_published? %>
-      <h2>Sharing options</h2>
-      <%= f.label :post_to_facebook, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_facebook %> Post to Facebook<% end %>
-      <%= f.label :post_to_flickr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_flickr %> Post to Flickr<% end %>
-      <%= f.label :post_to_pinterest, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_pinterest %> Post to Pinterest<% end %>
-      <%= f.label :post_to_tumblr, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_tumblr %> Post to Tumblr<% end %>
-      <%= f.label :post_to_twitter, class: 'form__label form__label--checkbox' do %><%= f.check_box(:post_to_twitter) %> Post to Twitter<% end %>
-      <%= f.text_area :tweet_text, placeholder: 'Your tweet…', maxlength: 230, class: 'form__input form__input--textarea form__input--short' %>
-      <%= f.label :post_to_instagram, class: 'form__label form__label--checkbox' do %><%= f.check_box :post_to_instagram %> Post to Instagram<% end %>
-      <%= f.text_area :instagram_text, placeholder: 'Your Instagram caption…', class: 'form__input form__input--textarea form__input--short' %>
-    <% end %>
+  <hr class="hr">
+  <h2 class="subtitle is-size-5-mobile">Entry options</h2>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :show_in_map, 'Show in map', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.check_box :show_in_map %>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="form__actions">
-    <div class="form__buttons">
-      <% if @entry.is_draft? %>
-        <%= link_to 'Cancel', drafts_admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button button--danger' %>
-      <% elsif @entry.is_queued? %>
-        <%= link_to 'Cancel', queued_admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button button--danger' %>
-      <% else %>
-        <%= link_to 'Cancel', admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button button--danger' %>
-      <% end %>
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :invalidate_cloudfront, 'Purge from CDN', class: 'label' %>
     </div>
-    <div class="form__buttons form__buttons--safe">
-    <%= f.submit 'Save changes', class: 'button button--success' %>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.check_box :invalidate_cloudfront, { checked: false } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
+  <h2 class="subtitle is-size-5-mobile">Sharing options</h2>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :post_to_facebook, 'Share on Facebook', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.check_box :post_to_facebook %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :post_to_flickr, 'Share on Flickr', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.check_box :post_to_flickr %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :post_to_pinterest, 'Share on Pinterest', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.check_box :post_to_pinterest %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :post_to_tumblr, 'Share on Tumblr', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.check_box :post_to_tumblr %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :post_to_twitter, 'Share on Twitter', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.check_box :post_to_twitter %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_area :tweet_text, placeholder: 'Your tweet…', maxlength: 230, class: 'textarea' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :post_to_instagram, 'Share on Instagram', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <%= f.check_box :post_to_instagram %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_area :instagram_text, placeholder: 'Your Instagram caption…', maxlength: 230, class: 'textarea' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
+  <div class="field is-horizontal">
+    <div class="field-label">
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="buttons is-right">
+          <% if @entry.is_draft? %>
+            <%= link_to 'Cancel', drafts_admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button' %>
+          <% elsif @entry.is_queued? %>
+            <%= link_to 'Cancel', queued_admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button' %>
+          <% else %>
+            <%= link_to 'Cancel', admin_entries_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button' %>
+          <% end %>
+
+          <%= f.submit 'Save changes', class: 'button is-success' %>
+        </div>
+      </div>
     </div>
   </div>
   <%= render partial: 'tag_datalists', locals: { tags: @tags } %>

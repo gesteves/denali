@@ -8,24 +8,23 @@
   <%= stylesheet_link_tag 'admin', media: 'all' %>
   <%= csrf_meta_tags %>
   <%= javascript_pack_tag 'admin', defer: true %>
+  <%= javascript_include_tag 'https://use.fontawesome.com/releases/v5.0.10/js/all.js', defer: true %>
 </head>
-<body>
+<body class="has-navbar-fixed-top">
+  <%= render partial: 'partials/admin/nav' %>
 
-<% if content_for? :nav %>
-  <%= yield :nav %>
-<% else %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'none' } %>
-<% end %>
-
-<div class="content">
-  <% flash.each do |name, message| -%>
-    <div class="flash flash--<%= name %>" data-controller="flash" data-flash-timeout="5000">
-      <p class="flash__message"><%= message %></p>
-      <a href="#" class="flash__close" data-action="click->flash#close">&times;</a>
+  <section class="section">
+    <div class="container">
+      <% flash.each do |name, message| -%>
+      <article class="message is-<%= name %>">
+        <div class="message-body">
+          <%= message %>
+        </div>
+      </article>
+      <% end %>
+      <%= yield %>
     </div>
-  <% end %>
-  <%= yield %>
-</div>
+  </section>
 
 </body>
 </html>

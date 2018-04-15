@@ -1,33 +1,62 @@
 <%= fields_for :entry, @entry do |f| %>
   <%= f.fields_for :photos, child_index: "#{(Time.now.to_f * 1000).to_i}#{i}" do |p| %>
-    <li class="form__photo draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="1">
-      <div class="form__fields form__fields--initial" data-target="entry-form-photo.fields">
-        <div class="form__drag draggable-handle">
-          <%= inline_svg 'drag', 'form__drag-icon' %>
+    <div class="box draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="1">
+      <div class="media" data-target="entry-form-photo.fields">
+        <div class="media-left">
+          <span class="icon is-small has-text-grey-light draggable-handle">
+            <i class="fas fa-arrows-alt-v"></i>
+          </span>
         </div>
-        <%= p.url_field :source_url, placeholder: 'Paste a URL', autocomplete: 'off', class: 'form__input form__input--url', 'data-action': 'keyup->entry-form-photo#addFromUrl' %>
-        <div class="button" data-action="click->entry-form-photo#triggerFileInput">
-          Upload a file
-          <%= p.file_field :source_file, accept: '.jpg,.jpeg', class: 'form__input form__input--file', 'data-target': 'entry-form-photo.fileinput','data-action': 'click->entry-form-photo#stopPropagation change->entry-form-photo#addFromFile' %>
+        <div class="media-content">
+          <div class="field is-grouped is-grouped-centered">
+            <div class="control">
+              <div class="file is-boxed">
+                <label class="file-label">
+                  <%= p.file_field :source_file, accept: '.jpg,.jpeg', class: 'file-input', 'data-target': 'entry-form-photo.fileinput','data-action': 'click->entry-form-photo#stopPropagation change->entry-form-photo#addFromFile' %>
+                  <span class="file-cta">
+                    <span class="file-icon">
+                      <i class="fas fa-upload"></i>
+                    </span>
+                    <span class="file-label">
+                      Choose an image…
+                    </span>
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
         </div>
-        <%= link_to 'Close', '#', class: 'button button--danger', 'data-action': 'click->entry-form-photo#delete' %>
+        <div class="media-right">
+          <a class="delete" data-action="click->entry-form-photo#delete"></a>
+        </div>
       </div>
-      <div class="form__fields form__fields--hidden" data-target="entry-form-photo.fields">
-        <div class="form__drag draggable-handle">
-          <%= inline_svg 'drag', 'form__drag-icon' %>
+
+      <div class="media is-hidden" data-target="entry-form-photo.fields">
+        <div class="media-left">
+          <span class="icon is-small has-text-grey-light draggable-handle">
+            <i class="fas fa-arrows-alt-v"></i>
+          </span>
         </div>
-        <div class="form__photo-thumb">
-          <img class="form__photo-img" data-target="entry-form-photo.thumbnail" data-action="click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint" />
-          <div class="form__photo-focal-point" data-target="entry-form-photo.focalmarker"></div>
+        <div class="media-content">
+          <div class="field is-grouped is-grouped-multiline">
+            <div class="control">
+              <img data-target="entry-form-photo.thumbnail" width="300" data-action="click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint" />
+              <span class="icon is-large draggable-handle has-text-danger is-hidden focal-marker" data-target="entry-form-photo.focalmarker">
+                <i class="far fa-3x fa-circle"></i>
+              </span>
+            </div>
+            <div class="control is-expanded">
+              <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'textarea' %>
+              <%= p.hidden_field :position, 'data-position': '' %>
+              <%= p.hidden_field :focal_x, 'data-target': 'entry-form-photo.focalx' %>
+              <%= p.hidden_field :focal_y, 'data-target': 'entry-form-photo.focaly' %>
+            </div>
+          </div>
         </div>
-        <div class="form__photo-fields">
-          <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'form__input form__input--caption' %>
-          <%= link_to 'Remove', '#', class: 'button button--danger form__photo-delete', 'data-action': 'click->entry-form-photo#delete' %>
-          <%= p.hidden_field :position, 'data-position': '' %>
-          <%= p.hidden_field :focal_x, 'data-target': 'entry-form-photo.focalx' %>
-          <%= p.hidden_field :focal_y, 'data-target': 'entry-form-photo.focaly' %>
+        <div class="media-right">
+          <a class="delete" data-action="click->entry-form-photo#delete"></a>
         </div>
       </div>
-    </li>
+    </div>
   <% end %>
 <% end %>

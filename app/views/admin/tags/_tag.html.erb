@@ -1,7 +1,11 @@
 <tr data-controller="tag" data-tag-name="<%= tag.name %>">
 <td><%= link_to tag.name, admin_tagged_entries_path(tag.slug) %></td>
 <td><%= Entry.tagged_with(tag.name).size %></td>
-<td><%= link_to 'Add', add_admin_tag_path(tag.id), 'data-action': 'click->tag#add' %></td>
-<td><%= link_to 'Edit', admin_tag_path(tag.id), 'data-action': 'click->tag#edit' %></td>
-<td><%= link_to 'Delete', admin_tag_path(tag.id), 'data-action': 'click->tag#delete' %></td>
+<td>
+  <div class="buttons">
+    <%= link_to 'Add', add_admin_tag_path(tag.id), class: 'button', 'data-action': 'click->tag#add' %>
+    <%= link_to 'Edit', admin_tag_path(tag.id), class: 'button', 'data-action': 'click->tag#edit' %>
+    <%= link_to 'Delete', admin_tag_path(tag.id), class: 'button is-danger', 'data-action': 'click->tag#delete' %>
+  </div>
+</td>
 </tr>

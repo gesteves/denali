@@ -7,21 +7,12 @@ import { Controller } from 'stimulus';
 export default class extends Controller {
 
   /**
-   * Sets up a timeout so flash alerts are dismissed automatically after a period
-   * of time.
-   */
-  connect () {
-    this.timeout_id = setTimeout(() => this.removeSelf(), parseInt(this.data.get('timeout')));
-  }
-
-  /**
-   * Closes the flash aler.
+   * Closes the flash alert.
    * @param {Event} event Click event from the close button.
    */
   close (event) {
     event.preventDefault();
     this.removeSelf();
-    clearTimeout(this.timeout_id);
   }
 
   /**

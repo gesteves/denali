@@ -78,32 +78,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_template :share
   end
 
-  test 'should render more options page' do
-    test_1 = Entry.new(title: 'test 1', status: 'queued', blog_id: @blog.id)
-    test_1.save
-    test_2 = Entry.new(title: 'test 2', status: 'draft', blog_id: @blog.id)
-    test_2.save
-
-    # Test published entry
-    get :more, params: { id: @entry.id }
-    assert_not_nil assigns(:entry)
-    assert_response :success
-    assert_template layout: 'layouts/admin'
-    assert_template :more
-    # Test queued entry
-    get :more, params: { id: test_1.id }
-    assert_not_nil assigns(:entry)
-    assert_response :success
-    assert_template layout: 'layouts/admin'
-    assert_template :more
-    # Test draft entry
-    get :more, params: { id: test_2.id }
-    assert_not_nil assigns(:entry)
-    assert_response :success
-    assert_template layout: 'layouts/admin'
-    assert_template :more
-  end
-
   test 'should render photo fields' do
     get :photo
     assert_response :success

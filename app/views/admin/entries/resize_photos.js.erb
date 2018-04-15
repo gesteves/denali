@@ -1,17 +1,17 @@
 <% if @size == 'original' %>
   <% @entry.photos.each do |photo| %>
-    <div class="entry__thumb--small"><%= image_tag photo.original_url %></div>
+    <%= image_tag photo.original_url %>
   <% end %>
 <% elsif @size == 'instagram_feed' %>
   <% @entry.photos.each do |photo| %>
-    <div class="entry__thumb--small"><%= image_tag photo.instagram_url %></div>
+    <%= image_tag photo.instagram_url %>
   <% end %>
   <% elsif @size == 'instagram_story' %>
     <% @entry.photos.each do |photo| %>
-      <div class="entry__thumb--small"><%= image_tag photo.url(w: 2160, h: 3840, fm: 'jpg') %></div>
+      <%= image_tag photo.url(w: 2160, h: 3840, fm: 'jpg') %>
     <% end %>
 <% else %>
   <% @entry.photos.each do |photo| %>
-    <div class="entry__thumb--small"><%= image_tag photo.url(w: [photo.width, @size.to_i].min, fm: 'jpg')%></div>
+    <%= image_tag photo.url(w: [photo.width, @size.to_i].min, fm: 'jpg')%>
   <% end %>
 <% end %>

@@ -1,23 +1,14 @@
 module AdminHelper
-
-  def published_count(opts = {})
-    render_count Entry.published.count, opts
+  def icon(text, icon, opts = {})
+    opts.reverse_merge!(size: 'is-small', additional_classes: '')
+    icon = content_tag :span, class: "icon #{opts[:size]} #{opts[:additional_classes]}" do
+      content_tag :i, nil, class: icon
+    end
+    text = content_tag :span, text
+    "#{icon}\n#{text}".html_safe
   end
 
-  def drafts_count(opts = {})
-    render_count Entry.drafted.count, opts
-  end
-
-  def queued_count(opts = {})
-    render_count Entry.queued.count, opts
-  end
-
-  def tag_count(opts = {})
-    render_count ActsAsTaggableOn::Tag.count, opts
-  end
-
-  private
-  def render_count(entries, opts = {})
-    entries > 0 ? content_tag(:span, "· #{number_with_delimiter entries}".html_safe, opts) : ''
+  def pluralize_with_delimiter(word, count)
+    "#{number_with_delimiter count} #{word.pluralize(count)}"
   end
 end

@@ -1,12 +1,9 @@
-<% content_for :nav do %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'tags' } %>
-<% end %>
-
-<table class="table">
+<table class="table is-fullwidth is-hoverable is-striped">
   <thead>
     <tr>
     <th>Tag</th>
     <th>Entries</th>
+    <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -14,4 +11,4 @@
   </tbody>
 </table>
 
-<%= paginate @tags %>
+<%= paginate @tags, views_prefix: 'admin', outer_window: 1, window: 1 %>

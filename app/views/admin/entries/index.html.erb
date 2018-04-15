@@ -1,12 +1,10 @@
-<% content_for :nav do %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'published' } %>
-<% end %>
-
 <% if @entries.size == 0 %>
-  <p class="content__message">You haven’t published any entries. Why don’t you <a href="<%= new_admin_entry_path %>">write one</a>?</p>
+  <article class="message is-info">
+    <div class="message-body">
+      You haven’t published any entries. Why don’t you <a href="<%= new_admin_entry_path %>">write one</a>?
+    </div>
+  </article>
 <% else %>
-  <ol class="entry__list">
-    <%= render partial: 'entry', collection: @entries %>
-  </ol>
-  <%= paginate @entries %>
+  <%= render partial: 'entry', collection: @entries %>
+  <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
 <% end %>

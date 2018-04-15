@@ -1,18 +1,18 @@
-<% content_for :nav do %>
-  <%= render partial: 'partials/admin/nav', locals: { active_nav: 'search' } %>
-<% end %>
-
-<%= form_tag(admin_search_path, method: 'get', class: 'form') do %>
-  <%= text_field_tag :q, @query || '', placeholder: "Search…", class: 'form__input' %>
-<% end %>
-
 <% if @query.present? %>
   <% if @entries.size == 0 %>
-    <p class="content__message">No results found for “<%= @query %>”.</p>
+    <article class="message is-info">
+      <div class="message-body">
+        No results found for “<%= @query %>”.
+      </div>
+    </article>
   <% else %>
-    <ol class="entry__list">
-      <%= render partial: 'entry', collection: @entries %>
-    </ol>
-    <%= paginate @entries %>
+    <%= render partial: 'entry', collection: @entries %>
+    <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
   <% end %>
+<% else %>
+  <article class="message is-info">
+    <div class="message-body">
+      You left the search field blank.
+    </div>
+  </article>
 <% end %>

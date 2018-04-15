@@ -1,17 +1,39 @@
-<% cache "admin/nav/#{active_nav || 'none'}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <nav class="nav">
-    <div class="nav__group">
-      <a href="<%= new_admin_entry_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'new' %>">Post a new entry</a>
-      <a href="<%= admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'published' %>">Published <%= published_count %></a>
-      <a href="<%= queued_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'queued' %>">Queued <%= queued_count %></a>
-      <a href="<%= drafts_admin_entries_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'drafts' %>">Drafts <%= drafts_count %></a>
-      <a href="<%= admin_tags_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'tags' %>">Tags <%= tag_count %></a>
+<nav class="navbar is-fixed-top" data-controller="nav">
+  <% if @photoblog.header_logo_svg.present? %>
+    <div class="navbar-brand">
+      <a href="<%= root_path %>" class="navbar-item logo">
+        <%= @photoblog.header_logo_svg.html_safe %>
+      </a>
+      <a role="button" class="navbar-burger" data-action="click->nav#toggle" data-target="nav.burger">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+  <% end %>
+  <div class="navbar-menu" data-target="nav.menu">
+    <div class="navbar-start">
+      <a href="<%= new_admin_entry_path %>" class="navbar-item">New entry</a>
+      <a href="<%= admin_entries_path %>" class="navbar-item">Published <% if Entry.published.count > 0 %>&nbsp;<span class="tag is-rounded"><%= number_with_delimiter Entry.published.count %></span><% end %></a>
+      <a href="<%= queued_admin_entries_path %>" class="navbar-item">Queued <% if Entry.queued.count > 0 %>&nbsp;<span class="tag is-rounded"><%= number_with_delimiter Entry.queued.count %></span><% end %></a>
+      <a href="<%= drafts_admin_entries_path %>" class="navbar-item">Drafts <% if Entry.drafted.count > 0 %>&nbsp;<span class="tag is-rounded"><%= number_with_delimiter Entry.drafted.count %></span><% end %></a>
+      <a href="<%= admin_tags_path %>" class="navbar-item">Tags</a>
       <% if @photoblog.has_search? %>
-        <a href="<%= admin_search_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'search' %>">Search</a>
+      <div class="navbar-item">
+        <%= form_tag(admin_search_path, method: 'get') do %>
+          <div class="control has-icons-left">
+            <%= text_field_tag :q, @query || '', placeholder: 'Search', class: 'input' %>
+            <span class="icon is-small is-left">
+              <i class="fas fa-search"></i>
+            </span>
+          </div>
+        <% end %>
+      </div>
       <% end %>
     </div>
-    <a href="<%= root_path %>" class="nav__link">View site</a>
-    <a href="<%= admin_settings_path %>" class="nav__link <%= 'nav__link--is-active' if active_nav == 'settings' %>">Settings</a>
-    <a href="<%= signout_path %>" class="nav__link">Sign out</a>
-  </nav>
-<% end %>
+    <div class="navbar-end">
+      <a href="<%= admin_settings_path %>" class="navbar-item">Settings</a>
+      <a href="<%= signout_path %>" class="navbar-item">Sign out</a>
+    </div>
+  </div>
+</nav>
