@@ -18,13 +18,13 @@
     <div class="content">
       <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
     </div>
-
     <div class="tags">
       <% entry.combined_tags.each do |t| %>
         <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
       <% end %>
     </div>
 
+    <hr class="hr">
     <div class="dropdown" data-controller="dropdown">
       <div class="dropdown-trigger">
         <button class="button" data-action="click->dropdown#toggle">
