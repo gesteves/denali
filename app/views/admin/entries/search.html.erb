@@ -9,4 +9,10 @@
     <%= render partial: 'entry', collection: @entries %>
     <%= paginate @entries, views_prefix: 'admin', outer_window: 1 %>
   <% end %>
+<% else %>
+  <article class="message is-info">
+    <div class="message-body">
+      You left the search field blank.
+    </div>
+  </article>
 <% end %>

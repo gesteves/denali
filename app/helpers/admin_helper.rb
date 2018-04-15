@@ -7,4 +7,8 @@ module AdminHelper
     text = content_tag :span, text
     "#{icon}\n#{text}".html_safe
   end
+
+  def pluralize_with_delimiter(word, count)
+    "#{number_with_delimiter count} #{word.pluralize(count)}"
+  end
 end
