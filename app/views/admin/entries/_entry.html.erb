@@ -1,4 +1,4 @@
-<div class="card entry">
+<div class="card">
   <% if entry.is_photo? %>
     <div class="card-image">
       <a class="image" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.preview_hash) %>">
@@ -47,6 +47,12 @@
           <% if entry.is_photo? %>
             <%= link_to 'Share', share_admin_entry_path(entry), class: 'dropdown-item' %>
           <% end %>
+          <hr class="dropdown-divider">
+          <%= link_to 'Purge entry from cache', invalidate_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %>
+          <% if entry.show_in_map? %><%= link_to 'Update location data', geotag_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %><% end %>
+          <%= link_to 'Update annotation data', annotate_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Update palette data', palette_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %>
+          <hr class="dropdown-divider">
           <%= link_to 'More', more_admin_entry_path(entry.id), class: 'dropdown-item' %>
         </div>
       </div>
