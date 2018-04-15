@@ -25,42 +25,39 @@
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :status_queued, 'Add to queue', class: 'label' %>
+      <%= f.label :status_queued, 'Queued', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
           <%= f.radio_button :status, 'queued' %>
         </div>
-        <p class="help">The entry will be added to the queue and published on <b><%= new_queue_date.strftime('%A, %B %-d, %Y') %></b>.</p>
       </div>
     </div>
   </div>
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :status_draft, 'Save as draft', class: 'label' %>
+      <%= f.label :status_draft, 'Draft', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
           <%= f.radio_button :status, 'draft' %>
         </div>
-        <p class="help">The entry will be added to the drafts and won’t be published.</p>
       </div>
     </div>
   </div>
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :status_published, 'Publish it now!', class: 'label' %>
+      <%= f.label :status_published, 'Published', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
           <%= f.radio_button :status, 'published' %>
         </div>
-        <p class="help">The entry will be published <b>immediately</b>.</p>
       </div>
     </div>
   </div>
@@ -77,7 +74,6 @@
         <div class="control">
           <%= f.check_box :show_in_map, { checked: true } %>
         </div>
-        <p class="help">When checked, the entry will be visible in the map, and be automatically tagged with location tags (e.g. #washington).</p>
       </div>
     </div>
   </div>
@@ -87,70 +83,65 @@
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_facebook, 'Facebook', class: 'label' %>
+      <%= f.label :post_to_facebook, 'Share on Facebook', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_facebook do %><%= f.check_box :post_to_facebook, { checked: true } %> Share on Facebook<% end %>
+          <%= f.check_box :post_to_facebook, { checked: true } %>
         </div>
-        <p class="help">When checked, the entry will be sent to the Facebook queue in Buffer after publishing, and won’t be posted immediately.</p>
       </div>
     </div>
   </div>
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_flickr, 'Flickr', class: 'label' %>
+      <%= f.label :post_to_flickr, 'Share on Flickr', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_flickr do %><%= f.check_box :post_to_flickr, { checked: true } %> Share on Flickr<% end %>
+          <%= f.check_box :post_to_flickr, { checked: true } %>
         </div>
-        <p class="help">When checked, the entry will be posted to Flickr immediately after publishing.</p>
       </div>
     </div>
   </div>
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_pinterest, 'Pinterest', class: 'label' %>
+      <%= f.label :post_to_pinterest, 'Share on Pinterest', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_pinterest do %><%= f.check_box :post_to_pinterest, { checked: true } %> Share on Pinterest<% end %>
+          <%= f.check_box :post_to_pinterest, { checked: true } %>
         </div>
-        <p class="help">When checked, the entry will be posted to Pinterest immediately after publishing.</p>
       </div>
     </div>
   </div>
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_tumblr, 'Tumblr', class: 'label' %>
+      <%= f.label :post_to_tumblr, 'Share on Tumblr', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_tumblr do %><%= f.check_box :post_to_tumblr, { checked: true } %> Share on Tumblr<% end %>
+          <%= f.check_box :post_to_tumblr, { checked: true } %>
         </div>
-        <p class="help">When checked, the entry will be sent to the Tumblr queue after publishing, and won’t be posted immediately.</p>
       </div>
     </div>
   </div>
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_twitter, 'Twitter', class: 'label' %>
+      <%= f.label :post_to_twitter, 'Share on Twitter', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_twitter do %><%= f.check_box :post_to_twitter, { checked: true } %> Share on Twitter<% end %>
+          <%= f.check_box :post_to_twitter, { checked: true } %>
         </div>
-        <p class="help">When checked, the entry will be sent to the Twitter queue in Buffer after publishing, and won’t be posted immediately.</p>
       </div>
     </div>
   </div>
@@ -169,14 +160,13 @@
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_instagram, 'Instagram', class: 'label' %>
+      <%= f.label :post_to_instagram, 'Share on Instagram', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_instagram do %><%= f.check_box :post_to_instagram, { checked: true } %> Share on Instagram<% end %>
+          <%= f.check_box :post_to_instagram, { checked: true } %>
         </div>
-        <p class="help">When checked, the entry will be sent to the Instagram queue in Buffer after publishing, and won’t be posted immediately.</p>
       </div>
     </div>
   </div>
@@ -201,7 +191,7 @@
       <div class="field">
         <div class="buttons is-right">
           <%= link_to 'Cancel', admin_entries_path, data: { confirm: 'Are you sure you want to discard this?' }, class: 'button' %>
-          <%= f.submit 'Save changes', class: 'button is-success' %>
+          <%= f.submit 'Save entry', class: 'button is-success' %>
         </div>
       </div>
     </div>

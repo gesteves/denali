@@ -63,7 +63,6 @@
         <div class="control">
           <%= f.check_box :show_in_map %>
         </div>
-        <p class="help">When checked, the entry will be visible in the map, and be automatically tagged with location tags (e.g. #washington).</p>
       </div>
     </div>
   </div>
@@ -77,7 +76,6 @@
         <div class="control">
           <%= f.check_box :invalidate_cloudfront, { checked: false } %>
         </div>
-        <p class="help">Entries are currently cached for <%= distance_of_time_in_words(Time.now, Time.now + @max_age.minutes) %>. Check this option before saving to purge the entry from the CDN and make the changes visible immediately.</p>
       </div>
     </div>
   </div>
@@ -87,70 +85,65 @@
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_facebook, 'Facebook', class: 'label' %>
+      <%= f.label :post_to_facebook, 'Share on Facebook', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_facebook do %><%= f.check_box :post_to_facebook %> Share on Facebook<% end %>
+          <%= f.check_box :post_to_facebook %>
         </div>
-        <p class="help">When checked, the entry will be sent to the Facebook queue in Buffer after publishing, and won’t be posted immediately.</p>
       </div>
     </div>
   </div>
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_flickr, 'Flickr', class: 'label' %>
+      <%= f.label :post_to_flickr, 'Share on Flickr', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_flickr do %><%= f.check_box :post_to_flickr %> Share on Flickr<% end %>
+          <%= f.check_box :post_to_flickr %>
         </div>
-        <p class="help">When checked, the entry will be posted to Flickr immediately after publishing.</p>
       </div>
     </div>
   </div>
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_pinterest, 'Pinterest', class: 'label' %>
+      <%= f.label :post_to_pinterest, 'Share on Pinterest', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_pinterest do %><%= f.check_box :post_to_pinterest %> Share on Pinterest<% end %>
+          <%= f.check_box :post_to_pinterest %>
         </div>
-        <p class="help">When checked, the entry will be posted to Pinterest immediately after publishing.</p>
       </div>
     </div>
   </div>
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_tumblr, 'Tumblr', class: 'label' %>
+      <%= f.label :post_to_tumblr, 'Share on Tumblr', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_tumblr do %><%= f.check_box :post_to_tumblr %> Share on Tumblr<% end %>
+          <%= f.check_box :post_to_tumblr %>
         </div>
-        <p class="help">When checked, the entry will be sent to the Tumblr queue after publishing, and won’t be posted immediately.</p>
       </div>
     </div>
   </div>
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_twitter, 'Twitter', class: 'label' %>
+      <%= f.label :post_to_twitter, 'Share on Twitter', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_twitter do %><%= f.check_box :post_to_twitter %> Share on Twitter<% end %>
+          <%= f.check_box :post_to_twitter %>
         </div>
-        <p class="help">When checked, the entry will be sent to the Twitter queue in Buffer after publishing, and won’t be posted immediately.</p>
       </div>
     </div>
   </div>
@@ -169,14 +162,13 @@
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_instagram, 'Instagram', class: 'label' %>
+      <%= f.label :post_to_instagram, 'Share on Instagram', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <%= f.label :post_to_instagram do %><%= f.check_box :post_to_instagram %> Share on Instagram<% end %>
+          <%= f.check_box :post_to_instagram %>
         </div>
-        <p class="help">When checked, the entry will be sent to the Instagram queue in Buffer after publishing, and won’t be posted immediately.</p>
       </div>
     </div>
   </div>
