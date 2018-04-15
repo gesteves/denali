@@ -29,7 +29,8 @@ export default class extends Controller {
     new Sortable(this.photosTarget, {
       delay: 100,
       classes: {
-        'source:dragging': 'is-invisible'
+        'source:dragging': 'is-invisible',
+        'mirror': 'draggable-mirror'
       },
       handle: '.draggable-handle'
     });
