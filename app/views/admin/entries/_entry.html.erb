@@ -48,7 +48,7 @@
             <%= link_to 'Share', share_admin_entry_path(entry), class: 'dropdown-item' %>
           <% end %>
           <hr class="dropdown-divider">
-          <%= link_to 'Purge entry from cache', invalidate_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %>
+          <%= link_to 'Purge from CDN', invalidate_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %>
           <% if entry.show_in_map? %><%= link_to 'Update location data', geotag_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %><% end %>
           <%= link_to 'Update annotation data', annotate_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %>
           <%= link_to 'Update palette data', palette_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %>
