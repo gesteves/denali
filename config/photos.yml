@@ -58,7 +58,7 @@ admin_entry:
     - "(min-width: 1472px) 1344px"
     - "(min-width: 1280px) 1152px"
     - "(min-width: 1088px) 960px"
-    - 100vw
+    - calc(100vw - 3rem)
 admin_edit:
   src: 300
   srcset:
