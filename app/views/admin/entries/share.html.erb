@@ -5,10 +5,10 @@
     <p class="card-header-title">Buffer</p>
   </header>
   <div class="card-content">
-    <div class="field is-grouped">
-      <p class="control"><%= link_to icon('Send to Facebook', 'fab fa-facebook'), facebook_admin_entry_path(@entry.id), method: :post, class: 'button' %></p>
-      <p class="control"><%= link_to icon('Send to Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), method: :post, class: 'button' %></p>
-      <p class="control"><%= link_to icon('Send to Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), method: :post, class: 'button' %></p>
+    <div class="buttons">
+      <%= link_to icon('Send to Facebook', 'fab fa-facebook'), facebook_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+      <%= link_to icon('Send to Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+      <%= link_to icon('Send to Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), method: :post, class: 'button' %>
     </div>
   </div>
 </div>
