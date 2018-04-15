@@ -1,49 +1,55 @@
-<li class="entry" <% if entry.is_queued? %>data-position="<%= entry.position %>"<% end %>>
+<div class="card entry">
   <% if entry.is_photo? %>
-    <a class="entry__link" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.preview_hash) %>" <% if entry.is_photo? %>style="<%= "#{intrinsic_ratio_padding(entry.photos.first)};#{image_placeholder(entry.photos.first)}" %>"<% end %>>
-      <%= responsive_image_tag entry.photos.first, 'admin_entry', { class: 'entry__thumb', alt: entry.photos.first.alt_text } %>
-    </a>
+    <div class="card-image">
+      <a class="image" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.preview_hash) %>">
+        <%= responsive_image_tag entry.photos.first, 'admin_entry', { alt: entry.photos.first.alt_text } %>
+      </a>
+    </div>
   <% end %>
-  <div class="entry__content <% if entry.is_text? %>entry__content--text<% end %>">
-    <h2><%= sanitize(entry.plain_title) %></h2>
-    <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
-  </div>
-  <div class="entry__meta">
-    <div>
-      <% entry.combined_tags.each do |t| %>
-        <span class="entry__tag"><%= link_to t.name, admin_tagged_entries_path(t.slug) %></span>
-      <% end %>
-    </div>
-    <% if entry.is_queued? && action_name != 'search' %>
-      <div class="entry__timestamp">
-        Queued for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
-      </div>
-    <% end %>
-    <div class="entry__meta-bottom">
+  <div class="card-content">
+    <h1 class="title is-size-5"><%= sanitize(entry.plain_title) %></h1>
+    <h2 class="subtitle is-size-7">
       <% if entry.is_published? %>
-        <div class="entry__timestamp">
-          <%= link_to "Published #{entry.published_at.strftime('%A, %B %-d, %Y')}", entry.permalink_url %>
-        </div>
-      <% elsif entry.is_queued? && action_name == 'search' %>
-        <div class="entry__timestamp">
+          Published <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
+      <% elsif entry.is_queued? %>
           Queued for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
-        </div>
-      <% elsif entry.is_queued? && action_name == 'queued' %>
-        <div class="entry__actions entry__actions--queue">
-          <%= link_to 'Move to top', top_admin_entry_path(entry.id), method: :post, data: { queue: 'top' } %>
-          <%= link_to 'Move up', up_admin_entry_path(entry.id), method: :post, data: { queue: 'up' } %>
-          <%= link_to 'Move down', down_admin_entry_path(entry.id), method: :post, data: { queue: 'down' } %>
-          <%= link_to 'Move to bottom', bottom_admin_entry_path(entry.id), method: :post, data: { queue: 'bottom' } %>
-        </div>
       <% end %>
-      <div class="entry__actions">
-        <%= link_to 'Edit', edit_admin_entry_path(entry) %> ·
-        <% if entry.is_photo? %>
-          <%= link_to 'Share', share_admin_entry_path(entry) %>
-          ·
-        <% end %>
-        <%= link_to 'More', more_admin_entry_path(entry.id) %>
+    </h2>
+    <div class="content">
+      <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
+    </div>
+
+    <div class="tags">
+      <% entry.combined_tags.each do |t| %>
+        <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
+      <% end %>
+    </div>
+
+    <div class="dropdown is-up" data-controller="dropdown">
+      <div class="dropdown-trigger">
+        <button class="button" data-action="click->dropdown#toggle">
+          <span>Actions</span>
+          <span class="icon is-small">
+            <i class="fas fa-angle-up" aria-hidden="true"></i>
+          </span>
+        </button>
+      </div>
+      <div class="dropdown-menu">
+        <div class="dropdown-content">
+          <% if entry.is_queued? && action_name == 'queued' %>
+            <%= link_to 'Move to top', top_admin_entry_path(entry.id), method: :post, data: { queue: 'top' }, class: 'dropdown-item' %>
+            <%= link_to 'Move up', up_admin_entry_path(entry.id), method: :post, data: { queue: 'up' }, class: 'dropdown-item' %>
+            <%= link_to 'Move down', down_admin_entry_path(entry.id), method: :post, data: { queue: 'down' }, class: 'dropdown-item' %>
+            <%= link_to 'Move to bottom', bottom_admin_entry_path(entry.id), method: :post, data: { queue: 'bottom' }, class: 'dropdown-item' %>
+            <hr class="dropdown-divider">
+          <% end %>
+          <%= link_to 'Edit', edit_admin_entry_path(entry), class: 'dropdown-item' %>
+          <% if entry.is_photo? %>
+            <%= link_to 'Share', share_admin_entry_path(entry), class: 'dropdown-item' %>
+          <% end %>
+          <%= link_to 'More', more_admin_entry_path(entry.id), class: 'dropdown-item' %>
+        </div>
       </div>
     </div>
   </div>
-</li>
+</div>

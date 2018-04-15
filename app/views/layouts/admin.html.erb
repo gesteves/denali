@@ -13,7 +13,7 @@
 <body>
   <%= render partial: 'partials/admin/nav' %>
 
-<div class="content">
+<div class="container">
   <% flash.each do |name, message| -%>
     <div class="flash flash--<%= name %>" data-controller="flash" data-flash-timeout="5000">
       <p class="flash__message"><%= message %></p>
