@@ -10,20 +10,20 @@
   <%= javascript_pack_tag 'admin', defer: true %>
   <%= javascript_include_tag 'https://use.fontawesome.com/releases/v5.0.10/js/all.js', defer: true %>
 </head>
-<body>
+<body class="has-navbar-fixed-top">
   <%= render partial: 'partials/admin/nav' %>
 
-<section class="section">
-  <div class="container">
-    <% flash.each do |name, message| -%>
-    <div class="notification is-<%= name %>" data-controller="flash">
-      <button class="delete" data-action="click->flash#close"></button>
-      <%= message %>
+  <section class="section">
+    <div class="container">
+      <% flash.each do |name, message| -%>
+      <div class="notification is-<%= name %>" data-controller="flash">
+        <button class="delete" data-action="click->flash#close"></button>
+        <%= message %>
+      </div>
+      <% end %>
+      <%= yield %>
     </div>
-    <% end %>
-    <%= yield %>
-  </div>
-</section>
+  </section>
 
 </body>
 </html>
