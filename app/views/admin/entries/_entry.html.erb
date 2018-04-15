@@ -8,7 +8,7 @@
   <% end %>
   <div class="card-content">
     <h1 class="title is-size-5"><%= sanitize(entry.plain_title) %></h1>
-    <h2 class="subtitle is-size-7">
+    <h2 class="subtitle is-size-7 has-text-grey">
       <% if entry.is_published? %>
           Published <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
       <% elsif entry.is_queued? %>
