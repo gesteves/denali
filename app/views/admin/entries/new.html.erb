@@ -1,4 +1,8 @@
+<h1 class="title is-size-5-mobile">New entry</h1>
+<hr class="hr">
+
 <%= form_for([:admin, @entry], html: { multipart: true, 'data-controller': 'entry-form', 'data-entry-form-photo-endpoint': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
+<h2 class="subtitle is-size-5-mobile">Content</h2>
 
 <div class="field is-horizontal">
   <div class="field-label">
