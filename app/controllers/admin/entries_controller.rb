@@ -194,26 +194,26 @@ class Admin::EntriesController < AdminController
 
   def geotag
     @entry.photos.map(&:geocode)
-    flash[:success] = 'Your entry is currently being geotagged. This may take a minute.'
+    flash[:success] = 'Your entry is being geotagged. This may take a few moments.'
     redirect_to session[:redirect_url]
   end
 
   def invalidate
     @entry.touch
     CloudfrontInvalidationJob.perform_later(@entry)
-    flash[:success] = 'Your entry is currently being invalidated in CloudFront. This may take a few minutes.'
+    flash[:success] = 'Your entry is being purged from CDN. This may take a few moments.'
     redirect_to session[:redirect_url]
   end
 
   def palette
     @entry.photos.map(&:update_palette)
-    flash[:success] = 'Your palette is currently being updated. This may take a minute.'
+    flash[:success] = 'Your entry’s palette data is being updated. This may take a few moments.'
     redirect_to session[:redirect_url]
   end
 
   def annotate
     @entry.photos.map(&:annotate)
-    flash[:success] = 'Annotation data is currently being updated. This may take a minute.'
+    flash[:success] = 'Your entry’s annotation data is being updated. This may take a few moments.'
     redirect_to session[:redirect_url]
   end
 
