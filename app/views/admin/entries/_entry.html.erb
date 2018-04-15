@@ -60,7 +60,7 @@
           <% end %>
           <%= link_to 'Publish!', publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry? This can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
           <hr class="dropdown-divider">
-          <%= link_to 'Delete forever!', admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it? it really can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
+          <%= link_to 'Delete forever!', admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it? It really can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
         </div>
       </div>
     </div>
