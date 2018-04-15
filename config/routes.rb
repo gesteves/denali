@@ -16,7 +16,6 @@ Rails.application.routes.draw do
 
     resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable do
       member do
-        get 'more'
         get 'share'
         post 'resize_photos'
         patch 'publish'

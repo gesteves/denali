@@ -132,11 +132,6 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def more
-    @page_title = "More options for “#{@entry.title}”"
-    @max_age = ENV['config_entry_caching_minutes'].try(:to_i) || ENV['config_caching_minutes'].try(:to_i) || 5
-  end
-
   # DELETE /admin/entries/1
   def destroy
     @entry.destroy
@@ -200,26 +195,26 @@ class Admin::EntriesController < AdminController
   def geotag
     @entry.photos.map(&:geocode)
     flash[:notice] = 'Your entry is currently being geotagged. This may take a minute.'
-    redirect_to more_admin_entry_path(@entry)
+    redirect_to session[:redirect_url]
   end
 
   def invalidate
     @entry.touch
     CloudfrontInvalidationJob.perform_later(@entry)
     flash[:notice] = 'Your entry is currently being invalidated in CloudFront. This may take a few minutes.'
-    redirect_to more_admin_entry_path(@entry)
+    redirect_to session[:redirect_url]
   end
 
   def palette
     @entry.photos.map(&:update_palette)
     flash[:notice] = 'Your palette is currently being updated. This may take a minute.'
-    redirect_to more_admin_entry_path(@entry)
+    redirect_to session[:redirect_url]
   end
 
   def annotate
     @entry.photos.map(&:annotate)
     flash[:notice] = 'Annotation data is currently being updated. This may take a minute.'
-    redirect_to more_admin_entry_path(@entry)
+    redirect_to session[:redirect_url]
   end
 
   def resize_photos
