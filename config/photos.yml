@@ -55,7 +55,9 @@ entry_list_square:
 admin_entry:
   <<: *entry
   sizes:
-    - "(min-width: 840px) 840px"
+    - "(min-width: 1472px) 1344px"
+    - "(min-width: 1280px) 1152px"
+    - "(min-width: 1088px) 960px"
     - 100vw
 admin_edit:
   src: 300
