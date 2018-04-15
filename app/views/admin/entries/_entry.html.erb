@@ -58,8 +58,10 @@
           <% elsif entry.is_draft? %>
             <%= link_to 'Send to queue', queue_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to send this entry to the queue?' }, class: 'dropdown-item' %>
           <% end %>
-          <%= link_to 'Publish!', publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry? This can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
-          <hr class="dropdown-divider">
+          <% if !entry.is_published? %>
+            <%= link_to 'Publish!', publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry? This can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
+            <hr class="dropdown-divider">
+          <% end %>
           <%= link_to 'Delete forever!', admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it? It really can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
         </div>
       </div>
