@@ -1,46 +1,83 @@
-<ol class="entry-list">
-  <%= render partial: 'entry', object: @entry %>
-  <% if @entry.is_published? %>
-  <li class="entry">
-    <div class="entry__content entry__content--misc">
-      <h2>Buffer</h2>
-      <div class="entry__content-buttons">
-        <%= button_to 'Send to Facebook', facebook_admin_entry_path(@entry.id), method: :post, class: 'button button--facebook' %>
-        <%= button_to 'Send to Instagram', instagram_admin_entry_path(@entry.id), method: :post, class: 'button button--instagram' %>
-        <%= button_to 'Send to Twitter', twitter_admin_entry_path(@entry.id), method: :post, class: 'button button--twitter' %>
+<%= render partial: 'entry', object: @entry %>
+<% if @entry.is_published? %>
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Buffer</p>
+  </header>
+  <div class="card-content">
+    <div class="field is-grouped">
+      <p class="control"><%= link_to icon('Send to Facebook', 'fab fa-facebook'), facebook_admin_entry_path(@entry.id), method: :post, class: 'button' %></p>
+      <p class="control"><%= link_to icon('Send to Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), method: :post, class: 'button' %></p>
+      <p class="control"><%= link_to icon('Send to Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), method: :post, class: 'button' %></p>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<div class="card" data-controller="photo-resizer">
+  <header class="card-header">
+    <p class="card-header-title">Images & crops</p>
+  </header>
+  <div class="card-content">
+    <%= form_tag(resize_photos_admin_entry_path, method: 'get', 'data-target': 'photo-resizer.form', 'data-action': 'change->photo-resizer#fetch') do %>
+      <div class="field">
+        <div class="control is-expanded">
+          <div class="select is-fullwidth">
+            <%= select_tag(:size, options_for_select([['Original', 'original'], ['Instagram Feed', 'instagram_feed'], ['Instagram Story', 'instagram_story']] + @sizes.map { |s| ["#{number_with_delimiter s}px wide", s] } + [['Other', 'other']]), prompt: 'Choose a size', 'data-target': 'photo-resizer.select') %>
+          </div>
+        </div>
       </div>
-    </div>
-  </li>
-  <% end %>
-  <li class="entry">
-    <div class="entry__content entry__content--misc" data-controller="photo-resizer">
-      <h2>Images & crops</h2>
-      <%= form_tag(resize_photos_admin_entry_path, method: 'get', class: 'form form--no-padding', 'data-target': 'photo-resizer.form', 'data-action': 'change->photo-resizer#fetch') do %>
-        <%= select_tag(:size, options_for_select([['Original', 'original'], ['Instagram Feed', 'instagram_feed'], ['Instagram Story', 'instagram_story']] + @sizes.map { |s| ["#{number_with_delimiter s}px wide", s] } + [['Other', 'other']]), prompt: 'Choose a size', class: 'form__dropdown', 'data-target': 'photo-resizer.select') %>
-      <% end %>
-      <div class="entry__thumbs" data-target="photo-resizer.thumbnails"></div>
-    </div>
-  </li>
-  <li class="entry">
-    <div class="entry__content entry__content--misc">
-      <h2>Instagram</h2>
-      <form class="form form--no-padding" data-controller="clipboard">
-        <textarea class="form__input form__input--textarea" readonly="readonly" data-target="clipboard.source"><%= @entry.instagram_caption %></textarea>
-        <div class="form__actions form__actions--no-padding">
-          <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">Copy to clipboard</button>
+    <% end %>
+    <div class="share-image" data-target="photo-resizer.thumbnails"></div>
+  </div>
+</div>
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Instagram</p>
+  </header>
+  <div class="card-content">
+    <form data-controller="clipboard">
+      <div class="field">
+        <div class="control">
+          <textarea rows="10" class="textarea" readonly="readonly" data-target="clipboard.source"><%= @entry.instagram_caption %></textarea>
         </div>
-      </form>
-    </div>
-  </li>
-  <li class="entry">
-    <div class="entry__content entry__content--misc">
-      <h2>Markdown</h2>
-      <form class="form form--no-padding" data-controller="clipboard">
-        <textarea class="form__input form__input--textarea" readonly="readonly" data-target="clipboard.source"><%= share_markdown @entry %></textarea>
-        <div class="form__actions form__actions--no-padding">
-          <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">Copy to clipboard</button>
+      </div>
+      <div class="field">
+        <div class="control">
+          <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">
+            <span class="icon">
+              <i class="fas fa-clipboard" data-target="clipboard.icon"></i>
+            </span>
+            <span data-target="clipboard.label">Copy to clipboard</span>
+          </button>
         </div>
-      </form>
-    </div>
-  </li>
-</ol>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <header class="card-header">
+    <p class="card-header-title">Markdown</p>
+  </header>
+  <div class="card-content">
+    <form data-controller="clipboard">
+      <div class="field">
+        <div class="control">
+          <textarea rows="10" class="textarea" readonly="readonly" data-target="clipboard.source"><%= share_markdown @entry %></textarea>
+        </div>
+      </div>
+      <div class="field">
+        <div class="control">
+          <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">
+            <span class="icon">
+              <i class="fas fa-clipboard" data-target="clipboard.icon"></i>
+            </span>
+            <span data-target="clipboard.label">Copy to clipboard</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
