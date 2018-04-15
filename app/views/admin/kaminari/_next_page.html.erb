@@ -6,10 +6,9 @@
     per_page:      number of items to fetch per page
     remote:        data-remote
 -%>
-<span class="pagination-next">
-  <% if current_page.last? %>
-    <%= t('views.pagination.next').html_safe %>
-  <% else %>
-    <%= link_to t('views.pagination.next').html_safe, url, title: 'Go to the next page of photos' %>
-  <% end %>
-</span>
+
+<% if current_page.last? %>
+  <span class="pagination-next"><%= t('views.pagination.next').html_safe %></span>
+<% else %>
+  <%= link_to t('views.pagination.next').html_safe, url, class: 'pagination-next', title: 'Go to the next page of photos' %>
+<% end %>
