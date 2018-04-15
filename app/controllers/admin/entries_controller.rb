@@ -4,7 +4,7 @@ class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :geotag, :invalidate, :palette, :annotate, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
-  before_action :set_redirect_url, only: [:edit, :new, :up, :down, :top, :bottom, :more]
+  before_action :set_redirect_url
   after_action :update_position, only: [:create]
   after_action :geocode_photos, only: [:create, :update]
   after_action :annotate_photos, only: [:create, :update]
@@ -74,9 +74,9 @@ class Admin::EntriesController < AdminController
   # PATCH /admin/entries/1/publish
   def publish
     if @entry.publish
-      flash[:notice] = 'Your entry was published!'
+      flash[:success] = 'Your entry was published!'
     else
-      flash[:alert] = 'Your entry couldn’t be published…'
+      flash[:warning] = 'Your entry couldn’t be published…'
     end
     redirect_to session[:redirect_url] || admin_entries_path
   end
@@ -84,9 +84,9 @@ class Admin::EntriesController < AdminController
   # PATCH /admin/entries/1/queue
   def queue
     if @entry.queue
-      flash[:notice] = 'Your entry was queued!'
+      flash[:success] = 'Your entry was queued!'
     else
-      flash[:alert] = 'Your entry couldn’t be queued…'
+      flash[:warning] = 'Your entry couldn’t be queued…'
     end
     redirect_to session[:redirect_url] || admin_entries_path
   end
@@ -94,9 +94,9 @@ class Admin::EntriesController < AdminController
   # PATCH /admin/entries/1/draft
   def draft
     if @entry.draft
-      flash[:notice] = 'Your entry was saved as draft!'
+      flash[:success] = 'Your entry was saved as draft!'
     else
-      flash[:alert] = 'Your entry couldn’t be saved as draft…'
+      flash[:warning] = 'Your entry couldn’t be saved as draft…'
     end
     redirect_to session[:redirect_url] || admin_entries_path
   end
@@ -108,10 +108,10 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save
-        flash[:notice] = 'Your entry was saved!'
+        flash[:success] = 'Your entry was saved!'
         format.html { redirect_to new_admin_entry_path }
       else
-        flash[:alert] = 'Your entry couldn’t be saved…'
+        flash[:warning] = 'Your entry couldn’t be saved…'
         format.html { render :new }
       end
     end
@@ -123,10 +123,10 @@ class Admin::EntriesController < AdminController
       @entry.modified_at = Time.now if @entry.is_published?
       if @entry.update(entry_params)
         logger.info "Entry #{@entry.id} was updated."
-        flash[:notice] = 'Your entry was updated!'
+        flash[:success] = 'Your entry was updated!'
         format.html { redirect_to session[:redirect_url] || admin_entries_path }
       else
-        flash[:alert] = 'Your entry couldn’t be updated…'
+        flash[:warning] = 'Your entry couldn’t be updated…'
         format.html { render :edit }
       end
     end
@@ -136,7 +136,7 @@ class Admin::EntriesController < AdminController
   def destroy
     @entry.destroy
     respond_to do |format|
-      flash[:notice] = 'Your entry was deleted!'
+      flash[:success] = 'Your entry was deleted!'
       format.html { redirect_to admin_entries_path }
     end
   end
@@ -174,46 +174,46 @@ class Admin::EntriesController < AdminController
   def instagram
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     InstagramJob.perform_later(@entry)
-    flash[:notice] = 'Your entry was sent to your Instagram queue in Buffer!'
+    flash[:success] = 'Your entry was sent to your Instagram queue in Buffer!'
     redirect_to share_admin_entry_path(@entry)
   end
 
   def twitter
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     TwitterJob.perform_later(@entry)
-    flash[:notice] = 'Your entry was sent to your Twitter queue in Buffer!'
+    flash[:success] = 'Your entry was sent to your Twitter queue in Buffer!'
     redirect_to share_admin_entry_path(@entry)
   end
 
   def facebook
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     FacebookJob.perform_later(@entry)
-    flash[:notice] = 'Your entry was sent to your Facebook queue in Buffer!'
+    flash[:success] = 'Your entry was sent to your Facebook queue in Buffer!'
     redirect_to share_admin_entry_path(@entry)
   end
 
   def geotag
     @entry.photos.map(&:geocode)
-    flash[:notice] = 'Your entry is currently being geotagged. This may take a minute.'
+    flash[:success] = 'Your entry is currently being geotagged. This may take a minute.'
     redirect_to session[:redirect_url]
   end
 
   def invalidate
     @entry.touch
     CloudfrontInvalidationJob.perform_later(@entry)
-    flash[:notice] = 'Your entry is currently being invalidated in CloudFront. This may take a few minutes.'
+    flash[:success] = 'Your entry is currently being invalidated in CloudFront. This may take a few minutes.'
     redirect_to session[:redirect_url]
   end
 
   def palette
     @entry.photos.map(&:update_palette)
-    flash[:notice] = 'Your palette is currently being updated. This may take a minute.'
+    flash[:success] = 'Your palette is currently being updated. This may take a minute.'
     redirect_to session[:redirect_url]
   end
 
   def annotate
     @entry.photos.map(&:annotate)
-    flash[:notice] = 'Annotation data is currently being updated. This may take a minute.'
+    flash[:success] = 'Annotation data is currently being updated. This may take a minute.'
     redirect_to session[:redirect_url]
   end
 

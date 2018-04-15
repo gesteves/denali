@@ -13,15 +13,17 @@
 <body>
   <%= render partial: 'partials/admin/nav' %>
 
-<div class="container">
-  <% flash.each do |name, message| -%>
-    <div class="flash flash--<%= name %>" data-controller="flash" data-flash-timeout="5000">
-      <p class="flash__message"><%= message %></p>
-      <a href="#" class="flash__close" data-action="click->flash#close">&times;</a>
+<section class="section">
+  <div class="container">
+    <% flash.each do |name, message| -%>
+    <div class="notification is-<%= name %>" data-controller="flash">
+      <button class="delete" data-action="click->flash#close"></button>
+      <%= message %>
     </div>
-  <% end %>
-  <%= yield %>
-</div>
+    <% end %>
+    <%= yield %>
+  </div>
+</section>
 
 </body>
 </html>
