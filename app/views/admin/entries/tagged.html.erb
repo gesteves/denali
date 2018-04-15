@@ -1,3 +1,9 @@
+<nav class="breadcrumb">
+  <ul>
+    <li><a href="<%= root_path %>">Home</a></li>
+    <li class="is-active"><a href="<%= queued_admin_entries_path %>">Queued</a></li>
+  </ul>
+</nav>
 <% if @entries.size == 0 %>
   <article class="message is-info">
     <div class="message-body">
@@ -6,5 +12,5 @@
   </article>
 <% else %>
   <%= render partial: 'entry', collection: @entries %>
-  <%= paginate @entries, views_prefix: 'admin', outer_window: 1 %>
+  <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
 <% end %>
