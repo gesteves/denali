@@ -7,6 +7,6 @@
     <p class="content__message">No results found for “<%= @query %>”.</p>
   <% else %>
     <%= render partial: 'entry', collection: @entries %>
-    <%= paginate @entries %>
+    <%= paginate @entries, views_prefix: 'admin'  %>
   <% end %>
 <% end %>

@@ -2,5 +2,5 @@
   <p class="content__message">You haven’t queued any entries. Why don’t you <a href="<%= new_admin_entry_path %>">write one</a>?</p>
 <% else %>
   <%= render partial: 'entry', collection: @entries %>
-  <%= paginate @entries %>
+  <%= paginate @entries, views_prefix: 'admin'  %>
 <% end %>

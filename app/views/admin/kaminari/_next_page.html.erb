@@ -1,0 +1,15 @@
+<%# Link to the "Next" page
+  - available local variables
+    url:           url to the next page
+    current_page:  a page object for the currently displayed page
+    total_pages:   total number of pages
+    per_page:      number of items to fetch per page
+    remote:        data-remote
+-%>
+<span class="pagination-next">
+  <% if current_page.last? %>
+    <%= t('views.pagination.next').html_safe %>
+  <% else %>
+    <%= link_to t('views.pagination.next').html_safe, url, title: 'Go to the next page of photos' %>
+  <% end %>
+</span>
