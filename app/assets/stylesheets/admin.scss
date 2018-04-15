@@ -1,7 +1,23 @@
+@import 'vendors/reset';
 @import 'awesomplete/awesomplete';
 
 @import 'admin/blocks/logo';
 @import 'admin/blocks/card';
 @import 'admin/blocks/share_image';
+@import 'admin/blocks/focal_marker';
+
+.awesomplete {
+  width: 100%;
+}
+
+.draggable-handle {
+  &:hover {
+    cursor: grab;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
+}
 
 @import 'bulma/bulma';

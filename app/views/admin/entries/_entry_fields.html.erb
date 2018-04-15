@@ -1,19 +1,70 @@
 <% if @entry.errors.any? %>
-  <div class="flash flash--danger">
-    <h2>Welp, the entry couldn't be saved.</h2>
-    <ul>
-    <% @entry.errors.full_messages.each do |message| %>
-      <li><%= message %></li>
-    <% end %>
-    </ul>
-  </div>
+  <article class="message is-danger">
+    <div class="message-header">
+      <p>Welp, the entry couldn't be saved.</p>
+      <button class="delete"></button>
+    </div>
+    <div class="message-body">
+      <% @entry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </div>
+  </article>
+  <hr class="hr">
 <% end %>
-
-<div class="form__inline">
-  <%= f.label :slug, "http://#{@photoblog.domain}/123/", class: 'form__label form__label--slug' %>
-  <%= f.text_field :slug, autocomplete: 'on', placeholder: 'your-optional-url-slug', class: 'form__input form__input--small' %>
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :slug, 'Permalink', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field has-addons">
+      <div class="control is-hidden-mobile">
+        <a class="button is-static">
+          <%= "https://#{@photoblog.domain}/#{Time.now.strftime('%Y')}/#{Time.now.strftime('%m')}/#{Time.now.strftime('%d')}/" %>
+        </a>
+      </div>
+      <div class="control is-expanded">
+        <%= f.text_field :slug, autocomplete: 'on', placeholder: 'your-optional-url-slug', class: 'input' %>
+      </div>
+    </div>
+  </div>
 </div>
 
-<%= f.text_field :title, required: true, autocomplete: 'on', placeholder: 'Title', class: 'form__input' %>
-<%= f.text_area :body, placeholder: 'Your text here…', class: 'form__input form__input--textarea' %>
-<%= f.text_field :tag_list, value: @entry.tag_list.to_s, autocomplete: 'off', placeholder: 'Tags (comma-separated)', class: 'form__input form__input--small', 'data-target': 'entry-form.tags' %>
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :title, 'Title', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_field :title, required: true, autocomplete: 'on', placeholder: 'Title', class: 'input' %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :body, 'Body', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_area :body, placeholder: 'Your text here…', class: 'textarea', rows: 10 %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :tag_list, 'Tags', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_field :tag_list, value: @entry.tag_list.to_s, autocomplete: 'off', placeholder: 'Tags (comma-separated)', class: 'input', 'data-target': 'entry-form.tags' %>
+      </div>
+    </div>
+  </div>
+</div>
