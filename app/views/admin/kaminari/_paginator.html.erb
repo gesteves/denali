@@ -9,6 +9,8 @@
 
 <%= paginator.render do -%>
   <nav class="pagination is-centered" role="navigation">
+    <%= prev_page_tag %>
+    <%= next_page_tag %>
     <ul class="pagination-list">
       <% each_page do |page| -%>
         <% if page.display_tag? -%>

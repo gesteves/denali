@@ -7,7 +7,7 @@
     </article>
   <% else %>
     <%= render partial: 'entry', collection: @entries %>
-    <%= paginate @entries, views_prefix: 'admin', outer_window: 1 %>
+    <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
   <% end %>
 <% else %>
   <article class="message is-info">
