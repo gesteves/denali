@@ -53,7 +53,20 @@ entry_list_square:
   <<: *entry_list
   square: Yes
 admin_entry:
-  <<: *entry
+  src: 1152
+  srcset:
+    - 544
+    - 654
+    - 1098
+    - 981
+    - 1440
+    - 1952
+    - 960
+    - 1920
+    - 1152
+    - 2304
+    - 1344
+    - 2688
   sizes:
     - "(min-width: 1472px) 1344px"
     - "(min-width: 1280px) 1152px"
@@ -63,15 +76,10 @@ admin_edit:
   src: 300
   srcset:
     - 300
-    - 516
     - 600
-    - 626
     - 900
-    - 1056
-    - 1412
   sizes:
-    - "(min-width: 800px) 300px"
-    - calc(100vw - 60px)
+    - 300px
 map:
   src: 300
   srcset:
