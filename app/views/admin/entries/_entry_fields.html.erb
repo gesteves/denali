@@ -20,7 +20,7 @@
     <div class="field has-addons">
       <div class="control is-hidden-mobile">
         <a class="button is-static">
-          <%= "https://#{@photoblog.domain}/#{Time.now.strftime('%Y')}/#{Time.now.strftime('%m')}/#{Time.now.strftime('%d')}/" %>
+          <%= "https://#{@photoblog.domain}/#{permalink_date(@entry)}/" %>
         </a>
       </div>
       <div class="control is-expanded">

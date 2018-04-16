@@ -14,4 +14,14 @@ module Admin::EntriesHelper
   def share_title(entry)
     entry.plain_title
   end
+
+  def permalink_date(entry)
+    if entry.is_published?
+      "#{entry.published_at.strftime('%Y')}/#{entry.published_at.strftime('%-m')}/#{entry.published_at.strftime('%-d')}"
+    elsif entry.is_queued? && entry.position.present?
+      "#{entry.publish_date_for_queued.strftime('%Y')}/#{entry.publish_date_for_queued.strftime('%-m')}/#{entry.publish_date_for_queued.strftime('%-d')}"
+    else
+      "#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}"
+    end
+  end
 end
