@@ -24,4 +24,8 @@
   z-index: 100;
 }
 
+.draggable--is-dragging {
+  cursor: grabbing;
+}
+
 @import 'bulma/bulma';
