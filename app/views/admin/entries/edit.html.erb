@@ -6,7 +6,11 @@
 <div class="field is-horizontal">
   <div class="field-label">
     <%= f.label :photos, 'Photos', class: 'label' %>
-    <%= link_to 'Add', '#', class: 'button', 'data-action': 'click->entry-form#addPhoto' %>
+    <a href="#" class="button" data-action="click->entry-form#addPhoto">
+      <span class="icon">
+        <i class="fas fa-plus-circle"></i>
+      </span>
+    </a>
   </div>
   <div class="field-body">
     <div class="field is-extended">
