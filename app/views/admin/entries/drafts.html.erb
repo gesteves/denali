@@ -1,3 +1,6 @@
+<h1 class="title is-size-5-mobile">Drafts</h1>
+<h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.drafted.count %></h2>
+<hr class="hr">
 <% if @entries.size == 0 %>
   <article class="message is-info">
     <div class="message-body">
