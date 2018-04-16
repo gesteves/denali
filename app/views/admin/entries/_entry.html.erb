@@ -27,7 +27,7 @@
             <% elsif entry.is_queued? %>
               <strong class="has-text-info">Queued</strong> for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
             <% elsif entry.is_draft? %>
-              <strong class="has-text-danger">Draft</strong>
+              <strong class="has-text-grey">Draft</strong>
             <% end %>
           </p>
         </div>
