@@ -1,5 +1,7 @@
 <h1 class="title is-size-5-mobile"><%= @tag_list.first %></h1>
-<h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.tagged_with(@tag_list.first).count %></h2>
+<% cache "admin/subtitles/tagged/#{@tag_list.first}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.tagged_with(@tag_list.first).count %></h2>
+<% end %>
 <hr class="hr">
 <% if @entries.size == 0 %>
   <article class="message is-info">
