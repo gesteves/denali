@@ -1,4 +1,7 @@
 <h1 class="title is-size-5-mobile">Tags</h1>
+<% cache "admin/subtitles/tags/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'tag', ActsAsTaggableOn::Tag.count %></h2>
+<% end %>
 <hr class="hr">
 <table class="table is-fullwidth is-hoverable is-striped">
   <thead>
