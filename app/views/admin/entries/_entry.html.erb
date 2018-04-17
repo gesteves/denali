@@ -1,44 +1,46 @@
-<div class="card">
-  <% if entry.is_photo? %>
-    <div class="card-image">
-      <a class="image" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.preview_hash) %>">
-        <%= responsive_image_tag entry.photos.first, 'admin_entry', { alt: entry.photos.first.alt_text } %>
-      </a>
-    </div>
-  <% end %>
-  <div class="card-content">
-    <h1 class="title is-size-5"><%= sanitize(entry.plain_title) %></h1>
-    <div class="content">
-      <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
-    </div>
-    <div class="tags">
-      <% entry.combined_tags.each do |t| %>
-        <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
-      <% end %>
-    </div>
+<% cache "admin/entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+  <div class="card">
+    <% if entry.is_photo? %>
+      <div class="card-image">
+        <a class="image" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.preview_hash) %>">
+          <%= responsive_image_tag entry.photos.first, 'admin_entry', { alt: entry.photos.first.alt_text } %>
+        </a>
+      </div>
+    <% end %>
+    <div class="card-content">
+      <h1 class="title is-size-5"><%= sanitize(entry.plain_title) %></h1>
+      <div class="content">
+        <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
+      </div>
+      <div class="tags">
+        <% entry.combined_tags.each do |t| %>
+          <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
+        <% end %>
+      </div>
 
-    <hr class="hr">
-    <div class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <p class="is-size-7 has-text-gray">
-            <% if entry.is_published? %>
-              <strong class="has-text-success">Published</strong> <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
-            <% elsif entry.is_queued? %>
-              <strong class="has-text-info">Queued</strong> for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
-            <% elsif entry.is_draft? %>
-              <strong class="has-text-grey">Draft</strong>
-            <% end %>
-          </p>
+      <hr class="hr">
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <p class="is-size-7 has-text-gray">
+              <% if entry.is_published? %>
+                <strong class="has-text-success">Published</strong> <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
+              <% elsif entry.is_queued? %>
+                <strong class="has-text-info">Queued</strong> for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
+              <% elsif entry.is_draft? %>
+                <strong class="has-text-grey">Draft</strong>
+              <% end %>
+            </p>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <%= render partial: 'actions', locals: { entry: entry } %>
+          </div>
         </div>
       </div>
-      <div class="level-right">
-        <div class="level-item">
-          <%= render partial: 'actions', locals: { entry: entry } %>
-        </div>
-      </div>
+
+
     </div>
-
-
   </div>
-</div>
+<% end %>
