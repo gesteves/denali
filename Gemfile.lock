@@ -292,6 +292,9 @@ GEM
       mime-types
       oauth
       simple_oauth
+    turbolinks (5.0.1)
+      turbolinks-source (~> 5)
+    turbolinks-source (5.1.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (4.1.8)
@@ -354,6 +357,7 @@ DEPENDENCIES
   sentry-raven
   spring
   tumblr_client
+  turbolinks (~> 5.0.0)
   uglifier
   web-console (~> 3.0)
   webpacker (~> 3.2.0)

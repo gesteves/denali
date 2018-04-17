@@ -6,6 +6,8 @@
 @import 'admin/blocks/share_image';
 @import 'admin/blocks/focal_marker';
 
+@import 'bulma/bulma';
+
 .awesomplete {
   width: 100%;
 }
@@ -28,4 +30,7 @@
   cursor: grabbing;
 }
 
-@import 'bulma/bulma';
+.turbolinks-progress-bar {
+  height: 2px;
+  background-color: $info;
+}
