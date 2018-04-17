@@ -34,8 +34,8 @@ export default class extends Controller {
     event.preventDefault();
     const { top, left } = this.thumbnailTarget.getBoundingClientRect();
     const { offsetWidth, offsetHeight} = this.thumbnailTarget;
-    const focalX = (event.pageX - left)/offsetWidth;
-    const focalY = (event.pageY - top)/offsetHeight;
+    const focalX = (event.pageX - (window.scrollX + left))/offsetWidth;
+    const focalY = (event.pageY - (window.scrollY + top))/offsetHeight;
 
     this.data.set('focal-x', focalX);
     this.data.set('focal-y', focalY);

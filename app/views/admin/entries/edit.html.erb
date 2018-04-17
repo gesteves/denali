@@ -17,20 +17,15 @@
       <div data-target="entry-form.photos">
         <%= f.fields_for :photos do |p| %>
           <div class="box draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="0" data-entry-form-photo-focal-x="<%= p.object.focal_x %>" data-entry-form-photo-focal-y="<%= p.object.focal_y %>">
-            <div class="media" data-target="entry-form-photo.fields">
-              <div class="media-left">
-                <span class="icon is-small has-text-grey-light draggable-handle">
-                  <i class="fas fa-arrows-alt-v"></i>
+            <div class="media photo-form" data-target="entry-form-photo.fields">
+              <div class="media-left is-relative">
+                <%= responsive_image_tag p.object, 'admin_edit', { class: 'photo-form__thumbnail', 'data-action': 'click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint', 'data-target': 'entry-form-photo.thumbnail' } %>
+                <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="entry-form-photo.focalmarker">
+                  <i class="far fa-3x fa-circle"></i>
                 </span>
               </div>
               <div class="media-content">
                 <div class="field is-grouped is-grouped-multiline">
-                  <div class="control">
-                    <%= responsive_image_tag p.object, 'admin_edit', { width: 300, 'data-action': 'click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint', 'data-target': 'entry-form-photo.thumbnail' } %>
-                    <span class="icon is-large draggable-handle has-text-danger is-hidden focal-marker" data-target="entry-form-photo.focalmarker">
-                      <i class="far fa-3x fa-circle"></i>
-                    </span>
-                  </div>
                   <div class="control is-expanded">
                     <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'textarea' %>
                     <%= p.hidden_field :id %>
@@ -41,8 +36,11 @@
                   </div>
                 </div>
               </div>
-              <div class="media-right">
+              <div class="media-right photo-form__controls">
                 <a class="delete" data-action="click->entry-form-photo#delete"></a>
+                <span class="icon is-small has-text-grey-light draggable-handle">
+                  <i class="fas fa-arrows-alt-v"></i>
+                </span>
               </div>
             </div>
           </div>

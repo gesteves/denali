@@ -1,12 +1,11 @@
 @import 'vendors/reset';
 @import 'awesomplete/awesomplete';
+@import 'bulma/bulma';
 
 @import 'admin/blocks/logo';
 @import 'admin/blocks/card';
 @import 'admin/blocks/share_image';
-@import 'admin/blocks/focal_marker';
-
-@import 'bulma/bulma';
+@import 'admin/blocks/photo-form';
 
 .awesomplete {
   width: 100%;
@@ -33,4 +32,8 @@
 .turbolinks-progress-bar {
   height: 2px;
   background-color: $info;
+}
+
+.is-relative {
+  position: relative;
 }
