@@ -5,7 +5,7 @@ import { Controller } from 'stimulus';
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['thumbnail', 'focalmarker', 'position', 'focalx', 'focaly', 'fields', 'fileinput', 'destroy'];
+  static targets = ['thumbnail', 'focalMarker', 'position', 'focalX', 'focalY', 'fields', 'destroy'];
   connect () {
     this.showFocalPoint();
   }
@@ -20,9 +20,9 @@ export default class extends Controller {
     }
 
     const { offsetWidth, offsetHeight } = this.thumbnailTarget;
-    this.focalmarkerTarget.style.top  = `${(offsetHeight * parseFloat(this.data.get('focal-y'))) - 24}px`;
-    this.focalmarkerTarget.style.left = `${(offsetWidth  * parseFloat(this.data.get('focal-x'))) - 24}px`;
-    this.focalmarkerTarget.classList.remove('is-hidden');
+    this.focalMarkerTarget.style.top  = `${(offsetHeight * parseFloat(this.data.get('focal-y'))) - 24}px`;
+    this.focalMarkerTarget.style.left = `${(offsetWidth  * parseFloat(this.data.get('focal-x'))) - 24}px`;
+    this.focalMarkerTarget.classList.remove('is-hidden');
   }
 
   /**
@@ -39,8 +39,8 @@ export default class extends Controller {
 
     this.data.set('focal-x', focalX);
     this.data.set('focal-y', focalY);
-    this.focalxTarget.value = focalX;
-    this.focalyTarget.value = focalY;
+    this.focalXTarget.value = focalX;
+    this.focalYTarget.value = focalY;
 
     this.showFocalPoint();
   }

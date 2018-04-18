@@ -20,7 +20,7 @@
             <div class="media photo-form" data-target="entry-form-photo.fields">
               <div class="media-left photo-form__photo-container">
                 <%= responsive_image_tag p.object, 'admin_edit', { class: 'photo-form__thumbnail', 'data-action': 'click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint', 'data-target': 'entry-form-photo.thumbnail' } %>
-                <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="entry-form-photo.focalmarker">
+                <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="entry-form-photo.focalMarker">
                   <i class="far fa-3x fa-circle"></i>
                 </span>
               </div>
@@ -31,8 +31,8 @@
                     <%= p.hidden_field :id %>
                     <%= p.hidden_field :position, 'data-position': '' %>
                     <%= p.hidden_field :_destroy, 'data-target': 'entry-form-photo.destroy' %>
-                    <%= p.hidden_field :focal_x, 'data-target': 'entry-form-photo.focalx' %>
-                    <%= p.hidden_field :focal_y, 'data-target': 'entry-form-photo.focaly' %>
+                    <%= p.hidden_field :focal_x, 'data-target': 'entry-form-photo.focalX' %>
+                    <%= p.hidden_field :focal_y, 'data-target': 'entry-form-photo.focalY' %>
                   </div>
                 </div>
               </div>
