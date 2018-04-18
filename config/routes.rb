@@ -28,6 +28,9 @@ Rails.application.routes.draw do
         post 'instagram'
         post 'twitter'
         post 'facebook'
+        post 'pinterest'
+        post 'flickr'
+        post 'tumblr'
         post 'invalidate'
         post 'refresh_metadata'
       end

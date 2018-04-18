@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :invalidate, :refresh_metadata, :resize_photos]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :invalidate, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url
@@ -189,6 +189,27 @@ class Admin::EntriesController < AdminController
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     FacebookJob.perform_later(@entry)
     flash[:success] = 'Your entry was sent to your Facebook queue in Buffer!'
+    redirect_to share_admin_entry_path(@entry)
+  end
+
+  def pinterest
+    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
+    PinterestJob.perform_later(@entry)
+    flash[:success] = 'Your entry was sent to Pinterest!'
+    redirect_to share_admin_entry_path(@entry)
+  end
+
+  def flickr
+    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
+    FlickrJob.perform_later(@entry)
+    flash[:success] = 'Your entry was sent to Flickr!'
+    redirect_to share_admin_entry_path(@entry)
+  end
+
+  def tumblr
+    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
+    TumblrJob.perform_later(@entry)
+    flash[:success] = 'Your entry was sent to your Tumblr queue!'
     redirect_to share_admin_entry_path(@entry)
   end
 

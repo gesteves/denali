@@ -4,13 +4,16 @@
 <% if @entry.is_published? %>
 <div class="card">
   <header class="card-header">
-    <p class="card-header-title">Buffer</p>
+    <p class="card-header-title">Share on</p>
   </header>
   <div class="card-content">
     <div class="buttons">
-      <%= link_to icon('Send to Facebook', 'fab fa-facebook'), facebook_admin_entry_path(@entry.id), method: :post, class: 'button' %>
-      <%= link_to icon('Send to Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), method: :post, class: 'button' %>
-      <%= link_to icon('Send to Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+      <%= link_to icon('Facebook', 'fab fa-facebook'), facebook_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+      <%= link_to icon('Flickr', 'fab fa-flickr'), flickr_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+      <%= link_to icon('Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+      <%= link_to icon('Pinterest', 'fab fa-pinterest'), pinterest_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+      <%= link_to icon('Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), method: :post, class: 'button' %>
+      <%= link_to icon('Tumblr', 'fab fa-tumblr'), tumblr_admin_entry_path(@entry.id), method: :post, class: 'button' %>
     </div>
   </div>
 </div>
@@ -36,7 +39,7 @@
 
 <div class="card">
   <header class="card-header">
-    <p class="card-header-title">Instagram</p>
+    <p class="card-header-title">Instagram caption</p>
   </header>
   <div class="card-content">
     <form data-controller="clipboard">
@@ -61,7 +64,7 @@
 
 <div class="card">
   <header class="card-header">
-    <p class="card-header-title">Markdown</p>
+    <p class="card-header-title">Markdown caption</p>
   </header>
   <div class="card-content">
     <form data-controller="clipboard">
