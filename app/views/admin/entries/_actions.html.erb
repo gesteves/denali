@@ -16,16 +16,16 @@
       <hr class="dropdown-divider">
       <% if entry.is_queued? && action_name == 'queued' %>
         <% if entry != Entry.queued.first %>
-          <%= link_to 'Move to top', top_admin_entry_path(entry.id), method: :post, data: { queue: 'top' }, class: 'dropdown-item' %>
-          <%= link_to 'Move up', up_admin_entry_path(entry.id), method: :post, data: { queue: 'up' }, class: 'dropdown-item' %>
+          <%= link_to icon('Move to top', 'fas fa-angle-double-up'), top_admin_entry_path(entry.id), method: :post, data: { queue: 'top' }, class: 'dropdown-item' %>
+          <%= link_to icon('Move up', 'fas fa-angle-up'), up_admin_entry_path(entry.id), method: :post, data: { queue: 'up' }, class: 'dropdown-item' %>
         <% end %>
         <% if entry != Entry.queued.last %>
-          <%= link_to 'Move down', down_admin_entry_path(entry.id), method: :post, data: { queue: 'down' }, class: 'dropdown-item' %>
-          <%= link_to 'Move to bottom', bottom_admin_entry_path(entry.id), method: :post, data: { queue: 'bottom' }, class: 'dropdown-item' %>
+          <%= link_to icon('Move down', 'fas fa-angle-down'), down_admin_entry_path(entry.id), method: :post, data: { queue: 'down' }, class: 'dropdown-item' %>
+          <%= link_to icon('Move to bottom', 'fas fa-angle-double-down'), bottom_admin_entry_path(entry.id), method: :post, data: { queue: 'bottom' }, class: 'dropdown-item' %>
         <% end %>
         <hr class="dropdown-divider">
       <% end %>
-      <%= link_to icon('Clear cache', 'fas fa-undo'), invalidate_admin_entry_path(entry.id), method: :post, data: { confirm: "Entries are currently cached for #{distance_of_time_in_words(Time.now, Time.now + @max_age.minutes)}. This will clear this entry from the cache and make any changes publicly visible right away. Do you want to proceed?" }, class: 'dropdown-item' %>
+      <%= link_to icon('Clear cache', 'fas fa-eraser'), invalidate_admin_entry_path(entry.id), method: :post, data: { confirm: "Entries are currently cached for #{distance_of_time_in_words(Time.now, Time.now + @max_age.minutes)}. This will clear this entry from the cache and make any changes publicly visible right away. Do you want to proceed?" }, class: 'dropdown-item' %>
       <%= link_to icon('Refresh metadata', 'fas fa-sync'), refresh_metadata_admin_entry_path(entry.id), method: :post, data: { confirm: 'This will refresh the entry’s location, annotation, and palette metadata and update its tags. Are you sure you want to proceed?' }, class: 'dropdown-item' %>
       <hr class="dropdown-divider">
       <% if entry.is_queued? %>
