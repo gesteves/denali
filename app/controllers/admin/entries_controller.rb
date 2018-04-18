@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :geotag, :invalidate, :palette, :annotate, :resize_photos]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :invalidate, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url
@@ -192,12 +192,6 @@ class Admin::EntriesController < AdminController
     redirect_to share_admin_entry_path(@entry)
   end
 
-  def geotag
-    @entry.photos.map(&:geocode)
-    flash[:success] = 'Your entry is being geotagged. This may take a few moments.'
-    redirect_to session[:redirect_url]
-  end
-
   def invalidate
     @entry.touch
     CloudfrontInvalidationJob.perform_later(@entry)
@@ -205,15 +199,12 @@ class Admin::EntriesController < AdminController
     redirect_to session[:redirect_url]
   end
 
-  def palette
-    @entry.photos.map(&:update_palette)
-    flash[:success] = 'Your entry’s palette data is being updated. This may take a few moments.'
-    redirect_to session[:redirect_url]
-  end
-
-  def annotate
+  def refresh_metadata
+    @entry.photos.map(&:geocode)
     @entry.photos.map(&:annotate)
-    flash[:success] = 'Your entry’s annotation data is being updated. This may take a few moments.'
+    @entry.photos.map(&:update_palette)
+    CloudfrontInvalidationJob.perform_later(@entry)
+    flash[:success] = 'Your entry’s metadata is being updated. This may take a few moments.'
     redirect_to session[:redirect_url]
   end
 

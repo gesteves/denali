@@ -26,9 +26,7 @@
         <hr class="dropdown-divider">
       <% end %>
       <%= link_to 'Purge from CDN', invalidate_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %>
-      <% if entry.show_in_map? %><%= link_to 'Update location data', geotag_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %><% end %>
-      <%= link_to 'Update annotation data', annotate_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %>
-      <%= link_to 'Update palette data', palette_admin_entry_path(entry.id), method: :post, class: 'dropdown-item' %>
+      <%= link_to icon('Refresh metadata', 'fas fa-sync'), refresh_metadata_admin_entry_path(entry.id), method: :post, data: { confirm: 'This will refresh the entry’s location, annotation, and palette metadata and update its tags. Are you sure you want to proceed?' }, class: 'dropdown-item' %>
       <hr class="dropdown-divider">
       <% if entry.is_queued? %>
         <%= link_to icon('Send to drafts', 'fas fa-pencil-alt'), draft_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to send this entry to the drafts? It will lose its place in the queue.' }, class: 'dropdown-item has-text-danger' %>

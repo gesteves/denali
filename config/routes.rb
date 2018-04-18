@@ -28,10 +28,8 @@ Rails.application.routes.draw do
         post 'instagram'
         post 'twitter'
         post 'facebook'
-        post 'geotag'
         post 'invalidate'
-        post 'annotate'
-        post 'palette'
+        post 'refresh_metadata'
       end
       collection do
         get 'queued'
