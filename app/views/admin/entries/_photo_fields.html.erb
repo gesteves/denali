@@ -1,13 +1,13 @@
 <%= fields_for :entry, @entry do |f| %>
   <%= f.fields_for :photos, child_index: "#{(Time.now.to_f * 1000).to_i}#{i}" do |p| %>
-    <div class="box draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="1">
-      <div class="media photo-form" data-target="entry-form-photo.fields">
+    <div class="box draggable-source" data-controller="photo-form" data-photo-form-empty="1">
+      <div class="media photo-form" data-target="photo-form.fields">
         <div class="media-content">
           <div class="field is-grouped is-grouped-centered">
             <div class="control">
               <div class="file is-boxed">
                 <label class="file-label">
-                  <%= p.file_field :source_file, accept: '.jpg,.jpeg', class: 'file-input', 'data-action': 'click->entry-form-photo#stopPropagation change->entry-form-photo#addFromFile' %>
+                  <%= p.file_field :source_file, accept: '.jpg,.jpeg', class: 'file-input', 'data-action': 'click->photo-form#stopPropagation change->photo-form#addFromFile' %>
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-image"></i>
@@ -22,17 +22,17 @@
           </div>
         </div>
         <div class="media-right photo-form__controls">
-          <a class="delete" data-action="click->entry-form-photo#delete"></a>
+          <a class="delete" data-action="click->photo-form#delete"></a>
           <span class="icon is-small has-text-grey-light draggable-handle">
             <i class="fas fa-arrows-alt-v"></i>
           </span>
         </div>
       </div>
 
-      <div class="media is-hidden photo-form" data-target="entry-form-photo.fields">
+      <div class="media is-hidden photo-form" data-target="photo-form.fields">
         <div class="media-left photo-form__photo-container">
-          <img class="photo-form__thumbnail" data-target="entry-form-photo.thumbnail" width="300" data-action="click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint" />
-          <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="entry-form-photo.focalMarker">
+          <img class="photo-form__thumbnail" data-target="photo-form.thumbnail" width="300" data-action="click->photo-form#setFocalPoint load->photo-form#showFocalPoint" />
+          <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="photo-form.focalMarker">
             <i class="far fa-3x fa-circle"></i>
           </span>
         </div>
@@ -41,13 +41,13 @@
             <div class="control is-expanded">
               <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'textarea' %>
               <%= p.hidden_field :position, 'data-position': '' %>
-              <%= p.hidden_field :focal_x, 'data-target': 'entry-form-photo.focalX' %>
-              <%= p.hidden_field :focal_y, 'data-target': 'entry-form-photo.focalY' %>
+              <%= p.hidden_field :focal_x, 'data-target': 'photo-form.focalX' %>
+              <%= p.hidden_field :focal_y, 'data-target': 'photo-form.focalY' %>
             </div>
           </div>
         </div>
         <div class="media-right photo-form__controls">
-          <a class="delete" data-action="click->entry-form-photo#delete"></a>
+          <a class="delete" data-action="click->photo-form#delete"></a>
           <span class="icon is-small has-text-grey-light draggable-handle">
             <i class="fas fa-arrows-alt-v"></i>
           </span>

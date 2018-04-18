@@ -16,11 +16,11 @@
     <div class="field is-extended">
       <div data-target="entry-form.photos">
         <%= f.fields_for :photos do |p| %>
-          <div class="box draggable-source" data-controller="entry-form-photo" data-entry-form-photo-empty="0" data-entry-form-photo-focal-x="<%= p.object.focal_x %>" data-entry-form-photo-focal-y="<%= p.object.focal_y %>">
-            <div class="media photo-form" data-target="entry-form-photo.fields">
+          <div class="box draggable-source" data-controller="photo-form" data-photo-form-empty="0" data-photo-form-focal-x="<%= p.object.focal_x %>" data-photo-form-focal-y="<%= p.object.focal_y %>">
+            <div class="media photo-form" data-target="photo-form.fields">
               <div class="media-left photo-form__photo-container">
-                <%= responsive_image_tag p.object, 'admin_edit', { class: 'photo-form__thumbnail', 'data-action': 'click->entry-form-photo#setFocalPoint load->entry-form-photo#showFocalPoint', 'data-target': 'entry-form-photo.thumbnail' } %>
-                <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="entry-form-photo.focalMarker">
+                <%= responsive_image_tag p.object, 'admin_edit', { class: 'photo-form__thumbnail', 'data-action': 'click->photo-form#setFocalPoint load->photo-form#showFocalPoint', 'data-target': 'photo-form.thumbnail' } %>
+                <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="photo-form.focalMarker">
                   <i class="far fa-3x fa-circle"></i>
                 </span>
               </div>
@@ -30,14 +30,14 @@
                     <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'textarea' %>
                     <%= p.hidden_field :id %>
                     <%= p.hidden_field :position, 'data-position': '' %>
-                    <%= p.hidden_field :_destroy, 'data-target': 'entry-form-photo.destroy' %>
-                    <%= p.hidden_field :focal_x, 'data-target': 'entry-form-photo.focalX' %>
-                    <%= p.hidden_field :focal_y, 'data-target': 'entry-form-photo.focalY' %>
+                    <%= p.hidden_field :_destroy, 'data-target': 'photo-form.destroy' %>
+                    <%= p.hidden_field :focal_x, 'data-target': 'photo-form.focalX' %>
+                    <%= p.hidden_field :focal_y, 'data-target': 'photo-form.focalY' %>
                   </div>
                 </div>
               </div>
               <div class="media-right photo-form__controls">
-                <a class="delete" data-action="click->entry-form-photo#delete"></a>
+                <a class="delete" data-action="click->photo-form#delete"></a>
                 <span class="icon is-small has-text-grey-light draggable-handle">
                   <i class="fas fa-arrows-alt-v"></i>
                 </span>
