@@ -1,3 +1,7 @@
+<% content_for :meta do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <%= form_for(@blog, url: admin_settings_update_path) do |f| %>
   <% if @blog.errors.any? %>
     <article class="message is-danger">
