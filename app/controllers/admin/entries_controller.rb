@@ -5,6 +5,7 @@ class Admin::EntriesController < AdminController
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url
+  before_action :set_max_age
   after_action :update_position, only: [:create]
   after_action :geocode_photos, only: [:create, :update]
   after_action :annotate_photos, only: [:create, :update]
@@ -63,7 +64,6 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/1/edit
   def edit
     @page_title = "Editing “#{@entry.title}”"
-    @max_age = ENV['config_entry_caching_minutes'].try(:to_i) || ENV['config_caching_minutes'].try(:to_i) || 5
   end
 
   def share
@@ -195,7 +195,7 @@ class Admin::EntriesController < AdminController
   def invalidate
     @entry.touch
     CloudfrontInvalidationJob.perform_later(@entry)
-    flash[:success] = 'Your entry is being purged from CDN. This may take a few moments.'
+    flash[:success] = 'Your entry is being cleared from cache. This may take a few moments.'
     redirect_to session[:redirect_url]
   end
 
@@ -256,6 +256,10 @@ class Admin::EntriesController < AdminController
 
     def set_redirect_url
       session[:redirect_url] = request.referer
+    end
+
+    def set_max_age
+      @max_age = ENV['config_entry_caching_minutes'].try(:to_i) || ENV['config_caching_minutes'].try(:to_i) || 5
     end
 
     def enqueue_invalidation
