@@ -1,56 +1,64 @@
 <%= fields_for :entry, @entry do |f| %>
   <%= f.fields_for :photos, child_index: "#{(Time.now.to_f * 1000).to_i}#{i}" do |p| %>
-    <div class="box draggable-source" data-controller="photo-form" data-photo-form-empty="1">
-      <div class="media photo-form" data-target="photo-form.fields">
-        <div class="media-content">
-          <div class="field is-grouped is-grouped-centered">
-            <div class="control">
-              <div class="file is-boxed">
-                <label class="file-label">
-                  <%= p.file_field :source_file, accept: '.jpg,.jpeg', class: 'file-input', 'data-action': 'click->photo-form#stopPropagation change->photo-form#addFromFile' %>
-                  <span class="file-cta">
-                    <span class="file-icon">
-                      <i class="fas fa-image"></i>
-                    </span>
-                    <span class="file-label">
-                      Choose a photo…
-                    </span>
-                  </span>
-                </label>
+    <div class="draggable-source" data-controller="photo-form" data-photo-form-empty="1">
+      <div class="card" data-target="photo-form.fields">
+        <div class="card-content">
+          <div class="media photo-form">
+            <div class="media-content">
+              <div class="field is-grouped is-grouped-centered">
+                <div class="control">
+                  <div class="file is-boxed">
+                    <label class="file-label">
+                      <%= p.file_field :source_file, accept: '.jpg,.jpeg', class: 'file-input', 'data-action': 'click->photo-form#stopPropagation change->photo-form#addFromFile' %>
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-image"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose a photo…
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
               </div>
+            </div>
+            <div class="media-right photo-form__controls">
+              <a class="delete" data-action="click->photo-form#delete"></a>
+              <span class="icon is-small has-text-grey-light draggable-handle">
+                <i class="fas fa-sort"></i>
+              </span>
             </div>
           </div>
         </div>
-        <div class="media-right photo-form__controls">
-          <a class="delete" data-action="click->photo-form#delete"></a>
-          <span class="icon is-small has-text-grey-light draggable-handle">
-            <i class="fas fa-sort"></i>
-          </span>
-        </div>
       </div>
 
-      <div class="media is-hidden photo-form" data-target="photo-form.fields">
-        <div class="media-left photo-form__photo-container">
-          <img class="photo-form__thumbnail" data-target="photo-form.thumbnail" width="300" data-action="click->photo-form#setFocalPoint load->photo-form#showFocalPoint" />
+      <div class="card is-hidden" data-target="photo-form.fields">
+        <div class="card-image">
+          <img class="photo-form__thumbnail" data-target="photo-form.thumbnail" data-action="click->photo-form#setFocalPoint load->photo-form#showFocalPoint" />
           <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="photo-form.focalMarker">
             <i class="far fa-3x fa-circle"></i>
           </span>
         </div>
-        <div class="media-content photo-form__form-container">
-          <div class="field is-grouped is-grouped-multiline">
-            <div class="control is-expanded">
-              <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'textarea' %>
-              <%= p.hidden_field :position, 'data-position': '' %>
-              <%= p.hidden_field :focal_x, 'data-target': 'photo-form.focalX' %>
-              <%= p.hidden_field :focal_y, 'data-target': 'photo-form.focalY' %>
+        <div class="card-content">
+          <div class="media photo-form">
+            <div class="media-content">
+              <div class="field is-grouped is-grouped-multiline">
+                <div class="control is-expanded">
+                  <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'textarea' %>
+                  <%= p.hidden_field :position, 'data-position': '' %>
+                  <%= p.hidden_field :focal_x, 'data-target': 'photo-form.focalX' %>
+                  <%= p.hidden_field :focal_y, 'data-target': 'photo-form.focalY' %>
+                </div>
+              </div>
+            </div>
+            <div class="media-right photo-form__controls">
+              <a class="delete" data-action="click->photo-form#delete"></a>
+              <span class="icon is-small has-text-grey-light draggable-handle">
+                <i class="fas fa-sort"></i>
+              </span>
             </div>
           </div>
-        </div>
-        <div class="media-right photo-form__controls">
-          <a class="delete" data-action="click->photo-form#delete"></a>
-          <span class="icon is-small has-text-grey-light draggable-handle">
-            <i class="fas fa-sort"></i>
-          </span>
         </div>
       </div>
     </div>

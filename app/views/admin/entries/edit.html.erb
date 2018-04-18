@@ -20,31 +20,35 @@
     <div class="field is-extended">
       <div data-target="entry-form.photos">
         <%= f.fields_for :photos do |p| %>
-          <div class="box draggable-source" data-controller="photo-form" data-photo-form-empty="0" data-photo-form-focal-x="<%= p.object.focal_x %>" data-photo-form-focal-y="<%= p.object.focal_y %>">
-            <div class="media photo-form" data-target="photo-form.fields">
-              <div class="media-left photo-form__photo-container">
+          <div class="draggable-source" data-controller="photo-form" data-photo-form-empty="0" data-photo-form-focal-x="<%= p.object.focal_x %>" data-photo-form-focal-y="<%= p.object.focal_y %>">
+            <div class="card" data-target="photo-form.fields">
+              <div class="card-image">
                 <%= responsive_image_tag p.object, 'admin_edit', { class: 'photo-form__thumbnail', 'data-action': 'click->photo-form#setFocalPoint load->photo-form#showFocalPoint', 'data-target': 'photo-form.thumbnail' } %>
                 <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="photo-form.focalMarker">
                   <i class="far fa-3x fa-circle"></i>
                 </span>
               </div>
-              <div class="media-content photo-form__form-container">
-                <div class="field is-grouped is-grouped-multiline">
-                  <div class="control is-expanded">
-                    <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'textarea' %>
-                    <%= p.hidden_field :id %>
-                    <%= p.hidden_field :position, 'data-position': '' %>
-                    <%= p.hidden_field :_destroy, 'data-target': 'photo-form.destroy' %>
-                    <%= p.hidden_field :focal_x, 'data-target': 'photo-form.focalX' %>
-                    <%= p.hidden_field :focal_y, 'data-target': 'photo-form.focalY' %>
+              <div class="card-content">
+                <div class="media photo-form">
+                  <div class="media-content">
+                    <div class="field is-grouped is-grouped-multiline">
+                      <div class="control is-expanded">
+                        <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'textarea' %>
+                        <%= p.hidden_field :id %>
+                        <%= p.hidden_field :position, 'data-position': '' %>
+                        <%= p.hidden_field :_destroy, 'data-target': 'photo-form.destroy' %>
+                        <%= p.hidden_field :focal_x, 'data-target': 'photo-form.focalX' %>
+                        <%= p.hidden_field :focal_y, 'data-target': 'photo-form.focalY' %>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="media-right photo-form__controls">
+                    <a class="delete" data-action="click->photo-form#delete"></a>
+                    <span class="icon is-small has-text-grey-light draggable-handle">
+                      <i class="fas fa-sort"></i>
+                    </span>
                   </div>
                 </div>
-              </div>
-              <div class="media-right photo-form__controls">
-                <a class="delete" data-action="click->photo-form#delete"></a>
-                <span class="icon is-small has-text-grey-light draggable-handle">
-                  <i class="fas fa-sort"></i>
-                </span>
               </div>
             </div>
           </div>

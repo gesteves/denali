@@ -7,29 +7,6 @@
   }
 }
 
-.photo-form__photo-container {
-  position: relative;
-
-  @media (max-width: $tablet) {
-    margin-right: 0;
-  }
-}
-
-.photo-form__form-container {
-  @media (max-width: $tablet) {
-    margin-top: 1rem;
-  }
-}
-
-.photo-form__thumbnail {
-  display: block;
-  width: 300px;
-
-  @media (max-width: $tablet) {
-    margin: 0 auto;
-  }
-}
-
 .photo-form__focal-marker {
   pointer-events: none;
   position: absolute;

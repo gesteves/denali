@@ -73,13 +73,24 @@ admin_entry:
     - "(min-width: 1088px) 960px"
     - calc(100vw - 3rem)
 admin_edit:
-  src: 300
+  src: 940
   srcset:
-    - 300
-    - 600
-    - 900
+    - 544
+    - 654
+    - 1098
+    - 1440
+    - 780
+    - 1560
+    - 940
+    - 1880
+    - 1100
+    - 2200
   sizes:
-    - 300px
+    - "(min-width: 1472px) 1100px"
+    - "(min-width: 1280px) 940px"
+    - "(min-width: 1088px) 780px"
+    - "(min-width: 769px) calc(((100vw - 4.5rem)/6) * 5)"
+    - calc(100vw - 3rem)
 map:
   src: 300
   srcset:
