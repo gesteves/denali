@@ -24,11 +24,11 @@
           <div class="level-item">
             <p class="is-size-7 has-text-gray">
               <% if entry.is_published? %>
-                <strong class="has-text-success">Published</strong> <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
+                <strong class="has-text-success"><%= icon('Published', 'fas fa-check-circle') %></strong> on <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
               <% elsif entry.is_queued? %>
-                <strong class="has-text-info">Queued</strong> for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
+                <strong class="has-text-info"><%= icon('Queued', 'fas fa-clock') %></strong> for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
               <% elsif entry.is_draft? %>
-                <strong class="has-text-grey">Draft</strong>
+                <strong class="has-text-grey"><%= icon('Draft', 'fas fa-pencil-alt') %></strong>
               <% end %>
             </p>
           </div>
