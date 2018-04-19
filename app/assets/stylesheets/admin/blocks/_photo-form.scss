@@ -22,6 +22,8 @@
 }
 
 .photo-form__image-container {
+  overflow: hidden;
+
   @media (hover: hover) {
     .photo-form__focal-marker {
       display: none;
