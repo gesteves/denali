@@ -20,8 +20,8 @@ export default class extends Controller {
     }
 
     const { offsetWidth, offsetHeight } = this.thumbnailTarget;
-    this.focalMarkerTarget.style.top  = `${(offsetHeight * parseFloat(this.data.get('focal-y'))) - 24}px`;
-    this.focalMarkerTarget.style.left = `${(offsetWidth  * parseFloat(this.data.get('focal-x'))) - 24}px`;
+    this.focalMarkerTarget.style.top  = `${(offsetHeight * parseFloat(this.data.get('focal-y'))) - 50}px`;
+    this.focalMarkerTarget.style.left = `${(offsetWidth  * parseFloat(this.data.get('focal-x'))) - 50}px`;
     this.focalMarkerTarget.classList.remove('is-hidden');
   }
 

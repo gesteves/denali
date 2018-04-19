@@ -22,11 +22,9 @@
         <%= f.fields_for :photos do |p| %>
           <div class="draggable-source" data-controller="photo-form" data-photo-form-empty="0" data-photo-form-focal-x="<%= p.object.focal_x %>" data-photo-form-focal-y="<%= p.object.focal_y %>">
             <div class="card" data-target="photo-form.fields">
-              <div class="card-image image" style="<%= "#{intrinsic_ratio_padding(p.object)};#{image_placeholder(p.object)}"  %>">
+              <div class="card-image image photo-form__image-container" style="<%= "#{intrinsic_ratio_padding(p.object)};#{image_placeholder(p.object)}"  %>">
                 <%= responsive_image_tag p.object, 'admin_edit', { class: 'photo-form__thumbnail is-overlay', 'data-action': 'click->photo-form#setFocalPoint load->photo-form#showFocalPoint', 'data-target': 'photo-form.thumbnail' } %>
-                <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="photo-form.focalMarker">
-                  <i class="far fa-3x fa-circle"></i>
-                </span>
+                <div class="is-hidden photo-form__focal-marker" data-target="photo-form.focalMarker"></div>
               </div>
               <div class="card-content">
                 <div class="media photo-form">

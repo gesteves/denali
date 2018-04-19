@@ -34,11 +34,9 @@
       </div>
 
       <div class="card is-hidden" data-target="photo-form.fields">
-        <div class="card-image">
+        <div class="card-image photo-form__image-container">
           <img class="photo-form__thumbnail" data-target="photo-form.thumbnail" data-action="click->photo-form#setFocalPoint load->photo-form#showFocalPoint" />
-          <span class="icon is-large has-text-danger is-hidden photo-form__focal-marker" data-target="photo-form.focalMarker">
-            <i class="far fa-3x fa-circle"></i>
-          </span>
+          <div class="is-hidden photo-form__focal-marker" data-target="photo-form.focalMarker"></div>
         </div>
         <div class="card-content">
           <div class="media photo-form">

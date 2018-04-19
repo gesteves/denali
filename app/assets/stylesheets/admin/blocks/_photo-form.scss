@@ -8,9 +8,28 @@
 }
 
 .photo-form__focal-marker {
+  border-radius: 100%;
+  border: 4px solid $red;
+  display: block;
+  height: 100px;
   pointer-events: none;
   position: absolute;
+  width: 100px;
   z-index: 1;
+}
+
+.photo-form__image-container {
+  @media (hover: hover) {
+    .photo-form__focal-marker {
+      display: none;
+    }
+
+    &:hover {
+      .photo-form__focal-marker {
+        display: block;
+      }
+    }
+  }
 }
 
 .photo-form__controls {
