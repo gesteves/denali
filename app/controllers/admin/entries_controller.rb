@@ -1,10 +1,10 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :more, :share, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :invalidate, :refresh_metadata, :resize_photos]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :share, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :invalidate, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
-  before_action :set_redirect_url
+  before_action :set_redirect_url, only: [:edit, :publish, :queue, :draft, :up, :down, :top, :bottom, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :invalidate, :refresh_metadata]
   before_action :set_max_age
   after_action :update_position, only: [:create]
   after_action :geocode_photos, only: [:create, :update]
