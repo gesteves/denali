@@ -17,16 +17,15 @@ gem 'paperclip', '~> 6.0'
 
 # Front-end things
 gem 'sass-rails', '~> 5.0'
-gem 'jquery-rails'
 gem 'autoprefixer-rails'
 gem 'imgix'
 gem 'uglifier'
 gem 'webpacker', '~> 3.2.0'
-gem 'turbolinks', '~> 5.0.0'
+gem 'turbolinks', '~> 5.1.0'
 
 # Misc
 gem 'jbuilder', '~> 2.3'
-gem 'sdoc', '~> 0.4.0', group: :doc
+gem 'sdoc', '~> 1.0', group: :doc
 gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
