@@ -24,4 +24,26 @@ module Admin::EntriesHelper
       "#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}/1"
     end
   end
+
+  def image_ratio_class(photo)
+    image_ratio = (photo.width.to_f / photo.height.to_f).round(2)
+    ratio = %w{
+      1by1
+      1by2
+      1by3
+      2by1
+      2by3
+      3by1
+      3by2
+      3by4
+      3by5
+      4by3
+      4by5
+      5by3
+      5by4
+      16by9
+      9by16
+    }.find { |i| (i.split('by').first.to_f / i.split('by').last.to_f).round(2) == image_ratio }
+    ratio.nil? ? '' : "is-#{ratio}"
+  end
 end
