@@ -1,3 +1,7 @@
 .logo svg {
   height: 32px;
+
+  @media (min-width: $desktop) {
+    height: 48px;
+  }
 }
