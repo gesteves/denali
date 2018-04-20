@@ -24,3 +24,9 @@
   height: 2px;
   background-color: $info;
 }
+
+.is-middle-right {
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+}

@@ -7,6 +7,15 @@ import { Controller } from 'stimulus';
 export default class extends Controller {
   static targets = ['tab', 'field'];
 
+  connect () {
+    const initialValue = this.fieldTarget.value;
+    this.tabTargets.forEach(tab => {
+      if (tab.getAttribute('data-radio-tab-value') === initialValue) {
+        tab.classList.add('is-active');
+      }
+    });
+  }
+
   /**
    * Toggles the active tab
    * @param {Event} event Click event from the tab.
