@@ -27,49 +27,39 @@
   <%= render partial: 'entry_fields', locals: { f: f } %>
 
   <hr class="hr">
-  <h2 class="subtitle is-size-5-mobile">Publish status</h2>
-
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :status_queued, 'Queued', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
-        <div class="control">
-          <%= f.radio_button :status, 'queued' %>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label">
-      <%= f.label :status_draft, 'Draft', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control">
-          <%= f.radio_button :status, 'draft' %>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label">
-      <%= f.label :status_published, 'Published', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control">
-          <%= f.radio_button :status, 'published' %>
+        <div class="tabs is-toggle is-fullwidth" data-controller="radio-tab">
+          <ul>
+            <li class="is-active" data-target="radio-tab.tab" data-radio-tab-value="queued" data-action="click->radio-tab#toggle">
+              <a>
+                <span class="icon is-small"><i class="fas fa-clock" aria-hidden="true"></i></span>
+                <span>Queued</span>
+              </a>
+            </li>
+            <li data-target="radio-tab.tab" data-radio-tab-value="draft" data-action="click->radio-tab#toggle">
+              <a>
+                <span class="icon is-small"><i class="fas fa-pencil-alt" aria-hidden="true"></i></span>
+                <span>Draft</span>
+              </a>
+            </li>
+            <li data-target="radio-tab.tab" data-radio-tab-value="published" data-action="click->radio-tab#toggle">
+              <a>
+                <span class="icon is-small"><i class="fas fa-rocket" aria-hidden="true"></i></span>
+                <span>Published</span>
+              </a>
+            </li>
+          </ul>
+          <%= f.hidden_field :status, value: 'queued', 'data-target': 'radio-tab.field' %>
         </div>
       </div>
     </div>
   </div>
 
   <hr class="hr">
-  <h2 class="subtitle is-size-5-mobile">Entry options</h2>
 
   <div class="field is-horizontal">
     <div class="field-label">
@@ -83,9 +73,6 @@
       </div>
     </div>
   </div>
-
-  <hr class="hr">
-  <h2 class="subtitle is-size-5-mobile">Sharing options</h2>
 
   <div class="field is-horizontal">
     <div class="field-label">
