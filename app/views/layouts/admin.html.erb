@@ -19,7 +19,7 @@
       <% flash.each do |name, message| -%>
       <article class="message is-<%= name %>">
         <div class="message-body">
-          <%= message %>
+          <%= message.html_safe %>
         </div>
       </article>
       <% end %>

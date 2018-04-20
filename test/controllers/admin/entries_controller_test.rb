@@ -39,6 +39,14 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_template :tagged
   end
 
+  test 'should render entry page' do
+    get :show, params: { id: @entry.id }
+    assert_not_nil assigns(:entry)
+    assert_response :success
+    assert_template layout: 'layouts/admin'
+    assert_template :show
+  end
+
   test 'should render new entry page' do
     get :new
     assert_response :success
@@ -126,7 +134,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   test 'should update entries' do
     entry = entries(:peppers)
     patch :update, params: { id: entry.id, entry: { id: entry.id } }
-    assert_redirected_to admin_entries_path
+    assert_redirected_to admin_entry_path(entry)
   end
 
   test 'update should change modified_at' do

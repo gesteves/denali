@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     get 'settings'                    => 'blogs#edit'
     patch 'settings/update'           => 'blogs#update'
 
-    resources :entries, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable do
+    resources :entries, concerns: :paginatable do
       member do
         get 'share'
         post 'resize_photos'
