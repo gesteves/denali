@@ -16,16 +16,21 @@
     <% end %>
     <div class="card-content">
       <h1 class="title is-size-5"><%= sanitize(entry.plain_title) %></h1>
-      <div class="content">
-        <%= sanitize(entry.formatted_body) unless entry.body.blank? %>
-      </div>
-      <div class="tags">
-        <% entry.combined_tags.each do |t| %>
-          <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
-        <% end %>
-      </div>
+      <% if entry.body.present? %>
+        <div class="content">
+          <%= sanitize(entry.formatted_body) %>
+        </div>
+      <% end %>
+      <% if entry.combined_tags.present? %>
+        <div class="tags">
+          <% entry.combined_tags.each do |t| %>
+            <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
+          <% end %>
+        </div>
+      <% end %>
 
       <hr class="hr">
+      
       <div class="level">
         <div class="level-left">
           <div class="level-item">
