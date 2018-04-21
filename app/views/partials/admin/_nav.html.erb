@@ -20,37 +20,17 @@
           </a>
           <div class="navbar-dropdown">
             <a href="<%= new_admin_entry_path %>" class="navbar-item">
-              <span>
-                <span class="icon is-left">
-                  <i class="fas fa-pencil-alt"></i>
-                </span>
-                <span>New entry</span>
-              </span>
+              New entry
             </a>
             <hr class="navbar-divider">
             <a href="<%= admin_entries_path %>" class="navbar-item">
-              <span>
-                <span class="icon is-left">
-                  <i class="fas fa-rocket"></i>
-                </span>
-                <span>Published</span>
-              </span>
+              Published
             </a>
             <a href="<%= queued_admin_entries_path %>" class="navbar-item">
-              <span>
-                <span class="icon is-left">
-                  <i class="fas fa-clock"></i>
-                </span>
-                <span>Queued</span>
-              </span>
+              Queued
             </a>
             <a href="<%= drafts_admin_entries_path %>" class="navbar-item">
-              <span>
-                <span class="icon is-left">
-                  <i class="fas fa-folder-open"></i>
-                </span>
-                <span>Drafts</span>
-              </span>
+              Drafts
             </a>
             <% if @photoblog.has_search? %>
             <hr class="navbar-divider">
