@@ -28,8 +28,8 @@
         <% end %>
         <hr class="dropdown-divider">
       <% end %>
-      <%= link_to icon('Clear cache', 'fas fa-eraser'), invalidate_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: "Entries are currently cached for #{distance_of_time_in_words(Time.now, Time.now + @max_age.minutes)}. This will clear this entry from the cache and make any changes publicly visible right away. Do you want to proceed?" }, class: 'dropdown-item' %>
-      <%= link_to icon('Refresh metadata', 'fas fa-sync'), refresh_metadata_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: 'This will refresh the entry’s location, annotation, and palette metadata and update its tags. Are you sure you want to proceed?' }, class: 'dropdown-item' %>
+      <%= link_to icon('Clear cache', 'fas fa-eraser'), invalidate_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: "This will clear this entry from the cache and make any changes publicly visible right away. Do you want to proceed?" }, class: 'dropdown-item' %>
+      <%= link_to icon('Refresh metadata', 'fas fa-sync'), refresh_metadata_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: 'This will refresh the entry’s metadata and update its tags. Do you want to proceed?' }, class: 'dropdown-item' %>
       <hr class="dropdown-divider">
       <% if entry.is_queued? %>
         <%= link_to icon('Send to drafts', 'fas fa-pencil-alt'), draft_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to send this entry to the drafts? It will lose its place in the queue.' }, class: 'dropdown-item' %>
@@ -40,7 +40,7 @@
         <%= link_to icon('Publish it!', 'fas fa-rocket'), publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry? This can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
         <hr class="dropdown-divider">
       <% end %>
-      <%= link_to icon('Delete', 'fas fa-trash-alt'), admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it forever? It really can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
+      <%= link_to icon('Delete it forever', 'fas fa-trash-alt'), admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it forever? This can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
     </div>
   </div>
 </div>

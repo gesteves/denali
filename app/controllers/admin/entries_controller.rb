@@ -84,7 +84,7 @@ class Admin::EntriesController < AdminController
   # PATCH /admin/entries/1/queue
   def queue
     if @entry.queue
-      flash[:success] = 'Your entry was queued!'
+      flash[:success] = 'Your entry was sent to the queue!'
     else
       flash[:warning] = 'Your entry couldn’t be queued…'
     end
@@ -136,7 +136,7 @@ class Admin::EntriesController < AdminController
   def destroy
     @entry.destroy
     respond_to do |format|
-      flash[:danger] = 'Your entry was deleted!'
+      flash[:danger] = 'Your entry was deleted forever!'
       format.html { redirect_to session[:redirect_url] || admin_entries_path }
     end
   end

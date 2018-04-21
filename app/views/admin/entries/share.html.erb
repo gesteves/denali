@@ -9,9 +9,9 @@
       <h2 class="subtitle is-size-6">Send to</h2>
       <div class="buttons">
         <%= link_to icon('Facebook', 'fab fa-facebook'), facebook_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Facebook queue in Buffer. Do you want to continue?' }, class: 'button' %>
-        <%= link_to icon('Flickr', 'fab fa-flickr'), flickr_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be posted to Flickr immeditately. Do you want to continue?' }, class: 'button' %>
+        <%= link_to icon('Flickr', 'fab fa-flickr'), flickr_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to Flickr immediately. Do you want to continue?' }, class: 'button' %>
         <%= link_to icon('Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Instagram queue in Buffer. Do you want to continue?' }, class: 'button' %>
-        <%= link_to icon('Pinterest', 'fab fa-pinterest'), pinterest_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be posted to Pinterest immediately. Do you want to continue?' }, class: 'button' %>
+        <%= link_to icon('Pinterest', 'fab fa-pinterest'), pinterest_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to Pinterest immediately. Do you want to continue?' }, class: 'button' %>
         <%= link_to icon('Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Twitter queue in Buffer. Do you want to continue?' }, class: 'button' %>
         <%= link_to icon('Tumblr', 'fab fa-tumblr'), tumblr_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Tumblr queue. Do you want to continue?' }, class: 'button' %>
       </div>
