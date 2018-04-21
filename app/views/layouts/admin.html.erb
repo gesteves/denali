@@ -23,8 +23,8 @@
   <div class="notifications" data-target="notifications.container">
     <% flash.each do |name, message| -%>
       <div class="notifications">
-        <div class="notification is-<%= name %>">
-          <button class="delete" data-action="click->notifications#close"></button>
+        <div class="notification is-<%= name %>" data-action="click->notifications#close">
+          <button class="delete"></button>
           <%= message.html_safe %>
       </div>
     <% end %>

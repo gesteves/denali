@@ -15,8 +15,8 @@ export default class extends Controller {
   show (event) {
     const status = event.detail.status;
     const message = event.detail.message;
-    const notification = $(`<div class="notification is-transparent is-${status}">
-    <button class="delete" data-action="click->notifications#close"></button>
+    const notification = $(`<div class="notification is-transparent is-${status}" data-action="click->notifications#close">
+    <button class="delete"></button>
     ${message}</div>`);
     $(this.containerTarget).append(notification);
     requestAnimationFrame(() => notification[0].classList.remove('is-transparent'));
@@ -27,7 +27,6 @@ export default class extends Controller {
    * @param {Event} event Click event from the close button.
    */
   close (event) {
-    event.preventDefault();
-    event.target.parentElement.remove();
+    event.currentTarget.remove();
   }
 }
