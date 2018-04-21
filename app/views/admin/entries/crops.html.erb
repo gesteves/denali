@@ -10,7 +10,7 @@
         <div class="field">
           <div class="control is-expanded">
             <div class="select is-fullwidth">
-              <%= select_tag(:size, options_for_select([['Original', 'original'], ['Instagram Feed', 'instagram_feed'], ['Instagram Story', 'instagram_story']] + @sizes.map { |s| ["#{number_with_delimiter s}px wide", s] }), prompt: 'Choose a size', 'data-target': 'photo-resizer.select') %>
+              <%= select_tag(:size, grouped_options_for_select(@sizes), prompt: 'Choose a size', 'data-target': 'photo-resizer.select') %>
             </div>
           </div>
         </div>

@@ -184,7 +184,22 @@ class Admin::EntriesController < AdminController
   end
 
   def crops
-    @sizes = [1200]
+    @sizes = {
+      'Sizes': [
+        ['Thumbnail 100', 100],
+        ['Small 240', 240],
+        ['Small 320', 320],
+        ['Medium 500', 500],
+        ['Medium 640', 640],
+        ['Medium 800', 800],
+        ['Large 1024', 1024],
+        ['Large 1200', 1200],
+        ['Large 1600', 1600],
+        ['Large 2048', 2048],
+        ['Original', 'original']
+      ],
+      'Instagram': [['Feed', 'instagram_feed'], ['Story', 'instagram_story']]
+    }
     respond_to do |format|
       format.html {
         if params[:modal]
