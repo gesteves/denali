@@ -4,7 +4,7 @@ class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :share, :crops, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :invalidate, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
-  before_action :set_redirect_url, only: [:up, :down, :top, :bottom, :invalidate, :refresh_metadata]
+  before_action :set_redirect_url, only: [:up, :down, :top, :bottom, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :invalidate, :refresh_metadata]
   before_action :set_max_age
   after_action :update_position, only: [:create]
   after_action :geocode_photos, only: [:create, :update]
@@ -200,49 +200,49 @@ class Admin::EntriesController < AdminController
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     InstagramJob.perform_later(@entry)
     flash[:success] = 'Your entry was sent to your Instagram queue in Buffer!'
-    redirect_to share_admin_entry_path(@entry)
+    redirect_to session[:redirect_url] || admin_entry_path(@entry)
   end
 
   def twitter
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     TwitterJob.perform_later(@entry)
     flash[:success] = 'Your entry was sent to your Twitter queue in Buffer!'
-    redirect_to share_admin_entry_path(@entry)
+    redirect_to session[:redirect_url] || admin_entry_path(@entry)
   end
 
   def facebook
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     FacebookJob.perform_later(@entry)
     flash[:success] = 'Your entry was sent to your Facebook queue in Buffer!'
-    redirect_to share_admin_entry_path(@entry)
+    redirect_to session[:redirect_url] || admin_entry_path(@entry)
   end
 
   def pinterest
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     PinterestJob.perform_later(@entry)
     flash[:success] = 'Your entry was sent to Pinterest!'
-    redirect_to share_admin_entry_path(@entry)
+    redirect_to session[:redirect_url] || admin_entry_path(@entry)
   end
 
   def flickr
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     FlickrJob.perform_later(@entry)
     flash[:success] = 'Your entry was sent to Flickr!'
-    redirect_to share_admin_entry_path(@entry)
+    redirect_to session[:redirect_url] || admin_entry_path(@entry)
   end
 
   def tumblr
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     TumblrJob.perform_later(@entry)
     flash[:success] = 'Your entry was sent to your Tumblr queue!'
-    redirect_to share_admin_entry_path(@entry)
+    redirect_to session[:redirect_url] || admin_entry_path(@entry)
   end
 
   def invalidate
     @entry.touch
     CloudfrontInvalidationJob.perform_later(@entry)
     flash[:success] = 'Your entry is being cleared from cache. This may take a few moments.'
-    redirect_to session[:redirect_url]
+    redirect_to session[:redirect_url] || admin_entry_path(@entry)
   end
 
   def refresh_metadata
@@ -251,7 +251,7 @@ class Admin::EntriesController < AdminController
     @entry.photos.map(&:update_palette)
     CloudfrontInvalidationJob.perform_later(@entry)
     flash[:success] = 'Your entry’s metadata is being updated. This may take a few moments.'
-    redirect_to session[:redirect_url]
+    redirect_to session[:redirect_url] || admin_entry_path(@entry)
   end
 
   def resize_photos
