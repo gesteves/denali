@@ -2,7 +2,7 @@
   <div class="container">
     <% if @photoblog.header_logo_svg.present? %>
       <div class="navbar-brand">
-        <a href="<%= root_path %>" class="navbar-item logo">
+        <a href="<%= root_path %>" class="navbar-item logo" data-turbolinks="false">
           <%= @photoblog.header_logo_svg.html_safe %>
         </a>
         <a role="button" class="navbar-burger" data-action="click->nav#toggle" data-target="nav.burger">
@@ -71,7 +71,7 @@
       </div>
       <div class="navbar-end">
         <a href="<%= admin_settings_path %>" class="navbar-item">Settings</a>
-        <a href="<%= signout_path %>" class="navbar-item">Sign out</a>
+        <a href="<%= signout_path %>" class="navbar-item" data-turbolinks="false">Sign out</a>
       </div>
     </div>
   </div>
