@@ -10,9 +10,15 @@ class Admin::BlogsController < AdminController
   def update
     respond_to do |format|
       if @photoblog.update(blog_params)
-        format.html { redirect_to admin_settings_path, notice: 'Blog was successfully updated.' }
+        format.html {
+          flash[:success] = 'Your changes were saved!'
+          redirect_to admin_settings_path
+        }
       else
-        format.html { render :edit }
+        format.html {
+          flash[:warning] = 'Your changes couldn’t be saved…'
+          render :edit
+        }
       end
     end
   end

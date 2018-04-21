@@ -19,16 +19,19 @@ class SessionsController < ApplicationController
       session[:original_url] = nil
       redirect_to url
     else
-      redirect_to signin_path, warning: 'There was a problem signing you in.'
+      flash[:warning] = 'There was a problem signing you in.'
+      redirect_to signin_path
     end
   end
 
   def failure
-    redirect_to signin_path, warning: "There was a problem signing you in: #{params[:message]}."
+    flash[:warning] = "There was a problem signing you in: #{params[:message]}."
+    redirect_to signin_path
   end
 
   def destroy
     session[:current_user] = nil
-    redirect_to signin_path, success: 'You have been signed out.'
+    flash[:success] = 'You have been signed out.'
+    redirect_to signin_path
   end
 end
