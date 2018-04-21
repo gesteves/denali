@@ -1,10 +1,26 @@
 import { Controller } from 'stimulus';
+import $ from 'jquery';
 
 /**
  * Controls the notifications.
  * @extends Controller
  */
 export default class extends Controller {
+  static targets = ['container'];
+
+  /**
+   * Opens a notification
+   * @param {Event} event Custom `notify` event.
+   */
+  show (event) {
+    const status = event.detail.status;
+    const message = event.detail.message;
+    const notification = $(`<div class="notification is-transparent is-${status}">
+    <button class="delete" data-action="click->notifications#close"></button>
+    ${message}</div>`);
+    $(this.containerTarget).append(notification);
+    requestAnimationFrame(() => notification[0].classList.remove('is-transparent'));
+  }
 
   /**
    * Closes the notification
@@ -12,6 +28,6 @@ export default class extends Controller {
    */
   close (event) {
     event.preventDefault();
-    this.element.remove();
+    event.target.parentElement.remove();
   }
 }

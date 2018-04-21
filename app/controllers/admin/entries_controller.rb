@@ -256,8 +256,14 @@ class Admin::EntriesController < AdminController
   def invalidate
     @entry.touch
     CloudfrontInvalidationJob.perform_later(@entry)
-    flash[:success] = 'Your entry is being cleared from cache. This may take a few moments.'
-    redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    @message = 'Your entry is being cleared from cache. This may take a few moments.'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render :notify }
+    end
   end
 
   def refresh_metadata
@@ -265,8 +271,14 @@ class Admin::EntriesController < AdminController
     @entry.photos.map(&:annotate)
     @entry.photos.map(&:update_palette)
     CloudfrontInvalidationJob.perform_later(@entry)
-    flash[:success] = 'Your entry’s metadata is being updated. This may take a few moments.'
-    redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    @message = 'Your entry’s metadata is being updated. This may take a few moments.'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render :notify }
+    end
   end
 
   def resize_photos

@@ -1,0 +1,9 @@
+(() => {
+  const event = new CustomEvent('notify', {
+  detail: {
+    message: '<%= j @message %>',
+    status: 'success'
+    }
+  });
+  document.body.dispatchEvent(event);
+})();
