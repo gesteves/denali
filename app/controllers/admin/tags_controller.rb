@@ -26,11 +26,12 @@ class Admin::TagsController < AdminController
 
   def update
     @tag = ActsAsTaggableOn::Tag.find(params[:id])
+    logger.info params[:name]
     respond_to do |format|
       if @tag.update(name: params[:name])
-        format.js
+        format.json
       else
-        format.js render plain: 'Could not update tag', status: 400
+        format.json render plain: 'Could not update tag', status: 400
       end
     end
   end

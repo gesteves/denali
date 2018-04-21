@@ -13,14 +13,15 @@ export default class extends Controller {
   }
 
   /**
-   * Adds a tag to the entries with the currebt tag. Sends the new tag name to the
+   * Adds a tag to the entries with the current tag. Sends the new tag name to the
    * server via Fetch, receives the updated tag's markup, and replaces it on the page.
    * TODO: Remove the jQuery dependency.
    * @param {Event} event A click event from the add link.
    */
   add (event) {
     event.preventDefault();
-    const prompt = window.prompt(`Which tag do you want to add to entries tagged with “${this.data.get('name')}”?`);
+    const tagName = this.data.get('name');
+    const prompt = window.prompt(`Which tag do you want to add to entries tagged with “${tagName}”?`);
     if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
       return;
     }
@@ -39,7 +40,7 @@ export default class extends Controller {
 
     fetch(`${url}.json`, fetchOpts)
       .then(fetchStatus)
-      .then(() => window.location.reload(true));
+      .then(() => this.dispatchEvent(`The “${prompt}” tag has been added to all the entries tagged “${tagName}”.`));
   }
 
   /**
@@ -50,7 +51,8 @@ export default class extends Controller {
    */
   edit (event) {
     event.preventDefault();
-    const prompt = window.prompt(`What do you want to replace the “${this.data.get('name')}” tag with?`, this.data.get('name'));
+    const tagName = this.data.get('name');
+    const prompt = window.prompt(`What do you want to rename the “${tagName}” tag to?`, tagName);
     if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
       return;
     }
@@ -67,10 +69,13 @@ export default class extends Controller {
       credentials: 'include'
     };
 
-    fetch(`${url}.js`, fetchOpts)
+    fetch(`${url}.json`, fetchOpts)
       .then(fetchStatus)
       .then(fetchText)
-      .then(html => $(this.element).replaceWith(html));
+      .then(html => {
+        $(this.element).replaceWith(html);
+        this.dispatchEvent(`The “${tagName}” tag has been renamed to “${prompt}”.`);
+      });
   }
 
   /**
@@ -80,7 +85,8 @@ export default class extends Controller {
    */
   delete (event) {
     event.preventDefault();
-    if (!window.confirm(`Are you sure you want to delete the “${this.data.get('name')}” tag?`)) {
+    const tagName = this.data.get('name');
+    if (!window.confirm(`Are you sure you want to delete the “${tagName}” tag?`)) {
       return;
     }
 
@@ -98,6 +104,24 @@ export default class extends Controller {
 
     fetch(`${url}.json`, fetchOpts)
       .then(fetchStatus)
-      .then(() => this.element.parentNode.removeChild(this.element));
+      .then(() => {
+        this.element.parentNode.removeChild(this.element);
+        this.dispatchEvent(`The “${tagName}” tag has been deleted!`);
+      });
+  }
+
+  /**
+   * Dispatches a custom `notify` event to trigger a notification
+   * @param {string} message The text for the notification
+   * * @param {string} status The type of notification
+   */
+  dispatchEvent (message, status = 'success') {
+    const event = new CustomEvent('notify', {
+      detail: {
+        message: message,
+        status: status
+      }
+    });
+    document.body.dispatchEvent(event);
   }
 }
