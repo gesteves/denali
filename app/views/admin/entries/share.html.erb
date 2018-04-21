@@ -1,88 +1,40 @@
-<h1 class="title is-size-5-mobile">Share entry</h1>
-<hr class="hr">
-<%= render partial: 'entry', object: @entry %>
-<% if @entry.is_published? %>
-<div class="card">
-  <header class="card-header">
-    <p class="card-header-title">Share on</p>
-  </header>
-  <div class="card-content">
-    <div class="buttons">
-      <%= link_to icon('Facebook', 'fab fa-facebook'), facebook_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be sent to your Facebook queue in Buffer. Do you want to continue?' }, class: 'button' %>
-      <%= link_to icon('Flickr', 'fab fa-flickr'), flickr_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be posted to Flickr immeditately. Do you want to continue?' }, class: 'button' %>
-      <%= link_to icon('Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be sent to your Instagram queue in Buffer. Do you want to continue?' }, class: 'button' %>
-      <%= link_to icon('Pinterest', 'fab fa-pinterest'), pinterest_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be posted to Pinterest immediately. Do you want to continue?' }, class: 'button' %>
-      <%= link_to icon('Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be sent to your Twitter queue in Buffer. Do you want to continue?' }, class: 'button' %>
-      <%= link_to icon('Tumblr', 'fab fa-tumblr'), tumblr_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be sent to your Tumblr queue. Do you want to continue?' }, class: 'button' %>
-    </div>
-  </div>
-</div>
-<% end %>
-
-<div class="card" data-controller="photo-resizer">
-  <header class="card-header">
-    <p class="card-header-title">Images & crops</p>
-  </header>
-  <div class="card-content">
-    <%= form_tag(resize_photos_admin_entry_path, method: 'get', 'data-target': 'photo-resizer.form', 'data-action': 'change->photo-resizer#fetch') do %>
-      <div class="field">
-        <div class="control is-expanded">
-          <div class="select is-fullwidth">
-            <%= select_tag(:size, options_for_select([['Original', 'original'], ['Instagram Feed', 'instagram_feed'], ['Instagram Story', 'instagram_story']] + @sizes.map { |s| ["#{number_with_delimiter s}px wide", s] } + [['Other', 'other']]), prompt: 'Choose a size', 'data-target': 'photo-resizer.select') %>
+<div class="modal is-active" data-target="modal.modal">
+  <div class="modal-background" data-action="click->modal#close"></div>
+  <div class="modal-card">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Share</p>
+      <button class="delete" data-action="click->modal#close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="buttons">
+        <%= link_to icon('Facebook', 'fab fa-facebook'), facebook_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be sent to your Facebook queue in Buffer. Do you want to continue?' }, class: 'button' %>
+        <%= link_to icon('Flickr', 'fab fa-flickr'), flickr_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be posted to Flickr immeditately. Do you want to continue?' }, class: 'button' %>
+        <%= link_to icon('Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be sent to your Instagram queue in Buffer. Do you want to continue?' }, class: 'button' %>
+        <%= link_to icon('Pinterest', 'fab fa-pinterest'), pinterest_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be posted to Pinterest immediately. Do you want to continue?' }, class: 'button' %>
+        <%= link_to icon('Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be sent to your Twitter queue in Buffer. Do you want to continue?' }, class: 'button' %>
+        <%= link_to icon('Tumblr', 'fab fa-tumblr'), tumblr_admin_entry_path(@entry.id), method: :post, data: { confirm: 'The entry will be sent to your Tumblr queue. Do you want to continue?' }, class: 'button' %>
+      </div>
+      <hr class="hr">
+      <form data-controller="clipboard">
+        <div class="field">
+          <div class="control">
+            <textarea rows="10" class="textarea" readonly="readonly" data-target="clipboard.source"><%= share_markdown @entry %></textarea>
           </div>
         </div>
-      </div>
-    <% end %>
-    <div class="share-image" data-target="photo-resizer.thumbnails"></div>
-  </div>
-</div>
-
-<div class="card">
-  <header class="card-header">
-    <p class="card-header-title">Instagram caption</p>
-  </header>
-  <div class="card-content">
-    <form data-controller="clipboard">
-      <div class="field">
-        <div class="control">
-          <textarea rows="10" class="textarea" readonly="readonly" data-target="clipboard.source"><%= @entry.instagram_caption %></textarea>
+        <div class="field">
+          <div class="control">
+            <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">
+              <span class="icon">
+                <i class="fas fa-clipboard" data-target="clipboard.icon"></i>
+              </span>
+              <span data-target="clipboard.label">Copy to clipboard</span>
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="field">
-        <div class="control">
-          <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">
-            <span class="icon">
-              <i class="fas fa-clipboard" data-target="clipboard.icon"></i>
-            </span>
-            <span data-target="clipboard.label">Copy to clipboard</span>
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
-
-<div class="card">
-  <header class="card-header">
-    <p class="card-header-title">Markdown caption</p>
-  </header>
-  <div class="card-content">
-    <form data-controller="clipboard">
-      <div class="field">
-        <div class="control">
-          <textarea rows="10" class="textarea" readonly="readonly" data-target="clipboard.source"><%= share_markdown @entry %></textarea>
-        </div>
-      </div>
-      <div class="field">
-        <div class="control">
-          <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">
-            <span class="icon">
-              <i class="fas fa-clipboard" data-target="clipboard.icon"></i>
-            </span>
-            <span data-target="clipboard.label">Copy to clipboard</span>
-          </button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button" data-action="click->modal#close">Done</button>
+    </footer>
   </div>
 </div>

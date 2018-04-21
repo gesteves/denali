@@ -11,7 +11,8 @@
     <div class="dropdown-content">
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
       <% if entry.is_photo? %>
-        <%= link_to icon('Share', 'fas fa-share-square'), share_admin_entry_path(entry), class: 'dropdown-item' %>
+        <%= link_to icon('Share', 'fas fa-share-square'), share_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
+        <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <hr class="dropdown-divider">
       <% if entry.is_queued? && action_name == 'queued' %>

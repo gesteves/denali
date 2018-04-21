@@ -3,38 +3,46 @@ import { fetchStatus, fetchText } from '../../lib/utils';
 import $ from 'jquery';
 
 /**
- * Controls editing and deleting tags.
+ * Controls the modals.
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['form', 'select', 'thumbnails'];
+  static targets = ['modal'];
 
   connect () {
     // Grab the CSRF token from the document head so we can send it in Fetch requests
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
   }
 
-  /**
-   * Fetches the requested size and inserts the result into the thumb container
-   * TODO: Remove the jQuery dependency.
-   * @param {Event} event A submit event from the form.
-   */
-  fetch (event) {
+  open (event) {
     event.preventDefault();
-    const url = this.formTarget.action;
-    let size = this.selectTarget.value;
+    const url = this.element.href;
+
+    if (this.hasModalTarget) {
+      return false;
+    }
 
     const fetchOpts = {
-      method: 'POST',
+      method: 'GET',
       headers: new Headers({
         'X-CSRF-Token': this.csrfToken
       }),
       credentials: 'include'
     };
 
-    fetch(`${url}.js?size=${size}`, fetchOpts)
+    fetch(`${url}?modal=true`, fetchOpts)
       .then(fetchStatus)
       .then(fetchText)
-      .then(html => $(this.thumbnailsTarget).html(html));
+      .then(html => $(this.element).append(html));
+  }
+
+  /**
+   * Closes the modal
+   * @param {Event} event Click event from the close button.
+   */
+  close (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.modalTarget.remove();
   }
 }

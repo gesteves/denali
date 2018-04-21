@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     resources :entries, concerns: :paginatable do
       member do
         get 'share'
+        get 'crops'
         post 'resize_photos'
         patch 'publish'
         patch 'queue'

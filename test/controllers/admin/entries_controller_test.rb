@@ -63,27 +63,19 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should render share entry page' do
-    test_1 = Entry.new(title: 'test 1', status: 'queued', blog_id: @blog.id)
-    test_1.save
-    test_2 = Entry.new(title: 'test 2', status: 'draft', blog_id: @blog.id)
-    test_2.save
-
-    # Test published entry
     get :share, params: { id: @entry.id }
     assert_not_nil assigns(:entry)
     assert_response :success
     assert_template layout: 'layouts/admin'
     assert_template :share
-    # Test queued entry
+  end
+
+  test 'should render crops page' do
+    get :crops, params: { id: @entry.id }
     assert_not_nil assigns(:entry)
     assert_response :success
     assert_template layout: 'layouts/admin'
-    assert_template :share
-    # Test draft entry
-    assert_not_nil assigns(:entry)
-    assert_response :success
-    assert_template layout: 'layouts/admin'
-    assert_template :share
+    assert_template :crops
   end
 
   test 'should render photo fields' do

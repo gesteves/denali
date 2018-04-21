@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :share, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :invalidate, :refresh_metadata, :resize_photos]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :share, :crops, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :invalidate, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url, only: [:up, :down, :top, :bottom, :invalidate, :refresh_metadata]
@@ -69,11 +69,6 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/1/edit
   def edit
     @page_title = "Editing “#{@entry.title}”"
-  end
-
-  def share
-    @page_title = "Share “#{@entry.title}”"
-    @sizes = [1200]
   end
 
   # PATCH /admin/entries/1/publish
@@ -173,6 +168,31 @@ class Admin::EntriesController < AdminController
     request.format = 'html'
     respond_to do |format|
       format.html { render layout: nil }
+    end
+  end
+
+  def share
+    respond_to do |format|
+      format.html {
+        if params[:modal]
+          render layout: nil
+        else
+          render
+        end
+      }
+    end
+  end
+
+  def crops
+    @sizes = [1200]
+    respond_to do |format|
+      format.html {
+        if params[:modal]
+          render layout: nil
+        else
+          render
+        end
+      }
     end
   end
 
