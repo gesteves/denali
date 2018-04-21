@@ -214,43 +214,79 @@ class Admin::EntriesController < AdminController
   def instagram
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     InstagramJob.perform_later(@entry)
-    flash[:success] = 'Your entry was sent to your Instagram queue in Buffer!'
-    redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    @message = 'Your entry was sent to your Instagram queue in Buffer!'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render :notify }
+    end
   end
 
   def twitter
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     TwitterJob.perform_later(@entry)
-    flash[:success] = 'Your entry was sent to your Twitter queue in Buffer!'
-    redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    @message = 'Your entry was sent to your Twitter queue in Buffer!'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render :notify }
+    end
   end
 
   def facebook
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     FacebookJob.perform_later(@entry)
-    flash[:success] = 'Your entry was sent to your Facebook queue in Buffer!'
-    redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    @message = 'Your entry was sent to your Facebook queue in Buffer!'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render :notify }
+    end
   end
 
   def pinterest
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     PinterestJob.perform_later(@entry)
-    flash[:success] = 'Your entry was sent to Pinterest!'
-    redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    @message = 'Your entry was sent to Pinterest!'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render :notify }
+    end
   end
 
   def flickr
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     FlickrJob.perform_later(@entry)
-    flash[:success] = 'Your entry was sent to Flickr!'
-    redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    @message = 'Your entry was sent to Flickr!'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render :notify }
+    end
   end
 
   def tumblr
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     TumblrJob.perform_later(@entry)
-    flash[:success] = 'Your entry was sent to your Tumblr queue!'
-    redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    @message = 'Your entry was sent to your Tumblr queue!'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render :notify }
+    end
   end
 
   def invalidate
