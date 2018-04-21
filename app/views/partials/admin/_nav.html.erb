@@ -19,6 +19,15 @@
             Entries
           </a>
           <div class="navbar-dropdown">
+            <a href="<%= new_admin_entry_path %>" class="navbar-item">
+              <span>
+                <span class="icon is-left">
+                  <i class="fas fa-pencil-alt"></i>
+                </span>
+                <span>New entry</span>
+              </span>
+            </a>
+            <hr class="navbar-divider">
             <a href="<%= admin_entries_path %>" class="navbar-item">
               <span>
                 <span class="icon is-left">
@@ -56,15 +65,6 @@
               <% end %>
             </div>
             <% end %>
-            <hr class="navbar-divider">
-            <a href="<%= new_admin_entry_path %>" class="navbar-item">
-              <span>
-                <span class="icon is-left">
-                  <i class="fas fa-pencil-alt"></i>
-                </span>
-                <span>New entry</span>
-              </span>
-            </a>
           </div>
         </div>
         <a href="<%= admin_tags_path %>" class="navbar-item">Tags</a>
