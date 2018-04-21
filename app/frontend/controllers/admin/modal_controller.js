@@ -7,7 +7,6 @@ import $ from 'jquery';
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['modal'];
 
   connect () {
     // Grab the CSRF token from the document head so we can send it in Fetch requests
@@ -17,10 +16,6 @@ export default class extends Controller {
   open (event) {
     event.preventDefault();
     const url = this.element.href;
-
-    if (this.hasModalTarget) {
-      return false;
-    }
 
     const fetchOpts = {
       method: 'GET',
@@ -33,7 +28,7 @@ export default class extends Controller {
     fetch(`${url}?modal=true`, fetchOpts)
       .then(fetchStatus)
       .then(fetchText)
-      .then(html => $(this.element).append(html));
+      .then(html => $('body').append(html));
   }
 
   /**
@@ -42,7 +37,6 @@ export default class extends Controller {
    */
   close (event) {
     event.preventDefault();
-    event.stopPropagation();
-    this.modalTarget.remove();
+    this.element.remove();
   }
 }
