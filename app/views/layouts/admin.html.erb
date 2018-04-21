@@ -16,16 +16,19 @@
 
   <section class="section">
     <div class="container">
-      <% flash.each do |name, message| -%>
-      <article class="message is-<%= name %>">
-        <div class="message-body">
-          <%= message.html_safe %>
-        </div>
-      </article>
-      <% end %>
       <%= yield %>
     </div>
   </section>
+
+  <div class="notifications">
+    <% flash.each do |name, message| -%>
+      <div class="notifications">
+        <div class="notification is-<%= name %>" data-controller="notifications">
+          <button class="delete" data-action="click->notifications#close"></button>
+          <%= message.html_safe %>
+      </div>
+    <% end %>
+  </div>
 
 </body>
 </html>
