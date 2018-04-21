@@ -46,7 +46,7 @@
             <% if @photoblog.has_search? %>
             <hr class="navbar-divider">
             <div class="navbar-item">
-              <%= form_tag(admin_search_path, method: 'get') do %>
+              <%= form_tag(admin_search_path, method: 'get', class: 'nav-search' ) do %>
                 <div class="control has-icons-left">
                   <%= text_field_tag :q, @query || '', placeholder: 'Search', class: 'input' %>
                   <span class="icon is-small is-left">
