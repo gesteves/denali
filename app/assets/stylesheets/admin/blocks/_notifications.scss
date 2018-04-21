@@ -39,7 +39,7 @@
 
   @supports (backdrop-filter: none) {
     .notification {
-      backdrop-filter: blur(25px);
+      backdrop-filter: blur($backdrop-blur);
       background-color: transparentize($notification-background-color, 0.25);
     }
   
