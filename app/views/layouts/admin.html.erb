@@ -20,7 +20,7 @@
     </div>
   </section>
 
-  <div class="notifications" data-target="notifications.container">
+  <div id="notifications" class="notifications" data-target="notifications.container" data-turbolinks-permanent>
     <% flash.each do |name, message| -%>
       <div class="notifications">
         <div class="notification is-<%= name %>" data-action="click->notifications#close">
