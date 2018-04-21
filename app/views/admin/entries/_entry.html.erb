@@ -29,13 +29,13 @@
       <div class="level">
         <div class="level-left">
           <div class="level-item">
-            <p class="is-size-7 has-text-gray">
+            <p class="is-size-7 has-text-grey">
               <% if entry.is_published? %>
-                <strong class="has-text-success"><%= icon('Published', 'fas fa-rocket') %></strong> on <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
+                <b class="has-text-success has-text-weight-bold"><%= icon('Published', 'fas fa-check-circle') %></b> on <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
               <% elsif entry.is_queued? %>
-                <strong class="has-text-info"><%= icon('Queued', 'fas fa-clock') %></strong> for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
+                <b class="has-text-info has-text-weight-bold"><%= icon('Queued', 'fas fa-clock') %></b> for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
               <% elsif entry.is_draft? %>
-                <strong class="has-text-grey"><%= icon('Draft', 'fas fa-pencil-alt') %></strong>
+                <b class="has-text-grey has-text-weight-bold"><%= icon('Draft', 'fas fa-pause-circle') %></b> &middot; Updated on <%= entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P') %>
               <% end %>
             </p>
           </div>
