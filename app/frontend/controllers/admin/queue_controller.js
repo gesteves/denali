@@ -16,7 +16,7 @@ export default class extends Controller {
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
     this.queueHasPublishedToday = this.data.get('has-published-today') === 'true';
     this.sortableQueue = new Sortable(this.containerTarget, {
-      draggable: '.card',
+      draggable: '.draggable-handle',
       delay: 100,
       classes: {
         'source:dragging': 'is-invisible'
@@ -38,6 +38,20 @@ export default class extends Controller {
    */
   showButtons () {
     this.buttonTargets.forEach(button => button.classList.remove('is-hidden'));
+  }
+
+  /**
+   * Disables the ability to drag an element.
+   */
+  disableDrag () {
+    this.cardTargets.forEach(card => card.classList.remove('draggable-handle'));
+  }
+
+  /**
+   * Enables the ability to drag an element.
+   */
+  enableDrag () {
+    this.cardTargets.forEach(card => card.classList.add('draggable-handle'));
   }
 
   /**
@@ -92,6 +106,7 @@ export default class extends Controller {
     }
 
     this.hideButtons();
+    this.disableDrag();
     const entry_ids = this.cardTargets.map(card => parseInt(card.getAttribute('data-entry-id'), 10));
     const url = this.data.get('endpoint');
     const fetchOpts = {
@@ -113,6 +128,7 @@ export default class extends Controller {
         clearTimeout(secondWarning);
         sendNotification('The changes you’ve made to the queue have been saved!');
         this.updateCardPositions();
+        this.enableDrag();
       });
   }
 
