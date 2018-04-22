@@ -10,7 +10,6 @@
 
   .notification {
     background-color: transparentize($notification-background-color, 0.1);
-    transition: opacity ease-in 250ms;
   }
 
   .notification.is-primary {
@@ -42,27 +41,27 @@
       backdrop-filter: blur($backdrop-blur);
       background-color: transparentize($notification-background-color, 0.25);
     }
-  
+
     .notification.is-primary {
       background-color: transparentize($primary, 0.25);
     }
-  
+
     .notification.is-link {
       background-color: transparentize($link, 0.25);
     }
-  
+
     .notification.is-info {
       background-color: transparentize($info, 0.25);
     }
-  
+
     .notification.is-success {
       background-color: transparentize($success, 0.25);
     }
-  
+
     .notification.is-warning {
       background-color: transparentize($warning, 0.25);
     }
-  
+
     .notification.is-danger {
       background-color: transparentize($danger, 0.25);
     }
