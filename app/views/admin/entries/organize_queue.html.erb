@@ -1,3 +1,7 @@
+<% content_for :meta do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_update_path %>" data-queue-has-published-today="<%= Entry.queue_has_published_today? %>">
   <h1 class="title is-size-5-mobile">Organize queue</h1>
   <% cache "admin/subtitles/queued/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
@@ -31,7 +35,7 @@
   <% else %>
     <% cache "admin/entries/queued/sort/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
       <div class="is-clearfix" data-target="queue.container">
-        <%= render partial: 'queue_item', collection: @entries, as: :entry %>
+        <%= render partial: 'queue_item', collection: @photoblog.entries.includes(:photos).queued, as: :entry %>
       </div>
     <% end %>
   <% end %>

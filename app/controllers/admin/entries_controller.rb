@@ -166,7 +166,6 @@ class Admin::EntriesController < AdminController
   end
 
   def organize_queue
-    @entries = @photoblog.entries.includes(:photos).queued
     @page_title = 'Organize queue'
   end
 
