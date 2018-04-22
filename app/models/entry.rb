@@ -104,7 +104,7 @@ class Entry < ApplicationRecord
   end
 
   def self.queue_has_published_today?
-    published.first.published_at.beginning_of_day == Time.now.beginning_of_day
+    published.first.published_at.in_time_zone(Rails.application.config.time_zone).beginning_of_day == Time.now.in_time_zone(Rails.application.config.time_zone).beginning_of_day
   end
 
   def is_photo?

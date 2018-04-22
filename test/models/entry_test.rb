@@ -224,4 +224,11 @@ class EntryTest < ActiveSupport::TestCase
     assert entry.tag_list.include?('Mammal')
     assert !entry.tag_list.include?('Washington')
   end
+
+  test 'checking if the queue has published today' do
+    assert_not Entry.queue_has_published_today?
+    entry = entries(:panda)
+    entry.publish
+    assert Entry.queue_has_published_today?
+  end
 end
