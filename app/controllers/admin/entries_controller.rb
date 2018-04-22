@@ -165,9 +165,9 @@ class Admin::EntriesController < AdminController
     respond_to_reposition
   end
 
-  def sort_queue
+  def organize_queue
     @entries = @photoblog.entries.includes(:photos).queued
-    @page_title = 'Sort Queue'
+    @page_title = 'Organize queue'
   end
 
   def update_queue

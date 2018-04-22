@@ -2,11 +2,11 @@
 <% cache "admin/subtitles/queued/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
 <% end %>
-<a href="<%= admin_entries_queued_sort_path %>" class="button is-small">
+<a href="<%= admin_entries_queued_organize_path %>" class="button is-small">
   <span class="icon is-small">
     <i class="fas fa-sort"></i>
   </span>
-  <span>Sort queue</span>
+  <span>Organize queue</span>
 </a>
 <hr class="hr">
 <% if @entries.size == 0 %>

@@ -11,8 +11,8 @@ Rails.application.routes.draw do
     get '/entries/search'             => 'entries#search', :as => :search
     get '/entries/edit'               => 'entries#edit'
     get '/entries/share'              => 'entries#share'
-    get '/entries/queued/sort'        => 'entries#sort_queue'
-    post '/entries/queued/sort'       => 'entries#update_queue'
+    get '/entries/queued/organize'    => 'entries#organize_queue'
+    post '/entries/queued/update'     => 'entries#update_queue'
     get 'settings'                    => 'blogs#edit'
     patch 'settings/update'           => 'blogs#update'
 

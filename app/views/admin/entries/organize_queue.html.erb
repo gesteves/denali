@@ -2,8 +2,8 @@
   <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
-<div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_sort_path %>" data-queue-has-published-today="<%= Entry.queue_has_published_today? %>">
-  <h1 class="title is-size-5-mobile">Sorting queue</h1>
+<div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_update_path %>" data-queue-has-published-today="<%= Entry.queue_has_published_today? %>">
+  <h1 class="title is-size-5-mobile">Organize queue</h1>
   <% cache "admin/subtitles/queued/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
   <% end %>
@@ -13,7 +13,7 @@
     </span>
     <span>Go back</span>
   </a>
-  <a href="<%= admin_entries_queued_sort_path %>" class="button is-small is-danger is-hidden" data-action="click->queue#discard" data-target="queue.button">
+  <a href="<%= admin_entries_queued_organize_path %>" class="button is-small is-danger is-hidden" data-action="click->queue#discard" data-target="queue.button">
     <span class="icon is-small">
       <i class="fas fa-undo-alt"></i>
     </span>
