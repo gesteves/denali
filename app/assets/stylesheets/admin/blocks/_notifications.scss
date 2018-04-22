@@ -10,6 +10,7 @@
 
   .notification {
     background-color: transparentize($notification-background-color, 0.1);
+    transition: opacity ease-in 250ms;
   }
 
   .notification.is-primary {
