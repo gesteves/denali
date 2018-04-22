@@ -77,7 +77,7 @@ export default class extends Controller {
         container.append($(card).detach());
       });
 
-    this.updateTimestamps();
+    this.updateCards();
     sendNotification('The changes you’ve made to the queue have been discarded.', 'danger');
   }
 
