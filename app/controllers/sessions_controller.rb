@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
 
     if auth_hash.present?
       logger.info "#{auth_hash['info']['name']} (#{auth_hash['info']['email']}) signed in"
-      flash[:success] = "Welcome, #{auth_hash['info']['first_name']}!"
+      flash[:success] = "Welcome back, #{auth_hash['info']['first_name']}!"
       user = User.from_omniauth(auth_hash)
       session[:user_id] = user.id
       url = session[:original_url] || admin_entries_path
