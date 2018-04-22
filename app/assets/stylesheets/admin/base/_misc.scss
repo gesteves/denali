@@ -16,7 +16,8 @@
   z-index: 100;
 }
 
-.draggable--is-dragging {
+.draggable--is-dragging,
+.draggable-container--is-dragging {
   cursor: grabbing;
 }
 

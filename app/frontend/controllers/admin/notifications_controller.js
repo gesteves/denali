@@ -19,7 +19,7 @@ export default class extends Controller {
     <button class="delete"></button>
     ${message}</div>`);
     $(this.containerTarget).append(notification);
-    requestAnimationFrame(() => notification[0].classList.remove('is-transparent'));
+    setTimeout(() => notification[0].classList.remove('is-transparent'), 0);
   }
 
   /**

@@ -1,0 +1,42 @@
+<% content_for :meta do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
+<div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_sort_path %>" data-queue-has-published-today="<%= Entry.queue_has_published_today? %>">
+  <h1 class="title is-size-5-mobile">Sorting queue</h1>
+  <% cache "admin/subtitles/queued/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+    <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
+  <% end %>
+  <a href="<%= queued_admin_entries_path %>" class="button is-small">
+    <span class="icon is-small">
+      <i class="fas fa-long-arrow-alt-left"></i>
+    </span>
+    <span>Go back</span>
+  </a>
+  <a href="<%= admin_entries_queued_sort_path %>" class="button is-small is-danger is-hidden" data-action="click->queue#discard" data-target="queue.button">
+    <span class="icon is-small">
+      <i class="fas fa-undo-alt"></i>
+    </span>
+    <span>Discard changes</span>
+  </a>
+  <a href="<%= queued_admin_entries_path %>" class="button is-small is-success is-hidden" data-action="click->queue#save" data-target="queue.button">
+    <span class="icon is-small">
+      <i class="fas fa-check"></i>
+    </span>
+    <span>Save changes</span>
+  </a>
+  <hr class="hr">
+  <% if @entries.size == 0 %>
+    <article class="message is-info">
+      <div class="message-body">
+        You haven’t queued any entries. Why don’t you <a href="<%= new_admin_entry_path %>">write one</a>?
+      </div>
+    </article>
+  <% else %>
+    <% cache "admin/entries/queued/sort/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+      <div class="is-clearfix" data-target="queue.container">
+        <%= render partial: 'queue_item', collection: @entries, as: :entry %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

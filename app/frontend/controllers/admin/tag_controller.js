@@ -1,5 +1,5 @@
 import { Controller } from 'stimulus';
-import { fetchStatus, fetchText } from '../../lib/utils';
+import { fetchStatus, fetchText, sendNotification } from '../../lib/utils';
 import $ from 'jquery';
 
 /**
@@ -40,7 +40,7 @@ export default class extends Controller {
 
     fetch(`${url}.json`, fetchOpts)
       .then(fetchStatus)
-      .then(() => this.dispatchEvent(`The “${prompt}” tag has been added to all the entries tagged “${tagName}”.`));
+      .then(() => sendNotification(`The “${prompt}” tag has been added to all the entries tagged “${tagName}”.`));
   }
 
   /**
@@ -74,7 +74,7 @@ export default class extends Controller {
       .then(fetchText)
       .then(html => {
         $(this.element).replaceWith(html);
-        this.dispatchEvent(`The “${tagName}” tag has been renamed to “${prompt}”.`);
+        sendNotification(`The “${tagName}” tag has been renamed to “${prompt}”.`);
       });
   }
 
@@ -106,22 +106,7 @@ export default class extends Controller {
       .then(fetchStatus)
       .then(() => {
         this.element.parentNode.removeChild(this.element);
-        this.dispatchEvent(`The “${tagName}” tag has been deleted!`);
+        sendNotification(`The “${tagName}” tag has been deleted!`);
       });
-  }
-
-  /**
-   * Dispatches a custom `notify` event to trigger a notification
-   * @param {string} message The text for the notification
-   * * @param {string} status The type of notification
-   */
-  dispatchEvent (message, status = 'success') {
-    const event = new CustomEvent('notify', {
-      detail: {
-        message: message,
-        status: status
-      }
-    });
-    document.body.dispatchEvent(event);
   }
 }

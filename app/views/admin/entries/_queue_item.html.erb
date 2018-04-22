@@ -1,0 +1,22 @@
+<div class="card queue__item draggable-handle" data-target="queue.card" data-entry-id="<%= entry.id %>" data-entry-position-original="<%= entry.position %>">
+
+    <div class="card-image">
+      <% if entry.is_photo? %>
+      <div style="<%= "padding-top:100%;#{image_placeholder(entry.photos.first)}"  %>" class="image">
+        <%= lazy_responsive_image_tag entry.photos.first,
+              'admin_queue',
+              { class: 'is-overlay', alt: entry.photos.first.alt_text, 'data-controller': 'lazy-load' } %>
+        <noscript>
+          <%= responsive_image_tag entry.photos.first,
+                'admin_queue',
+                { class: 'is-overlay', alt: entry.photos.first.alt_text } %>
+        </noscript>
+      </div>
+      <% else %>
+        <div style="padding-top:100%;background-color:#EEE;"><div>
+      <% end %>
+      <div class="queue__item-meta">
+        <p class="is-size-7 has-text-dark has-text-centered" data-timestamp></p>
+      </div>
+    </div>
+</div>

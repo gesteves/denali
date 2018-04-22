@@ -26,7 +26,6 @@ class Admin::TagsController < AdminController
 
   def update
     @tag = ActsAsTaggableOn::Tag.find(params[:id])
-    logger.info params[:name]
     respond_to do |format|
       if @tag.update(name: params[:name])
         format.json

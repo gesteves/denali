@@ -91,6 +91,27 @@ admin_edit:
     - "(min-width: 1088px) 780px"
     - "(min-width: 769px) calc(((100vw - 4.5rem)/6) * 5)"
     - calc(100vw - 3rem)
+admin_queue:
+  src: 490
+  srcset:
+    - 224
+    - 280
+    - 477
+    - 672
+    - 440
+    - 168
+    - 336
+    - 207
+    - 414
+    - 245
+    - 490
+  sizes:
+    - "(min-width: 1472px) 245px"
+    - "(min-width: 1280px) 207px"
+    - "(min-width: 1088px) 168px"
+    - "(min-width: 769px) calc(((100vw - 3rem)/4) - 1.5rem)"
+    - calc((100vw - 3rem)/2 - 1.5rem)
+  square: Yes
 map:
   src: 300
   srcset:

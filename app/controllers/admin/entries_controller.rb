@@ -165,6 +165,28 @@ class Admin::EntriesController < AdminController
     respond_to_reposition
   end
 
+  def sort_queue
+    @entries = @photoblog.entries.includes(:photos).queued
+    @page_title = 'Sort Queue'
+  end
+
+  def update_queue
+    entry_ids = params[:entry_ids]
+    entries = Entry.where(id: entry_ids)
+    position = 1
+    entry_ids.each do |id|
+      entry = entries.find { |e| e.id == id }
+      if entry.is_queued?
+        entry.position = position
+        entry.save
+        position += 1
+      end
+    end
+    respond_to do |format|
+      format.json
+    end
+  end
+
   def photo
     @entry = Entry.new
     @count = params[:count] || 1
