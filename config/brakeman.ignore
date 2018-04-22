@@ -100,6 +100,25 @@
       "note": ""
     },
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "b0b6e562c021ed6bb2f247bfb5380f4199a50cb80a5e9290a3bdaa7d77a96b33",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/admin/shared/_nav.html.erb",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Blog.first.header_logo_svg",
+      "render_path": [{"type":"controller","class":"AdminController","method":"index","line":11,"file":"app/controllers/admin_controller.rb"},{"type":"template","name":"layouts/admin","line":15,"file":"app/views/layouts/admin.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "admin/shared/_nav"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "beb6783fdf80fd11f2d67c4947da43aa901f016e75837a0d18b8c22101ad462b",
@@ -116,25 +135,6 @@
         "method": "domain_redirect"
       },
       "user_input": "Blog.first.domain",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "d522b631c1d5f775b38881d9d2fc97d28ff49bdc950d343e4600416dc1e1d20c",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/partials/admin/_nav.html.erb",
-      "line": 5,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Blog.first.header_logo_svg",
-      "render_path": [{"type":"controller","class":"AdminController","method":"index","line":11,"file":"app/controllers/admin_controller.rb"},{"type":"template","name":"layouts/admin","line":14,"file":"app/views/layouts/admin.html.erb"}],
-      "location": {
-        "type": "template",
-        "template": "partials/admin/_nav"
-      },
-      "user_input": null,
       "confidence": "High",
       "note": ""
     },
@@ -159,6 +159,6 @@
       "note": ""
     }
   ],
-  "updated": "2018-04-15 15:39:37 -0400",
+  "updated": "2018-04-22 13:58:22 -0400",
   "brakeman_version": "4.2.1"
 }
