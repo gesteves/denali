@@ -19,7 +19,7 @@ export default class extends Controller {
       draggable: '.draggable-handle',
       delay: 100,
       classes: {
-        'source:dragging': 'is-invisible'
+        'source:dragging': 'draggable-dragging'
       }
     });
     this.sortableQueue.on('mirror:destroy', () => this.updateCards());
