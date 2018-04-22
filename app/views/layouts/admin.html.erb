@@ -20,9 +20,9 @@
     </div>
   </section>
 
-  <div id="notifications" class="notifications" data-target="notifications.container" data-turbolinks-permanent>
+  <div id="notifications" class="notifications" data-target="notifications.container" data-action="transitionend->notifications#toggle" data-turbolinks-permanent>
     <% flash.each do |name, message| -%>
-      <div class="notification is-<%= name %> is-transparent" data-target="notifications.notification" data-action="click->notifications#close transitionend->notifications#toggle">
+      <div class="notification is-<%= name %> is-transparent" data-target="notifications.notification" data-action="click->notifications#close">
         <button class="delete"></button>
         <%= message.html_safe %>
       </div>

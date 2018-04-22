@@ -19,7 +19,7 @@ export default class extends Controller {
   show (event) {
     const status = event.detail.status;
     const message = event.detail.message;
-    const notification = $(`<div class="notification is-${status} is-transparent" data-target="notifications.notification" data-action="click->notifications#close transitionend->notifications#toggle">
+    const notification = $(`<div class="notification is-${status} is-transparent" data-target="notifications.notification" data-action="click->notifications#close">
     <button class="delete"></button>
     ${message}</div>`);
     if (this.hasNotificationTarget) {
