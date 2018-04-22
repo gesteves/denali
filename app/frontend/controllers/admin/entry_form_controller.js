@@ -26,7 +26,7 @@ export default class extends Controller {
       }
     });
 
-    new Sortable(this.photosTarget, {
+    this.sortablePhotos = new Sortable(this.photosTarget, {
       delay: 100,
       classes: {
         'source:dragging': 'is-invisible',
@@ -34,6 +34,8 @@ export default class extends Controller {
       },
       handle: '.draggable-handle'
     });
+
+    this.sortablePhotos.on('sortable:start', event => this.startSort(event));
   }
 
   /**
@@ -58,6 +60,18 @@ export default class extends Controller {
       .then(fetchStatus)
       .then(fetchText)
       .then(html => $(this.photosTarget).append(html));
+  }
+
+  /**
+   * Handles the start of a sorting event, hardcoding the size of the dragged
+   * element so it doesn't look weird while being dragged.
+   * Sortable events docs: https://github.com/Shopify/draggable/tree/master/src/Sortable/SortableEvent
+   * @param {Event} event A sortable:start event.
+   */
+  startSort (event) {
+    let mirror = event.data.dragEvent.data.mirror;
+    let originalWidth = event.data.dragEvent.data.sourceContainer.clientWidth;
+    mirror.style.width = `${originalWidth}px`;
   }
 
   /**
