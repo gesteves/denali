@@ -1,7 +1,7 @@
 import { Controller } from 'stimulus';
 import { fetchStatus, fetchText } from '../../lib/utils';
 import $ from 'jquery';
-import { Sortable } from '@shopify/draggable';
+import { Sortable, Plugins } from '@shopify/draggable';
 import Awesomplete from 'awesomplete';
 
 /**
@@ -32,7 +32,8 @@ export default class extends Controller {
         'source:dragging': 'is-invisible',
         'mirror': 'draggable-mirror'
       },
-      handle: '.draggable-handle'
+      handle: '.draggable-handle',
+      plugins: [Plugins.SwapAnimation]
     });
 
     this.sortablePhotos.on('sortable:start', event => this.startSort(event));
