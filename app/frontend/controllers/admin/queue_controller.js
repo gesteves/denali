@@ -91,6 +91,7 @@ export default class extends Controller {
       return false;
     }
 
+    this.hideButtons();
     const entry_ids = this.cardTargets.map(card => parseInt(card.getAttribute('data-entry-id'), 10));
     const url = this.data.get('endpoint');
     const fetchOpts = {
@@ -103,14 +104,25 @@ export default class extends Controller {
       credentials: 'include'
     };
 
-    const firstWarning = setTimeout(() => sendNotification('The changes you’ve made to the queue are being saved!'), 1000);
-    const secondWarning = setTimeout(() => sendNotification('Hang tight, saving your queue is taking longer than expected.', 'warning'), 5000);
+    const firstWarning = setTimeout(() => sendNotification('Your changes are being saved, this will take a few seconds.', 'warning'), 1000);
+    const secondWarning = setTimeout(() => sendNotification('Hang tight, your changes are still being saved.', 'warning'), 5000);
     fetch(`${url}.json`, fetchOpts)
       .then(fetchStatus)
       .then(() => {
         clearTimeout(firstWarning);
         clearTimeout(secondWarning);
         sendNotification('The changes you’ve made to the queue have been saved!');
+        this.updateCardPositions();
       });
+  }
+
+  /**
+   * Updates the stored positions of the cards after saving.
+   */
+  updateCardPositions () {
+    this.cardTargets.forEach((card, i) => {
+      const position = i + 1;
+      card.setAttribute('data-entry-position-original', position);
+    });
   }
 }
