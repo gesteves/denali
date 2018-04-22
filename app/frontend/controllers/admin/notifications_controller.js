@@ -8,6 +8,10 @@ import $ from 'jquery';
 export default class extends Controller {
   static targets = ['container', 'notification'];
 
+  connect () {
+    this.toggle();
+  }
+
   /**
    * Opens a notification
    * @param {Event} event Custom `notify` event.
