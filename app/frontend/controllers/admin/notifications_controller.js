@@ -31,7 +31,6 @@ export default class extends Controller {
    * Hides all the existing notifications on the page.
    */
   closeAll () {
-    console.log('Closing notifications')
     this.notificationTargets
       .filter(notification => !notification.classList.contains('is-transparent'))
       .forEach(notification => {
