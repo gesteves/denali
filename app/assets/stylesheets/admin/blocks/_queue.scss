@@ -13,14 +13,21 @@
 }
 
 .queue__item-meta {
-  background-color: transparentize(white, 0.1);
-  position: absolute;
+  background-color: transparentize($black, 0.1);
   bottom: 0;
-  width: 100%;
   padding: $size-7;
+  position: absolute;
+  width: 100%;
 
   @supports (backdrop-filter: none) {
     backdrop-filter: blur($backdrop-blur);
-    background-color: transparentize($white, 0.25);
+    background-color: transparentize($black, 0.25);
   }
+}
+
+.queue__item-timestamp {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
