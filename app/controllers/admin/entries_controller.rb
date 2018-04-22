@@ -183,7 +183,13 @@ class Admin::EntriesController < AdminController
       end
     end
     respond_to do |format|
-      format.json
+      format.json {
+        response = {
+          status: 'success',
+          message: 'The changes you’ve made to the queue have been saved!'
+        }
+        render json: response
+      }
     end
   end
 

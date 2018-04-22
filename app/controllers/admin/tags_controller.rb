@@ -6,13 +6,14 @@ class Admin::TagsController < AdminController
   end
 
   def destroy
-    @tag = ActsAsTaggableOn::Tag.find(params[:id]).destroy
+    tag = ActsAsTaggableOn::Tag.find(params[:id])
+    tag.destroy
     respond_to do |format|
       format.html { redirect_to admin_tags_path }
       format.json {
         response = {
-          status: 200,
-          message: 'Tag deleted'
+          status: 'danger',
+          message: "The “#{tag.name}” tag has been deleted!"
         }
         render json: response
       }
@@ -44,8 +45,8 @@ class Admin::TagsController < AdminController
       format.html { redirect_to admin_tags_path }
       format.json {
         response = {
-          status: 200,
-          message: "#{entries.size} entries with the tag #{tag.name} updated with the tag #{new_tags}"
+          status: 'success',
+          message: "The “#{new_tags}” tag has been added to all entries tagged “#{tag.name}”."
         }
         render json: response
       }

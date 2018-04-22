@@ -1,5 +1,5 @@
 import { Controller } from 'stimulus';
-import { fetchStatus, fetchText, sendNotification } from '../../lib/utils';
+import { fetchStatus, fetchText, fetchJson, sendNotification } from '../../lib/utils';
 import $ from 'jquery';
 
 /**
@@ -40,7 +40,8 @@ export default class extends Controller {
 
     fetch(`${url}.json`, fetchOpts)
       .then(fetchStatus)
-      .then(() => sendNotification(`The “${prompt}” tag has been added to all the entries tagged “${tagName}”.`));
+      .then(fetchJson)
+      .then(json => sendNotification(json.message, json.status));
   }
 
   /**
@@ -104,9 +105,10 @@ export default class extends Controller {
 
     fetch(`${url}.json`, fetchOpts)
       .then(fetchStatus)
-      .then(() => {
+      .then(fetchJson)
+      .then(json => {
         this.element.parentNode.removeChild(this.element);
-        sendNotification(`The “${tagName}” tag has been deleted!`);
+        sendNotification(json.message, json.status);
       });
   }
 }

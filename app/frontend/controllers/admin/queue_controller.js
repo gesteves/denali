@@ -1,5 +1,5 @@
 import { Controller } from 'stimulus';
-import { fetchStatus, sendNotification } from '../../lib/utils';
+import { fetchStatus, fetchJson, sendNotification } from '../../lib/utils';
 import { Sortable } from '@shopify/draggable';
 import $ from 'jquery';
 import moment from 'moment';
@@ -123,10 +123,11 @@ export default class extends Controller {
     const secondWarning = setTimeout(() => sendNotification('Hang tight, your changes are still being saved.', 'warning'), 5000);
     fetch(`${url}.json`, fetchOpts)
       .then(fetchStatus)
-      .then(() => {
+      .then(fetchJson)
+      .then(json => {
         clearTimeout(firstWarning);
         clearTimeout(secondWarning);
-        sendNotification('The changes you’ve made to the queue have been saved!');
+        sendNotification(json.message, json.status);
         this.updateCardPositions();
         this.enableDrag();
       });
