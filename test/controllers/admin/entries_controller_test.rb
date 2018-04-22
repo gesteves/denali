@@ -157,4 +157,11 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     post :top, params: { id: entry.id }
     assert_equal assigns(:entry).position, 1
   end
+
+  test 'should render organize queue page' do
+    get :organize_queue
+    assert_response :success
+    assert_template layout: 'layouts/admin'
+    assert_template :organize_queue
+  end
 end
