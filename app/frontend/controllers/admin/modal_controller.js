@@ -13,6 +13,11 @@ export default class extends Controller {
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
   }
 
+  /**
+   * Fetches the button's destination and opens it in a modal window.
+   * TODO: Remove the jQuery dependency.
+   * @param {Event} event A click event from the button.
+   */
   open (event) {
     event.preventDefault();
     const url = this.element.href;

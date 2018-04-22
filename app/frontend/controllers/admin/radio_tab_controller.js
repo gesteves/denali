@@ -17,7 +17,7 @@ export default class extends Controller {
   }
 
   /**
-   * Toggles the active tab
+   * Toggles the active tab and stores its value in the associated radio button.
    * @param {Event} event Click event from the tab.
    */
   toggle (event) {

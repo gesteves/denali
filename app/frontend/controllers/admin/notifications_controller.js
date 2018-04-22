@@ -13,10 +13,10 @@ export default class extends Controller {
   }
 
   /**
-   * Opens a notification
+   * Adds a new notification to the notifications container
    * @param {Event} event Custom `notify` event.
    */
-  show (event) {
+  add (event) {
     const status = event.detail.status;
     const message = event.detail.message;
     const notification = $(`<div class="notification is-${status} is-transparent" data-target="notifications.notification" data-action="click->notifications#close">

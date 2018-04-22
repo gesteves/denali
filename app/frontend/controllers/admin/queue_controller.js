@@ -72,6 +72,16 @@ export default class extends Controller {
   }
 
   /**
+   * Updates the stored positions of the cards after saving.
+   */
+  updateCardPositions () {
+    this.cardTargets.forEach((card, i) => {
+      const position = i + 1;
+      card.setAttribute('data-entry-position-original', position);
+    });
+  }
+
+  /**
    * Puts the queue back in the original order.
    * @param {Event} event A click event from the cancel button.
    */
@@ -131,15 +141,5 @@ export default class extends Controller {
         this.updateCardPositions();
         this.enableDrag();
       });
-  }
-
-  /**
-   * Updates the stored positions of the cards after saving.
-   */
-  updateCardPositions () {
-    this.cardTargets.forEach((card, i) => {
-      const position = i + 1;
-      card.setAttribute('data-entry-position-original', position);
-    });
   }
 }
