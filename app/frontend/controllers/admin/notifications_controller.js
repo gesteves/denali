@@ -60,6 +60,9 @@ export default class extends Controller {
       .filter(notification => notification.classList.contains('notification-closed'))
       .forEach(notification => notification.remove());
     this.notificationTargets
-      .forEach(notification => setTimeout(() => notification.classList.remove('is-transparent'), 10));
+      .forEach(notification => {
+        setTimeout(() => notification.classList.remove('is-transparent'), 10);
+        setTimeout(() => notification.classList.add('is-transparent', 'notification-closed'), 10000);
+      });
   }
 }
