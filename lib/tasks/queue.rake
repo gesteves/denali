@@ -14,4 +14,14 @@ namespace :queue do
       end
     end
   end
+
+  desc 'Fix the positions of the items in the queue'
+  task :fix => [:environment] do
+    puts "Old queue positions: #{Entry.queued.map(&:position).join(', ')}"
+    Entry.queued.each_with_index do |entry, i|
+      entry.position = i + 1
+      entry.save
+    end
+    puts "New queue positions: #{Entry.queued.map(&:position).join(', ')}"
+  end
 end
