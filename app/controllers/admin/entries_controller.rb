@@ -84,7 +84,7 @@ class Admin::EntriesController < AdminController
   # PATCH /admin/entries/1/queue
   def queue
     if @entry.queue
-      flash[:success] = 'Your entry was sent to the queue!'
+      flash[:success] = 'Your entry was sent to the queue.'
     else
       flash[:warning] = 'Your entry couldn’t be queued…'
     end
@@ -94,9 +94,9 @@ class Admin::EntriesController < AdminController
   # PATCH /admin/entries/1/draft
   def draft
     if @entry.draft
-      flash[:success] = 'Your entry was saved as draft!'
+      flash[:success] = 'Your entry was moved to the drafts.'
     else
-      flash[:warning] = 'Your entry couldn’t be saved as draft…'
+      flash[:warning] = 'Your entry couldn’t be moved to the drafts…'
     end
     redirect_to drafts_admin_entries_path
   end
@@ -108,7 +108,7 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save
-        flash[:success] = "Your entry was saved! <a href=\"#{admin_entry_path(@entry)}\">Check it out.</a>"
+        flash[:success] = "Your new entry was saved! <a href=\"#{admin_entry_path(@entry)}\">Check it out.</a>"
         format.html { redirect_to new_admin_entry_path }
       else
         flash[:warning] = 'Your entry couldn’t be saved…'
@@ -123,7 +123,7 @@ class Admin::EntriesController < AdminController
       @entry.modified_at = Time.now if @entry.is_published?
       if @entry.update(entry_params)
         logger.info "Entry #{@entry.id} was updated."
-        flash[:success] = 'Your entry was updated!'
+        flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else
         flash[:warning] = 'Your entry couldn’t be updated…'
@@ -136,28 +136,32 @@ class Admin::EntriesController < AdminController
   def destroy
     @entry.destroy
     respond_to do |format|
-      flash[:danger] = 'Your entry was deleted forever!'
+      flash[:danger] = 'Your entry was deleted forever.'
       format.html { redirect_to session[:redirect_url] || admin_entries_path }
     end
   end
 
   def up
     @entry.move_higher
+    flash[:success] = 'Your entry was moved up in the queue.'
     respond_to_reposition
   end
 
   def down
     @entry.move_lower
+    flash[:success] = 'Your entry was moved down in the queue.'
     respond_to_reposition
   end
 
   def top
     @entry.move_to_top
+    flash[:success] = 'Your entry was moved to the top of the queue.'
     respond_to_reposition
   end
 
   def bottom
     @entry.move_to_bottom
+    flash[:success] = 'Your entry was moved to the bottom of the queue.'
     respond_to_reposition
   end
 
@@ -214,7 +218,7 @@ class Admin::EntriesController < AdminController
   def instagram
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     InstagramJob.perform_later(@entry)
-    @message = 'Your entry was sent to your Instagram queue in Buffer!'
+    @message = 'Your entry was sent to your Instagram queue in Buffer.'
     respond_to do |format|
       format.html {
         flash[:success] = @message
@@ -227,7 +231,7 @@ class Admin::EntriesController < AdminController
   def twitter
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     TwitterJob.perform_later(@entry)
-    @message = 'Your entry was sent to your Twitter queue in Buffer!'
+    @message = 'Your entry was sent to your Twitter queue in Buffer.'
     respond_to do |format|
       format.html {
         flash[:success] = @message
@@ -240,7 +244,7 @@ class Admin::EntriesController < AdminController
   def facebook
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     FacebookJob.perform_later(@entry)
-    @message = 'Your entry was sent to your Facebook queue in Buffer!'
+    @message = 'Your entry was sent to your Facebook queue in Buffer.'
     respond_to do |format|
       format.html {
         flash[:success] = @message
@@ -253,7 +257,7 @@ class Admin::EntriesController < AdminController
   def pinterest
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     PinterestJob.perform_later(@entry)
-    @message = 'Your entry was sent to Pinterest!'
+    @message = 'Your entry was sent to Pinterest.'
     respond_to do |format|
       format.html {
         flash[:success] = @message
@@ -266,7 +270,7 @@ class Admin::EntriesController < AdminController
   def flickr
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     FlickrJob.perform_later(@entry)
-    @message = 'Your entry was sent to Flickr!'
+    @message = 'Your entry was sent to Flickr.'
     respond_to do |format|
       format.html {
         flash[:success] = @message
@@ -279,7 +283,7 @@ class Admin::EntriesController < AdminController
   def tumblr
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     TumblrJob.perform_later(@entry)
-    @message = 'Your entry was sent to your Tumblr queue!'
+    @message = 'Your entry was sent to your Tumblr queue.'
     respond_to do |format|
       format.html {
         flash[:success] = @message
