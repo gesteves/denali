@@ -173,7 +173,7 @@ class Entry < ApplicationRecord
     else
       self.position - 1
     end
-    Time.now + days.days
+    Time.now.in_time_zone(Rails.application.config.time_zone) + days.days
   end
 
   def related(count = 12)
