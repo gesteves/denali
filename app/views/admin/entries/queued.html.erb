@@ -1,15 +1,23 @@
-<h1 class="title is-size-5-mobile">Queued</h1>
-<% cache "admin/subtitles/queued/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
-  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
-<% end %>
-<% unless @entries.size == 0 %>
-  <a href="<%= admin_entries_queued_organize_path %>" class="button is-small">
-    <span class="icon is-small">
-      <i class="fas fa-sort"></i>
-    </span>
-    <span>Organize queue</span>
-  </a>
-<% end %>
+<div class="level">
+  <div class="level-left">
+    <div>
+    <h1 class="title is-size-5-mobile">Queued</h1>
+    <% cache "admin/subtitles/queued/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+      <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
+    <% end %>
+    </div>
+  </div>
+  <div class="level-right">
+    <% unless @entries.size == 0 %>
+      <a href="<%= admin_entries_queued_organize_path %>" class="button is-small">
+        <span class="icon is-small">
+          <i class="fas fa-sort"></i>
+        </span>
+        <span>Organize queue</span>
+      </a>
+    <% end %>
+  </div>
+</div>
 <hr class="hr">
 <% if @entries.size == 0 %>
   <article class="message is-info">

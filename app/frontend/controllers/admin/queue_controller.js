@@ -9,7 +9,7 @@ import moment from 'moment';
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['container', 'card', 'button'];
+  static targets = ['container', 'card', 'buttons'];
 
   connect () {
     // Grab the CSRF token from the document head so we can send it in Fetch requests
@@ -30,14 +30,14 @@ export default class extends Controller {
    * Hides the discard and save buttons
    */
   hideButtons () {
-    this.buttonTargets.forEach(button => button.classList.add('is-hidden'));
+    this.buttonsTarget.classList.add('is-hidden');
   }
 
   /**
    * Shows the discard and save buttons
    */
   showButtons () {
-    this.buttonTargets.forEach(button => button.classList.remove('is-hidden'));
+    this.buttonsTarget.classList.add('is-hidden');
   }
 
   /**
