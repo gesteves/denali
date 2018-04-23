@@ -46,3 +46,11 @@ export function sendNotification (message, status = 'success') {
   });
   document.body.dispatchEvent(event);
 }
+
+/**
+ * Checks if the device supports hover interactions or not
+ * @return {boolean} Whether or not the device supports hover
+ */
+export function supportsHover () {
+  return window.matchMedia('(hover: hover)').matches
+}

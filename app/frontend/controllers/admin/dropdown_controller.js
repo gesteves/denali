@@ -1,4 +1,5 @@
 import { Controller } from 'stimulus';
+import { supportsHover } from '../../lib/utils';
 
 /**
  * Controls the dropdown menus.
@@ -6,12 +7,21 @@ import { Controller } from 'stimulus';
  */
 export default class extends Controller {
 
+  connect () {
+    this.isHoverable = supportsHover();
+    if (this.isHoverable) {
+      this.element.classList.add('is-hoverable');
+    }
+  }
+
   /**
    * Toggles the dropdown menu
    * @param {Event} event Click event from the dropdown button.
    */
   toggle (event) {
     event.preventDefault();
-    this.element.classList.toggle('is-active');
+    if (!this.isHoverable) {
+      this.element.classList.toggle('is-active');
+    }
   }
 }
