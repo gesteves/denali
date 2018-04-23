@@ -37,7 +37,7 @@ export default class extends Controller {
    * Shows the discard and save buttons
    */
   showButtons () {
-    this.buttonsTarget.classList.add('is-hidden');
+    this.buttonsTarget.classList.remove('is-hidden');
   }
 
   /**
