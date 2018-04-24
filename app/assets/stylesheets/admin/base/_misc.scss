@@ -12,7 +12,12 @@
   }
 }
 
+.draggable-dragging {
+  opacity: 0.5;
+}
+
 .draggable-mirror {
+  cursor: grabbing;
   z-index: 100;
 }
 

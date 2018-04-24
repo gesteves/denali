@@ -29,7 +29,7 @@ export default class extends Controller {
     this.sortablePhotos = new Sortable(this.photosTarget, {
       delay: 100,
       classes: {
-        'source:dragging': 'is-invisible',
+        'source:dragging': 'draggable-dragging',
         'mirror': 'draggable-mirror'
       },
       handle: '.draggable-handle',

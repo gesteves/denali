@@ -10,12 +10,6 @@
   @media (min-width: $desktop) {
     width: calc(100%/5 - #{$size-4});
   }
-
-  &.draggable-dragging {
-    opacity: 0.5;
-  }
-
-
 }
 
 .queue__item-meta {
