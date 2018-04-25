@@ -128,7 +128,7 @@ class Photo < ApplicationRecord
     elsif self.make =~ /leica/i
       'Leica'
     else
-      self.make.titlecase
+      self.make&.titlecase
     end
   end
 
@@ -136,7 +136,7 @@ class Photo < ApplicationRecord
     if self.model =~ /iphone/i
       self.model
     elsif self.model =~ /leica/i
-      self.make&.titlecase
+      self.model.titlecase
     else
       "#{self.formatted_make} #{self.model&.gsub(%r{#{formatted_make}}i, '')&.strip}"
     end
