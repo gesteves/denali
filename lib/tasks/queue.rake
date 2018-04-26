@@ -1,7 +1,7 @@
 namespace :queue do
   desc 'Publish the first entry in the queue'
   task :publish => [:environment] do
-    if Entry.queue_has_published_today?
+    if ENV['limit_daily_queue_posts'].present? && Entry.queue_has_published_today?
       puts 'An entry was already published today!'
     else
       entry = Entry.queued.first
