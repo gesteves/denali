@@ -15,13 +15,15 @@ module Admin::EntriesHelper
     entry.plain_title
   end
 
-  def permalink_date(entry)
+  def permalink_preview(entry)
     if entry.is_published?
-      "#{entry.published_at.strftime('%Y')}/#{entry.published_at.strftime('%-m')}/#{entry.published_at.strftime('%-d')}/#{entry.id}"
+      "https://#{@photoblog.domain}/#{entry.published_at.strftime('%Y')}/#{entry.published_at.strftime('%-m')}/#{entry.published_at.strftime('%-d')}/#{entry.id}/"
     elsif entry.is_queued? && entry.position.present? && entry.id.present?
-      "#{entry.publish_date_for_queued.strftime('%Y')}/#{entry.publish_date_for_queued.strftime('%-m')}/#{entry.publish_date_for_queued.strftime('%-d')}/#{entry.id}"
+      "https://#{@photoblog.domain}/#{entry.publish_date_for_queued.strftime('%Y')}/#{entry.publish_date_for_queued.strftime('%-m')}/#{entry.publish_date_for_queued.strftime('%-d')}/#{entry.id}/"
+    elsif entry.id.present?
+      "https://#{@photoblog.domain}/#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}/#{entry.id}/"
     else
-      "#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}/1"
+      "https://#{@photoblog.domain}/#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}/1234/"
     end
   end
 end

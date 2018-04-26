@@ -20,11 +20,11 @@
     <div class="field has-addons">
       <div class="control is-hidden-mobile">
         <a class="button is-static">
-          <%= "https://#{@photoblog.domain}/#{permalink_date(@entry)}/" %>
+          <%= permalink_preview(@entry) %>
         </a>
       </div>
       <div class="control is-expanded">
-        <%= f.text_field :slug, autocomplete: 'on', placeholder: 'your-optional-url-slug', class: 'input' %>
+        <%= f.text_field :slug, autocomplete: 'on', placeholder: 'optional-url-slug', class: 'input' %>
       </div>
     </div>
   </div>
