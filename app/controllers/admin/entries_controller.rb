@@ -399,7 +399,7 @@ class Admin::EntriesController < AdminController
     end
 
     def set_max_age
-      @max_age = ENV['config_entry_caching_minutes'].try(:to_i) || ENV['config_caching_minutes'].try(:to_i) || 5
+      @max_age = ENV['config_entry_caching_minutes']&.to_i || ENV['config_caching_minutes']&.to_i || 5
     end
 
     def enqueue_invalidation

@@ -6,7 +6,7 @@
 <% if ENV['typekit_body_id'].present? || ENV['typekit_id'].present? %>
   <link rel="preconnect" href="https://use.typekit.net">
 <% end %>
-<%= @photoblog.additional_meta_tags.try(:html_safe) %>
+<%= @photoblog.additional_meta_tags&.html_safe %>
 <% if @photoblog.favicon.present? %>
 <link rel="icon" href="<%= @photoblog.favicon_url(w: 96) %>" type="image/png">
 <% end %>

@@ -192,7 +192,7 @@ class EntriesController < ApplicationController
   end
 
   def set_request_format
-    request.format = 'json' if request.headers['Content-Type'].try(:downcase) == 'application/vnd.api+json'
+    request.format = 'json' if request.headers['Content-Type']&.downcase == 'application/vnd.api+json'
   end
 
   def set_sitemap_entry_count
