@@ -35,6 +35,10 @@
   }
 }
 
+.photo-form__thumbnail:hover {
+  cursor: crosshair;
+}
+
 .photo-form__controls {
   align-items: center;
   display: flex;
