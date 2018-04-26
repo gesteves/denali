@@ -362,7 +362,7 @@ class Admin::EntriesController < AdminController
     end
 
     def get_tags
-      @tags = ActsAsTaggableOn::Tag.order('name asc')
+      @tags = ActsAsTaggableOn::Tag.order('taggings_count desc')
     end
 
     def entry_params
