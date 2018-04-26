@@ -1,5 +1,9 @@
 .awesomplete {
   width: 100%;
+  
+  ul {
+    z-index: 2;
+  }
 }
 
 .draggable-handle {
