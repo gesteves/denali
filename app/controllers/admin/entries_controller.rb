@@ -4,7 +4,7 @@ class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :share, :crops, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :invalidate, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
-  before_action :set_redirect_url, except: [:edit]
+  before_action :set_redirect_url
   before_action :set_max_age
   after_action :update_position, only: [:create]
   after_action :geocode_photos, only: [:create, :update]
@@ -395,7 +395,7 @@ class Admin::EntriesController < AdminController
     end
 
     def set_redirect_url
-      session[:redirect_url] = request.referer
+      session[:redirect_url] = request.referer if request.get?
     end
 
     def set_max_age
