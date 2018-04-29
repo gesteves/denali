@@ -32,7 +32,9 @@ export default class extends Controller {
   successfulCopy (event) {
     event.clearSelection();
     this.iconTarget.classList.replace('fa-clipboard', 'fa-clipboard-check');
-    this.labelTarget.innerHTML = 'Copied to clipboard!';
+    if (this.hasLabelTarget) {
+      this.labelTarget.innerHTML = 'Copied to clipboard!';
+    }
   }
 
   /**

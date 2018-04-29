@@ -261,14 +261,22 @@ class Entry < ApplicationRecord
   end
 
   def permalink_path
-    year, month, day, id, slug = self.slug_params
-    entry_long_path(year, month, day, id, slug)
+    if self.is_published?
+      year, month, day, id, slug = self.slug_params
+      entry_long_path(year, month, day, id, slug)
+    else
+      preview_entry_path(self.preview_hash)
+    end
   end
 
   def permalink_url(opts = {})
     opts.reverse_merge!(host: self.blog.domain)
-    year, month, day, id, slug = self.slug_params
-    entry_long_url(year, month, day, id, slug, url_opts(opts))
+    if self.is_published?
+      year, month, day, id, slug = self.slug_params
+      entry_long_url(year, month, day, id, slug, url_opts(opts))
+    else
+      preview_entry_url(self.preview_hash, url_opts(opts))
+    end
   end
 
   def short_permalink_url(opts = {})

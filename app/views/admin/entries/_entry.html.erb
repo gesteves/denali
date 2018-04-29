@@ -1,7 +1,7 @@
 <div class="card">
   <% if entry.is_photo? %>
     <div class="card-image">
-      <a style="<%= "#{intrinsic_ratio_padding(entry.photos.first)};#{image_placeholder(entry.photos.first)}"  %>" class="image" href="<%= entry.is_published? ? entry.permalink_url : preview_entry_path(entry.preview_hash) %>">
+      <a style="<%= "#{intrinsic_ratio_padding(entry.photos.first)};#{image_placeholder(entry.photos.first)}"  %>" class="image" href="<%= entry.permalink_url %>">
         <%= lazy_responsive_image_tag entry.photos.first,
               'admin_entry',
               { class: 'is-overlay', alt: entry.photos.first.alt_text, 'data-controller': 'lazy-load' } %>

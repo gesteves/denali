@@ -10,7 +10,7 @@
   <div class="dropdown-menu">
     <div class="dropdown-content">
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
-      <% if entry.is_photo? && entry.is_published? %>
+      <% if entry.is_photo? %>
         <%= link_to icon('Share', 'fas fa-share-square'), share_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <% if entry.is_photo? %>

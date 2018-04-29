@@ -16,6 +16,38 @@
         <%= link_to icon('Tumblr', 'fab fa-tumblr'), tumblr_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Tumblr queue. Do you want to continue?' }, class: 'button' %>
       </div>
       <hr class="hr">
+      <h2 class="subtitle is-size-6">Permalinks</h2>
+      <div class="field is-horizontal">
+        <div class="field-body">
+          <div class="field has-addons" data-controller="clipboard">
+            <div class="control is-expanded">
+              <input class="input" type="text" data-target="clipboard.source" readonly="readonly" value="<%= @entry.permalink_url %>">
+            </div>
+            <div class="control">
+              <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">
+                <span class="icon">
+                  <i class="fas fa-clipboard" data-target="clipboard.icon"></i>
+                </span>
+              </button>
+            </div>
+          </div>
+          <% if @entry.is_published? %>
+            <div class="field has-addons" data-controller="clipboard">
+              <div class="control is-expanded">
+                <input class="input" type="text" data-target="clipboard.source" readonly="readonly" value="<%= @entry.short_permalink_url %>">
+              </div>
+              <div class="control">
+                <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">
+                  <span class="icon">
+                    <i class="fas fa-clipboard" data-target="clipboard.icon"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <hr class="hr">
       <h2 class="subtitle is-size-6">Markdown</h2>
       <form data-controller="clipboard">
         <div class="field">
