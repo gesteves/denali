@@ -280,7 +280,8 @@ class Entry < ApplicationRecord
   end
 
   def short_permalink_url(opts = {})
-    opts.reverse_merge!(host: self.blog.short_domain)
+    host = self.blog.short_domain || self.blog.domain
+    opts.reverse_merge!(host: host)
     entry_url(self.id, url_opts(opts))
   end
 
