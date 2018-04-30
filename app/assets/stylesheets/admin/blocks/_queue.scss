@@ -21,7 +21,7 @@
 
   @supports (backdrop-filter: none) {
     backdrop-filter: blur($backdrop-blur);
-    background-color: transparentize($black, 0.25);
+    background-color: transparentize($black, 0.35);
   }
 }
 
