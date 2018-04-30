@@ -7,7 +7,6 @@ module Admin::EntriesHelper
   def share_markdown(entry)
     text = [entry.is_published? ? "[#{entry.plain_title}](#{entry.permalink_url})" : entry.plain_title]
     text << entry.body
-    text << entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }.uniq.sort.map { |t| "##{t}" }.join(' ')
     text.reject(&:blank?).join("\n\n")
   end
 
