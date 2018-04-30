@@ -5,7 +5,8 @@ module Admin::EntriesHelper
   end
 
   def share_markdown(entry)
-    text = "[#{entry.plain_title}](#{entry.permalink_url})"
+    text = []
+    text << "[#{entry.plain_title}](#{entry.permalink_url})"
     text << entry.body
     text.reject(&:blank?).join("\n\n")
   end
