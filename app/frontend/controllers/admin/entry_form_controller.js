@@ -36,7 +36,7 @@ export default class extends Controller {
       plugins: [Plugins.SwapAnimation]
     });
 
-    this.sortablePhotos.on('sortable:start', event => this.startSort(event));
+    this.sortablePhotos.on('drag:start', event => this.startSort(event));
   }
 
   /**
@@ -70,8 +70,8 @@ export default class extends Controller {
    * @param {Event} event A sortable:start event.
    */
   startSort (event) {
-    let mirror = event.data.dragEvent.data.mirror;
-    let originalWidth = event.data.dragEvent.data.sourceContainer.clientWidth;
+    let mirror = event.data.mirror;
+    let originalWidth = event.data.source.clientWidth;
     mirror.style.width = `${originalWidth}px`;
   }
 
