@@ -40,31 +40,31 @@
   @supports (backdrop-filter: none) {
     .notification {
       backdrop-filter: blur($backdrop-blur);
-      background-color: transparentize($notification-background-color, 0.25);
+      background-color: transparentize($notification-background-color, 0.35);
     }
 
     .notification.is-primary {
-      background-color: transparentize($primary, 0.25);
+      background-color: transparentize($primary, 0.35);
     }
 
     .notification.is-link {
-      background-color: transparentize($link, 0.25);
+      background-color: transparentize($link, 0.35);
     }
 
     .notification.is-info {
-      background-color: transparentize($info, 0.25);
+      background-color: transparentize($info, 0.35);
     }
 
     .notification.is-success {
-      background-color: transparentize($success, 0.25);
+      background-color: transparentize($success, 0.35);
     }
 
     .notification.is-warning {
-      background-color: transparentize($warning, 0.25);
+      background-color: transparentize($warning, 0.35);
     }
 
     .notification.is-danger {
-      background-color: transparentize($danger, 0.25);
+      background-color: transparentize($danger, 0.35);
     }
   }
 }
