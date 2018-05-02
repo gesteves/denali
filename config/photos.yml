@@ -48,7 +48,7 @@ entry_list: &entry_list
     - "(min-width: 1680px) 412px"
     - "(min-width: 1280px) calc(25vw - 8px)"
     - "(min-width: 400px) calc(100vw/3 - 8px)"
-    - 50vw
+    - "calc(50vw - 8px)"
 entry_list_square:
   <<: *entry_list
   square: Yes
@@ -71,7 +71,7 @@ admin_entry:
     - "(min-width: 1472px) 1344px"
     - "(min-width: 1280px) 1152px"
     - "(min-width: 1088px) 960px"
-    - calc(100vw - 3rem)
+    - "calc(100vw - 3rem)"
 admin_edit:
   src: 940
   srcset:
@@ -90,7 +90,7 @@ admin_edit:
     - "(min-width: 1280px) 940px"
     - "(min-width: 1088px) 780px"
     - "(min-width: 769px) calc(((100vw - 4.5rem)/6) * 5)"
-    - calc(100vw - 3rem)
+    - "calc(100vw - 3rem)"
 admin_queue:
   src: 490
   srcset:
@@ -110,7 +110,7 @@ admin_queue:
     - "(min-width: 1280px) 207px"
     - "(min-width: 1088px) 168px"
     - "(min-width: 769px) calc(((100vw - 3rem)/4) - 1.5rem)"
-    - calc((100vw - 3rem)/2 - 1.5rem)
+    - "calc((100vw - 3rem)/2 - 1.5rem)"
   square: Yes
 map:
   src: 300
