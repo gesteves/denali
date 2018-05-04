@@ -20,5 +20,6 @@ before_script:
 script:
   - yarn
   - RAILS_ENV=test bundle exec rails db:migrate --trace
+  - bundle exec rails webpacker:compile
   - bundle exec rails test
   - bundle exec rake brakeman:check
