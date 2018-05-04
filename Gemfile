@@ -20,7 +20,7 @@ gem 'sass-rails', '~> 5.0'
 gem 'autoprefixer-rails'
 gem 'imgix'
 gem 'uglifier'
-gem 'webpacker', '~> 3.2.0'
+gem 'webpacker'
 gem 'turbolinks', '~> 5.1.0'
 
 # Misc
