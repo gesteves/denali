@@ -42,7 +42,7 @@
   width: 0;
 }
 
-@media (hover: hover) {
+@media (-moz-touch-enabled: 0), (hover: hover) {
   .tooltip:hover:before,
   .tooltip:hover:after {
     display: block;

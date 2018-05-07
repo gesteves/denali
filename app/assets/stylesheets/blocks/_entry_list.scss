@@ -98,7 +98,7 @@
   overflow: hidden;
 
   &:hover .entry-list__photo-caption {
-    @media (min-width: $bp-xs) {
+    @media (-moz-touch-enabled: 0), (hover: hover) {
       opacity: 1;
     }
   }
