@@ -14,11 +14,11 @@ class AppleNewsJob < ApplicationJob
       article.document = generate_document(entry)
 
       response = article.save!
-      if response
+      if response.is_a?(Array)
+        raise response
+      elsif article.id.present? && article.id != entry.apple_news_id
         # entry.apple_news_id = article.id
         # entry.save
-      else
-        raise response
       end
     elsif Rails.env.development?
       File.open("tmp/article.json",'w'){ |f| f << generate_document(entry).as_json.to_json }
