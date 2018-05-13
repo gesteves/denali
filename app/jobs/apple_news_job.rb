@@ -33,6 +33,7 @@ class AppleNewsJob < ApplicationJob
     document.layout = AppleNews::Layout.new(columns: 7, width: 1024, margin: 60, gutter: 20)
     document.component_text_styles = component_text_styles
     document.component_layouts = component_layouts
+    document.text_styles = text_styles
 
     entry.photos.map { |p| document.components << photo_component(p) }
     document.components << divider_component(width: 4) if entry.is_photo?
@@ -41,7 +42,8 @@ class AppleNewsJob < ApplicationJob
     document.components << divider_component(layout: 'divider') if entry.is_photo?
     document.components << meta_component(published_on(entry))
     document.components << meta_component(exif(entry.photos.first)) if entry.is_single_photo?
-    document.components << meta_component(tag_list(entry), layout: 'tags')
+    document.components << meta_component(tag_list(entry))
+    document.components << divider_component(width: 4, layout: 'divider')
 
     document
   end
@@ -49,20 +51,21 @@ class AppleNewsJob < ApplicationJob
   def component_text_styles
     {
       title: AppleNews::Style::ComponentText.new(
-        fontName: 'AvenirNext-Regular',
-        fontSize: 28,
-        textColor: '#444444'
+        fontName: 'AvenirNext-Bold',
+        fontSize: 32,
+        textColor: '#444'
       ),
       body: AppleNews::Style::ComponentText.new(
         fontName: 'Palatino-Roman',
-        textColor: '#444444',
+        textColor: '#444',
         fontSize: 16,
         linkStyle: AppleNews::Style::Text.new(textColor: '#BF0222')
       ),
       meta: AppleNews::Style::ComponentText.new(
-        fontName: 'AvenirNext-Italic',
-        textColor: '#666666',
-        fontSize: 14,
+        fontName: 'AvenirNext-Regular',
+        textColor: '#666',
+        fontSize: 12,
+        lineHeight: 24,
         textAlignment: 'center'
       )
     }
@@ -85,12 +88,16 @@ class AppleNewsJob < ApplicationJob
       ),
       divider: AppleNews::ComponentLayout.new(
         margin: 36
-      ),
-      tags: AppleNews::ComponentLayout.new(
-        columnSpan: 5,
-        columnStart: 1,
-        margin: { top: 0, bottom: 36}
       )
+    }
+  end
+
+  def text_styles
+    {
+      'default-tag-blockquote': {
+        fontName: 'Palatino-Italic',
+        textColor: '#666'
+      }
     }
   end
 
@@ -124,20 +131,19 @@ class AppleNewsJob < ApplicationJob
 
   def body_component(entry)
     component = AppleNews::Component::Body.new
-    component.format = 'markdown'
-    component.text = entry.body
+    component.format = 'html'
+    component.text = entry.formatted_body
     component.text_style = 'body'
     component.layout = 'default'
     component
   end
 
   def meta_component(text, opts = {})
-    opts.reverse_merge!(layout: 'default')
     component = AppleNews::Component::Body.new
     component.format = 'html'
     component.text = text
     component.text_style = 'meta'
-    component.layout = opts[:layout]
+    component.layout = 'default'
     component
   end
 
