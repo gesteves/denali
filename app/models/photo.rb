@@ -159,7 +159,7 @@ class Photo < ApplicationRecord
     return '' if self.formatted_camera.blank?
     article = %w(a e i o u).include?(self.formatted_camera[0].downcase) ? 'an' : 'a'
     text = "Taken with #{article} #{self.formatted_camera}"
-    text += " #{on self.formatted_film}" if self.is_film?
+    text += " on #{self.formatted_film}" if self.is_film?
     text
   end
 
