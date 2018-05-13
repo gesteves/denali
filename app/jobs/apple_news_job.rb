@@ -29,131 +29,128 @@ class AppleNewsJob < ApplicationJob
     document.identifier = entry.id.to_s
     document.language = 'en'
     document.title = entry.plain_title
+    document.metadata = metadata(entry)
+    document.layout = AppleNews::Layout.new(columns: 7, width: 1024, margin: 60, gutter: 20)
+    document.component_text_styles = component_text_styles
+    document.component_layouts = component_layouts
 
-    document.layout = AppleNews::Layout.new(
-      columns: 7,
-      width: 1024
-    )
+    entry.photos.map { |p| document.components << photo_component(p) }
+    document.components << divider_component(width: 4) if entry.is_photo?
+    document.components << title_component(entry)
+    document.components << body_component(entry) if entry.body.present?
+    document.components << divider_component(layout: 'divider') if entry.is_photo?
+    document.components << meta_component(published_on(entry))
+    document.components << meta_component(exif(entry.photos.first)) if entry.is_single_photo?
+    document.components << meta_component(tag_list(entry), layout: 'tags')
 
-    document.metadata = AppleNews::Metadata.new(
-      authors: [entry.user.name],
-      canonicalURL: entry.permalink_url,
-      datePublished: entry.published_at.utc.strftime('%FT%TZ'),
-      dateModified: entry.modified_at.utc.strftime('%FT%TZ'),
-      keywords: entry.combined_tags.map(&:name),
-      thumbnailURL: entry.photos.first.url(w: 2732),
-      excerpt: excerpt(entry)
-    )
+    document
+  end
 
-    entry.photos.each do |p|
-      document.components << AppleNews::Component::Photo.new(
-        caption: p.plain_caption,
-        URL: p.url(w: 2732),
-        layout: AppleNews::ComponentLayout.new(
-          ignoreDocumentMargin: true,
-          margin: { top: 0, bottom: 36}
-        )
-      )
-    end
-
-    if entry.is_photo?
-      document.components << AppleNews::Component::Divider.new(
-        stroke: AppleNews::Style::Stroke.new(color: '#EEEEEE', width: 4)
-      )
-    end
-
-    document.components << AppleNews::Component::Title.new(
-      text: entry.plain_title,
-      textStyle: AppleNews::Style::ComponentText.new(
+  def component_text_styles
+    {
+      title: AppleNews::Style::ComponentText.new(
         fontName: 'AvenirNext-Regular',
         fontSize: 28,
         textColor: '#444444'
       ),
-      layout: AppleNews::ComponentLayout.new(
-        margin: 36,
-        columnSpan: 5,
-        columnStart: 1
-      )
-    )
-    if entry.body.present?
-      document.components << AppleNews::Component::Body.new(
-        format: 'markdown',
-        text: entry.body,
-        textStyle: AppleNews::Style::ComponentText.new(
-          fontName: 'Palatino-Roman',
-          textColor: '#444444',
-          fontSize: 16,
-          linkStyle: AppleNews::Style::Text.new(textColor: '#BF0222')
-        ),
-        layout: AppleNews::ComponentLayout.new(
-          columnSpan: 5,
-          columnStart: 1
-        )
-      )
-    end
-
-    document.components << AppleNews::Component::Divider.new(
-      stroke: AppleNews::Style::Stroke.new(color: '#EEEEEE', width: 1),
-      layout: AppleNews::ComponentLayout.new(
-        margin: 36
-      )
-    )
-
-    document.components << AppleNews::Component::Body.new(
-      format: 'html',
-      text: "Published on #{link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url}",
-      textStyle: AppleNews::Style::ComponentText.new(
+      body: AppleNews::Style::ComponentText.new(
+        fontName: 'Palatino-Roman',
+        textColor: '#444444',
+        fontSize: 16,
+        linkStyle: AppleNews::Style::Text.new(textColor: '#BF0222')
+      ),
+      meta: AppleNews::Style::ComponentText.new(
         fontName: 'AvenirNext-Italic',
         textColor: '#666666',
         fontSize: 14,
         textAlignment: 'center'
-      ),
-      layout: AppleNews::ComponentLayout.new(
+      )
+    }
+  end
+
+  def component_layouts
+    {
+      default: AppleNews::ComponentLayout.new(
         columnSpan: 5,
         columnStart: 1
-      )
-    )
-
-    if entry.is_single_photo?
-      document.components << AppleNews::Component::Body.new(
-        format: 'html',
-        text: exif(entry.photos.first),
-        textStyle: AppleNews::Style::ComponentText.new(
-          fontName: 'AvenirNext-Italic',
-          textColor: '#666666',
-          fontSize: 14,
-          textAlignment: 'center'
-        ),
-        layout: AppleNews::ComponentLayout.new(
-          columnSpan: 5,
-          columnStart: 1
-        )
-      )
-    end
-
-    document.components << AppleNews::Component::Body.new(
-      format: 'html',
-      text: tags(entry),
-      textStyle: AppleNews::Style::ComponentText.new(
-        fontName: 'AvenirNext-Italic',
-        textColor: '#666666',
-        fontSize: 14,
-        textAlignment: 'center'
       ),
-      layout: AppleNews::ComponentLayout.new(
+      title: AppleNews::ComponentLayout.new(
         columnSpan: 5,
-        columnStart: 1
-      )
-    )
-
-    document.components << AppleNews::Component::Divider.new(
-      stroke: AppleNews::Style::Stroke.new(color: '#FFFFFF00', width: 0),
-      layout: AppleNews::ComponentLayout.new(
+        columnStart: 1,
         margin: 36
+      ),
+      photo: AppleNews::ComponentLayout.new(
+        ignoreDocumentMargin: true,
+        margin: { top: 0, bottom: 36}
+      ),
+      divider: AppleNews::ComponentLayout.new(
+        margin: 36
+      ),
+      tags: AppleNews::ComponentLayout.new(
+        columnSpan: 5,
+        columnStart: 1,
+        margin: { top: 0, bottom: 36}
       )
-    )
+    }
+  end
 
-    document
+  def metadata(entry)
+    metadata = AppleNews::Metadata.new
+    metadata.authors = [entry.user.name]
+    metadata.canonical_url = entry.permalink_url
+    metadata.date_published = entry.published_at.utc.strftime('%FT%TZ')
+    metadata.date_modified = entry.modified_at.utc.strftime('%FT%TZ')
+    metadata.keywords = entry.combined_tags.map(&:name)
+    metadata.thumbnail_url = entry.photos.first.url(w: 2732)
+    metadata.excerpt = excerpt(entry)
+    metadata
+  end
+
+  def photo_component(photo)
+    component = AppleNews::Component::Photo.new
+    component.caption = photo.plain_caption
+    component.url = photo.url(w: 2732)
+    component.layout = 'photo'
+    component
+  end
+
+  def title_component(entry)
+    component = AppleNews::Component::Title.new
+    component.text = entry.plain_title
+    component.text_style = 'title'
+    component.layout = 'title'
+    component
+  end
+
+  def body_component(entry)
+    component = AppleNews::Component::Body.new
+    component.format = 'markdown'
+    component.text = entry.body
+    component.text_style = 'body'
+    component.layout = 'default'
+    component
+  end
+
+  def meta_component(text, opts = {})
+    opts.reverse_merge!(layout: 'default')
+    component = AppleNews::Component::Body.new
+    component.format = 'html'
+    component.text = text
+    component.text_style = 'meta'
+    component.layout = opts[:layout]
+    component
+  end
+
+  def divider_component(opts = {})
+    opts.reverse_merge!(width: 1, color: '#EEE')
+    component = AppleNews::Component::Divider.new
+    component.stroke = AppleNews::Style::Stroke.new(color: opts[:color], width: opts[:width])
+    component.layout = opts[:layout] if opts[:layout].present?
+    component
+  end
+
+  def published_on(entry)
+    "Published on #{link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url}"
   end
 
   def exif(photo)
@@ -213,7 +210,7 @@ class AppleNewsJob < ApplicationJob
     end
   end
 
-  def tags(entry)
+  def tag_list(entry)
     entry.combined_tags.sort_by { |t| t.name }.map { |t| link_to("##{t.name.downcase}", Rails.application.routes.url_helpers.tag_url(t.slug, host: entry.blog.domain)) }.join(' ')
   end
 end
