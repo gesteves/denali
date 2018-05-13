@@ -186,47 +186,25 @@ class AppleNewsJob < ApplicationJob
 
   def exif(photo)
     items = []
-    if photo.make.present? && photo.model.present?
-      text = "Taken with #{article(photo.make)} #{photo.formatted_camera}"
-      if photo.is_film?
-        text += " #{on photo.formatted_film}"
-      end
-      items << text
-    end
+    items << photo.taken_with
 
     unless photo.is_phone_camera?
-      if photo.focal_length.present?
-        items << "#{photo.focal_length} mm"
-      end
+      items << photo.focal_length_with_unit
 
       if photo.exposure.present? && photo.f_number.present?
-        items << "#{exposure(photo.exposure)} at f/#{aperture(photo.f_number)}"
+        items << "#{photo.formatted_exposure} at #{photo.formatted_aperture}"
       elsif photo.exposure.present?
-        items << exposure(photo.exposure)
+        items << photo.formatted_exposure
       elsif photo.f_number.present?
-        items << "f/#{aperture(photo.f_number)}"
+        items << photo.formatted_aperture
       end
 
       if photo.iso.present?
-        items << "ISO #{photo.iso }"
+        items << "ISO #{photo.iso}"
       end
     end
 
-    items.join(' · ')
-  end
-
-  def article(word)
-    %w(a e i o u).include?(word[0].downcase) ? 'an' : 'a'
-  end
-
-  def aperture(f_number)
-    "%g" % ("%.2f" % f_number)
-  end
-
-  def exposure(exposure)
-    exposure = exposure.to_r
-    formatted = exposure >= 1 ? "%g" % ("%.2f" % exposure) : exposure
-    "#{formatted}″"
+    items.reject(&:blank?).join(' · ')
   end
 
   def excerpt(entry)
