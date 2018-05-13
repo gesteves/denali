@@ -1,4 +1,5 @@
 class AppleNewsJob < ApplicationJob
+  include ActionView::Helpers::UrlHelper
 
   def perform(entry)
     return if !entry.is_published? || ENV['apple_news_channel_id'].blank? #|| !Rails.env.production?
@@ -91,7 +92,7 @@ class AppleNewsJob < ApplicationJob
 
     document.components << AppleNews::Component::Body.new(
       format: 'html',
-      text: "Published on <a href=\"#{entry.permalink_url}\">#{entry.published_at.strftime('%B %-d, %Y')}</a>",
+      text: "Published on #{link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url}",
       textStyle: AppleNews::Style::ComponentText.new(
         fontName: 'AvenirNext-Italic',
         textColor: '#666666',
@@ -188,5 +189,6 @@ class AppleNewsJob < ApplicationJob
     else
       entry.plain_body
     end
+  end
   end
 end
