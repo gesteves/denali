@@ -2,23 +2,26 @@ class AppleNewsJob < ApplicationJob
   include ActionView::Helpers::UrlHelper
 
   def perform(entry)
-    return if !entry.is_published? || ENV['apple_news_channel_id'].blank? || !Rails.env.production?
+    if Rails.env.production?
+      return if !entry.is_published? || ENV['apple_news_channel_id'].blank?
+      # article = if entry.apple_news_id.present?
+      #   AppleNews::Article.new(entry.apple_news_id)
+      # else
+      #   AppleNews::Article.new
+      # end
 
-    # article = if entry.apple_news_id.present?
-    #   AppleNews::Article.new(entry.apple_news_id)
-    # else
-    #   AppleNews::Article.new
-    # end
+      article = AppleNews::Article.new
+      article.document = generate_document(entry)
 
-    article = AppleNews::Article.new
-    article.document = generate_document(entry)
-
-    response = article.save!
-    if response
-      # entry.apple_news_id = article.id
-      # entry.save
-    else
-      raise response
+      response = article.save!
+      if response
+        # entry.apple_news_id = article.id
+        # entry.save
+      else
+        raise response
+      end
+    elsif Rails.env.development?
+      File.open("tmp/article.json",'w'){ |f| f << generate_document(entry).as_json.to_json }
     end
   end
 
