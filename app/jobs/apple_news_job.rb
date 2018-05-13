@@ -122,6 +122,21 @@ class AppleNewsJob < ApplicationJob
       )
     end
 
+    document.components << AppleNews::Component::Body.new(
+      format: 'html',
+      text: tags(entry),
+      textStyle: AppleNews::Style::ComponentText.new(
+        fontName: 'AvenirNext-Italic',
+        textColor: '#666666',
+        fontSize: 14,
+        textAlignment: 'center'
+      ),
+      layout: AppleNews::ComponentLayout.new(
+        columnSpan: 5,
+        columnStart: 1
+      )
+    )
+
     document.components << AppleNews::Component::Divider.new(
       stroke: AppleNews::Style::Stroke.new(color: '#FFFFFF00', width: 0),
       layout: AppleNews::ComponentLayout.new(
@@ -190,5 +205,8 @@ class AppleNewsJob < ApplicationJob
       entry.plain_body
     end
   end
+
+  def tags(entry)
+    entry.combined_tags.sort_by { |t| t.name }.map { |t| link_to("##{t.name.downcase}", Rails.application.routes.url_helpers.tag_url(t.slug, host: entry.blog.domain)) }.join(' ')
   end
 end
