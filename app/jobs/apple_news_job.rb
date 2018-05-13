@@ -128,7 +128,7 @@ class AppleNewsJob < ApplicationJob
     metadata.canonical_url = entry.permalink_url
     metadata.date_published = entry.published_at.utc.strftime('%FT%TZ')
     metadata.date_modified = entry.modified_at.utc.strftime('%FT%TZ')
-    metadata.keywords = entry.combined_tags.map(&:name)
+    metadata.keywords = entry.combined_tags[0, 50].map(&:name)
     metadata.thumbnail_url = entry.photos.first.url(w: 2732)
     metadata.excerpt = excerpt(entry)
     metadata
