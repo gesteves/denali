@@ -100,8 +100,6 @@ class AppleNewsJob < ApplicationJob
         margin: 36
       ),
       map: AppleNews::ComponentLayout.new(
-        columnSpan: 5,
-        columnStart: 1,
         margin: { top: 0, bottom: 36}
       )
     }
