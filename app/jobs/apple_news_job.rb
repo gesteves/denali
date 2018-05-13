@@ -4,19 +4,23 @@ class AppleNewsJob < ApplicationJob
   def perform(entry)
     if Rails.env.production?
       return if !entry.is_published? || ENV['apple_news_channel_id'].blank?
+      # TODO: Uncomment when entries have apple_news_id column
       # article = if entry.apple_news_id.present?
       #   AppleNews::Article.new(entry.apple_news_id)
       # else
       #   AppleNews::Article.new
       # end
 
+      # TODO: Remove when entries have apple_news_id column
       article = AppleNews::Article.new
+
       article.document = generate_document(entry)
 
       response = article.save!
       if response.is_a?(Array)
         raise response
       elsif article.id.present? && article.id != entry.apple_news_id
+        # TODO: Uncomment when entries have apple_news_id column
         # entry.apple_news_id = article.id
         # entry.save
       end
