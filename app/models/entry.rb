@@ -273,7 +273,7 @@ class Entry < ApplicationRecord
     opts.reverse_merge!(host: self.blog.domain)
     if self.is_published?
       year, month, day, id, slug = self.slug_params
-      entry_long_url(year, month, day, id, slug, url_opts(opts))
+      'https://www.allencompassingtrip.com' + entry_long_url(year, month, day, id, slug, url_opts(opts))
     else
       preview_entry_url(self.preview_hash, url_opts(opts))
     end

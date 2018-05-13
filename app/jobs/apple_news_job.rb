@@ -43,7 +43,7 @@ class AppleNewsJob < ApplicationJob
     document.components << title_component(entry)
     document.components << body_component(entry) if entry.body.present?
     document.components << divider_component(layout: 'divider') if entry.is_photo?
-    document.components << meta_component(published_on(entry))
+    document.components << meta_component(byline(entry))
     document.components << meta_component(exif(entry.photos.first)) if entry.is_single_photo?
     document.components << meta_component(tag_list(entry))
     document.components << divider_component(width: 4, layout: 'divider')
@@ -180,8 +180,8 @@ class AppleNewsJob < ApplicationJob
     component
   end
 
-  def published_on(entry)
-    "Published on #{link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url}"
+  def byline(entry)
+    "By #{entry.user.name} · Published on #{link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url}"
   end
 
   def exif(photo)
