@@ -38,7 +38,11 @@ class AppleNewsJob < ApplicationJob
     document.component_layouts = component_layouts
     document.text_styles = text_styles
 
-    entry.photos.map { |p| document.components << photo_component(p) }
+    if entry.is_single_photo?
+      document.components << photo_component(entry)
+    elsif entry.is_photoset?
+      document.components << gallery_component(entry)
+    end
     document.components << divider_component(width: 4) if entry.is_photo?
     document.components << title_component(entry)
     document.components << body_component(entry) if entry.body.present?
@@ -126,10 +130,18 @@ class AppleNewsJob < ApplicationJob
     metadata
   end
 
-  def photo_component(photo)
+  def photo_component(entry)
+    photo = entry.photos.first
     component = AppleNews::Component::Photo.new
     component.caption = photo.plain_caption
     component.url = photo.url(w: 2732)
+    component.layout = 'photo'
+    component
+  end
+
+  def gallery_component(entry)
+    component = AppleNews::Component::Gallery.new
+    component.items = entry.photos.map { |p| AppleNews::Property::GalleryItem.new(caption: p.plain_caption, URL: p.url(w: 2732)) }
     component.layout = 'photo'
     component
   end
