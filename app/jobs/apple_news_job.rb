@@ -2,8 +2,17 @@ class AppleNewsJob < ApplicationJob
   include ActionView::Helpers::UrlHelper
 
   def perform(entry)
-    return if !entry.is_published? || ENV['apple_news_channel_id'].blank? #|| !Rails.env.production?
-    article = generate_article(entry)
+    return if !entry.is_published? || ENV['apple_news_channel_id'].blank? || !Rails.env.production?
+
+    # article = if entry.apple_news_id.present?
+    #   AppleNews::Article.new(entry.apple_news_id)
+    # else
+    #   AppleNews::Article.new
+    # end
+
+    article = AppleNews::Article.new
+    article.document = generate_document(entry)
+
     response = article.save!
     if response
       # entry.apple_news_id = article.id
@@ -15,7 +24,7 @@ class AppleNewsJob < ApplicationJob
 
   private
 
-  def generate_article(entry)
+  def generate_document(entry)
     document = AppleNews::Document.new
     document.identifier = entry.id.to_s
     document.language = 'en'
@@ -144,9 +153,7 @@ class AppleNewsJob < ApplicationJob
       )
     )
 
-    article = AppleNews::Article.new(nil, document: document)
-    article.is_preview = true
-    article
+    document
   end
 
   def exif(photo)
