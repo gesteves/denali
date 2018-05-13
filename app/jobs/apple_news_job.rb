@@ -47,6 +47,7 @@ class AppleNewsJob < ApplicationJob
     document.components << meta_component(exif(entry.photos.first)) if entry.is_single_photo?
     document.components << meta_component(tag_list(entry))
     document.components << divider_component(width: 4, layout: 'divider')
+    document.components << map_component(entry) if entry.show_in_map? && entry.photos.count(&:has_location?) > 0
 
     document
   end
@@ -69,7 +70,8 @@ class AppleNewsJob < ApplicationJob
         textColor: '#666',
         fontSize: 12,
         lineHeight: 24,
-        textAlignment: 'center'
+        textAlignment: 'center',
+        hyphenation: false
       )
     }
   end
@@ -85,12 +87,22 @@ class AppleNewsJob < ApplicationJob
         columnStart: 1,
         margin: 36
       ),
+      titleOnly: AppleNews::ComponentLayout.new(
+        columnSpan: 5,
+        columnStart: 1,
+        margin: { top: 36, bottom: 0}
+      ),
       photo: AppleNews::ComponentLayout.new(
         ignoreDocumentMargin: true,
         margin: { top: 0, bottom: 36}
       ),
       divider: AppleNews::ComponentLayout.new(
         margin: 36
+      ),
+      map: AppleNews::ComponentLayout.new(
+        columnSpan: 5,
+        columnStart: 1,
+        margin: { top: 0, bottom: 36}
       )
     }
   end
@@ -128,7 +140,7 @@ class AppleNewsJob < ApplicationJob
     component = AppleNews::Component::Title.new
     component.text = entry.plain_title
     component.text_style = 'title'
-    component.layout = 'title'
+    component.layout = entry.body.present? ? 'title' : 'titleOnly'
     component
   end
 
@@ -147,6 +159,18 @@ class AppleNewsJob < ApplicationJob
     component.text = text
     component.text_style = 'meta'
     component.layout = 'default'
+    component
+  end
+
+  def map_component(entry)
+    component = AppleNews::Component::Map.new
+    photos = entry.photos.select(&:has_location?)
+    component.items = if photos.size > 1
+      component.items = entry.photos.select(&:has_location?).map { |p| AppleNews::Property::MapItem.new(latitude: p.latitude, longitude: p.longitude, caption: p.plain_caption) }
+    else
+      component.items = entry.photos.select(&:has_location?).map { |p| AppleNews::Property::MapItem.new(latitude: p.latitude, longitude: p.longitude) }
+    end
+    component.layout = 'map'
     component
   end
 
