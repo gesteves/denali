@@ -293,7 +293,7 @@ class Entry < ApplicationRecord
     FlickrJob.perform_later(self) if self.post_to_flickr
     InstagramJob.perform_later(self) if self.post_to_instagram
     PinterestJob.perform_later(self) if self.post_to_pinterest
-    AppleNewsJob.perform_later(self)
+    AppleNewsJob.perform_later(self) if self.blog.publish_on_apple_news
     true
   end
 

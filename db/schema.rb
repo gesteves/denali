@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180311180533) do
+ActiveRecord::Schema.define(version: 20180514214402) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 20180311180533) do
     t.datetime "logo_updated_at"
     t.string "facebook"
     t.string "apple_news_url"
+    t.boolean "publish_on_apple_news", default: false
     t.index ["domain"], name: "index_blogs_on_domain"
   end
 

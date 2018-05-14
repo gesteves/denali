@@ -298,7 +298,7 @@
   </div>
 
   <hr class="hr">
-  <h2 class="subtitle is-size-5-mobile">Entry options</h2>
+  <h2 class="subtitle is-size-5-mobile">Other options</h2>
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
@@ -334,6 +334,33 @@
               </li>
             </ul>
             <%= f.hidden_field :show_related_entries, 'data-target': 'radio-tab.field' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :publish_on_apple_news, 'Publish on Apple News', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>
+                  Yes
+                </a>
+              </li>
+              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>
+                  No
+                </a>
+              </li>
+            </ul>
+            <%= f.hidden_field :publish_on_apple_news, 'data-target': 'radio-tab.field' %>
           </div>
         </div>
       </div>

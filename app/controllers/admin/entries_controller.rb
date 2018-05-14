@@ -124,7 +124,7 @@ class Admin::EntriesController < AdminController
       if @entry.update(entry_params)
         logger.info "Entry #{@entry.id} was updated."
         flash[:success] = 'Your entry has been updated!'
-        AppleNewsJob.perform_later(@entry)
+        AppleNewsJob.perform_later(@entry) if @entry.blog.publish_on_apple_news
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else
         flash[:warning] = 'Your entry couldn’t be updated…'
