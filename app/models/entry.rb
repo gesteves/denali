@@ -287,13 +287,13 @@ class Entry < ApplicationRecord
 
   def enqueue_sharing_jobs
     self.enqueue_slack
-    TwitterJob.perform_later(self) if self.post_to_twitter
-    TumblrJob.perform_later(self) if self.post_to_tumblr
+    AppleNewsJob.perform_later(self) if self.blog.publish_on_apple_news
     FacebookJob.perform_later(self) if self.post_to_facebook
     FlickrJob.perform_later(self) if self.post_to_flickr
     InstagramJob.perform_later(self) if self.post_to_instagram
     PinterestJob.perform_later(self) if self.post_to_pinterest
-    AppleNewsJob.perform_later(self) if self.blog.publish_on_apple_news
+    TumblrJob.perform_later(self) if self.post_to_tumblr
+    TwitterJob.perform_later(self) if self.post_to_twitter
     true
   end
 
