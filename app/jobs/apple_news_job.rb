@@ -98,17 +98,17 @@ class AppleNewsJob < ApplicationJob
       titleOnly: AppleNews::ComponentLayout.new(
         columnSpan: 5,
         columnStart: 1,
-        margin: { top: 36, bottom: 0}
+        margin: { top: 36, bottom: 0 }
       ),
       photo: AppleNews::ComponentLayout.new(
         ignoreDocumentMargin: true,
-        margin: { top: 0, bottom: 36}
+        margin: { top: 0, bottom: 36 }
       ),
       divider: AppleNews::ComponentLayout.new(
         margin: 36
       ),
       map: AppleNews::ComponentLayout.new(
-        margin: { top: 0, bottom: 36}
+        margin: { top: 0, bottom: 36 }
       )
     }
   end
