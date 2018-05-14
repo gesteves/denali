@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180514214402) do
+ActiveRecord::Schema.define(version: 20180514215209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,6 +75,7 @@ ActiveRecord::Schema.define(version: 20180514214402) do
     t.string "preview_hash"
     t.datetime "modified_at"
     t.text "instagram_text"
+    t.string "apple_news_id"
     t.index ["blog_id"], name: "index_entries_on_blog_id"
     t.index ["photos_count"], name: "index_entries_on_photos_count"
     t.index ["preview_hash"], name: "index_entries_on_preview_hash"
