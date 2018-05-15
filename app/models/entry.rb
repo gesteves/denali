@@ -2,6 +2,8 @@ require 'elasticsearch/model'
 class Entry < ApplicationRecord
   include Elasticsearch::Model
   include Rails.application.routes.url_helpers
+  include ActionView::Helpers::UrlHelper
+  include ActionView::Helpers::TextHelper
   include Formattable
 
   has_many :photos, -> { order 'position ASC' }, dependent: :destroy
@@ -411,6 +413,35 @@ class Entry < ApplicationRecord
     self.save!
   end
 
+  def to_apple_news_document
+    document = AppleNews::Document.new
+    document.identifier = self.id.to_s
+    document.language = 'en'
+    document.title = self.plain_title
+    document.metadata = apple_news_metadata
+    document.layout = AppleNews::Layout.new(columns: 7, width: 1024, margin: 60, gutter: 20)
+    document.component_text_styles = apple_news_component_text_styles
+    document.component_layouts = apple_news_component_layouts
+    document.text_styles = apple_news_text_styles
+
+    if self.is_single_photo?
+      document.components << apple_news_photo_component
+    elsif self.is_photoset?
+      document.components << apple_news_gallery_component
+    end
+    document.components << apple_news_divider_component(width: 4) if self.is_photo?
+    document.components << apple_news_title_component
+    document.components << apple_news_body_component if self.body.present?
+    document.components << apple_news_divider_component(layout: 'divider') if self.is_photo?
+    document.components << apple_news_meta_component("By #{self.user.name} · Published on #{link_to self.published_at.strftime('%B %-d, %Y'), self.permalink_url}")
+    document.components << apple_news_meta_component(self.photos.first.exif_string) if self.is_single_photo?
+    document.components << apple_news_meta_component(apple_news_tag_list)
+    document.components << apple_news_divider_component(width: 4, layout: 'divider')
+    document.components << apple_news_map_component if self.show_in_map? && self.photos.count(&:has_location?) > 0
+
+    document
+  end
+
   private
 
   def url_opts(opts)
@@ -441,5 +472,151 @@ class Entry < ApplicationRecord
   def set_preview_hash
     sha256 = Digest::SHA256.new
     self.preview_hash = sha256.hexdigest(Time.now.to_i.to_s)
+  end
+
+  def apple_news_component_text_styles
+    {
+      title: AppleNews::Style::ComponentText.new(
+        fontName: 'AvenirNext-Bold',
+        fontSize: 32,
+        textColor: '#444'
+      ),
+      body: AppleNews::Style::ComponentText.new(
+        fontName: 'Palatino-Roman',
+        textColor: '#444',
+        fontSize: 16,
+        linkStyle: AppleNews::Style::Text.new(textColor: '#BF0222')
+      ),
+      meta: AppleNews::Style::ComponentText.new(
+        fontName: 'AvenirNext-Regular',
+        textColor: '#666',
+        fontSize: 12,
+        lineHeight: 24,
+        textAlignment: 'center',
+        hyphenation: false
+      )
+    }
+  end
+
+  def apple_news_component_layouts
+    {
+      default: AppleNews::ComponentLayout.new(
+        columnSpan: 5,
+        columnStart: 1
+      ),
+      title: AppleNews::ComponentLayout.new(
+        columnSpan: 5,
+        columnStart: 1,
+        margin: 36
+      ),
+      titleOnly: AppleNews::ComponentLayout.new(
+        columnSpan: 5,
+        columnStart: 1,
+        margin: { top: 36, bottom: 0 }
+      ),
+      photo: AppleNews::ComponentLayout.new(
+        ignoreDocumentMargin: true,
+        margin: { top: 0, bottom: 36 }
+      ),
+      divider: AppleNews::ComponentLayout.new(
+        margin: 36
+      ),
+      map: AppleNews::ComponentLayout.new(
+        margin: { top: 0, bottom: 36 }
+      )
+    }
+  end
+
+  def apple_news_text_styles
+    {
+      'default-tag-blockquote': {
+        fontName: 'Palatino-Italic',
+        textColor: '#666'
+      }
+    }
+  end
+
+  def apple_news_metadata
+    excerpt = if self.is_photo?
+      if self.body.present?
+        truncate(self.plain_body, length: 200)
+      elsif self.photos.first.alt_text.present?
+        self.photos.first.alt_text
+      end
+    else
+      truncate(self.plain_body, length: 200)
+    end
+
+    metadata = AppleNews::Metadata.new
+    metadata.authors = [self.user.name]
+    metadata.canonical_url = self.permalink_url
+    metadata.date_published = self.published_at.utc.strftime('%FT%TZ') if self.is_published?
+    metadata.date_modified = self.modified_at.utc.strftime('%FT%TZ') if self.is_published?
+    metadata.keywords = self.combined_tags[0, 50].map(&:name)
+    metadata.thumbnail_url = self.photos.first.url(w: 2732) if self.is_photo?
+    metadata.excerpt = excerpt
+    metadata
+  end
+
+  def apple_news_photo_component
+    photo = self.photos.first
+    component = AppleNews::Component::Photo.new
+    component.caption = photo.plain_caption
+    component.url = photo.url(w: 2732)
+    component.layout = 'photo'
+    component
+  end
+
+  def apple_news_gallery_component
+    component = AppleNews::Component::Gallery.new
+    component.items = self.photos.map { |p| AppleNews::Property::GalleryItem.new(caption: p.plain_caption, URL: p.url(w: 2732)) }
+    component.layout = 'photo'
+    component
+  end
+
+  def apple_news_divider_component(opts = {})
+    opts.reverse_merge!(width: 1, color: '#EEE')
+    component = AppleNews::Component::Divider.new
+    component.stroke = AppleNews::Style::Stroke.new(color: opts[:color], width: opts[:width])
+    component.layout = opts[:layout] if opts[:layout].present?
+    component
+  end
+
+  def apple_news_title_component
+    component = AppleNews::Component::Title.new
+    component.text = self.plain_title
+    component.text_style = 'title'
+    component.layout = self.body.present? ? 'title' : 'titleOnly'
+    component
+  end
+
+  def apple_news_body_component
+    component = AppleNews::Component::Body.new
+    component.format = 'html'
+    component.text = self.formatted_body
+    component.text_style = 'body'
+    component.layout = 'default'
+    component
+  end
+
+  def apple_news_meta_component(text, opts = {})
+    component = AppleNews::Component::Body.new
+    component.format = 'html'
+    component.text = text
+    component.text_style = 'meta'
+    component.layout = 'default'
+    component
+  end
+
+  def apple_news_map_component
+    component = AppleNews::Component::Map.new
+    photos = self.photos.select(&:has_location?)
+    component.items = photos.map { |p| AppleNews::Property::MapItem.new(latitude: p.latitude, longitude: p.longitude, caption: p.plain_caption) }
+    component.layout = 'map'
+    component
+  end
+
+  def apple_news_tag_list
+    self.combined_tags.sort_by { |t| t.name }.map { |t| link_to("##{t.name.downcase}", Rails.application.routes.url_helpers.tag_url(t.slug, host: self.blog.domain)) }.join(' ')
   end
 end

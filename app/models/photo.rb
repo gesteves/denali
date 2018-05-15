@@ -181,6 +181,29 @@ class Photo < ApplicationRecord
     "#{formatted}″"
   end
 
+  def exif_string(separator = ' · ')
+    items = []
+    items << self.taken_with
+
+    unless self.is_phone_camera?
+      items << self.focal_length_with_unit
+
+      if self.exposure.present? && self.f_number.present?
+        items << "#{self.formatted_exposure} at #{self.formatted_aperture}"
+      elsif self.exposure.present?
+        items << self.formatted_exposure
+      elsif self.f_number.present?
+        items << self.formatted_aperture
+      end
+
+      if self.iso.present?
+        items << "ISO #{self.iso}"
+      end
+    end
+
+    items.reject(&:blank?).join(separator)
+  end
+
   def long_address
     [self.neighborhood, self.sublocality, self.locality, self.administrative_area, self.country].uniq.reject(&:blank?).join(', ')
   end
