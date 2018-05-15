@@ -11,6 +11,7 @@ class Admin::EntriesController < AdminController
   after_action :annotate_photos, only: [:create, :update]
   after_action :update_palette, only: [:create, :update]
   after_action :enqueue_invalidation, only: [:update]
+  after_action :send_to_apple_news, only: [:create, :update]
 
   # GET /admin/entries
   def index
@@ -124,7 +125,6 @@ class Admin::EntriesController < AdminController
       if @entry.update(entry_params)
         logger.info "Entry #{@entry.id} was updated."
         flash[:success] = 'Your entry has been updated!'
-        AppleNewsJob.perform_later(@entry) if @entry.blog.publish_on_apple_news && @entry.apple_news_id.present?
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else
         flash[:warning] = 'Your entry couldn’t be updated…'
@@ -417,5 +417,9 @@ class Admin::EntriesController < AdminController
 
     def update_palette
       @entry.photos.map(&:update_palette)
+    end
+
+    def send_to_apple_news
+      AppleNewsJob.perform_later(@entry) if @entry.blog.publish_on_apple_news
     end
 end

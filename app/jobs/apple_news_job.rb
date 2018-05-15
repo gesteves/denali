@@ -13,7 +13,9 @@ class AppleNewsJob < ApplicationJob
         # (likely deleted in News Publisher), so just create a new article.
         AppleNews::Article.new
       end
+
       article.is_preview = !entry.is_published?
+
       response = article.save!
       if response.is_a? Array
         raise response
