@@ -2,7 +2,7 @@ class AppleNewsJob < ApplicationJob
 
   def perform(entry)
     if Rails.env.production?
-      return if !entry.is_published? || ENV['apple_news_channel_id'].blank? || ENV['apple_news_key_id'].blank? || ENV['apple_news_secret'].blank?
+      return if ENV['apple_news_channel_id'].blank? || ENV['apple_news_key_id'].blank? || ENV['apple_news_secret'].blank?
 
       document = entry.to_apple_news_document
 
@@ -13,7 +13,7 @@ class AppleNewsJob < ApplicationJob
         # (likely deleted in News Publisher), so just create a new article.
         AppleNews::Article.new
       end
-
+      article.is_preview = !entry.is_published?
       response = article.save!
       if response.is_a? Array
         raise response

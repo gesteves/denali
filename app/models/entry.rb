@@ -433,7 +433,7 @@ class Entry < ApplicationRecord
     document.components << apple_news_title_component
     document.components << apple_news_body_component if self.body.present?
     document.components << apple_news_divider_component(layout: 'divider') if self.is_photo?
-    document.components << apple_news_meta_component("By #{self.user.name} · Published on #{link_to self.published_at.strftime('%B %-d, %Y'), self.permalink_url}")
+    document.components << apple_news_meta_component(apple_news_byline)
     document.components << apple_news_meta_component(self.photos.first.exif_string) if self.is_single_photo?
     document.components << apple_news_meta_component(apple_news_tag_list)
     document.components << apple_news_divider_component(width: 4, layout: 'divider')
@@ -618,5 +618,15 @@ class Entry < ApplicationRecord
 
   def apple_news_tag_list
     self.combined_tags.sort_by { |t| t.name }.map { |t| link_to("##{t.name.downcase}", Rails.application.routes.url_helpers.tag_url(t.slug, host: self.blog.domain)) }.join(' ')
+  end
+
+  def apple_news_byline
+    if self.is_published?
+      "By #{self.user.name} · Published on #{link_to self.published_at.strftime('%B %-d, %Y'), self.permalink_url}"
+    elsif self.is_queued?
+      "By #{self.user.name} · Queued for #{link_to self.publish_date_for_queued.strftime('%B %-d, %Y'), self.permalink_url}"
+    else
+      "By #{self.user.name} · Updated on #{link_to self.updated_at.strftime('%B %-d, %Y'), self.permalink_url}"
+    end
   end
 end
