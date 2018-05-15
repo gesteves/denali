@@ -5,13 +5,8 @@ class AppleNewsJob < ApplicationJob
     if Rails.env.production?
       return if !entry.is_published? || ENV['apple_news_channel_id'].blank? || ENV['apple_news_key_id'].blank? || ENV['apple_news_secret'].blank?
 
-      article = if entry.apple_news_id.present?
-        AppleNews::Article.new(entry.apple_news_id)
-      else
-        AppleNews::Article.new
-      end
-
-      article.document = generate_document(entry)
+      document = generate_document(entry)
+      article = AppleNews::Article.new(entry.apple_news_id, document: document)
 
       response = article.save!
       if response.is_a? Array
