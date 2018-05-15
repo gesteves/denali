@@ -23,7 +23,9 @@ class AppleNewsJob < ApplicationJob
         entry.save
       end
     elsif Rails.env.development?
-      File.open("tmp/article.json",'w'){ |f| f << generate_document(entry).as_json.to_json }
+      # In dev mode, instead of pushing to Apple News, generate the article.json
+      # and store locally for testing with News Preview app: https://developer.apple.com/news-preview/
+      File.open('tmp/article.json', 'w'){ |f| f << generate_document(entry).as_json.to_json }
     end
   end
 
