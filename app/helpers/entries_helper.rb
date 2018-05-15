@@ -1,18 +1,4 @@
 module EntriesHelper
-  def aperture(f_number)
-    "%g" % ("%.2f" % f_number)
-  end
-
-  def exposure(exposure)
-    exposure = exposure.to_r
-    formatted = exposure >= 1 ? "%g" % ("%.2f" % exposure) : exposure
-    "#{formatted}″"
-  end
-
-  def article(word)
-    %w(a e i o u).include?(word[0].downcase) ? 'an' : 'a'
-  end
-
   def atom_tag(url, date)
     tag = url.gsub(/^http(s)?:\/\//, '').gsub('#', '/').split('/')
     tag[0] = "tag:#{tag[0]},#{date.strftime('%Y-%m-%d')}:"

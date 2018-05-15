@@ -155,6 +155,32 @@ class Photo < ApplicationRecord
     self.film_make.present? && self.film_type.present?
   end
 
+  def taken_with
+    return '' if self.formatted_camera.blank?
+    article = %w(a e i o u).include?(self.formatted_camera[0].downcase) ? 'an' : 'a'
+    text = "Taken with #{article} #{self.formatted_camera}"
+    text += " on #{self.formatted_film}" if self.is_film?
+    text
+  end
+
+  def focal_length_with_unit
+    return '' if self.focal_length.blank?
+    "#{self.focal_length} mm"
+  end
+
+  def formatted_aperture
+    return '' if self.f_number.blank?
+    f = "%g" % ("%.2f" % self.f_number)
+    "f/#{f}"
+  end
+
+  def formatted_exposure
+    return '' if self.exposure.blank?
+    exp = self.exposure.to_r
+    formatted = exp >= 1 ? "%g" % ("%.2f" % exp) : exp
+    "#{formatted}″"
+  end
+
   def long_address
     [self.neighborhood, self.sublocality, self.locality, self.administrative_area, self.country].uniq.reject(&:blank?).join(', ')
   end
