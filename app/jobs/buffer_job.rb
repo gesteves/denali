@@ -29,6 +29,9 @@ class BufferJob < ApplicationJob
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: body)
     if response.code >= 400
       raise JSON.parse(response.body)['message']
+    else
+      updates = JSON.parse(response.body)['updates']
+      updates.map { |u| logger.info "#{u['profile_service'].titlecase} update #{u['id']} created and due at #{u['due_time']}: #{u['text']}" }
     end
   end
 
