@@ -22,11 +22,14 @@ class OembedController < ApplicationController
 
   def load_entry
     url = Rails.application.routes.recognize_path(params[:url])
-    if url[:controller] != 'entries' || url[:action] != 'show' || url[:id].nil?
-      raise ActiveRecord::RecordNotFound
-    else
+    if url[:controller] == 'entries' && url[:action] == 'show' && url[:id].present?
       @entry = @photoblog.entries.includes(:photos, :user).published.find(url[:id])
       logger.info "oEmbed rendered for entry #{@entry.permalink_url}"
+    elsif url[:controller] == 'entries' && url[:action] == 'preview' && url[:preview_hash].present?
+      @entry = @photoblog.entries.includes(:photos, :user).where(preview_hash: url[:preview_hash]).limit(1).first
+      logger.info "oEmbed rendered for entry #{@entry.permalink_url}"
+    else
+      raise ActiveRecord::RecordNotFound
     end
   end
 
