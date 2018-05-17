@@ -20,9 +20,9 @@ class AppleNewsJob < ApplicationJob
       if response.is_a? Array
         raise response
       elsif article.id.present? && article.id != entry.apple_news_id
-        logger.info "#{entry.permalink_url} #{article.is_preview ? 'sent to Apple News drafts' : 'published in Apple News'} with ID #{article.id}. Status: #{article.state.downcase}."
         entry.apple_news_id = article.id
         entry.save
+        logger.info "Entry #{entry.permalink_url} #{article.is_preview ? 'sent to Apple News drafts' : 'published in Apple News'} with ID #{article.id}. Status: #{article.state.downcase}."
       end
     elsif Rails.env.development?
       # In dev mode, instead of pushing to Apple News, generate the article.json
