@@ -20,6 +20,7 @@ class AppleNewsJob < ApplicationJob
       if response.is_a? Array
         raise response
       elsif article.id.present? && article.id != entry.apple_news_id
+        logger.info "#{entry.permalink_url} #{article.is_preview ? 'sent to Apple News drafts' : 'published in Apple News'} with ID #{article.id}. Status: #{article.state.downcase}."
         entry.apple_news_id = article.id
         entry.save
       end
