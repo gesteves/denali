@@ -16,6 +16,6 @@ class CloudfrontInvalidationJob < ApplicationJob
         caller_reference: Time.now.to_i.to_s,
       },
     })
-    logger.info "Cloudfront invalidation created: #{response.inspect}"
+    logger.info "Cloudfront invalidation #{response.invalidation.id} created for the following paths: #{response.invalidation.invalidation_batch.paths.items.join(', ')}"
   end
 end
