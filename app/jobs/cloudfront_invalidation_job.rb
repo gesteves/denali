@@ -16,5 +16,6 @@ class CloudfrontInvalidationJob < ApplicationJob
         caller_reference: Time.now.to_i.to_s,
       },
     })
+    logger.info "Cloudfront invalidation created: #{response.inspect}"
   end
 end
