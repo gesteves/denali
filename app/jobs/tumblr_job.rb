@@ -29,6 +29,8 @@ class TumblrJob < ApplicationJob
       raise response['errors']
     elsif response['status'].present? && response['status'] >= 400
       raise response['msg']
+    else
+      logger.info response.inspect
     end
   end
 

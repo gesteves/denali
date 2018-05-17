@@ -12,6 +12,8 @@ class PinterestJob < ApplicationJob
     response = HTTParty.post('https://api.pinterest.com/v1/pins/', query: opts, headers: { 'Authorization' => "BEARER #{ENV['pinterest_token']}" })
     if response.code >= 400
       raise response.body
+    else
+      logger.info response.body
     end
   end
 end
