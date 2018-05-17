@@ -30,7 +30,7 @@ class TumblrJob < ApplicationJob
     elsif response['status'].present? && response['status'] >= 400
       raise response['msg']
     else
-      logger.info response.inspect
+      logger.info "Entry #{entry.permalink_url} has been #{response['state']} in Tumblr with ID #{response['id']}."
     end
   end
 
