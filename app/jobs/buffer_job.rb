@@ -31,7 +31,7 @@ class BufferJob < ApplicationJob
       raise JSON.parse(response.body)['message']
     else
       updates = JSON.parse(response.body)['updates']
-      updates.map { |u| logger.info "#{u['profile_service'].titlecase} update #{u['id']} created and due at #{u['due_time']}: #{u['text']}" }
+      updates.map { |u| logger.info "[#{u['profile_service'].titlecase}] Update #{u['id']} created, due at #{u['due_time']}" }
     end
   end
 

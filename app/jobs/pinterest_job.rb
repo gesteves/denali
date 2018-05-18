@@ -13,7 +13,8 @@ class PinterestJob < ApplicationJob
     if response.code >= 400
       raise response.body
     else
-      logger.info response.body
+      data = JSON.parse(response.body)['data']
+      logger.info "[Pinterest] Pin #{data['id']} created"
     end
   end
 end
