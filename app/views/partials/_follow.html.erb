@@ -1,25 +1,44 @@
+<% link_class = local_assigns[:has_tooltips] && has_tooltips ? 'follow__link tooltip' : 'follow__link' %>
 <div class="follow">
-  <a href="<%= about_path %>" class="follow__link tooltip" title="About <%= @photoblog.name %>"><%= inline_svg 'about', 'follow__icon' %></a>
+  <%= link_to about_path, class: link_class, title: "About #{@photoblog.name}" do %>
+    <%= inline_svg 'about', 'follow__icon' %>
+  <% end %>
   <% if ENV['mapbox_api_token'].present? %>
-    <a href="<%= map_path(trailing_slash: true)  %>" class="follow__link tooltip" title="Map"><%= inline_svg 'map', 'follow__icon' %></a>
+    <%= link_to map_path(trailing_slash: true), class: link_class, title: 'Map' do %>
+      <%= inline_svg 'map', 'follow__icon' %>
+    <% end %>
   <% end %>
   <% if @photoblog.has_search? %>
-    <a href="<%= search_path %>" class="follow__link tooltip" title="Search <%= @photoblog.name %>"><%= inline_svg 'search', 'follow__icon' %></a>
+    <%= link_to search_path, class: link_class, title: "Search #{@photoblog.name}" do %>
+      <%= inline_svg 'search', 'follow__icon' %>
+    <% end %>
   <% end %>
-  <a href="<%= feed_path(format: 'atom', page: nil) %>" class="follow__link tooltip" title="Subscribe to Feed"><%= inline_svg 'feed', 'follow__icon' %></a>
+  <%= link_to feed_path(format: 'atom', page: nil), class: link_class, title: 'Subscribe to Feed' do %>
+    <%= inline_svg 'feed', 'follow__icon' %>
+  <% end %>
   <% if @photoblog.email.present? %>
-    <a href="mailto:<%= @photoblog.email %>" class="follow__link tooltip" title="Contact email"><%= inline_svg 'email', 'follow__icon' %></a>
+    <%= link_to "mailto:#{@photoblog.email}", class: link_class, title: 'Contact by email' do %>
+      <%= inline_svg 'email', 'follow__icon' %>
+    <% end %>
   <% end %>
   <% if @photoblog.facebook.present? %>
-    <a href="<%= @photoblog.facebook %>" class="follow__link tooltip" rel="me" title="Like on Facebook"><%= inline_svg 'facebook', 'follow__icon' %></a>
+    <%= link_to @photoblog.facebook, class: link_class, title: 'Like on Facebook' do %>
+      <%= inline_svg 'facebook', 'follow__icon' %>
+    <% end %>
   <% end %>
   <% if @photoblog.instagram.present? %>
-    <a href="<%= @photoblog.instagram %>" class="follow__link tooltip" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'follow__icon' %></a>
+    <%= link_to @photoblog.instagram, class: link_class, title: 'Follow on Instagram' do %>
+      <%= inline_svg 'instagram', 'follow__icon' %>
+    <% end %>
   <% end %>
   <% if @photoblog.tumblr.present? %>
-    <a href="<%= @photoblog.tumblr %>" class="follow__link tooltip" rel="me" title="Follow on Tumblr"><%= inline_svg 'tumblr', 'follow__icon' %></a>
+    <%= link_to @photoblog.tumblr, class: link_class, title: 'Follow on Tumblr' do %>
+      <%= inline_svg 'tumblr', 'follow__icon' %>
+    <% end %>
   <% end %>
   <% if @photoblog.twitter.present? %>
-    <a href="<%= @photoblog.twitter %>" class="follow__link tooltip" rel="me" title="Follow on Twitter"><%= inline_svg 'twitter', 'follow__icon' %></a>
+    <%= link_to @photoblog.twitter, class: link_class, title: 'Follow on Twitter' do %>
+      <%= inline_svg 'twitter', 'follow__icon' %>
+    <% end %>
   <% end %>
 </div>

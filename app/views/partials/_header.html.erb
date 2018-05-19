@@ -10,6 +10,6 @@
     <% end %>
   </a>
   <div class="header__section">
-    <%= render partial: 'partials/follow.html.erb' %>
+    <%= render partial: 'partials/follow.html.erb', locals: { has_tooltips: !local_assigns[:is_minimal] || !is_minimal } %>
   </div>
 </header>
