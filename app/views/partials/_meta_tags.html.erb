@@ -1,14 +1,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, viewport-fit=cover">
-<% ENV['imgix_domain'].split(',').each do |domain| %>
-  <link rel="preconnect" href="http<%= 's' if ENV['imgix_secure'].present? %>://<%= domain %>">
-<% end %>
-<% if ENV['typekit_body_id'].present? || ENV['typekit_id'].present? %>
-  <link rel="preconnect" href="https://use.typekit.net">
-<% end %>
 <%= @photoblog.additional_meta_tags&.html_safe %>
 <% if @photoblog.favicon.present? %>
-<link rel="icon" href="<%= @photoblog.favicon_url(w: 96) %>" type="image/png">
+  <link rel="icon" href="<%= @photoblog.favicon_url(w: 96) %>" type="image/png">
 <% end %>
 <% if @photoblog.touch_icon.present? %>
   <link rel="icon" href="<%= @photoblog.touch_icon_url(w: 192) %>" sizes="192x192">
