@@ -66,6 +66,7 @@ Rails.application.routes.draw do
   get '/offline'                       => 'blogs#offline',  :as => :offline
   get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
+  get '/apple-news/:id/article.:format' => 'entries#apple_news', constraints: { id: /\d+/ }, defaults: { format: 'json' }, :as => :apple_news
 
   # Sitemaps
   get '/sitemap.:format'               => 'entries#sitemap_index', defaults: { format: 'xml' }, :as => :sitemap_index
