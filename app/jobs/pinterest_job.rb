@@ -2,7 +2,7 @@ class PinterestJob < ApplicationJob
   queue_as :default
 
   def perform(entry)
-    return if !entry.is_published? || !entry.is_photo? || !Rails.env.production?
+    return if !entry.is_published? || !entry.is_photo? || !Rails.env.production? || ENV['pinterest_token'].blank?
     opts = {
       board: ENV['pinterest_board_id'],
       note: entry.plain_title,
