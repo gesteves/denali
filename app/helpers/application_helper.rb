@@ -28,7 +28,7 @@ module ApplicationHelper
       src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
       sizes: get_sizes(photo_key)
     })
-    content_tag :img, '', html_options
+    content_tag :img, nil, html_options
   end
 
   def get_src(photo, photo_key)
