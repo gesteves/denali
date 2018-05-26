@@ -45,6 +45,7 @@
   <% if @entry.is_published? %>
     <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
     <link rel="canonical" href="<%= entry.permalink_url %>">
+    <link rel="amphtml" href="<%= entry.amp_url %>">
   <% end %>
 
   <script type="application/ld+json">

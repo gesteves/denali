@@ -1,6 +1,6 @@
 <li class="entry-list__item" role="article" <%= entry_list_item_observer(page_url) if observe && entry_counter == 0 %>>
   <div class="entry-list__wrapper" style="<%= "#{intrinsic_ratio_padding(entry.photos.first, { square: square })};#{image_placeholder(entry.photos.first)}" %>">
-    <a class="entry-list__link entry-list__link--photo" href="<%= entry.permalink_url %>">
+    <a class="entry-list__link" href="<%= entry.permalink_url %>">
       <figure class="entry-list__photo">
         <% if lazy_load %>
           <%= lazy_responsive_image_tag entry.photos.first,

@@ -1,0 +1,13 @@
+<% content_for :meta do %>
+  <%= render partial: 'entries/entry_meta', object: @entry, as: :entry %>
+<% end %>
+
+<% content_for :typekit do %>
+  <%= render partial: 'partials/amp/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @entry.body.present? %>
+<% end %>
+
+<%= render partial: 'entries/amp/entry_photo', object: @entry, as: :entry if @entry.is_photo? %>
+<%= render partial: 'entries/entry_text', object: @entry, as: :entry if @entry.is_text? %>
+<%= render partial: 'entries/entry_pagination', object: @entry, as: :entry %>
+<%= render partial: 'entries/amp/related', locals: { amp: true }, object: @entry if @photoblog.show_related_entries? %>
+<%= render partial: 'partials/elsewhere' %>

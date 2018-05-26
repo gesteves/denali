@@ -1,0 +1,28 @@
+<% if ENV['google_analytics_id'].present? %>
+<amp-analytics type="googleanalytics">
+<script type="application/json">
+{
+  "vars": {
+    "account": "<%= ENV['google_analytics_id'] %>"
+  },
+  "triggers": {
+    "trackPageview": {
+      "on": "visible",
+      "request": "pageview"
+    }
+  }
+}
+</script>
+</amp-analytics>
+<% end %>
+<% if ENV['clicky_id'].present? %>
+<amp-analytics type="clicky">
+<script type="application/json">
+{
+  "vars": {
+	"site_id": "<%= ENV['clicky_id'] %>"
+  }
+}
+</script>
+</amp-analytics>
+<% end %>

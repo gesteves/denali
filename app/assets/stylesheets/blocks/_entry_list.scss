@@ -75,6 +75,10 @@
   }
 }
 
+.entry-list__link--amp {
+  position: relative;
+}
+
 .entry-list__item--map {
   float: none;
   font-family: $font-sans;

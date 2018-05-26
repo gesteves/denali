@@ -1,0 +1,15 @@
+<meta charset="UTF-8">
+<script async src="https://cdn.ampproject.org/v0.js"></script>
+<script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
+<meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1">
+<% if @photoblog.favicon.present? %>
+  <link rel="icon" href="<%= @photoblog.favicon_url(w: 96) %>" type="image/png">
+<% end %>
+<% if @photoblog.touch_icon.present? %>
+  <link rel="icon" href="<%= @photoblog.touch_icon_url(w: 192) %>" sizes="192x192">
+  <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(w: 180) %>" sizes="180x180">
+  <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(w: 152) %>" sizes="152x152">
+  <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(w: 120) %>" sizes="120x120">
+  <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(w: 76) %>" sizes="76x76">
+<% end %>
+<style amp-boilerplate>body{-webkit-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-moz-animation:-amp-start 8s steps(1,end) 0s 1 normal both;-ms-animation:-amp-start 8s steps(1,end) 0s 1 normal both;animation:-amp-start 8s steps(1,end) 0s 1 normal both}@-webkit-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-moz-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-ms-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@-o-keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}@keyframes -amp-start{from{visibility:hidden}to{visibility:visible}}</style><noscript><style amp-boilerplate>body{-webkit-animation:none;-moz-animation:none;-ms-animation:none;animation:none}</style></noscript>

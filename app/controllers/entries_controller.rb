@@ -5,7 +5,7 @@ class EntriesController < ApplicationController
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search]
-  before_action :set_entry_max_age, only: [:show, :preview, :photo, :apple_news]
+  before_action :set_entry_max_age, only: [:show, :preview, :photo, :apple_news, :amp]
   skip_before_action :verify_authenticity_token
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
 
@@ -87,6 +87,15 @@ class EntriesController < ApplicationController
         end
       rescue ActionController::UnknownFormat
         redirect_to(@entry.permalink_url, status: 301)
+      end
+    end
+  end
+
+  def amp
+    if stale?(@photoblog, public: true)
+      @entry = @photoblog.entries.includes(:photos, :user, :blog, :tags).published.find(params[:id])
+      respond_to do |format|
+        format.html { render layout: 'amp' }
       end
     end
   end

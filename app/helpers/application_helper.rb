@@ -1,17 +1,33 @@
 module ApplicationHelper
 
   def responsive_image_tag(photo, photo_key, html_options = {})
-    html_options[:srcset] = get_srcset(photo, photo_key)
-    html_options[:sizes] = get_sizes(photo_key)
-    html_options[:src] = get_src(photo, photo_key) unless PHOTOS[photo_key]['src'].nil?
+    html_options.reverse_merge!({
+      srcset: get_srcset(photo, photo_key),
+      sizes: get_sizes(photo_key),
+      src: get_src(photo, photo_key)
+    })
     content_tag :img, nil, html_options
   end
 
+  def amp_image_tag(photo, photo_key, html_options = {})
+    html_options.reverse_merge!({
+      srcset: get_srcset(photo, photo_key),
+      sizes: get_sizes(photo_key),
+      src: get_src(photo, photo_key),
+      width: photo.width,
+      height: photo.height,
+      layout: 'responsive'
+    })
+    content_tag 'amp-img', nil, html_options
+  end
+
   def lazy_responsive_image_tag(photo, photo_key, html_options = {})
-    html_options[:'data-srcset'] = get_srcset(photo, photo_key)
-    html_options[:sizes] = get_sizes(photo_key)
-    html_options[:'data-src'] = get_src(photo, photo_key) unless PHOTOS[photo_key]['src'].nil?
-    html_options[:src] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+    html_options.reverse_merge!({
+      'data-srcset': get_srcset(photo, photo_key),
+      'data-src': get_src(photo, photo_key),
+      src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+      sizes: get_sizes(photo_key)
+    })
     content_tag :img, '', html_options
   end
 
