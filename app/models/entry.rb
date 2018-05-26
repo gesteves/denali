@@ -271,6 +271,12 @@ class Entry < ApplicationRecord
     end
   end
 
+  def amp_path
+    return nil unless self.is_published?
+    year, month, day, id, slug = self.slug_params
+    entry_amp_path(year, month, day, id, slug)
+  end
+
   def permalink_url(opts = {})
     opts.reverse_merge!(host: self.blog.domain)
     if self.is_published?
