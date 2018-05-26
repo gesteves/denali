@@ -16,7 +16,7 @@ namespace :cloudfront do
             caller_reference: Time.now.to_i.to_s,
           },
         })
-        puts "Invalidation request for \"#{entry.title}\" has been sent."
+        puts "Invalidation request sent for the following paths: #{paths.join(', ')}"
       else
         puts 'That entry wasn\'t found.'
       end
@@ -33,7 +33,7 @@ namespace :cloudfront do
           caller_reference: Time.now.to_i.to_s,
         },
       })
-      puts "Invalidation request for the most recent #{count} entries has been sent."
+      puts "Invalidation request sent for the following paths: #{paths.join(', ')}"
     elsif ENV['PATHS'].present?
       paths = ENV['PATHS'].split(',')
       response = client.create_invalidation({
@@ -46,9 +46,9 @@ namespace :cloudfront do
           caller_reference: Time.now.to_i.to_s,
         },
       })
-      puts "Invalidation request sent."
+      puts "Invalidation request sent for the following paths: #{paths.join(', ')}"
     else
-      puts 'Please specify an `ENTRY_ID` or a `COUNT`.'
+      puts 'Please specify `ENTRY_ID` or `COUNT` or `PATHS`.'
     end
   end
 end
