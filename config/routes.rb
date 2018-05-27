@@ -34,7 +34,7 @@ Rails.application.routes.draw do
         post 'pinterest'
         post 'flickr'
         post 'tumblr'
-        post 'invalidate'
+        post 'flush_caches'
         post 'refresh_metadata'
       end
       collection do

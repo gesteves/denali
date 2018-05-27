@@ -57,7 +57,7 @@
   <hr class="hr">
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :invalidate_cloudfront, 'Clear cache', class: 'label' %>
+      <%= f.label :flush_caches, 'Clear from caches', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
@@ -75,10 +75,10 @@
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :invalidate_cloudfront, value: 'false', 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :flush_caches, value: 'false', 'data-target': 'radio-tab.field' %>
           </div>
         </div>
-        <p class="help">Entries are currently cached for <%= distance_of_time_in_words(Time.now, Time.now + @max_age.minutes) %>. Enabling this will clear this entry from the cache after saving and make any changes publicly visible right away.</p>
+        <p class="help">Enabling this will clear this entry from CDN and AMP caches after saving, and make any changes publicly visible right away.</p>
       </div>
     </div>
   </div>

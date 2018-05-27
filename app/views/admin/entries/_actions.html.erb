@@ -28,7 +28,7 @@
         <% end %>
         <hr class="dropdown-divider">
       <% end %>
-      <%= link_to icon('Clear cache', 'fas fa-eraser'), invalidate_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: "This will clear this entry from the cache and make any changes publicly visible right away. Do you want to proceed?" }, class: 'dropdown-item' %>
+      <%= link_to icon('Clear from caches', 'fas fa-eraser'), flush_caches_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: "This will clear this entry from CDN and AMP caches and make any changes publicly visible right away. Do you want to proceed?" }, class: 'dropdown-item' %>
       <%= link_to icon('Refresh metadata', 'fas fa-sync'), refresh_metadata_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: 'This will refresh the entry’s metadata and update its tags. Do you want to proceed?' }, class: 'dropdown-item' %>
       <hr class="dropdown-divider">
       <% if entry.is_queued? %>

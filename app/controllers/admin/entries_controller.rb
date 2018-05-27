@@ -10,7 +10,7 @@ class Admin::EntriesController < AdminController
   after_action :geocode_photos, only: [:create, :update]
   after_action :annotate_photos, only: [:create, :update]
   after_action :update_palette, only: [:create, :update]
-  after_action :enqueue_invalidation, only: [:update]
+  after_action :flush_caches, only: [:update]
   after_action :send_to_apple_news, only: [:create, :update]
 
   # GET /admin/entries
@@ -321,9 +321,10 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def invalidate
+  def flush_caches
     @entry.touch
     CloudfrontInvalidationJob.perform_later(@entry)
+    AmpCacheJob.perform_later(@entry)
     @message = 'Your entry is being cleared from cache. This may take a few moments.'
     respond_to do |format|
       format.html {
@@ -339,6 +340,7 @@ class Admin::EntriesController < AdminController
     @entry.photos.map(&:annotate)
     @entry.photos.map(&:update_palette)
     CloudfrontInvalidationJob.perform_later(@entry)
+    AmpCacheJob.perform_later(@entry)
     @message = 'Your entry’s metadata is being updated. This may take a few moments.'
     respond_to do |format|
       format.html {
@@ -367,7 +369,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_instagram, :post_to_facebook, :post_to_pinterest, :tweet_text, :instagram_text, :show_in_map, :invalidate_cloudfront, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :focal_x, :focal_y])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_instagram, :post_to_facebook, :post_to_pinterest, :tweet_text, :instagram_text, :show_in_map, :flush_caches, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :focal_x, :focal_y])
     end
 
     def update_position
@@ -403,8 +405,9 @@ class Admin::EntriesController < AdminController
       @max_age = ENV['config_entry_caching_minutes']&.to_i || ENV['config_caching_minutes']&.to_i || 5
     end
 
-    def enqueue_invalidation
-      CloudfrontInvalidationJob.perform_later(@entry) if entry_params[:invalidate_cloudfront] == "1"
+    def flush_caches
+      CloudfrontInvalidationJob.perform_later(@entry) if entry_params[:flush_caches] == "1"
+      AmpCacheJob.perform_later(@entry) if entry_params[:flush_caches] == "1"
     end
 
     def geocode_photos

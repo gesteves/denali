@@ -21,7 +21,7 @@ class Entry < ApplicationRecord
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
 
-  attr_accessor :invalidate_cloudfront
+  attr_accessor :flush_caches
 
   settings index: { number_of_shards: 1 }
 
@@ -302,6 +302,7 @@ class Entry < ApplicationRecord
 
   def enqueue_sharing_jobs
     self.enqueue_slack
+    AmpCacheJob.perform_later(self)
     AppleNewsJob.perform_later(self) if self.blog.publish_on_apple_news
     FacebookJob.perform_later(self) if self.post_to_facebook
     FlickrJob.perform_later(self) if self.post_to_flickr
