@@ -4,13 +4,13 @@
       &copy; <%= Photo.oldest&.taken_at&.strftime('%Y') %>-<%= Time.now.strftime('%Y') %> <%= sanitize @photoblog.copyright %>
     <% end %>
     <span class="footer__links">
-      <%= link_to 'Home', root_path %> ·
-      <%= link_to 'About', about_path %> ·
-      <%= link_to 'Map', map_path(trailing_slash: true) %> ·
+      <%= link_to 'Home', root_url %> ·
+      <%= link_to 'About', about_url %> ·
+      <%= link_to 'Map', map_url(trailing_slash: true) %> ·
       <% if @photoblog.has_search? %>
-        <%= link_to 'Search', search_path %> ·
+        <%= link_to 'Search', search_url %> ·
       <% end %>
-      <%= link_to 'Feed', feed_path(format: 'atom', page: nil) %>
+      <%= link_to 'Feed', feed_url(format: 'atom', page: nil) %>
       <% if @photoblog.email.present? %>
         · <a href="mailto:<%= @photoblog.email %>">Contact</a>
       <% end %>

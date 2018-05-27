@@ -7,7 +7,7 @@
     <% if @photoblog.facebook.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.facebook %>" rel="me" title="Like on Facebook"><%= inline_svg 'facebook', 'elsewhere__icon' %><span class="elsewhere__label">Facebook</span></a></li>
     <% end %>
-    <li class="elsewhere__item"><a href="<%= feed_path %>" title="Subscribe to Feed"><%= inline_svg 'feed', 'elsewhere__icon' %><span class="elsewhere__label">Feed</span></a></li>
+    <li class="elsewhere__item"><a href="<%= feed_url %>" title="Subscribe to Feed"><%= inline_svg 'feed', 'elsewhere__icon' %><span class="elsewhere__label">Feed</span></a></li>
     <% if @photoblog.flickr.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.flickr %>" rel="me" title="Follow on Flickr"><%= inline_svg 'flickr', 'elsewhere__icon' %><span class="elsewhere__label">Flickr</span></a></li>
     <% end %>

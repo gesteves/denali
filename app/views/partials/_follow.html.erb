@@ -1,19 +1,19 @@
 <% link_class = local_assigns[:has_tooltips] && has_tooltips ? 'follow__link tooltip' : 'follow__link' %>
 <div class="follow">
-  <%= link_to about_path, class: link_class, title: "About #{@photoblog.name}" do %>
+  <%= link_to about_url, class: link_class, title: "About #{@photoblog.name}" do %>
     <%= inline_svg 'about', 'follow__icon' %>
   <% end %>
   <% if ENV['mapbox_api_token'].present? %>
-    <%= link_to map_path(trailing_slash: true), class: link_class, title: 'Map' do %>
+    <%= link_to map_url(trailing_slash: true), class: link_class, title: 'Map' do %>
       <%= inline_svg 'map', 'follow__icon' %>
     <% end %>
   <% end %>
   <% if @photoblog.has_search? %>
-    <%= link_to search_path, class: link_class, title: "Search #{@photoblog.name}" do %>
+    <%= link_to search_url, class: link_class, title: "Search #{@photoblog.name}" do %>
       <%= inline_svg 'search', 'follow__icon' %>
     <% end %>
   <% end %>
-  <%= link_to feed_path(format: 'atom', page: nil), class: link_class, title: 'Subscribe to Feed' do %>
+  <%= link_to feed_url(format: 'atom', page: nil), class: link_class, title: 'Subscribe to Feed' do %>
     <%= inline_svg 'feed', 'follow__icon' %>
   <% end %>
   <% if @photoblog.email.present? %>
