@@ -10,7 +10,7 @@ class Admin::EntriesController < AdminController
   after_action :geocode_photos, only: [:create, :update]
   after_action :annotate_photos, only: [:create, :update]
   after_action :update_palette, only: [:create, :update]
-  after_action :flush_caches, only: [:update]
+  after_action :enqueue_cache_jobs, only: [:update]
   after_action :send_to_apple_news, only: [:create, :update]
 
   # GET /admin/entries
@@ -405,7 +405,7 @@ class Admin::EntriesController < AdminController
       @max_age = ENV['config_entry_caching_minutes']&.to_i || ENV['config_caching_minutes']&.to_i || 5
     end
 
-    def flush_caches
+    def enqueue_cache_jobs
       CloudfrontInvalidationJob.perform_later(@entry) if entry_params[:flush_caches] == "1"
       AmpCacheJob.perform_later(@entry) if entry_params[:flush_caches] == "1"
     end
