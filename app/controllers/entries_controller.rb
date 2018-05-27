@@ -1,13 +1,15 @@
 class EntriesController < ApplicationController
   include TagList
 
+  skip_before_action :verify_authenticity_token
   before_action :check_if_user_has_visited, only: [:index, :tagged, :show, :preview, :search]
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search]
   before_action :set_entry_max_age, only: [:show, :preview, :photo, :apple_news, :amp]
-  skip_before_action :verify_authenticity_token
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
+
+  layout 'amp', only: :amp
 
   def index
     if stale?(@photoblog, public: true)
@@ -95,7 +97,9 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       @entry = @photoblog.entries.includes(:photos, :user, :blog, :tags).published.find(params[:id])
       respond_to do |format|
-        format.html { render layout: 'amp' }
+        format.html {
+          redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
+        }
       end
     end
   end
