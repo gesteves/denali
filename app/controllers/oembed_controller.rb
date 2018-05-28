@@ -1,6 +1,6 @@
 class OembedController < ApplicationController
   before_action :load_entry, :set_request_format
-  before_action :set_max_age, only: [:show]
+  before_action :set_entry_max_age, only: [:show]
   skip_before_action :verify_authenticity_token
 
   def show

@@ -5,7 +5,6 @@ class Admin::EntriesController < AdminController
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url, except: [:photo]
-  before_action :set_max_age
   after_action :update_position, only: [:create]
   after_action :geocode_photos, only: [:create, :update]
   after_action :annotate_photos, only: [:create, :update]
@@ -399,10 +398,6 @@ class Admin::EntriesController < AdminController
 
     def set_redirect_url
       session[:redirect_url] = request.referer if request.get?
-    end
-
-    def set_max_age
-      @max_age = ENV['config_entry_caching_minutes']&.to_i || ENV['config_caching_minutes']&.to_i || 5
     end
 
     def enqueue_cache_jobs
