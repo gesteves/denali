@@ -143,4 +143,38 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_template layout: 'layouts/admin'
     assert_template :organize_queue
   end
+
+  test 'should properly sort queue' do
+    blog = blogs(:allencompassingtrip)
+
+    entry1 = entries(:panda)
+    assert_equal entry1.position, 1
+
+    entry2 = Entry.new(title: 'Title 1', status: 'queued', blog: blog)
+    entry2.save
+    assert_equal entry2.position, 2
+
+    entry3 = Entry.new(title: 'Title 2', status: 'queued', blog: blog)
+    entry3.save
+    assert_equal entry3.position, 3
+
+    entry4 = Entry.new(title: 'Title 3', status: 'queued', blog: blog)
+    entry4.save
+    assert_equal entry4.position, 4
+
+    ids = [entry4.id, entry3.id, entry2.id, entry1.id]
+    post :update_queue, params: { entry_ids: ids }, format: 'json'
+
+    assert_response :success
+
+    entry1.reload
+    entry2.reload
+    entry3.reload
+    entry4.reload
+
+    assert_equal entry4.position, 1
+    assert_equal entry3.position, 2
+    assert_equal entry2.position, 3
+    assert_equal entry1.position, 4
+  end
 end

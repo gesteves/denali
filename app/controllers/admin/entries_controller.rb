@@ -146,7 +146,7 @@ class Admin::EntriesController < AdminController
   end
 
   def update_queue
-    entry_ids = params[:entry_ids]
+    entry_ids = params[:entry_ids].map(&:to_i)
     entries = Entry.where(id: entry_ids)
     position = 1
     entry_ids.each do |id|
