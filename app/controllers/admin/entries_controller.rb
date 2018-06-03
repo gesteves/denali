@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :up, :down, :top, :bottom, :share, :crops, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :flush_caches, :refresh_metadata, :resize_photos]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :share, :crops, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :flush_caches, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url, except: [:photo]
@@ -139,30 +139,6 @@ class Admin::EntriesController < AdminController
       flash[:danger] = 'Your entry was deleted forever.'
       format.html { redirect_to session[:redirect_url] || admin_entries_path }
     end
-  end
-
-  def up
-    @entry.move_higher
-    flash[:success] = 'Your entry was moved up in the queue.'
-    respond_to_reposition
-  end
-
-  def down
-    @entry.move_lower
-    flash[:success] = 'Your entry was moved down in the queue.'
-    respond_to_reposition
-  end
-
-  def top
-    @entry.move_to_top
-    flash[:success] = 'Your entry was moved to the top of the queue.'
-    respond_to_reposition
-  end
-
-  def bottom
-    @entry.move_to_bottom
-    flash[:success] = 'Your entry was moved to the bottom of the queue.'
-    respond_to_reposition
   end
 
   def organize_queue
@@ -380,20 +356,6 @@ class Admin::EntriesController < AdminController
     def load_tagged_entries
       @page = params[:page] || 1
       @entries = @photoblog.entries.includes(:photos).tagged_with(@tag_list, any: true).order('created_at DESC').page(@page)
-    end
-
-    def respond_to_reposition
-      respond_to do |format|
-        format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
-        format.json {
-          response = {
-            status: 200,
-            entry_id: @entry.id,
-            entry_position: @entry.position
-          }
-          render json: response
-        }
-      end
     end
 
     def set_redirect_url

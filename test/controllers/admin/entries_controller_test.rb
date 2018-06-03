@@ -137,27 +137,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_not_equal modified, entry.modified_at
   end
 
-  test 'should reposition entries' do
-    test_1 = Entry.new(title: 'test 1', status: 'queued', blog_id: @blog.id)
-    test_1.save
-    test_2 = Entry.new(title: 'test 2', status: 'queued', blog_id: @blog.id)
-    test_2.save
-
-    entry = entries(:panda)
-
-    post :down, params: { id: entry.id }
-    assert_equal assigns(:entry).position, 2
-
-    post :up, params: { id: entry.id }
-    assert_equal assigns(:entry).position, 1
-
-    post :bottom, params: { id: entry.id }
-    assert_equal assigns(:entry).position, 3
-
-    post :top, params: { id: entry.id }
-    assert_equal assigns(:entry).position, 1
-  end
-
   test 'should render organize queue page' do
     get :organize_queue
     assert_response :success
