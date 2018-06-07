@@ -189,7 +189,7 @@ GEM
     pg (0.21.0)
     public_suffix (3.0.2)
     rack (2.0.5)
-    rack-protection (2.0.1)
+    rack-protection (2.0.2)
       rack
     rack-proxy (0.6.4)
       rack
@@ -264,10 +264,10 @@ GEM
     sentry-raven (2.7.3)
       faraday (>= 0.7.6, < 1.0)
     simple_oauth (0.3.1)
-    sinatra (2.0.1)
+    sinatra (2.0.2)
       mustermann (~> 1.0)
       rack (~> 2.0)
-      rack-protection (= 2.0.1)
+      rack-protection (= 2.0.2)
       tilt (~> 2.0)
     spring (2.0.2)
       activesupport (>= 4.2)
