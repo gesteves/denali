@@ -4,15 +4,15 @@ namespace :geocode do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        GeocodeJob.perform_later(entry)
-        puts "Geocode job queued"
+        entry.photos.map { |photo| GeocodeJob.perform_later(photo) }
+        puts "Geocode jobs queued"
       else
         puts 'That entry wasn\'t found.'
       end
     elsif ENV['COUNT'].present?
       count = ENV['COUNT'].to_i
       entries = Entry.published.limit(count)
-      entries.map { |entry| GeocodeJob.perform_later(entry) }
+      entries.map(&:photos).flatten.map { |photo| GeocodeJob.perform_later(photo) }
       puts "Geocode jobs queued"
     else
       puts 'Please specify `ENTRY_ID` or `COUNT`.'
@@ -21,7 +21,7 @@ namespace :geocode do
 
   desc "Refreshes location info for all entries"
   task :refresh_all => :environment do
-    Entry.all.map { |entry| GeocodeJob.perform_later(entry) }
+    Photo.all.map { |photo| GeocodeJob.perform_later(photo) }
     puts "Geocode jobs queued"
   end
 end
