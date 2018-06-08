@@ -21,7 +21,7 @@ namespace :geocode do
 
   desc "Refreshes location info for all entries"
   task :refresh_all => :environment do
-    Entry.map { |entry| GeocodeJob.perform_later(entry) }
+    Entry.all.map { |entry| GeocodeJob.perform_later(entry) }
     puts "Geocode jobs queued"
   end
 end
