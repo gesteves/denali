@@ -108,7 +108,7 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save
-        flash[:success] = "Your new entry was saved! <a href=\"#{admin_entry_path(@entry)}\">Check it out.</a>"
+        flash[:success] = "Your new entry was saved! <a href=\"#{@entry.permalink_url}\">Check it out.</a>"
         format.html { redirect_to new_admin_entry_path }
       else
         flash[:warning] = 'Your entry couldn’t be saved…'
