@@ -12,9 +12,4 @@ class BlogsControllerTest < ActionController::TestCase
     get :manifest
     assert_response :success
   end
-
-  test "should get offline" do
-    get :offline
-    assert_response :success
-  end
 end

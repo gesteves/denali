@@ -55,7 +55,6 @@ Rails.application.routes.draw do
   get '/map/photos.:format'            => 'maps#photos', :as => :map_markers
   get '/map/photo/:id.:format'         => 'maps#photo'
   get '/about'                         => 'blogs#about', :as => :about
-  get '/offline'                       => 'blogs#offline',  :as => :offline
   get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
 
