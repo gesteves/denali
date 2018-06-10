@@ -31,7 +31,7 @@ class Admin::TagsController < AdminController
       if @tag.update(name: params[:name])
         format.json
       else
-        format.json render plain: 'Could not update tag', status: 400
+        format.json { render plain: 'Could not update tag', status: 400 }
       end
     end
   end
