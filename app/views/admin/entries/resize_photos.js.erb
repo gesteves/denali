@@ -9,7 +9,7 @@
   <% end %>
   <% elsif @size == 'instagram_story' %>
     <% @entry.photos.each do |photo| %>
-      <%= image_tag photo.url(w: 2160, h: 3840, fm: 'jpg') %>
+      <%= image_tag photo.instagram_story_url %>
     <% end %>
 <% else %>
   <% @entry.photos.each do |photo| %>
