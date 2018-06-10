@@ -363,8 +363,10 @@ class Admin::EntriesController < AdminController
     end
 
     def enqueue_cache_jobs
-      CloudfrontInvalidationJob.perform_later(@entry) if entry_params[:flush_caches] == "1"
-      AmpCacheJob.perform_later(@entry) if entry_params[:flush_caches] == "1"
+      if entry_params[:flush_caches] == "1"
+        CloudfrontInvalidationJob.perform_later(@entry)
+        AmpCacheJob.perform_later(@entry)
+      end
     end
 
     def geocode_photos
