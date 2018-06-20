@@ -1,5 +1,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, viewport-fit=cover">
+<meta http-equiv="Accept-CH" content="DPR, Width">
 <%= @photoblog.additional_meta_tags&.html_safe %>
 <% if @photoblog.favicon.present? %>
   <link rel="icon" href="<%= @photoblog.favicon_url(w: 96) %>" type="image/png">

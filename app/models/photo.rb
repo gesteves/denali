@@ -50,6 +50,7 @@ class Photo < ApplicationRecord
     if opts[:square]
       opts[:h] = opts[:w]
       opts.delete(:square)
+      opts.delete(:ch)
     end
     if opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]) && !opts[:fit].present?
       opts[:fit] = 'crop'
