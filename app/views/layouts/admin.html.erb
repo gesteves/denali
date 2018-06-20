@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width">
   <meta name="turbolinks-cache-control" content="no-cache">
   <meta name="robots" content="noindex">
-  <meta http-equiv="Accept-CH" content="DPR, Width">
   <%= yield :meta %>
   <title><%= @page_title.nil? ? '' : sanitize("#{@page_title} · ") %><%= @photoblog.name %></title>
   <%= stylesheet_link_tag 'admin', media: 'all', 'data-turbolinks-track': 'reload' %>

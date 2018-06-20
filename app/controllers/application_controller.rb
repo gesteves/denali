@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :get_photoblog
   before_action :domain_redirect
   before_action :set_app_version
+  before_action :set_client_hints
 
   helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?
 
@@ -85,5 +86,9 @@ class ApplicationController < ActionController::Base
   def check_if_user_has_visited
     @has_visited = cookies[:has_visited] == @app_version
     cookies[:has_visited] = { value: @app_version, expires: 1.month.from_now }
+  end
+
+  def set_client_hints
+    response.headers['Accept-CH'] = 'DPR, Width' if request.headers['Content-Type']&.downcase ~= /text\/html
   end
 end
