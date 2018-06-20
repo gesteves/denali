@@ -89,6 +89,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_client_hints
-    response.headers['Accept-CH'] = 'DPR, Width' if request.headers['Content-Type']&.downcase =~ /text\/html
+    response.headers['Accept-CH'] = 'DPR, Width' if request.headers['Content-Type']&.downcase =~ /text\/html/
   end
 end
