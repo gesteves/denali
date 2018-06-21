@@ -1,9 +1,6 @@
 <aside class="elsewhere" role="complementary">
   <h2 class="elsewhere__heading">Follow <i><%= @photoblog.name %></i></h2>
   <ul class="elsewhere__list">
-    <% if @photoblog.apple_news_url.present? %>
-      <li class="elsewhere__item"><a href="<%= @photoblog.apple_news_url %>" rel="me" title="Subscribe on Apple News"><%= inline_svg 'apple', 'elsewhere__icon' %><span class="elsewhere__label">Apple News</span></a></li>
-    <% end %>
     <% if @photoblog.facebook.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.facebook %>" rel="me" title="Like on Facebook"><%= inline_svg 'facebook', 'elsewhere__icon' %><span class="elsewhere__label">Facebook</span></a></li>
     <% end %>

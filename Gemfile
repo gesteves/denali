@@ -47,7 +47,6 @@ gem 'resque-scheduler'
 # Social Networks
 gem 'tumblr_client'
 gem 'flickraw'
-gem 'apple-news'
 
 # Search
 gem 'elasticsearch-model'

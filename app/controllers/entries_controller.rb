@@ -6,7 +6,7 @@ class EntriesController < ApplicationController
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search]
-  before_action :set_entry_max_age, only: [:show, :preview, :photo, :apple_news, :amp]
+  before_action :set_entry_max_age, only: [:show, :preview, :photo, :amp]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
 
   layout 'amp', only: :amp
@@ -100,16 +100,6 @@ class EntriesController < ApplicationController
         format.html {
           redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
         }
-      end
-    end
-  end
-
-  def apple_news
-    if stale?(@photoblog, public: true)
-      raise ActionController::RoutingError.new('Not Found') unless @photoblog.publish_on_apple_news?
-      @entry = @photoblog.entries.includes(:photos, :user, :blog, :tags).published.find(params[:id])
-      respond_to do |format|
-        format.json { render json: @entry.to_apple_news_document.as_json }
       end
     end
   end

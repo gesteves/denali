@@ -10,7 +10,6 @@ class Admin::EntriesController < AdminController
   after_action :annotate_photos, only: [:create, :update]
   after_action :update_palette, only: [:create, :update]
   after_action :enqueue_cache_jobs, only: [:update]
-  after_action :send_to_apple_news, only: [:create, :update]
 
   # GET /admin/entries
   def index
@@ -379,9 +378,5 @@ class Admin::EntriesController < AdminController
 
     def update_palette
       @entry.photos.map(&:update_palette)
-    end
-
-    def send_to_apple_news
-      AppleNewsJob.perform_later(@entry) if @entry.blog.publish_on_apple_news
     end
 end
