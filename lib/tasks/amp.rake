@@ -9,13 +9,18 @@ namespace :amp do
       else
         puts 'That entry wasn\'t found.'
       end
+    elsif ENV['ENTRY_IDS'].present?
+      entry_ids = ENV['ENTRY_IDS'].map(&:to_i)
+      entries = Entry.where(id: entry_ids)
+      entries.map { |entry| AmpCacheJob.perform_later(entry) }
+      puts "AMP Cache update requests sent"
     elsif ENV['COUNT'].present?
       count = ENV['COUNT'].to_i
       entries = Entry.published.limit(count)
       entries.map { |entry| AmpCacheJob.perform_later(entry) }
       puts "AMP Cache update requests sent"
     else
-      puts 'Please specify `ENTRY_ID` or `COUNT`.'
+      puts 'Please specify `ENTRY_ID` or `ENTRY_IDS` or `COUNT`.'
     end
   end
 
