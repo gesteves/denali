@@ -11,7 +11,7 @@ namespace :cloudfront do
           distribution_id: ENV['aws_cloudfront_distribution_id'],
           invalidation_batch: {
             paths: {
-              quantity: quantity
+              quantity: quantity,
               items: paths,
             },
             caller_reference: Time.now.to_i.to_s,
@@ -45,7 +45,7 @@ namespace :cloudfront do
         distribution_id: ENV['aws_cloudfront_distribution_id'],
         invalidation_batch: {
           paths: {
-            quantity: quantity
+            quantity: quantity,
             items: paths,
           },
           caller_reference: Time.now.to_i.to_s,
@@ -59,7 +59,7 @@ namespace :cloudfront do
         distribution_id: ENV['aws_cloudfront_distribution_id'],
         invalidation_batch: {
           paths: {
-            quantity: quantity
+            quantity: quantity,
             items: paths,
           },
           caller_reference: Time.now.to_i.to_s,
