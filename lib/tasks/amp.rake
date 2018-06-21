@@ -10,7 +10,7 @@ namespace :amp do
         puts 'That entry wasn\'t found.'
       end
     elsif ENV['ENTRY_IDS'].present?
-      entry_ids = ENV['ENTRY_IDS'].map(&:to_i)
+      entry_ids = ENV['ENTRY_IDS'].split(',').map(&:to_i)
       entries = Entry.where(id: entry_ids)
       entries.map { |entry| AmpCacheJob.perform_later(entry) }
       puts "AMP Cache update requests sent"

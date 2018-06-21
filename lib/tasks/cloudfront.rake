@@ -22,7 +22,7 @@ namespace :cloudfront do
         puts 'That entry wasn\'t found.'
       end
     elsif ENV['ENTRY_IDS'].present?
-      entry_ids = ENV['ENTRY_IDS'].map(&:to_i)
+      entry_ids = ENV['ENTRY_IDS'].split(',').map(&:to_i)
       entries = Entry.where(id: entry_ids)
       paths = entries.map { |e| [e.permalink_path, e.amp_path] }.flatten.compact
       quantity = paths.size
