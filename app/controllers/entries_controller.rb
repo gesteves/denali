@@ -2,6 +2,7 @@ class EntriesController < ApplicationController
   include TagList
 
   skip_before_action :verify_authenticity_token
+  skip_before_action :preload_assets, only: [:amp]
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search]
@@ -82,6 +83,7 @@ class EntriesController < ApplicationController
       begin
         respond_to do |format|
           format.html {
+            preload_asset(ActionController::Base.helpers.asset_path("https://use.typekit.net/#{ENV['typekit_body_id']}.css"), as = 'style') if ENV['typekit_body_id'].present? && @entry.body.present?
             redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
           }
           format.json

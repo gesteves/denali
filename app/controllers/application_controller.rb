@@ -6,8 +6,9 @@ class ApplicationController < ActionController::Base
   before_action :get_photoblog
   before_action :domain_redirect
   before_action :set_app_version
+  before_action :preload_assets
 
-  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?
+  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :preload_asset
 
   def default_url_options
     if Rails.env.production?
@@ -80,5 +81,21 @@ class ApplicationController < ActionController::Base
     # Requires enabling dyno metadata with `heroku labs:enable runtime-dyno-metadata`
     # See: https://devcenter.heroku.com/articles/dyno-metadata
     @app_version = ENV['HEROKU_RELEASE_VERSION'] || 'v1'
+  end
+
+  def preload_asset(url, as, crossorigin = false)
+    links = [response.headers['Link']]
+    link = "<#{url}>; rel=preload; as=#{as}"
+    link += '; crossorigin' if crossorigin
+    links << link
+    response.headers['Link'] = links.join(', ')
+  end
+
+  def preload_assets
+    if request.format.html?
+      preload_asset(ActionController::Base.helpers.asset_path('application.css'), as = 'style')
+      preload_asset(ActionController::Base.helpers.asset_path("https://use.typekit.net/#{ENV['typekit_id']}.css"), as = 'style') if ENV['typekit_id'].present?
+      preload_asset(ActionController::Base.helpers.asset_pack_path('application.js'), as = 'script')
+    end
   end
 end
