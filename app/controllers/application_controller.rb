@@ -81,9 +81,4 @@ class ApplicationController < ActionController::Base
     # See: https://devcenter.heroku.com/articles/dyno-metadata
     @app_version = ENV['HEROKU_RELEASE_VERSION'] || 'v1'
   end
-
-  def check_if_user_has_visited
-    @has_visited = cookies[:has_visited] == @app_version
-    cookies[:has_visited] = { value: @app_version, expires: 1.month.from_now }
-  end
 end

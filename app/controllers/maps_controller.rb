@@ -1,6 +1,5 @@
 class MapsController < ApplicationController
   before_action :set_max_age, only: [:index, :photos, :photo]
-  before_action :check_if_user_has_visited, only: [:index]
   skip_before_action :verify_authenticity_token
 
   def index
