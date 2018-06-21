@@ -23,7 +23,6 @@ entry: &entry
     - "(min-width: 1680px) 1680px"
     - 100vw
   quality: 90
-  client_hints: 'Width,DPR'
 entry_list: &entry_list
   src: 355
   srcset:
@@ -50,7 +49,6 @@ entry_list: &entry_list
     - "(min-width: 1280px) calc(25vw - 8px)"
     - "(min-width: 400px) calc(100vw/3 - 8px)"
     - "calc(50vw - 8px)"
-  client_hints: 'Width,DPR'
 entry_list_square:
   <<: *entry_list
   square: Yes
@@ -74,7 +72,6 @@ admin_entry:
     - "(min-width: 1280px) 1152px"
     - "(min-width: 1088px) 960px"
     - "calc(100vw - 3rem)"
-  client_hints: 'Width,DPR'
 admin_edit:
   src: 940
   srcset:
@@ -94,7 +91,6 @@ admin_edit:
     - "(min-width: 1088px) 780px"
     - "(min-width: 769px) calc(((100vw - 4.5rem)/6) * 5)"
     - "calc(100vw - 3rem)"
-  client_hints: 'Width,DPR'
 admin_queue:
   src: 490
   srcset:
