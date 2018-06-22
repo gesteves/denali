@@ -13,4 +13,11 @@ class AdminController < ApplicationController
   def is_admin?
     true
   end
+
+  def preload_assets
+    if request.format.html?
+      add_preload_link_header(ActionController::Base.helpers.asset_path('admin.css'), as: 'style')
+      add_preload_link_header(ActionController::Base.helpers.asset_pack_path('admin.js'), as: 'script')
+    end
+  end
 end

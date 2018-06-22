@@ -1,6 +1,6 @@
 class MapsController < ApplicationController
   before_action :set_max_age, only: [:index, :photos, :photo]
-  before_action :check_if_user_has_visited, only: [:index]
+  before_action :set_map_link_headers, only: [:index]
   skip_before_action :verify_authenticity_token
 
   def index
@@ -23,6 +23,17 @@ class MapsController < ApplicationController
       respond_to do |format|
         format.json
       end
+    end
+  end
+
+  private
+  def set_map_link_headers
+    if request.format.html?
+      add_preload_link_header(ActionController::Base.helpers.asset_path('https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'), as: 'script')
+      add_preload_link_header(ActionController::Base.helpers.asset_path('https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css'), as: 'style')
+      add_preload_link_header(map_markers_url(format: 'json'), as: 'fetch')
+      add_preconnect_link_header('https://a.tiles.mapbox.com')
+      add_preconnect_link_header('https://b.tiles.mapbox.com')
     end
   end
 end

@@ -6,12 +6,6 @@
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @entry.body.present? %>
 <% end %>
 
-<% if !@has_visited %>
-  <% content_for :inline_css do %>
-    <%= render partial: 'partials/inline_style', locals: { filename: 'entry.css' } %>
-  <% end %>
-<% end %>
-
 <%= render partial: 'entries/entry_photo', object: @entry, as: :entry if @entry.is_photo? %>
 <%= render partial: 'entries/entry_text', object: @entry, as: :entry if @entry.is_text? %>
 <%= render partial: 'entries/entry_pagination', object: @entry, as: :entry %>
