@@ -29,6 +29,7 @@ class MapsController < ApplicationController
   private
   def set_map_link_headers
     if request.format.html?
+      add_preload_link_header(ActionController::Base.helpers.asset_path('vendor/map.js'), as: 'script')
       add_preload_link_header(ActionController::Base.helpers.asset_path('https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'), as: 'script')
       add_preload_link_header(ActionController::Base.helpers.asset_path('https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css'), as: 'style')
       add_preload_link_header(map_markers_url(format: 'json'), as: 'fetch')
