@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :set_app_version
   before_action :preload_assets
 
-  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :preload_asset
+  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preload_link_header, :add_preconnect_link_header
 
   def default_url_options
     if Rails.env.production?
@@ -83,19 +83,29 @@ class ApplicationController < ActionController::Base
     @app_version = ENV['HEROKU_RELEASE_VERSION'] || 'v1'
   end
 
-  def preload_asset(url, as, crossorigin = false)
+  def add_preload_link_header(url, opts = {})
+    opts.reverse_merge!({ as: 'style', crossorigin: false })
     links = [response.headers['Link']]
-    link = "<#{url}>; rel=preload; as=#{as}"
-    link += '; crossorigin' if crossorigin
+    link = "<#{url}>; rel=preload; as=#{opts[:as]}"
+    link += '; crossorigin' if opts[:crossorigin]
     links << link
-    response.headers['Link'] = links.join(', ')
+    response.headers['Link'] = links.compact.join(', ')
+  end
+
+  def add_preconnect_link_header(url, opts = {})
+    opts.reverse_merge!({ crossorigin: false })
+    links = [response.headers['Link']]
+    link = "<#{url}>; rel=preconnect"
+    link += '; crossorigin' if opts[:crossorigin]
+    links << link
+    response.headers['Link'] = links.compact.join(', ')
   end
 
   def preload_assets
     if request.format.html?
-      preload_asset(ActionController::Base.helpers.asset_path('application.css'), as = 'style')
-      preload_asset(ActionController::Base.helpers.asset_path("https://use.typekit.net/#{ENV['typekit_id']}.css"), as = 'style') if ENV['typekit_id'].present?
-      preload_asset(ActionController::Base.helpers.asset_pack_path('application.js'), as = 'script')
+      add_preload_link_header(ActionController::Base.helpers.asset_path('application.css'), as: 'style')
+      add_preload_link_header(ActionController::Base.helpers.asset_path("https://use.typekit.net/#{ENV['typekit_id']}.css"), as: 'style') if ENV['typekit_id'].present?
+      add_preload_link_header(ActionController::Base.helpers.asset_pack_path('application.js'), as: 'script')
     end
   end
 end

@@ -28,8 +28,6 @@
       <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
     <% end %>
     <meta name="twitter:card" content="summary">
-    <link rel="preconnect" href="https://a.tiles.mapbox.com" crossorigin>
-    <link rel="preconnect" href="https://b.tiles.mapbox.com" crossorigin>
   <% end %>
 <% end %>
 
@@ -42,7 +40,7 @@
   <%= stylesheet_link_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css', media: 'all' %>
 <% end %>
 
-<div data-controller="map" data-map-api-token="<%= ENV['mapbox_api_token'] %>" data-map-markers-url="<%= map_markers_path(format: 'json') %>">
+<div data-controller="map" data-map-api-token="<%= ENV['mapbox_api_token'] %>" data-map-markers-url="<%= map_markers_url(format: 'json') %>">
   <div id="map" class="map" role="main" data-target="map.container"></div>
   <div class="map__loading" data-target="map.spinner">
     <%= inline_svg 'spinner', 'map__loading-spinner' %>
