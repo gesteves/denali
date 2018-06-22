@@ -109,6 +109,12 @@ class ApplicationController < ActionController::Base
       ENV['imgix_domain'].split(',').each do |domain|
         add_preconnect_link_header("http#{'s' if ENV['imgix_secure'].present?}://#{domain}")
       end
+      if ENV['google_analytics_id'].present?
+        add_preconnect_link_header('https://www.googletagmanager.com')
+      end
+      if ENV['clicky_id'].present?
+        add_preconnect_link_header('https://static.getclicky.com')
+      end
     end
   end
 end
