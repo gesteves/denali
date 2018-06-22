@@ -75,12 +75,6 @@ class EntriesControllerTest < ActionController::TestCase
     assert_template :show
   end
 
-  test 'should render apple news page' do
-    entry = entries(:peppers)
-    get :apple_news, params: { id: entry.id, format: 'json' }
-    assert_response :success
-  end
-
   test 'should redirect published photos from preview page' do
     entry = entries(:peppers)
     get :preview, params: { preview_hash: entry.preview_hash }

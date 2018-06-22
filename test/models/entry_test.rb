@@ -231,19 +231,4 @@ class EntryTest < ActiveSupport::TestCase
     entry.publish
     assert Entry.queue_has_published_today?
   end
-
-  test 'generate apple news document' do
-    entry = entries(:peppers)
-    doc = entry.to_apple_news_document
-    assert_not_nil doc
-    assert_not_nil doc.metadata
-    assert_not_nil doc.layout
-    assert_not_nil doc.component_text_styles
-    assert_not_nil doc.component_layouts
-    assert_not_nil doc.text_styles
-    assert_not_nil doc.components
-    assert_not_equal doc.components.size, 0
-    assert_equal doc.identifier, entry.id.to_s
-    assert_equal doc.title, entry.plain_title
-  end
 end

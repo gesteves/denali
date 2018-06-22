@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180514215209) do
+ActiveRecord::Schema.define(version: 20180621222846) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,8 +46,6 @@ ActiveRecord::Schema.define(version: 20180514215209) do
     t.integer "logo_file_size"
     t.datetime "logo_updated_at"
     t.string "facebook"
-    t.string "apple_news_url"
-    t.boolean "publish_on_apple_news", default: false
     t.index ["domain"], name: "index_blogs_on_domain"
   end
 
@@ -75,7 +73,6 @@ ActiveRecord::Schema.define(version: 20180514215209) do
     t.string "preview_hash"
     t.datetime "modified_at"
     t.text "instagram_text"
-    t.string "apple_news_id"
     t.index ["blog_id"], name: "index_entries_on_blog_id"
     t.index ["photos_count"], name: "index_entries_on_photos_count"
     t.index ["preview_hash"], name: "index_entries_on_preview_hash"
