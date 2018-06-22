@@ -14,10 +14,13 @@ class AdminController < ApplicationController
     true
   end
 
-  def preload_assets
+  def set_link_headers
     if request.format.html?
       add_preload_link_header(ActionController::Base.helpers.asset_path('admin.css'), as: 'style')
       add_preload_link_header(ActionController::Base.helpers.asset_pack_path('admin.js'), as: 'script')
+      ENV['imgix_domain'].split(',').each do |domain|
+        add_preconnect_link_header("http#{'s' if ENV['imgix_secure'].present?}://#{domain}")
+      end
     end
   end
 end

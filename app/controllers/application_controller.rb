@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :get_photoblog
   before_action :domain_redirect
   before_action :set_app_version
-  before_action :preload_assets
+  before_action :set_link_headers
 
   helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preload_link_header, :add_preconnect_link_header
 
@@ -101,11 +101,14 @@ class ApplicationController < ActionController::Base
     response.headers['Link'] = links.compact.join(', ')
   end
 
-  def preload_assets
+  def set_link_headers
     if request.format.html?
       add_preload_link_header(ActionController::Base.helpers.asset_path('application.css'), as: 'style')
       add_preload_link_header("https://use.typekit.net/#{ENV['typekit_id']}.css", as: 'style') if ENV['typekit_id'].present?
       add_preload_link_header(ActionController::Base.helpers.asset_pack_path('application.js'), as: 'script')
+      ENV['imgix_domain'].split(',').each do |domain|
+        add_preconnect_link_header("http#{'s' if ENV['imgix_secure'].present?}://#{domain}")
+      end
     end
   end
 end
