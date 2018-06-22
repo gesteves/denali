@@ -104,7 +104,7 @@ class ApplicationController < ActionController::Base
   def preload_assets
     if request.format.html?
       add_preload_link_header(ActionController::Base.helpers.asset_path('application.css'), as: 'style')
-      add_preload_link_header(ActionController::Base.helpers.asset_path("https://use.typekit.net/#{ENV['typekit_id']}.css"), as: 'style') if ENV['typekit_id'].present?
+      add_preload_link_header("https://use.typekit.net/#{ENV['typekit_id']}.css", as: 'style') if ENV['typekit_id'].present?
       add_preload_link_header(ActionController::Base.helpers.asset_pack_path('application.js'), as: 'script')
     end
   end
