@@ -2,6 +2,7 @@ class EntriesController < ApplicationController
   include TagList
 
   skip_before_action :verify_authenticity_token
+  skip_before_action :set_link_headers, only: [:amp]
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search]
@@ -98,7 +99,6 @@ class EntriesController < ApplicationController
       @entry = @photoblog.entries.includes(:photos, :user, :blog, :tags).published.find(params[:id])
       respond_to do |format|
         format.html {
-          add_preload_link_header("https://use.typekit.net/#{ENV['typekit_body_id']}.css", as: 'style') if ENV['typekit_body_id'].present? && @entry.body.present?
           redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
         }
       end
