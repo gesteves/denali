@@ -146,19 +146,20 @@ class Admin::EntriesControllerTest < ActionController::TestCase
 
   test 'should properly sort queue' do
     blog = blogs(:allencompassingtrip)
+    user = users(:guille)
 
     entry1 = entries(:panda)
     assert_equal entry1.position, 1
 
-    entry2 = Entry.new(title: 'Title 1', status: 'queued', blog: blog)
+    entry2 = Entry.new(title: 'Title 1', status: 'queued', blog: blog, user: user)
     entry2.save
     assert_equal entry2.position, 2
 
-    entry3 = Entry.new(title: 'Title 2', status: 'queued', blog: blog)
+    entry3 = Entry.new(title: 'Title 2', status: 'queued', blog: blog, user: user)
     entry3.save
     assert_equal entry3.position, 3
 
-    entry4 = Entry.new(title: 'Title 3', status: 'queued', blog: blog)
+    entry4 = Entry.new(title: 'Title 3', status: 'queued', blog: blog, user: user)
     entry4.save
     assert_equal entry4.position, 4
 
