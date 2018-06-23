@@ -73,6 +73,7 @@ Rails.application.routes.draw do
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
   get '/archive(/:year)(/:month)',     to: redirect('/')
   get '/rss',                          to: redirect('/feed.atom')
+  get '/service_worker.:format'        => 'errors#file_not_found'
 
   # Feeds
   get '(/page/:page)/feed(.:format)'             => 'entries#feed', constraints: { page: /\d+/ }, defaults: { format: 'atom' }, :as => :feed
