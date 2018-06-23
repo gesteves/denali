@@ -33,7 +33,7 @@ gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr', require: nil
-gem 'acts-as-taggable-on', '~> 5.0'
+gem 'acts-as-taggable-on', '~> 6.0'
 gem 'httparty'
 gem 'kaminari'
 gem 'figaro'
@@ -73,7 +73,6 @@ group :development, :test do
   gem 'scss-lint'
   gem 'foreman'
   gem 'byebug'
-  gem 'spring'
   gem 'brakeman', require: nil
 end
 
