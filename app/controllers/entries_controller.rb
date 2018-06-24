@@ -79,7 +79,7 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.includes(:photos, :user, :blog, :tags).published.find(params[:id])
+      @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
       begin
         respond_to do |format|
           format.html {
@@ -96,7 +96,7 @@ class EntriesController < ApplicationController
 
   def amp
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.includes(:photos, :user, :blog, :tags).published.find(params[:id])
+      @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
       respond_to do |format|
         format.html {
           redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
@@ -150,7 +150,7 @@ class EntriesController < ApplicationController
   def preview
     request.format = 'html'
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.includes(:photos, :user, :blog, :tags).where(preview_hash: params[:preview_hash]).limit(1).first
+      @entry = @photoblog.entries.includes(:photos, :user, :blog).where(preview_hash: params[:preview_hash]).limit(1).first
       raise ActiveRecord::RecordNotFound if @entry.nil?
       respond_to do |format|
         format.html {
