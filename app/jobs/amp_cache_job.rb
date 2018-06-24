@@ -26,7 +26,7 @@ class AmpCacheJob < ApplicationJob
   def update(cache, domain, path, signature)
     url = "https://#{domain.parameterize}.#{cache}#{path}&amp_url_signature=#{signature}"
     response = HTTParty.get(url)
-    if respose.code >= 400
+    if response.code >= 400
       logger.tagged('AMP') { logger.error { "Update cache request to #{cache} responded with #{response.code}" } }
     end
   end
