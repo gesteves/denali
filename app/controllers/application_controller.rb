@@ -85,19 +85,18 @@ class ApplicationController < ActionController::Base
   end
 
   def add_preload_link_header(url, opts = {})
-    opts.reverse_merge!({ as: 'style', crossorigin: false })
+    opts.reverse_merge!({ as: 'style' })
     links = [response.headers['Link']]
     link = "<#{url}>; rel=preload; as=#{opts[:as]}"
-    link += '; crossorigin' if opts[:crossorigin]
+    link += "; crossorigin=#{opts[:crossorigin]}" if opts[:crossorigin].present?
     links << link
     response.headers['Link'] = links.compact.join(', ')
   end
 
   def add_preconnect_link_header(url, opts = {})
-    opts.reverse_merge!({ crossorigin: false })
     links = [response.headers['Link']]
     link = "<#{url}>; rel=preconnect"
-    link += '; crossorigin' if opts[:crossorigin]
+    link += "; crossorigin=#{opts[:crossorigin]}" if opts[:crossorigin].present?
     links << link
     response.headers['Link'] = links.compact.join(', ')
   end
