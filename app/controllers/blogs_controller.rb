@@ -3,11 +3,6 @@ class BlogsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def about
-    respond_to do |format|
-      format.html {
-        add_preload_link_header("https://use.typekit.net/#{ENV['typekit_body_id']}.css", as: 'style') if ENV['typekit_body_id'].present? && @photoblog.about.present?
-      }
-    end
   end
 
   def manifest

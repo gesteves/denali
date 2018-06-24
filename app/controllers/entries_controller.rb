@@ -83,7 +83,6 @@ class EntriesController < ApplicationController
       begin
         respond_to do |format|
           format.html {
-            add_preload_link_header("https://use.typekit.net/#{ENV['typekit_body_id']}.css", as: 'style') if ENV['typekit_body_id'].present? && @entry.body.present?
             redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
           }
           format.json
