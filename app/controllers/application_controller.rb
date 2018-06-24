@@ -115,6 +115,7 @@ class ApplicationController < ActionController::Base
       end
       if ENV['clicky_id'].present?
         add_preconnect_link_header('https://static.getclicky.com')
+        add_preconnect_link_header('https://in.getclicky.com')
       end
     end
   end
