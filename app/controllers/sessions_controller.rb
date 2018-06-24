@@ -25,6 +25,7 @@ class SessionsController < ApplicationController
   end
 
   def failure
+    logger.tagged('Auth') { logger.warn { "Sign in failure: #{params[:message]}" } }
     flash[:warning] = "There was a problem signing you in: #{params[:message]}."
     redirect_to signin_path
   end
