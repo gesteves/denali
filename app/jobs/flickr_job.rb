@@ -22,7 +22,7 @@ class FlickrJob < ApplicationJob
 
     entry.photos.each do |p|
       response = flickr.upload_photo open(p.original_url).path, title: title, description: body, tags: all_tags
-      logger.info "[Flickr] Photo #{response} created"
+      logger.tagged('Social', 'Flickr') { logger.info { "Photo #{response} created" } }
     end
   end
 end

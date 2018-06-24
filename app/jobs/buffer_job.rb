@@ -6,7 +6,7 @@ class BufferJob < ApplicationJob
     profiles = Rails.cache.fetch('buffer:profiles', expires_in: 1.hour) do
       response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}")
       if response.code >= 400
-        raise response.body
+        logger.tagged('Social', 'Buffer') { logger.error response.body }
       else
         response.body
       end
@@ -28,10 +28,12 @@ class BufferJob < ApplicationJob
 
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: body)
     if response.code >= 400
-      raise JSON.parse(response.body)['message']
+      logger.tagged('Social', 'Buffer') { logger.error response.body }
     else
       updates = JSON.parse(response.body)['updates']
-      updates.map { |u| logger.info "[#{u['profile_service'].titlecase}] Update #{u['id']} created, due at #{u['due_time']}" }
+      updates.each do |u|
+        logger.tagged('Social', 'Buffer', u['profile_service'].titlecase) { logger.info { "Update #{u['id']} created, due at #{u['due_time']}" } }
+      end
     end
   end
 

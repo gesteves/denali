@@ -11,7 +11,7 @@ class SessionsController < ApplicationController
     auth_hash = request.env['omniauth.auth']
 
     if auth_hash.present?
-      logger.info "#{auth_hash['info']['name']} (#{auth_hash['info']['email']}) signed in"
+      logger.tagged('Auth') { logger.info { "#{auth_hash['info']['name']} (#{auth_hash['info']['email']}) signed in" } }
       flash[:success] = "Welcome back, #{auth_hash['info']['first_name']}!"
       user = User.from_omniauth(auth_hash)
       session[:user_id] = user.id

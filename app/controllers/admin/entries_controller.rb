@@ -121,7 +121,6 @@ class Admin::EntriesController < AdminController
     respond_to do |format|
       @entry.modified_at = Time.now if @entry.is_published?
       if @entry.update(entry_params)
-        logger.info "Entry #{@entry.id} was updated."
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else

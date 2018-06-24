@@ -8,7 +8,7 @@ class AmpCacheJob < ApplicationJob
     domain = entry.blog.domain
     path = "/update-cache/c/s/#{domain}#{entry.amp_path}?amp_action=flush&amp_ts=#{timestamp}"
     signature = Base64.urlsafe_encode64(sign(path))
-    logger.info "[AMP Cache] Preparing update cache request for #{path}"
+    logger.tagged('AMP') { logger.info { "Preparing update cache request for #{path}" } }
     caches.map { |cache| update(cache, domain, path, signature) }
   end
 
@@ -27,7 +27,7 @@ class AmpCacheJob < ApplicationJob
   def update(cache, domain, path, signature)
     url = "https://#{domain.parameterize}.#{cache}#{path}&amp_url_signature=#{signature}"
     response = HTTParty.get(url)
-    logger.info "[AMP Cache] Update cache request to #{cache} responded with #{response.code}"
+    logger.tagged('AMP') { logger.info { "Update cache request to #{cache} responded with #{response.code}" } }
   end
 
   def sign(path)

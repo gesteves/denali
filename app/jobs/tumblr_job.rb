@@ -25,12 +25,10 @@ class TumblrJob < ApplicationJob
       tumblr.text(ENV['tumblr_domain'], opts)
     end
 
-    if response['errors'].present?
-      raise response['errors']
-    elsif response['status'].present? && response['status'] >= 400
-      raise response['msg']
+    if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
+      logger.tagged('Social', 'Tumblr') { logger.error response.to_s }
     else
-      logger.info "[Tumblr] Post #{response['id']} #{response['display_text'].downcase.gsub('.', '')}"
+      logger.tagged('Social', 'Tumblr') { logger.info { "Post #{response['id']} #{response['display_text'].downcase.gsub('.', '')}" } }
     end
   end
 

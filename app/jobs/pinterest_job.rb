@@ -11,10 +11,10 @@ class PinterestJob < ApplicationJob
     }
     response = HTTParty.post('https://api.pinterest.com/v1/pins/', query: opts, headers: { 'Authorization' => "BEARER #{ENV['pinterest_token']}" })
     if response.code >= 400
-      raise response.body
+      logger.tagged('Social', 'Pinterest') { logger.error response.body }
     else
       data = JSON.parse(response.body)['data']
-      logger.info "[Pinterest] Pin #{data['id']} created"
+      logger.tagged('Social', 'Pinterest') { logger.info { "Pin #{data['id']} created" } }
     end
   end
 end

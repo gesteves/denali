@@ -6,7 +6,7 @@ class SlackJob < ApplicationJob
     opts.reverse_merge!(text: '')
     response = HTTParty.post(ENV['slack_incoming_webhook'], body: opts.to_json)
     if response.code >= 400
-      raise response.body
+      logger.tagged('Slack') { response.body }
     end
   end
 end

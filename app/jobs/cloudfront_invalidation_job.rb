@@ -16,6 +16,6 @@ class CloudfrontInvalidationJob < ApplicationJob
         caller_reference: Time.now.to_i.to_s,
       },
     })
-    logger.info "[CloudFront] Invalidation #{response.invalidation.id} created for #{response.invalidation.invalidation_batch.paths.items.join(', ')}"
+    logger.tagged('CloudFront') { logger.info { "Invalidation #{response.invalidation.id} created for #{response.invalidation.invalidation_batch.paths.items.join(', ')}" } }
   end
 end
