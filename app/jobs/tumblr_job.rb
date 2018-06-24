@@ -27,8 +27,6 @@ class TumblrJob < ApplicationJob
 
     if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
       logger.tagged('Social', 'Tumblr') { logger.error response.to_s }
-    else
-      logger.tagged('Social', 'Tumblr') { logger.info { "Post #{response['id']} #{response['display_text'].downcase.gsub('.', '')}" } }
     end
   end
 
