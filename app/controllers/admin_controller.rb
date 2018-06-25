@@ -25,6 +25,6 @@ class AdminController < ApplicationController
   end
 
   def set_referrer_policy
-    response.headers['Referrer-Policy'] = 'no-referrer'
+    response.headers['Referrer-Policy'] = 'strict-origin'
   end
 end
