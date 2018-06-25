@@ -38,6 +38,9 @@ gem 'httparty'
 gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
+
+# Monitoring
+gem 'newrelic_rpm'
 gem 'sentry-raven'
 
 # Caching
