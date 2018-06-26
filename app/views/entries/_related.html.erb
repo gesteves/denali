@@ -1,4 +1,4 @@
-<% cache "entry/related/#{entry.id}/#{entry.updated_at.to_i}" do %>
+<% cache "entry/related/#{entry.id}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <% related = entry.related %>
   <% if related.present? %>
     <aside role="complementary">
