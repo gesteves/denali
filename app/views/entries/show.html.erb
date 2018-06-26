@@ -6,10 +6,9 @@
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @entry.body.present? %>
 <% end %>
 
-<% cache "entry/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
-  <%= render partial: 'entries/entry_photo', object: @entry, as: :entry if @entry.is_photo? %>
-  <%= render partial: 'entries/entry_text', object: @entry, as: :entry if @entry.is_text? %>
-  <%= render partial: 'entries/entry_pagination', object: @entry, as: :entry %>
-  <%= render partial: 'entries/related', object: @entry if @photoblog.show_related_entries? %>
-  <%= render partial: 'partials/elsewhere' %>
-<% end %>
+
+<%= render partial: 'entries/entry_photo', object: @entry, as: :entry if @entry.is_photo? %>
+<%= render partial: 'entries/entry_text', object: @entry, as: :entry if @entry.is_text? %>
+<%= render partial: 'entries/entry_pagination', object: @entry, as: :entry %>
+<%= render partial: 'entries/related', object: @entry, as: :entry if @photoblog.show_related_entries? %>
+<%= render partial: 'partials/elsewhere' %>

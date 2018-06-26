@@ -1,14 +1,16 @@
-<% related = @entry.related %>
-<% if related.present? %>
-  <aside role="complementary">
-    <h2 class="entry__related">Other Photos You Might Like</h2>
-    <ol class="entry-list entry-list--related">
-      <%= render partial: 'entries/amp/entry_list_item',
-                  collection: related,
-                  as: :entry,
-                  locals: {
-                    square: true
-                  } %>
-    </ol>
-  </aside>
+<% cache "entry/related/amp/#{entry.id}/#{entry.updated_at.to_i}" do %>
+  <% related = entry.related %>
+  <% if related.present? %>
+    <aside role="complementary">
+      <h2 class="entry__related">Other Photos You Might Like</h2>
+      <ol class="entry-list entry-list--related">
+        <%= render partial: 'entries/amp/entry_list_item',
+                    collection: related,
+                    as: :entry,
+                    locals: {
+                      square: true
+                    } %>
+      </ol>
+    </aside>
+  <% end %>
 <% end %>

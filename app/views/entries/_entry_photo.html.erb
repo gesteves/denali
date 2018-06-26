@@ -1,29 +1,31 @@
-<article class="entry entry--photo" role="main" data-controller="photo" data-photo-container-max-width="1680">
-  <% entry.photos.each do |photo| %>
-    <div class="entry__photo-container" style="<%= intrinsic_ratio_width(photo) %>">
-      <figure class="entry__figure" style="<%= "#{intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}" %>">
-        <%= responsive_image_tag photo,
-            'entry',
-            { class: "entry__photo",
-              alt: photo.alt_text,
-              'data-photo-width': photo.width,
-              'data-photo-height': photo.height,
-              'data-action': 'click->photo#zoom',
-              'data-target': 'photo.photo' } %>
-      </figure>
+<% cache "entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+  <article class="entry entry--photo" role="main" data-controller="photo" data-photo-container-max-width="1680">
+    <% entry.photos.each do |photo| %>
+      <div class="entry__photo-container" style="<%= intrinsic_ratio_width(photo) %>">
+        <figure class="entry__figure" style="<%= "#{intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}" %>">
+          <%= responsive_image_tag photo,
+              'entry',
+              { class: "entry__photo",
+                alt: photo.alt_text,
+                'data-photo-width': photo.width,
+                'data-photo-height': photo.height,
+                'data-action': 'click->photo#zoom',
+                'data-target': 'photo.photo' } %>
+        </figure>
+      </div>
+    <% end %>
+
+    <div class="entry__body">
+      <h1 class="entry__headline">
+        <%= sanitize entry.plain_title %>
+      </h1>
+      <%= sanitize entry.formatted_body unless entry.body.blank? %>
     </div>
-  <% end %>
 
-  <div class="entry__body">
-    <h1 class="entry__headline">
-      <%= sanitize entry.plain_title %>
-    </h1>
-    <%= sanitize entry.formatted_body unless entry.body.blank? %>
-  </div>
-
-  <div class="entry__meta">
-    <%= render partial: 'entries/byline', object: entry, as: :entry %>
-    <%= render partial: 'entries/exif', object: entry.photos.first, as: :photo if entry.is_single_photo? %>
-    <%= render partial: 'entries/tags', object: entry.combined_tags %>
-  </div>
-</article>
+    <div class="entry__meta">
+      <%= render partial: 'entries/byline', object: entry, as: :entry %>
+      <%= render partial: 'entries/exif', object: entry.photos.first, as: :photo if entry.is_single_photo? %>
+      <%= render partial: 'entries/tags', object: entry.combined_tags %>
+    </div>
+  </article>
+<% end %>

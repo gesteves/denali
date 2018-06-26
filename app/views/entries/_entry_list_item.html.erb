@@ -1,53 +1,55 @@
-<li class="entry-list__item" role="article" <%= entry_list_item_observer(page_url) if observe && entry_counter == 0 %>>
-  <div class="entry-list__wrapper" style="<%= "#{intrinsic_ratio_padding(entry.photos.first, { square: square })};#{image_placeholder(entry.photos.first)}" %>">
-    <a class="entry-list__link" href="<%= entry.permalink_url %>">
-      <figure class="entry-list__photo">
-        <% if lazy_load %>
-          <%= lazy_responsive_image_tag entry.photos.first,
-                entry_list_image_variant(square: square),
-                { class: 'entry-list__image', alt: entry.photos.first.alt_text, 'data-controller': 'lazy-load' } %>
-          <noscript>
+<% cache "entry/list_item/observe/#{local_assigns[:page_url] && observe && entry_counter == 0 ? page_url : false}/lazy-load/#{lazy_load}/square/#{square}/#{entry.id}/#{entry.updated_at.to_i}" do %>
+  <li class="entry-list__item" role="article" <%= entry_list_item_observer(page_url) if observe && entry_counter == 0 %>>
+    <div class="entry-list__wrapper" style="<%= "#{intrinsic_ratio_padding(entry.photos.first, { square: square })};#{image_placeholder(entry.photos.first)}" %>">
+      <a class="entry-list__link" href="<%= entry.permalink_url %>">
+        <figure class="entry-list__photo">
+          <% if lazy_load %>
+            <%= lazy_responsive_image_tag entry.photos.first,
+                  entry_list_image_variant(square: square),
+                  { class: 'entry-list__image', alt: entry.photos.first.alt_text, 'data-controller': 'lazy-load' } %>
+            <noscript>
+              <%= responsive_image_tag entry.photos.first,
+                    entry_list_image_variant(square: square),
+                    { class: 'entry-list__image', alt: entry.photos.first.alt_text } %>
+            </noscript>
+          <% else %>
             <%= responsive_image_tag entry.photos.first,
                   entry_list_image_variant(square: square),
                   { class: 'entry-list__image', alt: entry.photos.first.alt_text } %>
-          </noscript>
-        <% else %>
-          <%= responsive_image_tag entry.photos.first,
-                entry_list_image_variant(square: square),
-                { class: 'entry-list__image', alt: entry.photos.first.alt_text } %>
-        <% end %>
-        <figcaption class="entry-list__photo-caption">
-          <p class="entry-list__photo-title"><%= sanitize truncate(entry.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
-          <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
-          <% if entry.is_photoset? %>
-            <p class="entry-list__photo-meta"><%= pluralize(entry.photos_count, 'photo') %></p>
-          <% else %>
-            <% photo = entry.photos.first %>
-            <p class="entry-list__photo-meta">
-              <% if photo.make.present? && photo.model.present? %>
-                <span class="exif__field"><%= photo.formatted_camera %></span>
-              <% end %>
-              <% unless photo.is_phone_camera? %>
-                <% if photo.is_film? %>
-                  <span class="exif__field"><%= photo.formatted_film %></span>
-                <% end %>
-                <% if photo.focal_length.present? %>
-                  <span class="exif__field"><%= photo.focal_length_with_unit %></span>
-                <% end %>
-                <% if photo.exposure.present? %>
-                  <span class="exif__field"><%= photo.formatted_exposure %></span>
-                <% end %>
-                <% if photo.f_number.present? %>
-                  <span class="exif__field"><%= photo.formatted_aperture %></span>
-                <% end %>
-                <% if photo.iso.present? %>
-                  <span class="exif__field">ISO <%= photo.iso %></span>
-                <% end %>
-              <% end %>
-            </p>
           <% end %>
-        </figcaption>
-      </figure>
-    </a>
-  </div>
-</li>
+          <figcaption class="entry-list__photo-caption">
+            <p class="entry-list__photo-title"><%= sanitize truncate(entry.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
+            <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
+            <% if entry.is_photoset? %>
+              <p class="entry-list__photo-meta"><%= pluralize(entry.photos_count, 'photo') %></p>
+            <% else %>
+              <% photo = entry.photos.first %>
+              <p class="entry-list__photo-meta">
+                <% if photo.make.present? && photo.model.present? %>
+                  <span class="exif__field"><%= photo.formatted_camera %></span>
+                <% end %>
+                <% unless photo.is_phone_camera? %>
+                  <% if photo.is_film? %>
+                    <span class="exif__field"><%= photo.formatted_film %></span>
+                  <% end %>
+                  <% if photo.focal_length.present? %>
+                    <span class="exif__field"><%= photo.focal_length_with_unit %></span>
+                  <% end %>
+                  <% if photo.exposure.present? %>
+                    <span class="exif__field"><%= photo.formatted_exposure %></span>
+                  <% end %>
+                  <% if photo.f_number.present? %>
+                    <span class="exif__field"><%= photo.formatted_aperture %></span>
+                  <% end %>
+                  <% if photo.iso.present? %>
+                    <span class="exif__field">ISO <%= photo.iso %></span>
+                  <% end %>
+                <% end %>
+              </p>
+            <% end %>
+          </figcaption>
+        </figure>
+      </a>
+    </div>
+  </li>
+<% end %>
