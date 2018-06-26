@@ -12,6 +12,11 @@ class EntriesControllerTest < ActionController::TestCase
     end
   end
 
+  test 'entries index should redirect from unknown format' do
+    get :index, params: { format: 'foo' }
+    assert_redirected_to entries_url
+  end
+
   test "should generate index json" do
     get :index, params: { format: 'json' }
     assert_template :index
@@ -40,6 +45,11 @@ class EntriesControllerTest < ActionController::TestCase
     get :feed, params: { format: 'json' }
     assert_template :feed
     assert_response :success
+  end
+
+  test "should redirect to atom feed from unknown format" do
+    get :feed, params: { format: 'rss' }
+    assert_redirected_to feed_url(format: 'atom', page: nil)
   end
 
   test 'photo page should render correctly' do
@@ -96,6 +106,12 @@ class EntriesControllerTest < ActionController::TestCase
     assert_redirected_to entry.permalink_url
   end
 
+  test 'should redirect from unknown format' do
+    entry = entries(:peppers)
+    get :show, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug, format: 'foo' }
+    assert_redirected_to entry.permalink_url
+  end
+
   test 'should render tag page' do
     entry = entries(:peppers)
     entry.tag_list = 'washington'
@@ -108,6 +124,14 @@ class EntriesControllerTest < ActionController::TestCase
     assert_select '.entry-list' do
       assert_select '.entry-list__item', 1
     end
+  end
+
+  test 'should redirect tag page from unknown format' do
+    entry = entries(:peppers)
+    entry.tag_list = 'washington'
+    entry.save
+    get :tagged, params: { tag: 'washington', format: 'foo' }
+    assert_redirected_to tag_url(format: 'html', page: nil, tag: 'washington')
   end
 
   test 'should render tag page json' do
@@ -135,5 +159,13 @@ class EntriesControllerTest < ActionController::TestCase
     get :tag_feed, params: { tag: 'washington', format: 'json' }
     assert_template :tag_feed
     assert_response :success
+  end
+
+  test 'should redirect tag feed from unknown format' do
+    entry = entries(:peppers)
+    entry.tag_list = 'washington'
+    entry.save
+    get :tag_feed, params: { tag: 'washington', format: 'rss' }
+    assert_redirected_to tag_feed_url(format: 'atom', page: nil, tag: 'washington')
   end
 end
