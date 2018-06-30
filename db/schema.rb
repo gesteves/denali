@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180621222846) do
+ActiveRecord::Schema.define(version: 2018_06_30_183302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,9 @@ ActiveRecord::Schema.define(version: 20180621222846) do
     t.integer "logo_file_size"
     t.datetime "logo_updated_at"
     t.string "facebook"
+    t.string "paperclip_favicon_url"
+    t.string "paperclip_touch_icon_url"
+    t.string "paperclip_logo_url"
     t.index ["domain"], name: "index_blogs_on_domain"
   end
 
@@ -119,6 +122,7 @@ ActiveRecord::Schema.define(version: 20180621222846) do
     t.string "color_muted"
     t.string "color_palette"
     t.string "keywords"
+    t.string "paperclip_image_url"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["latitude"], name: "index_photos_on_latitude"
     t.index ["longitude"], name: "index_photos_on_longitude"
