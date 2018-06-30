@@ -38,11 +38,12 @@ class Photo < ApplicationRecord
   end
 
   def original_url
-    self.image.url
+    self.paperclip_image_url
   end
 
   def original_path
-    self.image.path
+    return '' if self.paperclip_image_url.blank?
+    self.paperclip_image_url.gsub("https://s3.amazonaws.com/#{ENV['s3_bucket']}", '')
   end
 
   def url(opts = {})

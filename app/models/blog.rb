@@ -9,11 +9,11 @@ class Blog < ApplicationRecord
                       bucket: ENV['s3_bucket'] },
     s3_headers: { 'Cache-Control': 'max-age=31536000, public' },
     s3_region: ENV['s3_region'],
-    s3_protocol: 'http',
-    url: ':s3_domain_url',
+    s3_protocol: 'https',
+    url: ':s3_path_url',
     path: 'icons/favicon-:updated_at.:extension',
     hash_secret: ENV['secret_key_base'],
-    use_timestamp: true
+    use_timestamp: false
   has_attached_file :touch_icon,
     storage: :s3,
     s3_credentials: { access_key_id: ENV['aws_access_key_id'],
@@ -21,11 +21,11 @@ class Blog < ApplicationRecord
                       bucket: ENV['s3_bucket'] },
     s3_headers: { 'Cache-Control': 'max-age=31536000, public' },
     s3_region: ENV['s3_region'],
-    s3_protocol: 'http',
-    url: ':s3_domain_url',
+    s3_protocol: 'https',
+    url: ':s3_path_url',
     path: 'icons/touch-icon-:updated_at.:extension',
     hash_secret: ENV['secret_key_base'],
-    use_timestamp: true
+    use_timestamp: false
   has_attached_file :logo,
     storage: :s3,
     s3_credentials: { access_key_id: ENV['aws_access_key_id'],
@@ -33,11 +33,11 @@ class Blog < ApplicationRecord
                       bucket: ENV['s3_bucket'] },
     s3_headers: { 'Cache-Control': 'max-age=31536000, public' },
     s3_region: ENV['s3_region'],
-    s3_protocol: 'http',
-    url: ':s3_domain_url',
+    s3_protocol: 'https',
+    url: ':s3_path_url',
     path: 'icons/logo-:updated_at.:extension',
     hash_secret: ENV['secret_key_base'],
-    use_timestamp: true
+    use_timestamp: false
 
   validates :name, :description, :about, presence: true
   validates_attachment :favicon, content_type: { content_type: 'image/png' }
@@ -60,19 +60,37 @@ class Blog < ApplicationRecord
     markdown_to_plaintext(self.about)
   end
 
+  def favicon_path
+    return nil if self.paperclip_favicon_url.blank?
+    self.paperclip_favicon_url.gsub("https://s3.amazonaws.com/#{ENV['s3_bucket']}", '')
+  end
+
+  def touch_icon_path
+    return nil if self.paperclip_touch_icon_url.blank?
+    self.paperclip_touch_icon_url.gsub("https://s3.amazonaws.com/#{ENV['s3_bucket']}", '')
+  end
+
+  def logo_path
+    return nil if self.paperclip_logo_url.blank?
+    self.paperclip_logo_url.gsub("https://s3.amazonaws.com/#{ENV['s3_bucket']}", '')
+  end
+
   def favicon_url(opts = {})
+    return nil if self.paperclip_favicon_url.blank?
     opts.reverse_merge!(w: 16)
-    self.favicon.present? ? Ix.path(self.favicon.path).to_url(opts.reject { |k,v| v.blank? }) : nil
+    Ix.path(self.favicon_path).to_url(opts.reject { |k,v| v.blank? })
   end
 
   def touch_icon_url(opts = {})
+    return nil if self.paperclip_touch_icon_url.blank?
     opts.reverse_merge!(w: 32)
-    self.touch_icon.present? ? Ix.path(self.touch_icon.path).to_url(opts.reject { |k,v| v.blank? }) : nil
+    Ix.path(self.touch_icon_path).to_url(opts.reject { |k,v| v.blank? })
   end
 
   def logo_url(opts = {})
+    return nil if self.paperclip_logo_url.blank?
     opts.reverse_merge!(h: 60)
-    self.logo.present? ? Ix.path(self.logo.path).to_url(opts.reject { |k,v| v.blank? }) : nil
+    Ix.path(self.logo_path).to_url(opts.reject { |k,v| v.blank? })
   end
 
   def has_search?
