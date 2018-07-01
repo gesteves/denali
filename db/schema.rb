@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_06_30_234452) do
+ActiveRecord::Schema.define(version: 2018_07_01_202023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,23 +53,8 @@ ActiveRecord::Schema.define(version: 2018_06_30_234452) do
     t.string "email"
     t.text "header_logo_svg"
     t.text "additional_meta_tags"
-    t.string "favicon_file_name"
-    t.string "favicon_content_type"
-    t.integer "favicon_file_size"
-    t.datetime "favicon_updated_at"
-    t.string "touch_icon_file_name"
-    t.string "touch_icon_content_type"
-    t.integer "touch_icon_file_size"
-    t.datetime "touch_icon_updated_at"
     t.string "flickr"
-    t.string "logo_file_name"
-    t.string "logo_content_type"
-    t.integer "logo_file_size"
-    t.datetime "logo_updated_at"
     t.string "facebook"
-    t.string "paperclip_favicon_url"
-    t.string "paperclip_touch_icon_url"
-    t.string "paperclip_logo_url"
     t.index ["domain"], name: "index_blogs_on_domain"
   end
 
@@ -113,10 +98,6 @@ ActiveRecord::Schema.define(version: 2018_06_30_234452) do
     t.integer "entry_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "image_file_name"
-    t.string "image_content_type"
-    t.integer "image_file_size"
-    t.datetime "image_updated_at"
     t.string "source_url"
     t.string "make"
     t.string "model"
@@ -143,7 +124,6 @@ ActiveRecord::Schema.define(version: 2018_06_30_234452) do
     t.string "color_muted"
     t.string "color_palette"
     t.string "keywords"
-    t.string "paperclip_image_url"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["latitude"], name: "index_photos_on_latitude"
     t.index ["longitude"], name: "index_photos_on_longitude"
