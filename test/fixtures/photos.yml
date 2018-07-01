@@ -3,10 +3,6 @@
 peppers:
   position: 1
   entry: peppers
-  image_file_name: tumblr_lwzxda7qwx1qzattso1_1280.jpg
-  image_content_type: image/jpeg
-  image_file_size: 1239274
-  source_url: http://41.media.tumblr.com/tumblr_lwzxda7qwx1qzattso1_1280.jpg
   make: OLYMPUS IMAGING CORP.
   model: XZ-1
   taken_at: 2011-07-02 16:18:21.000000
@@ -23,10 +19,6 @@ peppers:
 potomac:
   position: 1
   entry: potomac
-  image_file_name: tumblr_lwzxfitFan1qzattso1_1280.jpg
-  image_content_type: image/jpeg
-  image_file_size: 621488
-  source_url: http://36.media.tumblr.com/tumblr_lwzxfitFan1qzattso1_1280.jpg
   make: OLYMPUS IMAGING CORP.
   model: XZ-1
   taken_at: 2011-07-03 14:23:57.000000
@@ -42,10 +34,6 @@ potomac:
 panda:
   position: 1
   entry: panda
-  image_file_name: tumblr_lwzxj59UEs1qzattso1_1280.jpg
-  image_content_type: image/jpeg
-  image_file_size: 1373881
-  source_url: http://41.media.tumblr.com/tumblr_lwzxj59UEs1qzattso1_1280.jpg
   make: OLYMPUS IMAGING CORP.
   model: XZ-1
   taken_at: 2011-07-03 15:22:37.000000
@@ -61,10 +49,6 @@ panda:
 franklin:
   position: 1
   entry: franklin
-  image_file_name: tumblr_lx00c71gKU1qzattso1_1280.jpg
-  image_content_type: image/jpeg
-  image_file_size: 531641
-  source_url: http://41.media.tumblr.com/tumblr_lx00c71gKU1qzattso1_1280.jpg
   make: OLYMPUS IMAGING CORP.
   model: XZ-1
   taken_at: 2011-07-06 16:14:53.000000

@@ -236,11 +236,10 @@ class EntryTest < ActiveSupport::TestCase
     entry.location_list = 'Washington'
     entry.equipment_list = 'Nikon'
     entry.style_list = 'Black & White'
-    entry.save
+    entry.save!
     entry.reload
 
     entry.add_tags('Panda, Washington, Mammal')
-
     assert entry.tag_list.include?('Panda')
     assert entry.location_list.include?('Washington')
     assert entry.style_list.include?('Black & White')
