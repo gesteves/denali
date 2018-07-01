@@ -14,21 +14,21 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries
   def index
     @page = params[:page] || 1
-    @entries = @photoblog.entries.includes(:photos).published.page(@page)
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.page(@page)
     @page_title = 'Published'
   end
 
   # GET /admin/entries/queued
   def queued
     @page = params[:page] || 1
-    @entries = @photoblog.entries.includes(:photos).queued.page(@page)
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued.page(@page)
     @page_title = 'Queued'
   end
 
   # GET /admin/entries/drafts
   def drafts
     @page = params[:page] || 1
-    @entries = @photoblog.entries.includes(:photos).drafted.page(@page)
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).drafted.page(@page)
     @page_title = 'Drafts'
   end
 
@@ -61,7 +61,7 @@ class Admin::EntriesController < AdminController
       @page_title = "Search results for \"#{@query}\""
       results = Entry.full_search(@query, @page, @count)
       @total_count = results.results.total
-      @entries = Kaminari.paginate_array(results.records.includes(:photos), total_count: @total_count).page(@page).per(@count)
+      @entries = Kaminari.paginate_array(results.records.includes(photos: [:image_attachment, :image_blob]), total_count: @total_count).page(@page).per(@count)
     end
   end
 
@@ -334,7 +334,7 @@ class Admin::EntriesController < AdminController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
-      @entry = @photoblog.entries.includes(:photos).find(params[:id])
+      @entry = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).find(params[:id])
     end
 
     def get_tags
@@ -353,7 +353,7 @@ class Admin::EntriesController < AdminController
 
     def load_tagged_entries
       @page = params[:page] || 1
-      @entries = @photoblog.entries.includes(:photos).tagged_with(@tag_list, any: true).order('created_at DESC').page(@page)
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).tagged_with(@tag_list, any: true).order('created_at DESC').page(@page)
     end
 
     def set_redirect_url

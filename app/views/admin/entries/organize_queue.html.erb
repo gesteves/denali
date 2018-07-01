@@ -11,7 +11,7 @@
 
   <% cache "admin/entries/queued/sort/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <div class="is-clearfix" data-target="queue.container">
-      <%= render partial: 'queue_item', collection: @photoblog.entries.includes(:photos).queued, as: :entry %>
+      <%= render partial: 'queue_item', collection: @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued, as: :entry %>
     </div>
   <% end %>
 

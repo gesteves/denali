@@ -23,9 +23,9 @@ class OembedController < ApplicationController
   def load_entry
     url = Rails.application.routes.recognize_path(params[:url])
     if url[:controller] == 'entries' && url[:action] == 'show' && url[:id].present?
-      @entry = @photoblog.entries.includes(:photos, :user).published.find(url[:id])
+      @entry = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.find(url[:id])
     elsif url[:controller] == 'entries' && url[:action] == 'preview' && url[:preview_hash].present?
-      @entry = @photoblog.entries.includes(:photos, :user).where(preview_hash: url[:preview_hash]).limit(1).first
+      @entry = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).where(preview_hash: url[:preview_hash]).limit(1).first
     else
       raise ActiveRecord::RecordNotFound
     end

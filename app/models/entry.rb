@@ -54,7 +54,7 @@ class Entry < ApplicationRecord
   end
 
   def self.mapped
-    joins(:photos).includes(:photos).where(entries: { show_in_map: true, status: 'published' }).where.not(photos: { latitude: nil, longitude: nil })
+    joins(:photos).includes(photos: [:image_attachment, :image_blob]).where(entries: { show_in_map: true, status: 'published' }).where.not(photos: { latitude: nil, longitude: nil })
   end
 
   def self.text_entries
@@ -218,7 +218,7 @@ class Entry < ApplicationRecord
         },
         size: count
       }
-      Entry.search(search).records.includes(:photos)
+      Entry.search(search).records.includes(photos: [:image_attachment, :image_blob])
     rescue => e
       logger.error "Fetching related entries failed with the following error: #{e}"
       nil
