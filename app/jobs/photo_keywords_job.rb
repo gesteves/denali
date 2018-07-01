@@ -1,4 +1,4 @@
-class ImageAnnotationJob < ApplicationJob
+class PhotoKeywordsJob < ApplicationJob
   queue_as :default
 
   def perform(photo)

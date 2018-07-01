@@ -1,4 +1,4 @@
-class PaletteJob < ApplicationJob
+class PhotoPaletteJob < ApplicationJob
   queue_as :default
 
   def perform(photo)

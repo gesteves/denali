@@ -3,12 +3,10 @@ require 'exifr/jpeg'
 class Photo < ApplicationRecord
   include Formattable
 
-  belongs_to :entry, touch: true, counter_cache: true
+  belongs_to :entry, touch: true, counter_cache: true, optional: true
   has_one_attached :image
 
   acts_as_list scope: :entry
-
-  attr_accessor :source_file
 
   after_save :update_entry
 
@@ -195,16 +193,20 @@ class Photo < ApplicationRecord
     [self.locality, self.administrative_area, self.country].uniq.reject(&:blank?).reject { |a| a.match? /^united (states|kingdom)/i }.join(', ')
   end
 
+  def extract_metadata
+    PhotoMetadataJob.perform_later(self)
+  end
+
   def geocode
-    GeocodeJob.perform_later(self)
+    PhotoGeocodeJob.perform_later(self)
   end
 
-  def annotate
-    ImageAnnotationJob.perform_later(self)
+  def extract_keywords
+    PhotoKeywordsJob.perform_later(self)
   end
 
-  def update_palette
-    PaletteJob.perform_later(self)
+  def extract_palette
+    PhotoPaletteJob.perform_later(self)
   end
 
   def prominent_color
@@ -229,54 +231,5 @@ class Photo < ApplicationRecord
     else
       ''
     end
-  end
-
-  private
-  def set_image
-    if self.source_url.present?
-      self.image = URI.parse(self.source_url)
-    elsif self.source_file.present?
-      self.image = self.source_file
-    else
-      self.image = nil
-    end
-  end
-
-  def save_dimensions
-    tempfile = image.queued_for_write[:original]
-    unless tempfile.nil?
-      geometry = Paperclip::Geometry.from_file(tempfile)
-      geometry.auto_orient
-      self.width = geometry.width.to_i
-      self.height = geometry.height.to_i
-    end
-  end
-
-  def save_exif
-    exif = EXIFR::JPEG.new(image.queued_for_write[:original].path)
-    unless exif.nil? || !exif.exif?
-      self.make = exif.make
-      self.model = exif.model
-      self.iso = exif.iso_speed_ratings
-      self.taken_at = exif.date_time
-      self.exposure = exif.exposure_time
-      self.f_number = exif&.f_number&.to_f
-      self.focal_length = exif&.focal_length&.to_i
-      save_gps_info(exif.gps) if exif.gps.present?
-      save_film_info(exif.user_comment) if exif.user_comment.present?
-    end
-  end
-
-  def save_gps_info(gps)
-    self.longitude = gps.longitude
-    self.latitude = gps.latitude
-  end
-
-  def save_film_info(comment)
-    comment_array = comment.split(/(\n)+/).select{ |c| c =~ /^film/i }
-    film_make = comment_array.select{ |c| c =~ /^film make/i }
-    film_type = comment_array.select{ |c| c =~ /^film type/i }
-    self.film_make = film_make&.first&.gsub(/^film make:/i, '')&.strip
-    self.film_type = film_type&.first&.gsub(/^film type:/i, '')&.strip
   end
 end

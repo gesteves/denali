@@ -19,7 +19,7 @@ class Entry < ApplicationRecord
   acts_as_taggable_on :tags, :equipment, :locations, :styles
   acts_as_list scope: :blog
 
-  accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
+  accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['image'].blank? && attributes['id'].blank? }
 
   attr_accessor :flush_caches
 

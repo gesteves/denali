@@ -5,11 +5,6 @@ class Admin::EntriesController < AdminController
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url, except: [:photo]
-  after_action :update_position, only: [:create]
-  after_action :geocode_photos, only: [:create, :update]
-  after_action :annotate_photos, only: [:create, :update]
-  after_action :update_palette, only: [:create, :update]
-  after_action :enqueue_cache_jobs, only: [:update]
 
   # GET /admin/entries
   def index
@@ -107,6 +102,8 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save
+        update_position
+        enqueue_photo_jobs
         flash[:success] = "Your new entry was saved! <a href=\"#{@entry.permalink_url}\">Check it out.</a>"
         format.html { redirect_to new_admin_entry_path }
       else
@@ -121,6 +118,8 @@ class Admin::EntriesController < AdminController
     respond_to do |format|
       @entry.modified_at = Time.now if @entry.is_published?
       if @entry.update(entry_params)
+        enqueue_photo_jobs
+        enqueue_cache_jobs
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else
@@ -309,9 +308,11 @@ class Admin::EntriesController < AdminController
   end
 
   def refresh_metadata
-    @entry.photos.map(&:geocode)
-    @entry.photos.map(&:annotate)
-    @entry.photos.map(&:update_palette)
+    @entry.photos.each do |photo|
+      photo.extract_metadata
+      photo.extract_palette
+      photo.extract_keywords
+    end
     CloudfrontInvalidationJob.perform_later(@entry)
     AmpCacheJob.perform_later(@entry)
     @message = 'Your entry’s metadata is being updated. This may take a few moments.'
@@ -334,7 +335,7 @@ class Admin::EntriesController < AdminController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
-      @entry = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).find(params[:id])
+      @entry = @photoblog.entries.find(params[:id])
     end
 
     def get_tags
@@ -342,7 +343,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_instagram, :post_to_facebook, :post_to_pinterest, :tweet_text, :instagram_text, :show_in_map, :flush_caches, photos_attributes: [:source_url, :source_file, :id, :_destroy, :position, :caption, :focal_x, :focal_y])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_instagram, :post_to_facebook, :post_to_pinterest, :tweet_text, :instagram_text, :show_in_map, :flush_caches, photos_attributes: [:image, :id, :_destroy, :position, :caption, :focal_x, :focal_y])
     end
 
     def update_position
@@ -367,15 +368,11 @@ class Admin::EntriesController < AdminController
       end
     end
 
-    def geocode_photos
-      @entry.photos.map(&:geocode)
-    end
-
-    def annotate_photos
-      @entry.photos.map(&:annotate)
-    end
-
-    def update_palette
-      @entry.photos.map(&:update_palette)
+    def enqueue_photo_jobs
+      @entry.photos.each do |photo|
+        photo.extract_metadata
+        photo.extract_palette
+        photo.extract_keywords
+      end
     end
 end
