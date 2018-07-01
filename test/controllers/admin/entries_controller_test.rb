@@ -6,8 +6,9 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     session[:user_id] = users(:guille).id
     @blog = blogs(:allencompassingtrip)
     @entry = entries(:peppers)
-    @entry.tag_list = 'washington'
+    @entry.tag_list = 'Washington'
     @entry.save
+    super
   end
 
   test 'should render entries page' do
