@@ -4,27 +4,11 @@ class Photo < ApplicationRecord
   include Formattable
 
   belongs_to :entry, touch: true, counter_cache: true
-  has_attached_file :image,
-    storage: :s3,
-    s3_credentials: { access_key_id: ENV['aws_access_key_id'],
-                      secret_access_key: ENV['aws_secret_access_key'],
-                      bucket: ENV['s3_bucket'] },
-    s3_headers: { 'Cache-Control': 'max-age=31536000, public' },
-    s3_region: ENV['s3_region'],
-    s3_protocol: 'https',
-    url: ':s3_path_url',
-    path: 'photos/:hash.:extension',
-    hash_secret: ENV['secret_key_base'],
-    use_timestamp: false
+  has_one_attached :image
 
   acts_as_list scope: :entry
 
-  validates_attachment_content_type :image, :content_type => /image\/jpe?g/i
-
   attr_accessor :source_file
-
-  before_create :set_image
-  after_image_post_process :save_exif, :save_dimensions
 
   after_save :update_entry
 
