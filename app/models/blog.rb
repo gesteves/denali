@@ -2,47 +2,12 @@ class Blog < ApplicationRecord
   include Formattable
 
   has_many :entries, dependent: :destroy
-  has_attached_file :favicon,
-    storage: :s3,
-    s3_credentials: { access_key_id: ENV['aws_access_key_id'],
-                      secret_access_key: ENV['aws_secret_access_key'],
-                      bucket: ENV['s3_bucket'] },
-    s3_headers: { 'Cache-Control': 'max-age=31536000, public' },
-    s3_region: ENV['s3_region'],
-    s3_protocol: 'https',
-    url: ':s3_path_url',
-    path: 'icons/favicon-:updated_at.:extension',
-    hash_secret: ENV['secret_key_base'],
-    use_timestamp: false
-  has_attached_file :touch_icon,
-    storage: :s3,
-    s3_credentials: { access_key_id: ENV['aws_access_key_id'],
-                      secret_access_key: ENV['aws_secret_access_key'],
-                      bucket: ENV['s3_bucket'] },
-    s3_headers: { 'Cache-Control': 'max-age=31536000, public' },
-    s3_region: ENV['s3_region'],
-    s3_protocol: 'https',
-    url: ':s3_path_url',
-    path: 'icons/touch-icon-:updated_at.:extension',
-    hash_secret: ENV['secret_key_base'],
-    use_timestamp: false
-  has_attached_file :logo,
-    storage: :s3,
-    s3_credentials: { access_key_id: ENV['aws_access_key_id'],
-                      secret_access_key: ENV['aws_secret_access_key'],
-                      bucket: ENV['s3_bucket'] },
-    s3_headers: { 'Cache-Control': 'max-age=31536000, public' },
-    s3_region: ENV['s3_region'],
-    s3_protocol: 'https',
-    url: ':s3_path_url',
-    path: 'icons/logo-:updated_at.:extension',
-    hash_secret: ENV['secret_key_base'],
-    use_timestamp: false
+
+  has_one_attached :favicon
+  has_one_attached :touch_icon
+  has_one_attached :logo
 
   validates :name, :description, :about, presence: true
-  validates_attachment :favicon, content_type: { content_type: 'image/png' }
-  validates_attachment :touch_icon, content_type: { content_type: 'image/png' }
-  validates_attachment :logo, content_type: { content_type: 'image/png' }
 
   def formatted_description
     markdown_to_html(self.description)

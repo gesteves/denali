@@ -15,9 +15,6 @@ gem 'aws-sdk-cloudfront', '~> 1'
 gem 'aws-sdk-s3', '~> 1'
 gem 'aws-sdk-rekognition', '~> 1'
 
-# Uploads
-gem 'paperclip', '~> 6.0'
-
 # Front-end things
 gem 'sass-rails', '~> 5.0'
 gem 'autoprefixer-rails'
