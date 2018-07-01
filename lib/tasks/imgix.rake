@@ -16,7 +16,7 @@ end
 def purge_imgix(entry)
   puts "Purging photos for entry #{entry.id} (#{entry.title})"
   entry.photos.each do |p|
-    url = Ix.path(p.original_path).to_url
+    url = Ix.path(p.image.key).to_url
     response = HTTParty.post('https://api.imgix.com/v2/image/purger', basic_auth: { username: ENV['imgix_api_key'], password: '' }, body: { url: url })
     puts response.body if response.code.to_i != 200
   end

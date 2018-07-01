@@ -1,7 +1,7 @@
 <hr class="hr">
 <% if @size == 'original' %>
   <% @entry.photos.each do |photo| %>
-    <%= image_tag photo.original_url %>
+    <%= image_tag photo.image.service_url %>
   <% end %>
 <% elsif @size == 'instagram_feed' %>
   <% @entry.photos.each do |photo| %>

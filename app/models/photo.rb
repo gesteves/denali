@@ -21,15 +21,6 @@ class Photo < ApplicationRecord
     order('taken_at ASC').limit(1)&.first
   end
 
-  def original_url
-    self.paperclip_image_url
-  end
-
-  def original_path
-    return '' if self.paperclip_image_url.blank?
-    self.paperclip_image_url.gsub("https://s3.amazonaws.com/#{ENV['s3_bucket']}", '')
-  end
-
   def url(opts = {})
     opts.reverse_merge!(w: 1200, auto: 'format', square: false)
     if opts[:square]
@@ -50,7 +41,7 @@ class Photo < ApplicationRecord
     if opts[:fm].present?
       opts.delete(:auto)
     end
-    Ix.path(self.original_path).to_url(opts.reject { |k,v| v.blank? })
+    Ix.path(self.image.key).to_url(opts.reject { |k,v| v.blank? })
   end
 
   # Returns the url of the image, formatted & sized fit to into instagram's
@@ -73,7 +64,7 @@ class Photo < ApplicationRecord
 
   def palette_url(opts = {})
     opts.reverse_merge!(palette: 'json', colors: 6)
-    Ix.path(self.original_path).to_url(opts)
+    Ix.path(self.image.key).to_url(opts)
   end
 
   def formatted_caption
