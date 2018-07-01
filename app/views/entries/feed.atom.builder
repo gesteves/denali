@@ -15,8 +15,8 @@ cache "feed/atom/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.upd
     xml.updated @entries.map(&:modified_at).max.utc.strftime('%FT%TZ')
     xml.description @photoblog.plain_description
     xml.tag! 'webfeeds:accentColor', '#BF0222'
-    xml.tag! 'webfeeds:wordmark', @photoblog.logo_url(w: 192) if @photoblog.logo.present?
-    xml.tag! 'webfeeds:icon', @photoblog.touch_icon_url(w: 192) if @photoblog.touch_icon.present?
+    xml.tag! 'webfeeds:wordmark', @photoblog.logo_url(w: 192) if @photoblog.logo.attached?
+    xml.tag! 'webfeeds:icon', @photoblog.touch_icon_url(w: 192) if @photoblog.touch_icon.attached?
     xml.tag! 'webfeeds:related', layout: 'card', target: 'browser'
 
     @entries.each do |e|

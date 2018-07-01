@@ -18,7 +18,7 @@ end
 json.publisher do
   json.set! '@type', 'Organization'
   json.name @photoblog.name
-  if @photoblog.logo.present?
+  if @photoblog.logo.attached?
     json.logo do
       json.set! '@type', 'ImageObject'
       json.width 145

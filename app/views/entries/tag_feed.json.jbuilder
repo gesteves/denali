@@ -10,8 +10,8 @@ json.cache! "feed/json/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photobl
     json.feed_url tag_feed_url(format: 'json', tag: @tag_slug, page: @page)
   end
   json.description "Photos tagged #{@tags.first.name}"
-  json.icon @photoblog.touch_icon_url(w: 512) if @photoblog.touch_icon.present?
-  json.favicon @photoblog.favicon_url(w: 64) if @photoblog.favicon.present?
+  json.icon @photoblog.touch_icon_url(w: 512) if @photoblog.touch_icon.attached?
+  json.favicon @photoblog.favicon_url(w: 64) if @photoblog.favicon.attached?
   json.items @entries do |e|
     json.partial! 'feed_entry', entry: e
   end

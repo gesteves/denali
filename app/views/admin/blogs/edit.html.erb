@@ -226,7 +226,7 @@
           </label>
         </div>
       </div>
-      <% if @blog.logo.present? %>
+      <% if @blog.logo.attached? %>
         <div><%= image_tag @blog.logo_url %></div>
       <% end %>
     </div>
@@ -252,7 +252,7 @@
           </label>
         </div>
       </div>
-      <% if @blog.touch_icon.present? %>
+      <% if @blog.touch_icon.attached? %>
         <div><%= image_tag @blog.touch_icon_url %></div>
       <% end %>
     </div>
@@ -278,7 +278,7 @@
           </label>
         </div>
       </div>
-      <% if @blog.favicon.present? %>
+      <% if @blog.favicon.attached? %>
         <div><%= image_tag @blog.favicon_url %></div>
       <% end %>
     </div>

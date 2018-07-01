@@ -33,7 +33,7 @@
     <% end %>
     <meta name="twitter:card" content="summary_large_image">
   <% else %>
-    <% if @photoblog.touch_icon.present? %>
+    <% if @photoblog.touch_icon.attached? %>
       <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
     <% end %>
     <meta name="twitter:card" content="summary">
