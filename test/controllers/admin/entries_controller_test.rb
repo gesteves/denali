@@ -6,8 +6,9 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     session[:user_id] = users(:guille).id
     @blog = blogs(:allencompassingtrip)
     @entry = entries(:peppers)
-    @entry.tag_list = 'washington'
+    @entry.tag_list = 'Washington'
     @entry.save
+    super
   end
 
   test 'should render entries page' do
@@ -107,18 +108,26 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should create entries' do
-    post :create, params: { entry: { title: 'Published', status: 'published' } }
+    file = fixture_file_upload(Rails.root.join('test/fixtures/images/rusty.jpg'), 'image/jpg')
+
+    post :create, params: { entry: { title: 'Published', status: 'published', photos_attributes: [image: file] } }
     assert assigns(:entry).is_published?
+    assert_equal assigns(:entry).photos.count, 1
+    assert assigns(:entry).photos.first.image.attached?
     assert_nil assigns(:entry).position
     assert_redirected_to new_admin_entry_path
 
-    post :create, params: { entry: { title: 'Draft', status: 'draft' } }
+    post :create, params: { entry: { title: 'Draft', status: 'draft', photos_attributes: [image: file] } }
     assert assigns(:entry).is_draft?
+    assert_equal assigns(:entry).photos.count, 1
+    assert assigns(:entry).photos.first.image.attached?
     assert_nil assigns(:entry).position
     assert_redirected_to new_admin_entry_path
 
-    post :create, params: { entry: { title: 'Queued', status: 'queued' } }
+    post :create, params: { entry: { title: 'Queued', status: 'queued', photos_attributes: [image: file] } }
     assert assigns(:entry).is_queued?
+    assert_equal assigns(:entry).photos.count, 1
+    assert assigns(:entry).photos.first.image.attached?
     assert_not_nil assigns(:entry).position
     assert_redirected_to new_admin_entry_path
   end

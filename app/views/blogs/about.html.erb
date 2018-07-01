@@ -5,7 +5,7 @@
     <link rel="canonical" href="<%= about_url %>">
 
     <meta property="og:title" content="About <%= @photoblog.name %>">
-    <% if @photoblog.logo.present? %>
+    <% if @photoblog.logo.attached? %>
       <meta property="og:image" content="<%= @photoblog.logo_url(w: 1200, h: 628, fm: 'png', pad: 50, fit: 'fill', bg: 'fff') %>">
     <% else %>
       <meta property="og:image" content="<%= @photoblog.entries.photo_entries.published.first.photos.first.url(w: 1200, h: 628) %>">
@@ -25,7 +25,7 @@
     <meta name="twitter:title" content="About <%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= about_url %>">
     <meta name="twitter:description" content="<%= truncate @photoblog.plain_about, length: 200 %>">
-    <% if @photoblog.touch_icon.present? %>
+    <% if @photoblog.touch_icon.attached? %>
       <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
     <% end %>
     <meta name="twitter:card" content="summary">

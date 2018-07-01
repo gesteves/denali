@@ -1,4 +1,4 @@
-class ImageAnnotationJob < ApplicationJob
+class PhotoKeywordsJob < ApplicationJob
   queue_as :default
 
   def perform(photo)
@@ -15,7 +15,7 @@ class ImageAnnotationJob < ApplicationJob
       image: {
         s3_object: {
           bucket: ENV['s3_bucket'],
-          name: photo.image.s3_object.key
+          name: photo.image.key
         }
       },
       min_confidence: 80

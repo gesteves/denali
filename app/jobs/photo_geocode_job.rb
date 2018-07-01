@@ -1,4 +1,4 @@
-class GeocodeJob < ApplicationJob
+class PhotoGeocodeJob < ApplicationJob
   queue_as :default
 
   def perform(photo)

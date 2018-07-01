@@ -8,7 +8,7 @@
     <link rel="canonical" href="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>">
 
     <meta property="og:title" content="<%= @photoblog.name %>">
-    <% if @photoblog.logo.present? %>
+    <% if @photoblog.logo.attached? %>
       <meta property="og:image" content="<%= @photoblog.logo_url(w: 1200, h: 628, fm: 'png', pad: 50, fit: 'fill', bg: 'fff') %>">
     <% else %>
       <meta property="og:image" content="<%= @entries.first.photos.first.url(w: 1200, h: 628) %>">
@@ -28,7 +28,7 @@
     <meta name="twitter:title" content="<%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>">
     <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
-    <% if @photoblog.touch_icon.present? %>
+    <% if @photoblog.touch_icon.attached? %>
       <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
     <% end %>
     <meta name="twitter:card" content="summary">

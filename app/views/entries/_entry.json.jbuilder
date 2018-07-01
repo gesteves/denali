@@ -93,10 +93,10 @@ json.cache! "entry/json/#{entry.id}/#{entry.updated_at.to_i}" do
     json.blog do
       json.data do
         json.type 'blog'
-        json.id entry.blog.id.to_s
+        json.id @photoblog.id.to_s
         json.attributes do
-          json.name entry.blog.name
-          json.description entry.blog.description
+          json.name @photoblog.name
+          json.description @photoblog.description
         end
       end
     end

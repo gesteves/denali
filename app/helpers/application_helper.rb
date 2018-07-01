@@ -63,11 +63,13 @@ module ApplicationHelper
 
   def intrinsic_ratio_padding(photo, opts = {})
     opts.reverse_merge!(square: false)
+    return '' if !opts[:square] && (photo.width.blank? || photo.height.blank?)
     padding = opts[:square] ? 100 : ((photo.height.to_f/photo.width.to_f) * 100)
     "padding-top:#{padding}%"
   end
 
   def intrinsic_ratio_width(photo)
+    return '' if photo.width.blank? || photo.height.blank?
     width = (photo.width.to_f/photo.height.to_f) * 100
     "width:#{width}vh"
   end

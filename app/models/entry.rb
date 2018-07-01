@@ -19,7 +19,7 @@ class Entry < ApplicationRecord
   acts_as_taggable_on :tags, :equipment, :locations, :styles
   acts_as_list scope: :blog
 
-  accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['source_file'].blank? && attributes['source_url'].blank? && attributes['id'].blank? }
+  accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['image'].blank? && attributes['id'].blank? }
 
   attr_accessor :flush_caches
 
@@ -54,7 +54,7 @@ class Entry < ApplicationRecord
   end
 
   def self.mapped
-    joins(:photos).includes(:photos).where(entries: { show_in_map: true, status: 'published' }).where.not(photos: { latitude: nil, longitude: nil })
+    joins(:photos).includes(photos: [:image_attachment, :image_blob]).where(entries: { show_in_map: true, status: 'published' }).where.not(photos: { latitude: nil, longitude: nil })
   end
 
   def self.text_entries
@@ -218,7 +218,7 @@ class Entry < ApplicationRecord
         },
         size: count
       }
-      Entry.search(search).records.includes(:photos)
+      Entry.search(search).records.includes(photos: [:image_attachment, :image_blob])
     rescue => e
       logger.error "Fetching related entries failed with the following error: #{e}"
       nil

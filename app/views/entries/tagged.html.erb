@@ -28,7 +28,7 @@
     <meta name="twitter:title" content="<%= sanitize "#{@tags.first.name} · #{@photoblog.name}" %>">
     <meta name="twitter:url" content="<%= @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) %>">
     <meta name="twitter:description" content="<%= number_with_delimiter @tags.first.taggings_count %> photos tagged “<%= @tags.first.name %>” on <%= @photoblog.name %>.">
-    <% if @photoblog.touch_icon.present? %>
+    <% if @photoblog.touch_icon.attached? %>
       <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
     <% end %>
     <meta name="twitter:card" content="summary">

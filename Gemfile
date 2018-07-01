@@ -35,6 +35,7 @@ gem 'httparty'
 gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
+gem 'mini_magick'
 
 # Monitoring
 gem 'newrelic_rpm'

@@ -15,7 +15,7 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(:photos).published.photo_entries.page(@page).per(@count)
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @entries.empty? && request.format != 'js'
       respond_to do |format|
         format.html
@@ -43,7 +43,7 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(:photos).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
       respond_to do |format|
         format.html
@@ -75,7 +75,7 @@ class EntriesController < ApplicationController
     if @query.present?
       results = Entry.published_search(@query, @page, @count)
       total_count = results.results.total
-      records = results.records.includes(:photos)
+      records = results.records.includes(photos: [:image_attachment, :image_blob])
       @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
     end
     respond_to do |format|
@@ -86,7 +86,7 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
+      @entry = @photoblog.entries.published.find(params[:id])
       respond_to do |format|
         format.html {
           redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
@@ -99,7 +99,7 @@ class EntriesController < ApplicationController
 
   def amp
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.includes(:photos, :user, :blog).published.find(params[:id])
+      @entry = @photoblog.entries.published.find(params[:id])
       respond_to do |format|
         format.html {
           redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
@@ -120,7 +120,7 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(:photos, :user).published.photo_entries.page(@page).per(@count)
+      @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @entries.empty?
       respond_to do |format|
         format.atom
@@ -134,7 +134,7 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(:photos, :user).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
+      @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
       respond_to do |format|
         format.atom
@@ -147,7 +147,7 @@ class EntriesController < ApplicationController
   def preview
     request.format = 'html'
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.includes(:photos, :user, :blog).where(preview_hash: params[:preview_hash]).limit(1).first
+      @entry = @photoblog.entries.where(preview_hash: params[:preview_hash]).limit(1).first
       raise ActiveRecord::RecordNotFound if @entry.nil?
       respond_to do |format|
         format.html {
@@ -183,7 +183,7 @@ class EntriesController < ApplicationController
     expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)
       @page = params[:page]
-      @entries = @photoblog.entries.includes(:photos).published.page(@page).per(@entries_per_sitemap)
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.page(@page).per(@entries_per_sitemap)
       render format: 'xml'
     end
   end

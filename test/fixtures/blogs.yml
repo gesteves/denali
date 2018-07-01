@@ -8,6 +8,3 @@ allencompassingtrip:
   about: 'This is mah blog.'
   posts_per_page: 60
   copyright: 'Guillermo Esteves'
-  paperclip_logo_url: 'https://denali-dev.imgix.net/icons/logo-1502593564.png?h=60&s=7f87bc30d6d198644306a4fbd4fde403'
-  paperclip_favicon_url: 'https://denali-dev.imgix.net/icons/favicon-1495296880.png?w=16&s=8f699a51105d05eef6c42212a4f71373'
-  paperclip_touch_icon_url: 'https://denali-dev.imgix.net/icons/touch-icon-1495296880.png?w=32&s=69befa1b2194e22147353096d558d269'

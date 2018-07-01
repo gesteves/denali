@@ -21,7 +21,7 @@ class FlickrJob < ApplicationJob
     all_tags = entry.combined_tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')
 
     entry.photos.each do |p|
-      flickr.upload_photo open(p.original_url).path, title: title, description: body, tags: all_tags
+      flickr.upload_photo open(p.image.service_url).path, title: title, description: body, tags: all_tags
     end
   end
 end

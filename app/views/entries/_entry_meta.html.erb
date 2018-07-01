@@ -1,8 +1,8 @@
-<% cache "entry/meta/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+<% cache "entry/meta/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <% unless @entry.is_published? %>
     <meta name="robots" content="noindex">
   <% end %>
-  <title><%= sanitize "#{entry.plain_title} · #{entry.blog.name}" %></title>
+  <title><%= sanitize "#{entry.plain_title} · #{@photoblog.name}" %></title>
   <meta name="description" content="<%= meta_description entry %>">
 
   <%# Facebook meta tags %>
@@ -33,7 +33,7 @@
     <% end %>
     <meta name="twitter:card" content="summary_large_image">
   <% else %>
-    <% if @photoblog.touch_icon.present? %>
+    <% if @photoblog.touch_icon.attached? %>
       <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
     <% end %>
     <meta name="twitter:card" content="summary">
