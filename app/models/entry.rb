@@ -179,7 +179,7 @@ class Entry < ApplicationRecord
   end
 
   def related(count = 12)
-    Rails.cache.fetch("entry/related/#{self.id}/#{self.updated_at.to_i}", expires_in: 1.month) do
+    Rails.cache.fetch("entry/related/#{self.id}/#{self.updated_at.to_i}", expires_in: 2.weeks) do
       start_date = if self.is_published?
         self.published_at.beginning_of_day - 1.year
       elsif self.is_queued?
