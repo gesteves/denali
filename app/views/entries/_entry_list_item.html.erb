@@ -18,36 +18,7 @@
                   entry_list_image_variant(square: square),
                   { class: 'entry-list__image', alt: photo.alt_text } %>
           <% end %>
-          <figcaption class="entry-list__photo-caption">
-            <p class="entry-list__photo-title"><%= sanitize truncate(entry.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
-            <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
-            <% if entry.is_photoset? %>
-              <p class="entry-list__photo-meta"><%= pluralize(entry.photos_count, 'photo') %></p>
-            <% else %>
-              <p class="entry-list__photo-meta">
-                <% if photo.make.present? && photo.model.present? %>
-                  <span class="exif__field"><%= photo.formatted_camera %></span>
-                <% end %>
-                <% unless photo.is_phone_camera? %>
-                  <% if photo.is_film? %>
-                    <span class="exif__field"><%= photo.formatted_film %></span>
-                  <% end %>
-                  <% if photo.focal_length.present? %>
-                    <span class="exif__field"><%= photo.focal_length_with_unit %></span>
-                  <% end %>
-                  <% if photo.exposure.present? %>
-                    <span class="exif__field"><%= photo.formatted_exposure %></span>
-                  <% end %>
-                  <% if photo.f_number.present? %>
-                    <span class="exif__field"><%= photo.formatted_aperture %></span>
-                  <% end %>
-                  <% if photo.iso.present? %>
-                    <span class="exif__field">ISO <%= photo.iso %></span>
-                  <% end %>
-                <% end %>
-              </p>
-            <% end %>
-          </figcaption>
+          <%= render partial: 'entries/entry_list_item_caption', locals: { entry: entry, photo: photo } %>
         </figure>
       </a>
     </div>
