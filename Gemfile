@@ -40,6 +40,7 @@ gem 'mini_magick'
 # Monitoring
 gem 'newrelic_rpm'
 gem 'sentry-raven'
+gem 'skylight'
 
 # Caching
 gem 'dalli'
