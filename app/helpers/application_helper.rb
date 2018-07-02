@@ -32,25 +32,29 @@ module ApplicationHelper
   end
 
   def get_src(photo, photo_key)
-    quality = PHOTOS[photo_key]['quality']
-    square = PHOTOS[photo_key]['square'].present?
-    width = PHOTOS[photo_key]['src']
-    client_hints = PHOTOS[photo_key]['client_hints']
-    auto = PHOTOS[photo_key]['auto'] || 'format'
-    photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)
+    Rails.cache.fetch("photo/src/#{photo_key}/#{photo.id}") do
+      quality = PHOTOS[photo_key]['quality']
+      square = PHOTOS[photo_key]['square'].present?
+      width = PHOTOS[photo_key]['src']
+      client_hints = PHOTOS[photo_key]['client_hints']
+      auto = PHOTOS[photo_key]['auto'] || 'format'
+      photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)
+    end
   end
 
   def get_srcset(photo, photo_key)
-    quality = PHOTOS[photo_key]['quality']
-    square = PHOTOS[photo_key]['square'].present?
-    client_hints = PHOTOS[photo_key]['client_hints']
-    auto = PHOTOS[photo_key]['auto'] || 'format'
-    PHOTOS[photo_key]['srcset'].
-      uniq.
-      sort.
-      reject { |width| width > photo.width }.
-      map { |width| "#{photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)} #{width}w" }.
-      join(', ')
+    Rails.cache.fetch("photo/srcset/#{photo_key}/#{photo.id}") do
+      quality = PHOTOS[photo_key]['quality']
+      square = PHOTOS[photo_key]['square'].present?
+      client_hints = PHOTOS[photo_key]['client_hints']
+      auto = PHOTOS[photo_key]['auto'] || 'format'
+      PHOTOS[photo_key]['srcset'].
+        uniq.
+        sort.
+        reject { |width| width > photo.width }.
+        map { |width| "#{photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)} #{width}w" }.
+        join(', ')
+    end
   end
 
   def get_sizes(photo_key)
