@@ -1,6 +1,6 @@
 <% cache "entry/amp/#{entry.id}/#{entry.updated_at.to_i}" do %>
   <article class="entry entry--photo" role="main">
-    <% entry.photos.each do |photo| %>
+    <% @photos.each do |photo| %>
       <div class="entry__photo-container">
         <figure class="entry__figure">
           <%= amp_image_tag photo,
@@ -19,8 +19,8 @@
 
     <div class="entry__meta">
       <%= render partial: 'entries/byline', object: entry, as: :entry %>
-      <%= render partial: 'entries/exif', object: entry.photos.first, as: :photo if entry.is_single_photo? %>
-      <%= render partial: 'entries/tags', object: entry.combined_tags %>
+      <%= render partial: 'entries/exif', object: @photos.first, as: :photo if entry.is_single_photo? %>
+      <%= render partial: 'entries/tags', object: @tags %>
     </div>
   </article>
 <% end %>

@@ -1,5 +1,5 @@
 <% cache "entry/meta/#{entry.id}/#{entry.updated_at.to_i}" do %>
-  <% unless @entry.is_published? %>
+  <% unless entry.is_published? %>
     <meta name="robots" content="noindex">
   <% end %>
   <title><%= sanitize "#{entry.plain_title} · #{@photoblog.name}" %></title>
@@ -13,9 +13,9 @@
   <meta property="og:site_name" content="<%= @photoblog.name %>">
   <meta property="og:locale" content="en_US">
   <% if entry.is_photo? %>
-    <meta property="og:image" content="<%= entry.photos.first.url(w: 1200) %>">
+    <meta property="og:image" content="<%= @photos.first.url(w: 1200) %>">
     <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="<%= entry.photos.first.height_from_width(1200) %>">
+    <meta property="og:image:height" content="<%= @photos.first.height_from_width(1200) %>">
   <% end %>
 
   <%# Twitter meta tags %>
@@ -27,9 +27,9 @@
   <meta name="twitter:description" content="<%= meta_description entry %>">
   <meta name="twitter:url" content="<%= entry.permalink_url %>">
   <% if entry.is_photo? %>
-    <meta name="twitter:image" content="<%= entry.photos.first.url(w: 1200, h: 628) %>">
-    <% if entry.photos.first.caption.present? %>
-      <meta name="twitter:image:alt" content="<%= entry.photos.first.plain_caption %>">
+    <meta name="twitter:image" content="<%= @photos.first.url(w: 1200, h: 628) %>">
+    <% if @photos.first.caption.present? %>
+      <meta name="twitter:image:alt" content="<%= @photos.first.plain_caption %>">
     <% end %>
     <meta name="twitter:card" content="summary_large_image">
   <% else %>
@@ -42,7 +42,7 @@
   <%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>
   <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">
   <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
-  <% if @entry.is_published? %>
+  <% if entry.is_published? %>
     <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
     <link rel="canonical" href="<%= entry.permalink_url %>">
     <link rel="amphtml" href="<%= entry.amp_url %>">
