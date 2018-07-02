@@ -1,15 +1,18 @@
 <% cache "entry/related/html/#{entry.id}/#{entry.updated_at.to_i}", expires_in: 2.weeks do %>
-  <aside role="complementary">
-    <h2 class="entry__related">Other Photos You Might Like</h2>
-    <ol class="entry-list entry-list--related">
-      <%= render partial: 'entries/entry_list_item',
-                  collection: @related,
-                  as: :entry,
-                  locals: {
-                    lazy_load: true,
-                    square: true,
-                    observe: false
-                  } %>
-    </ol>
-  </aside>
+  <% related = entry.related %>
+  <% if related.present? %>
+    <aside role="complementary">
+      <h2 class="entry__related">Other Photos You Might Like</h2>
+      <ol class="entry-list entry-list--related">
+        <%= render partial: 'entries/entry_list_item',
+                    collection: related,
+                    as: :entry,
+                    locals: {
+                      lazy_load: true,
+                      square: true,
+                      observe: false
+                    } %>
+      </ol>
+    </aside>
+  <% end %>
 <% end %>
