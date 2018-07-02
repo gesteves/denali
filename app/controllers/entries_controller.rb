@@ -119,7 +119,7 @@ class EntriesController < ApplicationController
   def preview
     request.format = 'html'
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.published.find(params[:id])
+      @entry = @photoblog.entries.where(preview_hash: params[:preview_hash]).limit(1).first
       @photos = @entry.photos.with_attached_image
       @tags = @entry.combined_tags
       @user = @entry.user
