@@ -90,6 +90,7 @@ class EntriesController < ApplicationController
       @photos = @entry.photos.with_attached_image
       @tags = @entry.combined_tags
       @related = @entry.related if @photoblog.show_related_entries?
+      @user = @entry.user
       respond_to do |format|
         format.html {
           redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
@@ -106,9 +107,31 @@ class EntriesController < ApplicationController
       @photos = @entry.photos.with_attached_image
       @tags = @entry.combined_tags
       @related = @entry.related if @photoblog.show_related_entries?
+      @user = @entry.user
       respond_to do |format|
         format.html {
           redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
+        }
+      end
+    end
+  end
+
+  def preview
+    request.format = 'html'
+    if stale?(@photoblog, public: true)
+      @entry = @photoblog.entries.where(preview_hash: params[:preview_hash]).limit(1).first
+      @photos = @entry.photos.with_attached_image
+      @tags = @entry.combined_tags
+      @related = @entry.related if @photoblog.show_related_entries?
+      @user = @entry.user
+      raise ActiveRecord::RecordNotFound if @entry.nil?
+      respond_to do |format|
+        format.html {
+          if @entry.is_published?
+            redirect_to @entry.permalink_url
+          else
+            render 'entries/show'
+          end
         }
       end
     end
@@ -146,26 +169,6 @@ class EntriesController < ApplicationController
         format.atom
         format.json
         format.all { redirect_to tag_feed_url(format: 'atom', page: nil) }
-      end
-    end
-  end
-
-  def preview
-    request.format = 'html'
-    if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.where(preview_hash: params[:preview_hash]).limit(1).first
-      @photos = @entry.photos.with_attached_image
-      @tags = @entry.combined_tags
-      @related = @entry.related if @photoblog.show_related_entries?
-      raise ActiveRecord::RecordNotFound if @entry.nil?
-      respond_to do |format|
-        format.html {
-          if @entry.is_published?
-            redirect_to @entry.permalink_url
-          else
-            render 'entries/show'
-          end
-        }
       end
     end
   end

@@ -1,4 +1,4 @@
-<% cache "entry/related/html/#{entry.id}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "entry/related/html/#{entry.id}/#{entry.updated_at.to_i}", expires_in: 2.weeks do %>
   <aside role="complementary">
     <h2 class="entry__related">Other Photos You Might Like</h2>
     <ol class="entry-list entry-list--related">

@@ -13,7 +13,7 @@ if entry.is_photo?
 end
 json.author do
   json.set! '@type', 'Person'
-  json.name entry.user.name
+  json.name @user
 end
 json.publisher do
   json.set! '@type', 'Organization'

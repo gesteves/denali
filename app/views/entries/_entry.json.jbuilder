@@ -65,40 +65,5 @@ json.cache! "entry/json/#{entry.id}/#{entry.updated_at.to_i}" do
         end
       end
     end
-    json.tags do
-      json.data do
-        json.array! entry.combined_tags do |t|
-          json.type 'tag'
-          json.id t.id.to_s
-          json.attributes do
-            json.(t, :name)
-            json.(t, :slug)
-            json.(t, :taggings_count)
-          end
-          json.links do
-            json.self tag_url(t.slug, page: nil)
-          end
-        end
-      end
-    end
-    json.user do
-      json.data do
-        json.type 'user'
-        json.id entry.user.id.to_s
-        json.attributes do
-          json.name entry.user.name
-        end
-      end
-    end
-    json.blog do
-      json.data do
-        json.type 'blog'
-        json.id @photoblog.id.to_s
-        json.attributes do
-          json.name @photoblog.name
-          json.description @photoblog.description
-        end
-      end
-    end
   end
 end

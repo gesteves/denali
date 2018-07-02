@@ -179,51 +179,49 @@ class Entry < ApplicationRecord
   end
 
   def related(count = 12)
-    Rails.cache.fetch("entry/related/#{self.id}/#{self.updated_at.to_i}", expires_in: 2.weeks) do
-      start_date = if self.is_published?
-        self.published_at.beginning_of_day - 1.year
-      elsif self.is_queued?
-        self.publish_date_for_queued.beginning_of_day - 1.year
-      else
-        self.created_at.beginning_of_day - 1.year
-      end
+    start_date = if self.is_published?
+      self.published_at.beginning_of_day - 1.year
+    elsif self.is_queued?
+      self.publish_date_for_queued.beginning_of_day - 1.year
+    else
+      self.created_at.beginning_of_day - 1.year
+    end
 
-      end_date = if self.is_published?
-        self.published_at.end_of_day + 1.year
-      elsif self.is_queued?
-        self.publish_date_for_queued.end_of_day + 1.year
-      else
-        self.created_at.end_of_day + 1.year
-      end
+    end_date = if self.is_published?
+      self.published_at.end_of_day + 1.year
+    elsif self.is_queued?
+      self.publish_date_for_queued.end_of_day + 1.year
+    else
+      self.created_at.end_of_day + 1.year
+    end
 
-      begin
-        search = {
-          query: {
-            bool: {
-              must: [
-                { term: { blog_id: self.blog_id } },
-                { term: { status: 'published' } },
-                { range: { photos_count: { gt: 0 } } },
-                { range: { published_at: { gte: start_date, lte: end_date } } }
-              ],
-              must_not: {
-                term: { id: self.id }
-              },
-              should: [
-                { match: { es_tags: { query: self.es_tags } } },
-                { match: { es_locations: { query: self.es_locations } } },
-                { match: { es_styles: { query: self.es_styles } } }
-              ],
-              minimum_should_match: 1
-            }
-          },
-          size: count
-        }
-        Entry.search(search).records.includes(photos: [:image_attachment, :image_blob])
-      rescue => e
-        logger.error "Fetching related entries failed with the following error: #{e}"
-        nil
-      end
+    begin
+      search = {
+        query: {
+          bool: {
+            must: [
+              { term: { blog_id: self.blog_id } },
+              { term: { status: 'published' } },
+              { range: { photos_count: { gt: 0 } } },
+              { range: { published_at: { gte: start_date, lte: end_date } } }
+            ],
+            must_not: {
+              term: { id: self.id }
+            },
+            should: [
+              { match: { es_tags: { query: self.es_tags } } },
+              { match: { es_locations: { query: self.es_locations } } },
+              { match: { es_styles: { query: self.es_styles } } }
+            ],
+            minimum_should_match: 1
+          }
+        },
+        size: count
+      }
+      Entry.search(search).records.includes(photos: [:image_attachment, :image_blob])
+    rescue => e
+      logger.error "Fetching related entries failed with the following error: #{e}"
+      nil
     end
   end
 
