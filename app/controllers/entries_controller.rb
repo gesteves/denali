@@ -89,8 +89,8 @@ class EntriesController < ApplicationController
       @entry = @photoblog.entries.published.find(params[:id])
       @photos = @entry.photos.with_attached_image
       @tags = @entry.combined_tags
-      @related = @entry.related if @photoblog.show_related_entries?
       @user = @entry.user
+      @related = @photoblog.show_related_entries? ? @entry.related : nil
       respond_to do |format|
         format.html {
           redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
@@ -106,8 +106,8 @@ class EntriesController < ApplicationController
       @entry = @photoblog.entries.published.find(params[:id])
       @photos = @entry.photos.with_attached_image
       @tags = @entry.combined_tags
-      @related = @entry.related if @photoblog.show_related_entries?
       @user = @entry.user
+      @related = @photoblog.show_related_entries? ? @entry.related : nil
       respond_to do |format|
         format.html {
           redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
@@ -119,11 +119,11 @@ class EntriesController < ApplicationController
   def preview
     request.format = 'html'
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.where(preview_hash: params[:preview_hash]).limit(1).first
+      @entry = @photoblog.entries.published.find(params[:id])
       @photos = @entry.photos.with_attached_image
       @tags = @entry.combined_tags
-      @related = @entry.related if @photoblog.show_related_entries?
       @user = @entry.user
+      @related = @photoblog.show_related_entries? ? @entry.related : nil
       raise ActiveRecord::RecordNotFound if @entry.nil?
       respond_to do |format|
         format.html {

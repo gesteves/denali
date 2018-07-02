@@ -324,7 +324,7 @@ class Entry < ApplicationRecord
   end
 
   def combined_tags
-    tags = ActsAsTaggableOn::Tag.joins(:taggings).where('taggings.taggable_type = ? and taggings.taggable_id = ?', 'Entry', self.id)
+    tags = self.tags + self.equipment + self.locations + self.styles
     tags.uniq { |t| t.slug }
   end
 
