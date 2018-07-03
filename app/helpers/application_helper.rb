@@ -33,26 +33,26 @@ module ApplicationHelper
 
   def get_src(photo, photo_key)
     Rails.cache.fetch("photo/src/#{photo_key}/#{photo.id}") do
-      quality = PHOTOS[photo_key]['quality']
-      square = PHOTOS[photo_key]['square'].present?
-      width = PHOTOS[photo_key]['src']
-      client_hints = PHOTOS[photo_key]['client_hints']
-      auto = PHOTOS[photo_key]['auto'] || 'format'
-      photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)
+      variant = PHOTOS[photo_key]
+      quality = variant['quality']
+      square = variant['square'].present?
+      width = variant['src']
+      auto = variant['auto'] || 'format'
+      photo.url(w: width, q: quality, square: square, auto: auto)
     end
   end
 
   def get_srcset(photo, photo_key)
     Rails.cache.fetch("photo/srcset/#{photo_key}/#{photo.id}") do
-      quality = PHOTOS[photo_key]['quality']
-      square = PHOTOS[photo_key]['square'].present?
-      client_hints = PHOTOS[photo_key]['client_hints']
-      auto = PHOTOS[photo_key]['auto'] || 'format'
-      PHOTOS[photo_key]['srcset'].
+      variant = PHOTOS[photo_key]
+      quality = variant['quality']
+      square = variant['square'].present?
+      auto = variant['auto'] || 'format'
+      variant['srcset'].
         uniq.
         sort.
         reject { |width| width > photo.width }.
-        map { |width| "#{photo.url(w: width, q: quality, square: square, ch: client_hints, auto: auto)} #{width}w" }.
+        map { |width| "#{photo.url(w: width, q: quality, square: square, auto: auto)} #{width}w" }.
         join(', ')
     end
   end
@@ -69,22 +69,19 @@ module ApplicationHelper
     opts.reverse_merge!(square: false)
     return '' if !opts[:square] && (photo.width.blank? || photo.height.blank?)
     padding = opts[:square] ? 100 : ((photo.height.to_f/photo.width.to_f) * 100)
-    "padding-top:#{padding}%"
+    "padding-top:#{padding}%".html_safe
   end
 
   def intrinsic_ratio_width(photo)
     return '' if photo.width.blank? || photo.height.blank?
     width = (photo.width.to_f/photo.height.to_f) * 100
-    "width:#{width}vh"
+    "width:#{width}vh".html_safe
   end
 
   def image_placeholder(photo)
     return '' if photo.color_palette.blank?
-    style = if photo.color_palette.present?
-      palette = photo.color_palette.split(',').sample(2).join(',')
-      "background:linear-gradient(to bottom right, #{palette})"
-    end
-    style.html_safe
+    palette = photo.color_palette.split(',').sample(2).join(',')
+    "background:linear-gradient(to bottom right, #{palette})".html_safe
   end
 
   def inline_asset(filename, opts = {})
