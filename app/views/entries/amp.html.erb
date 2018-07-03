@@ -6,7 +6,6 @@
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @entry.body.present? %>
 <% end %>
 
-
 <%= render partial: 'entries/amp/entry_photo', object: @entry, as: :entry if @entry.is_photo? %>
 <%= render partial: 'entries/entry_text', object: @entry, as: :entry if @entry.is_text? %>
 <%= render partial: 'entries/entry_pagination', object: @entry, as: :entry %>
