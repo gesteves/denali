@@ -1,5 +1,5 @@
 <% if @query.present? %>
-  <% content_for :meta do %>
+  <% content_for :head do %>
     <meta name="robots" content="noindex">
   <% end %>
   <%= render partial: 'search_results' %>

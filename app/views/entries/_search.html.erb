@@ -1,5 +1,5 @@
-<% content_for :meta do %>
-  <% cache "entries/meta/search/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% content_for :head do %>
+  <% cache "entries/head/search/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <title><%= "Search · #{@photoblog.name}" %></title>
     <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <link rel="canonical" href="<%= search_url %>">

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <%= render partial: 'partials/meta_tags' %>
-  <%= yield :meta %>
+  <%= yield :head %>
   <%= yield :stylesheets %>
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} if ENV['typekit_id'].present? %>

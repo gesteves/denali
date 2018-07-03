@@ -1,5 +1,5 @@
-<% content_for :meta do %>
-  <% cache "maps/meta/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% content_for :head do %>
+  <% cache "maps/head/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
     <title>Map · <%= @photoblog.name %></title>
     <meta name="description" content="<%= @photoblog.name %> photos, mapped.">
     <link rel="canonical" href="<%= map_url %>">
