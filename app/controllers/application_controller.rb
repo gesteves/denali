@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_photoblog
-    @photoblog = Blog.with_attached_favicon.with_attached_touch_icon.with_attached_logo.first
+    @photoblog = Blog.first
   end
 
   def block_cloudfront
