@@ -32,7 +32,7 @@ module ApplicationHelper
   end
 
   def get_src(photo, photo_key)
-    Rails.cache.fetch("photo/src/#{photo_key}/#{photo.id}") do
+    Rails.cache.fetch("photo/src/#{photo_key}/#{photo.id}/#{photo.updated_at.to_i}") do
       variant = PHOTOS[photo_key]
       quality = variant['quality']
       square = variant['square'].present?
@@ -43,7 +43,7 @@ module ApplicationHelper
   end
 
   def get_srcset(photo, photo_key)
-    Rails.cache.fetch("photo/srcset/#{photo_key}/#{photo.id}") do
+    Rails.cache.fetch("photo/srcset/#{photo_key}/#{photo.id}/#{photo.updated_at.to_i}") do
       variant = PHOTOS[photo_key]
       quality = variant['quality']
       square = variant['square'].present?
