@@ -9,7 +9,7 @@
 
     <div class="entry__meta">
       <%= render partial: 'entries/byline', object: entry, as: :entry %>
-      <%= render partial: 'entries/tags', object: @tags %>
+      <%= render partial: 'entries/tags', object: @entry.combined_tags %>
     </div>
   </article>
 <% end %>
