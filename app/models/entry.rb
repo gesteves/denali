@@ -278,7 +278,6 @@ class Entry < ApplicationRecord
   end
 
   def permalink_url(opts = {})
-    opts.reverse_merge!(host: self.blog.domain)
     if self.is_published?
       year, month, day, id, slug = self.slug_params
       entry_long_url(year, month, day, id, slug, url_opts(opts))
@@ -289,14 +288,12 @@ class Entry < ApplicationRecord
 
   def amp_url(opts = {})
     return nil unless self.is_published?
-    opts.reverse_merge!(host: self.blog.domain)
     year, month, day, id, slug = self.slug_params
     entry_amp_url(year, month, day, id, slug, url_opts(opts))
   end
 
   def short_permalink_url(opts = {})
-    host = self.blog.short_domain || self.blog.domain
-    opts.reverse_merge!(host: host)
+    opts.reverse_merge!(host: self.blog.short_domain) if self.blog.short_domain.present?
     entry_url(self.id, url_opts(opts))
   end
 
