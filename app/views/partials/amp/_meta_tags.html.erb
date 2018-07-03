@@ -1,4 +1,4 @@
-<% cache "blog/meta/amp/#{@photoblog.updated_at.to_i}" do %>
+<% cache "blog/meta/amp/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
   <meta charset="UTF-8">
   <script async src="https://cdn.ampproject.org/v0.js"></script>
   <script async custom-element="amp-analytics" src="https://cdn.ampproject.org/v0/amp-analytics-0.1.js"></script>
