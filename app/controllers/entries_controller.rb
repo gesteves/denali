@@ -89,7 +89,6 @@ class EntriesController < ApplicationController
       @entry = @photoblog.entries.published.find(params[:id])
       @photos = @entry.photos.with_attached_image
       @tags = @entry.combined_tags
-      @user = @entry.user
       respond_to do |format|
         format.html {
           redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
@@ -105,7 +104,6 @@ class EntriesController < ApplicationController
       @entry = @photoblog.entries.published.find(params[:id])
       @photos = @entry.photos.with_attached_image
       @tags = @entry.combined_tags
-      @user = @entry.user
       respond_to do |format|
         format.html {
           redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
@@ -120,7 +118,6 @@ class EntriesController < ApplicationController
       @entry = @photoblog.entries.where(preview_hash: params[:preview_hash]).limit(1).first
       @photos = @entry.photos.with_attached_image
       @tags = @entry.combined_tags
-      @user = @entry.user
       raise ActiveRecord::RecordNotFound if @entry.nil?
       respond_to do |format|
         format.html {
