@@ -277,24 +277,24 @@ class Entry < ApplicationRecord
     entry_amp_path(year, month, day, id, slug)
   end
 
-  def permalink_url(opts = {})
+  def permalink_url
     if self.is_published?
       year, month, day, id, slug = self.slug_params
-      entry_long_url(year, month, day, id, slug, url_opts(opts))
+      entry_long_url(year, month, day, id, slug, url_opts(host: ENV['domain']))
     else
-      preview_entry_url(self.preview_hash, url_opts(opts))
+      preview_entry_url(self.preview_hash, url_opts(host: ENV['domain']))
     end
   end
 
-  def amp_url(opts = {})
+  def amp_url
     return nil unless self.is_published?
     year, month, day, id, slug = self.slug_params
-    entry_amp_url(year, month, day, id, slug, url_opts(opts))
+    entry_amp_url(year, month, day, id, slug, url_opts(host: ENV['domain']))
   end
 
   def short_permalink_url(opts = {})
-    opts.reverse_merge!(host: self.blog.short_domain) if self.blog.short_domain.present?
-    entry_url(self.id, url_opts(opts))
+    host = ENV['domain_short'] || ENV['domain']
+    entry_url(self.id, url_opts(host: host))
   end
 
   def enqueue_sharing_jobs

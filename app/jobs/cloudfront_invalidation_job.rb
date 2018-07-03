@@ -1,5 +1,4 @@
 class CloudfrontInvalidationJob < ApplicationJob
-  include Rails.application.routes.url_helpers
   queue_as :default
 
   def perform(entry)

@@ -13,7 +13,7 @@ class ApplicationController < ActionController::Base
 
   def default_url_options
     if Rails.env.production?
-      { host: @photoblog.domain }
+      { host: ENV['domain'] }
     else
       {}
     end
