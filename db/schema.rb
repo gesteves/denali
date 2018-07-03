@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_01_202023) do
+ActiveRecord::Schema.define(version: 2018_07_03_201029) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,10 +40,8 @@ ActiveRecord::Schema.define(version: 2018_07_01_202023) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "domain"
     t.text "description"
     t.integer "posts_per_page", default: 10
-    t.string "short_domain"
     t.text "about"
     t.string "copyright"
     t.boolean "show_related_entries", default: true
@@ -55,7 +53,6 @@ ActiveRecord::Schema.define(version: 2018_07_01_202023) do
     t.text "additional_meta_tags"
     t.string "flickr"
     t.string "facebook"
-    t.index ["domain"], name: "index_blogs_on_domain"
   end
 
   create_table "entries", id: :serial, force: :cascade do |t|

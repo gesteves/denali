@@ -10,6 +10,12 @@ default: &default
   # Required. Set it to a random string (you can use `bundle exec rails secret` to generate one).
   denali_secret:
 
+  # Required.
+  domain:
+
+  # Optional
+  domain_short
+
   # Optional. Used for sharing on Flickr.
   flickr_access_token_secret:
   flickr_access_token:

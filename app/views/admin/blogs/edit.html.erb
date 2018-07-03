@@ -56,34 +56,6 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
-      <%= f.label :domains, 'Domains', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field has-addons">
-        <div class="control">
-          <a class="button is-static">
-            https://
-          </a>
-        </div>
-        <div class="control is-expanded">
-          <%= f.text_field :domain, placeholder: 'Domain, e.g., example.com', class: 'input', required: true, autocomplete: 'off' %>
-        </div>
-      </div>
-      <div class="field is-expanded has-addons">
-        <div class="control">
-          <a class="button is-static">
-            https://
-          </a>
-        </div>
-        <div class="control is-expanded">
-          <%= f.text_field :short_domain, placeholder: 'Short domain, e.g. xmpl.co', class: 'input', required: true, autocomplete: 'off' %>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
       <%= f.label :copyright, 'Copyright', class: 'label' %>
     </div>
     <div class="field-body">

@@ -7,7 +7,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 93,
+      "line": 96,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Blog.first.entries.published.find(params[:id]).permalink_url, :status => 301)",
       "render_path": null,
@@ -27,7 +27,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 96,
+      "line": 93,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Blog.first.entries.published.find(params[:id]).permalink_url, :status => 301)",
       "render_path": null,
@@ -141,26 +141,6 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
-      "fingerprint": "beb6783fdf80fd11f2d67c4947da43aa901f016e75837a0d18b8c22101ad462b",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/application_controller.rb",
-      "line": 63,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(\"#{(\"https\" or \"http\")}://#{Blog.first.domain}#{request.fullpath}\", :status => 301)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "ApplicationController",
-        "method": "domain_redirect"
-      },
-      "user_input": "Blog.first.domain",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
       "fingerprint": "f135bc6b94485279758c5a28cfffd7a8ece0907bf0b228b5b1a1fa0bb37b6d97",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
@@ -179,6 +159,6 @@
       "note": ""
     }
   ],
-  "updated": "2018-07-03 11:24:50 -0400",
+  "updated": "2018-07-03 16:20:25 -0400",
   "brakeman_version": "4.2.1"
 }

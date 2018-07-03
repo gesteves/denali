@@ -5,7 +5,7 @@ class AmpCacheJob < ApplicationJob
     caches = get_cache_prefixes
 
     timestamp = Time.now.to_i
-    domain = entry.blog.domain
+    domain = ENV['domain']
     path = "/update-cache/c/s/#{domain}#{entry.amp_path}?amp_action=flush&amp_ts=#{timestamp}"
     signature = Base64.urlsafe_encode64(sign(path))
     caches.map { |cache| update(cache, domain, path, signature) }

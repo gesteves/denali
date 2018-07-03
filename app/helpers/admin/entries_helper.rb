@@ -17,13 +17,13 @@ module Admin::EntriesHelper
 
   def permalink_preview(entry)
     if entry.is_published?
-      "https://#{@photoblog.domain}/#{entry.published_at.strftime('%Y')}/#{entry.published_at.strftime('%-m')}/#{entry.published_at.strftime('%-d')}/#{entry.id}/"
+      "https://#{ENV['domain']}/#{entry.published_at.strftime('%Y')}/#{entry.published_at.strftime('%-m')}/#{entry.published_at.strftime('%-d')}/#{entry.id}/"
     elsif entry.is_queued? && entry.position.present? && entry.id.present?
-      "https://#{@photoblog.domain}/#{entry.publish_date_for_queued.strftime('%Y')}/#{entry.publish_date_for_queued.strftime('%-m')}/#{entry.publish_date_for_queued.strftime('%-d')}/#{entry.id}/"
+      "https://#{ENV['domain']}/#{entry.publish_date_for_queued.strftime('%Y')}/#{entry.publish_date_for_queued.strftime('%-m')}/#{entry.publish_date_for_queued.strftime('%-d')}/#{entry.id}/"
     elsif entry.id.present?
-      "https://#{@photoblog.domain}/#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}/#{entry.id}/"
+      "https://#{ENV['domain']}/#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}/#{entry.id}/"
     else
-      "https://#{@photoblog.domain}/#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}/1234/"
+      "https://#{ENV['domain']}/#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}/1234/"
     end
   end
 end
