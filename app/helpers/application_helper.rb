@@ -48,12 +48,7 @@ module ApplicationHelper
       quality = variant['quality']
       square = variant['square'].present?
       auto = variant['auto'] || 'format'
-      variant['srcset'].
-        uniq.
-        sort.
-        reject { |width| width > photo.width }.
-        map { |width| "#{photo.url(w: width, q: quality, square: square, auto: auto)} #{width}w" }.
-        join(', ')
+      photo.srcset(variant['srcset'], { q: quality, square: square, auto: auto })
     end
   end
 

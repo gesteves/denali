@@ -27,16 +27,28 @@ class Photo < ApplicationRecord
     end
     if opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]) && !opts[:fit].present?
       opts[:fit] = 'crop'
-      if self.focal_x.present? && self.focal_y.present?
-        opts[:crop] = 'focalpoint'
-        opts['fp-x'] = self.focal_x
-        opts['fp-y'] = self.focal_y
-      end
+      opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
     end
     if opts[:fm].present?
       opts.delete(:auto)
     end
     Ix.path(self.image.key).to_url(opts.reject { |k,v| v.blank? })
+  end
+
+  def srcset(widths, opts = {})
+    opts.reverse_merge!(auto: 'format', square: false)
+    square = opts[:square]
+    opts.delete(:square)
+    s3_key = self.image.key
+    max_width = self.width
+    widths = widths.uniq.sort.reject { |width| width > max_width }
+    if square
+      opts[:fit] = 'crop'
+      opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
+      widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
+    else
+      widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w))} #{w}w" }.join(', ')
+    end
   end
 
   # Returns the url of the image, formatted & sized fit to into instagram's
