@@ -1,4 +1,4 @@
-<% cache "entry/list_item/#{image_variant}/observe:#{local_assigns[:page_url] && entry_counter == 0 ? page_url : false}/lazy-load:#{lazy_load}/#{entry.id}/#{entry.updated_at.to_i}" do %>
+<% cache "entry/list_item/#{image_variant}/observe:#{local_assigns[:page_url] && entry_counter == 0 ? page_url : false}/lazy-load:#{lazy_load}/#{entry.cache_key}" do %>
   <% photo = entry.photos.first %>
   <li class="entry-list__item" role="article" <%= entry_list_item_observer(page_url) if local_assigns[:page_url] && entry_counter == 0 %>>
     <div class="entry-list__wrapper" style="<%= "#{image_variant == 'entry_list_square' ? 'padding-top:100%' : intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}" %>">

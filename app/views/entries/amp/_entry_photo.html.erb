@@ -1,4 +1,4 @@
-<% cache "entry/amp/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+<% cache "entry/amp/#{@entry.cache_key}" do %>
   <article class="entry entry--photo" role="main">
     <% @photos.each do |photo| %>
       <div class="entry__photo-container">

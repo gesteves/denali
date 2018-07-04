@@ -9,7 +9,7 @@
       </div>
     </article>
   <% else %>
-    <% cache "admin/entries/search/#{@query}/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+    <% cache "admin/entries/search/#{@query}/page/#{@page}/#{@photoblog.cache_key}" do %>
       <%= render partial: 'entry', collection: @entries %>
     <% end %>
     <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>

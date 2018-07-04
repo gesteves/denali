@@ -1,5 +1,5 @@
 <% content_for :head do %>
-  <% cache "entries/head/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% cache "entries/head/page/#{@page}/count/#{@count}/#{@photoblog.cache_key}" do %>
     <% if @page > 1 %>
       <meta name="robots" content="noindex">
     <% end %>
@@ -38,7 +38,7 @@
   <% end %>
 <% end %>
 
-<% cache "entries/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "entries/page/#{@page}/count/#{@count}/#{@photoblog.cache_key}" do %>
   <div data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= entries_url(page: nil).sub(/\/$/, '') %>" data-infinite-scroll-current-page="<%= @page %>">
     <ol class="entry-list" role="main" data-target="infinite-scroll.container" data-controller="grid">
       <%= render partial: 'entries/entry_list_item',

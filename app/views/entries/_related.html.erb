@@ -1,4 +1,4 @@
-<% cache "entry/related/html/#{@entry.id}/#{@entry.updated_at.to_i}", expires_in: 2.weeks do %>
+<% cache "entry/related/html/#{@entry.cache_key}", expires_in: 2.weeks do %>
   <% related = @entry.related %>
   <% if related.present? %>
     <aside role="complementary">

@@ -1,4 +1,4 @@
-json.cache! "entries/json/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+json.cache! "entries/json/page/#{@page}/count/#{@count}/#{@photoblog.cache_key}" do
   json.links do
     json.self @page == 1 ? entries_url(page: nil) : entries_url(@page)
     if @page > 1

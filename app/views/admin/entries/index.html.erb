@@ -1,5 +1,5 @@
 <h1 class="title is-size-5-mobile">Published</h1>
-<% cache "admin/subtitles/published/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "admin/subtitles/published/#{@photoblog.cache_key}" do %>
   <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.published.count %></h2>
 <% end %>
 <hr class="hr">
@@ -10,7 +10,7 @@
     </div>
   </article>
 <% else %>
-  <% cache "admin/entries/published/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% cache "admin/entries/published/page/#{@page}/#{@photoblog.cache_key}" do %>
     <%= render partial: 'entry', collection: @entries %>
   <% end %>
   <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>

@@ -1,5 +1,5 @@
 <h1 class="title is-size-5-mobile">Tags</h1>
-<% cache "admin/subtitles/tags/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "admin/subtitles/tags/#{@photoblog.cache_key}" do %>
   <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'tag', ActsAsTaggableOn::Tag.count %></h2>
 <% end %>
 <hr class="hr">
@@ -12,7 +12,7 @@
     </tr>
   </thead>
   <tbody>
-    <% cache "admin/tags/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+    <% cache "admin/tags/page/#{@page}/#{@photoblog.cache_key}" do %>
       <%= render partial: 'tag', collection: @tags %>
     <% end %>
   </tbody>

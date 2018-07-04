@@ -2,7 +2,7 @@
   <div class="level-left">
     <div>
     <h1 class="title is-size-5-mobile">Queued</h1>
-    <% cache "admin/subtitles/queued/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+    <% cache "admin/subtitles/queued/#{@photoblog.cache_key}" do %>
       <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
     <% end %>
     </div>
@@ -26,7 +26,7 @@
     </div>
   </article>
 <% else %>
-  <% cache "admin/entries/queued/page/#{@page}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+  <% cache "admin/entries/queued/page/#{@page}/#{@photoblog.cache_key}" do %>
     <%= render partial: 'entry', collection: @entries %>
   <% end %>
   <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>

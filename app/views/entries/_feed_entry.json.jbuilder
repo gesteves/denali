@@ -1,4 +1,4 @@
-json.cache! "feed/json/entry/#{entry.id}/#{entry.updated_at.to_i}" do
+json.cache! "feed/json/entry/#{entry.cache_key}" do
   json.id entry.permalink_url
   json.url entry.permalink_url
   json.title entry.plain_title if entry.title.present?

@@ -1,4 +1,4 @@
-<% cache "entry/list-item/amp/#{entry.id}/#{entry.updated_at.to_i}" do %>
+<% cache "entry/list-item/amp/#{entry.cache_key}" do %>
   <% photo = entry.photos.first %>
   <li class="entry-list__item" role="article">
     <a class="entry-list__link entry-list__link--amp" href="<%= entry.permalink_url %>">

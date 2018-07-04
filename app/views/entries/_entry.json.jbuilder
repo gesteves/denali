@@ -1,4 +1,4 @@
-json.cache! "entry/json/#{entry.id}/#{entry.updated_at.to_i}" do
+json.cache! "entry/json/#{entry.cache_key}" do
   json.type 'entry'
   json.id entry.id.to_s
   json.attributes do

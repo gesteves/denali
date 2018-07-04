@@ -1,4 +1,4 @@
-json.cache! "maps/photos/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+json.cache! "maps/photos/#{@photoblog.cache_key}" do
   json.array! @photoblog.entries.mapped.pluck('photos.id', 'photos.longitude', 'photos.latitude') do |e|
     json.type 'Feature'
     json.geometry do

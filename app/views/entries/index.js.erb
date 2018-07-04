@@ -1,4 +1,4 @@
-<% cache "entries/js/page/#{@page}/count/#{@count}/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do %>
+<% cache "entries/js/page/#{@page}/count/#{@count}/#{@photoblog.cache_key}" do %>
   <%= render partial: 'entries/entry_list_item',
       collection: @entries,
       as: :entry,

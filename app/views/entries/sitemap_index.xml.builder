@@ -1,4 +1,4 @@
-cache "sitemap/index/#{@photoblog.id}/#{@photoblog.updated_at.to_i}" do
+cache "sitemap/index/#{@photoblog.cache_key}" do
   xml.instruct!
   xml.sitemapindex xmlns: 'http://www.sitemaps.org/schemas/sitemap/0.9' do
     @pages.times do |page|
