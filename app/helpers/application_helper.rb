@@ -46,24 +46,20 @@ module ApplicationHelper
   end
 
   def get_src(photo, photo_key)
-    Rails.cache.fetch("photo/src/#{photo_key}/#{photo.id}/#{photo.updated_at.to_i}") do
-      variant = PHOTOS[photo_key]
-      quality = variant['quality']
-      square = variant['square'].present?
-      width = variant['src']
-      auto = variant['auto'] || 'format'
-      photo.url(w: width, q: quality, square: square, auto: auto)
-    end
+    variant = PHOTOS[photo_key]
+    quality = variant['quality']
+    square = variant['square'].present?
+    width = variant['src']
+    auto = variant['auto'] || 'format'
+    photo.url(w: width, q: quality, square: square, auto: auto)
   end
 
   def get_srcset(photo, photo_key)
-    Rails.cache.fetch("photo/srcset/#{photo_key}/#{photo.id}/#{photo.updated_at.to_i}") do
-      variant = PHOTOS[photo_key]
-      quality = variant['quality']
-      square = variant['square'].present?
-      auto = variant['auto'] || 'format'
-      photo.srcset(variant['srcset'], { q: quality, square: square, auto: auto })
-    end
+    variant = PHOTOS[photo_key]
+    quality = variant['quality']
+    square = variant['square'].present?
+    auto = variant['auto'] || 'format'
+    photo.srcset(variant['srcset'], { q: quality, square: square, auto: auto })
   end
 
   def get_sizes(photo_key)
