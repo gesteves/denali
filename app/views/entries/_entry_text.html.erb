@@ -1,17 +1,15 @@
-<% cache "entry/#{entry.id}/#{entry.updated_at.to_i}" do %>
+<% cache "entry/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
   <article class="entry entry--text" role="main">
     <div class="entry__body">
       <h1 class="entry__headline">
-        <%= link_to sanitize(entry.plain_title), entry.permalink_url %>
+        <%= link_to sanitize(@entry.plain_title), @entry.permalink_url %>
       </h1>
-      <%= sanitize entry.formatted_body unless entry.body.blank? %>
+      <%= sanitize @entry.formatted_body unless @entry.body.blank? %>
     </div>
 
-    <% cache "entry/meta/#{entry.id}/#{entry.updated_at.to_i}" do %>
-      <div class="entry__meta">
-        <%= render partial: 'entries/byline', object: entry, as: :entry %>
-        <%= render partial: 'entries/tags', object: @entry.combined_tags %>
-      </div>
-    <% end %>
+    <div class="entry__meta">
+      <%= render partial: 'entries/byline' %>
+      <%= render partial: 'entries/tags', object: @entry.combined_tags %>
+    </div>
   </article>
 <% end %>

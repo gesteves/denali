@@ -2,18 +2,18 @@ json.set! '@context', 'http://schema.org'
 json.set! '@type', 'BlogPosting'
 json.set! 'mainEntityOfPage' do
   json.set! '@type', 'WebPage'
-  json.set! '@id', entry.permalink_url
+  json.set! '@id', @entry.permalink_url
 end
-json.headline entry.plain_title
-json.description meta_description(entry)
-json.set! 'datePublished', entry.published_at
-json.set! 'dateModified', entry.modified_at
-if entry.is_photo?
+json.headline @entry.plain_title
+json.description meta_description
+json.set! 'datePublished', @entry.published_at
+json.set! 'dateModified', @entry.modified_at
+if @photos.present?
   json.image json_schema_images(@photos.first)
 end
 json.author do
   json.set! '@type', 'Person'
-  json.name entry.user.name
+  json.name @entry.user.name
 end
 json.publisher do
   json.set! '@type', 'Organization'

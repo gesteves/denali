@@ -1,13 +1,13 @@
 <% content_for :head do %>
-  <%= render partial: 'entries/entry_head', object: @entry, as: :entry %>
+  <%= render partial: 'entries/entry_head' %>
 <% end %>
 
 <% content_for :typekit do %>
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @entry.body.present? %>
 <% end %>
 
-<%= render partial: 'entries/entry_photo', object: @entry, as: :entry if @entry.is_photo? %>
-<%= render partial: 'entries/entry_text', object: @entry, as: :entry if @entry.is_text? %>
-<%= render partial: 'entries/entry_pagination', object: @entry, as: :entry %>
-<%= render partial: 'entries/related', object: @entry, as: :entry if @photoblog.show_related_entries?  %>
+<%= render partial: 'entries/entry_photo' if @photos.present? %>
+<%= render partial: 'entries/entry_text' if @photos.blank? %>
+<%= render partial: 'entries/entry_pagination' %>
+<%= render partial: 'entries/related' if @photoblog.show_related_entries?  %>
 <%= render partial: 'partials/elsewhere' %>

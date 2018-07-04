@@ -1,5 +1,5 @@
-<% cache "entry/related/amp/#{entry.id}/#{entry.updated_at.to_i}", expires_in: 2.weeks do %>
-  <% related = entry.related %>
+<% cache "entry/related/amp/#{@entry.id}/#{@entry.updated_at.to_i}", expires_in: 2.weeks do %>
+  <% related = @entry.related %>
   <% if related.present? %>
     <aside role="complementary">
       <h2 class="entry__related">Other Photos You Might Like</h2>

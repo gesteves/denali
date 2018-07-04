@@ -1,18 +1,18 @@
 <p>
-  <% if entry.is_published? %>
+  <% if @entry.is_published? %>
     Published
-  <% elsif entry.is_queued? %>
+  <% elsif @entry.is_queued? %>
     Queued
-  <% elsif entry.is_draft? %>
+  <% elsif @entry.is_draft? %>
     Drafted
   <% else %>
     Updated
   <% end %>
-  <% if entry.is_published? %>
-    on <%= link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url %>
-  <% elsif entry.is_queued? %>
-    for <%= link_to entry.publish_date_for_queued.strftime('%B %-d, %Y'), entry.permalink_url %>
+  <% if @entry.is_published? %>
+    on <%= link_to @entry.published_at.strftime('%B %-d, %Y'), @entry.permalink_url %>
+  <% elsif @entry.is_queued? %>
+    for <%= link_to @entry.publish_date_for_queued.strftime('%B %-d, %Y'), @entry.permalink_url %>
   <% else %>
-    on <%= link_to entry.updated_at.strftime('%B %-d, %Y'), entry.permalink_url %>
+    on <%= link_to @entry.updated_at.strftime('%B %-d, %Y'), @entry.permalink_url %>
   <% end %>
 </p>

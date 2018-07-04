@@ -1,35 +1,40 @@
-<% cache "entry/head/#{entry.id}/#{entry.updated_at.to_i}" do %>
-  <% unless entry.is_published? %>
+<% cache "entry/head/#{@entry.id}/#{@entry.updated_at.to_i}" do %>
+  <% unless @entry.is_published? %>
     <meta name="robots" content="noindex">
   <% end %>
-  <title><%= sanitize "#{entry.plain_title} · #{@photoblog.name}" %></title>
-  <meta name="description" content="<%= meta_description entry %>">
+  <% meta_description = meta_description(@entry) %>
+  <% if @photos.present? %>
+    <% photo = @photos.first %>
+  <% end %>
+  <title><%= sanitize "#{@entry.plain_title} · #{@photoblog.name}" %></title>
+  <meta name="description" content="<%= meta_description %>">
 
   <%# Facebook meta tags %>
-  <meta property="og:title" content="<%= entry.plain_title %>">
-  <meta property="og:description" content="<%= meta_description entry %>">
-  <meta property="og:url" content="<%= entry.permalink_url %>">
+  <meta property="og:title" content="<%= @entry.plain_title %>">
+  <meta property="og:description" content="<%= meta_description %>">
+  <meta property="og:url" content="<%= @entry.permalink_url %>">
   <meta property="og:type" content="Article">
   <meta property="og:site_name" content="<%= @photoblog.name %>">
   <meta property="og:locale" content="en_US">
-  <% if entry.is_photo? %>
-    <meta property="og:image" content="<%= @photos.first.url(w: 1200) %>">
+  <% if @photos.present? %>
+    <meta property="og:image" content="<%= photo.url(w: 1200) %>">
     <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="<%= @photos.first.height_from_width(1200) %>">
+    <meta property="og:image:height" content="<%= photo.height_from_width(1200) %>">
   <% end %>
 
   <%# Twitter meta tags %>
   <% if @photoblog.twitter.present? %>
-    <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
-    <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
+    <% twitter_username = "@#{@photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '')}" %>
+    <meta name="twitter:site" content="<%= twitter_username %>">
+    <meta name="twitter:creator" content="<%= twitter_username %>">
   <% end %>
-  <meta name="twitter:title" content="<%= entry.plain_title %>">
-  <meta name="twitter:description" content="<%= meta_description entry %>">
-  <meta name="twitter:url" content="<%= entry.permalink_url %>">
-  <% if entry.is_photo? %>
-    <meta name="twitter:image" content="<%= @photos.first.url(w: 1200, h: 628) %>">
-    <% if @photos.first.caption.present? %>
-      <meta name="twitter:image:alt" content="<%= @photos.first.plain_caption %>">
+  <meta name="twitter:title" content="<%= @entry.plain_title %>">
+  <meta name="twitter:description" content="<%= meta_description %>">
+  <meta name="twitter:url" content="<%= @entry.permalink_url %>">
+  <% if @photos.present? %>
+    <meta name="twitter:image" content="<%= photo.url(w: 1200, h: 628) %>">
+    <% if photo.caption.present? %>
+      <meta name="twitter:image:alt" content="<%= photo.plain_caption %>">
     <% end %>
     <meta name="twitter:card" content="summary_large_image">
   <% else %>
@@ -40,15 +45,15 @@
   <% end %>
   <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
   <%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>
-  <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">
-  <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
-  <% if entry.is_published? %>
-    <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
-    <link rel="canonical" href="<%= entry.permalink_url %>">
-    <link rel="amphtml" href="<%= entry.amp_url %>">
+  <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode @entry.permalink_url}&format=json" %>">
+  <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode @entry.permalink_url}&format=xml" %>">
+  <% if @entry.is_published? %>
+    <link rel="alternate" type="application/vnd.api+json" href="<%= @entry.permalink_url %>">
+    <link rel="canonical" href="<%= @entry.permalink_url %>">
+    <link rel="amphtml" href="<%= @entry.amp_url %>">
   <% end %>
 
   <script type="application/ld+json">
-    <%= sanitize render partial: 'entries/entry_schema.json.jbuilder', object: entry, as: :entry %>
+    <%= sanitize render partial: 'entries/entry_schema.json.jbuilder', locals: { meta_description: meta_description } %>
   </script>
 <% end %>
