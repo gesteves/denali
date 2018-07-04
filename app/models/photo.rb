@@ -47,10 +47,10 @@ class Photo < ApplicationRecord
       opts[:fit] = 'crop'
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
       src = Ix.path(s3_key).to_url(opts.merge(w: src_width, h: src_width))
-      srcset = widths.map! { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
+      srcset = widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
     else
       src = Ix.path(s3_key).to_url(opts.merge(w: src_width))
-      srcset = widths.map! { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w))} #{w}w" }.join(', ')
+      srcset = widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w))} #{w}w" }.join(', ')
     end
     return src, srcset
   end
