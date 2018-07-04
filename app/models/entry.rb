@@ -38,7 +38,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :es_tags, :es_locations, :es_equipment, :es_captions, :es_styles, :es_keywords])
+    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :es_tags, :es_captions, :es_keywords])
   end
 
   def self.published(order = 'published_at DESC')
@@ -209,9 +209,7 @@ class Entry < ApplicationRecord
               term: { id: self.id }
             },
             should: [
-              { match: { es_tags: { query: self.es_tags } } },
-              { match: { es_locations: { query: self.es_locations } } },
-              { match: { es_styles: { query: self.es_styles } } }
+              { match: { es_tags: { query: self.es_tags } } }
             ],
             minimum_should_match: 1
           }
@@ -321,8 +319,7 @@ class Entry < ApplicationRecord
   end
 
   def combined_tags
-    tags = self.tags + self.equipment + self.locations + self.styles
-    tags.uniq { |t| t.slug }
+    ActsAsTaggableOn::Tag.joins(:taggings).where('taggings.taggable_type = ? and taggings.taggable_id = ?', 'Entry', self.id)
   end
 
   def combined_tag_list
@@ -330,19 +327,7 @@ class Entry < ApplicationRecord
   end
 
   def es_tags
-    self.tag_list.join(' ')
-  end
-
-  def es_locations
-    self.location_list.join(' ')
-  end
-
-  def es_equipment
-    self.equipment_list.join(' ')
-  end
-
-  def es_styles
-    self.style_list.join(' ')
+    self.combined_tags.map { |t| t.slug.gsub(/-/, '') }.join(' ')
   end
 
   def es_captions
