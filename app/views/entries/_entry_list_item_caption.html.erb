@@ -2,7 +2,7 @@
   <p class="entry-list__photo-title"><%= sanitize truncate(entry.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
   <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
   <% if entry.is_photoset? %>
-    <p class="entry-list__photo-meta"><%= pluralize(entry.photos_count, 'photo') %></p>
+    <p class="entry-list__photo-meta"><%= entry.photos_count %> photos</p>
   <% else %>
     <p class="entry-list__photo-meta">
       <% if photo.make.present? && photo.model.present? %>

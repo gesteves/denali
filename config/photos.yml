@@ -1,5 +1,4 @@
 entry: &entry
-  src: 1440
   srcset:
     - 640
     - 1136
@@ -24,7 +23,6 @@ entry: &entry
     - 100vw
   quality: 90
 entry_list: &entry_list
-  src: 355
   srcset:
     - 304
     - 362
@@ -53,7 +51,6 @@ entry_list_square:
   <<: *entry_list
   square: Yes
 admin_entry:
-  src: 1152
   srcset:
     - 544
     - 654
@@ -73,7 +70,6 @@ admin_entry:
     - "(min-width: 1088px) 960px"
     - "calc(100vw - 3rem)"
 admin_edit:
-  src: 940
   srcset:
     - 544
     - 654
@@ -92,7 +88,6 @@ admin_edit:
     - "(min-width: 769px) calc(((100vw - 4.5rem)/6) * 5)"
     - "calc(100vw - 3rem)"
 admin_queue:
-  src: 490
   srcset:
     - 224
     - 280
@@ -113,7 +108,6 @@ admin_queue:
     - "calc((100vw - 3rem)/2 - 1.5rem)"
   square: Yes
 map:
-  src: 300
   srcset:
     - 300
     - 600

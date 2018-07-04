@@ -1,6 +1,7 @@
-<% cache "entry/list_item/#{image_variant}/observe:#{local_assigns[:page_url] && entry_counter == 0 ? page_url : false}/lazy-load:#{lazy_load}/#{entry.cache_key}" do %>
+<% observe = local_assigns[:page_url] && entry_counter == 0 %>
+<% cache "entry/list_item/#{image_variant}/observe:#{observe ? page_url : false}/lazy_load:#{lazy_load}/#{entry.cache_key}" do %>
   <% photo = entry.photos.first %>
-  <li class="entry-list__item" role="article" <%= entry_list_item_observer(page_url) if local_assigns[:page_url] && entry_counter == 0 %>>
+  <li class="entry-list__item" role="article" <%= "data-controller=\"pagination\" data-pagination-page-url=\"#{page_url}\"" if observe %>>
     <div class="entry-list__wrapper" style="<%= "#{image_variant == 'entry_list_square' ? 'padding-top:100%' : intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}" %>">
       <a class="entry-list__link" href="<%= entry.permalink_url %>">
         <figure class="entry-list__photo">

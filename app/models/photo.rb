@@ -42,13 +42,17 @@ class Photo < ApplicationRecord
     s3_key = self.image.key
     max_width = self.width
     widths = widths.uniq.sort.reject { |width| width > max_width }
+    src_width = widths.last
     if square
       opts[:fit] = 'crop'
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
-      widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
+      src = Ix.path(s3_key).to_url(opts.merge(w: src_width, h: src_width))
+      srcset = widths.map! { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
     else
-      widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w))} #{w}w" }.join(', ')
+      src = Ix.path(s3_key).to_url(opts.merge(w: src_width))
+      srcset = widths.map! { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w))} #{w}w" }.join(', ')
     end
+    return src, srcset
   end
 
   # Returns the url of the image, formatted & sized fit to into instagram's
