@@ -47,8 +47,7 @@
           locals: {
             page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page),
             lazy_load: false,
-            square: false,
-            observe: true
+            image_variant: 'entry_list'
           } %>
     </ol>
     <%= paginate @entries, target: 'infinite-scroll.paginator' %>

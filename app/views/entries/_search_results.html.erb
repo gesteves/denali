@@ -35,10 +35,8 @@
           collection: @entries,
           as: :entry,
           locals: {
-            page_url: @page == 1 ? search_url(query: @query, page: nil) : search_url(query: @query, page: @page),
             lazy_load: false,
-            square: true,
-            observe: false
+            image_variant: 'entry_list_square'
           } %>
     </ol>
     <%= paginate @entries %>

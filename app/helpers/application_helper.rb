@@ -22,13 +22,27 @@ module ApplicationHelper
   end
 
   def lazy_responsive_image_tag(photo, photo_key, html_options = {})
-    html_options.reverse_merge!({
-      'data-srcset': get_srcset(photo, photo_key),
-      'data-src': get_src(photo, photo_key),
-      src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-      sizes: get_sizes(photo_key)
-    })
-    content_tag :img, nil, html_options
+    srcset = get_srcset(photo, photo_key)
+    src = get_src(photo, photo_key)
+    sizes = get_sizes(photo_key)
+
+    lazy_img = content_tag(:img, nil, html_options.merge({
+      'data-srcset': srcset,
+      'data-src': src,
+      'data-controller': 'lazy-load',
+      sizes: sizes,
+      src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+    }))
+
+    noscript = content_tag :noscript do
+      content_tag :img, nil, html_options.merge({
+        srcset: srcset,
+        src: src,
+        sizes: sizes
+      })
+    end
+
+    lazy_img + noscript
   end
 
   def get_src(photo, photo_key)
@@ -60,10 +74,9 @@ module ApplicationHelper
     render partial: "partials/svg/#{icon}.html.erb", locals: { svg_class: "#{svg_class} #{svg_class}--#{icon}" }
   end
 
-  def intrinsic_ratio_padding(photo, opts = {})
-    opts.reverse_merge!(square: false)
-    return '' if !opts[:square] && (photo.width.blank? || photo.height.blank?)
-    padding = opts[:square] ? 100 : ((photo.height.to_f/photo.width.to_f) * 100)
+  def intrinsic_ratio_padding(photo)
+    return '' if photo.width.blank? || photo.height.blank?
+    padding = (photo.height.to_f/photo.width.to_f) * 100
     "padding-top:#{padding}%".html_safe
   end
 

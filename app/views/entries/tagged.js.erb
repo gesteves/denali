@@ -5,7 +5,6 @@
       locals: {
         page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page),
         lazy_load: true,
-        square: false,
-        observe: true
+        image_variant: 'entry_list'
       } %>
 <% end %>
