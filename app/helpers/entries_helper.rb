@@ -5,21 +5,6 @@ module EntriesHelper
     tag.join('/')
   end
 
-  def meta_description(entry)
-    body = if entry.is_photo?
-      if entry.photos.first.alt_text.present?
-        entry.photos.first.alt_text
-      elsif entry.body.present?
-        entry.plain_body
-      else
-        Sanitize.fragment(entry.blog.description)
-      end
-    else
-      entry.plain_body
-    end
-    truncate body, length: 200
-  end
-
   def entry_photo_widths(photo, key)
     PHOTOS[key]['srcset'].uniq.sort.reject { |width| width > photo.width }
   end
