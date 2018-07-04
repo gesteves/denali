@@ -84,6 +84,10 @@
   font-family: $font-sans;
   margin: 0;
   width: 100%;
+
+  .entry-list__wrapper {
+    padding-top: 100%;
+  }
 }
 
 .entry-list__image {
