@@ -5,9 +5,9 @@
       <a class="entry-list__link" href="<%= entry.permalink_url %>">
         <figure class="entry-list__photo">
           <%= lazy_responsive_image_tag photo,
-                  'entry_list_square',
-                  { class: 'entry-list__image', alt: photo.alt_text } %>
-          <%= render partial: 'entries/shared/entry_list_item_caption.html.erb', locals: { entry: entry, photo: photo } %>
+                'entry_list_square',
+                { class: 'entry-list__image', alt: photo.alt_text } %>
+          <%= render partial: 'entries/grid/caption.html.erb', locals: { entry: entry, photo: photo } %>
         </figure>
       </a>
     </div>

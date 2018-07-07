@@ -1,5 +1,5 @@
 <% content_for :head do %>
-  <% cache "entries/head/search/#{@query.parameterize}/page/#{@page}/count/#{@count}/#{@photoblog.cache_key}" do %>
+  <% cache [@photoblog, @query.parameterize, @page, @count, :head] do %>
     <title><%= "Search results for “#{@query}” · #{@photoblog.name}" %><%= sanitize " · Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <link rel="canonical" href="<%=  search_url %>">
@@ -27,17 +27,14 @@
   <% end %>
 <% end %>
 
-<% cache "entries/search/#{@query.parameterize}/page/#{@page}/count/#{@count}/#{@photoblog.cache_key}" do %>
+<% cache [@photoblog, @query.parameterize, @page, @count] do %>
   <% if @entries.present? %>
     <%= render partial: 'search_form' %>
-    <ol class="entry-list" role="main" data-base-url="<%= search_url(page: nil).sub(/\/$/, '') %>" data-current-page="<%= @page %>">
-      <%= render partial: 'entries/entry_list_item',
+    <ol class="entry-list" role="main">
+      <%= render partial: 'entries/grid/square',
           collection: @entries,
           as: :entry,
-          locals: {
-            lazy_load: false,
-            image_variant: 'entry_list_square'
-          } %>
+          cached: true %>
     </ol>
     <%= paginate @entries %>
   <% else %>

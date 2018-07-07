@@ -1,10 +1,8 @@
-<% cache "entries/js/page/#{@page}/count/#{@count}/#{@photoblog.cache_key}" do %>
-  <%= render partial: 'entries/entry_list_item',
-      collection: @entries,
+<% cache [@photoblog, @page, @count] do %>
+  <% entries = @entries.to_a %>
+  <%= render partial: 'entries/grid/observer', object: entries.shift, as: :entry, locals: { page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page) } %>
+  <%= render partial: 'entries/grid/regular',
+      collection: entries,
       as: :entry,
-      locals: {
-        page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page),
-        lazy_load: true,
-        image_variant: 'entry_list'
-      } %>
+      cached: true %>
 <% end %>

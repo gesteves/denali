@@ -1,4 +1,4 @@
-json.cache! "entry/json/#{@entry.cache_key}" do
+json.cache! @entry do
   json.links do
     json.self @entry.permalink_url
     json.prev @entry.older.permalink_url if @entry.older.present?

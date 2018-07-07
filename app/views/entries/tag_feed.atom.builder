@@ -1,4 +1,4 @@
-cache "feed/atom/tagged/#{@tag_slug}/page/#{@page}/count/#{@count}/#{@photoblog.cache_key}" do
+cache [@photoblog, @tag_slug, @page, @count] do
   xml.instruct!
   xml.feed xmlns: 'http://www.w3.org/2005/Atom', 'xmlns:webfeeds': 'http://webfeeds.org/rss/1.0' do
     if @page.nil? || @page == 1

@@ -4,7 +4,7 @@
     <aside role="complementary">
       <h2 class="entry__related">Other Photos You Might Like</h2>
       <ol class="entry-list entry-list--related">
-        <%= render partial: 'entries/entry/related_entry',
+        <%= render partial: 'entries/grid/square',
                     collection: related,
                     as: :entry,
                     cached: true %>
