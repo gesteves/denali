@@ -1,50 +1,51 @@
-<div class="card">
-  <% if entry.is_photo? %>
-    <div class="card-image">
-      <a style="<%= "#{intrinsic_ratio_padding(entry.photos.first)};#{image_placeholder(entry.photos.first)}"  %>" class="image" href="<%= entry.permalink_url %>">
-        <%= lazy_responsive_image_tag entry.photos.first,
-              'admin_entry',
-              { class: 'is-overlay', alt: entry.photos.first.alt_text, 'data-controller': 'lazy-load' } %>
-      </a>
-    </div>
-  <% end %>
-  <div class="card-content">
-    <h1 class="title is-size-5"><%= sanitize(entry.plain_title) %></h1>
-    <% if entry.body.present? %>
-      <div class="content">
-        <%= sanitize(entry.formatted_body) %>
+<% cache entry do %>
+  <div class="card">
+    <% if entry.is_photo? %>
+      <div class="card-image">
+        <a style="<%= "#{intrinsic_ratio_padding(entry.photos.first)};#{image_placeholder(entry.photos.first)}"  %>" class="image" href="<%= entry.permalink_url %>">
+          <%= lazy_responsive_image_tag entry.photos.first,
+                'admin_entry',
+                { class: 'is-overlay', alt: entry.photos.first.alt_text, 'data-controller': 'lazy-load' } %>
+        </a>
       </div>
     <% end %>
-    <% if entry.combined_tags.present? %>
-      <div class="tags">
-        <% entry.combined_tags.each do |t| %>
-          <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
-        <% end %>
-      </div>
-    <% end %>
-
-    <hr class="hr">
-
-    <div class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <p class="is-size-7 has-text-grey">
-            <% if entry.is_published? %>
-              <b class="has-text-success has-text-weight-bold"><%= icon('Published', 'fas fa-check-circle') %></b> on <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
-            <% elsif entry.is_queued? %>
-              <b class="has-text-info has-text-weight-bold"><%= icon('Queued', 'fas fa-clock') %></b> for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
-            <% elsif entry.is_draft? %>
-              <b class="has-text-grey has-text-weight-bold"><%= icon('Draft', 'fas fa-pause-circle') %></b> &middot; Updated on <%= entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P') %>
-            <% end %>
-          </p>
+    <div class="card-content">
+      <h1 class="title is-size-5"><%= sanitize(entry.plain_title) %></h1>
+      <% if entry.body.present? %>
+        <div class="content">
+          <%= sanitize(entry.formatted_body) %>
         </div>
-      </div>
-      <div class="level-right">
-        <div class="level-item">
-          <%= render partial: 'actions', locals: { entry: entry } %>
+      <% end %>
+      <% if entry.combined_tags.present? %>
+        <div class="tags">
+          <% entry.combined_tags.each do |t| %>
+            <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <hr class="hr">
+
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <p class="is-size-7 has-text-grey">
+              <% if entry.is_published? %>
+                <b class="has-text-success has-text-weight-bold"><%= icon('Published', 'fas fa-check-circle') %></b> on <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
+              <% elsif entry.is_queued? %>
+                <b class="has-text-info has-text-weight-bold"><%= icon('Queued', 'fas fa-clock') %></b> for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
+              <% elsif entry.is_draft? %>
+                <b class="has-text-grey has-text-weight-bold"><%= icon('Draft', 'fas fa-pause-circle') %></b> &middot; Updated on <%= entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P') %>
+              <% end %>
+            </p>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <%= render partial: 'actions', locals: { entry: entry } %>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-
+<% end %>
