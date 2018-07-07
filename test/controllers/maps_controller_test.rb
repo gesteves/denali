@@ -20,4 +20,10 @@ class MapsControllerTest < ActionController::TestCase
     assert_empty json.select { |e| e['properties']['id'] == photos(:potomac).id }
   end
 
+  test "should generate photo json" do
+    get :photo, params: { id: photos(:peppers).id, format: 'json' }
+    assert_template :photo
+    assert_response :success
+  end
+
 end
