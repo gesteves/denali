@@ -1,18 +1,18 @@
 <% if @query.present? %>
-  <h1 class="title is-size-5-mobile">Search results for “<%= @query %>”</h1>
-  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', @total_count %></h2>
-  <hr class="hr">
-  <% if @entries.size == 0 %>
-    <article class="message is-info">
-      <div class="message-body">
-        No results found for “<%= @query %>”.
-      </div>
-    </article>
-  <% else %>
-    <% cache "admin/entries/search/#{@query}/page/#{@page}/#{@photoblog.cache_key}" do %>
+  <% cache "admin/entries/search/#{@query}/page/#{@page}/#{@photoblog.cache_key}" do %>
+    <h1 class="title is-size-5-mobile">Search results for “<%= @query %>”</h1>
+    <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', @total_count %></h2>
+    <hr class="hr">
+    <% if @entries.size == 0 %>
+      <article class="message is-info">
+        <div class="message-body">
+          No results found for “<%= @query %>”.
+        </div>
+      </article>
+    <% else %>
       <%= render partial: 'entry', collection: @entries %>
+      <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
     <% end %>
-    <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
   <% end %>
 <% else %>
   <h1 class="title is-size-5-mobile">Search</h1>

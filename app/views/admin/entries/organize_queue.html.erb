@@ -3,16 +3,13 @@
 <% end %>
 
 <div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_update_path %>" data-queue-has-published-today="<%= Entry.queue_has_published_today? %>">
-  <h1 class="title is-size-5-mobile">Organize queue</h1>
-  <% cache "admin/subtitles/organize_queue/#{@photoblog.cache_key}" do %>
-    <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
-  <% end %>
-  <hr class="hr">
-
   <% cache "admin/entries/queued/sort/#{@photoblog.cache_key}" do %>
-    <div class="is-clearfix" data-target="queue.container">
-      <%= render partial: 'queue_item', collection: @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued, as: :entry %>
-    </div>
+    <h1 class="title is-size-5-mobile">Organize queue</h1>
+    <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
+    <hr class="hr">
+      <div class="is-clearfix" data-target="queue.container">
+        <%= render partial: 'queue_item', collection: @entries, as: :entry %>
+      </div>
   <% end %>
 
   <nav class="navbar is-fixed-bottom has-shadow">

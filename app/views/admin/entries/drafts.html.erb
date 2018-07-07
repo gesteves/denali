@@ -1,17 +1,15 @@
-<h1 class="title is-size-5-mobile">Drafts</h1>
-<% cache "admin/subtitles/drafts/#{@photoblog.cache_key}" do %>
-  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.drafted.count %></h2>
-<% end %>
-<hr class="hr">
-<% if @entries.size == 0 %>
-  <article class="message is-info">
-    <div class="message-body">
-      You don’t have any drafts. Why don’t you <a href="<%= new_admin_entry_path %>">write one</a>?
-    </div>
-  </article>
-<% else %>
 <% cache "admin/entries/drafts/page/#{@page}/#{@photoblog.cache_key}" do %>
-  <%= render partial: 'entry', collection: @entries %>
-<% end %>
-  <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
+  <h1 class="title is-size-5-mobile">Drafts</h1>
+  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.drafted.count %></h2>
+  <hr class="hr">
+  <% if @entries.size == 0 %>
+    <article class="message is-info">
+      <div class="message-body">
+        You don’t have any drafts. Why don’t you <a href="<%= new_admin_entry_path %>">write one</a>?
+      </div>
+    </article>
+  <% else %>
+    <%= render partial: 'entry', collection: @entries %>
+    <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
+  <% end %>
 <% end %>
