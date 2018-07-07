@@ -1,21 +1,19 @@
-<h1 class="title is-size-5-mobile">Tags</h1>
-<% cache "admin/subtitles/tags/#{@photoblog.cache_key}" do %>
+<% cache "admin/tags/page/#{@page}/#{@photoblog.cache_key}" do %>
+  <h1 class="title is-size-5-mobile">Tags</h1>
   <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'tag', ActsAsTaggableOn::Tag.count %></h2>
-<% end %>
-<hr class="hr">
-<table class="table is-fullwidth is-hoverable is-striped">
-  <thead>
-    <tr>
-    <th>Name</th>
-    <th class="has-text-right-desktop">Entries</th>
-    <th class="has-text-right-desktop">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% cache "admin/tags/page/#{@page}/#{@photoblog.cache_key}" do %>
+  <hr class="hr">
+  <table class="table is-fullwidth is-hoverable is-striped">
+    <thead>
+      <tr>
+      <th>Name</th>
+      <th class="has-text-right-desktop">Entries</th>
+      <th class="has-text-right-desktop">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
       <%= render partial: 'tag', collection: @tags %>
-    <% end %>
-  </tbody>
-</table>
+    </tbody>
+  </table>
 
-<%= paginate @tags, views_prefix: 'admin', outer_window: 1, window: 1 %>
+  <%= paginate @tags, views_prefix: 'admin', outer_window: 1, window: 1 %>
+<% end %>
