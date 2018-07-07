@@ -170,7 +170,8 @@
   }
 }
 
-.entry-list__photo-meta {
+.entry-list__photo-meta,
+.entry-list__item--map .entry-list__photo-meta {
   color: #FFF;
   font-size: 14px;
   font-style: italic;
