@@ -1,12 +1,13 @@
-<% cache "entry/related/amp/#{@entry.cache_key}", expires_in: 2.weeks do %>
-  <% related = @entry.related %>
+<% cache entry, expires_in: 2.weeks do %>
+  <% related = entry.related %>
   <% if related.present? %>
     <aside role="complementary">
       <h2 class="entry__related">Other Photos You Might Like</h2>
       <ol class="entry-list entry-list--related">
-        <%= render partial: 'entries/amp/entry_list_item',
+        <%= render partial: 'entries/entry/related_entry',
                     collection: related,
-                    as: :entry %>
+                    as: :entry,
+                    cached: true %>
       </ol>
     </aside>
   <% end %>

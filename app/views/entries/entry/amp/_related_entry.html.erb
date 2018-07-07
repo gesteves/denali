@@ -1,4 +1,4 @@
-<% cache "entry/list-item/amp/#{entry.cache_key}" do %>
+<% cache entry do %>
   <% photo = entry.photos.first %>
   <li class="entry-list__item" role="article">
     <a class="entry-list__link entry-list__link--amp" href="<%= entry.permalink_url %>">
@@ -6,7 +6,7 @@
         <%= amp_image_tag photo,
               'entry_list_square',
               { width: 1, height: 1, class: 'entry-list__image', alt: photo.alt_text } %>
-        <%= render partial: 'entries/entry_list_item_caption', locals: { entry: entry, photo: photo } %>
+        <%= render partial: 'entries/shared/entry_list_item_caption', locals: { entry: entry, photo: photo } %>
       </figure>
     </a>
   </li>

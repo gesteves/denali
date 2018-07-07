@@ -1,25 +1,25 @@
-<% cache "entry/head/#{@entry.cache_key}" do %>
-  <% unless @entry.is_published? %>
+<% cache entry do %>
+  <% unless entry.is_published? %>
     <meta name="robots" content="noindex">
   <% end %>
 
-  <% if @photos.present? %>
-    <% photo = @photos.first %>
+  <% if entry.is_photo? %>
+    <% photo = entry.photos.first %>
     <% meta_description = truncate(photo.alt_text, length: 200) %>
   <% else %>
-    <% meta_description = truncate(@entry.plain_body, length: 200) %>
+    <% meta_description = truncate(entry.plain_body, length: 200) %>
   <% end %>
-  <title><%= sanitize "#{@entry.plain_title} · #{@photoblog.name}" %></title>
+  <title><%= sanitize "#{entry.plain_title} · #{@photoblog.name}" %></title>
   <meta name="description" content="<%= meta_description %>">
 
   <%# Facebook meta tags %>
-  <meta property="og:title" content="<%= @entry.plain_title %>">
+  <meta property="og:title" content="<%= entry.plain_title %>">
   <meta property="og:description" content="<%= meta_description %>">
-  <meta property="og:url" content="<%= @entry.permalink_url %>">
+  <meta property="og:url" content="<%= entry.permalink_url %>">
   <meta property="og:type" content="Article">
   <meta property="og:site_name" content="<%= @photoblog.name %>">
   <meta property="og:locale" content="en_US">
-  <% if @photos.present? %>
+  <% if entry.is_photo? %>
     <meta property="og:image" content="<%= photo.url(w: 1200) %>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="<%= photo.height_from_width(1200) %>">
@@ -31,10 +31,10 @@
     <meta name="twitter:site" content="<%= twitter_username %>">
     <meta name="twitter:creator" content="<%= twitter_username %>">
   <% end %>
-  <meta name="twitter:title" content="<%= @entry.plain_title %>">
+  <meta name="twitter:title" content="<%= entry.plain_title %>">
   <meta name="twitter:description" content="<%= meta_description %>">
-  <meta name="twitter:url" content="<%= @entry.permalink_url %>">
-  <% if @photos.present? %>
+  <meta name="twitter:url" content="<%= entry.permalink_url %>">
+  <% if entry.is_photo? %>
     <meta name="twitter:image" content="<%= photo.url(w: 1200, h: 628) %>">
     <% if photo.alt_text.present? %>
       <meta name="twitter:image:alt" content="<%= photo.alt_text %>">
@@ -48,15 +48,15 @@
   <% end %>
   <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
   <%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>
-  <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode @entry.permalink_url}&format=json" %>">
-  <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode @entry.permalink_url}&format=xml" %>">
-  <% if @entry.is_published? %>
-    <link rel="alternate" type="application/vnd.api+json" href="<%= @entry.permalink_url %>">
-    <link rel="canonical" href="<%= @entry.permalink_url %>">
-    <link rel="amphtml" href="<%= @entry.amp_url %>">
+  <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">
+  <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
+  <% if entry.is_published? %>
+    <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
+    <link rel="canonical" href="<%= entry.permalink_url %>">
+    <link rel="amphtml" href="<%= entry.amp_url %>">
   <% end %>
 
   <script type="application/ld+json">
-    <%= sanitize render partial: 'entries/entry_schema.json.jbuilder', locals: { meta_description: meta_description } %>
+    <%= sanitize render partial: 'entries/entry/schema.json.jbuilder', object: entry, as: :entry, locals: { meta_description: meta_description } %>
   </script>
 <% end %>

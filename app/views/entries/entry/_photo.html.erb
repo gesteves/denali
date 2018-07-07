@@ -1,6 +1,6 @@
-<% cache "entry/#{@entry.cache_key}" do %>
+<% cache entry do %>
   <article class="entry entry--photo" role="main" data-controller="photo" data-photo-container-max-width="1680">
-    <% @photos.each do |photo| %>
+    <% entry.photos.each do |photo| %>
       <div class="entry__photo-container" style="<%= intrinsic_ratio_width(photo) %>">
         <figure class="entry__figure" style="<%= "#{intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}" %>">
           <%= responsive_image_tag photo,
@@ -17,15 +17,15 @@
 
     <div class="entry__body">
       <h1 class="entry__headline">
-        <%= sanitize @entry.plain_title %>
+        <%= sanitize entry.plain_title %>
       </h1>
-      <%= sanitize @entry.formatted_body unless @entry.body.blank? %>
+      <%= sanitize entry.formatted_body unless entry.body.blank? %>
     </div>
 
     <div class="entry__meta">
-      <%= render partial: 'entries/byline' %>
-      <%= render partial: 'entries/exif', object: @photos.first, as: :photo if @entry.is_single_photo? %>
-      <%= render partial: 'entries/tags', object: @entry.combined_tags %>
+      <%= render partial: 'entries/entry/byline', object: entry, as: :entry %>
+      <%= render partial: 'entries/entry/exif', object: entry.photos.first, as: :photo if entry.is_single_photo? %>
+      <%= render partial: 'entries/entry/tags', object: entry.combined_tags, as: :tags %>
     </div>
   </article>
 <% end %>

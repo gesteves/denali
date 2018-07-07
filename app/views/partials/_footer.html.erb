@@ -1,19 +1,19 @@
-<footer class="footer <%= additional_classes if local_assigns[:additional_classes] %>" role="contentinfo">
-  <p>
-    <% cache "blog/copyright/#{Time.now.strftime('%Y')}" do %>
-      &copy; <%= Photo.oldest&.taken_at&.strftime('%Y') %>-<%= Time.now.strftime('%Y') %> <%= sanitize @photoblog.copyright %>
-    <% end %>
-    <span class="footer__links">
-      <%= link_to 'Home', root_url %> ·
-      <%= link_to 'About', about_url %> ·
-      <%= link_to 'Map', map_url(trailing_slash: true) %> ·
-      <% if @photoblog.has_search? %>
-        <%= link_to 'Search', search_url %> ·
-      <% end %>
-      <%= link_to 'Feed', feed_url(format: 'atom', page: nil) %>
-      <% if @photoblog.email.present? %>
-        · <a href="mailto:<%= @photoblog.email %>">Contact</a>
-      <% end %>
-    </span>
-  </p>
-</footer>
+<% cache @photoblog do %>
+  <footer class="footer" role="contentinfo">
+    <p>
+        &copy; <%= Photo.oldest&.taken_at&.strftime('%Y') %>-<%= Time.now.strftime('%Y') %> <%= sanitize @photoblog.copyright %>
+      <span class="footer__links">
+        <%= link_to 'Home', root_url %> ·
+        <%= link_to 'About', about_url %> ·
+        <%= link_to 'Map', map_url(trailing_slash: true) %> ·
+        <% if @photoblog.has_search? %>
+          <%= link_to 'Search', search_url %> ·
+        <% end %>
+        <%= link_to 'Feed', feed_url(format: 'atom', page: nil) %>
+        <% if @photoblog.email.present? %>
+          · <a href="mailto:<%= @photoblog.email %>">Contact</a>
+        <% end %>
+      </span>
+    </p>
+  </footer>
+<% end %>

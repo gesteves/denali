@@ -6,7 +6,7 @@
         <%= responsive_image_tag photo,
               'map',
               { class: 'entry-list__image', alt: photo.alt_text } %>
-        <%= render partial: 'entries/entry_list_item_caption.html.erb', locals: { entry: entry, photo: photo } %>
+        <%= render partial: 'entries/shared/entry_list_item_caption.html.erb', locals: { entry: entry, photo: photo } %>
       </figure>
     </a>
   </div>
