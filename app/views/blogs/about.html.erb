@@ -6,12 +6,10 @@
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @photoblog.about.present? %>
 <% end %>
 
-<% cache @photoblog do %>
-  <article class="entry entry--text">
-    <div class="entry__body">
-      <h1 class="entry__headline">About <%= @photoblog.name %></h1>
-      <%= sanitize @photoblog.formatted_about %>
-    </div>
-  </article>
-  <%= render partial: 'partials/elsewhere' %>
-<% end %>
+<article class="entry entry--text">
+  <div class="entry__body">
+    <h1 class="entry__headline">About <%= @photoblog.name %></h1>
+    <%= sanitize @photoblog.formatted_about %>
+  </div>
+</article>
+<%= render partial: 'partials/elsewhere' %>
