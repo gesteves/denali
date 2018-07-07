@@ -1,4 +1,4 @@
-<% cache "admin/tags/page/#{@page}/#{@photoblog.cache_key}" do %>
+<% cache [@photoblog, @page] do %>
   <h1 class="title is-size-5-mobile">Tags</h1>
   <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'tag', ActsAsTaggableOn::Tag.count %></h2>
   <hr class="hr">

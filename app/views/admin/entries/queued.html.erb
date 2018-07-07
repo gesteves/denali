@@ -1,4 +1,4 @@
-<% cache "admin/entries/queued/page/#{@page}/#{@photoblog.cache_key}" do %>
+<% cache [@photoblog, @page] do %>
   <div class="level">
     <div class="level-left">
       <div>
@@ -25,7 +25,7 @@
       </div>
     </article>
   <% else %>
-    <%= render partial: 'entry', collection: @entries %>
+    <%= render partial: 'entry', collection: @entries, cached: true %>
     <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
   <% end %>
 <% end %>

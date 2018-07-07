@@ -1,4 +1,4 @@
-<% cache "admin/entries/published/page/#{@page}/#{@photoblog.cache_key}" do %>
+<% cache [@photoblog, @page] do %>
   <h1 class="title is-size-5-mobile">Published</h1>
   <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.published.count %></h2>
   <hr class="hr">
@@ -9,7 +9,7 @@
       </div>
     </article>
   <% else %>
-    <%= render partial: 'entry', collection: @entries %>
+    <%= render partial: 'entry', collection: @entries, cached: true %>
     <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
   <% end %>
 <% end %>

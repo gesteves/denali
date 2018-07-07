@@ -1,5 +1,5 @@
 <% if @query.present? %>
-  <% cache "admin/entries/search/#{@query}/page/#{@page}/#{@photoblog.cache_key}" do %>
+  <% cache [@photoblog, @query, @page] do %>
     <h1 class="title is-size-5-mobile">Search results for “<%= @query %>”</h1>
     <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', @total_count %></h2>
     <hr class="hr">
@@ -10,7 +10,7 @@
         </div>
       </article>
     <% else %>
-      <%= render partial: 'entry', collection: @entries %>
+      <%= render partial: 'entry', collection: @entries, cached: true %>
       <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
     <% end %>
   <% end %>
