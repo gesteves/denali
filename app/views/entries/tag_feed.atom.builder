@@ -26,7 +26,7 @@ cache [@photoblog, @tag_slug, @page, @count] do
         xml.updated e.modified_at.utc.strftime('%FT%TZ')
         xml.link rel: 'alternate', type: 'text/html', href: e.permalink_url
         xml.title e.plain_title
-        xml.content render(partial: 'feed_entry_body.html.erb', locals: { entry: e }), type: 'html'
+        xml.content render(partial: 'entries/feed/feed_entry_body.html.erb', locals: { entry: e }), type: 'html'
         xml.tag! 'webfeeds:featuredImage', url: e.photos.first.url(w: 2560, fm: 'jpg'), type: 'image/jpg', width: 2560, height: e.photos.first.height_from_width(2560) if e.is_photo?
         xml.author do |author|
           author.name e.user.name

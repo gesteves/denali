@@ -29,7 +29,7 @@
 
 <% cache [@photoblog, @query.parameterize, @page, @count] do %>
   <% if @entries.present? %>
-    <%= render partial: 'search_form' %>
+    <%= render partial: 'entries/search/search_form' %>
     <ol class="entry-list" role="main">
       <%= render partial: 'entries/grid/square',
           collection: @entries,
@@ -38,7 +38,7 @@
     </ol>
     <%= paginate @entries %>
   <% else %>
-    <%= render partial: 'search_form' %>
+    <%= render partial: 'entries/search/search_form' %>
     <h1 class="entry_list__heading">No results found for “<%= @query %></i>”. Try searching for something else, like “film”, “nikon”, or “cats”.</h1>
   <% end %>
 <% end %>

@@ -13,6 +13,6 @@ json.cache! [@photoblog, @tag_slug, @page, @count] do
   json.icon @photoblog.touch_icon_url(w: 512) if @photoblog.touch_icon.attached?
   json.favicon @photoblog.favicon_url(w: 64) if @photoblog.favicon.attached?
   json.items @entries do |e|
-    json.partial! 'feed_entry', entry: e
+    json.partial! 'entries/feed/feed_entry', entry: e
   end
 end
