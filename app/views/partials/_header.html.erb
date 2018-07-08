@@ -1,15 +1,17 @@
-<header role="banner" class="header <%= 'header--minimal' if local_assigns[:is_minimal] && is_minimal %>">
-  <div class="header__section">
-    <p class="header__tagline"><%= sanitize @photoblog.description %></p>
-  </div>
-  <a href="/" class="header__link">
-    <% if @photoblog.header_logo_svg.present? %>
-      <%= @photoblog.header_logo_svg.html_safe %>
-    <% else %>
-      <%= @photoblog.name %>
-    <% end %>
-  </a>
-  <div class="header__section">
-    <%= render partial: 'partials/follow.html.erb', locals: { has_tooltips: !local_assigns[:is_minimal] || !is_minimal } %>
-  </div>
-</header>
+<% cache [@photoblog, is_minimal] do %>
+  <header role="banner" class="header <%= 'header--minimal' if is_minimal %>">
+    <div class="header__section">
+      <p class="header__tagline"><%= sanitize @photoblog.description %></p>
+    </div>
+    <a href="/" class="header__link">
+      <% if @photoblog.header_logo_svg.present? %>
+        <%= @photoblog.header_logo_svg.html_safe %>
+      <% else %>
+        <%= @photoblog.name %>
+      <% end %>
+    </a>
+    <div class="header__section">
+      <%= render partial: 'partials/follow.html.erb', locals: { has_tooltips: !is_minimal } %>
+    </div>
+  </header>
+<% end %>
