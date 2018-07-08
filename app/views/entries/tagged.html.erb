@@ -41,12 +41,14 @@
 <% cache [@photoblog, @tag_slug, @page, @count] do %>
   <div data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= tag_url(tag: @tag_slug, page: nil) %>" data-infinite-scroll-current-page="<%= @page %>">
     <ol class="entry-list" role="main" data-target="infinite-scroll.container" data-controller="grid">
-      <% entries = @entries.to_a %>
-      <%= render partial: 'entries/grid/observer', object: entries.shift, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) } %>
-      <%= render partial: 'entries/grid/regular',
-          collection: entries,
-          as: :entry,
-          cached: true %>
+      <% if @entries.present? %>
+        <% entries = @entries.to_a %>
+        <%= render partial: 'entries/grid/observer', object: entries.shift, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) } %>
+        <%= render partial: 'entries/grid/regular',
+            collection: entries,
+            as: :entry,
+            cached: true %>
+      <% end %>
     </ol>
     <%= paginate @entries, target: 'infinite-scroll.paginator' %>
     <%= render partial: 'partials/loading', locals: { target: 'infinite-scroll.spinner' } %>

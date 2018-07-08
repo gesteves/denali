@@ -1,8 +1,10 @@
 <% cache [@photoblog, @tag_slug, @page, @count] do %>
-  <% entries = @entries.to_a %>
-  <%= render partial: 'entries/grid/observer', object: entries.shift, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) } %>
-  <%= render partial: 'entries/grid/regular',
-      collection: entries,
-      as: :entry,
-      cached: true %>
+  <% if @entries.present? %>
+    <% entries = @entries.to_a %>
+    <%= render partial: 'entries/grid/observer', object: entries.shift, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) } %>
+    <%= render partial: 'entries/grid/regular',
+        collection: entries,
+        as: :entry,
+        cached: true %>
+  <% end %>
 <% end %>
