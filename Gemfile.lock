@@ -189,7 +189,7 @@ GEM
     omniauth-oauth2 (1.5.0)
       oauth2 (~> 1.1)
       omniauth (~> 1.2)
-    passenger (5.2.3)
+    passenger (5.3.3)
       rack
       rake (>= 0.8.1)
     pg (0.21.0)
