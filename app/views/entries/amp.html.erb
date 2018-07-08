@@ -1,14 +1,14 @@
 <% content_for :head do %>
-  <%= render partial: 'entries/entry/head', object: @entry, as: :entry, cached: true %>
+  <%= render partial: 'entries/entry/head', object: @entry, as: :entry %>
 <% end %>
 
 <% content_for :typekit do %>
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @entry.body.present? %>
 <% end %>
 
-<%= render partial: 'entries/entry/amp/photo', object: @entry, as: :entry, cached: true if @entry.is_photo? %>
-<%= render partial: 'entries/entry/text', object: @entry, as: :entry,cached: true if @entry.is_text? %>
-<%= render partial: 'entries/entry/pagination', object: @entry, as: :entry, cached: true %>
-<%= render partial: 'entries/entry/amp/related', object: @entry, as: :entry, cached: true if @photoblog.show_related_entries? %>
+<%= render partial: 'entries/entry/amp/photo', object: @entry, as: :entry if @entry.is_photo? %>
+<%= render partial: 'entries/entry/text', object: @entry, as: :entry if @entry.is_text? %>
+<%= render partial: 'entries/entry/pagination', object: @entry, as: :entry %>
+<%= render partial: 'entries/entry/amp/related', object: @entry, as: :entry if @photoblog.show_related_entries? %>
 <%= render partial: 'partials/elsewhere' %>
 

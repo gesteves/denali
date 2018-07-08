@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html ⚡ lang="en">
 <head>
-  <%= render partial: 'partials/amp/meta_tags', cached: true %>
+  <%= render partial: 'partials/amp/meta_tags' %>
   <%= yield :head %>
   <%= yield :inline_css %>
-  <%= render partial: 'partials/amp/inline_style', cached: true, locals: { filename: 'amp.css' } %>
+  <%= render partial: 'partials/amp/inline_style', locals: { filename: 'amp.css' } %>
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} if ENV['typekit_id'].present? %>
   <% if content_for? :typekit %>
     <%= yield :typekit %>
@@ -13,7 +13,7 @@
 <body>
 <%= render partial: 'partials/header.html.erb' %>
 <%= yield %>
-<%= render partial: 'partials/footer.html.erb', cached: true %>
+<%= render partial: 'partials/footer.html.erb' %>
 <%= render partial: 'partials/amp/analytics' %>
 </body>
 </html>

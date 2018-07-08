@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%= render partial: 'partials/meta_tags', cached: true %>
+  <%= render partial: 'partials/meta_tags' %>
   <%= yield :head %>
   <%= yield :stylesheets %>
   <%= stylesheet_link_tag 'application', media: 'all' %>
@@ -16,6 +16,6 @@
 <body>
 <%= render partial: 'partials/header.html.erb', locals: { is_minimal: @minimal_header } %>
 <%= yield %>
-<%= render partial: 'partials/footer.html.erb', cached: true unless @hide_footer %>
+<%= render partial: 'partials/footer.html.erb' unless @hide_footer %>
 </body>
 </html>
