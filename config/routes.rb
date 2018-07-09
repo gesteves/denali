@@ -76,8 +76,8 @@ Rails.application.routes.draw do
   get '/service_worker.:format'        => 'errors#file_not_found'
 
   # Feeds
-  get '(/page/:page)/feed(.:format)'             => 'entries#feed', constraints: { page: /\d+/ }, defaults: { format: 'atom' }, :as => :feed
-  get '/tagged/:tag(/page/:page)/feed(.:format)' => 'entries#tag_feed', constraints: { page: /\d+/ }, defaults: { format: 'atom' }, :as => :tag_feed
+  get '/feed(.:format)'             => 'entries#feed', defaults: { format: 'atom' }, :as => :feed
+  get '/tagged/:tag/feed(.:format)' => 'entries#tag_feed', defaults: { format: 'atom' }, :as => :tag_feed
 
   # Admin
   get '/admin'                         => 'admin#index',      :as => :admin

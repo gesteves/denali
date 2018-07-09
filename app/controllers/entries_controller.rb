@@ -21,13 +21,7 @@ class EntriesController < ApplicationController
         format.html
         format.json
         format.js { render status: @entries.empty? ? 404 : 200 }
-        format.atom {
-          if @page == 1
-            redirect_to feed_url(page: nil, format: 'atom'), status: 301
-          else
-            redirect_to feed_url(page: @page, format: 'atom'), status: 301
-          end
-        }
+        format.atom { redirect_to feed_url(format: 'atom'), status: 301 }
         format.all {
           if @page == 1
             redirect_to entries_url, status: 301
@@ -49,13 +43,7 @@ class EntriesController < ApplicationController
         format.html
         format.json
         format.js { render status: @entries.empty? ? 404 : 200 }
-        format.atom {
-          if @page == 1
-            redirect_to tag_feed_url(tag: @tag_slug, page: nil, format: 'atom'), status: 301
-          else
-            redirect_to tag_feed_url(tag: @tag_slug, page: @page, format: 'atom'), status: 301
-          end
-        }
+        format.atom { redirect_to tag_feed_url(tag: @tag_slug, format: 'atom'), status: 301 }
         format.all {
           if @page == 1
             redirect_to tag_url(@tag_slug), status: 301
@@ -135,28 +123,26 @@ class EntriesController < ApplicationController
 
   def feed
     if stale?(@photoblog, public: true)
-      @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
+      @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.page(1).per(@count)
       raise ActiveRecord::RecordNotFound if @entries.empty?
       respond_to do |format|
         format.atom
         format.json
-        format.all { redirect_to feed_url(format: 'atom', page: nil, tag: params[:tag]) }
+        format.all { redirect_to feed_url(format: 'atom') }
       end
     end
   end
 
   def tag_feed
     if stale?(@photoblog, public: true)
-      @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
+      @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
       raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
       respond_to do |format|
         format.atom
         format.json
-        format.all { redirect_to tag_feed_url(format: 'atom', page: nil) }
+        format.all { redirect_to tag_feed_url(format: 'atom', tag: @tag_slug) }
       end
     end
   end

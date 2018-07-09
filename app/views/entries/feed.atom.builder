@@ -1,17 +1,10 @@
-cache [@photoblog, @page, @count] do
+cache @photoblog do
   xml.instruct!
   xml.feed xmlns: 'http://www.w3.org/2005/Atom', 'xmlns:webfeeds': 'http://webfeeds.org/rss/1.0' do
-    if @page.nil? || @page == 1
-      xml.id atom_tag(root_url, @entries.map(&:modified_at).max)
-      xml.title @photoblog.name
-      xml.link rel: 'alternate', type: 'text/html', href: root_url
-      xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(format: 'atom', page: nil)
-    else
-      xml.id atom_tag(entries_url(page: @page), @entries.map(&:modified_at).max)
-      xml.title "#{@photoblog.name} · Page #{@page}"
-      xml.link rel: 'alternate', type: 'text/html', href: entries_url(page: @page)
-      xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(page: @page, format: 'atom')
-    end
+    xml.id atom_tag(root_url, @entries.map(&:modified_at).max)
+    xml.title @photoblog.name
+    xml.link rel: 'alternate', type: 'text/html', href: root_url
+    xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(format: 'atom')
     xml.updated @entries.map(&:modified_at).max.utc.strftime('%FT%TZ')
     xml.description @photoblog.plain_description
     xml.tag! 'webfeeds:accentColor', '#BF0222'

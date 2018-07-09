@@ -1,17 +1,10 @@
-cache [@photoblog, @tag_slug, @page, @count] do
+cache [@photoblog, @tag_slug] do
   xml.instruct!
   xml.feed xmlns: 'http://www.w3.org/2005/Atom', 'xmlns:webfeeds': 'http://webfeeds.org/rss/1.0' do
-    if @page.nil? || @page == 1
-      xml.id atom_tag(tag_url(tag: @tag_slug), @entries.map(&:modified_at).max)
-      xml.title "#{@tags.first.name} - #{@photoblog.name}"
-      xml.link rel: 'alternate', type: 'text/html', href: tag_url(tag: @tag_slug, page: nil)
-      xml.link rel: 'self', type: 'application/atom+xml', href: tag_feed_url(tag: @tag_slug, page: nil, format: 'atom')
-    else
-      xml.id atom_tag(tag_url(tag: @tag_slug, page: @page), @entries.map(&:modified_at).max)
-      xml.title "#{@tags.first.name} - #{@photoblog.name} - Page #{@page}"
-      xml.link rel: 'alternate', type: 'text/html', href: tag_url(tag: @tag_slug, page: @page)
-      xml.link rel: 'self', type: 'application/atom+xml', href: tag_feed_url(tag: @tag_slug, page: @page, format: 'atom')
-    end
+    xml.id atom_tag(tag_url(tag: @tag_slug), @entries.map(&:modified_at).max)
+    xml.title "#{@tags.first.name} - #{@photoblog.name}"
+    xml.link rel: 'alternate', type: 'text/html', href: tag_url(tag: @tag_slug)
+    xml.link rel: 'self', type: 'application/atom+xml', href: tag_feed_url(tag: @tag_slug, format: 'atom')
     xml.updated @entries.map(&:modified_at).max.utc.strftime('%FT%TZ')
     xml.description "#{@photoblog.plain_description} – Photos tagged “#{@tags.first.name}”"
     xml.tag! 'webfeeds:accentColor', 'BF0222'

@@ -5,7 +5,7 @@
     <% end %>
     <title><%= sanitize "#{@tags.first.name} · #{@photoblog.name}" %><%= sanitize " · Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= number_with_delimiter @tags.first.taggings_count %> photos tagged “<%= @tags.first.name %>” on <%= @photoblog.name %>.">
-    <link rel="canonical" href="<%= @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) %>">
+    <link rel="canonical" href="<%= @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) %>">
 
     <meta property="og:title" content="<%= sanitize "#{@tags.first.name} · #{@photoblog.name}" %>">
     <% if @photoblog.logo.present? %>
@@ -16,7 +16,7 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="628">
     <meta property="og:description" content="<%= number_with_delimiter @tags.first.taggings_count %> photos tagged “<%= @tags.first.name %>” on <%= @photoblog.name %>.">
-    <meta property="og:url" content="<%= @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) %>">
+    <meta property="og:url" content="<%= @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) %>">
     <meta property="og:type" content="Website">
     <meta property="og:site_name" content="<%= @photoblog.name %>">
     <meta property="og:locale" content="en_US">
@@ -26,15 +26,15 @@
       <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
     <% end %>
     <meta name="twitter:title" content="<%= sanitize "#{@tags.first.name} · #{@photoblog.name}" %>">
-    <meta name="twitter:url" content="<%= @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) %>">
+    <meta name="twitter:url" content="<%= @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) %>">
     <meta name="twitter:description" content="<%= number_with_delimiter @tags.first.taggings_count %> photos tagged “<%= @tags.first.name %>” on <%= @photoblog.name %>.">
     <% if @photoblog.touch_icon.attached? %>
       <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
     <% end %>
     <meta name="twitter:card" content="summary">
-    <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'atom', page: nil), title: sanitize("#{@tags.first.name} · #{@photoblog.name}") %>
-    <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'json', page: nil), title: sanitize("#{@tags.first.name} · #{@photoblog.name}"), type: 'application/json' %>
-    <link rel="alternate" type="application/vnd.api+json" href="<%= @page == 1 ? tag_url(@tags.first.slug, page: nil) : tag_url(tag: @tags.first.slug, page: @page) %>" %>
+    <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'atom', tag: @tag_slug), title: sanitize("#{@tags.first.name} · #{@photoblog.name}") %>
+    <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'json', tag: @tag_slug), title: sanitize("#{@tags.first.name} · #{@photoblog.name}"), type: 'application/json' %>
+    <link rel="alternate" type="application/vnd.api+json" href="<%= @page == 1 ? tag_url(@tag_slug, page: nil) : tag_url(tag: @tag_slug, page: @page) %>" %>
   <% end %>
 <% end %>
 
@@ -43,7 +43,7 @@
     <ol class="entry-list" role="main" data-target="infinite-scroll.container" data-controller="grid">
       <% if @entries.present? %>
         <% entries = @entries.to_a %>
-        <%= render partial: 'entries/grid/observer', object: entries.shift, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tags.first.slug, page: nil) : tag_url(@tags.first.slug, @page) } %>
+        <%= render partial: 'entries/grid/observer', object: entries.shift, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) } %>
         <%= render partial: 'entries/grid/regular',
             collection: entries,
             as: :entry,
