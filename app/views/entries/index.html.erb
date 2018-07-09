@@ -38,19 +38,11 @@
   <% end %>
 <% end %>
 
-<% cache [@photoblog, @page, @count] do %>
-  <div data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= entries_url(page: nil).sub(/\/$/, '') %>" data-infinite-scroll-current-page="<%= @page %>">
-    <ol class="entry-list" role="main" data-target="infinite-scroll.container" data-controller="grid">
-      <% if @entries.present? %>
-        <% entries = @entries.to_a %>
-        <%= render partial: 'entries/grid/observer', object: entries.shift, as: :entry, locals: { page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page) } %>
-        <%= render partial: 'entries/grid/regular',
-            collection: entries,
-            as: :entry,
-            cached: true %>
-      <% end %>
-    </ol>
-    <%= paginate @entries, target: 'infinite-scroll.paginator' %>
-    <%= render partial: 'partials/loading', locals: { target: 'infinite-scroll.spinner' } %>
-  </div>
-<% end %>
+
+<div data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= entries_url(page: nil).sub(/\/$/, '') %>" data-infinite-scroll-current-page="<%= @page %>">
+  <ol class="entry-list" role="main" data-target="infinite-scroll.container" data-controller="grid">
+    <%= render partial: 'entries/grid/grid', locals: { entries: @entries.to_a, page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page) } if @entries.present? %>
+  </ol>
+  <%= paginate @entries, target: 'infinite-scroll.paginator' %>
+  <%= render partial: 'partials/loading', locals: { target: 'infinite-scroll.spinner' } %>
+</div>

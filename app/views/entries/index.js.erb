@@ -1,10 +1,1 @@
-<% cache [@photoblog, @page, @count] do %>
-  <% if @entries.present? %>
-    <% entries = @entries.to_a %>
-    <%= render partial: 'entries/grid/observer', object: entries.shift, as: :entry, locals: { page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page) } %>
-    <%= render partial: 'entries/grid/regular',
-        collection: entries,
-        as: :entry,
-        cached: true %>
-  <% end %>
-<% end %>
+<%= render partial: 'entries/grid/grid', locals: { entries: @entries.to_a, page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page) } if @entries.present? %>
