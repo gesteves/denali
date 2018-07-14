@@ -6,3 +6,4 @@ allencompassingtrip:
   about: 'This is mah blog.'
   posts_per_page: 60
   copyright: 'Guillermo Esteves'
+  show_related_entries: true

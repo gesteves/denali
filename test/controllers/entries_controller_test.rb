@@ -85,6 +85,13 @@ class EntriesControllerTest < ActionController::TestCase
     assert_template :show
   end
 
+  test 'should render related entries' do
+    peppers = entries(:peppers)
+    get :related, params: { id: peppers.id, format: 'js' }
+    assert_response :success
+    assert_template :related
+  end
+
   test 'should redirect published photos from preview page' do
     entry = entries(:peppers)
     get :preview, params: { preview_hash: entry.preview_hash }

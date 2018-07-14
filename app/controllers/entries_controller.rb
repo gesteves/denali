@@ -6,7 +6,7 @@ class EntriesController < ApplicationController
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search]
-  before_action :set_entry_max_age, only: [:show, :preview, :photo, :amp]
+  before_action :set_entry_max_age, only: [:show, :preview, :photo, :amp, :related]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
 
   layout 'amp', only: :amp
@@ -109,6 +109,16 @@ class EntriesController < ApplicationController
             render 'entries/show'
           end
         }
+      end
+    end
+  end
+
+  def related
+    raise ActionController::RoutingError unless @photoblog.show_related_entries?
+    if stale?(@photoblog, public: true)
+      @entry = @photoblog.entries.find(params[:id])
+      respond_to do |format|
+        format.js
       end
     end
   end
