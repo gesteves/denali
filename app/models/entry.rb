@@ -179,21 +179,16 @@ class Entry < ApplicationRecord
   end
 
   def related(count = 12)
-    start_date = if self.is_published?
-      self.published_at.beginning_of_day - 1.year
+    entry_date = if self.is_published?
+      self.published_at
     elsif self.is_queued?
-      self.publish_date_for_queued.beginning_of_day - 1.year
+      self.publish_date_for_queued
     else
-      self.created_at.beginning_of_day - 1.year
+      self.created_at
     end
 
-    end_date = if self.is_published?
-      self.published_at.end_of_day + 1.year
-    elsif self.is_queued?
-      self.publish_date_for_queued.end_of_day + 1.year
-    else
-      self.created_at.end_of_day + 1.year
-    end
+    start_date = entry_date.beginning_of_day - 1.year
+    end_date = entry_date.end_of_day + 1.year
 
     begin
       search = {
@@ -203,15 +198,12 @@ class Entry < ApplicationRecord
               { term: { blog_id: self.blog_id } },
               { term: { status: 'published' } },
               { range: { photos_count: { gt: 0 } } },
-              { range: { published_at: { gte: start_date, lte: end_date } } }
+              { range: { published_at: { gte: start_date, lte: end_date } } },
+              { match: { es_tags: { query: self.es_tags } } }
             ],
             must_not: {
               term: { id: self.id }
-            },
-            should: [
-              { match: { es_tags: { query: self.es_tags } } }
-            ],
-            minimum_should_match: 1
+            }
           }
         },
         size: count
