@@ -38,7 +38,7 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :es_tags, :es_captions, :es_keywords])
+    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :es_tags, :es_locations, :es_equipment, :es_captions, :es_styles, :es_keywords])
   end
 
   def self.published(order = 'published_at DESC')
@@ -187,8 +187,8 @@ class Entry < ApplicationRecord
       self.created_at
     end
 
-    start_date = entry_date.beginning_of_day - 1.year
-    end_date = entry_date.end_of_day + 1.year
+    start_date = entry_date.beginning_of_day - 2.year
+    end_date = entry_date.end_of_day + 2.year
 
     begin
       search = {
@@ -198,12 +198,16 @@ class Entry < ApplicationRecord
               { term: { blog_id: self.blog_id } },
               { term: { status: 'published' } },
               { range: { photos_count: { gt: 0 } } },
-              { range: { published_at: { gte: start_date, lte: end_date } } },
-              { match: { es_tags: { query: self.es_tags } } }
+              { range: { published_at: { gte: start_date, lte: end_date } } }
             ],
             must_not: {
               term: { id: self.id }
-            }
+            },
+            should: [
+              { match: { es_tags: { query: self.es_tags } } },
+              { match: { es_locations: { query: self.es_locations } } }
+            ],
+            minimum_should_match: 1
           }
         },
         size: count
@@ -319,7 +323,19 @@ class Entry < ApplicationRecord
   end
 
   def es_tags
-    self.combined_tags.map { |t| t.slug.gsub(/-/, '') }.join(' ')
+    self.tags.map { |t| t.slug.gsub(/-/, '') }.join(' ')
+  end
+
+  def es_locations
+    self.locations.map { |t| t.slug.gsub(/-/, '') }.join(' ')
+  end
+
+  def es_equipment
+    self.equipment.map { |t| t.slug.gsub(/-/, '') }.join(' ')
+  end
+
+  def es_styles
+    self.styles.map { |t| t.slug.gsub(/-/, '') }.join(' ')
   end
 
   def es_captions
