@@ -4,7 +4,7 @@ class Admin::EntriesController < AdminController
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :share, :crops, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :flush_caches, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
-  before_action :set_redirect_url, except: [:photo]
+  before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
 
   # GET /admin/entries
   def index
@@ -359,7 +359,7 @@ class Admin::EntriesController < AdminController
     end
 
     def set_redirect_url
-      session[:redirect_url] = request.referer if request.get?
+      session[:redirect_url] = request.referer
     end
 
     def enqueue_cache_jobs
