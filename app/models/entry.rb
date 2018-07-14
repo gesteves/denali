@@ -205,7 +205,8 @@ class Entry < ApplicationRecord
             },
             should: [
               { match: { es_tags: { query: self.es_tags } } },
-              { match: { es_locations: { query: self.es_locations } } }
+              { match: { es_locations: { query: self.es_locations } } },
+              { match: { es_styles: { query: self.es_styles } } }
             ],
             minimum_should_match: 1
           }
