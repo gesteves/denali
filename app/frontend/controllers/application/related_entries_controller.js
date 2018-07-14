@@ -9,7 +9,7 @@ import { Controller }             from 'stimulus';
 export default class extends Controller {
   connect () {
     // Set up an intersection observer to observe the sentinel element.
-    this.observer = new IntersectionObserver(e => this.handleIntersect(e), { rootMargin: '50%' });
+    this.observer = new IntersectionObserver(e => this.handleIntersect(e), { rootMargin: '100%' });
     this.observer.observe(this.element);
     // Enable polling on the polyfill to work around some Safari weirdness
     this.observer.POLL_INTERVAL = 50;
