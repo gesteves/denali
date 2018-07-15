@@ -45,6 +45,7 @@ export default class extends Controller {
    */
   appendEntries (html) {
     if (!html) {
+      this.endObserver();
       return;
     }
     const fragment = document.createRange().createContextualFragment(html);
