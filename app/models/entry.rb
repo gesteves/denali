@@ -478,9 +478,9 @@ class Entry < ApplicationRecord
               term: { id: self.id }
             },
             should: [
-              { match: { es_postal_codes: { query: self.es_postal_codes, boost: 4 } } },
-              { match: { es_localities: { query: self.es_localities, boost: 3 } } },
-              { match: { es_administrative_areas: { query: self.es_administrative_areas, boost: 2 } } },
+              { match: { es_postal_codes: { query: self.es_postal_codes, boost: 10 } } },
+              { match: { es_localities: { query: self.es_localities, boost: 5 } } },
+              { match: { es_administrative_areas: { query: self.es_administrative_areas, boost: 5 } } },
               { match: { es_neighborhoods: { query: self.es_neighborhoods } } },
               { match: { es_sublocalities: { query: self.es_sublocalities } } },
               { match: { es_countries: { query: self.es_countries } } },
