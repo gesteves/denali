@@ -478,15 +478,20 @@ class Entry < ApplicationRecord
               term: { id: self.id }
             },
             should: [
-              { match: { es_postal_codes: { query: self.es_postal_codes, boost: 2 } } },
+              { match: { es_postal_codes: { query: self.es_postal_codes, boost: 3 } } },
+              { match: { es_localities: { query: self.es_localities, boost: 2 } } },
               { match: { es_neighborhoods: { query: self.es_neighborhoods } } },
               { match: { es_sublocalities: { query: self.es_sublocalities } } },
-              { match: { es_localities: { query: self.es_localities } } },
               { match: { es_administrative_areas: { query: self.es_administrative_areas } } },
               { match: { es_countries: { query: self.es_countries } } },
-              { match: { es_tags: { query: self.es_tags } } }
-            ],
-            minimum_should_match: 1
+              { bool: {
+                should: [
+                  { match: { es_tags: { query: self.es_tags, boost: 2 } } },
+                  { match: { es_styles: { query: self.es_styles } } },
+                  { match: { es_keywords: { query: self.es_keywords, boost: 0.5 } } }
+                ]
+              }}
+            ]
           }
         },
         size: count
