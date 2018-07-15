@@ -197,45 +197,8 @@ class Entry < ApplicationRecord
   end
 
   def related(count = 12)
-    entry_date = if self.is_published?
-      self.published_at
-    elsif self.is_queued?
-      self.publish_date_for_queued
-    else
-      self.created_at
-    end
-
-    start_date = entry_date.beginning_of_day - 1.year
-    end_date = entry_date.end_of_day + 1.year
-
     begin
-      search = {
-        query: {
-          bool: {
-            must: [
-              { term: { blog_id: self.blog_id } },
-              { term: { status: 'published' } },
-              { range: { photos_count: { gt: 0 } } },
-              { range: { published_at: { gte: start_date, lte: end_date } } }
-            ],
-            must_not: {
-              term: { id: self.id }
-            },
-            should: [
-              { match: { es_postal_codes: { query: self.es_postal_codes, boost: 2 } } },
-              { match: { es_neighborhoods: { query: self.es_neighborhoods } } },
-              { match: { es_sublocalities: { query: self.es_sublocalities } } },
-              { match: { es_localities: { query: self.es_localities } } },
-              { match: { es_administrative_areas: { query: self.es_administrative_areas } } },
-              { match: { es_countries: { query: self.es_countries } } },
-              { match: { es_tags: { query: self.es_tags } } }
-            ],
-            minimum_should_match: 1
-          }
-        },
-        size: count
-      }
-      Entry.search(search).records.includes(photos: [:image_attachment, :image_blob])
+      Entry.search(related_query(count)).records.includes(photos: [:image_attachment, :image_blob])
     rescue => e
       logger.error "Fetching related entries failed with the following error: #{e}"
       nil
@@ -389,7 +352,6 @@ class Entry < ApplicationRecord
     self.photos.map { |p| p.country }.reject(&:blank?).uniq.join(' ')
   end
 
-
   def instagram_hashtags(count = 30)
     entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
     instagram_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
@@ -488,5 +450,47 @@ class Entry < ApplicationRecord
   def set_preview_hash
     sha256 = Digest::SHA256.new
     self.preview_hash = sha256.hexdigest(Time.now.to_i.to_s)
+  end
+
+  def related_query(count = 12)
+    Rails.cache.fetch("#{cache_key}/#{count}/related-query") do
+      entry_date = if self.is_published?
+        self.published_at
+      elsif self.is_queued?
+        self.publish_date_for_queued
+      else
+        self.created_at
+      end
+
+      start_date = entry_date.beginning_of_day - 1.year
+      end_date = entry_date.end_of_day + 1.year
+
+      {
+        query: {
+          bool: {
+            must: [
+              { term: { blog_id: self.blog_id } },
+              { term: { status: 'published' } },
+              { range: { photos_count: { gt: 0 } } },
+              { range: { published_at: { gte: start_date, lte: end_date } } }
+            ],
+            must_not: {
+              term: { id: self.id }
+            },
+            should: [
+              { match: { es_postal_codes: { query: self.es_postal_codes, boost: 2 } } },
+              { match: { es_neighborhoods: { query: self.es_neighborhoods } } },
+              { match: { es_sublocalities: { query: self.es_sublocalities } } },
+              { match: { es_localities: { query: self.es_localities } } },
+              { match: { es_administrative_areas: { query: self.es_administrative_areas } } },
+              { match: { es_countries: { query: self.es_countries } } },
+              { match: { es_tags: { query: self.es_tags } } }
+            ],
+            minimum_should_match: 1
+          }
+        },
+        size: count
+      }
+    end
   end
 end
