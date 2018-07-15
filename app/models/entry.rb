@@ -328,7 +328,7 @@ class Entry < ApplicationRecord
   end
 
   def es_locations
-    self.location_list.join(' ')
+    self.photos.map { |p| p.long_address }.reject(&:blank?).join(' ')
   end
 
   def es_equipment

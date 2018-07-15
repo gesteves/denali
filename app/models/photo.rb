@@ -199,7 +199,7 @@ class Photo < ApplicationRecord
   end
 
   def long_address
-    [self.neighborhood, self.sublocality, self.locality, self.administrative_area, self.country].uniq.reject(&:blank?).join(', ')
+    [self.neighborhood, self.sublocality, self.locality, self.administrative_area, self.postal_code, self.country].uniq.reject(&:blank?).join(', ')
   end
 
   def short_address

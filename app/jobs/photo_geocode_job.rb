@@ -16,6 +16,7 @@ class PhotoGeocodeJob < ApplicationJob
       photo.sublocality         = components.select { |c| c['types'].include? 'sublocality' }.map {|c| c['long_name']}.join(', ')
       photo.neighborhood        = components.select { |c| c['types'].include? 'neighborhood' }.map {|c| c['long_name']}.join(', ')
       photo.administrative_area = components.select { |c| c['types'].include? 'administrative_area_level_1' }.map {|c| c['long_name']}.join(', ')
+      photo.postal_code         = components.select { |c| c['types'].include? 'postal_code' }.map {|c| c['long_name']}.join(', ')
       photo.save
     end
   end
