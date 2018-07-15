@@ -7,10 +7,14 @@ import { Controller }             from 'stimulus';
  * @extends Controller
  */
 export default class extends Controller {
+  static targets = ['spinner'];
+
   connect () {
+    this.spinnerTarget.classList.add('loading--active');
+    this.element.classList.add('entry__related');
     // Set up an intersection observer to observe the sentinel element.
     this.observer = new IntersectionObserver(e => this.handleIntersect(e), { rootMargin: '50%' });
-    this.observer.observe(this.element);
+    this.observer.observe(this.spinnerTarget);
     // Enable polling on the polyfill to work around some Safari weirdness
     this.observer.POLL_INTERVAL = 50;
   }
@@ -44,7 +48,7 @@ export default class extends Controller {
       return;
     }
     const fragment = document.createRange().createContextualFragment(html);
-    this.observer.unobserve(this.element);
+    this.observer.unobserve(this.spinnerTarget);
     this.element.parentNode.replaceChild(fragment, this.element);
   }
 
@@ -53,7 +57,7 @@ export default class extends Controller {
    * and removes it from the page.
    */
   endObserver () {
-    this.observer.unobserve(this.element);
+    this.observer.unobserve(this.spinnerTarget);
     this.element.parentNode.removeChild(this.element);
   }
 }
