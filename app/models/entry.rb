@@ -484,13 +484,9 @@ class Entry < ApplicationRecord
               { match: { es_neighborhoods: { query: self.es_neighborhoods } } },
               { match: { es_sublocalities: { query: self.es_sublocalities } } },
               { match: { es_countries: { query: self.es_countries } } },
-              { bool: {
-                should: [
-                  { match: { es_tags: { query: self.es_tags, boost: 2 } } },
-                  { match: { es_styles: { query: self.es_styles } } },
-                  { match: { es_keywords: { query: self.es_keywords } } }
-                ]
-              }}
+              { match: { es_tags: { query: self.es_tags, boost: 0.5 } } },
+              { match: { es_styles: { query: self.es_styles, boost: 0.25 } } },
+              { match: { es_keywords: { query: self.es_keywords, boost: 0.1 } } }
             ]
           }
         },
