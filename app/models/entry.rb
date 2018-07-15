@@ -187,8 +187,8 @@ class Entry < ApplicationRecord
       self.created_at
     end
 
-    start_date = entry_date.beginning_of_day - 2.year
-    end_date = entry_date.end_of_day + 2.year
+    start_date = entry_date.beginning_of_day - 1.year
+    end_date = entry_date.end_of_day + 1.year
 
     begin
       search = {
