@@ -39,6 +39,7 @@ json.cache! entry do
               json.(p, :locality)
               json.(p, :sublocality)
               json.(p, :administrative_area)
+              json.(p, :postal_code)
               json.(p, :country)
             end
             json.(p, :width)
