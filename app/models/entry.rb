@@ -38,7 +38,25 @@ class Entry < ApplicationRecord
   end
 
   def as_indexed_json(opts = nil)
-    self.as_json(only: [:photos_count, :status, :published_at, :created_at, :blog_id, :id], methods: [:plain_body, :plain_title, :es_tags, :es_locations, :es_equipment, :es_captions, :es_styles, :es_keywords])
+    self.as_json(only: [:photos_count,
+                        :status,
+                        :published_at,
+                        :created_at,
+                        :blog_id,
+                        :id],
+                 methods: [:plain_body,
+                           :plain_title,
+                           :es_tags,
+                           :es_equipment,
+                           :es_captions,
+                           :es_styles,
+                           :es_keywords,
+                           :es_postal_codes,
+                           :es_administrative_areas,
+                           :es_neighborhoods,
+                           :es_sublocalities,
+                           :es_localities,
+                           :es_countries])
   end
 
   def self.published(order = 'published_at DESC')
@@ -204,9 +222,13 @@ class Entry < ApplicationRecord
               term: { id: self.id }
             },
             should: [
-              { match: { es_locations: { query: self.es_locations, boost: 2 } } },
-              { match: { es_tags: { query: self.es_tags } } },
-              { match: { es_styles: { query: self.es_styles } } }
+              { match: { es_postal_codes: { query: self.es_postal_codes, boost: 2 } } },
+              { match: { es_neighborhoods: { query: self.es_neighborhoods } } },
+              { match: { es_sublocalities: { query: self.es_sublocalities } } },
+              { match: { es_localities: { query: self.es_localities } } },
+              { match: { es_administrative_areas: { query: self.es_administrative_areas } } },
+              { match: { es_countries: { query: self.es_countries } } },
+              { match: { es_tags: { query: self.es_tags } } }
             ],
             minimum_should_match: 1
           }
@@ -327,10 +349,6 @@ class Entry < ApplicationRecord
     self.tag_list.join(' ')
   end
 
-  def es_locations
-    self.photos.map { |p| p.long_address }.reject(&:blank?).join(' ')
-  end
-
   def es_equipment
     self.equipment_list.join(' ')
   end
@@ -346,6 +364,31 @@ class Entry < ApplicationRecord
   def es_keywords
     self.photos.map { |p| p.keywords }.reject(&:blank?).join(', ')
   end
+
+  def es_postal_codes
+    self.photos.map { |p| p.postal_code }.reject(&:blank?).uniq.join(' ')
+  end
+
+  def es_administrative_areas
+    self.photos.map { |p| p.administrative_area }.reject(&:blank?).uniq.join(' ')
+  end
+
+  def es_neighborhoods
+    self.photos.map { |p| p.neighborhood }.reject(&:blank?).uniq.join(' ')
+  end
+
+  def es_sublocalities
+    self.photos.map { |p| p.sublocality }.reject(&:blank?).uniq.join(' ')
+  end
+
+  def es_localities
+    self.photos.map { |p| p.locality }.reject(&:blank?).uniq.join(' ')
+  end
+
+  def es_countries
+    self.photos.map { |p| p.country }.reject(&:blank?).uniq.join(' ')
+  end
+
 
   def instagram_hashtags(count = 30)
     entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
