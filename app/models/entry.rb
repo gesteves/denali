@@ -418,37 +418,35 @@ class Entry < ApplicationRecord
   end
 
   def related_query(count = 12)
-    Rails.cache.fetch("#{cache_key}/#{count}/related-query") do
-      entry_date = if self.is_published?
-        self.published_at
-      elsif self.is_queued?
-        self.publish_date_for_queued
-      else
-        self.created_at
-      end
-
-      start_date = entry_date.beginning_of_day - 1.year
-      end_date = entry_date.end_of_day + 1.year
-
-      {
-        query: {
-          bool: {
-            must: [
-              { term: { blog_id: self.blog_id } },
-              { term: { status: 'published' } },
-              { range: { photos_count: { gt: 0 } } },
-              { range: { published_at: { gte: start_date, lte: end_date } } }
-            ],
-            must_not: {
-              term: { id: self.id }
-            },
-            should: [
-              { match: { es_tag_slugs: self.es_tag_slugs } }
-            ]
-          }
-        },
-        size: count
-      }
+    entry_date = if self.is_published?
+      self.published_at
+    elsif self.is_queued?
+      self.publish_date_for_queued
+    else
+      self.created_at
     end
+
+    start_date = entry_date.beginning_of_day - 1.year
+    end_date = entry_date.end_of_day + 1.year
+
+    {
+      query: {
+        bool: {
+          must: [
+            { term: { blog_id: self.blog_id } },
+            { term: { status: 'published' } },
+            { range: { photos_count: { gt: 0 } } },
+            { range: { published_at: { gte: start_date, lte: end_date } } }
+          ],
+          must_not: {
+            term: { id: self.id }
+          },
+          should: [
+            { match: { es_tag_slugs: self.es_tag_slugs } }
+          ]
+        }
+      },
+      size: count
+    }
   end
 end
