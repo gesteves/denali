@@ -69,6 +69,18 @@ class EntryTest < ActiveSupport::TestCase
     assert entry.is_published?
   end
 
+  test 'publish should touch previous entry' do
+    user = users(:guille)
+    blog = blogs(:allencompassingtrip)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user)
+    entry.save
+    older = entry.older
+    updated_at = older.updated_at
+    entry.publish
+    older.reload
+    assert_not_equal updated_at, older.updated_at
+  end
+
   test 'should change drafts to queued' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)

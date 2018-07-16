@@ -149,6 +149,7 @@ class Entry < ApplicationRecord
   end
 
   def publish
+    self.older&.touch
     self.remove_from_list
     self.status = 'published'
     self.save && self.enqueue_sharing_jobs
@@ -171,13 +172,19 @@ class Entry < ApplicationRecord
   end
 
   def newer
-    date = self.published_at || self.publish_date_for_queued
-    Entry.published('published_at ASC').where('published_at > ?', date).where.not(id: self.id).limit(1).first
+    if self.is_published?
+      Entry.published('published_at ASC').where('published_at > ?', self.published_at).where.not(id: self.id).limit(1)&.first
+    else
+      nil
+    end
   end
 
   def older
-    date = self.published_at || self.publish_date_for_queued
-    Entry.published.where('published_at < ?', date).where.not(id: self.id).limit(1).first
+    if self.is_published?
+      Entry.published.where('published_at < ?', self.published_at).where.not(id: self.id).limit(1)&.first
+    else
+      Entry.published.first
+    end
   end
 
   def publish_date_for_queued
