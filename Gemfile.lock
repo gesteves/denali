@@ -280,10 +280,6 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.2)
       tilt (~> 2.0)
-    skylight (2.0.2)
-      skylight-core (= 2.0.2)
-    skylight-core (2.0.2)
-      activesupport (>= 4.2.0)
     spring (2.0.2)
       activesupport (>= 4.2)
     spring-watcher-listen (2.0.1)
@@ -371,7 +367,6 @@ DEPENDENCIES
   scss-lint
   sdoc (~> 1.0)
   sentry-raven
-  skylight
   spring
   spring-watcher-listen (~> 2.0.0)
   tumblr_client
