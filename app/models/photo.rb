@@ -41,7 +41,7 @@ class Photo < ApplicationRecord
     opts.delete(:square)
     s3_key = self.image.key
     max_width = self.width
-    widths = widths.uniq.sort.reject { |width| width > max_width }
+    widths = widths.uniq.sort.reject { |width| max_width.present? && width > max_width }
     src_width = widths.last
     if square
       opts[:fit] = 'crop'
