@@ -3,11 +3,9 @@
   <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
   <% if entry.is_photoset? %>
     <p class="entry-list__photo-meta"><%= entry.photos_count %> photos</p>
-  <% else %>
+  <% elsif photo.camera.present? %>
     <p class="entry-list__photo-meta">
-      <% if photo.camera.present? %>
-        <span class="exif__field"><%= photo.camera.display_name %></span>
-      <% end %>
+      <span class="exif__field"><%= photo.camera.display_name %></span>
       <% if photo.film.present? %>
         <span class="exif__field"><%= photo.film.display_name %></span>
       <% elsif !photo.is_phone_photo? %>
