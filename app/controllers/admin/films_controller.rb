@@ -1,6 +1,6 @@
 class Admin::FilmsController < AdminController
   def index
-    @films = Film.order('display_name asc')
+    @films = Film.order('make asc, model asc')
     @page_title = 'Films'
   end
 

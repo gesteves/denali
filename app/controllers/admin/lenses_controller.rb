@@ -1,6 +1,6 @@
 class Admin::LensesController < AdminController
   def index
-    @lenses = Lens.order('display_name asc')
+    @lenses = Lens.order('make asc, model asc')
     @page_title = 'Lenses'
   end
 

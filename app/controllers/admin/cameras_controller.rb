@@ -1,6 +1,6 @@
 class Admin::CamerasController < AdminController
   def index
-    @cameras = Camera.order('display_name asc')
+    @cameras = Camera.order('make asc, model asc')
     @page_title = 'Cameras'
   end
 
