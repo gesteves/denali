@@ -2,6 +2,7 @@
   <td><%= camera.make %></td>
   <td><%= camera.model %></td>
   <td><%= camera.display_name %></td>
+  <td><%= camera.photos.count %></td>
   <td>
     <div class="buttons is-pulled-right">
       <%= link_to 'Edit', edit_admin_camera_path(camera), class: 'button is-small' %>
