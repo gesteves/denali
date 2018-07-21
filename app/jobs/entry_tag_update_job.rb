@@ -1,4 +1,4 @@
-class TagUpdateJob < ApplicationJob
+class EntryTagUpdateJob < ApplicationJob
   queue_as :default
 
   def perform(entry)

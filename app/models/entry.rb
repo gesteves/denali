@@ -368,7 +368,7 @@ class Entry < ApplicationRecord
   end
 
   def update_tags
-    TagUpdateJob.perform_later(self)
+    EntryTagUpdateJob.perform_later(self)
   end
 
   def add_tags(new_tags)
