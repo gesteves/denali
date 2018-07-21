@@ -1,7 +1,8 @@
 class PhotoMetadataJob < ApplicationJob
   queue_as :default
 
-  def perform(photo)
+  def perform(photo, opts = {})
+    opts.reverse_merge!(geocode: true)
     original = open(photo.image.service_url)
     image = MiniMagick::Image.open(original.path)
     image.auto_orient
@@ -30,6 +31,6 @@ class PhotoMetadataJob < ApplicationJob
       end
     end
     photo.save!
-    photo.geocode
+    photo.geocode if opts[:geocode]
   end
 end
