@@ -1,0 +1,2 @@
+module Admin::FilmsHelper
+end

@@ -1,0 +1,94 @@
+<%= form_for([:admin, @camera]) do |f| %>
+  <% if @camera.errors.any? %>
+    <article class="message is-danger">
+      <div class="message-header">
+        <p>Welp, the changes couldn't be saved.</p>
+        <button class="delete"></button>
+      </div>
+      <div class="message-body">
+        <% @camera.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </div>
+    </article>
+  <% end %>
+
+  <h1 class="title is-size-5-mobile">Editing camera</h1>
+  <hr class="hr">
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :make, 'Camera make', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :make, placeholder: 'This camera’s make…', class: 'input', required: true, autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :model, 'Camera model', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :model, placeholder: 'This camera’s model…', class: 'input', required: true, autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :display_name, 'Display name', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :display_name, placeholder: 'How this camera is displayed publicly…', class: 'input', required: true, autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :is_phone, 'Is this a phone?', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>
+                  Yes
+                </a>
+              </li>
+              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>
+                  No
+                </a>
+              </li>
+            </ul>
+            <%= f.hidden_field :is_phone, 'data-target': 'radio-tab.field' %>
+          </div>
+        </div>
+        <p class="help">Exif information is hidden for phones.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="buttons is-right">
+          <%= link_to 'Cancel', admin_cameras_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button' %>
+          <%= f.submit 'Save changes', class: 'button is-success' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

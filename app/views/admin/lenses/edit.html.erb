@@ -1,0 +1,66 @@
+<%= form_for([:admin, @lens]) do |f| %>
+  <% if @lens.errors.any? %>
+    <article class="message is-danger">
+      <div class="message-header">
+        <p>Welp, the changes couldn't be saved.</p>
+        <button class="delete"></button>
+      </div>
+      <div class="message-body">
+        <% @lens.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </div>
+    </article>
+  <% end %>
+
+  <h1 class="title is-size-5-mobile">Editing lens</h1>
+  <hr class="hr">
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :make, 'Lens make', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :make, placeholder: 'This lens’s make…', class: 'input', required: true, autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :model, 'Lens model', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :model, placeholder: 'This lens’s model…', class: 'input', required: true, autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :display_name, 'Display name', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :display_name, placeholder: 'How this lens is displayed publicly…', class: 'input', required: true, autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="buttons is-right">
+          <%= link_to 'Cancel', admin_lenses_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button' %>
+          <%= f.submit 'Save changes', class: 'button is-success' %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

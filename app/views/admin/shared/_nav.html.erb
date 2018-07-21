@@ -34,6 +34,22 @@
             </a>
           </div>
         </div>
+        <div class="navbar-item has-dropdown" data-controller="dropdown">
+          <a class="navbar-link" data-action="click->dropdown#toggle">
+            Equipment
+          </a>
+          <div class="navbar-dropdown">
+            <a href="<%= admin_cameras_path %>" class="navbar-item">
+              Cameras
+            </a>
+            <a href="<%= admin_lenses_path %>" class="navbar-item">
+              Lenses
+            </a>
+            <a href="<%= admin_films_path %>" class="navbar-item">
+              Films
+            </a>
+          </div>
+        </div>
         <a href="<%= admin_tags_path %>" class="navbar-item">Tags</a>
         <% if @photoblog.has_search? %>
         <div class="navbar-item">
