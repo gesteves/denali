@@ -1,19 +1,31 @@
 require 'test_helper'
 
-class Admin::LensesControllerTest < ActionDispatch::IntegrationTest
-  test "should get index" do
-    get admin_lenses_index_url
-    assert_response :success
+class Admin::LensesControllerTest < ActionController::TestCase
+  test 'should redirect to sign in page if not signed in' do
+    get :index
+    assert_redirected_to signin_path
   end
 
-  test "should get edit" do
-    get admin_lenses_edit_url
+  test 'should render index page' do
+    session[:user_id] = users(:guille).id
+    get :index
     assert_response :success
+    assert_template layout: 'layouts/admin'
+    assert_template :index
   end
 
-  test "should get update" do
-    get admin_lenses_update_url
+  test 'should render edit page' do
+    session[:user_id] = users(:guille).id
+    get :edit, params: { id: lenses(:xf23mm).id }
     assert_response :success
+    assert_template layout: 'layouts/admin'
+    assert_template :edit
   end
 
+  test 'should update lenses' do
+    session[:user_id] = users(:guille).id
+    lens = lenses(:xf23mm)
+    patch :update, params: { id: lens.id, lens: { id: lens.id } }
+    assert_redirected_to admin_lenses_path
+  end
 end

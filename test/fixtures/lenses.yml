@@ -1,6 +1,6 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-23mm:
+xf23mm:
   make: Fujifilm
   model: XF23mmF1.4 R
   slug: fujifilm-xf23mmf1-4-r
