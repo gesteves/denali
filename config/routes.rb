@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-
   concern :paginatable do
     get '(page/:page)', :action => :index, :on => :collection
     get 'queued(/page/:page)', :action => :queued, :on => :collection
@@ -45,6 +44,10 @@ Rails.application.routes.draw do
         post 'add'
       end
     end
+
+    resources :cameras, only: [:index, :edit, :update]
+    resources :lenses, only: [:index, :edit, :update]
+    resources :films, only: [:index, :edit, :update]
   end
 
 

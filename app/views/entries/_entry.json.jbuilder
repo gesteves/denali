@@ -24,14 +24,13 @@ json.cache! entry do
             json.(p, :formatted_caption)
             json.(p, :plain_caption)
             json.(p, :keywords)
-            json.(p, :make)
-            json.(p, :model)
             json.(p, :exposure)
             json.(p, :f_number)
             json.(p, :iso)
             json.(p, :focal_length)
-            json.(p, :film_make)
-            json.(p, :film_type)
+            json.camera p.camera.display_name if p.camera.present?
+            json.lens p.lens.display_name if p.lens.present? && !p.is_phone_photo?
+            json.film p.film.display_name if p.film.present?
             if entry.show_in_map && p.has_location?
               json.(p, :latitude)
               json.(p, :longitude)

@@ -1,25 +1,28 @@
-<p class="exif">
-  <% if photo.taken_with.present? %>
+<% if photo.camera.present? %>
+  <p class="exif">
     <span class="exif__field">
-      <%= photo.taken_with %>
+      Taken with <%= "#{photo.camera.article} #{photo.camera.display_name}" %>
     </span>
-  <% end %>
+    <% if photo.film.present? %>
+      <span class="exif__field"><%= photo.film.display_name %></span>
+    <% elsif !photo.is_phone_photo? %>
+      <% if photo.lens.present? %>
+        <span class="exif__field"><%= photo.lens.display_name %></span>
+      <% elsif photo.focal_length.present? %>
+        <span class="exif__field"><%= photo.focal_length_with_unit %></span>
+      <% end %>
 
-  <% unless photo.is_phone_camera? %>
-    <% if photo.focal_length.present? %>
-      <span class="exif__field"><%= photo.focal_length_with_unit %> <span class="exif__optional">focal length</span></span>
-    <% end %>
+      <% if photo.exposure.present? && photo.f_number.present? %>
+        <span class="exif__field"><%= photo.formatted_exposure %> at <%= photo.formatted_aperture %></span>
+      <% elsif photo.exposure.present? %>
+        <span class="exif__field"><%= photo.formatted_exposure %></span>
+      <% elsif photo.f_number.present? %>
+        <span class="exif__field"><%= photo.formatted_aperture %></span>
+      <% end %>
 
-    <% if photo.exposure.present? && photo.f_number.present? %>
-      <span class="exif__field"><%= photo.formatted_exposure %> at <%= photo.formatted_aperture %></span>
-    <% elsif photo.exposure.present? %>
-      <span class="exif__field"><%= photo.formatted_exposure %></span>
-    <% elsif photo.f_number.present? %>
-      <span class="exif__field"><%= photo.formatted_aperture %></span>
+      <% if photo.iso.present? %>
+        <span class="exif__field">ISO <%= photo.iso %></span>
+      <% end %>
     <% end %>
-
-    <% if photo.iso.present? %>
-      <span class="exif__field">ISO <%= photo.iso %></span>
-    <% end %>
-  <% end %>
-</p>
+  </p>
+<% end %>

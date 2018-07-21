@@ -1,0 +1,18 @@
+<% cache @photoblog do %>
+  <h1 class="title is-size-5-mobile">Films</h1>
+  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'film', @films.size %></h2>
+  <hr class="hr">
+  <table class="table is-fullwidth is-hoverable is-striped">
+    <thead>
+      <tr>
+      <th>Make</th>
+      <th>Type</th>
+      <th>Display Name</th>
+      <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: 'film', collection: @films, as: :film %>
+    </tbody>
+  </table>
+<% end %>

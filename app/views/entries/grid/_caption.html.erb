@@ -3,16 +3,15 @@
   <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
   <% if entry.is_photoset? %>
     <p class="entry-list__photo-meta"><%= entry.photos_count %> photos</p>
-  <% else %>
+  <% elsif photo.camera.present? %>
     <p class="entry-list__photo-meta">
-      <% if photo.make.present? && photo.model.present? %>
-        <span class="exif__field"><%= photo.formatted_camera %></span>
-      <% end %>
-      <% unless photo.is_phone_camera? %>
-        <% if photo.is_film? %>
-          <span class="exif__field"><%= photo.formatted_film %></span>
-        <% end %>
-        <% if photo.focal_length.present? %>
+      <span class="exif__field"><%= photo.camera.display_name %></span>
+      <% if photo.film.present? %>
+        <span class="exif__field"><%= photo.film.display_name %></span>
+      <% elsif !photo.is_phone_photo? %>
+        <% if photo.lens.present? %>
+          <span class="exif__field"><%= photo.lens.display_name %></span>
+        <% elsif photo.focal_length.present? %>
           <span class="exif__field"><%= photo.focal_length_with_unit %></span>
         <% end %>
         <% if photo.exposure.present? %>
