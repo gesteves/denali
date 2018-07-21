@@ -13,6 +13,8 @@
       <% elsif !photo.is_phone_photo? %>
         <% if photo.lens.present? %>
           <span class="exif__field"><%= photo.lens.display_name %></span>
+        <% elsif photo.focal_length.present? %>
+          <span class="exif__field"><%= photo.focal_length_with_unit %></span>
         <% end %>
         <% if photo.exposure.present? %>
           <span class="exif__field"><%= photo.formatted_exposure %></span>
