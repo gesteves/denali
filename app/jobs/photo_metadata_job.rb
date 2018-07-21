@@ -34,7 +34,7 @@ class PhotoMetadataJob < ApplicationJob
         comment_array = exif.user_comment.split(/(\n)+/).select{ |c| c =~ /^film/i }
         film_make = comment_array.select{ |c| c =~ /^film make/i }&.first&.gsub(/^film make:/i, '')&.strip
         film_type = comment_array.select{ |c| c =~ /^film type/i }&.first&.gsub(/^film type:/i, '')&.strip
-        film_type = "#{film_type} #{exif.iso_speed_ratings}" if exif.iso_speed_ratings.present?
+        film_type = "#{film_type&.gsub(%r{#{exif.iso_speed_ratings}}i, '')} #{exif.iso_speed_ratings}" if exif.iso_speed_ratings.present?
         film_name = "#{film_make} #{film_type}"
         photo.film = Film.create_with(display_name: film_name, make: film_make, model: film_type).find_or_create_by(slug: film_name.parameterize) if film_make.present? && film_type.present?
       end
