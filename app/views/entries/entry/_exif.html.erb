@@ -1,13 +1,15 @@
 <p class="exif">
-  <% if photo.taken_with.present? %>
+  <% if photo.camera.present? %>
     <span class="exif__field">
-      <%= photo.taken_with %>
+      <%= photo.camera.display_name %>
     </span>
   <% end %>
 
-  <% unless photo.is_phone_camera? %>
-    <% if photo.focal_length.present? %>
-      <span class="exif__field"><%= photo.focal_length_with_unit %> <span class="exif__optional">focal length</span></span>
+  <% if photo.film.present? %>
+    <span class="exif__field"><%= photo.film.display_name %></span>
+  <% elsif !photo.is_phone_photo? %>
+    <% if photo.lens.present? %>
+      <span class="exif__field"><%= photo.lens.display_name %></span>
     <% end %>
 
     <% if photo.exposure.present? && photo.f_number.present? %>

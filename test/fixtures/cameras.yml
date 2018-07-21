@@ -1,0 +1,8 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+xz1:
+  make: OLYMPUS IMAGING CORP.
+  model: XZ-1
+  slug: xz-1
+  display_name: Olympus XZ-1
+  is_phone: false

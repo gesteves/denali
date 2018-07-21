@@ -4,6 +4,9 @@ class Photo < ApplicationRecord
   include Formattable
 
   belongs_to :entry, touch: true, counter_cache: true, optional: true
+  belongs_to :camera, optional: true
+  belongs_to :lens, optional: true
+  belongs_to :film, optional: true
   has_one_attached :image
 
   acts_as_list scope: :entry
@@ -110,51 +113,8 @@ class Photo < ApplicationRecord
     ((self.width.to_f * height.to_f)/self.height.to_f).round
   end
 
-  def formatted_make
-    if self.make =~ /olympus/i
-      'Olympus'
-    elsif self.make =~ /nikon/i
-      'Nikon'
-    elsif self.make =~ /fuji/i
-      'Fujifilm'
-    elsif self.make =~ /canon/i
-      'Canon'
-    elsif self.make =~ /leica/i
-      'Leica'
-    else
-      self.make&.titlecase
-    end
-  end
-
-  def formatted_camera
-    if self.model =~ /iphone/i
-      self.model
-    elsif self.model =~ /leica/i
-      self.model.titlecase
-    else
-      "#{self.formatted_make} #{self.model&.gsub(%r{#{formatted_make}}i, '')&.strip}"
-    end
-  end
-
-  def formatted_film
-    return '' if self.film_type.blank? || self.film_make.blank?
-    self.film_type.match(self.film_make) ? self.film_type : "#{self.film_make} #{self.film_type}"
-  end
-
-  def is_phone_camera?
-    self.model =~ /iphone/i
-  end
-
-  def is_film?
-    self.film_make.present? && self.film_type.present?
-  end
-
-  def taken_with
-    return '' if self.formatted_camera.blank?
-    article = %w(a e i o u).include?(self.formatted_camera[0].downcase) ? 'an' : 'a'
-    text = "Taken with #{article} #{self.formatted_camera}"
-    text += " on #{self.formatted_film}" if self.is_film?
-    text
+  def is_phone_photo?
+    self.camera.is_phone?
   end
 
   def focal_length_with_unit
@@ -177,10 +137,11 @@ class Photo < ApplicationRecord
 
   def exif_string(separator = ' · ')
     items = []
-    items << self.taken_with
+    items << self.camera&.display_name
+    items << self.film&.display_name
 
-    unless self.is_phone_camera?
-      items << self.focal_length_with_unit
+    unless self.is_phone_photo?
+      items << self.lens&.display_name
 
       if self.exposure.present? && self.f_number.present?
         items << "#{self.formatted_exposure} at #{self.formatted_aperture}"

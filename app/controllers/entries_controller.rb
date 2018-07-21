@@ -15,7 +15,7 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.photo_entries.page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @entries.empty? && request.format != 'js'
       respond_to do |format|
         format.html
@@ -37,7 +37,7 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
       respond_to do |format|
         format.html
@@ -63,7 +63,7 @@ class EntriesController < ApplicationController
     if @query.present?
       results = Entry.published_search(@query, @page, @count)
       total_count = results.results.total
-      records = results.records.includes(photos: [:image_attachment, :image_blob])
+      records = results.records.includes(photos: [:image_attachment, :image_blob, :camera, :lens, :film])
       @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
     end
     respond_to do |format|

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_15_012114) do
+ActiveRecord::Schema.define(version: 2018_07_21_181523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,6 +55,16 @@ ActiveRecord::Schema.define(version: 2018_07_15_012114) do
     t.string "facebook"
   end
 
+  create_table "cameras", force: :cascade do |t|
+    t.string "make"
+    t.string "model"
+    t.string "slug"
+    t.string "display_name"
+    t.boolean "is_phone", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "entries", id: :serial, force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -89,6 +99,24 @@ ActiveRecord::Schema.define(version: 2018_07_15_012114) do
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
+  create_table "films", force: :cascade do |t|
+    t.string "make"
+    t.string "model"
+    t.string "slug"
+    t.string "display_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "lenses", force: :cascade do |t|
+    t.string "make"
+    t.string "model"
+    t.string "slug"
+    t.string "display_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "photos", id: :serial, force: :cascade do |t|
     t.text "caption"
     t.integer "position"
@@ -96,8 +124,6 @@ ActiveRecord::Schema.define(version: 2018_07_15_012114) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "source_url"
-    t.string "make"
-    t.string "model"
     t.datetime "taken_at"
     t.string "exposure"
     t.float "f_number"
@@ -107,8 +133,6 @@ ActiveRecord::Schema.define(version: 2018_07_15_012114) do
     t.integer "height"
     t.integer "iso"
     t.integer "focal_length"
-    t.string "film_make"
-    t.string "film_type"
     t.float "focal_x"
     t.float "focal_y"
     t.string "geocoded_address"
@@ -122,8 +146,14 @@ ActiveRecord::Schema.define(version: 2018_07_15_012114) do
     t.string "color_palette"
     t.string "keywords"
     t.string "postal_code"
+    t.bigint "camera_id"
+    t.bigint "lens_id"
+    t.bigint "film_id"
+    t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
+    t.index ["film_id"], name: "index_photos_on_film_id"
     t.index ["latitude"], name: "index_photos_on_latitude"
+    t.index ["lens_id"], name: "index_photos_on_lens_id"
     t.index ["longitude"], name: "index_photos_on_longitude"
   end
 
@@ -170,5 +200,8 @@ ActiveRecord::Schema.define(version: 2018_07_15_012114) do
 
   add_foreign_key "entries", "blogs"
   add_foreign_key "entries", "users"
+  add_foreign_key "photos", "cameras"
   add_foreign_key "photos", "entries"
+  add_foreign_key "photos", "films"
+  add_foreign_key "photos", "lenses"
 end
