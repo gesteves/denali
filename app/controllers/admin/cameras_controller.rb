@@ -13,6 +13,7 @@ class Admin::CamerasController < AdminController
     @camera = Camera.find(params[:id])
     respond_to do |format|
       if @camera.update(camera_params)
+        @camera.photos.map { |p| p.entry.update_tags }
         format.html {
           flash[:success] = 'Your changes were saved!'
           redirect_to admin_cameras_path
