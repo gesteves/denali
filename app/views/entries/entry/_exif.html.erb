@@ -12,7 +12,7 @@
 <% unless photo.film.present? %>
   <p class="exif">
     <% if photo.focal_length.present? %>
-      <span class="exif__field"><%= photo.focal_length_with_unit %> <span class="exif__optional">focal length</span></span>
+      <span class="exif__field"><%= photo.focal_length_with_unit %> focal length</span>
     <% end %>
     <% if photo.exposure.present? && photo.f_number.present? %>
       <span class="exif__field"><%= photo.formatted_exposure %> at <%= photo.formatted_aperture %></span>
