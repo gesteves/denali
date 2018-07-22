@@ -1,11 +1,12 @@
 <% cache entry do %>
   <div class="card">
-    <% if entry.is_photo? %>
+    <% photo = entry.photos&.first %>
+    <% if photo.present? && photo.width.present? && photo.height.present? %>
       <div class="card-image">
-        <a style="<%= "#{intrinsic_ratio_padding(entry.photos.first)};#{image_placeholder(entry.photos.first)}"  %>" class="image" href="<%= entry.permalink_url %>">
-          <%= lazy_responsive_image_tag entry.photos.first,
+        <a style="<%= "#{intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}"  %>" class="image" href="<%= entry.permalink_url %>">
+          <%= lazy_responsive_image_tag photo,
                 'admin_entry',
-                { class: 'is-overlay', alt: entry.photos.first.alt_text, 'data-controller': 'lazy-load' } %>
+                { class: 'is-overlay', alt: photo.alt_text, 'data-controller': 'lazy-load' } %>
         </a>
       </div>
     <% end %>
