@@ -9,7 +9,7 @@
     <% end %>
   </p>
 <% end %>
-<% unless photo.camera&.is_phone? || photo.film.present? %>
+<% unless photo.film.present? %>
   <p class="exif">
     <% if photo.focal_length.present? %>
       <span class="exif__field"><%= photo.focal_length_with_unit %> <span class="exif__optional">focal length</span></span>
