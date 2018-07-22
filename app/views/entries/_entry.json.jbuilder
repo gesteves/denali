@@ -29,7 +29,7 @@ json.cache! entry do
             json.(p, :iso)
             json.(p, :focal_length)
             json.camera p.camera.display_name if p.camera.present?
-            json.lens p.lens.display_name if p.lens.present? && !p.is_phone_photo?
+            json.lens p.lens.display_name if p.lens.present? && !p.camera&.is_phone?
             json.film p.film.display_name if p.film.present?
             if entry.show_in_map && p.has_location?
               json.(p, :latitude)

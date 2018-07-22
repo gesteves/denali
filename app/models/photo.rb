@@ -113,10 +113,6 @@ class Photo < ApplicationRecord
     ((self.width.to_f * height.to_f)/self.height.to_f).round
   end
 
-  def is_phone_photo?
-    self.camera.is_phone?
-  end
-
   def focal_length_with_unit
     return '' if self.focal_length.blank?
     "#{self.focal_length} mm"
@@ -133,30 +129,6 @@ class Photo < ApplicationRecord
     exp = self.exposure.to_r
     formatted = exp >= 1 ? "%g" % ("%.2f" % exp) : exp
     "#{formatted}″"
-  end
-
-  def exif_string(separator = ' · ')
-    items = []
-    items << self.camera&.display_name
-    items << self.film&.display_name
-
-    unless self.is_phone_photo?
-      items << self.lens&.display_name
-
-      if self.exposure.present? && self.f_number.present?
-        items << "#{self.formatted_exposure} at #{self.formatted_aperture}"
-      elsif self.exposure.present?
-        items << self.formatted_exposure
-      elsif self.f_number.present?
-        items << self.formatted_aperture
-      end
-
-      if self.iso.present?
-        items << "ISO #{self.iso}"
-      end
-    end
-
-    items.reject(&:blank?).join(separator)
   end
 
   def long_address
