@@ -1,0 +1,21 @@
+<% cache lenses do %>
+  <% if lenses.present? %>
+    <h2 class="title is-size-5-mobile">Lenses</h2>
+    <h3 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'lens', lenses.size %></h3>
+    <hr class="hr">
+    <table class="table is-fullwidth is-hoverable is-striped">
+      <thead>
+        <tr>
+        <th>Make</th>
+        <th>Model</th>
+        <th>Display Name</th>
+        <th>Photos</th>
+        <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render partial: 'lens', collection: lenses, as: :lens %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>

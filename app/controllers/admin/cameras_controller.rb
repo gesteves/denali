@@ -1,9 +1,4 @@
 class Admin::CamerasController < AdminController
-  def index
-    @cameras = Camera.order('make asc, model asc')
-    @page_title = 'Cameras'
-  end
-
   def edit
     @camera = Camera.find(params[:id])
     @page_title = 'Editing camera'
@@ -16,7 +11,7 @@ class Admin::CamerasController < AdminController
         @camera.photos.map { |p| p.entry.update_tags }
         format.html {
           flash[:success] = 'Your changes were saved!'
-          redirect_to admin_cameras_path
+          redirect_to admin_equipment_path
         }
       else
         format.html {

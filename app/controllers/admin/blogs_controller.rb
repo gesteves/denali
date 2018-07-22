@@ -1,7 +1,6 @@
 class Admin::BlogsController < AdminController
   # GET /admin/blogs/1/edit
   def edit
-    @blog = @photoblog
     @page_title = 'Blog settings'
   end
 
@@ -12,7 +11,7 @@ class Admin::BlogsController < AdminController
       if @photoblog.update(blog_params)
         format.html {
           flash[:success] = 'Your changes were saved!'
-          redirect_to admin_settings_path
+          redirect_to edit_admin_blog_path(@photoblog)
         }
       else
         format.html {

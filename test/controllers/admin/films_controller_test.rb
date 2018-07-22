@@ -2,16 +2,8 @@ require 'test_helper'
 
 class Admin::FilmsControllerTest < ActionController::TestCase
   test 'should redirect to sign in page if not signed in' do
-    get :index
+    get :edit, params: { id: films(:portra).id }
     assert_redirected_to signin_path
-  end
-
-  test 'should render index page' do
-    session[:user_id] = users(:guille).id
-    get :index
-    assert_response :success
-    assert_template layout: 'layouts/admin'
-    assert_template :index
   end
 
   test 'should render edit page' do
@@ -26,6 +18,6 @@ class Admin::FilmsControllerTest < ActionController::TestCase
     session[:user_id] = users(:guille).id
     film = films(:portra)
     patch :update, params: { id: film.id, film: { id: film.id } }
-    assert_redirected_to admin_films_path
+    assert_redirected_to admin_equipment_path
   end
 end

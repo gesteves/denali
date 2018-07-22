@@ -1,9 +1,4 @@
 class Admin::FilmsController < AdminController
-  def index
-    @films = Film.order('make asc, model asc')
-    @page_title = 'Films'
-  end
-
   def edit
     @film = Film.find(params[:id])
     @page_title = 'Editing film'
@@ -16,7 +11,7 @@ class Admin::FilmsController < AdminController
         @film.photos.map { |p| p.entry.update_tags }
         format.html {
           flash[:success] = 'Your changes were saved!'
-          redirect_to admin_films_path
+          redirect_to admin_equipment_path
         }
       else
         format.html {

@@ -1,9 +1,4 @@
 class Admin::LensesController < AdminController
-  def index
-    @lenses = Lens.order('make asc, model asc')
-    @page_title = 'Lenses'
-  end
-
   def edit
     @lens = Lens.find(params[:id])
     @page_title = 'Editing lens'
@@ -16,7 +11,7 @@ class Admin::LensesController < AdminController
         @lens.photos.map { |p| p.entry.update_tags }
         format.html {
           flash[:success] = 'Your changes were saved!'
-          redirect_to admin_lenses_path
+          redirect_to admin_equipment_path
         }
       else
         format.html {

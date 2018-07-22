@@ -12,8 +12,7 @@ Rails.application.routes.draw do
     get '/entries/share'              => 'entries#share'
     get '/entries/queued/organize'    => 'entries#organize_queue'
     post '/entries/queued/update'     => 'entries#update_queue'
-    get 'settings'                    => 'blogs#edit'
-    patch 'settings/update'           => 'blogs#update'
+    get '/equipment'                  => 'equipment#index'
 
     resources :entries, concerns: :paginatable do
       member do
@@ -45,9 +44,10 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :cameras, only: [:index, :edit, :update]
-    resources :lenses, only: [:index, :edit, :update]
-    resources :films, only: [:index, :edit, :update]
+    resources :cameras, only: [:edit, :update]
+    resources :lenses, only: [:edit, :update]
+    resources :films, only: [:edit, :update]
+    resources :blogs, only: [:edit, :update]
   end
 
 

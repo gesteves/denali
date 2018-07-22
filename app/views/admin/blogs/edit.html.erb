@@ -1,12 +1,12 @@
-<%= form_for(@blog, url: admin_settings_update_path) do |f| %>
-  <% if @blog.errors.any? %>
+<%= form_for([:admin, @photoblog]) do |f| %>
+  <% if @photoblog.errors.any? %>
     <article class="message is-danger">
       <div class="message-header">
         <p>Welp, the changes couldn't be saved.</p>
         <button class="delete"></button>
       </div>
       <div class="message-body">
-        <% @blog.errors.full_messages.each do |message| %>
+        <% @photoblog.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </div>
@@ -198,8 +198,8 @@
           </label>
         </div>
       </div>
-      <% if @blog.logo.attached? %>
-        <div><%= image_tag @blog.logo_url %></div>
+      <% if @photoblog.logo.attached? %>
+        <div><%= image_tag @photoblog.logo_url %></div>
       <% end %>
     </div>
   </div>
@@ -224,8 +224,8 @@
           </label>
         </div>
       </div>
-      <% if @blog.touch_icon.attached? %>
-        <div><%= image_tag @blog.touch_icon_url %></div>
+      <% if @photoblog.touch_icon.attached? %>
+        <div><%= image_tag @photoblog.touch_icon_url %></div>
       <% end %>
     </div>
   </div>
@@ -250,8 +250,8 @@
           </label>
         </div>
       </div>
-      <% if @blog.favicon.attached? %>
-        <div><%= image_tag @blog.favicon_url %></div>
+      <% if @photoblog.favicon.attached? %>
+        <div><%= image_tag @photoblog.favicon_url %></div>
       <% end %>
     </div>
   </div>

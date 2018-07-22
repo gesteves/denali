@@ -1,0 +1,21 @@
+<% cache cameras do %>
+  <% if cameras.present? %>
+    <h2 class="title is-size-5-mobile">Cameras</h2>
+    <h3 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'camera', cameras.size %></h3>
+    <hr class="hr">
+    <table class="table is-fullwidth is-hoverable is-striped">
+      <thead>
+        <tr>
+        <th>Make</th>
+        <th>Model</th>
+        <th>Display Name</th>
+        <th>Photos</th>
+        <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render partial: 'camera', collection: cameras, as: :camera %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>
