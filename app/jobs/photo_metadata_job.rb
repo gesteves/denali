@@ -11,13 +11,13 @@ class PhotoMetadataJob < ApplicationJob
 
     exif = EXIFR::JPEG.new(original)
     if exif.present? && exif.exif?
-      camera_make = exif.make
-      camera_model = exif.model
+      camera_make = exif.make.strip
+      camera_model = exif.model.strip
       camera_name = "#{camera_make} #{camera_model}"
       photo.camera = Camera.create_with(display_name: camera_name, make: camera_make, model: camera_model, is_phone: camera_model.match?(/iphone/i)).find_or_create_by(slug: camera_name.parameterize) if camera_make.present? && camera_model.present?
 
-      lens_make = exif.lens_make || camera_make
-      lens_model = exif.lens_model
+      lens_make = exif.lens_make.strip || camera_make
+      lens_model = exif.lens_model.strip
       lens_name = "#{lens_make} #{lens_model}"
       photo.lens = Lens.create_with(display_name: lens_name, make: lens_make, model: lens_model).find_or_create_by(slug: lens_name.parameterize) if lens_make.present? && lens_model.present?
 
