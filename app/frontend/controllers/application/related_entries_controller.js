@@ -30,7 +30,7 @@ export default class extends Controller {
     }).length) {
       return;
     }
-    fetch(this.data.get('url'))
+    fetch(this.data.get('url'), { credentials: 'same-origin' })
       .then(fetchStatus)
       .then(fetchText)
       .then(text => {
