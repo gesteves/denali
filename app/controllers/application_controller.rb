@@ -103,19 +103,8 @@ class ApplicationController < ActionController::Base
 
   def set_link_headers
     if request.format.html?
-      add_preload_link_header(ActionController::Base.helpers.asset_path('application.css'), as: 'style')
-      add_preload_link_header(ActionController::Base.helpers.asset_pack_path('application.js'), as: 'script')
-      add_preconnect_link_header('https://use.typekit.net') if ENV['typekit_id'].present?
-      add_preconnect_link_header('https://p.typekit.net') if ENV['typekit_id'].present?
       ENV['imgix_domain'].split(',').each do |domain|
         add_preconnect_link_header("http#{'s' if ENV['imgix_secure'].present?}://#{domain}")
-      end
-      if ENV['google_analytics_id'].present?
-        add_preconnect_link_header('https://www.googletagmanager.com')
-      end
-      if ENV['clicky_id'].present?
-        add_preconnect_link_header('https://static.getclicky.com')
-        add_preconnect_link_header('https://in.getclicky.com')
       end
     end
   end

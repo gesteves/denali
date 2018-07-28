@@ -29,7 +29,6 @@ class MapsController < ApplicationController
   def set_map_link_headers
     if request.format.html?
       add_preload_link_header(map_markers_url(format: 'json'), as: 'fetch', crossorigin: 'anonymous')
-      add_preconnect_link_header('https://api.mapbox.com')
       add_preconnect_link_header('https://a.tiles.mapbox.com')
       add_preconnect_link_header('https://b.tiles.mapbox.com')
     end
