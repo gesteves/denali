@@ -11,10 +11,6 @@ module Admin::EntriesHelper
     text.reject(&:blank?).join("\n\n")
   end
 
-  def share_title(entry)
-    entry.plain_title
-  end
-
   def permalink_preview(entry)
     if entry.is_published?
       "https://#{ENV['domain']}/#{entry.published_at.strftime('%Y')}/#{entry.published_at.strftime('%-m')}/#{entry.published_at.strftime('%-d')}/#{entry.id}/"

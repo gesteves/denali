@@ -48,23 +48,24 @@
         </div>
       </div>
       <hr class="hr">
-      <h2 class="subtitle is-size-6">Title</h2>
-      <div class="field is-horizontal">
-        <div class="field-body">
-          <div class="field has-addons" data-controller="clipboard">
-            <div class="control is-expanded">
-              <input class="input" type="text" data-target="clipboard.source" readonly="readonly" value="<%= @entry.plain_title %>">
-            </div>
-            <div class="control">
-              <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">
-                <span class="icon">
-                  <i class="fas fa-clipboard" data-target="clipboard.icon"></i>
-                </span>
-              </button>
-            </div>
+      <h2 class="subtitle is-size-6">Instagram</h2>
+      <form data-controller="clipboard">
+        <div class="field">
+          <div class="control">
+            <textarea rows="3" class="textarea" readonly="readonly" data-target="clipboard.source"><%= @entry.instagram_caption %></textarea>
           </div>
         </div>
-      </div>
+        <div class="field">
+          <div class="control">
+            <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">
+              <span class="icon">
+                <i class="fas fa-clipboard" data-target="clipboard.icon"></i>
+              </span>
+              <span data-target="clipboard.label">Copy to clipboard</span>
+            </button>
+          </div>
+        </div>
+      </form>
       <hr class="hr">
       <h2 class="subtitle is-size-6">Markdown</h2>
       <form data-controller="clipboard">
