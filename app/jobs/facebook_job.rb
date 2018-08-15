@@ -8,12 +8,11 @@ class FacebookJob < BufferJob
     text << entry.plain_body if entry.body.present?
     text << entry.permalink_url
     text = text.join("\n\n")
-    ids = get_profile_ids('facebook')
     if entry.is_photo?
       media = media_hash(entry.photos.first)
-      post_to_buffer(ids, text, media)
+      post_to_buffer('facebook', text, media)
     else
-      post_to_buffer(ids, text)
+      post_to_buffer('facebook', text)
     end
   end
 end

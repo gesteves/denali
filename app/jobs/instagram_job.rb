@@ -4,9 +4,8 @@ class InstagramJob < BufferJob
   def perform(entry)
     return if !entry.is_photo?
     text = entry.instagram_caption
-    ids = get_profile_ids('instagram')
     media = media_hash(entry.photos.first)
-    post_to_buffer(ids, text, media)
+    post_to_buffer('instagram', text, media)
   end
 
   private

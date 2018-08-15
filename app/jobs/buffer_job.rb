@@ -3,19 +3,19 @@ class BufferJob < ApplicationJob
 
   def get_profile_ids(service)
     return if ENV['buffer_access_token'].blank? || !Rails.env.production?
-    profiles = Rails.cache.fetch('buffer:profiles', expires_in: 1.hour) do
-      response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}")
-      if response.code >= 400
-        logger.tagged('Social', 'Buffer') { logger.error response.body }
-      else
-        response.body
-      end
+    response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}")
+    begin
+      profiles = JSON.parse(response.body)
+      profiles.select { |profile| profile['service'].downcase.match(service) }.map { |profile| profile['id'] }
+    rescue
+      []
     end
-    profiles = JSON.parse(profiles)
-    profiles.select { |profile| profile['service'].downcase.match(service) }.map { |profile| profile['id'] }
   end
 
-  def post_to_buffer(profile_ids, text, media = nil)
+  def post_to_buffer(service, text, media = nil)
+    profile_ids = get_profile_ids(service)
+    return if profile_ids.blank?
+
     body = {
       profile_ids: profile_ids,
       text: text,
