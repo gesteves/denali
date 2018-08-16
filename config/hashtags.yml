@@ -309,9 +309,17 @@ instagram:
     - jacksonhole
     - mygrandteton
     - tetons
+    - gtnp
   yellowstonenationalpark:
     - yellowstone
     - yellowstonepledge
+  mountrainiernationalpark:
+    - mountrainiernps
+    - ourpnw
+    - pnwwilderness
+    - nrthwst
+    - pnwparadise
+    - wanderwashington
   nationalportraitgallery:
     - mynpg
   newyorkcity: &nyc
@@ -355,6 +363,23 @@ instagram:
     - pgh
     - pghcreative
     - steelcitygrammers
+  seattle:
+    - seattle
+    - pnw
+    - visitseattle
+    - seattlewa
+    - seattlepulse
+    - igers_seattle
+    - livewashington
+    - seattlelife
+    - upperleftusa
+    - thatpnwlife
+    - pacificnorthwest
+    - emeraldcity
+    - pnwlife
+    - seattlephotographer
+    - northwestisbest
+    - northwest
   scotland:
     - ig_scotland
     - insta_scotland
