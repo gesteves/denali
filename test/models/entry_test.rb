@@ -12,10 +12,10 @@ class EntryTest < ActiveSupport::TestCase
   test 'should set slug before saving' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    title = 'This is my title'
+    title = 'This should be in my title. This should not.'
     entry = Entry.new(title: title, body: 'Whatever.', blog: blog, user: user)
     entry.save
-    assert_equal title.parameterize, entry.slug
+    assert_equal 'this-should-be-in-my-title', entry.slug
   end
 
   test 'should set preview hash before saving' do
