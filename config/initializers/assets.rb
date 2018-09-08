@@ -14,7 +14,5 @@ Rails.application.config.assets.precompile += %w(
   admin.css
   application.css
   amp.css
-  entry.css
-  vendor/loadcss.js
   vendor/map.js
 )
