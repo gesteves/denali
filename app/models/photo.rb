@@ -61,9 +61,9 @@ class Photo < ApplicationRecord
   # Returns the url of the image, formatted & sized fit to into instagram's
   # 5:4 ratio
   def instagram_url
-    if self.is_vertical?
+    if self.is_vertical? && self.height_from_width(1080) > 1350
       self.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff', fm: 'jpg', q: 90)
-    elsif self.is_horizontal?
+    elsif self.is_horizontal? && self.height_from_width(1080) > 864
       self.url(w: 1080, h: 864, fit: 'fill', bg: 'fff', fm: 'jpg', q: 90)
     else
       self.url(w: 1080, fm: 'jpg', q: 90)
