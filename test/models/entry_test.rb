@@ -237,6 +237,11 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal entry_1.position, 1
   end
 
+  test 'instagram hashtags should work' do
+    entry = entries(:panda)
+    assert_not_empty entry.instagram_hashtags
+  end
+
   test 'adding tags' do
     entry = entries(:panda)
     entry.tag_list = 'Panda'
