@@ -1,237 +1,215 @@
 instagram:
   apple:
-    - iphoneography
-    - iphoneonly
-    - iphonephotography
+    - iphonephoto
+    - iphonephotograph
+    - iphonephotographer
+    - iphonephotos
+    - iphonepic
     - shotoniphone
   architecture:
-    - archdaily
-    - archidaily
-    - archilovers
-    - architecturelovers
+    - amazingarchitecture
+    - archilove
+    - archiporn
+    - architecture_lovers
+    - architecturedaily
+    - architecturedetails
+    - architecturelover
     - architecturephotography
     - architectureporn
-    - architexture
+    - buildinglovers
+    - lovearchitecture
   astrophotography:
+    - astro_photography
+    - astropgraphy
     - astrophoto
     - astrophotography
     - ig_astrophotography
-    - ig_nightphotography
-    - milkywaychasers
-    - milkywaygalaxy
     - natgeospace
     - nightimages
-    - nightscape
     - nightscaper
-    - nightshooters
+    - nightscapes
     - nightsky
-    - rsa_night
-    - skymasters
-    - stargazing
-    - starrynight
+    - nightskyphotography
+    - starphotography
+    - starscape
   birds:
-    - birdextreme
-    - birdfreaks
-    - birding
-    - birdlover
-    - birdlovers
-    - birdphotography
-    - birdstagram
-    - eye_spy_birds
-    - igbirds
-    - instabird
-    - instabirds
-    - nuts_about_birds
-    - your_best_birds
+    - best_birds_of_ig
+    - birdlove
+    - birds
+    - birdslover
+    - birdsofinstagram
+    - birdsphotography
+    - featheredfriends
+    - ig_discover_birdslife
+    - ornithology
+    - wildbirds
   blackandwhite:
+    - bandw
+    - blackandwhite
     - blackandwhitephoto
+    - blackandwhitephotograph
     - blackandwhitephotography
-    - blancoynegro
-    - bnw_captures
-    - bnw_city
-    - bnw_globe
-    - bnw_life
-    - bnw_magazine
+    - blackandwhitepics
     - bnw_planet
-    - bnw_society
-    - bnwmood
-    - bw_lover
-    - bw_photooftheday
-    - monochrome
+    - bnwcommunity
+    - bnwlovers
+    - bnwphotography
+    - bwphotography
+    - instablackandwhite
+    - instabnw
   caracas:
-    - ccs
-    - ig_caracas
+    - caracas
+    - caracascity
+    - caracashermosa
+    - caracasvenezuela
+    - caracaswalk
+    - igerscaracas
   cars:
-    - carinstagram
-    - carporn
+    - cars
     - carsofinstagram
-    - carstagram
-    - igcars
-    - instacars
+    - car
+    - coolcars
+    - dailycars
+    - carlove
+    - carlovers
+    - lovethiscar
   cats:
-    - animalsofinstagram
-    - cat_features
-    - catlove
-    - catlover
-    - catlovers
-    - catoftheday
+    - cats
     - cats_of_instagram
-    - cats_of_world
     - catsagram
+    - catscatscats
+    - catsgram
+    - catslife
     - catsofig
+    - catsofinsta
     - catsofinstagram
     - catstagram
-    - caturday
-    - catvalentine
-    - catwalk
-    - cutecat
-    - ilovemycat
+    - catstuff
+    - cutecats
     - instacat
     - instacats
     - instagramcats
-    - katze
-    - kitten
-    - kittylove
-    - lovecats
-    - meow
   chattanooga:
-    - nooga
-    - noogagram
+    - chattanooga
+    - chattanoogatn
+    - chattanoogaphotographer
+    - chattanoogatennessee
+    - chattanoogaphotography
   cityscapes:
-    - city_explore
-    - citybestpics
-    - citylife
-    - citylimitless
+    - cityexplore
     - cityphotography
-    - cityscape
-    - cityview
-    - guardiancities
-    - ic_thecity
-    - ig_captures_city
-    - seemycity
-    - skyline
-    - theprettycities
+    - cityscapephotography
+    - cityscapes
+    - cityscapes_unlimited
+    - cityscapesphotography
+    - cityshots
+    - cityskyline
+    - cityvibe
+    - skylinephotography
   ciudaddemexico:
     - cdmx
     - ciudaddemexico
-    - df
-    - igerscdmx
-    - igersdf
+    - instacdmx
     - mexicocity
     - mexicodf
-  oldcars:
-    - drivetastefully
-    - retrocars
-    - vintagecars
   coffee:
-    - coffeetime
-    - cafe
-    - coffeelover
-    - coffeeaddict
-    - coffeegram
-    - instacoffee
-    - caffeine
-    - coffeeshop
-    - coffeelovers
+    - coffee
+    - coffee_inst
     - coffeeholic
-    - coffeebreak
-    - coffeelove
+    - coffee_time
+    - coffeegram
+    - coffeelover
     - coffeelife
+    - coffeetime
+    - coffeedaily
+    - instacoffee
   concerts:
     - bandphotographer
-    - concertphoto
+    - concert
+    - concertlive
     - concertphotographer
     - concertphotography
     - concertphotos
+    - concerts
+    - liveconcert
     - liveconcertphotography
     - livemusic
-    - livemusicphotographer
     - livemusicphotography
-    - livephotography
-    - musiclife
-    - musicphoto
     - musicphotographer
-    - musicphotography
-    - rocknroll
-    - rockphotography
   districtofcolumbia:
-    - acreativedc
+    - dcchasers
+    - dcfocused
     - dcitystyle
+    - dclife
     - districtofcolumbia
     - exploredc
-    - exposeddc
     - fotodc
     - igdc
-    - igersdc
+    - ilovedc
     - mydccool
-    - streetmeetdc
+    - thedistrict
     - walkwithlocals
     - washingtondaily
     - washingtondc
+    - washmagphoto
   dogs:
-    - barkbox
-    - bestwoof
-    - dog_features
-    - doglife
-    - doglover
-    - doglovers
-    - dogoftheday
-    - dogs_of_instagram
-    - dogscorner
-    - dogslife
+    - cutedogs
+    - doggy
+    - doglifestyle
+    - dogs
     - dogsofig
-    - instagramdogs
-    - instapet
-    - lovepuppies
-    - petsagram
-    - petsofinstagram
-    - petstagram
-    - pup
-    - puppies
-    - puppiesofinstagram
-    - puppylove
-    - weeklyfluff
+    - dogsofinstagram
+    - dogstagram
+    - dogstagram
+    - igdogs
+    - ilovedogs
+    - instadogs
   film:
-    - analogphotography
+    - analogphoto
     - believeinfilm
     - filmisnotdead
     - filmphotography
-    - ishootfilm
+    - grainisgood
+    - onfilm
     - shootfilm
-    - thefilmcommunity
+    - shotonfilm
   fujifilm:
-    - fuji
+    - fuji_xseries
     - fujifeed
     - fujifilm
-    - fujifilm_xseries
-    - fujifilmx_us
-    - fujifilmxseries
     - fujilove
-    - fujixclub
+    - fujix
     - fujixseries
-    - myfujifilm
-  landscapes: &landscapes
-    - allnatureshots
-    - earth_deluxe
-    - earthvisuals
-    - fantastic_earth
-    - ic_landscapes
-    - instanaturelover
-    - landscape_captures
-    - landscape_lovers
+    - fujixshooters
+    - myfujilove
+  fujifilmxt2:
+    - fujifilmxt2
+    - fujixt2
+  fujifilmxt3:
+    - fujifilmxt3
+    - fujixt3
+  fujifilmxh1:
+    - fujifilmxh1
+    - fujixh1
+  fujifilmx100f:
+    - fujifilmx100f
+    - fujix100f
+  landscapes:
+    - igersnature
+    - landscape
+    - landscape_lover
+    - landscape_photography
+    - landscapeart
+    - landscapecaptures
     - landscapehunter
     - landscapelovers
+    - landscapephoto
+    - landscapephotographer
     - landscapephotography
     - landscapes
-    - nature_brilliance
-    - nature_prefection
-    - nature_shooters
-    - nature_wizards
-    - naturediversity
-    - ourplanetdaily
-    - special_shots
-    - welivetoexplore
-  telephotolandscapes: *landscapes
+    - lovelandscape
+    - naturelandscape
+    - naturephotography
   lasvegas:
     - lasvegasstrip
     - sincity
@@ -241,20 +219,26 @@ instagram:
     - 🔴
     - leica
     - leicacamera
+    - leicagram
     - leicam
     - leicaphoto
     - leicaphotography
+    - leicaworld
   longexposure:
     - amazing_longexpo
-    - fs_longexpo
-    - ic_longexpo
+    - long_exposure_pics
     - longexpo
+    - longexpoelite
     - longexpohunter
+    - longexposhots
     - longexposure
     - longexposure_shots
     - longexposureoftheday
     - longexposurephotography
-    - splendid_xposure
+    - longexposures
+    - longexposureshots
+    - slowshutter
+    - slowshutterspeed
   magazines:
     - aintbadmagazine
     - aperturefoundation
@@ -276,21 +260,16 @@ instagram:
     - yetmagazine
     - yourshotphotographer
   mexico:
-    - ig_mexico
-    - igersmexico
+    - ilovemexico
+    - mejico
     - mexico
+    - mexico_amazing
+    - mexico_fotos
     - mexico_maravilloso
-    - mexigers
-    - mextagram
-    - vive_mexico
-  mountains:
-    - mountainlove
-    - instamountain
-    - ig_mountains
-    - mountainlife
-    - mountainaddict
-    - mountaingram
-    - igersmountain
+    - mexicolove
+    - mexicomagico
+    - mexicomaravilloso
+    - vivamexico
   nationalairandspacemuseum:
     - airandspace
   nationalgalleryofart:
@@ -301,141 +280,139 @@ instagram:
     - findyourpark
     - goparks
     - optoutside
+    - nationalparks
   nationalmall: *nationalparks
   yosemitenationalpark: *nationalparks
   greatfallspark: *nationalparks
   grandtetonnationalpark:
+    - grandteton
     - grandtetonnationalpark
-    - jacksonhole
+    - gtnp
     - mygrandteton
     - tetons
-    - gtnp
   yellowstonenationalpark:
     - yellowstone
+    - yellowstonenationalpark
+    - yellowstonenps
     - yellowstonepledge
   mountrainiernationalpark:
+    - mountrainiernationalpark
     - mountrainiernps
-    - ourpnw
-    - pnwwilderness
+    - mtrainiernationalpark
     - nrthwst
+    - ourpnw
     - pnwparadise
+    - pnwwilderness
     - wanderwashington
   nationalportraitgallery:
     - mynpg
   newyorkcity: &nyc
     - icapture_nyc
-    - ig_great_shots_nyc
-    - ig_nycity
-    - igersofnyc
-    - instagramnyc
-    - made_in_ny
+    - igersnyc
+    - ilovenyc
+    - newyork
     - newyork_ig
     - newyork_instagram
     - newyorkcity
-    - newyorknewyork
-    - ny
-    - nycprimeshot
-    - unlimitednewyork
-    - what_i_saw_in_nyc
+    - newyorkinstagram
+    - newyorkphoto
+    - nyc
+    - nycityworld
+    - nyloveyou
+    - topnewyorkphoto
   manhattan: *nyc
   brooklyn: *nyc
   queens: *nyc
   bronx: *nyc
   philadelphia:
-    - discoverphl
-    - explore215
-    - explorephilly
+    - cityofbrotherlylove
     - igers_philly
-    - igersphilly
     - instadelphia
     - instaphilly
     - philadelphia
-    - philly
+    - philadelphia_ig
+    - philadelphiaphotographer
+    - philly_igers
     - phillygram
-    - phillyigers
     - phillylove
-    - phillyprimeshots
-    - phl
     - visitphilly
-    - whyilovephilly
   pittsburgh:
     - '412'
     - pgh
     - pghcreative
+    - pittsburgh
+    - pittsburghphotographer
+    - pittsburghphotography
     - steelcitygrammers
   seattle:
     - seattle
-    - pnw
-    - visitseattle
-    - seattlewa
-    - seattlepulse
-    - igers_seattle
-    - livewashington
-    - seattlelife
-    - upperleftusa
-    - thatpnwlife
-    - pacificnorthwest
-    - emeraldcity
-    - pnwlife
+    - seattle_igers
     - seattlephotographer
-    - northwestisbest
-    - northwest
+    - seattlewashington
+    - seattlewa
+    - seattlephotography
+    - igers_seattle
+    - seattlelove
+    - exploreseattle
   scotland:
-    - ig_scotland
-    - insta_scotland
-    - instascotland
-    - visitscotland
+    - igersscotland
+    - lovescotland
+    - scotland
+    - scotland_greatshots
+    - scotland_ig
+    - scotland_insta
+    - scotlandphotography
+    - scotlandshots
+    - scotshots
   streetphotography:
     - everybodystreet
-    - ig_street
-    - lensculture
     - lensculturestreets
+    - lensonstreets
     - magnumphotos
-    - seemycity
     - spicollective
-    - street_photo_club
-    - streetart
-    - streetlife
-    - streetlife_award
-    - streetmagazine
-    - streetmagazines
-    - streetphotographer
-    - streetphotographers
-    - streets_vision
+    - storyofthestreet
+    - streetgram
+    - streetphotography
+    - streetphotography_bw
+    - streetphotographyinternational
+    - streetphotographymagazine
+    - streets
+    - streetselect
+    - streetshooter
     - streetshot
-    - urbanandstreet
+    - thestreetphotographyhub
   tennessee:
     - instagramtennessee
+    - tennesseephotographer
+    - tennesseephotography
     - tn
   venezuela:
     - elnacionalweb
     - igersvenezuela
     - instavenezuela
+    - venezuela
     - vzla
   wildlife:
-    - animal_in_world
-    - animales
-    - animallovers
-    - animalofinstagram
-    - animalsaddict
-    - animalsmood
-    - animalsofinstagram
-    - animalworld
-    - anmlsworld
-    - exclusive_animals
-    - fantastic_earth
-    - planet_of_animals
-    - thecritterhaven
+    - animalplanet
+    - bbcearth
+    - instawildlife
+    - natgeowild
+    - naturegrampixels
     - wildlife
-    - wildlife_seekers
-    - wildlifeonearth
-    - wildlifephoto
+    - wildlifeig
+    - wildlifeofinstagram
+    - wildlifephotographer
     - wildlifephotography
-    - wildlifeplanet
+    - wildlifepics
+    - wildlifeshots
+    - wildlifeshots
+    - wildplanet
   wyoming:
+    - discover_wyoming
+    - explorewyoming
+    - thatswy
     - visitwyoming
     - wyoming
-    - wyomingphotographer
     - wyomingexplored
-    - wyomingphotography
-    - naturalwyoming
+    - wyominglife
+    - wyomingphotographer
