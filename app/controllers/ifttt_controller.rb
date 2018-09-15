@@ -1,4 +1,6 @@
 class IftttController < ApplicationController
+  include ActionView::Helpers::TextHelper
+
   skip_before_action :verify_authenticity_token
   skip_before_action :domain_redirect
 
@@ -9,14 +11,11 @@ class IftttController < ApplicationController
       entry = Entry.published.first
 
       attachment = {
-        fallback: 'New photo on Instagram!',
-        text: params[:caption],
-        image_url: params[:source_url],
-        actions: [{
-          type: 'button',
-          text: 'Open in Instagram',
-          url: params[:url]
-        }]
+        fallback: "Instagram: #{truncate(params[:caption], length: 100)}",
+        pretext: 'New photo on Instagram:',
+        title: truncate(params[:caption], length: 100),
+        title_link: params[:url],
+        image_url: params[:source_url]
       }
 
       SlackJob.perform_later(attachments: [attachment])
