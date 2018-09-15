@@ -5,6 +5,9 @@ class IftttController < ApplicationController
     if params[:token] != ENV['ifttt_webhook_token']
       render plain: 'No', status: 401
     else
+      logger.tagged('IFTTT', 'WEBHOOK') { logger.info params[:created_at] }
+      logger.tagged('IFTTT', 'WEBHOOK') { logger.info params[:source_url] }
+      logger.tagged('IFTTT', 'WEBHOOK') { logger.info params[:url] }
       entry = Entry.published.first
       payload = {
         value1: entry.plain_title,
