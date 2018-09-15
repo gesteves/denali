@@ -1,5 +1,6 @@
 class IftttController < ApplicationController
   skip_before_action :verify_authenticity_token
+  skip_before_action :domain_redirect
 
   def instagram
     if params[:token] != ENV['ifttt_webhook_token']
