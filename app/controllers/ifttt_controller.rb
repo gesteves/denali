@@ -10,9 +10,11 @@ class IftttController < ApplicationController
       logger.tagged('IFTTT', 'WEBHOOK') { logger.info params[:source_url] }
       logger.tagged('IFTTT', 'WEBHOOK') { logger.info params[:url] }
       entry = Entry.published.first
+      hashtags = entry.instagram_hashtags
       payload = {
-        value1: entry.instagram_hashtags
+        value1: hashtags
       }
+      SlackJob.perform_later(text: hashtags)
       IftttWebhookJob.perform_later('instagram_tags', payload.to_json)
       render plain: 'OK'
     end
