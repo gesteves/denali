@@ -291,9 +291,12 @@ class Entry < ApplicationRecord
 
   def enqueue_slack
     attachment = {
-      fallback: "#{self.plain_title} #{self.permalink_url}",
+      fallback: "#{self.blog.name}: #{self.plain_title}",
       title: self.plain_title,
-      title_link: self.permalink_url
+      title_link: self.permalink_url,
+      author_name: "#{self.user.first_name} #{self.user.last_name}",
+      author_icon: self.user.avatar_url,
+      ts: self.published_at.to_i
     }
     attachment[:image_url] = self.photos.first.url(w: 800) if self.is_photo?
     attachment[:color] = '#BF0222'
