@@ -183,6 +183,17 @@ class EntriesController < ApplicationController
     end
   end
 
+  def latest
+    expires_in 15.minutes, public: true
+    if stale?(@photoblog, public: true)
+      @entry = Entry.published.first
+      respond_to do |format|
+        format.json { render :show }
+        format.all { redirect_to(@entry.permalink_url, status: 301) }
+      end
+    end
+  end
+
   private
   def params_match(entry, params)
     entry_date = entry.published_at

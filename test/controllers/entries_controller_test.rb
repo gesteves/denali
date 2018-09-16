@@ -175,4 +175,16 @@ class EntriesControllerTest < ActionController::TestCase
     get :tag_feed, params: { tag: 'washington', format: 'rss' }
     assert_redirected_to tag_feed_url(format: 'atom', page: nil, tag: 'washington')
   end
+
+  test "should generate latest entry json" do
+    get :latest, params: { format: 'json' }
+    assert_template :show
+    assert_response :success
+  end
+
+  test "should redirect to latest entry" do
+    get :latest
+    entry = Entry.published.first
+    assert_redirected_to entry.permalink_url
+  end
 end

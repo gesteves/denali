@@ -12,6 +12,7 @@ json.cache! entry do
     json.(entry, :published_at)
     json.(entry, :updated_at)
     json.(entry, :created_at)
+    json.(entry, :instagram_hashtags)
   end
   json.relationships do
     json.photos do

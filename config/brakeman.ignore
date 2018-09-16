@@ -63,6 +63,26 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
+      "fingerprint": "58f5a977210b4bc468ce91b389c1e2909527df0617d95881817329923245140b",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/entries_controller.rb",
+      "line": 192,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Entry.published.first.permalink_url, :status => 301)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EntriesController",
+        "method": "latest"
+      },
+      "user_input": "Entry.published.first.permalink_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
       "fingerprint": "73be32bde41489c75aea7009104078063ec5f8b4ed3c537744a4f3834602694f",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
@@ -90,7 +110,7 @@
       "line": 4,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Blog.first.additional_meta_tags",
-      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":6,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":4,"file":"app/views/layouts/application.html.erb"}],
+      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":5,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":4,"file":"app/views/layouts/application.html.erb"}],
       "location": {
         "type": "template",
         "template": "partials/_meta_tags"
@@ -159,6 +179,6 @@
       "note": ""
     }
   ],
-  "updated": "2018-07-15 22:05:16 -0400",
-  "brakeman_version": "4.2.1"
+  "updated": "2018-09-16 14:12:26 -0400",
+  "brakeman_version": "4.3.1"
 }

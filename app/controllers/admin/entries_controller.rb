@@ -341,10 +341,6 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def latest_hashtags
-    render plain: Entry.published.first.instagram_hashtags
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
