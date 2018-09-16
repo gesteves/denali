@@ -84,7 +84,7 @@ Rails.application.routes.draw do
   get '/tagged/:tag/feed(.:format)' => 'entries#tag_feed', defaults: { format: 'atom' }, :as => :tag_feed
 
   # IFTTT
-  post 'ifttt/webhook/:token/instagram' => 'ifttt#instagram'
+  post '/ifttt/webhook/:token/instagram' => 'ifttt#instagram'
 
   # Admin
   get '/admin'                         => 'admin#index',      :as => :admin

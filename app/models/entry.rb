@@ -278,7 +278,7 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_sharing_jobs
-    self.enqueue_slack
+    self.send_push_notification
     AmpCacheJob.perform_later(self)
     FacebookJob.perform_later(self) if self.post_to_facebook
     FlickrJob.perform_later(self) if self.post_to_flickr
@@ -289,19 +289,13 @@ class Entry < ApplicationRecord
     true
   end
 
-  def enqueue_slack
-    attachment = {
-      fallback: "#{self.plain_title} #{self.short_permalink_url}",
-      title: self.plain_title,
-      title_link: self.permalink_url,
-      text: self.plain_body,
-      author_name: "#{self.user.first_name} #{self.user.last_name}",
-      author_icon: self.user.avatar_url,
-      ts: self.published_at.to_i
+  def send_push_notification
+    payload = {
+      value1: self.plain_title,
+      value2: self.permalink_url
     }
-    attachment[:image_url] = self.photos.first.url(w: 800) if self.is_photo?
-    attachment[:color] = '#BF0222'
-    SlackJob.perform_later(attachments: [attachment])
+    payload[:value3] = self.photos.first.url(w: 1200) if self.is_photo?
+    IftttWebhookJob.perform_later('denali:entry_published', payload.to_json)
   end
 
   def combined_tags
