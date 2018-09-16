@@ -279,7 +279,6 @@ class Entry < ApplicationRecord
 
   def enqueue_sharing_jobs
     self.send_to_ifttt('denali:entry_published')
-    AmpCacheJob.perform_later(self)
     FacebookJob.perform_later(self) if self.post_to_facebook
     FlickrJob.perform_later(self) if self.post_to_flickr
     InstagramJob.perform_later(self) if self.post_to_instagram
