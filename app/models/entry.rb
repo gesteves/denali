@@ -291,9 +291,10 @@ class Entry < ApplicationRecord
 
   def enqueue_slack
     attachment = {
-      fallback: "#{self.blog.name}: #{self.plain_title}",
+      fallback: "#{self.plain_title} #{self.short_permalink_url}",
       title: self.plain_title,
       title_link: self.permalink_url,
+      text: self.plain_body,
       author_name: "#{self.user.first_name} #{self.user.last_name}",
       author_icon: self.user.avatar_url,
       ts: self.published_at.to_i
