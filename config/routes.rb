@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get '/entries/share'              => 'entries#share'
     get '/entries/queued/organize'    => 'entries#organize_queue'
     post '/entries/queued/update'     => 'entries#update_queue'
+    get '/entries/hashtags/latest'    => 'entries#latest_hashtags', :as => :latest_hashtags
     get '/equipment'                  => 'equipment#index'
 
     resources :entries, concerns: :paginatable do
