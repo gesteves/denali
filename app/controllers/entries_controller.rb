@@ -184,12 +184,12 @@ class EntriesController < ApplicationController
   end
 
   def latest
-    expires_in 15.minutes, public: true
+    expires_in 5.minutes, public: true
     if stale?(@photoblog, public: true)
       @entry = Entry.published.first
       respond_to do |format|
-        format.json { render :show }
-        format.all { redirect_to(@entry.permalink_url, status: 301) }
+        format.json { redirect_to "#{@entry.permalink_url}.json", status: 302 }
+        format.all { redirect_to @entry.permalink_url, status: 302 }
       end
     end
   end
