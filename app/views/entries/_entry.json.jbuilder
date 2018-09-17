@@ -62,6 +62,8 @@ json.cache! entry do
             entry_photo_widths(p, 'entry_list_square').each do |w|
               json.set! "square_#{w}", p.url(w: w, square: true)
             end
+            json.set! "instagram_feed", p.instagram_url
+            json.set! "instagram_story", p.instagram_story_url
           end
         end
       end
