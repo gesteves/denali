@@ -278,7 +278,7 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_sharing_jobs
-    self.send_to_ifttt('denali:entry_published')
+    self.send_to_ifttt
     FacebookJob.perform_later(self) if self.post_to_facebook
     FlickrJob.perform_later(self) if self.post_to_flickr
     InstagramJob.perform_later(self) if self.post_to_instagram
@@ -288,13 +288,13 @@ class Entry < ApplicationRecord
     true
   end
 
-  def send_to_ifttt(event)
+  def send_to_ifttt
     payload = {
       value1: self.plain_title,
       value2: self.permalink_url
     }
     payload[:value3] = self.photos.first.url(w: 1200) if self.is_photo?
-    IftttWebhookJob.perform_later(event, payload)
+    IftttWebhookJob.perform_later(payload)
   end
 
   def combined_tags
