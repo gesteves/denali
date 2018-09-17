@@ -97,7 +97,6 @@ class EntriesController < ApplicationController
   end
 
   def preview
-    request.format = 'html'
     @entry = @photoblog.entries.find_by!(preview_hash: params[:preview_hash])
     if stale?(@entry, public: true)
       respond_to do |format|
@@ -105,7 +104,14 @@ class EntriesController < ApplicationController
           if @entry.is_published?
             redirect_to @entry.permalink_url
           else
-            render 'entries/show'
+            render :show
+          end
+        }
+        format.json {
+          if @entry.is_published?
+            redirect_to "#{@entry.permalink_url}.json", status: 302
+          else
+            render :show
           end
         }
       end
