@@ -1,6 +1,7 @@
 entry: &entry
   srcset:
     - 640
+    - 828
     - 1136
     - 750
     - 1334
@@ -24,6 +25,7 @@ entry: &entry
   quality: 90
 entry_list: &entry_list
   srcset:
+    - 260
     - 304
     - 362
     - 360
