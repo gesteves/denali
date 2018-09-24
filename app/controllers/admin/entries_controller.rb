@@ -225,7 +225,7 @@ class Admin::EntriesController < AdminController
   end
 
   def instagram
-    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
+    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     InstagramJob.perform_later(@entry)
     @message = 'Your entry was sent to your Instagram queue in Buffer.'
     respond_to do |format|
