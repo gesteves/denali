@@ -50,8 +50,7 @@ module ApplicationHelper
     variant = PHOTOS[photo_key]
     quality = variant['quality']
     square = variant['square'].present?
-    auto = variant['auto'] || 'format'
-    photo.srcset(variant['srcset'], { q: quality, square: square, auto: auto })
+    photo.srcset(variant['srcset'], { q: quality, square: square })
   end
 
   def get_sizes(photo_key)
