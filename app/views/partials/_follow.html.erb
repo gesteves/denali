@@ -26,6 +26,11 @@
       <%= inline_svg 'facebook', 'follow__icon' %>
     <% end %>
   <% end %>
+  <% if @photoblog.flickr.present? %>
+    <%= link_to @photoblog.flickr, class: link_class, title: 'Follow on Flickr' do %>
+      <%= inline_svg 'flickr', 'follow__icon' %>
+    <% end %>
+  <% end %>
   <% if @photoblog.instagram.present? %>
     <%= link_to @photoblog.instagram, class: link_class, title: 'Follow on Instagram' do %>
       <%= inline_svg 'instagram', 'follow__icon' %>
