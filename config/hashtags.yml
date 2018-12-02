@@ -262,6 +262,9 @@ instagram:
     - vivamexico
   nationalairandspacemuseum:
     - airandspace
+  nationalelkrefuge:
+    - jacksonhole
+    - staywild
   nationalgalleryofart:
     - myngadc
   nationalparks: &nationalparks
@@ -280,6 +283,8 @@ instagram:
     - gtnp
     - mygrandteton
     - tetons
+    - jacksonhole
+    - staywild
   yellowstonenationalpark:
     - yellowstone
     - yellowstonenationalpark
