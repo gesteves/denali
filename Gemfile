@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.5.1'
 
-gem 'rails', '~> 5.2.1'
+gem 'rails', '5.2.2.rc1'
 gem 'pg', '~> 0.21'
 
 # Reduces boot times through caching; required in config/boot.rb
