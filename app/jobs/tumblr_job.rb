@@ -2,7 +2,7 @@ class TumblrJob < ApplicationJob
   queue_as :default
 
   def perform(entry)
-    return if !entry.is_published? || !Rails.env.production?
+    return if !entry.is_published? || !Rails.env.production? || ENV['tumblr_consumer_key'].blank?
     tumblr = Tumblr::Client.new({
       consumer_key: ENV['tumblr_consumer_key'],
       consumer_secret: ENV['tumblr_consumer_secret'],
