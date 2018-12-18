@@ -313,6 +313,7 @@ instagram:
     - newyorkphoto
     - nyc
     - nycityworld
+    - nycspc
     - nyloveyou
     - topnewyorkphoto
   manhattan: *nyc
@@ -339,6 +340,16 @@ instagram:
     - pittsburghphotographer
     - pittsburghphotography
     - steelcitygrammers
+  sanfrancisco:
+    - alwayssf
+    - citybythebay
+    - igerssf
+    - igsanfrancisco
+    - onlyinsf
+    - sanfrancisco
+    - sf
+    - sf_insta
+    - streetsofsf
   seattle:
     - seattle
     - seattle_igers
