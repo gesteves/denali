@@ -6,6 +6,14 @@ class AdminController < ApplicationController
   skip_before_action :domain_redirect
   helper_method :is_admin?
 
+  def default_url_options
+    if Rails.env.production?
+      { host: "#{ENV['HEROKU_APP_NAME']}.herokuapp.com" }
+    else
+      {}
+    end
+  end
+
   def index
     redirect_to admin_entries_path
   end

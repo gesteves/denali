@@ -15,7 +15,7 @@
   <meta name="turbolinks-visit-control" content="reload">
 <% end %>
 
-<div class="map__container" data-controller="map" data-map-api-token="<%= ENV['mapbox_api_token'] %>" data-map-markers-url="<%= admin_map_markers_path(format: 'json') %>">
+<div class="map__container" data-controller="map" data-map-api-token="<%= ENV['mapbox_api_token'] %>" data-map-markers-url="<%= admin_map_markers_url(format: 'json') %>">
   <div id="map" class="map" role="main" data-target="map.container"></div>
   <div class="map__loading" data-target="map.spinner">
     <%= inline_svg 'spinner', 'map__loading-spinner' %>
