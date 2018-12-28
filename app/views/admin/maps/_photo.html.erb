@@ -1,10 +1,23 @@
 <% photo = entry.photos.first %>
 <div class="card is-marginless">
   <div class="card-image">
-    <a style="<%= image_placeholder(photo) %>" target="_blank" class="image is-1by1" href="<%= entry.permalink_url %>">
+    <a style="<%= image_placeholder(photo) %>" target="_blank" class="image is-square" href="<%= entry.permalink_url %>">
       <%= lazy_responsive_image_tag photo,
             'map',
             { class: 'is-overlay', alt: photo.alt_text, 'data-controller': 'lazy-load' } %>
     </a>
+  </div>
+  <div class="card-content">
+    <h1 class="title is-size-7"><%= sanitize(entry.plain_title) %></h1>
+    <hr class="hr">
+    <p class="is-size-7 has-text-grey">
+      <% if entry.is_published? %>
+        <b class="has-text-success has-text-weight-bold"><%= icon('Published', 'fas fa-check-circle') %></b> on <%= entry.published_at.strftime('%B %-d, %Y') %>
+      <% elsif entry.is_queued? %>
+        <b class="has-text-info has-text-weight-bold"><%= icon('Queued', 'fas fa-clock') %></b> for <%= entry.publish_date_for_queued.strftime('%B %-d, %Y') %>
+      <% elsif entry.is_draft? %>
+        <b class="has-text-grey has-text-weight-bold"><%= icon('Draft', 'fas fa-pause-circle') %></b> &middot; Updated on <%= entry.updated_at.strftime('%B %-d, %Y') %>
+      <% end %>
+    </p>
   </div>
 </div>

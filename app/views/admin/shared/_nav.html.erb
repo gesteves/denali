@@ -32,15 +32,12 @@
             <a href="<%= drafts_admin_entries_path %>" class="navbar-item">
               Drafts
             </a>
-            <% if ENV['mapbox_api_token'].present? %>
-              <hr class="navbar-divider">
-              <a href="<%= admin_map_path(trailing_slash: true) %>" class="navbar-item">
-                Map
-              </a>
-            <% end %>
           </div>
         </div>
         <a href="<%= admin_tags_path %>" class="navbar-item">Tags</a>
+        <% if ENV['mapbox_api_token'].present? %>
+          <a href="<%= admin_map_path(trailing_slash: true) %>" class="navbar-item">Map</a>
+        <% end %>
         <% if @photoblog.has_search? %>
         <div class="navbar-item">
           <%= form_tag(admin_search_path, method: 'get' ) do %>
