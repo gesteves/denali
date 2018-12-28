@@ -1,5 +1,5 @@
-<% cache [@photoblog, is_minimal] do %>
-  <header role="banner" class="header <%= 'header--minimal' if is_minimal %>">
+<% cache @photoblog do %>
+  <header role="banner" class="header">
     <div class="header__section">
       <p class="header__tagline"><%= sanitize @photoblog.description %></p>
     </div>
@@ -11,7 +11,7 @@
       <% end %>
     </a>
     <div class="header__section">
-      <%= render partial: 'partials/follow.html.erb', locals: { has_tooltips: !is_minimal } %>
+      <%= render partial: 'partials/follow.html.erb' %>
     </div>
   </header>
 <% end %>

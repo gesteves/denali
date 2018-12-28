@@ -1,0 +1,19 @@
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js', defer: true %>
+  <%= javascript_include_tag 'vendor/map', defer: true %>
+<% end %>
+
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css', media: 'all' %>
+<% end %>
+
+<% content_for :body_class do %>
+  map__body
+<% end %>
+
+<div class="map__container" data-controller="map" data-map-api-token="<%= ENV['mapbox_api_token'] %>" data-map-markers-url="<%= admin_map_markers_url(format: 'json') %>">
+  <div id="map" class="map" role="main" data-target="map.container"></div>
+  <div class="map__loading" data-target="map.spinner">
+    <%= inline_svg 'spinner', 'map__loading-spinner' %>
+  </div>
+</div>
