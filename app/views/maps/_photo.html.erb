@@ -1,0 +1,6 @@
+<% photo = entry.photos.first %>
+<div class="entry-list__item entry-list__item--map" role="article">
+  <div class="entry-list__wrapper entry-list__wrapper--square" style="<%= "#{image_placeholder(photo)}" %>">
+    <%= render partial: 'entries/grid/figure.html.erb', locals: { entry: entry, photo: photo, variant: 'map' } %>
+  </div>
+</div>

@@ -22,6 +22,7 @@ export default class extends Controller {
     const bounds = L.latLngBounds(southWest, northEast);
     const zoom = this.getZoom();
     const containerId = this.containerTarget.id;
+
     L.mapbox.accessToken = this.data.get('apiToken');
     this.map = L.mapbox.map(containerId, 'gesteves.ce0e3aae', { minZoom: zoom, maxZoom: 18, maxBounds: bounds });
     let layer = L.mapbox.featureLayer();
@@ -69,7 +70,7 @@ export default class extends Controller {
 
   requestPopup (e) {
     const marker = e.target;
-    fetch(`/admin/map/photo/${marker.photoId}.json`)
+    fetch(`/map/photo/${marker.photoId}.json`)
       .then(fetchStatus)
       .then(fetchJson)
       .then(json => marker.setPopupContent(json.html));

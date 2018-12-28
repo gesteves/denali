@@ -1,12 +1,6 @@
 require 'test_helper'
 
-class Admin::MapsControllerTest < ActionController::TestCase
-
-  def setup
-    session[:user_id] = users(:guille).id
-    super
-  end
-
+class MapsControllerTest < ActionController::TestCase
   test "should get index" do
     get :index
     assert_template :index

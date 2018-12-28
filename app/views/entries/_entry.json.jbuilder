@@ -33,6 +33,8 @@ json.cache! entry do
             json.lens p.lens.display_name if p.lens.present? && !p.camera&.is_phone?
             json.film p.film.display_name if p.film.present?
             if entry.show_in_map && p.has_location?
+              json.(p, :latitude)
+              json.(p, :longitude)
               json.(p, :neighborhood)
               json.(p, :locality)
               json.(p, :sublocality)

@@ -8,25 +8,19 @@
   <meta name="robots" content="noindex">
   <%= yield :head %>
   <title><%= @page_title.nil? ? '' : sanitize("#{@page_title} · ") %><%= @photoblog.name %></title>
-  <%= yield :stylesheets %>
   <%= stylesheet_link_tag 'admin', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= csrf_meta_tags %>
-  <%= yield :javascript %>
   <%= javascript_pack_tag 'admin', defer: true, 'data-turbolinks-track': 'reload' %>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
 </head>
 <body data-controller="notifications" data-action="notify->notifications#add" <% if content_for?(:body_class) %>class="<%= yield :body_class %>"<% end %>>
   <%= render partial: 'admin/shared/nav' %>
 
-  <% if @no_container %>
-    <%= yield %>
-  <% else %>
-    <section class="section">
-      <div class="container">
-        <%= yield %>
-      </div>
-    </section>
-  <% end %>
+  <section class="section">
+    <div class="container">
+      <%= yield %>
+    </div>
+  </section>
 
   <div id="notifications" class="notifications" data-target="notifications.container" data-action="transitionend->notifications#toggle" data-turbolinks-permanent>
     <% flash.each do |name, message| -%>

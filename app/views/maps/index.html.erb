@@ -1,0 +1,48 @@
+<% content_for :head do %>
+  <% cache [@photoblog, :head] do %>
+    <title>Map · <%= @photoblog.name %></title>
+    <meta name="description" content="<%= @photoblog.name %> photos, mapped.">
+    <link rel="canonical" href="<%= map_url %>">
+
+    <meta property="og:title" content="<%= @photoblog.name %>">
+    <% if @photoblog.logo.attached? %>
+      <meta property="og:image" content="<%= @photoblog.logo_url(w: 1200, h: 628, fm: 'png', pad: 50, fit: 'fill', bg: 'fff') %>">
+    <% else %>
+      <meta property="og:image" content="<%= @photoblog.entries.photo_entries.published.first.photos.first.url(w: 1200, h: 628) %>">
+    <% end %>
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="628">
+    <meta property="og:description" content="<%= @photoblog.name %> photos, mapped.">
+    <meta property="og:url" content="<%= map_url %>">
+    <meta property="og:type" content="Website">
+    <meta property="og:site_name" content="<%= @photoblog.name %>">
+    <meta property="og:locale" content="en_US">
+    <% if @photoblog.twitter.present? %>
+      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
+      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
+    <% end %>
+    <meta name="twitter:title" content="<%= @photoblog.name %>">
+    <meta name="twitter:url" content="<%= map_url %>">
+    <meta name="twitter:description" content="<%= @photoblog.name %> photos, mapped.">
+    <% if @photoblog.touch_icon.attached? %>
+      <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
+    <% end %>
+    <meta name="twitter:card" content="summary">
+  <% end %>
+<% end %>
+
+<% content_for :javascript do %>
+  <%= javascript_include_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js', defer: true %>
+  <%= javascript_include_tag 'vendor/map', defer: true %>
+<% end %>
+
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css', media: 'all' %>
+<% end %>
+
+<div data-controller="map" data-map-api-token="<%= ENV['mapbox_api_token'] %>" data-map-markers-url="<%= map_markers_url(format: 'json') %>">
+  <div id="map" class="map" role="main" data-target="map.container"></div>
+  <div class="map__loading" data-target="map.spinner">
+    <%= inline_svg 'spinner', 'map__loading-spinner' %>
+  </div>
+</div>

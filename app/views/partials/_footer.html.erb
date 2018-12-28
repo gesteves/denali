@@ -5,6 +5,7 @@
       <span class="footer__links">
         <%= link_to 'Home', root_url %> ·
         <%= link_to 'About', about_url %> ·
+        <%= link_to 'Map', map_url(trailing_slash: true) %> ·
         <% if @photoblog.has_search? %>
           <%= link_to 'Search', search_url %> ·
         <% end %>

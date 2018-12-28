@@ -13,9 +13,6 @@ Rails.application.routes.draw do
     get '/entries/queued/organize'    => 'entries#organize_queue'
     post '/entries/queued/update'     => 'entries#update_queue'
     get '/equipment'                  => 'equipment#index'
-    get '/map'                        => 'maps#index', :as => :map
-    get '/map/photos.:format'         => 'maps#photos', :as => :map_markers
-    get '/map/photo/:id.:format'      => 'maps#photo', :as => :map_photo
 
     resources :entries, concerns: :paginatable do
       member do
@@ -57,6 +54,9 @@ Rails.application.routes.draw do
   get '/(page/:page)'                  => 'entries#index',   constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :entries
   get '/tagged/:tag(/page/:page)'      => 'entries#tagged',  constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :tag
   get '/search'                        => 'entries#search', :as => :search
+  get '/map'                           => 'maps#index', :as => :map
+  get '/map/photos.:format'            => 'maps#photos', :as => :map_markers
+  get '/map/photo/:id.:format'         => 'maps#photo'
   get '/about'                         => 'blogs#about', :as => :about
   get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
