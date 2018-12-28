@@ -21,9 +21,6 @@
 @import 'blocks/signin';
 @import 'blocks/tags';
 
-@import 'leaflet.markercluster/dist/MarkerCluster.Default';
-@import 'leaflet.markercluster/dist/MarkerCluster';
-
 // scss-lint:disable ImportantRule
 .entry__photo-container--zoom {
   width: auto !important;

@@ -12,3 +12,6 @@
 @import 'admin/blocks/notifications';
 @import 'admin/blocks/queue';
 @import 'admin/blocks/map';
+
+@import 'leaflet.markercluster/dist/MarkerCluster.Default';
+@import 'leaflet.markercluster/dist/MarkerCluster';
