@@ -9,15 +9,5 @@
   </div>
   <div class="card-content">
     <h1 class="title is-size-7"><%= sanitize(entry.plain_title) %></h1>
-    <hr class="hr">
-    <p class="is-size-7 has-text-grey">
-      <% if entry.is_published? %>
-        <b class="has-text-success has-text-weight-bold"><%= icon('Published', 'fas fa-check-circle') %></b> on <%= entry.published_at.strftime('%B %-d, %Y') %>
-      <% elsif entry.is_queued? %>
-        <b class="has-text-info has-text-weight-bold"><%= icon('Queued', 'fas fa-clock') %></b> for <%= entry.publish_date_for_queued.strftime('%B %-d, %Y') %>
-      <% elsif entry.is_draft? %>
-        <b class="has-text-grey has-text-weight-bold"><%= icon('Draft', 'fas fa-pause-circle') %></b> &middot; Updated on <%= entry.updated_at.strftime('%B %-d, %Y') %>
-      <% end %>
-    </p>
   </div>
 </div>
