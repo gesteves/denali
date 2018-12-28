@@ -1,14 +1,18 @@
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js', defer: true %>
-  <%= javascript_include_tag 'vendor/map', defer: true %>
+  <%= javascript_include_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js', defer: true, 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'vendor/map', defer: true, 'data-turbolinks-track': 'reload' %>
 <% end %>
 
 <% content_for :stylesheets do %>
-  <%= stylesheet_link_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css', media: 'all' %>
+  <%= stylesheet_link_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css', media: 'all', 'data-turbolinks-track': 'reload' %>
 <% end %>
 
 <% content_for :body_class do %>
   map__body
+<% end %>
+
+<% content_for :meta do %>
+  <meta name="turbolinks-visit-control" content="reload">
 <% end %>
 
 <div class="map__container" data-controller="map" data-map-api-token="<%= ENV['mapbox_api_token'] %>" data-map-markers-url="<%= admin_map_markers_path(format: 'json') %>">
