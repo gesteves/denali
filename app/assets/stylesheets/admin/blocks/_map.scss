@@ -5,11 +5,13 @@
 }
 
 .map__container {
+  display: flex;
+  flex-flow: column nowrap;
   flex-grow: 1;
 }
 
 .map {
-  height: 100%;
+  flex-grow: 1;
   width: 100vw;
 
   .map__marker {
