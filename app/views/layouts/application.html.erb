@@ -14,8 +14,8 @@
   <%= render partial: 'partials/analytics' %>
 </head>
 <body>
-<%= render partial: 'partials/header.html.erb', locals: { is_minimal: @minimal_header } %>
+<%= render partial: 'partials/header.html.erb' %>
 <%= yield %>
-<%= render partial: 'partials/footer.html.erb' unless @hide_footer %>
+<%= render partial: 'partials/footer.html.erb' %>
 </body>
 </html>
