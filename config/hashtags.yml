@@ -132,7 +132,7 @@ instagram:
     - livemusicphotography
     - musicphotographer
   districtofcolumbia:
-    _ dc_spc
+    - dc_spc
     - dcfocused
     - dcitystyle
     - dclife
