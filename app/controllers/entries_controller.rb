@@ -9,7 +9,7 @@ class EntriesController < ApplicationController
   before_action :set_entry_max_age, only: [:show, :preview, :photo, :amp, :related]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
-  before_action :preload_photos, only: [:show]
+  before_action :preload_photos, only: [:show, :preview]
 
   layout 'amp', only: :amp
 
