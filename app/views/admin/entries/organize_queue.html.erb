@@ -2,7 +2,7 @@
   has-navbar-fixed-bottom
 <% end %>
 
-<div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_update_path %>" data-queue-has-published-today="<%= Entry.queue_has_published_today? %>">
+<div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_update_path %>" data-queue-entries-published-per-day="<%= Entry.entries_published_per_day %>" data-queue-entries-published-today="<%= Entry.published_today.count %>">
   <h1 class="title is-size-5-mobile">Organize queue</h1>
   <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
   <hr class="hr">

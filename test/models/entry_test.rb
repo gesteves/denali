@@ -261,9 +261,9 @@ class EntryTest < ActiveSupport::TestCase
   end
 
   test 'checking if the queue has published today' do
-    assert_not Entry.queue_has_published_today?
+    assert_equal Entry.published_today.count, 0
     entry = entries(:panda)
     entry.publish
-    assert Entry.queue_has_published_today?
+    assert_equal Entry.published_today.count, 1
   end
 end
