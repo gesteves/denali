@@ -116,10 +116,6 @@ class Entry < ApplicationRecord
     self.search(search)
   end
 
-  def self.queue_has_published_today?
-    published.first.published_at.in_time_zone(Rails.application.config.time_zone).beginning_of_day == Time.now.in_time_zone(Rails.application.config.time_zone).beginning_of_day
-  end
-
   def self.published_today
     published.where('published_at >= ? and published_at <= ?', Time.now.in_time_zone(Rails.application.config.time_zone).beginning_of_day, Time.now.in_time_zone(Rails.application.config.time_zone).end_of_day)
   end
