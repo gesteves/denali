@@ -46,7 +46,7 @@ class Photo < ApplicationRecord
     quality = variant['quality']
     square = variant['square'].present?
     widths = variant['srcset'].uniq.sort.reject { |width| max_width.present? && width > max_width }
-    src_width = widths.last
+    src_width = widths.first
     if square
       opts[:fit] = 'crop'
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
