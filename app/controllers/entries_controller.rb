@@ -2,7 +2,7 @@ class EntriesController < ApplicationController
   include TagList
 
   skip_before_action :verify_authenticity_token
-  skip_before_action :set_link_headers, only: [:amp, :show]
+  skip_before_action :set_link_headers, only: [:amp, :show, :preview]
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search]
