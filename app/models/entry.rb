@@ -125,7 +125,7 @@ class Entry < ApplicationRecord
   end
 
   def self.entries_published_per_day
-    ENV.fetch('entries_published_per_day') { 2 }
+    ENV['entries_published_per_day']&.to_i || 1
   end
 
   def is_photo?
