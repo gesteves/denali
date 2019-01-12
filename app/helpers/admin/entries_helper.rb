@@ -1,7 +1,7 @@
 module Admin::EntriesHelper
   def new_queue_date
-    last_in_queue = Entry.queued.last&.publish_date_for_queued || Time.now
-    last_in_queue + 1.day
+    days = ((Entry.queued.last.position + Entry.published_today.count)/Entry.entries_published_per_day).floor
+    Time.now.in_time_zone(Rails.application.config.time_zone) + days.days
   end
 
   def share_markdown(entry)

@@ -120,6 +120,14 @@ class Entry < ApplicationRecord
     published.first.published_at.in_time_zone(Rails.application.config.time_zone).beginning_of_day == Time.now.in_time_zone(Rails.application.config.time_zone).beginning_of_day
   end
 
+  def self.published_today
+    published.where('published_at >= ? and published_at <= ?', Time.now.in_time_zone(Rails.application.config.time_zone).beginning_of_day, Time.now.in_time_zone(Rails.application.config.time_zone).end_of_day)
+  end
+
+  def self.entries_published_per_day
+    ENV.fetch('entries_published_per_day') { 2 }
+  end
+
   def is_photo?
     !self.photos_count.blank? && self.photos_count > 0
   end
@@ -188,11 +196,7 @@ class Entry < ApplicationRecord
   end
 
   def publish_date_for_queued
-    days = if Entry.queue_has_published_today?
-      self.position
-    else
-      self.position - 1
-    end
+    days = ((self.position - 1 + Entry.published_today.count)/Entry.entries_published_per_day).floor
     Time.now.in_time_zone(Rails.application.config.time_zone) + days.days
   end
 

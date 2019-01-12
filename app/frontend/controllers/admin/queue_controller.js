@@ -14,7 +14,8 @@ export default class extends Controller {
   connect () {
     // Grab the CSRF token from the document head so we can send it in Fetch requests
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
-    this.queueHasPublishedToday = this.data.get('has-published-today') === 'true';
+    this.entriesPublishedToday = parseInt(this.data.get('entries-published-today'), 10);
+    this.entriesPublishedPerDay = parseInt(this.data.get('entries-published-per-day'), 10);
     this.sortableQueue = new Sortable(this.containerTarget, {
       draggable: '.draggable-handle',
       delay: 100,
@@ -75,7 +76,7 @@ export default class extends Controller {
     this.cardTargets.filter(card => !card.classList.contains('draggable-mirror')).forEach((card, i) => {
       const originalPosition = parseInt(card.getAttribute('data-entry-position-original'), 10);
       const position = i + 1;
-      const days = this.queueHasPublishedToday ? position : position - 1;
+      const days = Math.floor((position - 1 + this.entriesPublishedToday)/this.entriesPublishedPerDay);
       card.setAttribute('data-entry-position', position);
       card.querySelector('[data-timestamp]').innerHTML = moment().add(days, 'days').format('dddd, MMMM D, YYYY');
       if (position !== originalPosition) {
