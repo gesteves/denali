@@ -89,6 +89,8 @@ class ApplicationController < ActionController::Base
     links = [response.headers['Link']]
     link = "<#{url}>; rel=preload; as=#{opts[:as]}"
     link += "; crossorigin=#{opts[:crossorigin]}" if opts[:crossorigin].present?
+    link += "; imagesizes=\"#{opts[:imagesizes]}\"" if opts[:imagesizes].present?
+    link += "; imagesrcset=\"#{opts[:imagesrcset]}\"" if opts[:imagesrcset].present?
     links << link
     response.headers['Link'] = links.compact.join(', ')
   end

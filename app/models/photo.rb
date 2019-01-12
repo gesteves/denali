@@ -22,6 +22,10 @@ class Photo < ApplicationRecord
     order('taken_at ASC').limit(1)&.first
   end
 
+  def self.sizes(key)
+    PHOTOS[key]['sizes'].join(', ')
+  end
+
   def url(opts = {})
     opts.reverse_merge!(w: 1200, square: false)
     if opts[:square]
@@ -35,13 +39,13 @@ class Photo < ApplicationRecord
     Ix.path(self.image.key).to_url(opts.reject { |k,v| v.blank? })
   end
 
-  def srcset(widths, opts = {})
-    opts.reverse_merge!(square: false)
-    square = opts[:square]
-    opts.delete(:square)
+  def srcset(key, opts = {})
     s3_key = self.image.key
     max_width = self.width
-    widths = widths.uniq.sort.reject { |width| max_width.present? && width > max_width }
+    variant = PHOTOS[key]
+    quality = variant['quality']
+    square = variant['square'].present?
+    widths = variant['srcset'].uniq.sort.reject { |width| max_width.present? && width > max_width }
     src_width = widths.last
     if square
       opts[:fit] = 'crop'

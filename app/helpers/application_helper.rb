@@ -1,21 +1,21 @@
 module ApplicationHelper
 
   def responsive_image_tag(photo, photo_key, html_options = {})
-    src, srcset = get_srcset(photo, photo_key)
+    src, srcset = photo.srcset(photo_key)
     html_options.reverse_merge!({
       srcset: srcset,
       src: src,
-      sizes: get_sizes(photo_key)
+      sizes: Photo.sizes(photo_key)
     })
     content_tag :img, nil, html_options
   end
 
   def amp_image_tag(photo, photo_key, html_options = {})
-    src, srcset = get_srcset(photo, photo_key)
+    src, srcset = photo.srcset(photo_key)
     html_options.reverse_merge!({
       srcset: srcset,
       src: src,
-      sizes: get_sizes(photo_key),
+      sizes: Photo.sizes(photo_key),
       width: photo.width,
       height: photo.height,
       layout: 'responsive'
@@ -24,8 +24,8 @@ module ApplicationHelper
   end
 
   def lazy_responsive_image_tag(photo, photo_key, html_options = {})
-    src, srcset = get_srcset(photo, photo_key)
-    sizes = get_sizes(photo_key)
+    src, srcset = photo.srcset(photo_key)
+    sizes = Photo.sizes(photo_key)
 
     lazy_img = content_tag(:img, nil, html_options.merge({
       'data-srcset': srcset,
@@ -44,17 +44,6 @@ module ApplicationHelper
     end
 
     lazy_img + noscript
-  end
-
-  def get_srcset(photo, photo_key)
-    variant = PHOTOS[photo_key]
-    quality = variant['quality']
-    square = variant['square'].present?
-    photo.srcset(variant['srcset'], { q: quality, square: square })
-  end
-
-  def get_sizes(photo_key)
-    PHOTOS[photo_key]['sizes'].join(', ')
   end
 
   def inline_svg(icon, svg_class = "icon")

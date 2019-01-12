@@ -2,12 +2,14 @@ class EntriesController < ApplicationController
   include TagList
 
   skip_before_action :verify_authenticity_token
-  skip_before_action :set_link_headers, only: [:amp]
+  skip_before_action :set_link_headers, only: [:amp, :show]
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search]
   before_action :set_entry_max_age, only: [:show, :preview, :photo, :amp, :related]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
+  before_action :set_entry, only: [:show, :amp]
+  before_action :preload_photos, only: [:show]
 
   layout 'amp', only: :amp
 
@@ -73,7 +75,6 @@ class EntriesController < ApplicationController
   end
 
   def show
-    @entry = @photoblog.entries.published.find(params[:id])
     if stale?(@entry, public: true)
       respond_to do |format|
         format.html {
@@ -87,7 +88,6 @@ class EntriesController < ApplicationController
 
   def amp
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.published.find(params[:id])
       respond_to do |format|
         format.html {
           redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
@@ -220,5 +220,17 @@ class EntriesController < ApplicationController
 
   def set_sitemap_entry_count
     @entries_per_sitemap = 100
+  end
+
+  def set_entry
+    @entry = @photoblog.entries.published.find(params[:id])
+  end
+
+  def preload_photos
+    sizes = Photo.sizes('entry')
+    @entry.photos.each do |photo|
+      src, srcset = photo.srcset('entry')
+      add_preload_link_header(src, as: 'image', imagesizes: sizes, imagesrcset: srcset)
+    end
   end
 end
