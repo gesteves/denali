@@ -29,6 +29,11 @@ instagram:
     - nightskyphotography
     - starphotography
     - starscape
+  baltimore:
+    - baltimore
+    - bmore
+    - charmcity
+    - baltimoremd
   birds:
     - birdlove
     - birds
@@ -38,6 +43,9 @@ instagram:
     - featheredfriends
     - ornithology
     - wildbirds
+  bison:
+    - bison
+    - americanbison
   blackandwhite:
     - bandw
     - blackandwhite
@@ -174,18 +182,6 @@ instagram:
     - fujilove
     - fujix
     - fujixseries
-  fujifilmxt2:
-    - fujifilmxt2
-    - fujixt2
-  fujifilmxt3:
-    - fujifilmxt3
-    - fujixt3
-  fujifilmxh1:
-    - fujifilmxh1
-    - fujixh1
-  fujifilmx100f:
-    - fujifilmx100f
-    - fujix100f
   landscapes:
     - igersnature
     - landscape
@@ -199,9 +195,6 @@ instagram:
     - landscapephotographer
     - landscapephotography
     - landscapes
-    - lovelandscape
-    - naturelandscape
-    - naturephotography
   lasvegas:
     - lasvegasstrip
     - sincity
@@ -246,6 +239,8 @@ instagram:
     - mexicomagico
     - mexicomaravilloso
     - vivamexico
+  moose:
+    - moose
   nationalairandspacemuseum:
     - airandspace
   nationalelkrefuge:
@@ -291,13 +286,10 @@ instagram:
     - icapture_nyc
     - igersnyc
     - ilovenyc
-    - newyork
     - newyork_ig
     - newyork_instagram
-    - newyorkcity
     - newyorkinstagram
     - newyorkphoto
-    - nyc
     - nycityworld
     - nycspc
     - nyloveyou
@@ -367,11 +359,6 @@ instagram:
     - streetphotography
     - streetphotography_bw
     - streetphotographyinternational
-    - streetphotographymagazine
-    - streets
-    - streetselect
-    - streetshooter
-    - streetshot
     - thestreetphotographyhub
   tennessee:
     - instagramtennessee
@@ -389,16 +376,9 @@ instagram:
     - bbcearth
     - instawildlife
     - natgeowild
-    - naturegrampixels
     - wildlife
-    - wildlifeig
-    - wildlifeofinstagram
     - wildlifephotographer
     - wildlifephotography
-    - wildlifepics
-    - wildlifeshots
-    - wildlifeshots
-    - wildplanet
   wyoming:
     - discover_wyoming
     - explorewyoming
