@@ -117,11 +117,7 @@ class Entry < ApplicationRecord
   end
 
   def self.published_today
-    published.where('published_at >= ? and published_at <= ?', Time.now.in_time_zone(Rails.application.config.time_zone).beginning_of_day, Time.now.in_time_zone(Rails.application.config.time_zone).end_of_day)
-  end
-
-  def self.entries_published_per_day
-    ENV['entries_published_per_day']&.to_i || 1
+    where('published_at >= ? and published_at <= ?', Time.current.beginning_of_day, Time.current.end_of_day)
   end
 
   def is_photo?
@@ -192,8 +188,12 @@ class Entry < ApplicationRecord
   end
 
   def publish_date_for_queued
-    days = ((self.position - 1 + Entry.published_today.count)/Entry.entries_published_per_day).floor
-    Time.now.in_time_zone(Rails.application.config.time_zone) + days.days
+    days = if self.blog.queued_entries_published_per_day == 0
+      0
+    else
+      ((self.position - 1 + self.blog.entries.published_today.count)/self.blog.queued_entries_published_per_day).floor
+    end
+    Time.current + days.days
   end
 
   def related(count = 12)
@@ -386,7 +386,7 @@ class Entry < ApplicationRecord
 
   def set_published_date
     if self.is_published? && self.published_at.nil?
-      time = Time.now
+      time = Time.current
       self.published_at = time
       self.modified_at  = time
     end
@@ -402,7 +402,7 @@ class Entry < ApplicationRecord
 
   def set_preview_hash
     sha256 = Digest::SHA256.new
-    self.preview_hash = sha256.hexdigest(Time.now.to_i.to_s)
+    self.preview_hash = sha256.hexdigest(Time.current.to_i.to_s)
   end
 
   def related_query(count = 12)

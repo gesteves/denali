@@ -124,7 +124,7 @@ class Admin::EntriesController < AdminController
   # PATCH/PUT /admin/entries/1
   def update
     respond_to do |format|
-      @entry.modified_at = Time.now if @entry.is_published?
+      @entry.modified_at = Time.current if @entry.is_published?
       if @entry.update(entry_params)
         enqueue_photo_jobs
         enqueue_cache_jobs

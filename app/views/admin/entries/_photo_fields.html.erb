@@ -1,5 +1,5 @@
 <%= fields_for :entry, @entry do |f| %>
-  <%= f.fields_for :photos, child_index: "#{(Time.now.to_f * 1000).to_i}#{i}" do |p| %>
+  <%= f.fields_for :photos, child_index: "#{(Time.current.to_f * 1000).to_i}#{i}" do |p| %>
     <div class="draggable-source" data-controller="photo-form" data-photo-form-empty="1">
       <div class="card" data-target="photo-form.fields">
         <div class="card-content">

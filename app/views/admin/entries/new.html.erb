@@ -53,7 +53,7 @@
             <%= f.hidden_field :status, value: 'queued', 'data-target': 'radio-tab.field' %>
           </div>
         </div>
-        <p class="help">If queued, the entry will be published on <%= new_queue_date.strftime('%A, %B %-d, %Y') %>.</p>
+        <p class="help">If queued, the entry will be published on <%= @photoblog.publish_date_for_new_queued_post.strftime('%A, %B %-d, %Y') %>.</p>
       </div>
     </div>
   </div>

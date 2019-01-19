@@ -1,7 +1,7 @@
 <% cache @photoblog do %>
   <footer class="footer" role="contentinfo">
     <p>
-        &copy; <%= Photo.oldest&.taken_at&.strftime('%Y') %>-<%= Time.now.strftime('%Y') %> <%= sanitize @photoblog.copyright %>
+        &copy; <%= Photo.oldest&.taken_at&.strftime('%Y') %>-<%= Time.current.strftime('%Y') %> <%= sanitize @photoblog.copyright %>
       <span class="footer__links">
         <%= link_to 'Home', root_url %> ·
         <%= link_to 'About', about_url %> ·
