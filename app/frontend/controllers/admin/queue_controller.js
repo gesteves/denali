@@ -77,14 +77,15 @@ export default class extends Controller {
     this.cardTargets.filter(card => !card.classList.contains('draggable-mirror')).forEach((card, i) => {
       const originalPosition = parseInt(card.getAttribute('data-entry-position-original'), 10);
       const position = i + 1;
-      let days;
+      let publish_date;
       if (this.entriesPublishedPerDay === 0) {
-        days = 0;
+        publish_date = 'N/A';
       } else {
-        days = Math.floor((position - 1 + this.entriesPublishedToday)/this.entriesPublishedPerDay);
+        const days = Math.floor((position - 1 + this.entriesPublishedToday)/this.entriesPublishedPerDay);
+        publish_date = moment().tz(this.timeZone).add(days, 'days').format('dddd, MMMM D, YYYY');
       }
       card.setAttribute('data-entry-position', position);
-      card.querySelector('[data-timestamp]').innerHTML = moment().tz(this.timeZone).add(days, 'days').format('dddd, MMMM D, YYYY');
+      card.querySelector('[data-timestamp]').innerHTML = publish_date;
       if (position !== originalPosition) {
         this.showButtons();
       }

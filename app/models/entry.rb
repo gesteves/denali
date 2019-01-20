@@ -188,12 +188,12 @@ class Entry < ApplicationRecord
   end
 
   def publish_date_for_queued
-    days = if self.blog.queued_entries_published_per_day == 0
-      0
+    if self.blog.queued_entries_published_per_day == 0
+      nil
     else
-      ((self.position - 1 + self.blog.entries.published_today.count)/self.blog.queued_entries_published_per_day).floor
+      days = ((self.position - 1 + self.blog.entries.published_today.count)/self.blog.queued_entries_published_per_day).floor
+      Time.current + days.days
     end
-    Time.current + days.days
   end
 
   def related(count = 12)

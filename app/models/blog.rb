@@ -49,12 +49,12 @@ class Blog < ApplicationRecord
   end
 
   def publish_date_for_new_queued_post
-    days = if self.queued_entries_published_per_day == 0
-      0
+    if self.queued_entries_published_per_day == 0
+      nil
     else
-      ((self.entries.queued.last.position + self.entries.published_today.count)/self.queued_entries_published_per_day).floor
+      days = ((self.entries.queued.last.position + self.entries.published_today.count)/self.queued_entries_published_per_day).floor
+      Time.current + days.days
     end
-    Time.current + days.days
   end
 
   def publish_queued_entry!
