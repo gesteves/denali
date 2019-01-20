@@ -7,7 +7,7 @@
         <% if @photoblog.queued_entries_published_per_day == 0 %>
           <h2 class="subtitle is-size-6-mobile">Publishing is paused</h2>
         <% else %>
-          <h2 class="subtitle is-size-6-mobile">Publishing <%= pluralize_with_delimiter 'entry', @photoblog.queued_entries_published_per_day %> per day</h2>
+          <h2 class="subtitle is-size-6-mobile">Publishing <%= pluralize_with_delimiter 'time', @photoblog.queued_entries_published_per_day %> a day</h2>
         <% end %>
       </div>
     </div>
