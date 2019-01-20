@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_19_192516) do
+ActiveRecord::Schema.define(version: 2019_01_20_202203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 2019_01_19_192516) do
     t.string "flickr"
     t.string "facebook"
     t.integer "publish_schedules_count"
+    t.string "time_zone", default: "UTC"
   end
 
   create_table "cameras", force: :cascade do |t|

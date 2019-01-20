@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :set_app_version
   before_action :set_link_headers
   before_action :set_referrer_policy
+  around_action :set_time_zone
 
   helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preload_link_header, :add_preconnect_link_header
 
@@ -113,5 +114,9 @@ class ApplicationController < ActionController::Base
 
   def set_referrer_policy
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+  end
+
+  def set_time_zone(&block)
+    Time.use_zone(@photoblog.time_zone, &block)
   end
 end

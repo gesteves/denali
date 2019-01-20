@@ -45,7 +45,7 @@
         <%= f.submit 'Add to schedule', class: 'button', data: { confirm: 'Are you sure you want to add another publishing time?' } %>
       </div>
     </div>
-    <p class="help">The current time zone is <%= Rails.application.config.time_zone %>.</p>
+    <p class="help">The current time zone is <%= Time.zone.name %>.</p>
   <% end %>
 
   <% if @schedules.present? %>

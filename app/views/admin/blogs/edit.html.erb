@@ -299,6 +299,21 @@
     </div>
   </div>
 
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :time_zone, 'Time zone', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field is-narrow">
+        <div class="control">
+          <div class="select is-fullwidth">
+            <%= f.time_zone_select :time_zone %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <hr class="hr">
 
   <div class="field is-horizontal">
