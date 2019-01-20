@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     get '/entries/share'              => 'entries#share'
     get '/entries/queued/organize'    => 'entries#organize_queue'
     post '/entries/queued/update'     => 'entries#update_queue'
+    get '/entries/queued/schedule'    => 'publish_schedules#index'
     get '/equipment'                  => 'equipment#index'
     get '/map'                        => 'maps#index', :as => :map
     get '/map/photos.:format'         => 'maps#photos', :as => :map_markers
@@ -51,7 +52,7 @@ Rails.application.routes.draw do
     resources :lenses, only: [:edit, :update]
     resources :films, only: [:edit, :update]
     resources :blogs, only: [:edit, :update]
-    resources :publish_schedules, only: [:index, :create, :destroy]
+    resources :publish_schedules, only: [:create, :destroy]
   end
 
 
