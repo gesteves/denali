@@ -2,7 +2,7 @@
   has-navbar-fixed-bottom
 <% end %>
 
-<div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_update_path %>" data-queue-entries-published-per-day="<%= @photoblog.queued_entries_published_per_day %>" data-queue-entries-published-today="<%= @photoblog.entries.published_today.count %>">
+<div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_update_path %>" data-queue-entries-published-per-day="<%= @photoblog.queued_entries_published_per_day %>" data-queue-entries-published-today="<%= @photoblog.entries.published_today.count %>" data-queue-time-zone="<%= Time.zone.tzinfo.name %>">
   <div class="level is-mobile">
     <div class="level-left">
       <div>

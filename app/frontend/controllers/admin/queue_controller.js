@@ -2,7 +2,7 @@ import { Controller } from 'stimulus';
 import { fetchStatus, fetchJson, sendNotification } from '../../lib/utils';
 import { Sortable } from '@shopify/draggable';
 import $ from 'jquery';
-import moment from 'moment';
+import moment from 'moment-timezone';
 
 /**
  * Controls the sorting of the queue.
@@ -16,6 +16,7 @@ export default class extends Controller {
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
     this.entriesPublishedToday = parseInt(this.data.get('entries-published-today'), 10);
     this.entriesPublishedPerDay = parseInt(this.data.get('entries-published-per-day'), 10);
+    this.timeZone = this.data.get('time-zone');
     this.sortableQueue = new Sortable(this.containerTarget, {
       draggable: '.draggable-handle',
       delay: 100,
@@ -80,10 +81,10 @@ export default class extends Controller {
       if (this.entriesPublishedPerDay === 0) {
         days = 0;
       } else {
-        days = Math.floor((position - 1 + this.entriesPublishedToday)/this.entriesPublishedPerDay)
+        days = Math.floor((position - 1 + this.entriesPublishedToday)/this.entriesPublishedPerDay);
       }
       card.setAttribute('data-entry-position', position);
-      card.querySelector('[data-timestamp]').innerHTML = moment().add(days, 'days').format('dddd, MMMM D, YYYY');
+      card.querySelector('[data-timestamp]').innerHTML = moment().tz(this.timeZone).add(days, 'days').format('dddd, MMMM D, YYYY');
       if (position !== originalPosition) {
         this.showButtons();
       }
