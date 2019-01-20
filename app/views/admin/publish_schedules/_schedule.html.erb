@@ -1,0 +1,8 @@
+<tr>
+<td><%= pretty_hour(schedule.hour) %></td>
+<td>
+  <div class="buttons is-pulled-right">
+    <%= link_to 'Delete', admin_publish_schedule_path(schedule.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete this?' }, class: 'button is-danger is-small' %>
+  </div>
+</td>
+</tr>
