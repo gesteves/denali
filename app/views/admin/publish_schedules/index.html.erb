@@ -34,7 +34,7 @@
   <hr class="hr">
 
   <%= form_for([:admin, @new_schedule]) do |f| %>
-    <% hours = ([*0..23] - @schedules.map(&:hour)).map { |h| [pretty_hour(h, true), h]} %>
+    <% hours = ([*0..23] - @schedules.map(&:hour)).map { |h| [pretty_hour(h), h]} %>
     <div class="field has-addons">
       <div class="control is-expanded">
         <div class="select is-fullwidth">
@@ -42,9 +42,10 @@
         </div>
       </div>
       <div class="control">
-        <%= f.submit 'Add to schedule', class: 'button' %>
+        <%= f.submit 'Add to schedule', class: 'button', data: { confirm: 'Are you sure you want to add another publishing time?' } %>
       </div>
     </div>
+    <p class="help">The current time zone is <%= Rails.application.config.time_zone %>.</p>
   <% end %>
 
   <% if @schedules.present? %>
@@ -53,7 +54,6 @@
       <thead>
         <tr>
         <th>Time</th>
-        <th>Time zone</th>
         <th class="has-text-right-desktop">Actions</th>
         </tr>
       </thead>
