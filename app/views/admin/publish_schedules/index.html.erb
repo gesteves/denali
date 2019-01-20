@@ -4,11 +4,17 @@
     <div class="level-left">
       <div>
         <h1 class="title is-size-5-mobile">Queue schedule</h1>
-        <% if @photoblog.queued_entries_published_per_day == 0 %>
-          <h2 class="subtitle is-size-6-mobile">Publishing is paused</h2>
-        <% else %>
-          <h2 class="subtitle is-size-6-mobile">Publishing <%= pluralize_with_delimiter 'time', @photoblog.queued_entries_published_per_day %> a day</h2>
-        <% end %>
+        <h2 class="subtitle is-size-6-mobile">
+          <% if @photoblog.queued_entries_published_per_day == 0 %>
+            Publishing is paused</h2>
+          <% elsif @photoblog.queued_entries_published_per_day == 1 %>
+            Publishing once a day
+          <% elsif @photoblog.queued_entries_published_per_day == 2 %>
+            Publishing twice a day
+          <% else %>
+            Publishing <%= pluralize_with_delimiter 'time', @photoblog.queued_entries_published_per_day %> a day
+          <% end %>
+        </h2>
       </div>
     </div>
     <div class="level-right">
