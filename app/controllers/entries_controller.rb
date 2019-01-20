@@ -19,7 +19,7 @@ class EntriesController < ApplicationController
       @page = (params[:page] || 1).to_i
       @count = @photoblog.posts_per_page
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
-      raise ActiveRecord::RecordNotFound if @entries.empty? && request.format != 'js'
+      raise ActiveRecord::RecordNotFound if @page > 1 && @entries.empty? && request.format != 'js'
       respond_to do |format|
         format.html
         format.json

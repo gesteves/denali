@@ -11,7 +11,7 @@
     <% if @photoblog.logo.attached? %>
       <meta property="og:image" content="<%= @photoblog.logo_url(w: 1200, h: 628, fm: 'png', pad: 50, fit: 'fill', bg: 'fff') %>">
     <% else %>
-      <meta property="og:image" content="<%= @entries.first.photos.first.url(w: 1200, h: 628) %>">
+      <meta property="og:image" content="<%= @entries.first&.photos&.first&.url(w: 1200, h: 628) %>">
     <% end %>
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="628">
