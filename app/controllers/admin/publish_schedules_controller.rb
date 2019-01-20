@@ -4,18 +4,21 @@ class Admin::PublishSchedulesController < AdminController
     @schedules = @photoblog.publish_schedules
     @page_title = 'Publish Schedules'
     @queued_entries = @photoblog.entries.queued.count
-    respond_to do |format|
-      format.html
-      format.js
-    end
-  end
-
-  def new
-
+    @new_schedule = PublishSchedule.new
   end
 
   def create
-
+    @schedule = PublishSchedule.new(schedule_params)
+    @schedule.blog = @photoblog
+    respond_to do |format|
+      if @schedule.save
+        flash[:success] = "Publishing schedule updated!"
+        format.html { redirect_to admin_publish_schedules_path }
+      else
+        flash[:warning] = 'The publishing schedule couldn’t be updated…'
+        format.html { render :index }
+      end
+    end
   end
 
   def destroy
@@ -23,13 +26,11 @@ class Admin::PublishSchedulesController < AdminController
     schedule.destroy
     respond_to do |format|
       format.html { redirect_to admin_publish_schedules_path }
-      format.json {
-        response = {
-          status: 'danger',
-          message: "The publish time has been deleted!"
-        }
-        render json: response
-      }
     end
+  end
+
+  private
+  def schedule_params
+    params.require(:publish_schedule).permit(:hour)
   end
 end
