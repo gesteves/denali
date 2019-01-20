@@ -2,15 +2,9 @@ namespace :queue do
   desc 'Publish the first entry in the queue'
   task :publish => [:environment] do
     photoblog = Blog.first
-    # Sometimes Heroku kicks off dupe scheduled jobs, publishing two posts by mistake
-    if photoblog.entries.published.first.published_at >= 10.minutes.ago
-      puts 'An entry was published less than 10 minutes ago!'
-    elsif photoblog.time_to_publish_queued_entry?
-      puts "Publishing queued entry..."
-      photoblog.publish_queued_entry!
-    else
-      puts "It's not time to publish a queued entry."
-    end
+    # Sometimes Heroku kicks off dupe scheduled jobs, publishing two posts by mistake,
+    # so only attempt to publish a queued entry if another one hasn't been published in the last 10 minutes
+    photoblog.publish_queued_entry! unless photoblog.entries.published.first.published_at >= 10.minutes.ago
   end
 
   desc 'Fix the positions of the items in the queue'
