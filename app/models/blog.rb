@@ -63,6 +63,6 @@ class Blog < ApplicationRecord
 
   def time_to_publish_queued_entry?
     current_time = Time.current
-    self.publish_schedules.where(weekday: current_time.wday, hour: current_time.hour).count > 0
+    self.publish_schedules.where(hour: current_time.hour).count > 0
   end
 end

@@ -159,7 +159,6 @@ ActiveRecord::Schema.define(version: 2019_01_19_192516) do
   end
 
   create_table "publish_schedules", force: :cascade do |t|
-    t.integer "weekday"
     t.integer "hour"
     t.bigint "blog_id"
     t.datetime "created_at", null: false

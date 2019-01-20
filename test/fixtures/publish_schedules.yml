@@ -1,11 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 sunday:
-  weekday: 0
   hour: 8
   blog: allencompassingtrip
 
 monday:
-  weekday: 1
   hour: 18
   blog: allencompassingtrip
