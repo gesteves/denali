@@ -5,7 +5,7 @@ class InstagramJob < BufferJob
     return if !entry.is_photo?
     text = entry.instagram_caption
     media = media_hash(entry.photos.first)
-    post_to_buffer('instagram', text, media)
+    post_to_buffer('instagram', text: text, media: media, scheduled_at: 2.hours.from_now.to_i)
   end
 
   private
