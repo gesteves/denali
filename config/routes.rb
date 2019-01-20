@@ -29,9 +29,7 @@ Rails.application.routes.draw do
         post 'instagram'
         post 'twitter'
         post 'facebook'
-        post 'pinterest'
         post 'flickr'
-        post 'tumblr'
         post 'flush_caches'
         post 'refresh_metadata'
       end
@@ -77,7 +75,6 @@ Rails.application.routes.draw do
   get '/sitemap/:page.:format'         => 'entries#sitemap', defaults: { format: 'xml' }, :as => :sitemap
 
   # Legacy routes & redirects
-  get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
   get '/archive(/:year)(/:month)',     to: redirect('/')
   get '/rss',                          to: redirect('/feed.atom')
   get '/service_worker.:format'        => 'errors#file_not_found'

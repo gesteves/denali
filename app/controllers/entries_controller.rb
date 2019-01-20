@@ -162,16 +162,6 @@ class EntriesController < ApplicationController
     end
   end
 
-  def tumblr
-    expires_in 1.year, public: true
-    @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').first
-    respond_to do |format|
-      format.html {
-        redirect_to @entry.present? ? @entry.permalink_url : root_url, status: 301
-      }
-    end
-  end
-
   def sitemap_index
     expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)

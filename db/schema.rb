@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_20_202203) do
+ActiveRecord::Schema.define(version: 2019_01_20_210517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,7 +47,6 @@ ActiveRecord::Schema.define(version: 2019_01_20_202203) do
     t.boolean "show_related_entries", default: true
     t.string "instagram"
     t.string "twitter"
-    t.string "tumblr"
     t.string "email"
     t.text "header_logo_svg"
     t.text "additional_meta_tags"
@@ -79,14 +78,11 @@ ActiveRecord::Schema.define(version: 2019_01_20_202203) do
     t.datetime "published_at"
     t.integer "photos_count"
     t.integer "position"
-    t.string "tumblr_id"
     t.boolean "post_to_twitter"
-    t.boolean "post_to_tumblr"
     t.string "tweet_text"
     t.boolean "post_to_facebook"
     t.boolean "post_to_flickr"
     t.boolean "show_in_map", default: true
-    t.boolean "post_to_pinterest"
     t.boolean "post_to_instagram"
     t.string "preview_hash"
     t.datetime "modified_at"
@@ -97,7 +93,6 @@ ActiveRecord::Schema.define(version: 2019_01_20_202203) do
     t.index ["published_at"], name: "index_entries_on_published_at"
     t.index ["show_in_map"], name: "index_entries_on_show_in_map"
     t.index ["status"], name: "index_entries_on_status"
-    t.index ["tumblr_id"], name: "index_entries_on_tumblr_id"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
 

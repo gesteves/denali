@@ -42,10 +42,6 @@ default: &default
   # Optional. Enables the map page.
   mapbox_api_token:
 
-  # Optional. Used for sharing on Pinterest.
-  pinterest_board_id:
-  pinterest_token:
-
   # Required.
   s3_bucket:
   s3_region:
@@ -58,13 +54,6 @@ default: &default
 
   # Optional. Enables notifications in Slack when new entries are published.
   slack_incoming_webhook:
-
-  # Optional. Enables sharing to Tumblr.
-  tumblr_access_token_secret:
-  tumblr_access_token:
-  tumblr_consumer_key:
-  tumblr_consumer_secret:
-  tumblr_domain:
 
   # Optional. Enables webfonts.
   typekit_id:
@@ -113,10 +102,6 @@ production:
   # Optional. Enables the map page.
   mapbox_api_token:
 
-  # Optional. Used for sharing on Pinterest.
-  pinterest_board_id:
-  pinterest_token:
-
   # Required. Make sure it's a different bucket than the one in default config, used for development.
   s3_bucket:
   s3_region:
@@ -129,13 +114,6 @@ production:
 
   # Optional. Enables notifications in Slack when new entries are published.
   slack_incoming_webhook:
-
-  # Optional. Enables sharing to Tumblr.
-  tumblr_access_token_secret:
-  tumblr_access_token:
-  tumblr_consumer_key:
-  tumblr_consumer_secret:
-  tumblr_domain:
 
   # Optional. Enables webfonts.
   typekit_id:

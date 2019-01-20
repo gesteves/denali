@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :share, :crops, :instagram, :facebook, :twitter, :pinterest, :flickr, :tumblr, :flush_caches, :refresh_metadata, :resize_photos]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :share, :crops, :instagram, :facebook, :twitter, :flickr, :flush_caches, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
@@ -263,36 +263,10 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def pinterest
-    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    PinterestJob.perform_later(@entry)
-    @message = 'Your entry was sent to Pinterest.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render :notify }
-    end
-  end
-
   def flickr
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     FlickrJob.perform_later(@entry)
     @message = 'Your entry was sent to Flickr.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render :notify }
-    end
-  end
-
-  def tumblr
-    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    TumblrJob.perform_later(@entry)
-    @message = 'Your entry was sent to your Tumblr queue.'
     respond_to do |format|
       format.html {
         flash[:success] = @message
@@ -352,7 +326,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_tumblr, :post_to_flickr, :post_to_instagram, :post_to_facebook, :post_to_pinterest, :tweet_text, :instagram_text, :show_in_map, :flush_caches, photos_attributes: [:image, :id, :_destroy, :position, :caption, :focal_x, :focal_y])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_flickr, :post_to_instagram, :post_to_facebook, :tweet_text, :instagram_text, :show_in_map, :flush_caches, photos_attributes: [:image, :id, :_destroy, :position, :caption, :focal_x, :focal_y])
     end
 
     def update_position

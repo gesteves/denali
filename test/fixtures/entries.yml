@@ -10,9 +10,7 @@ peppers:
   modified_at: 2012-02-11 21:00:00.000000
   show_in_map: true
   photos_count: 1
-  tumblr_id: 17444976847
   post_to_twitter: true
-  post_to_tumblr: true
   post_to_facebook: true
   post_to_flickr: true
   preview_hash: 2fe91153a0f6b165854a632f4c0a9d9c43f3a62321f8c6d3453ef758b6a4c815
@@ -37,10 +35,8 @@ panda:
   show_in_map: true
   photos_count: 1
   post_to_twitter: true
-  post_to_tumblr: true
   post_to_facebook: true
   post_to_flickr: true
-  post_to_pinterest: true
   post_to_instagram: true
   position: 1
   preview_hash: b3f0e6d43bc2f565ecec6ea5580f20165faefd589dfcc7829a1dbc2ee1228a7d
@@ -54,7 +50,6 @@ franklin:
   show_in_map: true
   photos_count: 1
   post_to_twitter: true
-  post_to_tumblr: true
   post_to_facebook: true
   post_to_flickr: true
   preview_hash: df529486130da31c5b5dafecdc5030b26078b433b49c3867428edcc339661aa2

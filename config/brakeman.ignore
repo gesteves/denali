@@ -47,7 +47,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 197,
+      "line": 187,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(\"#{Entry.published.first.permalink_url}.json\", :status => 302)",
       "render_path": null,
@@ -83,31 +83,11 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
-      "fingerprint": "73be32bde41489c75aea7009104078063ec5f8b4ed3c537744a4f3834602694f",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 170,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to((if Blog.first.entries.published.where(:tumblr_id => params[:tumblr_id]).order(\"published_at ASC\").first.present? then\n  Blog.first.entries.published.where(:tumblr_id => params[:tumblr_id]).order(\"published_at ASC\").first.permalink_url\nelse\n  root_url\nend), :status => 301)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "tumblr"
-      },
-      "user_input": "Blog.first.entries.published.where(:tumblr_id => params[:tumblr_id]).order(\"published_at ASC\").first.permalink_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
       "fingerprint": "80718f7e47bb33528060035f48ab67f8c595f32f392997a2624e03b6a666dcf0",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 198,
+      "line": 188,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Entry.published.first.permalink_url, :status => 302)",
       "render_path": null,
@@ -219,6 +199,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-01-12 14:01:05 -0700",
+  "updated": "2019-01-20 14:09:08 -0700",
   "brakeman_version": "4.3.1"
 }

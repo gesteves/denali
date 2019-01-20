@@ -49,7 +49,6 @@ gem 'resque'
 gem 'resque-scheduler'
 
 # Social Networks
-gem 'tumblr_client'
 gem 'flickraw'
 
 # Search

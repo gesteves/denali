@@ -98,14 +98,6 @@ class EntriesControllerTest < ActionController::TestCase
     assert_redirected_to entry.permalink_url
   end
 
-  test 'should redirect from tumblr url' do
-    get :tumblr, params: { tumblr_id: '17444976847' }
-    entry = entries(:peppers)
-    assert_not_nil assigns(:entry)
-    assert_equal assigns(:entry), entry
-    assert_redirected_to entry.permalink_url
-  end
-
   test 'should redirect from photo url' do
     photo = photos(:peppers)
     entry = entries(:peppers)

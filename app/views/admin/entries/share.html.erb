@@ -14,10 +14,8 @@
           <% end %>
           <%= link_to icon('Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Instagram queue in Buffer. Do you want to continue?' }, class: 'button' %>
           <% if @entry.is_published? %>
-            <%= link_to icon('Pinterest', 'fab fa-pinterest'), pinterest_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to Pinterest immediately. Do you want to continue?' }, class: 'button' %>
             <%= link_to icon('Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Twitter queue in Buffer. Do you want to continue?' }, class: 'button' %>
-            <%= link_to icon('Tumblr', 'fab fa-tumblr'), tumblr_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Tumblr queue. Do you want to continue?' }, class: 'button' %>
-          <% end %>  
+          <% end %>
       </div>
         <hr class="hr">
       <h2 class="subtitle is-size-6">Permalinks</h2>

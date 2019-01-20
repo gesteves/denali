@@ -147,60 +147,6 @@
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_pinterest, 'Share on Pinterest', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control">
-          <div class="tabs is-toggle is-small" data-controller="radio-tab">
-            <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
-                <a>
-                  Yes
-                </a>
-              </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
-                <a>
-                  No
-                </a>
-              </li>
-            </ul>
-            <%= f.hidden_field :post_to_pinterest, value: 'true', 'data-target': 'radio-tab.field' %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label">
-      <%= f.label :post_to_tumblr, 'Share on Tumblr', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control">
-          <div class="tabs is-toggle is-small" data-controller="radio-tab">
-            <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
-                <a>
-                  Yes
-                </a>
-              </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
-                <a>
-                  No
-                </a>
-              </li>
-            </ul>
-            <%= f.hidden_field :post_to_tumblr, value: 'true', 'data-target': 'radio-tab.field' %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label">
       <%= f.label :post_to_twitter, 'Share on Twitter', class: 'label' %>
     </div>
     <div class="field-body">

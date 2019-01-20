@@ -282,8 +282,6 @@ class Entry < ApplicationRecord
     FacebookJob.perform_later(self) if self.post_to_facebook
     FlickrJob.perform_later(self) if self.post_to_flickr
     InstagramJob.perform_later(self) if self.post_to_instagram
-    PinterestJob.perform_later(self) if self.post_to_pinterest
-    TumblrJob.perform_later(self) if self.post_to_tumblr
     TwitterJob.perform_later(self) if self.post_to_twitter
     true
   end
