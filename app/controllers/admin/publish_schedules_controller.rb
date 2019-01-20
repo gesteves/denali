@@ -2,7 +2,7 @@ class Admin::PublishSchedulesController < AdminController
 
   def index
     @schedules = @photoblog.publish_schedules
-    @page_title = 'Publish Schedules'
+    @page_title = 'Schedule'
     @queued_entries = @photoblog.entries.queued.count
     @new_schedule = PublishSchedule.new
   end
