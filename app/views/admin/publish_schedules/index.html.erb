@@ -1,0 +1,76 @@
+<% cache @photoblog do %>
+
+  <div class="level">
+    <div class="level-left">
+      <div>
+        <h1 class="title is-size-5-mobile">Schedule</h1>
+        <% if @photoblog.queued_entries_published_per_day == 0 %>
+          <h2 class="subtitle is-size-6-mobile">Publishing is paused</h2>
+        <% else %>
+          <h2 class="subtitle is-size-6-mobile">Publishing <%= pluralize_with_delimiter 'entry', @photoblog.queued_entries_published_per_day %> per day</h2>
+        <% end %>
+      </div>
+    </div>
+    <div class="level-right">
+      <% if @queued_entries > 0 %>
+        <div class="level-item">
+          <a href="<%= admin_entries_queued_organize_path %>" class="button is-small">
+            <span class="icon is-small">
+              <i class="fas fa-sort"></i>
+            </span>
+            <span>Organize</span>
+          </a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <hr class="hr">
+
+  <%= form_for([:admin, @new_schedule]) do |f| %>
+    <% hours = ([*0..23] - @schedules.map(&:hour)).map { |h| [pretty_hour(h, true), h]} %>
+    <div class="field has-addons">
+      <div class="control is-expanded">
+        <div class="select is-fullwidth">
+          <%= f.select :hour, options_for_select(hours) %>
+        </div>
+      </div>
+      <div class="control">
+        <%= f.submit 'Add to schedule', class: 'button' %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @schedules.present? %>
+    <hr class="hr">
+    <table class="table is-fullwidth is-hoverable is-striped">
+      <thead>
+        <tr>
+        <th>Time</th>
+        <th>Time zone</th>
+        <th class="has-text-right-desktop">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render partial: 'schedule', collection: @schedules %>
+      </tbody>
+    </table>
+  <% end %>
+
+  <nav class="navbar is-fixed-bottom has-shadow">
+    <div class="container">
+      <div class="navbar-menu is-active">
+        <div class="navbar-start">
+          <div class="navbar-item">
+            <a href="<%= queued_admin_entries_path %>" class="button is-small">
+              <span class="icon is-small">
+                <i class="fas fa-long-arrow-alt-left"></i>
+              </span>
+              <span>Go back</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+<% end %>

@@ -12,7 +12,7 @@ class CloudfrontInvalidationJob < ApplicationJob
           quantity: paths.size,
           items: paths,
         },
-        caller_reference: Time.now.to_i.to_s,
+        caller_reference: Time.current.to_i.to_s,
       },
     })
   end

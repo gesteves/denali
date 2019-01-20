@@ -47,7 +47,7 @@ class Admin::EntriesController < AdminController
     @page_title = 'New entry'
 
     previous_entry = @photoblog.entries.order('created_at DESC').first
-    if previous_entry.created_at >= 5.minutes.ago
+    if previous_entry.present? && previous_entry.created_at >= 5.minutes.ago
       @entry.title = previous_entry.title
       @entry.slug = previous_entry.slug
       @entry.tag_list = previous_entry.tag_list
@@ -124,7 +124,7 @@ class Admin::EntriesController < AdminController
   # PATCH/PUT /admin/entries/1
   def update
     respond_to do |format|
-      @entry.modified_at = Time.now if @entry.is_published?
+      @entry.modified_at = Time.current if @entry.is_published?
       if @entry.update(entry_params)
         enqueue_photo_jobs
         enqueue_cache_jobs

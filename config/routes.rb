@@ -51,6 +51,7 @@ Rails.application.routes.draw do
     resources :lenses, only: [:edit, :update]
     resources :films, only: [:edit, :update]
     resources :blogs, only: [:edit, :update]
+    resources :publish_schedules, only: [:index, :create, :destroy]
   end
 
 

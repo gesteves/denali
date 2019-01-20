@@ -225,16 +225,16 @@ class EntryTest < ActiveSupport::TestCase
     entry_3.save
 
     entry_1.move_lower
-    assert_equal entry_1.position, 2
+    assert_equal 2, entry_1.position
 
     entry_1.move_higher
-    assert_equal entry_1.position, 1
+    assert_equal 1, entry_1.position
 
     entry_1.move_to_bottom
-    assert_equal entry_1.position, 3
+    assert_equal 3, entry_1.position
 
     entry_1.move_to_top
-    assert_equal entry_1.position, 1
+    assert_equal 1, entry_1.position
   end
 
   test 'instagram hashtags should work' do

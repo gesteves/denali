@@ -4,7 +4,7 @@ class AmpCacheJob < ApplicationJob
     return if !Rails.env.production? || ENV['google_amp_cache_private_key_url'].blank?
     caches = get_cache_prefixes
 
-    timestamp = Time.now.to_i
+    timestamp = Time.current.to_i
     domain = ENV['domain']
     path = "/update-cache/c/s/#{domain}#{entry.amp_path}?amp_action=flush&amp_ts=#{timestamp}"
     signature = Base64.urlsafe_encode64(sign(path))

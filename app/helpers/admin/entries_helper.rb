@@ -1,8 +1,4 @@
 module Admin::EntriesHelper
-  def new_queue_date
-    days = ((Entry.queued.last.position + Entry.published_today.count)/Entry.entries_published_per_day).floor
-    Time.now.in_time_zone(Rails.application.config.time_zone) + days.days
-  end
 
   def share_markdown(entry)
     text = []
@@ -17,9 +13,9 @@ module Admin::EntriesHelper
     elsif entry.is_queued? && entry.position.present? && entry.id.present?
       "https://#{ENV['domain']}/#{entry.publish_date_for_queued.strftime('%Y')}/#{entry.publish_date_for_queued.strftime('%-m')}/#{entry.publish_date_for_queued.strftime('%-d')}/#{entry.id}/"
     elsif entry.id.present?
-      "https://#{ENV['domain']}/#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}/#{entry.id}/"
+      "https://#{ENV['domain']}/#{Time.current.strftime('%Y')}/#{Time.current.strftime('%-m')}/#{Time.current.strftime('%-d')}/#{entry.id}/"
     else
-      "https://#{ENV['domain']}/#{Time.now.strftime('%Y')}/#{Time.now.strftime('%-m')}/#{Time.now.strftime('%-d')}/1234/"
+      "https://#{ENV['domain']}/#{Time.current.strftime('%Y')}/#{Time.current.strftime('%-m')}/#{Time.current.strftime('%-d')}/1234/"
     end
   end
 end

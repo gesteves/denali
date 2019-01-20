@@ -14,7 +14,7 @@ namespace :cloudfront do
               quantity: quantity,
               items: paths,
             },
-            caller_reference: Time.now.to_i.to_s,
+            caller_reference: Time.current.to_i.to_s,
           },
         })
         puts "Invalidation request sent for the following #{quantity} paths: #{paths.join(', ')}"
@@ -33,7 +33,7 @@ namespace :cloudfront do
             quantity: quantity,
             items: paths,
           },
-          caller_reference: Time.now.to_i.to_s,
+          caller_reference: Time.current.to_i.to_s,
         },
       })
       puts "Invalidation request sent for the following #{quantity} paths: #{paths.join(', ')}"
@@ -48,7 +48,7 @@ namespace :cloudfront do
             quantity: quantity,
             items: paths,
           },
-          caller_reference: Time.now.to_i.to_s,
+          caller_reference: Time.current.to_i.to_s,
         },
       })
       puts "Invalidation request sent for the following #{quantity} paths: #{paths.join(', ')}"
@@ -62,7 +62,7 @@ namespace :cloudfront do
             quantity: quantity,
             items: paths,
           },
-          caller_reference: Time.now.to_i.to_s,
+          caller_reference: Time.current.to_i.to_s,
         },
       })
       puts "Invalidation request sent for the following #{quantity} paths: #{paths.join(', ')}"

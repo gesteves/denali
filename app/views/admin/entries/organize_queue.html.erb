@@ -2,9 +2,26 @@
   has-navbar-fixed-bottom
 <% end %>
 
-<div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_update_path %>" data-queue-entries-published-per-day="<%= Entry.entries_published_per_day %>" data-queue-entries-published-today="<%= Entry.published_today.count %>">
-  <h1 class="title is-size-5-mobile">Organize queue</h1>
-  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
+<div data-controller="queue" data-queue-endpoint="<%= admin_entries_queued_update_path %>" data-queue-entries-published-per-day="<%= @photoblog.queued_entries_published_per_day %>" data-queue-entries-published-today="<%= @photoblog.entries.published_today.count %>">
+  <div class="level">
+    <div class="level-left">
+      <div>
+        <h1 class="title is-size-5-mobile">Organize queue</h1>
+        <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', Entry.queued.count %></h2>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <a href="<%= admin_publish_schedules_path %>" class="button is-small">
+          <span class="icon is-small">
+            <i class="fas fa-clock"></i>
+          </span>
+          <span>Schedule</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
   <hr class="hr">
   <div class="is-clearfix" data-target="queue.container">
     <%= render partial: 'queue_item', collection: @entries, as: :entry %>

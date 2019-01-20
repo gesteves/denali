@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_21_181523) do
+ActiveRecord::Schema.define(version: 2019_01_19_192516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 2018_07_21_181523) do
     t.text "additional_meta_tags"
     t.string "flickr"
     t.string "facebook"
+    t.integer "publish_schedules_count"
   end
 
   create_table "cameras", force: :cascade do |t|
@@ -155,6 +156,14 @@ ActiveRecord::Schema.define(version: 2018_07_21_181523) do
     t.index ["latitude"], name: "index_photos_on_latitude"
     t.index ["lens_id"], name: "index_photos_on_lens_id"
     t.index ["longitude"], name: "index_photos_on_longitude"
+  end
+
+  create_table "publish_schedules", force: :cascade do |t|
+    t.integer "hour"
+    t.bigint "blog_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_id"], name: "index_publish_schedules_on_blog_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|
