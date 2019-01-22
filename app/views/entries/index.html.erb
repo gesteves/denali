@@ -3,7 +3,7 @@
     <% if @page > 1 %>
       <meta name="robots" content="noindex">
     <% end %>
-    <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta name="description" content="<%= sanitize @photoblog.meta_description %>">
     <link rel="canonical" href="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>">
 
     <meta property="og:title" content="<%= @photoblog.name %>">

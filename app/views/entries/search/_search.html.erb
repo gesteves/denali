@@ -1,6 +1,6 @@
 <% content_for :head do %>
   <% cache @photoblog do %>
-    <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta name="description" content="<%= sanitize @photoblog.meta_description %>">
     <link rel="canonical" href="<%= search_url %>">
 
     <meta property="og:title" content="<%= "Search · #{@photoblog.name}" %>">

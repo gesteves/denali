@@ -29,6 +29,6 @@ class Admin::BlogsController < AdminController
                                  :show_related_entries, :analytics_code,
                                  :instagram, :twitter, :email, :flickr,
                                  :header_logo_svg, :additional_meta_tags,
-                                 :favicon, :touch_icon, :logo, :facebook, :time_zone)
+                                 :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description)
   end
 end

@@ -80,6 +80,19 @@
     </div>
   </div>
 
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :meta_description, 'Meta description', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_area :meta_description, placeholder: 'Short description for search engines…', class: 'textarea' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <hr class="hr">
   <h2 class="subtitle is-size-5-mobile">Social & links</h2>
 
