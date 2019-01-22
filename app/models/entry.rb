@@ -188,10 +188,10 @@ class Entry < ApplicationRecord
   end
 
   def publish_date_for_queued
-    if self.blog.queued_entries_published_per_day == 0
+    if self.blog.publish_schedules_count == 0
       nil
     else
-      days = ((self.position - 1 + self.blog.entries.published_today.count)/self.blog.queued_entries_published_per_day).floor
+      days = ((self.position - 1 + self.blog.past_publish_schedules_today.count)/self.blog.publish_schedules_count).floor
       Time.current + days.days
     end
   end

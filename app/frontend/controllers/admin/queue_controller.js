@@ -14,8 +14,8 @@ export default class extends Controller {
   connect () {
     // Grab the CSRF token from the document head so we can send it in Fetch requests
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
-    this.entriesPublishedToday = parseInt(this.data.get('entries-published-today'), 10);
-    this.entriesPublishedPerDay = parseInt(this.data.get('entries-published-per-day'), 10);
+    this.pastPublishSchedulesToday = parseInt(this.data.get('past-publish-schedules-today'), 10);
+    this.publishSchedulesCount = parseInt(this.data.get('publish-schedules-count'), 10);
     this.timeZone = this.data.get('time-zone');
     this.sortableQueue = new Sortable(this.containerTarget, {
       draggable: '.draggable-handle',
@@ -78,10 +78,10 @@ export default class extends Controller {
       const originalPosition = parseInt(card.getAttribute('data-entry-position-original'), 10);
       const position = i + 1;
       let publish_date;
-      if (this.entriesPublishedPerDay === 0) {
+      if (this.publishSchedulesCount === 0) {
         publish_date = 'N/A';
       } else {
-        const days = Math.floor((position - 1 + this.entriesPublishedToday)/this.entriesPublishedPerDay);
+        const days = Math.floor((position - 1 + this.pastPublishSchedulesToday)/this.publishSchedulesCount);
         publish_date = moment().tz(this.timeZone).add(days, 'days').format('dddd, MMMM D, YYYY');
       }
       card.setAttribute('data-entry-position', position);

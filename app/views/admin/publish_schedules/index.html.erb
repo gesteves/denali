@@ -5,14 +5,14 @@
       <div>
         <h1 class="title is-size-5-mobile">Queue schedule</h1>
         <h2 class="subtitle is-size-6-mobile">
-          <% if @photoblog.queued_entries_published_per_day == 0 %>
+          <% if @photoblog.publish_schedules_count == 0 %>
             Publishing is paused</h2>
-          <% elsif @photoblog.queued_entries_published_per_day == 1 %>
+          <% elsif @photoblog.publish_schedules_count == 1 %>
             Publishing once a day
-          <% elsif @photoblog.queued_entries_published_per_day == 2 %>
+          <% elsif @photoblog.publish_schedules_count == 2 %>
             Publishing twice a day
           <% else %>
-            Publishing <%= pluralize_with_delimiter 'time', @photoblog.queued_entries_published_per_day %> a day
+            Publishing <%= pluralize_with_delimiter 'time', @photoblog.publish_schedules_count %> a day
           <% end %>
         </h2>
       </div>

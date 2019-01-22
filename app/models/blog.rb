@@ -44,15 +44,21 @@ class Blog < ApplicationRecord
     Rails.env.development? || ENV['ELASTICSEARCH_URL'].present?
   end
 
-  def queued_entries_published_per_day
-    self.publish_schedules_count || 0
+  def past_publish_schedules_today
+    current_time = Time.current.in_time_zone(self.time_zone)
+    self.publish_schedules.where('hour <= ?', current_time.hour)
+  end
+
+  def pending_publish_schedules_today
+    current_time = Time.current.in_time_zone(self.time_zone)
+    self.publish_schedules.where('hour > ?', current_time.hour)
   end
 
   def publish_date_for_new_queued_post
-    if self.queued_entries_published_per_day == 0
+    if self.publish_schedules_count == 0
       nil
     else
-      days = ((self.entries.queued.last.position + self.entries.published_today.count)/self.queued_entries_published_per_day).floor
+      days = ((self.entries.queued.last.position + self.past_publish_schedules_today.count)/self.publish_schedules_count).floor
       Time.current + days.days
     end
   end

@@ -11,9 +11,23 @@ class BlogTest < ActiveSupport::TestCase
     assert_not_equal initial_date, final_date
   end
 
-  test 'queued entries published per day' do
+  test 'check count publish scheduled' do
     blog = blogs(:allencompassingtrip)
-    assert_equal 2, blog.queued_entries_published_per_day
+
+    # Travel to 12:00 am
+    travel_to Time.zone.local(2019, 01, 19, 0, 0, 0)
+    assert_equal 0, blog.past_publish_schedules_today.count
+    assert_equal 2, blog.pending_publish_schedules_today.count
+
+    # Travel to 8:05 am
+    travel_to Time.zone.local(2019, 01, 19, 8, 5, 0)
+    assert_equal 1, blog.past_publish_schedules_today.count
+    assert_equal 1, blog.pending_publish_schedules_today.count
+
+    # Travel to 6:59 pm
+    travel_to Time.zone.local(2019, 01, 19, 18, 59, 0)
+    assert_equal 2, blog.past_publish_schedules_today.count
+    assert_equal 0, blog.pending_publish_schedules_today.count
   end
 
   test 'check time to publish scheduled entries' do
@@ -40,7 +54,7 @@ class BlogTest < ActiveSupport::TestCase
     entry.save
     entry.move_to_top
     queue_size = blog.entries.queued.count
-    assert_equal entry.position, 1
+    assert_equal 1, entry.position
 
     # Travel to 12:00 am
     travel_to Time.zone.local(2019, 01, 19, 0, 0, 0)
