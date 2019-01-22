@@ -7,14 +7,14 @@ class Blog < ApplicationRecord
   has_one_attached :touch_icon
   has_one_attached :logo
 
-  validates :name, :description, :about, presence: true
+  validates :name, :tag_line, :about, presence: true
 
-  def formatted_description
-    markdown_to_html(self.description)
+  def formatted_tag_line
+    markdown_to_html(self.tag_line)
   end
 
-  def plain_description
-    markdown_to_plaintext(self.description)
+  def plain_tag_line
+    markdown_to_plaintext(self.tag_line)
   end
 
   def formatted_about

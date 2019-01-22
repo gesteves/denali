@@ -14,7 +14,7 @@
     <% end %>
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="628">
-    <meta property="og:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta property="og:description" content="<%= sanitize @photoblog.tag_line %>">
     <meta property="og:url" content="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>">
     <meta property="og:type" content="Website">
     <meta property="og:site_name" content="<%= @photoblog.name %>">
@@ -26,7 +26,7 @@
     <% end %>
     <meta name="twitter:title" content="<%= @photoblog.name %>">
     <meta name="twitter:url" content="<%= @page == 1 ? entries_url(page: nil) : entries_url(page: @page) %>">
-    <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta name="twitter:description" content="<%= sanitize @photoblog.tag_line %>">
     <% if @photoblog.touch_icon.attached? %>
       <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
     <% end %>

@@ -6,7 +6,7 @@ cache @photoblog do
     xml.link rel: 'alternate', type: 'text/html', href: root_url
     xml.link rel: 'self', type: 'application/atom+xml', href: feed_url(format: 'atom')
     xml.updated @entries.map(&:modified_at).max.utc.strftime('%FT%TZ')
-    xml.description @photoblog.plain_description
+    xml.description @photoblog.plain_tag_line
     xml.tag! 'webfeeds:accentColor', '#BF0222'
     xml.tag! 'webfeeds:wordmark', @photoblog.logo_url(w: 192) if @photoblog.logo.attached?
     xml.tag! 'webfeeds:icon', @photoblog.touch_icon_url(w: 192) if @photoblog.touch_icon.attached?

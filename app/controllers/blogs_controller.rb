@@ -3,7 +3,7 @@ class BlogsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def about
-    @page_title = "About #{@photoblog.name} · #{@photoblog.description}"
+    @page_title = "About #{@photoblog.name} · #{@photoblog.tag_line}"
   end
 
   def manifest

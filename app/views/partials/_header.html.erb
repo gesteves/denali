@@ -1,7 +1,7 @@
 <% cache @photoblog do %>
   <header role="banner" class="header">
     <div class="header__section">
-      <p class="header__tagline"><%= sanitize @photoblog.description %></p>
+      <p class="header__tagline"><%= sanitize @photoblog.tag_line %></p>
     </div>
     <a href="/" class="header__link">
       <% if @photoblog.header_logo_svg.present? %>

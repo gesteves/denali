@@ -2,7 +2,7 @@
 
 allencompassingtrip:
   name: 'All-Encompassing Trip'
-  description: 'Photography by Guillermo Esteves'
+  tag_line: 'Photography by Guillermo Esteves'
   about: 'This is mah blog.'
   posts_per_page: 60
   copyright: 'Guillermo Esteves'

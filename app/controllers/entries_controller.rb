@@ -23,7 +23,7 @@ class EntriesController < ApplicationController
       respond_to do |format|
         format.html {
           if @page.nil? || @page == 1
-            @page_title = "#{@photoblog.name} · #{@photoblog.description}"
+            @page_title = "#{@photoblog.name} · #{@photoblog.tag_line}"
           else
             @page_title = "#{@photoblog.name} · Page #{@page}"
           end
@@ -92,7 +92,7 @@ class EntriesController < ApplicationController
     if stale?(@entry, public: true)
       respond_to do |format|
         format.html {
-          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.description}"
+          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
           redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
         }
         format.json
@@ -105,7 +105,7 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       respond_to do |format|
         format.html {
-          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.description}"
+          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
           redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
         }
       end
@@ -116,7 +116,7 @@ class EntriesController < ApplicationController
     if stale?(@entry, public: true)
       respond_to do |format|
         format.html {
-          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.description}"
+          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
           if @entry.is_published?
             redirect_to @entry.permalink_url
           else

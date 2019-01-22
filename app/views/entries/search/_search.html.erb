@@ -4,7 +4,7 @@
     <link rel="canonical" href="<%= search_url %>">
 
     <meta property="og:title" content="<%= "Search · #{@photoblog.name}" %>">
-    <meta property="og:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta property="og:description" content="<%= sanitize @photoblog.tag_line %>">
     <meta property="og:url" content="<%= search_url %>">
     <meta property="og:type" content="Website">
     <meta property="og:site_name" content="<%= @photoblog.name %>">
@@ -16,7 +16,7 @@
     <% end %>
     <meta name="twitter:title" content="<%= "Search · #{@photoblog.name}" %>">
     <meta name="twitter:url" content="<%= search_url %>">
-    <meta name="twitter:description" content="<%= Sanitize.fragment(@photoblog.description) %>">
+    <meta name="twitter:description" content="<%= sanitize @photoblog.tag_line %>">
     <meta name="twitter:card" content="summary">
   <% end %>
 <% end %>

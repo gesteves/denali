@@ -3,7 +3,7 @@ json.cache! @photoblog do
   json.title @photoblog.name
   json.home_page_url root_url
   json.feed_url feed_url(format: 'json')
-  json.description @photoblog.plain_description
+  json.description @photoblog.plain_tag_line
   json.icon @photoblog.touch_icon_url(w: 512) if @photoblog.touch_icon.attached?
   json.favicon @photoblog.favicon_url(w: 64) if @photoblog.favicon.attached?
   json.items @entries do |e|
