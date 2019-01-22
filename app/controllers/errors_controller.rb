@@ -22,7 +22,10 @@ class ErrorsController < ApplicationController
 
   def respond
     respond_to do |format|
-      format.html { render 'error', status: @errors.first[:status] }
+      format.html {
+        @page_title = "#{@errors.first[:message]} · #{@photoblog.name }"
+        render 'error', status: @errors.first[:status]
+      }
       format.json { render 'error', status: @errors.first[:status] }
       format.all { render plain: @errors.first[:message], status: @errors.first[:status] }
     end

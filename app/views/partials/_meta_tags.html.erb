@@ -13,4 +13,5 @@
     <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(w: 76) %>" sizes="76x76">
   <% end %>
   <link rel="manifest" href="<%= app_manifest_path %>">
+  <title><%= sanitize @page_title %></title>
 <% end %>

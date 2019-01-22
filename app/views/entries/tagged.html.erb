@@ -3,7 +3,6 @@
     <% if @page > 1 %>
       <meta name="robots" content="noindex">
     <% end %>
-    <title><%= sanitize "#{@tags.first.name} · #{@photoblog.name}" %><%= sanitize " · Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= number_with_delimiter @tags.first.taggings_count %> photos tagged “<%= @tags.first.name %>” on <%= @photoblog.name %>.">
     <link rel="canonical" href="<%= @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) %>">
 

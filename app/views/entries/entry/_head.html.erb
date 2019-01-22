@@ -9,7 +9,6 @@
   <% else %>
     <% meta_description = truncate(entry.plain_body, length: 200) %>
   <% end %>
-  <title><%= sanitize "#{entry.plain_title} · #{@photoblog.name}" %></title>
   <meta name="description" content="<%= meta_description %>">
 
   <%# Facebook meta tags %>

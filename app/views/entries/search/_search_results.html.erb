@@ -1,6 +1,5 @@
 <% content_for :head do %>
   <% cache [@photoblog, @query.parameterize, @page, @count, :head] do %>
-    <title><%= "Search results for “#{@query}” · #{@photoblog.name}" %><%= sanitize " · Page #{@page}" unless @page.nil? || @page == 1 %></title>
     <meta name="description" content="<%= Sanitize.fragment(@photoblog.description) %>">
     <link rel="canonical" href="<%=  search_url %>">
 

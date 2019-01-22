@@ -1,7 +1,3 @@
-<% content_for :head do %>
-  <title><%= @errors.first[:message] %> · <%= @photoblog.name %></title>
-<% end %>
-
 <% content_for :typekit do %>
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? %>
 <% end %>

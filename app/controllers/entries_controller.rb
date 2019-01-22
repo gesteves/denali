@@ -21,7 +21,13 @@ class EntriesController < ApplicationController
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if @page > 1 && @entries.empty? && request.format != 'js'
       respond_to do |format|
-        format.html
+        format.html {
+          if @page.nil? || @page == 1
+            @page_title = "#{@photoblog.name} · #{@photoblog.description}"
+          else
+            @page_title = "#{@photoblog.name} · Page #{@page}"
+          end
+        }
         format.json
         format.js { render status: @entries.empty? ? 404 : 200 }
         format.atom { redirect_to feed_url(format: 'atom'), status: 301 }
@@ -43,7 +49,10 @@ class EntriesController < ApplicationController
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
       raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
       respond_to do |format|
-        format.html
+        format.html {
+          @page_title = "#{@tags.first.name} · #{@photoblog.name}"
+          @page_title += " · Page #{@page}" unless @page.nil? || @page == 1
+        }
         format.json
         format.js { render status: @entries.empty? ? 404 : 200 }
         format.atom { redirect_to tag_feed_url(tag: @tag_slug, format: 'atom'), status: 301 }
@@ -68,6 +77,10 @@ class EntriesController < ApplicationController
       total_count = results.results.total
       records = results.records.includes(photos: [:image_attachment, :image_blob])
       @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
+      @page_title = "Search results for “#{@query}” · #{@photoblog.name}"
+      @page_title += " · Page #{@page}" unless @page.nil? || @page == 1
+    else
+      @page_title = "Search · #{@photoblog.name}"
     end
     respond_to do |format|
       format.html
@@ -79,6 +92,7 @@ class EntriesController < ApplicationController
     if stale?(@entry, public: true)
       respond_to do |format|
         format.html {
+          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.description}"
           redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
         }
         format.json
@@ -91,6 +105,7 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       respond_to do |format|
         format.html {
+          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.description}"
           redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
         }
       end
@@ -101,6 +116,7 @@ class EntriesController < ApplicationController
     if stale?(@entry, public: true)
       respond_to do |format|
         format.html {
+          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.description}"
           if @entry.is_published?
             redirect_to @entry.permalink_url
           else
