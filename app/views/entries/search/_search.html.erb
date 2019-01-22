@@ -1,5 +1,6 @@
 <% content_for :head do %>
   <% cache @photoblog do %>
+    <title><%= sanitize @page_title %></title>
     <meta name="description" content="<%= sanitize @photoblog.meta_description %>">
     <link rel="canonical" href="<%= search_url %>">
 
