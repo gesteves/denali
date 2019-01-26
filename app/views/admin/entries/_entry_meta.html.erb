@@ -1,0 +1,16 @@
+<% cache [@photoblog, entry] do %>
+  <p class="is-size-7 has-text-grey">
+    <% if entry.is_published? %>
+      <b class="has-text-success has-text-weight-bold"><%= icon('Published', 'fas fa-check-circle') %></b> on <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
+    <% elsif entry.is_queued? %>
+      <b class="has-text-info has-text-weight-bold"><%= icon('Queued', 'fas fa-clock') %></b>
+        <% if entry.publish_date_for_queued.present? %>
+          for <%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y') %>
+        <% else %>
+          but no publishing schedule is set
+        <% end %>
+    <% elsif entry.is_draft? %>
+      <b class="has-text-grey has-text-weight-bold"><%= icon('Draft', 'fas fa-pause-circle') %></b> &middot; Updated on <%= entry.updated_at.strftime('%A, %B %-d, %Y at %-l:%M %P') %>
+    <% end %>
+  </p>
+<% end %>
