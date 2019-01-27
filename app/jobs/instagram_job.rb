@@ -11,7 +11,7 @@ class InstagramJob < BufferJob
       if minutes == 0
         buffer_opts[:now] = true
       else
-        buffer_opts[:scheduled_at] = (Time.current + minutes.minutes).to_i
+        buffer_opts[:scheduled_at] = (Time.current + minutes.minutes).beginning_of_hour.to_i
       end
     end
     post_to_buffer('instagram', buffer_opts)
