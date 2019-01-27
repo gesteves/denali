@@ -5,7 +5,16 @@ class InstagramJob < BufferJob
     return if !entry.is_photo?
     text = entry.instagram_caption
     media = media_hash(entry.photos.first)
-    post_to_buffer('instagram', text: text, media: media)
+    buffer_opts = { text: text, media: media }
+    if ENV['instagram_delay_in_minutes'].present?
+      minutes = ENV['instagram_delay_in_minutes'].to_i
+      if minutes == 0
+        buffer_opts[:now] = true
+      else
+        buffer_opts[:scheduled_at] = (Time.current + minutes.minutes).to_i
+      end
+    end
+    post_to_buffer('instagram', buffer_opts)
   end
 
   private
