@@ -16,6 +16,14 @@ class BufferJob < ApplicationJob
     profile_ids = get_profile_ids(service)
     return if profile_ids.blank?
     opts.reverse_merge!(profile_ids: profile_ids, shorten: false, access_token: ENV['buffer_access_token'])
+    if ENV['buffer_delay_in_minutes'].present?
+      minutes = ENV['buffer_delay_in_minutes'].to_i
+      if minutes == 0
+        opts[:now] = true
+      else
+        opts[:scheduled_at] = (Time.current.beginning_of_hour + minutes.minutes).to_i
+      end
+    end
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
     if response.code >= 400
       logger.tagged('Social', 'Buffer') { logger.error response.body }
