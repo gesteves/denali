@@ -1,4 +1,4 @@
-<% cache [@photoblog, entry] do %>
+<% cache @photoblog do %>
   <p class="is-size-7 has-text-grey">
     <% if entry.is_published? %>
       <b class="has-text-success has-text-weight-bold"><%= icon('Published', 'fas fa-check-circle') %></b> on <%= entry.published_at.strftime('%A, %B %-d, %Y') %>
