@@ -432,6 +432,10 @@ class Entry < ApplicationRecord
           ]
         }
       },
+      sort: [
+        '_score',
+        { published_at: 'desc' }
+      ],
       size: count
     }
   end
