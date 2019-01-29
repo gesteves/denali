@@ -1,3 +1,4 @@
+require 'exifr/jpeg'
 class PhotoMetadataJob < ApplicationJob
   queue_as :default
 

@@ -1,5 +1,3 @@
-require 'exifr/jpeg'
-
 class Photo < ApplicationRecord
   include Formattable
 
