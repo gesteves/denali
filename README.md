@@ -29,3 +29,11 @@ A simple, fast photoblogging CMS built in Ruby on Rails which features responsiv
 * Automatic generation of Instagram hashtags, and image crops for feed and stories
 * Google AMP support
 * Did I mention it's fast as heck?
+
+## Requirements
+
+[TODO]
+
+## Installation & setup
+
+[TODO]
