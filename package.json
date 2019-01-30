@@ -5,7 +5,7 @@
   "main": "Gulpfile.js",
   "engines": {
     "node": "9.1.0",
-    "yarn": "1.9.4"
+    "yarn": "1.13.0"
   },
   "dependencies": {
     "@rails/webpacker": "^3.5.3",
