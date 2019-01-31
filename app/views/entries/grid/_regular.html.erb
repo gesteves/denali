@@ -1,7 +1,7 @@
 <% cache entry do %>
   <% photo = entry.photos.first %>
   <li class="entry-list__item" role="article">
-    <div class="entry-list__wrapper" style="<%= "#{intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}" %>">
+    <div class="entry-list__wrapper" style="<%= "--photo-width:#{photo.width};--photo-height:#{photo.height};#{gradient_colors(photo)}" %>">
       <%= render partial: 'entries/grid/figure.html.erb', locals: { entry: entry, photo: photo, variant: 'entry_list' } %>
     </div>
   </li>

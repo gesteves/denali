@@ -57,22 +57,10 @@ module ApplicationHelper
     render partial: "partials/svg/#{icon}.html.erb", locals: { svg_class: "#{svg_class} #{svg_class}--#{icon}" }
   end
 
-  def intrinsic_ratio_padding(photo)
-    return '' if photo.width.blank? || photo.height.blank?
-    padding = (photo.height.to_f/photo.width.to_f) * 100
-    "padding-top:#{padding}%".html_safe
-  end
-
-  def intrinsic_ratio_width(photo)
-    return '' if photo.width.blank? || photo.height.blank?
-    width = (photo.width.to_f/photo.height.to_f) * 100
-    "width:#{width}vh".html_safe
-  end
-
-  def image_placeholder(photo)
+  def gradient_colors(photo)
     return '' if photo.color_palette.blank?
-    palette = photo.color_palette.split(',').sample(2).join(',')
-    "background:linear-gradient(to bottom right, #{palette})".html_safe
+    palette = photo.color_palette.split(',').sample(2)
+    "--gradient-start-color:#{palette.first};--gradient-end-color:#{palette.last}".html_safe
   end
 
   def inline_asset(filename, opts = {})
