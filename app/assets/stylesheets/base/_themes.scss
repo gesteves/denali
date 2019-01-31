@@ -1,23 +1,23 @@
 :root {
-  --color-logo-fill        : #000;
-  --color-background       : #FFF;
+  --color-logo-fill        : black;
+  --color-background       : white;
   --color-text             : $color-gray-dark;
   --color-text-alt         : $color-gray-medium;
   --color-links            : $color-red;
   --color-border           : $color-gray-very-light;
-  --color-photo-hover      : rgba(0,0,0,0.75);
-  --color-photo-text       : #FFF;
-  --color-tooltip          : #000;
-  --color-tooltip-text     : #FFF;
+  --color-photo-hover      : transparentize(black, 0.25);
+  --color-photo-text       : white;
+  --color-tooltip          : black;
+  --color-tooltip-text     : white;
   --color-pagination-text  : $color-gray-light;
   --color-icon-fill        : $color-gray-light;
-  --color-input-background : #FFF;
+  --color-input-background : white;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-logo-fill        : #FFF;
-    --color-background       : #000;
+    --color-logo-fill        : white;
+    --color-background       : black;
     --color-border           : $color-gray-very-dark;
     --color-text             : $color-gray-very-light;
     --color-text-alt         : $color-gray-light;
