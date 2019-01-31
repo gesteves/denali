@@ -1,4 +1,5 @@
 :root {
+  --color-logo-fill        : #000;
   --color-background       : #FFF;
   --color-text             : $color-gray-dark;
   --color-text-alt         : $color-gray-medium;
@@ -11,4 +12,16 @@
   --color-tooltip-text     : #FFF;
   --color-pagination-text  : $color-gray-light;
   --color-icon-fill        : $color-gray-light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-logo-fill        : #FFF;
+    --color-background       : #000;
+    --color-border           : $color-gray-very-dark;
+    --color-text             : $color-gray-very-light;
+    --color-text-alt         : $color-gray-light;
+    --color-tooltip          : $color-gray-very-dark;
+    --color-tooltip-text     : $color-gray-very-light;
+  }
 }

@@ -13,6 +13,10 @@
   @media (min-width: $bp-xl) {
     margin: 72px auto;
   }
+
+  svg g {
+    fill: var(--color-logo-fill);
+  }
 }
 
 .header__section {
