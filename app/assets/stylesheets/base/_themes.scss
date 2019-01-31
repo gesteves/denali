@@ -12,6 +12,7 @@
   --color-tooltip-text     : #FFF;
   --color-pagination-text  : $color-gray-light;
   --color-icon-fill        : $color-gray-light;
+  --color-input-background : #FFF;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,5 +24,6 @@
     --color-text-alt         : $color-gray-light;
     --color-tooltip          : $color-gray-very-dark;
     --color-tooltip-text     : $color-gray-very-light;
+    --color-input-background : $color-gray-very-dark;
   }
 }

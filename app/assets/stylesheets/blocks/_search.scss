@@ -16,8 +16,10 @@
 }
 
 .search__input {
+  background-color: var(--color-input-background);
   border: 1px solid var(--color-border);
   border-radius: 4px;
+  color: var(--color-text);
   font-family: $font-sans;
   font-size: 18px;
   line-height: 2;
