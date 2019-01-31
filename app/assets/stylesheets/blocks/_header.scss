@@ -17,11 +17,11 @@
 
 .header__section {
   &:first-of-type {
-    border-bottom: 1px solid $color-border;
+    border-bottom: 1px solid var(--color-border);
   }
 
   @media (min-width: $bp-m) {
-    border-bottom: 1px solid $color-border;
+    border-bottom: 1px solid var(--color-border);
     flex-grow: 1;
     margin-bottom: 45px;
     padding: 0 20px;
@@ -35,18 +35,18 @@
 }
 
 .header__tagline {
-  color: $color-text-alt;
+  color: var(--color-text-alt);
   font-size: 16px;
   line-height: 44px;
 
   a:link,
   a:visited {
-    color: $color-text-alt;
+    color: var(--color-text-alt);
   }
 
   a:hover,
   a:active {
-    color: $color-links;
+    color: var(--color-links);
   }
 }
 
@@ -60,12 +60,12 @@
 
   &:link,
   &:visited {
-    color: $color-text;
+    color: var(--color-text);
   }
 
   &:hover,
   &:active {
-    color: $color-links;
+    color: var(--color-links);
     text-decoration: none;
   }
 

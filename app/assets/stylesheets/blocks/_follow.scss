@@ -11,12 +11,12 @@
 
   &:link,
   &:visited {
-    fill: $color-gray-light;
+    fill: var(--color-icon-fill);
   }
 
   &:hover,
   &:active {
-    fill: $color-links;
+    fill: var(--color-links);
   }
 }
 

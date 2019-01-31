@@ -1,5 +1,5 @@
 .elsewhere {
-  border-top: 4px solid $color-border;
+  border-top: 4px solid var(--color-border);
   display: block;
   margin: 0 auto;
   max-width: $bp-m;
@@ -46,12 +46,12 @@
 
     &:link,
     &:visited {
-      color: $color-text-alt;
+      color: var(--color-text-alt);
     }
 
     &:hover,
     &:active {
-      color: $color-links;
+      color: var(--color-links);
     }
   }
 }

@@ -14,7 +14,7 @@
 }
 
 .entry__figure {
-  background-color: $color-photo-background;
+  background-color: var(--color-photo-background);
   background-repeat: no-repeat;
   background-size: cover;
   display: flex;
@@ -79,7 +79,7 @@
 
 .entry--photo {
   .entry__body {
-    border-top: 4px solid $color-border;
+    border-top: 4px solid var(--color-border);
     padding-top: 24px;
 
     @media (min-width: $bp-s) {
@@ -89,7 +89,7 @@
 }
 
 .entry--photo #{&}__body {
-  border-top: 1px solid $color-border;
+  border-top: 1px solid var(--color-border);
 }
 
 .entry__body {
@@ -97,14 +97,14 @@
 }
 
 .entry__meta {
-  border-bottom: 4px solid $color-border;
-  border-top: 1px solid $color-border;
+  border-bottom: 4px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
   margin: 0 auto;
   max-width: $bp-m;
   padding: 24px 20px;
 
   p {
-    color: $color-text-alt;
+    color: var(--color-text-alt);
     font-size: 14px;
     font-style: italic;
     line-height: (24/14);
@@ -119,12 +119,12 @@
 
   a:link,
   a:visited {
-    color: $color-text-alt;
+    color: var(--color-text-alt);
   }
 
   a:hover,
   a:active {
-    color: $color-links;
+    color: var(--color-links);
     text-decoration: none;
   }
 
@@ -134,7 +134,7 @@
 }
 
 .entry__related {
-  border-top: 4px solid $color-border;
+  border-top: 4px solid var(--color-border);
   display: block;
   font-size: 18px;
   line-height: (24/18);
@@ -272,7 +272,7 @@
   }
 
   blockquote {
-    color: $color-text-alt;
+    color: var(--color-text-alt);
     font-style: italic;
     margin: 0 1.5rem;
     padding-left: 5px;

@@ -3,8 +3,8 @@
 }
 
 html {
-  background-color: $color-background;
-  color: $color-text;
+  background-color: var(--color-background);
+  color: var(--color-text);
   font-family: $font-sans;
   font-size: 62.5%;
   font-weight: 300;
@@ -12,13 +12,13 @@ html {
 
 a:link,
 a:visited {
-  color: $color-links;
+  color: var(--color-links);
   text-decoration: none;
 }
 
 a:hover,
 a:active {
-  color: $color-links;
+  color: var(--color-links);
   text-decoration: underline;
 }
 

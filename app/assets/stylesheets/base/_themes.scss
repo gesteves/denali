@@ -1,0 +1,14 @@
+:root {
+  --color-background       : #FFF;
+  --color-text             : $color-gray-dark;
+  --color-text-alt         : $color-gray-medium;
+  --color-links            : $color-red;
+  --color-border           : $color-gray-very-light;
+  --color-photo-background : $color-gray-very-light;
+  --color-photo-hover      : rgba(0,0,0,0.75);
+  --color-photo-text       : #FFF;
+  --color-tooltip          : #000;
+  --color-tooltip-text     : #FFF;
+  --color-pagination-text  : $color-gray-light;
+  --color-icon-fill        : $color-gray-light;
+}

@@ -1,5 +1,5 @@
 .button {
-  @include button($color-alert-default, $color-text);
+  @include button($color-red);
   appearance: none;
   border-radius: 2px;
   display: block;
@@ -24,40 +24,4 @@
     margin: 0 10px 0 0;
     width: auto;
   }
-}
-
-.button--info {
-  @include button($color-alert-info);
-}
-
-.button--danger {
-  @include button($color-alert-danger);
-}
-
-.button--success {
-  @include button($color-alert-success);
-}
-
-.button--twitter {
-  @include button($color-twitter);
-}
-
-.button--facebook {
-  @include button($color-facebook);
-}
-
-.button--instagram {
-  @include button($color-instagram);
-}
-
-.button--pad-right {
-  padding-right: 20px;
-}
-
-.button--no-margin {
-  margin: 0;
-}
-
-.button--margin-bottom {
-  margin: 0 0 20px;
 }

@@ -12,10 +12,10 @@
 }
 
 .tooltip:before {
-  background-color: $color-tooltip;
+  background-color: var(--color-tooltip);
   border-radius: 4px;
   bottom: 150%;
-  color: $color-tooltip-text;
+  color: var(--color-tooltip-text);
   content: attr(title);
   font-size: 14px;
   left: 50%;
@@ -31,7 +31,7 @@
 .tooltip:after {
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-top: 5px solid $color-tooltip;
+  border-top: 5px solid var(--color-tooltip);
   bottom: 150%;
   content: ' ';
   font-size: 0;

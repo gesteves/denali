@@ -51,7 +51,7 @@
 }
 
 .entry-list__wrapper {
-  background-color: $color-photo-background;
+  background-color: var(--color-photo-background);
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -127,7 +127,7 @@
 .entry-list__photo-caption {
   align-items: center;
   backdrop-filter: blur(20px);
-  background-color: transparentize(black, 0.35);
+  background-color: var(--color-photo-hover);
   border-radius: 4px;
   bottom: 0;
   display: flex;
@@ -145,7 +145,7 @@
 }
 
 .entry-list__photo-title {
-  color: #FFF;
+  color: var(--color-photo-text);
   line-height: 1.2;
   margin: 1.2rem 0;
   text-align: center;
@@ -172,7 +172,7 @@
 
 .entry-list__photo-meta,
 .entry-list__item--map .entry-list__photo-meta {
-  color: #FFF;
+  color: var(--color-photo-text);
   font-size: 14px;
   font-style: italic;
   line-height: 1.5;

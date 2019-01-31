@@ -16,7 +16,7 @@
 }
 
 .search__input {
-  border: 1px solid $color-gray-light;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
   font-family: $font-sans;
   font-size: 18px;

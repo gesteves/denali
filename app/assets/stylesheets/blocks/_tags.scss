@@ -10,12 +10,12 @@
 
     &:link,
     &:visited {
-      color: $color-text-alt;
+      color: var(--color-text-alt);
     }
 
     &:hover,
     &:active {
-      color: $color-links;
+      color: var(--color-links);
     }
   }
 }
