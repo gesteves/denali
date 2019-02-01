@@ -90,9 +90,6 @@ Rails.application.routes.draw do
   get '/signin'                        => 'sessions#new',     :as => :signin
   get '/signout'                       => 'sessions#destroy', :as => :signout
 
-  # ¯\_(ツ)_/¯
-  get '/experiments/starwars.html',    to: redirect('https://codepen.io/gesteves/full/YBPpwG')
-
   # The rest
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }
   root 'entries#index'
