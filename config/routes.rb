@@ -77,6 +77,7 @@ Rails.application.routes.draw do
   # Legacy routes & redirects
   get '/archive(/:year)(/:month)',     to: redirect('/')
   get '/rss',                          to: redirect('/feed.atom')
+  get '/index.html',                   to: redirect('/')
   get '/service_worker.:format'        => 'errors#file_not_found'
 
   # Feeds
