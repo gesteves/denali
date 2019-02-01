@@ -2,7 +2,7 @@
   <% photo = entry.photos&.first %>
   <% if photo.present? && photo.width.present? && photo.height.present? %>
     <div class="card-image">
-      <a style="<%= "#{intrinsic_ratio_padding(photo)};#{image_placeholder(photo)}"  %>" class="image" href="<%= entry.permalink_url %>">
+      <a style="<%= "--photo-width:#{photo.width};--photo-height:#{photo.height};#{gradient_colors(photo)}"  %>" class="image image-container" href="<%= entry.permalink_url %>">
         <%= lazy_responsive_image_tag photo,
               'admin_entry',
               { class: 'is-overlay', alt: photo.alt_text, 'data-controller': 'lazy-load' } %>

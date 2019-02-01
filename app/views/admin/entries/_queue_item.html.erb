@@ -1,10 +1,11 @@
 <div class="card queue__item draggable-handle" data-target="queue.card" data-entry-id="<%= entry.id %>" data-entry-position-original="<%= entry.position %>">
   <div class="card-image">
     <% if entry.is_photo? %>
-    <div style="<%= "padding-top:100%;#{image_placeholder(entry.photos.first)}"  %>" class="image">
-      <%= lazy_responsive_image_tag entry.photos.first,
+    <% photo = entry.photos.first %>
+    <div style="<%= "#{gradient_colors(photo)}"  %>" class="image image-container">
+      <%= lazy_responsive_image_tag photo,
             'admin_queue',
-            { class: 'is-overlay', alt: entry.photos.first.alt_text, 'data-controller': 'lazy-load' } %>
+            { class: 'is-overlay', alt: photo.alt_text, 'data-controller': 'lazy-load' } %>
     </div>
     <% else %>
       <div style="padding-top:100%;background-color:#EEE;"><div>
