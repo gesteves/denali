@@ -10,17 +10,12 @@
 }
 
 .entry_list__heading {
-  font-size: 18px;
-  line-height: (24/18);
+  font-size: var(--font-size-heading);
+  line-height: var(--line-height-heading);
   margin: 0 auto;
   max-width: $bp-max;
   padding: 0 var(--gutter-vertical) var(--gutter-horizontal) ;
   text-align: center;
-
-  @media (min-width: $bp-s) {
-    font-size: 24px;
-    line-height: (36/24);
-  }
 }
 
 .entry-list--related {

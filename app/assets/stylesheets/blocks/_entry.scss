@@ -134,17 +134,12 @@
 .entry__related {
   border-top: 4px solid var(--color-border);
   display: block;
-  font-size: 18px;
-  line-height: (24/18);
+  font-size: var(--font-size-heading);
+  line-height: var(--line-height-heading);
   margin: 0 auto;
   max-width: $bp-m;
   padding: var(--gutter-horizontal) var(--gutter-vertical);
   text-align: center;
-
-  @media (min-width: $bp-s) {
-    font-size: 24px;
-    line-height: (36/24);
-  }
 }
 
 .entry__embed {
