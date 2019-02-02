@@ -12,13 +12,8 @@
 
 .loading__spinner {
   fill: var(--color-text-alt);
-  height: 24px;
-  width: 24px;
-
-  @media (min-width: $bp-xl) {
-    height: 36px;
-    width: 36px;
-  }
+  height: var(--gutter-horizontal);
+  width: var(--gutter-horizontal);
 }
 
 .loading--active {
