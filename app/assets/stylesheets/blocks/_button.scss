@@ -1,7 +1,7 @@
 .button {
   @include button($color-red);
   appearance: none;
-  border-radius: 2px;
+  border-radius: var(--border-radius);
   display: block;
   font-family: 'proxima-nova', 'Helvetica Neue', sans-serif;
   font-size: 16px;

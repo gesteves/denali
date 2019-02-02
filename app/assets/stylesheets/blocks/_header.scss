@@ -17,11 +17,11 @@
 
 .header__section {
   &:first-of-type {
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: var(--border-thin) solid var(--color-border);
   }
 
   @media (min-width: $bp-m) {
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: var(--border-thin) solid var(--color-border);
     flex-grow: 1;
     margin-bottom: 45px;
     padding: 0 20px;

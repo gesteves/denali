@@ -13,8 +13,8 @@
 
 .search__input {
   background-color: var(--color-input-background);
-  border: 1px solid var(--color-border);
-  border-radius: 4px;
+  border: var(--border-thin) solid var(--color-border);
+  border-radius: var(--border-radius);
   color: var(--color-text);
   font-family: $font-sans;
   font-size: 18px;

@@ -23,7 +23,7 @@
 }
 
 .entry-list__item {
-  border-radius: 4px;
+  border-radius: var(--border-radius);
   display: block;
   float: left;
   margin: 0 4px 8px;
@@ -115,7 +115,7 @@
   align-items: center;
   backdrop-filter: blur(20px);
   background-color: var(--color-photo-hover);
-  border-radius: 4px;
+  border-radius: var(--border-radius);
   bottom: 0;
   display: flex;
   flex-flow: column nowrap;

@@ -1,5 +1,5 @@
 .elsewhere {
-  border-top: 4px solid var(--color-border);
+  border-top: var(--border-thick) solid var(--color-border);
   display: block;
   margin: 0 auto;
   max-width: $bp-m;

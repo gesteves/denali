@@ -81,13 +81,13 @@
 
 .entry--photo {
   .entry__body {
-    border-top: 4px solid var(--color-border);
+    border-top: var(--border-thick) solid var(--color-border);
     padding-top: var(--gutter-horizontal);
   }
 }
 
 .entry--photo #{&}__body {
-  border-top: 1px solid var(--color-border);
+  border-top: var(--border-thin) solid var(--color-border);
 }
 
 .entry__body {
@@ -95,8 +95,8 @@
 }
 
 .entry__meta {
-  border-bottom: 4px solid var(--color-border);
-  border-top: 1px solid var(--color-border);
+  border-bottom: var(--border-thick) solid var(--color-border);
+  border-top: var(--border-thin) solid var(--color-border);
   margin: 0 auto;
   max-width: $bp-m;
   padding: var(--gutter-horizontal) var(--gutter-vertical);
@@ -128,7 +128,7 @@
 }
 
 .entry__related {
-  border-top: 4px solid var(--color-border);
+  border-top: var(--border-thick) solid var(--color-border);
   display: block;
   font-size: var(--font-size-heading);
   line-height: var(--line-height-heading);
