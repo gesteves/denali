@@ -18,7 +18,7 @@
         <%= f.fields_for :photos do |p| %>
           <div class="draggable-source" data-controller="photo-form" data-photo-form-empty="0" data-photo-form-focal-x="<%= p.object.focal_x %>" data-photo-form-focal-y="<%= p.object.focal_y %>">
             <div class="card" data-target="photo-form.fields">
-              <div class="card-image image photo-form__image-container is-clipped image-container" style="<%= "#{photo_dimensions_css_props(p.object)}#{gradient_css_props(p.object)}"  %>">
+              <div class="card-image image photo-form__image-container is-clipped image-container" style="<%= "#{css_aspect_ratio(p.object)}#{css_gradient_stops(p.object)}"  %>">
                 <%= responsive_image_tag p.object, 'admin_edit', { class: 'photo-form__thumbnail is-overlay', 'data-action': 'click->photo-form#setFocalPoint load->photo-form#showFocalPoint', 'data-target': 'photo-form.thumbnail' } %>
                 <div class="is-hidden photo-form__focal-marker" data-target="photo-form.focalMarker"></div>
               </div>

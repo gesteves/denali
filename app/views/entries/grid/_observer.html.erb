@@ -1,7 +1,7 @@
 <% cache [entry, page_url] do %>
   <% photo = entry.photos.first %>
   <li class="entry-list__item" role="article" data-controller="pagination" data-pagination-page-url="<%= page_url%>">
-    <div class="entry-list__wrapper" style="<%= "#{photo_dimensions_css_props(photo)}#{gradient_css_props(photo)}" %>">
+    <div class="entry-list__wrapper" style="<%= "#{css_aspect_ratio(photo)}#{css_gradient_stops(photo)}" %>">
       <%= render partial: 'entries/grid/figure.html.erb', locals: { entry: entry, photo: photo, variant: 'entry_list' } %>
     </div>
   </li>

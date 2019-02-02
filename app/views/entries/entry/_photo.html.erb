@@ -1,7 +1,7 @@
 <% cache entry do %>
   <article class="entry entry--photo" role="main" data-controller="photo" data-photo-container-max-width="1680">
     <% entry.photos.each do |photo| %>
-      <div class="entry__photo-container entry__photo-container--zoom" style="<%= "#{photo_dimensions_css_props(photo)}#{gradient_css_props(photo)}" %>">
+      <div class="entry__photo-container entry__photo-container--zoom" style="<%= "#{css_aspect_ratio(photo)}#{css_gradient_stops(photo)}" %>">
         <figure class="entry__figure">
           <%= responsive_image_tag photo,
               'entry',

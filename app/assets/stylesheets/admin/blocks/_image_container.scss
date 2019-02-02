@@ -1,6 +1,6 @@
 .image-container {
-  background: linear-gradient(to bottom right, var(--gradient-start-color, $color-gray-very-light), var(--gradient-end-color, $color-gray-light));
+  background: linear-gradient(to bottom right, var(--gradient-start, $color-gray-very-light), var(--gradient-end, $color-gray-light));
   background-repeat: no-repeat;
   background-size: cover;
-  padding-top: calc((var(--photo-height, 1)/var(--photo-width, 1)) * 100%);
+  padding-top: calc(var(--aspect-ratio, 1) * 100%);
 }

@@ -11,11 +11,11 @@
 .entry__photo-container {
   margin: 0 auto;
   max-width: 100%;
-  width: calc((var(--photo-width, 1)/var(--photo-height, 1)) * 100vh);
+  width: calc((1/var(--aspect-ratio, 1)) * 100%);
 }
 
 .entry__figure {
-  background: linear-gradient(to bottom right, var(--gradient-start-color, $color-gray-very-light), var(--gradient-end-color, $color-gray-light));
+  background: linear-gradient(to bottom right, var(--gradient-start, $color-gray-very-light), var(--gradient-end, $color-gray-light));
   background-repeat: no-repeat;
   background-size: cover;
   display: flex;
@@ -24,7 +24,7 @@
   margin: 0 0 24px;
   max-width: 100vw;
   padding: 0;
-  padding-top: calc((var(--photo-height, 1)/var(--photo-width, 1)) * 100%);
+  padding-top: calc(var(--aspect-ratio, 1) * 100%);
   position: relative;
   text-align: center;
   width: 100%;

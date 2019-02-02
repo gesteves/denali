@@ -57,15 +57,15 @@ module ApplicationHelper
     render partial: "partials/svg/#{icon}.html.erb", locals: { svg_class: "#{svg_class} #{svg_class}--#{icon}" }
   end
 
-  def gradient_css_props(photo)
+  def css_gradient_stops(photo)
     return '' if photo.color_palette.blank?
     palette = photo.color_palette.split(',').sample(2)
-    "--gradient-start-color:#{palette.first};--gradient-end-color:#{palette.last};".html_safe
+    "--gradient-start:#{palette.first};--gradient-end:#{palette.last};".html_safe
   end
 
-  def photo_dimensions_css_props(photo)
+  def css_aspect_ratio(photo)
     return '' if photo.width.blank? || photo.height.blank?
-    "--photo-width:#{photo.width};--photo-height:#{photo.height};"
+    "--aspect-ratio:#{photo.height.to_f/photo.width.to_f};"
   end
 
   def inline_asset(filename, opts = {})
