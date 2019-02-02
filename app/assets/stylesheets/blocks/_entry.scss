@@ -11,7 +11,7 @@
 .entry__photo-container {
   margin: 0 auto;
   max-width: 100%;
-  width: calc((1/var(--aspect-ratio, 1)) * 100%);
+  width: calc((1/var(--aspect-ratio, 1)) * 100vh);
 }
 
 .entry__figure {
