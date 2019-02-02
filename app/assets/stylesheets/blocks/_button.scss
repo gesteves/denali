@@ -19,9 +19,4 @@
   &:focus {
     outline-width: 0;
   }
-
-  @media (min-width: $bp-admin-m) {
-    margin: 0 10px 0 0;
-    width: auto;
-  }
 }

@@ -3,7 +3,7 @@
   display: block;
   margin: 0 auto;
   max-width: $bp-m;
-  padding: 24px 20px;
+  padding: var(--gutter-horizontal) var(--gutter-vertical);
   width: 100%;
 
   p {
@@ -20,7 +20,6 @@
 
   @media (min-width: $bp-s) {
     margin: 0 auto;
-    padding: 36px 90px;
   }
 }
 
