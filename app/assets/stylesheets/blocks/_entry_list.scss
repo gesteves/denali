@@ -16,28 +16,16 @@
 
 .entry-list--related {
   margin-top: 0;
-
-  @media (min-width: $bp-s) {
-    margin-top: 0;
-  }
 }
 
 .entry-list__item {
   border-radius: var(--border-radius);
   display: block;
   float: left;
-  margin: 0 4px 8px;
+  margin: 0 calc(var(--entry-list-gutters)/2) var(--entry-list-gutters);
   overflow: hidden;
   position: relative;
-  width: calc(50% - 8px);
-
-  @media (min-width: $bp-xxxs) {
-    width: calc(100%/3 - 8px);
-  }
-
-  @media (min-width: $bp-xl) {
-    width: calc(25% - 8px);
-  }
+  width: calc((100%/var(--entry-list-columns)) - var(--entry-list-gutters));
 }
 
 .entry-list__wrapper {

@@ -21,6 +21,9 @@
   --border-thin            : 1px;
   --border-thick           : 4px;
   --border-radius          : 4px;
+
+  --entry-list-gutters: 8px;
+  --entry-list-columns: 2;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -36,6 +39,12 @@
   }
 }
 
+@media (min-width: $bp-xxxs) {
+  :root {
+    --entry-list-columns: 3;
+  }
+}
+
 @media (min-width: $bp-s) {
   :root {
     --gutter-horizontal: 36px;
@@ -48,5 +57,6 @@
 @media (min-width: $bp-xl) {
   :root {
     --margin-content: 72px auto;
+    --entry-list-columns: 4;
   }
 }
