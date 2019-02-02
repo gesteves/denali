@@ -2,16 +2,12 @@
   align-items: center;
   display: flex;
   flex-flow: column nowrap;
-  margin: 24px auto;
+  margin: var(--margin-content);
   max-width: $bp-max;
   text-align: center;
 
   @media (min-width: $bp-m) {
     flex-flow: row nowrap;
-  }
-
-  @media (min-width: $bp-xl) {
-    margin: 72px auto;
   }
 
   svg g {

@@ -1,11 +1,7 @@
 .entry {
-  margin: 24px auto;
+  margin: var(--margin-content);
   max-width: $bp-max;
   width: 100%;
-
-  @media (min-width: $bp-xl) {
-    margin: 72px auto;
-  }
 }
 
 .entry__photo-container {

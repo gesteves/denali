@@ -2,12 +2,8 @@
   display: none;
   flex-flow: row nowrap;
   justify-content: center;
-  margin: 24px auto;
+  margin: var(--margin-content);
   max-width: $bp-max;
-
-  @media (min-width: $bp-xl) {
-    margin: 72px auto;
-  }
 }
 
 .loading__spinner {

@@ -1,12 +1,8 @@
 .entry-list {
   @include clearfix;
   display: block;
-  margin: 24px auto;
+  margin: var(--margin-content);
   max-width: $bp-max;
-
-  @media (min-width: $bp-xl) {
-    margin: 72px auto;
-  }
 }
 
 .entry_list__heading {

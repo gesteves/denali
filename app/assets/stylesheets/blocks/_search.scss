@@ -2,16 +2,12 @@
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
-  margin: 24px auto;
+  margin: var(--margin-content);
   max-width: $bp-m;
   padding: 0 20px;
 
   @media (min-width: $bp-m) {
     padding: 0;
-  }
-
-  @media (min-width: $bp-xl) {
-    margin: 72px auto;
   }
 }
 
