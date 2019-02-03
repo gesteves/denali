@@ -24,7 +24,6 @@ entry: &entry
     - "(min-width: 1680px) 1680px"
     - 100vw
   quality: 90
-  auto: 'format'
 entry_list: &entry_list
   srcset:
     - 304
