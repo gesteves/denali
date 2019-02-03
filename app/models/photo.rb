@@ -41,9 +41,10 @@ class Photo < ApplicationRecord
     s3_key = self.image.key
     max_width = self.width
     variant = PHOTOS[key]
-    quality = variant['quality']
     square = variant['square'].present?
     widths = variant['srcset'].uniq.sort.reject { |width| max_width.present? && width > max_width }
+    opts.merge!(auto: variant['auto']) if variant['auto'].present?
+    opts.merge!(q: variant['quality']) if variant['quality'].present?
     src_width = widths.first
     if square
       opts[:fit] = 'crop'
