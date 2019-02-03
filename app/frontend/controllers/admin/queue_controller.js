@@ -24,7 +24,6 @@ export default class extends Controller {
         'source:dragging': 'draggable-dragging'
       }
     });
-    this.sortableQueue.on('drag:start', event => this.startSort(event));
     this.sortableQueue.on('mirror:destroy', () => this.updateCards());
     this.updateCards();
   }
@@ -55,18 +54,6 @@ export default class extends Controller {
    */
   enableDrag () {
     this.cardTargets.forEach(card => card.classList.add('draggable-handle'));
-  }
-
-  /**
-   * Handles the start of a sorting event, hardcoding the size of the dragged
-   * element so it doesn't look weird while being dragged.
-   * Sortable events docs: https://github.com/Shopify/draggable/tree/master/src/Sortable/SortableEvent
-   * @param {Event} event A sortable:start event.
-   */
-  startSort (event) {
-    let mirror = event.data.mirror;
-    let originalWidth = event.data.source.clientWidth;
-    mirror.style.width = `${originalWidth}px`;
   }
 
   /**
