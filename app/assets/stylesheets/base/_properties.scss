@@ -24,10 +24,8 @@
 
   --entry-list-gutters: 8px;
   --entry-list-columns: 2;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
+  @media (prefers-color-scheme: dark) {
     --color-logo-fill        : white;
     --color-background       : black;
     --color-border           : $color-gray-very-dark;
@@ -37,25 +35,19 @@
     --color-tooltip-text     : $color-gray-very-light;
     --color-input-background : $color-gray-very-dark;
   }
-}
 
-@media (min-width: $bp-xxxs) {
-  :root {
+  @media (min-width: $bp-xxxs) {
     --entry-list-columns: 3;
   }
-}
 
-@media (min-width: $bp-s) {
-  :root {
+  @media (min-width: $bp-s) {
     --gutter-horizontal: 36px;
     --gutter-vertical: 90px;
     --font-size-heading: 24px;
     --line-height-heading: (36/24);
   }
-}
 
-@media (min-width: $bp-xl) {
-  :root {
+  @media (min-width: $bp-xl) {
     --margin-content: 72px auto;
     --entry-list-columns: 4;
   }
