@@ -31,7 +31,7 @@ class BufferJob < ApplicationJob
   end
 
   def media_hash(photo, opts = {})
-    opts.reverse_merge!(w: 2048, alt_text: false)
+    opts.reverse_merge!(w: 1200, alt_text: false)
     media = {
       photo: photo.url(w: opts[:w], fm: 'jpg'),
       thumbnail: photo.url(w: 512, fm: 'jpg')
