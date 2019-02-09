@@ -192,9 +192,10 @@ instagram:
     - encuentratuparque
     - findyourpark
     - goparks
+    - livebravely
+    - nationalparkgeek
     - nationalparks
     - nationalparkservice
-    - optoutside
     - usinterior
   nationalmall: *nationalparks
   yosemitenationalpark: *nationalparks
