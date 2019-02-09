@@ -7,48 +7,27 @@ instagram:
     - iphonepic
     - shotoniphone
   astrophotography:
-    - astro_photography
     - astrophoto
     - astrophotography
-    - ig_astrophotography
-    - natgeospace
-    - nightimages
+    - milkywaychasers
+    - nightscape
     - nightscapes
-    - nightsky
-    - nightskyphotography
-    - starphotography
-    - starscape
+  baldeagle:
+    - baldeagle
   baltimore:
     - baltimore
     - bmore
     - charmcity
     - baltimoremd
   birds:
-    - birdlove
-    - birds
-    - birdslover
+    - birding
+    - birdphotography
     - birdsofinstagram
-    - birdsphotography
-    - featheredfriends
     - ornithology
     - wildbirds
   bison:
     - bison
     - americanbison
-  blackandwhite:
-    - bandw
-    - blackandwhite
-    - blackandwhitephoto
-    - blackandwhitephotograph
-    - blackandwhitephotography
-    - blackandwhitepics
-    - bnw_planet
-    - bnwcommunity
-    - bnwlovers
-    - bnwphotography
-    - bwphotography
-    - instablackandwhite
-    - instabnw
   caracas:
     - caracas
     - caracascity
@@ -56,18 +35,8 @@ instagram:
     - caracasvenezuela
     - caracaswalk
     - igerscaracas
-  cars:
-    - cars
-    - carsofinstagram
-    - car
-    - coolcars
-    - dailycars
-    - carlove
-    - carlovers
-    - lovethiscar
   cats:
     - cats
-    - cats_of_instagram
     - catsagram
     - catscatscats
     - catsgram
@@ -92,12 +61,9 @@ instagram:
     - cityphotography
     - cityscapephotography
     - cityscapes
-    - cityscapes_unlimited
     - cityscapesphotography
     - cityshots
     - cityskyline
-    - cityvibe
-    - skylinephotography
   ciudaddemexico:
     - cdmx
     - ciudaddemexico
@@ -106,9 +72,7 @@ instagram:
     - mexicodf
   coffee:
     - coffee
-    - coffee_inst
     - coffeeholic
-    - coffee_time
     - coffeegram
     - coffeelover
     - coffeelife
@@ -165,25 +129,19 @@ instagram:
     - shootfilm
     - shotonfilm
   fujifilm:
-    - fuji_xseries
     - fujifeed
     - fujifilm
     - fujilove
     - fujix
     - fujixseries
   landscapes:
-    - igersnature
-    - landscape
-    - landscape_lover
-    - landscape_photography
-    - landscapeart
     - landscapecaptures
-    - landscapehunter
-    - landscapelovers
     - landscapephoto
-    - landscapephotographer
     - landscapephotography
+    - landscapeporn
     - landscapes
+    - natgeolandscape
+    - yourshotphotographer
   lasvegas:
     - lasvegasstrip
     - sincity
@@ -199,31 +157,14 @@ instagram:
     - leicaphotography
     - leicaworld
   longexposure:
-    - amazing_longexpo
-    - long_exposure_pics
     - longexpo
-    - longexpoelite
-    - longexpohunter
-    - longexposhots
     - longexposure
-    - longexposure_shots
-    - longexposureoftheday
     - longexposurephotography
-    - longexposures
     - longexposureshots
-    - slowshutter
-    - slowshutterspeed
-  magazines:
-    - aperturefoundation
-    - lensculture
-    - yourshotphotographer
   mexico:
     - ilovemexico
     - mejico
     - mexico
-    - mexico_amazing
-    - mexico_fotos
-    - mexico_maravilloso
     - mexicolove
     - mexicomagico
     - mexicomaravilloso
@@ -247,8 +188,10 @@ instagram:
     - encuentratuparque
     - findyourpark
     - goparks
-    - optoutside
     - nationalparks
+    - nationalparkservice
+    - optoutside
+    - usinterior
   nationalmall: *nationalparks
   yosemitenationalpark: *nationalparks
   greatfallspark: *nationalparks
@@ -270,18 +213,12 @@ instagram:
     - mountrainiernps
     - mtrainiernationalpark
     - nrthwst
-    - ourpnw
-    - pnwparadise
-    - pnwwilderness
     - wanderwashington
   nationalportraitgallery:
     - mynpg
   newyorkcity: &nyc
-    - icapture_nyc
     - igersnyc
     - ilovenyc
-    - newyork_ig
-    - newyork_instagram
     - newyorkinstagram
     - newyorkphoto
     - nycityworld
@@ -294,13 +231,10 @@ instagram:
   bronx: *nyc
   philadelphia:
     - cityofbrotherlylove
-    - igers_philly
     - instadelphia
     - instaphilly
     - philadelphia
-    - philadelphia_ig
     - philadelphiaphotographer
-    - philly_igers
     - phillygram
     - phillylove
     - visitphilly
@@ -320,25 +254,21 @@ instagram:
     - onlyinsf
     - sanfrancisco
     - sf
-    - sf_insta
     - streetsofsf
   seattle:
-    - seattle
-    - seattle_igers
-    - seattlephotographer
-    - seattlewashington
-    - seattlewa
-    - seattlephotography
-    - igers_seattle
-    - seattlelove
     - exploreseattle
+    - seattle
+    - seattlelife
+    - seattlelove
+    - seattlephotographer
+    - seattlephotography
+    - seattlewa
+    - seattlewashington
+    - visitseattle
   scotland:
     - igersscotland
     - lovescotland
     - scotland
-    - scotland_greatshots
-    - scotland_ig
-    - scotland_insta
     - scotlandphotography
     - scotlandshots
     - scotshots
@@ -351,7 +281,6 @@ instagram:
     - storyofthestreet
     - streetgram
     - streetphotography
-    - streetphotography_bw
     - streetphotographyinternational
     - thestreetphotographyhub
   tennessee:
@@ -374,7 +303,6 @@ instagram:
     - wildlifephotographer
     - wildlifephotography
   wyoming:
-    - discover_wyoming
     - explorewyoming
     - thatswy
     - visitwyoming
