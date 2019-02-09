@@ -239,6 +239,8 @@ class EntryTest < ActiveSupport::TestCase
 
   test 'instagram hashtags should work' do
     entry = entries(:panda)
+    entry.add_tags('wildlife')
+    entry.reload
     assert_not_empty entry.instagram_hashtags
   end
 
