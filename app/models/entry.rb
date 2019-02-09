@@ -323,8 +323,8 @@ class Entry < ApplicationRecord
     entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
     instagram_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
 
-    tags = instagram_hashtags['magazines'].sample(5)
-    extra_tags = instagram_hashtags['magazines']
+    tags = []
+    extra_tags = []
 
     # For each entry tag, add 5 matching Instagram tags to the array
     instagram_hashtags.each do |k, v|
