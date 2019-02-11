@@ -89,7 +89,7 @@ class EntriesController < ApplicationController
   end
 
   def show
-    if stale?(@entry, public: true)
+    if stale?(@photoblog, public: true)
       respond_to do |format|
         format.html {
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
@@ -113,7 +113,7 @@ class EntriesController < ApplicationController
   end
 
   def preview
-    if stale?(@entry, public: true)
+    if stale?(@photoblog, public: true)
       respond_to do |format|
         format.html {
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
