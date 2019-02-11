@@ -71,12 +71,12 @@ class ApplicationController < ActionController::Base
 
   def set_max_age
     @max_age = ENV['config_caching_minutes']&.to_i || 5
-    expires_in @max_age.minutes, public: true
+    response.headers['Cache-Control'] = "s-maxage=#{@max_age.minutes}, max-age=0, public"
   end
 
   def set_entry_max_age
     @max_age = ENV['config_entry_caching_minutes']&.to_i || ENV['config_caching_minutes']&.to_i || 5
-    expires_in @max_age.minutes, public: true
+    response.headers['Cache-Control'] = "s-maxage=#{@max_age.minutes}, max-age=0, public"
   end
 
   def set_app_version
