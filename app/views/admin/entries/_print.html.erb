@@ -19,7 +19,7 @@
       <tbody>
         <% sizes = photo.color? ? @color_print_sizes : @bw_print_sizes %>
         <% best_size = sizes.reject { |size| print_needs_cropping?(photo, size) || print_dpi(photo, size) < 300 }.sort { |size| size.split('×').first.to_i * size.split('×').last.to_i }.first %>
-        <%= render partial: 'print_size', collection: sizes, as: :size, cached: true, locals: { photo: photo, best_size: best_size } %>
+        <%= render partial: 'print_size', collection: sizes, as: :size, locals: { photo: photo, best_size: best_size } %>
       </tbody>
     </table>
   </div>
