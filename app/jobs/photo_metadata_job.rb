@@ -39,6 +39,9 @@ class PhotoMetadataJob < ApplicationJob
         film_name = "#{film_make} #{film_type}"
         photo.film = Film.create_with(display_name: film_name, make: film_make, model: film_type).find_or_create_by(slug: film_name.parameterize) if film_make.present? && film_type.present?
       end
+      if exif.image_description.present? && photo.caption.blank?
+        photo.caption = exif.image_description
+      end
     end
     photo.save!
     photo.geocode if opts[:geocode]
