@@ -125,10 +125,15 @@ map:
   auto: 'format'
 admin_prints:
   srcset:
-    - 128
-    - 256
-    - 384
+    - 600
+    - 1200
+    - 1800
+    - 560
+    - 670
+    - 1005
+    - 1122
   sizes:
-    - '128px'
+    - "(min-width: 769px) 600px"
+    - "calc(100vw - 40px)"
   auto: 'format'
 

@@ -1,14 +1,12 @@
-<article class="media">
-  <figure class="media-left">
-    <p class="image is-128x128">
-      <a href="<%= photo.image.service_url %>" target="_blank">
+<div class="card">
+  <div class="card-image">
+    <div style="<%= "#{css_aspect_ratio(photo)}#{css_gradient_stops(photo)}"  %>" class="image image-container">
       <%= lazy_responsive_image_tag photo,
-            'admin_prints',
-            { alt: photo.alt_text } %>
-      </a>
-    </p>
-  </figure>
-  <div class="media-content">
+            'admin_entry',
+            { class: 'is-overlay', alt: photo.alt_text, 'data-controller': 'lazy-load' } %>
+    </div>
+  </div>
+  <div class="card-content">
     <table class="table is-fullwidth">
       <thead>
         <tr>
@@ -22,5 +20,15 @@
         <%= render partial: 'print_size', collection: sizes, as: :size, locals: { photo: photo, best_size: best_size } %>
       </tbody>
     </table>
+    <hr class="hr">
+    <div class="level">
+      <div class="level-left">
+        <div class="level-item">
+          <%= link_to 'Download image', photo.image.service_url, class: 'button', target: '_blank' %>
+        </div>
+      </div>
+      <div class="level-right">
+      </div>
+    </div>
   </div>
-</article>
+</div>
