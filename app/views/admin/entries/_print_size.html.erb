@@ -8,29 +8,19 @@
     </div>
   </td>
   <td>
-    <div class="field is-grouped is-grouped-multiline">
-
-      <div class="control">
-        <div class="tags has-addons">
-          <span class="tag">DPI</span>
-          <span class="tag <%= print_dpi_class(print_dpi(photo, size)) %>"><%= print_dpi(photo, size) %></span>
-        </div>
-      </div>
-
-      <div class="control">
-        <div class="tags has-addons">
-          <span class="tag">Crop</span>
-          <% if print_needs_cropping?(photo, size) %>
-            <span class="tag is-danger">Yes</span>
-          <% else %>
-            <span class="tag is-success">No</span>
-          <% end %>
-        </div>
-      </div>
+    <div class="tags has-addons">
+      <span class="tag">DPI</span>
+      <span class="tag <%= print_dpi_class(print_dpi(photo, size)) %>"><%= print_dpi(photo, size) %></span>
     </div>
-    <div class="tags">
-
-
+  </td>
+  <td>
+    <div class="tags has-addons">
+      <span class="tag">Crop</span>
+      <% if print_needs_cropping?(photo, size) %>
+        <span class="tag is-danger">Yes</span>
+      <% else %>
+        <span class="tag is-success">No</span>
+      <% end %>
     </div>
   </td>
 </tr>
