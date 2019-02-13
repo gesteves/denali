@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :share, :crops, :instagram, :facebook, :twitter, :flickr, :flush_caches, :refresh_metadata, :resize_photos]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :share, :crops, :prints, :instagram, :facebook, :twitter, :flickr, :flush_caches, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, :load_tagged_entries, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
@@ -213,6 +213,20 @@ class Admin::EntriesController < AdminController
       ],
       'Instagram': [['Feed', 'instagram_feed'], ['Story', 'instagram_story']]
     }
+    respond_to do |format|
+      format.html {
+        if params[:modal]
+          render layout: nil
+        else
+          render
+        end
+      }
+    end
+  end
+
+  def prints
+    @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
+    @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
     respond_to do |format|
       format.html {
         if params[:modal]

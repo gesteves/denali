@@ -123,3 +123,12 @@ map:
     - 300px
   square: Yes
   auto: 'format'
+admin_prints:
+  srcset:
+    - 128
+    - 256
+    - 384
+  sizes:
+    - '128px'
+  auto: 'format'
+

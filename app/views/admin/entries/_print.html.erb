@@ -1,0 +1,26 @@
+<article class="media">
+  <figure class="media-left">
+    <p class="image is-128x128">
+      <a href="<%= photo.image.service_url %>" target="_blank">
+      <%= lazy_responsive_image_tag photo,
+            'admin_prints',
+            { alt: photo.alt_text } %>
+      </a>
+    </p>
+  </figure>
+  <div class="media-content">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+        <th>Size</th>
+        <th>
+        </tr>
+      </thead>
+      <tbody>
+        <% sizes = photo.color? ? @color_print_sizes : @bw_print_sizes %>
+        <% best_size = sizes.reject { |size| print_needs_cropping?(photo, size) || print_dpi(photo, size) < 300 }.sort { |size| size.split('×').first.to_i * size.split('×').last.to_i }.first %>
+        <%= render partial: 'print_size', collection: sizes, as: :size, cached: true, locals: { photo: photo, best_size: best_size } %>
+      </tbody>
+    </table>
+  </div>
+</article>

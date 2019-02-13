@@ -22,6 +22,7 @@ Rails.application.routes.draw do
       member do
         get 'share'
         get 'crops'
+        get 'prints'
         post 'resize_photos'
         patch 'publish'
         patch 'queue'

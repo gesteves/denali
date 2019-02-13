@@ -1,0 +1,36 @@
+<tr>
+  <td>
+    <div class="tags has-addons">
+      <span class="tag"><%= size %>″</span>
+      <% if size == best_size %>
+        <span class="tag is-success">Best size</span>
+      <% end %>
+    </div>
+  </td>
+  <td>
+    <div class="field is-grouped is-grouped-multiline">
+
+      <div class="control">
+        <div class="tags has-addons">
+          <span class="tag">DPI</span>
+          <span class="tag <%= print_dpi_class(print_dpi(photo, size)) %>"><%= print_dpi(photo, size) %></span>
+        </div>
+      </div>
+
+      <div class="control">
+        <div class="tags has-addons">
+          <span class="tag">Crop</span>
+          <% if print_needs_cropping?(photo, size) %>
+            <span class="tag is-danger">Yes</span>
+          <% else %>
+            <span class="tag is-success">No</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="tags">
+
+
+    </div>
+  </td>
+</tr>
