@@ -30,6 +30,7 @@ export default class extends Controller {
     }).length) {
       return;
     }
+    this.animateSpinner();
     fetch(this.data.get('url'), { credentials: 'same-origin' })
       .then(fetchStatus)
       .then(fetchText)
@@ -60,5 +61,12 @@ export default class extends Controller {
   endObserver () {
     this.observer.unobserve(this.spinnerTarget);
     this.element.parentNode.removeChild(this.element);
+  }
+
+  /**
+   * Starts animating the spinner.
+   */
+  animateSpinner () {
+    this.spinnerTarget.classList.add('loading--visible');
   }
 }

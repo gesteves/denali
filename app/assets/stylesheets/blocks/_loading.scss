@@ -14,10 +14,10 @@
 
 .loading--active {
   display: flex;
+}
 
-  .loading__spinner {
-    animation: load 1s infinite linear;
-  }
+.loading--visible .loading__spinner {
+  animation: load 1s infinite linear;
 }
 
 @keyframes load {

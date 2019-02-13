@@ -59,10 +59,12 @@ export default class extends Controller {
       return;
     }
     const nextPage = this.getCurrentPage() + 1;
+    this.animateSpinner();
     fetch(`${this.data.get('baseUrl')}/page/${nextPage}.js`)
       .then(fetchStatus)
       .then(fetchText)
       .then(text => {
+        this.stopSpinner();
         this.data.set('currentPage', nextPage);
         this.appendPage(text);
       })
@@ -89,5 +91,19 @@ export default class extends Controller {
     this.observer.unobserve(this.spinnerTarget);
     this.footer.style.display = 'block';
     this.spinnerTarget.parentNode.removeChild(this.spinnerTarget);
+  }
+
+  /**
+   * Starts animating the spinner.
+   */
+  animateSpinner () {
+    this.spinnerTarget.classList.add('loading--visible');
+  }
+
+  /**
+   * Stops animating the spinner.
+   */
+  stopSpinner () {
+    this.spinnerTarget.classList.remove('loading--visible');
   }
 }
