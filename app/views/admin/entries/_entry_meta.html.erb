@@ -1,5 +1,5 @@
-<% cache_if entry.is_queued?, [@photoblog, entry] do %>
-  <div class="field is-grouped is-grouped-multiline">
+<div class="field is-grouped is-grouped-multiline">
+  <% cache_if entry.is_queued?, [@photoblog, entry] do %>
     <div class="control">
       <div class="tags has-addons">
         <% if entry.is_published? %>
@@ -17,7 +17,8 @@
         <% end %>
       </div>
     </div>
-
+  <% end %>
+  <% cache entry do %>
     <% if entry.photos.count { |p| p.caption.blank? } > 0 %>
       <div class="control">
         <div class="tags">
@@ -33,5 +34,5 @@
         </div>
       </div>
     <% end %>
-  </div>
-<% end %>
+  <% end %>
+</div>
