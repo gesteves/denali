@@ -32,8 +32,8 @@ module Admin::EntriesHelper
   end
 
   def print_dpi(photo, size)
-    print_width = size.split('×').max.to_f
-    photo_width = [photo.width, photo.height].max.to_f
+    print_width = size.split('×').map(&:to_f).max
+    photo_width = [photo.width, photo.height].map(&:to_f).max
     [300, (photo_width/print_width)].min.floor
   end
 
