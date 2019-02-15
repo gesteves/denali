@@ -1,3 +1,40 @@
+aliases:
+  jacksonhole: &jacksonhole
+    - jacksonhole
+    - staywild
+  nationalparks: &nationalparks
+    - americasbestidea
+    - encuentratuparque
+    - findyourpark
+    - goparks
+    - livebravely
+    - nationalparkgeek
+    - nationalparks
+    - nationalparkservice
+    - usinterior
+  newyorkcity: &nyc
+    - igersnyc
+    - ilovenyc
+    - newyorkinstagram
+    - newyorkphoto
+    - nycityworld
+    - nycspc
+    - nyloveyou
+    - topnewyorkphoto
+  pacificnorthwest: &pacificnorthwest
+    - evergreenstate
+    - explorepnw
+    - livewashington
+    - nrthwst
+    - pacificnorthwest
+    - pnw
+    - pnwcollective
+    - pnwlife
+    - upperleft
+    - upperleftusa
+    - wanderwashington
+    - washingtonexplored
+    - washingtonstate
 instagram:
   apple:
     - iphonephoto
@@ -160,6 +197,14 @@ instagram:
     - leicaphoto
     - leicaphotography
     - leicaworld
+  londonbridgestudio:
+    - *pacificnorthwest
+    - grunge
+    - makemusic
+    - music
+    - musicstudio
+    - pearljam
+    - recordingstudio
   longexposure:
     - longexpo
     - longexposure
@@ -182,21 +227,10 @@ instagram:
     - phonephoto
   nationalairandspacemuseum:
     - airandspace
-  nationalelkrefuge:
-    - jacksonhole
-    - staywild
+  nationalelkrefuge: *jacksonhole
   nationalgalleryofart:
     - myngadc
-  nationalparks: &nationalparks
-    - americasbestidea
-    - encuentratuparque
-    - findyourpark
-    - goparks
-    - livebravely
-    - nationalparkgeek
-    - nationalparks
-    - nationalparkservice
-    - usinterior
+  nationalparks: *nationalparks
   nationalmall: *nationalparks
   yosemitenationalpark: *nationalparks
   greatfallspark: *nationalparks
@@ -206,34 +240,25 @@ instagram:
     - gtnp
     - mygrandteton
     - tetons
-    - jacksonhole
-    - staywild
   yellowstonenationalpark:
     - yellowstone
     - yellowstonenationalpark
     - yellowstonenps
     - yellowstonepledge
   mountrainiernationalpark:
+    - *pacificnorthwest
     - mountrainiernationalpark
     - mountrainiernps
     - mtrainiernationalpark
-    - nrthwst
-    - wanderwashington
   nationalportraitgallery:
     - mynpg
-  newyorkcity: &nyc
-    - igersnyc
-    - ilovenyc
-    - newyorkinstagram
-    - newyorkphoto
-    - nycityworld
-    - nycspc
-    - nyloveyou
-    - topnewyorkphoto
   manhattan: *nyc
   brooklyn: *nyc
   queens: *nyc
   bronx: *nyc
+  pearljam:
+    - music
+    - pearljam
   philadelphia:
     - cityofbrotherlylove
     - instadelphia
@@ -261,6 +286,7 @@ instagram:
     - sf
     - streetsofsf
   seattle:
+    - *pacificnorthwest
     - exploreseattle
     - seattle
     - seattlelife
@@ -288,6 +314,9 @@ instagram:
     - streetphotography
     - streetphotographyinternational
     - thestreetphotographyhub
+  tacoma:
+    - *pacificnorthwest
+    - tacomawashington
   tennessee:
     - instagramtennessee
     - tennesseephotographer
