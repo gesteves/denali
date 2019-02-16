@@ -8,8 +8,8 @@ class EntryTagUpdateJob < ApplicationJob
     entry.photos.each do |p|
       equipment_tags << [p.camera&.make, p.camera&.display_name, p.film&.display_name]
       style_tags << (p.color? ? 'Color' : 'Black and White') unless p.color?.nil?
-      style_tags << 'Film Photography' if p.film.present?
-      style_tags << 'Mobile Photography' if p.camera&.is_phone?
+      style_tags << 'Film' if p.film.present?
+      style_tags << 'Mobile' if p.camera&.is_phone?
       location_tags  << [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area] if entry.show_in_map?
     end
     equipment_tags = equipment_tags.flatten.uniq.reject(&:blank?)
