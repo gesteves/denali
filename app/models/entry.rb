@@ -292,7 +292,7 @@ class Entry < ApplicationRecord
       value2: self.permalink_url
     }
     payload[:value3] = self.photos.first.url(w: 1200) if self.is_photo?
-    IftttWebhookJob.perform_later(payload)
+    IftttWebhookJob.perform_later('entry-published', payload)
   end
 
   def combined_tags
