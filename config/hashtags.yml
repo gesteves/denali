@@ -130,7 +130,6 @@ instagram:
     - livemusicphotography
     - musicphotographer
   districtofcolumbia:
-    - dc_spc
     - dcfocused
     - dcitystyle
     - dclife
@@ -323,10 +322,11 @@ instagram:
     - scotlandshots
     - scotshots
   streets:
+    - dc_spc
     - everybodystreet
     - lensculturestreets
     - lensonstreets
-    - magnumphotos
+    - myspc
     - spicollective
     - storyofthestreet
     - streetgram
