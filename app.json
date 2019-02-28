@@ -14,7 +14,7 @@
   "environments": {
     "test": {
       "addons":[
-        "heroku-postgresql:in-dyno"
+        "heroku-postgresql"
       ],
       "scripts": {
         "test": "bundle exec rails test && bundle exec rake brakeman:check"
