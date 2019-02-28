@@ -1,0 +1,16 @@
+{
+  "name": "Denali",
+  "description": "A Rails-based photoblogging app.",
+  "website": "https://www.allencompassingtrip.com/",
+  "repository": "https://github.com/gesteves/denali",
+  "environments": {
+    "test": {
+      "addons":[
+        "heroku-postgresql:in-dyno"
+      ],
+      "scripts": {
+        "test": "bundle exec rails test && bundle exec rake brakeman:check"
+      }
+    }
+  }
+}
