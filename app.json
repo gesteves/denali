@@ -3,6 +3,13 @@
   "description": "A Rails-based photoblogging app.",
   "website": "https://www.allencompassingtrip.com/",
   "repository": "https://github.com/gesteves/denali",
+  "addons": [
+    "heroku-postgresql",
+    "heroku-redis",
+    "memcachedcloud",
+    "searchbox",
+    "papertrail"
+  ],
   "buildpacks": [
     {
       "url": "heroku/nodejs"
@@ -11,6 +18,116 @@
       "url": "heroku/ruby"
     }
   ],
+  "env": {
+    "aws_access_key_id": {
+      "description": "AWS access key for S3, CloudFront, and Rekognition.",
+      "required": true
+    },
+    "aws_secret_access_key": {
+      "description": "AWS access secret for S3, CloudFront, and Rekognition.",
+      "required": true
+    },
+    "aws_cloudfront_distribution_id": {
+      "description": "The ID of your CloudFront distribution.",
+      "required": false
+    },
+    "buffer_access_token": {
+      "description": "Your access token for the Buffer API, for sharing on social media.",
+      "required": false
+    },
+    "denali_secret": {
+      "description": "A secret token, used for various purposes.",
+      "required": true,
+      "generator": "secret"
+    },
+    "domain": {
+      "description": "Domain for this app.",
+      "required": true
+    },
+    "flickr_access_token_secret": {
+      "description": "Used for sharing on Flickr.",
+      "required": false
+    },
+    "flickr_access_token": {
+      "description": "Used for sharing on Flickr.",
+      "required": false
+    },
+    "flickr_consumer_key": {
+      "description": "Used for sharing on Flickr.",
+      "required": false
+    },
+    "flickr_consumer_secret": {
+      "description": "Used for sharing on Flickr.",
+      "required": false
+    },
+    "google_apps_domain": {
+      "description": "Domain of your G Suite account, used for authentication.",
+      "required": true
+    },
+    "google_client_id": {
+      "description": "Required for authentication.",
+      "required": true
+    },
+    "google_client_secret": {
+      "description": "Required for authentication.",
+      "required": true
+    },
+    "google_api_key": {
+      "description": "Google API Key for the Google Maps API, used to auto-tag entries by location.",
+      "required": false
+    },
+    "ifttt_webhook_key": {
+      "description": "Enables IFTTT webhooks, useful for push notifications.",
+      "required": false
+    },
+    "imgix_domain": {
+      "description": "Domain used for Imgix.",
+      "required": true
+    },
+    "imgix_secure": {
+      "description": "Required for Imgix.",
+      "required": true,
+      "value": "true"
+    },
+    "imgix_token": {
+      "description": "Required for Imgix.",
+      "required": true
+    },
+    "imgix_api_key": {
+      "description": "Required for Imgix.",
+      "required": true
+    },
+    "mapbox_api_token": {
+      "description": "Used to display the map view.",
+      "required": false
+    },
+    "s3_bucket": {
+      "description": "S3 bucket to store images.",
+      "required": true
+    },
+    "s3_region": {
+      "description": "Region of the S3 bucket.",
+      "required": true,
+      "value": "us-east-1"
+    },
+    "secret_key_base": {
+      "description": "A secret token, used for various purposes.",
+      "required": true,
+      "generator": "secret"
+    },
+    "sentry_dsn": {
+      "description": "Used for exception reporting in Sentry.",
+      "required": false
+    },
+    "typekit_id": {
+      "description": "Typekit ID for headlines and other text.",
+      "required": false
+    },
+    "typekit_body_id": {
+      "description": "Typekit ID for body text.",
+      "required": false
+    }
+  },
   "environments": {
     "test": {
       "addons":[
@@ -20,5 +137,18 @@
         "test": "bundle exec rails test && bundle exec rake brakeman:check"
       }
     }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "free"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  },
+  "scripts": {
+    "postdeploy": "bundle exec rails db:schema:load && bundle exec rails db:seed"
   }
 }
