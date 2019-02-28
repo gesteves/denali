@@ -14,7 +14,7 @@ default: &default
   domain:
 
   # Optional
-  domain_short
+  domain_short:
 
   # Optional. Used for sharing on Flickr.
   flickr_access_token_secret:
@@ -32,6 +32,9 @@ default: &default
 
   # Optional.
   google_analytics_id:
+
+  # Optional. Enables IFTTT webhooks.
+  ifttt_webhook_key:
 
   # Required.
   imgix_domain:
@@ -52,11 +55,9 @@ default: &default
   # Optional. Used for exception reporting to Sentry.
   sentry_dsn:
 
-  # Optional. Enables notifications in Slack when new entries are published.
-  slack_incoming_webhook:
-
   # Optional. Enables webfonts.
   typekit_id:
+  typekit_body_id:
 
 development:
   <<: *default
@@ -93,6 +94,9 @@ production:
   # Optional. Used for auto-tagging entries with location info.
   google_api_key:
 
+  # Optional. Enables IFTTT webhooks.
+  ifttt_webhook_key:
+
   # Required.
   imgix_domain:
   imgix_secure: 'true'
@@ -117,3 +121,4 @@ production:
 
   # Optional. Enables webfonts.
   typekit_id:
+  typekit_body_id:
