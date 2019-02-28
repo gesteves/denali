@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_cloudfront?
-    request.headers['X-Denali-Secret'] == ENV['denali_secret'] && ENV['aws_cloudfront_distribution_id'].present?
+    request.headers['X-Denali-Secret'] == ENV['denali_secret']
   end
 
   def current_user
@@ -59,7 +59,7 @@ class ApplicationController < ActionController::Base
 
   def domain_redirect
     # Prevent people from bypassing CloudFront and hitting Heroku directly.
-    if Rails.env.production? && !is_cloudfront?
+    if Rails.env.production? && ENV['aws_cloudfront_distribution_id'].present? && !is_cloudfront?
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
       redirect_to "#{protocol}://#{ENV['domain']}#{request.fullpath}", status: 301
     end
