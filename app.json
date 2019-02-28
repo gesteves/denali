@@ -9,6 +9,7 @@
         "heroku-postgresql:in-dyno"
       ],
       "scripts": {
+        "test-setup": "bundle exec rails webpacker:compile",
         "test": "bundle exec rails test && bundle exec rake brakeman:check"
       }
     }
