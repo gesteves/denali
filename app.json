@@ -3,13 +3,21 @@
   "description": "A Rails-based photoblogging app.",
   "website": "https://www.allencompassingtrip.com/",
   "repository": "https://github.com/gesteves/denali",
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/ruby"
+    }
+  ],
   "environments": {
     "test": {
       "addons":[
         "heroku-postgresql:in-dyno"
       ],
       "scripts": {
-        "test-setup": "yarn && bundle exec rails webpacker:compile",
+        "test-setup": "bundle exec rails assets:precompile",
         "test": "bundle exec rails test && bundle exec rake brakeman:check"
       }
     }
