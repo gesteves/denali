@@ -40,7 +40,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_cloudfront?
-    request.headers['X-Denali-Secret'] == ENV['denali_secret']
+    request.headers['X-Denali-Secret'] == ENV['denali_secret'] && ENV['aws_cloudfront_distribution_id'].present?
   end
 
   def current_user
