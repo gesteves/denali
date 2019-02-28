@@ -8,9 +8,9 @@ class TwitterJob < BufferJob
     text = "#{truncate(caption, length: max_length, omission: '…')} #{entry.permalink_url}"
     if entry.is_photo?
       media = media_hash(entry.photos.first, w: 1024, alt_text: true)
-      post_to_buffer('twitter', text: text, media: media, now: true)
+      post_to_buffer('twitter', text: text, media: media)
     else
-      post_to_buffer('twitter', text: text, now: true)
+      post_to_buffer('twitter', text: text)
     end
   end
 end
