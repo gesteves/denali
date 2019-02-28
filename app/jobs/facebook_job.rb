@@ -10,9 +10,9 @@ class FacebookJob < BufferJob
     text = text.join("\n\n")
     if entry.is_photo?
       media = media_hash(entry.photos.first)
-      post_to_buffer('facebook', text: text, media: media, now: true)
+      post_to_buffer('facebook', text: text, media: media)
     else
-      post_to_buffer('facebook', text: text, now: true)
+      post_to_buffer('facebook', text: text)
     end
   end
 end
