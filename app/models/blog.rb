@@ -41,7 +41,7 @@ class Blog < ApplicationRecord
   end
 
   def has_search?
-    Rails.env.development? || ENV['ELASTICSEARCH_URL'].present?
+    Rails.env.development? || ENV['ELASTICSEARCH_URL'].present? || ENV['SEARCHBOX_URL'].present?
   end
 
   def past_publish_schedules_today

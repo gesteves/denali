@@ -1,6 +1,7 @@
-if ENV['ELASTICSEARCH_URL'].present?
+elasticsearch_url = ENV['ELASTICSEARCH_URL'] || ENV['SEARCHBOX_URL']
+if elasticsearch_url.present?
   Elasticsearch::Model.client = Elasticsearch::Client.new({
-    host: ENV['ELASTICSEARCH_URL'],
+    host: elasticsearch_url,
     transport_options: {
       request: { timeout: ENV['ELASTICSEARCH_TIMEOUT'].to_i || 1 }
     }
