@@ -35,6 +35,16 @@
       "description": "Your access token for the Buffer API, for sharing on social media.",
       "required": false
     },
+    "config_caching_minutes": {
+      "description": "Number of minutes pages are cached for.",
+      "required": true,
+      "value": "60"
+    },
+    "config_entry_caching_minutes": {
+      "description": "Number of minutes entry pages are cached for.",
+      "required": true,
+      "value": "60"
+    },
     "denali_secret": {
       "description": "A secret token, used for various purposes.",
       "required": true,
@@ -43,6 +53,10 @@
     "domain": {
       "description": "Domain for this app.",
       "required": true
+    },
+    "domain_short": {
+      "description": "Optional short domain for this app.",
+      "required": false
     },
     "flickr_access_token_secret": {
       "description": "Used for sharing on Flickr.",
