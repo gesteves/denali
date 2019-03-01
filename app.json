@@ -56,7 +56,7 @@
     },
     "domain": {
       "description": "Domain for this app.",
-      "required": true
+      "required": false
     },
     "domain_short": {
       "description": "Optional short domain for this app.",
