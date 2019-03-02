@@ -39,3 +39,5 @@ A simple, fast photoblogging CMS built in Ruby on Rails which features responsiv
 ## Installation & setup
 
 [TODO]
+
+...
