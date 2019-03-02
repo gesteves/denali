@@ -150,10 +150,10 @@
       "required": false
     },
     "HEROKU_APP_NAME": {
-      "required": true
+      "required": false
     },
     "HEROKU_PARENT_APP_NAME": {
-      "required": true
+      "required": false
     }
   },
   "environments": {
