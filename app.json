@@ -150,9 +150,11 @@
       "required": false
     },
     "HEROKU_APP_NAME": {
+      "description": "Leave this blank, but turn on runtime-dyno-metadata on your Heroku app after deploying.",
       "required": false
     },
     "HEROKU_PARENT_APP_NAME": {
+      "description": "Leave this blank.",
       "required": false
     }
   },
