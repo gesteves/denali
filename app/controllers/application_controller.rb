@@ -13,11 +13,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preload_link_header, :add_preconnect_link_header
 
   def default_url_options
-    if Rails.env.production?
-      { host: ENV['domain'] }
-    else
-      {}
-    end
+    Rails.application.routes.default_url_options
   end
 
   def require_login
@@ -61,7 +57,7 @@ class ApplicationController < ActionController::Base
     # Prevent people from bypassing CloudFront and hitting Heroku directly.
     if Rails.env.production? && ENV['aws_cloudfront_distribution_id'].present? && !is_cloudfront?
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
-      redirect_to "#{protocol}://#{ENV['domain']}#{request.fullpath}", status: 301
+      redirect_to "#{protocol}://#{Rails.application.routes.default_url_options[:host]}#{request.fullpath}", status: 301
     end
   end
 

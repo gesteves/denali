@@ -260,20 +260,20 @@ class Entry < ApplicationRecord
   def permalink_url
     if self.is_published?
       year, month, day, id, slug = self.slug_params
-      entry_long_url(year, month, day, id, slug, url_opts(host: ENV['domain']))
+      entry_long_url(year, month, day, id, slug)
     else
-      preview_entry_url(self.preview_hash, url_opts(host: ENV['domain']))
+      preview_entry_url(self.preview_hash)
     end
   end
 
   def amp_url
     return nil unless self.is_published?
     year, month, day, id, slug = self.slug_params
-    entry_amp_url(year, month, day, id, slug, url_opts(host: ENV['domain']))
+    entry_amp_url(year, month, day, id, slug)
   end
 
   def short_permalink_url(opts = {})
-    host = ENV['domain_short'] || ENV['domain']
+    host = ENV['domain_short'] || Rails.application.routes.default_url_options[:host]
     entry_url(self.id, url_opts(host: host))
   end
 
