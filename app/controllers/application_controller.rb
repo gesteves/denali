@@ -12,6 +12,10 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preload_link_header, :add_preconnect_link_header
 
+  def default_url_options
+    Rails.application.routes.default_url_options
+  end
+
   def require_login
     unless current_user
       session[:original_url] = request.original_url
