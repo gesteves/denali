@@ -9,7 +9,7 @@ class FacebookJob < BufferJob
     text << entry.permalink_url
     text = text.join("\n\n")
     if entry.is_photo?
-      media = media_hash(entry.photos.first, w: 2048)
+      media = media_hash(entry.photos.first)
       post_to_buffer('facebook', text: text, media: media)
     else
       post_to_buffer('facebook', text: text)
