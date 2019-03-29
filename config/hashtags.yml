@@ -11,6 +11,8 @@ aliases:
     - nationalparks
     - nationalparkservice
     - usinterior
+    - usnationalparks
+    - nps
   newyorkcity: &nyc
     - igersnyc
     - ilovenyc
@@ -243,6 +245,7 @@ instagram:
     - yellowstonenps
     - yellowstonepledge
     - yellowstoneforever
+    - ynp
   mountrainiernationalpark:
     - *pacificnorthwest
     - mountrainiernationalpark
