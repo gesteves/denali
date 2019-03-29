@@ -57,6 +57,14 @@ instagram:
     - bmore
     - charmcity
     - baltimoremd
+  blackandwhite:
+    - blackandwhitephoto
+    - blackandwhitephotography
+    - blancoynegro
+    - bnw
+    - bw
+    - igersbnw
+    - monochrome
   birds:
     - birding
     - birdphotography
@@ -158,7 +166,11 @@ instagram:
     - instadogs
   enumclaw: *pacificnorthwest
   featureaccounts:
+    - aperturefoundation
+    - fujifeed
     - lensculturediscovery
+    - myfeatureshoot
+    - subjectivelyobjective
   film:
     - analogphoto
     - believeinfilm
@@ -168,12 +180,6 @@ instagram:
     - onfilm
     - shootfilm
     - shotonfilm
-  fujifilm:
-    - fujifeed
-    - fujifilm
-    - fujilove
-    - fujix
-    - fujixseries
   landscapes:
     - landscapecaptures
     - landscapephoto
@@ -234,7 +240,6 @@ instagram:
   yosemitenationalpark: *nationalparks
   greatfallspark: *nationalparks
   grandtetonnationalpark:
-    - *jacksonhole
     - grandteton
     - grandtetonnationalpark
     - gtnp
