@@ -234,6 +234,7 @@ instagram:
   yosemitenationalpark: *nationalparks
   greatfallspark: *nationalparks
   grandtetonnationalpark:
+    - *jacksonhole
     - grandteton
     - grandtetonnationalpark
     - gtnp
