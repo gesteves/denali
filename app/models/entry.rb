@@ -320,16 +320,39 @@ class Entry < ApplicationRecord
   end
 
   def instagram_hashtags(count = 30)
-    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    entry_tags = self.tags.map { |t| t.slug.gsub(/-/, '') }
+    location_tags = self.locations.map { |t| t.slug.gsub(/-/, '') }
+    equipment_tags = self.equipment.map { |t| t.slug.gsub(/-/, '') }
+    style_tags = self.styles.map { |t| t.slug.gsub(/-/, '') }
+    all_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+
     instagram_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
 
     tags = instagram_hashtags['featureaccounts']&.flatten&.uniq&.sample(5) || []
-    extra_tags = instagram_hashtags['featureaccounts']&.flatten&.uniq || []
+    extra_tags = all_tags&.flatten&.uniq || []
 
-    # For each entry tag, add 5 matching Instagram tags to the array
+    # For each tag, add 5 matching Instagram tags to the array
     instagram_hashtags.each do |k, v|
       if entry_tags.include? k
         tags += instagram_hashtags[k]&.flatten&.uniq&.sample(5)
+      end
+    end
+
+    instagram_hashtags.each do |k, v|
+      if location_tags.include? k
+        tags += instagram_hashtags[k]&.flatten&.uniq&.sample(5)
+      end
+    end
+
+    instagram_hashtags.each do |k, v|
+      if equipment_tags.include? k
+        tags += instagram_hashtags[k]&.flatten&.uniq&.sample(3)
+      end
+    end
+
+    instagram_hashtags.each do |k, v|
+      if style_tags.include? k
+        tags += instagram_hashtags[k]&.flatten&.uniq&.sample(3)
       end
     end
 
@@ -337,7 +360,7 @@ class Entry < ApplicationRecord
     # every Instagram tag that matches this entry's tags.
     if tags.uniq.size < count
       instagram_hashtags.each do |k, v|
-        if entry_tags.include? k
+        if all_tags.include? k
           extra_tags += instagram_hashtags[k]&.flatten&.uniq
         end
       end
@@ -346,8 +369,8 @@ class Entry < ApplicationRecord
     # Shuffle and add them up, remove the duplicates, and grab the first `count`.
     # That way we end up with `count` Instagram hashtags, guaranteeing there are
     # at least a few of each matching entry tag.
-    instagram_tags = tags.shuffle + extra_tags.shuffle
-    instagram_tags.compact.uniq[0, count].shuffle.map { |t| "##{t}"}.join(' ')
+    instagram_tags = tags + extra_tags
+    instagram_tags.compact.uniq[0, count].sort.map { |t| "##{t}"}.join(' ')
   end
 
   def instagram_caption

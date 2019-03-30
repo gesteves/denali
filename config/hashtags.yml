@@ -167,10 +167,7 @@ instagram:
   enumclaw: *pacificnorthwest
   featureaccounts:
     - aperturefoundation
-    - fujifeed
     - lensculturediscovery
-    - myfeatureshoot
-    - subjectivelyobjective
   film:
     - analogphoto
     - believeinfilm
@@ -180,6 +177,12 @@ instagram:
     - onfilm
     - shootfilm
     - shotonfilm
+  fujifilm:
+    - fujifeed
+    - fujifilm
+    - fujilove
+    - fujix
+    - fujixseries
   landscapes:
     - landscapecaptures
     - landscapephoto
