@@ -369,8 +369,8 @@ class Entry < ApplicationRecord
     # Shuffle and add them up, remove the duplicates, and grab the first `count`.
     # That way we end up with `count` Instagram hashtags, guaranteeing there are
     # at least a few of each matching entry tag.
-    instagram_tags = tags + extra_tags
-    instagram_tags.compact.uniq[0, count].sort.map { |t| "##{t}"}.join(' ')
+    instagram_tags = tags + extra_tags.shuffle
+    instagram_tags.compact.uniq[0, count].shuffle.map { |t| "##{t}"}.join(' ')
   end
 
   def instagram_caption
