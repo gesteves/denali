@@ -47,6 +47,7 @@ gem 'dalli'
 # Background Jobs
 gem 'resque'
 gem 'resque-scheduler'
+gem 'resque-pool'
 
 # Social Networks
 gem 'flickraw'
