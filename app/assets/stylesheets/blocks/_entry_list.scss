@@ -19,7 +19,6 @@
 }
 
 .entry-list__item {
-  border-radius: var(--border-radius);
   display: block;
   float: left;
   margin: 0 calc(var(--entry-list-gutters)/2) var(--entry-list-gutters);
@@ -103,7 +102,6 @@
   align-items: center;
   backdrop-filter: blur(20px);
   background-color: var(--color-photo-hover);
-  border-radius: var(--border-radius);
   bottom: 0;
   display: flex;
   flex-flow: column nowrap;
