@@ -1,2 +1,2 @@
 web: bundle exec passenger start -p $PORT --max-pool-size 3
-worker: bundle exec resque-pool
+worker: bundle exec sidekiq -t 25

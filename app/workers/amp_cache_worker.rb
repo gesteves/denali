@@ -1,9 +1,9 @@
-class AmpCacheJob < ApplicationJob
+class AmpCacheWorker < ApplicationWorker
 
-  def perform(entry)
+  def perform(entry_id)
     return if !Rails.env.production? || ENV['google_amp_cache_private_key_url'].blank?
+    entry = Entry.find(entry_id)
     caches = get_cache_prefixes
-
     timestamp = Time.current.to_i
     domain = Rails.application.routes.default_url_options[:host]
     path = "/update-cache/c/s/#{domain}#{entry.amp_path}?amp_action=flush&amp_ts=#{timestamp}"
@@ -27,7 +27,7 @@ class AmpCacheJob < ApplicationJob
     url = "https://#{domain.parameterize}.#{cache}#{path}&amp_url_signature=#{signature}"
     response = HTTParty.get(url)
     if response.code >= 400
-      logger.tagged('AMP') { logger.error { "Update cache request to #{cache} responded with #{response.code}" } }
+      raise "Update cache request to #{cache} responded with #{response.code}"
     end
   end
 

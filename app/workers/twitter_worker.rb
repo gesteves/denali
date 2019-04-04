@@ -1,7 +1,7 @@
-class TwitterJob < BufferJob
-  queue_as :default
+class TwitterWorker < BufferWorker
 
-  def perform(entry)
+  def perform(entry_id)
+    entry = Entry.find(entry_id)
     return if !entry.is_published?
     max_length = 230 # 280 characters - 25 for the image url - 25 for the permalink url
     caption = entry.tweet_text.present? ? entry.tweet_text : entry.plain_title

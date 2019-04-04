@@ -140,19 +140,19 @@ class Photo < ApplicationRecord
   end
 
   def extract_metadata
-    PhotoMetadataJob.perform_later(self)
+    PhotoMetadataWorker.perform_async(self.id)
   end
 
   def geocode
-    PhotoGeocodeJob.perform_later(self)
+    PhotoGeocodeWorker.perform_async(self.id)
   end
 
   def extract_keywords
-    PhotoKeywordsJob.perform_later(self)
+    PhotoKeywordsWorker.perform_async(self.id)
   end
 
   def extract_palette
-    PhotoPaletteJob.perform_later(self)
+    PhotoPaletteWorker.perform_async(self.id)
   end
 
   def prominent_color

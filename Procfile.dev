@@ -1,5 +1,5 @@
 rails: rails s -p 3000
 memcached: memcached
 redis: redis-server
-worker: resque-pool
+worker: sidekiq
 elasticsearch: elasticsearch

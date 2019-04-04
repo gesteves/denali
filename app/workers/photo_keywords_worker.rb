@@ -1,7 +1,7 @@
-class PhotoKeywordsJob < ApplicationJob
-  queue_as :default
+class PhotoKeywordsWorker < ApplicationWorker
 
-  def perform(photo)
+  def perform(photo_id)
+    photo = Photo.find(photo_id)
     labels = detect_labels(photo)
     photo.keywords = labels.map(&:name).join(', ')
     photo.save

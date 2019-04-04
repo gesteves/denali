@@ -1,4 +1,6 @@
-class BufferJob < ApplicationJob
+class BufferWorker < ApplicationWorker
+  sidekiq_options queue: 'high'
+
   private
 
   def get_profile_ids(service)
@@ -26,7 +28,7 @@ class BufferJob < ApplicationJob
     end
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
     if response.code >= 400
-      logger.tagged('Social', 'Buffer') { logger.error response.body }
+      raise "Failed to post to Buffer: #{response.body}"
     end
   end
 

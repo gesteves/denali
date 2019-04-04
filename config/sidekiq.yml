@@ -1,0 +1,4 @@
+:queues:
+  - high
+  - default
+  - low

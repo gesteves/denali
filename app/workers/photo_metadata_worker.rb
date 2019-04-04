@@ -1,8 +1,8 @@
 require 'exifr/jpeg'
-class PhotoMetadataJob < ApplicationJob
-  queue_as :default
+class PhotoMetadataWorker < ApplicationWorker
 
-  def perform(photo, opts = {})
+  def perform(photo_id, opts = {})
+    photo = Photo.find(photo_id)
     opts.reverse_merge!(geocode: true)
     original = open(photo.image.service_url)
     image = MiniMagick::Image.open(original.path)

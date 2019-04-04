@@ -1,7 +1,7 @@
-class FacebookJob < BufferJob
-  queue_as :default
+class FacebookWorker < BufferWorker
 
-  def perform(entry)
+  def perform(entry_id)
+    entry = Entry.find(entry_id)
     return if !entry.is_published? || !entry.is_photo?
     text = []
     text << entry.plain_title

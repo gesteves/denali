@@ -241,7 +241,7 @@ class Admin::EntriesController < AdminController
 
   def instagram
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    InstagramJob.perform_later(@entry)
+    InstagramWorker.perform_async(@entry.id)
     @message = 'Your entry was sent to your Instagram queue in Buffer.'
     respond_to do |format|
       format.html {
@@ -254,7 +254,7 @@ class Admin::EntriesController < AdminController
 
   def twitter
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    TwitterJob.perform_later(@entry)
+    TwitterWorker.perform_async(@entry.id)
     @message = 'Your entry was sent to your Twitter queue in Buffer.'
     respond_to do |format|
       format.html {
@@ -267,7 +267,7 @@ class Admin::EntriesController < AdminController
 
   def facebook
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    FacebookJob.perform_later(@entry)
+    FacebookWorker.perform_async(@entry.id)
     @message = 'Your entry was sent to your Facebook queue in Buffer.'
     respond_to do |format|
       format.html {
@@ -280,7 +280,7 @@ class Admin::EntriesController < AdminController
 
   def flickr
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    FlickrJob.perform_later(@entry)
+    FlickrWorker.perform_async(@entry.id)
     @message = 'Your entry was sent to Flickr.'
     respond_to do |format|
       format.html {
@@ -293,8 +293,8 @@ class Admin::EntriesController < AdminController
 
   def flush_caches
     @entry.touch
-    CloudfrontInvalidationJob.perform_later(@entry)
-    AmpCacheJob.perform_later(@entry)
+    CloudfrontInvalidationWorker.perform_async(@entry.id)
+    AmpCacheWorker.perform_async(@entry.id)
     @message = 'Your entry is being cleared from cache. This may take a few moments.'
     respond_to do |format|
       format.html {
@@ -311,8 +311,8 @@ class Admin::EntriesController < AdminController
       photo.extract_palette
       photo.extract_keywords
     end
-    CloudfrontInvalidationJob.perform_later(@entry)
-    AmpCacheJob.perform_later(@entry)
+    CloudfrontInvalidationWorker.perform_async(@entry.id)
+    AmpCacheWorker.perform_async(@entry.id)
     @message = 'Your entry’s metadata is being updated. This may take a few moments.'
     respond_to do |format|
       format.html {
@@ -361,8 +361,8 @@ class Admin::EntriesController < AdminController
 
     def enqueue_cache_jobs
       if entry_params[:flush_caches] == 'true'
-        CloudfrontInvalidationJob.perform_later(@entry)
-        AmpCacheJob.perform_later(@entry)
+        CloudfrontInvalidationWorker.perform_async(@entry.id)
+        AmpCacheWorker.perform_async(@entry.id)
       end
     end
 
