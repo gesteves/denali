@@ -27,9 +27,6 @@ class BufferWorker < ApplicationWorker
       end
     end
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
-    if response.code >= 400
-      logger.tagged('Social', 'Buffer') { logger.error response.body }
-    end
   end
 
   def media_hash(photo, opts = {})
