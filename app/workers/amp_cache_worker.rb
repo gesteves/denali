@@ -26,6 +26,9 @@ class AmpCacheWorker < ApplicationWorker
   def update(cache, domain, path, signature)
     url = "https://#{domain.parameterize}.#{cache}#{path}&amp_url_signature=#{signature}"
     response = HTTParty.get(url)
+    if response.code >= 400
+      raise "Update cache request to #{cache} responded with #{response.code}"
+    end
   end
 
   def sign(path)
