@@ -1,5 +1,5 @@
 rails: rails s -p 3000
 memcached: memcached
 redis: redis-server
-worker: bundle exec rails jobs:work
+worker: sidekiq
 elasticsearch: elasticsearch

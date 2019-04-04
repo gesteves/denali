@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  require 'sidekiq/web'
+  require 'user_constraint'
+  mount Sidekiq::Web => '/sidekiq', :constraints => UserConstraint.new
+
   concern :paginatable do
     get '(page/:page)', :action => :index, :on => :collection
     get 'queued(/page/:page)', :action => :queued, :on => :collection

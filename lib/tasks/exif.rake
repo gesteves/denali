@@ -5,7 +5,7 @@ namespace :exif do
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
         entry.photos.each do |p|
-          PhotoMetadataJob.perform_later(p, { geocode: false })
+          PhotoMetadataWorker.perform_async(p.id, { geocode: false })
         end
       end
     else
@@ -16,7 +16,7 @@ namespace :exif do
   desc "Refreshes exif data for all entries"
   task :update_all => :environment do
     Photo.find_each do |p|
-      PhotoMetadataJob.perform_later(p, { geocode: false })
+      PhotoMetadataWorker.perform_async(p.id, { geocode: false })
     end
   end
 end

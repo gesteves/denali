@@ -1,9 +1,9 @@
-class AmpCacheJob < ApplicationJob
+class AmpCacheWorker < ApplicationWorker
 
-  def perform(entry)
+  def perform(entry_id)
     return if !Rails.env.production? || ENV['google_amp_cache_private_key_url'].blank?
+    entry = Entry.find(entry_id)
     caches = get_cache_prefixes
-
     timestamp = Time.current.to_i
     domain = Rails.application.routes.default_url_options[:host]
     path = "/update-cache/c/s/#{domain}#{entry.amp_path}?amp_action=flush&amp_ts=#{timestamp}"

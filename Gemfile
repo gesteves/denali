@@ -45,8 +45,7 @@ gem 'sentry-raven'
 gem 'dalli'
 
 # Background Jobs
-gem 'resque'
-gem 'resque-scheduler'
+gem 'sidekiq'
 
 # Social Networks
 gem 'flickraw'

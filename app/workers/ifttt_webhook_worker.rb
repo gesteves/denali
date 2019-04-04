@@ -1,5 +1,5 @@
-class IftttWebhookJob < ApplicationJob
-  queue_as :default
+class IftttWebhookWorker < ApplicationWorker
+  sidekiq_options queue: 'high'
 
   def perform(event, payload)
     return if !Rails.env.production? || ENV['ifttt_webhook_key'].blank? || event.blank? || payload.blank?

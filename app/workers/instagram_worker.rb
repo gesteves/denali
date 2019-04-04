@@ -1,7 +1,7 @@
-class InstagramJob < BufferJob
-  queue_as :default
+class InstagramWorker < BufferWorker
 
-  def perform(entry)
+  def perform(entry_id)
+    entry = Entry.find(entry_id)
     return if !entry.is_photo?
     text = entry.instagram_caption
     media = media_hash(entry.photos.first)

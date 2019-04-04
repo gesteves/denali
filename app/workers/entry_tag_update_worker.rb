@@ -1,7 +1,7 @@
-class EntryTagUpdateJob < ApplicationJob
-  queue_as :default
+class EntryTagUpdateWorker < ApplicationWorker
 
-  def perform(entry)
+  def perform(entry_id)
+    entry = Entry.find(entry_id)
     equipment_tags = []
     location_tags = []
     style_tags = []

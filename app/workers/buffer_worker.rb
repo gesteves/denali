@@ -1,4 +1,6 @@
-class BufferJob < ApplicationJob
+class BufferWorker < ApplicationWorker
+  sidekiq_options queue: 'high'
+
   private
 
   def get_profile_ids(service)

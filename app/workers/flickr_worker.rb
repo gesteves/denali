@@ -1,7 +1,8 @@
-class FlickrJob < ApplicationJob
-  queue_as :default
+class FlickrWorker < ApplicationWorker
+  sidekiq_options queue: 'high'
 
-  def perform(entry)
+  def perform(entry_id)
+    entry = Entry.find(entry_id)
     return if !entry.is_published? || !entry.is_photo? || !Rails.env.production?
     FlickRaw.api_key = ENV['flickr_consumer_key']
     FlickRaw.shared_secret = ENV['flickr_consumer_secret']

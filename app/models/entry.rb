@@ -26,15 +26,15 @@ class Entry < ApplicationRecord
   settings index: { number_of_shards: 1 }
 
   after_commit on: [:create] do
-    ElasticsearchJob.perform_later(self, 'create')
+    ElasticsearchWorker.perform_async(self.id, 'create')
   end
 
   after_commit on: [:update] do
-    ElasticsearchJob.perform_later(self, 'update')
+    ElasticsearchWorker.perform_async(self.id, 'update')
   end
 
   after_commit on: [:destroy] do
-    ElasticsearchJob.perform_later(self, 'destroy')
+    ElasticsearchWorker.perform_async(self.id, 'destroy')
   end
 
   def as_indexed_json(opts = nil)
@@ -279,10 +279,10 @@ class Entry < ApplicationRecord
 
   def enqueue_sharing_jobs
     self.send_to_ifttt
-    FacebookJob.perform_later(self) if self.post_to_facebook
-    FlickrJob.perform_later(self) if self.post_to_flickr
-    InstagramJob.perform_later(self) if self.post_to_instagram
-    TwitterJob.perform_later(self) if self.post_to_twitter
+    FacebookWorker.perform_async(self.id) if self.post_to_facebook
+    FlickrWorker.perform_async(self.id) if self.post_to_flickr
+    InstagramWorker.perform_async(self.id) if self.post_to_instagram
+    TwitterWorker.perform_async(self.id) if self.post_to_twitter
     true
   end
 
@@ -292,7 +292,7 @@ class Entry < ApplicationRecord
       value2: self.permalink_url
     }
     payload[:value3] = self.photos.first.url(w: 1200) if self.is_photo?
-    IftttWebhookJob.perform_later('entry-published', payload)
+    IftttWebhookWorker.perform_async('entry-published', payload)
   end
 
   def combined_tags
@@ -385,7 +385,7 @@ class Entry < ApplicationRecord
   end
 
   def update_tags
-    EntryTagUpdateJob.perform_later(self)
+    EntryTagUpdateWorker.perform_async(self.id)
   end
 
   def add_tags(new_tags)
