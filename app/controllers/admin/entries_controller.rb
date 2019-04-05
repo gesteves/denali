@@ -310,7 +310,6 @@ class Admin::EntriesController < AdminController
       photo.extract_palette
       photo.extract_keywords
     end
-    CloudfrontInvalidationWorker.perform_async(@entry.id)
     @message = 'Your entry’s metadata is being updated. This may take a few moments.'
     respond_to do |format|
       format.html {
