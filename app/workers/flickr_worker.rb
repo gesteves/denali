@@ -1,9 +1,10 @@
 class FlickrWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id)
-    entry = Entry.find(entry_id)
-    return if !entry.is_published? || !entry.is_photo? || !Rails.env.production?
+  def perform(photo_id)
+    photo = Photo.find(photo_id)
+    entry = photo.entry
+    return if !entry.is_published? || !Rails.env.production?
     FlickRaw.api_key = ENV['flickr_consumer_key']
     FlickRaw.shared_secret = ENV['flickr_consumer_secret']
 
@@ -21,8 +22,6 @@ class FlickrWorker < ApplicationWorker
 
     all_tags = entry.combined_tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')
 
-    entry.photos.each do |p|
-      flickr.upload_photo open(p.image.service_url).path, title: title, description: body, tags: all_tags
-    end
+    flickr.upload_photo open(photo.image.service_url).path, title: title, description: body, tags: all_tags
   end
 end

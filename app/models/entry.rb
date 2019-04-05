@@ -280,10 +280,16 @@ class Entry < ApplicationRecord
   def enqueue_sharing_jobs
     self.send_to_ifttt
     FacebookWorker.perform_async(self.id) if self.post_to_facebook
-    FlickrWorker.perform_async(self.id) if self.post_to_flickr
     InstagramWorker.perform_async(self.id) if self.post_to_instagram
     TwitterWorker.perform_async(self.id) if self.post_to_twitter
+    self.send_photos_to_flickr if self.post_to_flickr
     true
+  end
+
+  def send_photos_to_flickr
+    self.photos.each do |p|
+      FlickrWorker.perform_async(p.id)
+    end
   end
 
   def send_to_ifttt
