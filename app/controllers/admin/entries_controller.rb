@@ -294,7 +294,6 @@ class Admin::EntriesController < AdminController
   def flush_caches
     @entry.touch
     CloudfrontInvalidationWorker.perform_async(@entry.id)
-    AmpCacheWorker.perform_async(@entry.id)
     @message = 'Your entry is being cleared from cache. This may take a few moments.'
     respond_to do |format|
       format.html {
@@ -312,7 +311,6 @@ class Admin::EntriesController < AdminController
       photo.extract_keywords
     end
     CloudfrontInvalidationWorker.perform_async(@entry.id)
-    AmpCacheWorker.perform_async(@entry.id)
     @message = 'Your entry’s metadata is being updated. This may take a few moments.'
     respond_to do |format|
       format.html {
@@ -362,7 +360,6 @@ class Admin::EntriesController < AdminController
     def enqueue_cache_jobs
       if entry_params[:flush_caches] == 'true'
         CloudfrontInvalidationWorker.perform_async(@entry.id)
-        AmpCacheWorker.perform_async(@entry.id)
       end
     end
 
