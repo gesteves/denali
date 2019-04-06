@@ -1,4 +1,5 @@
 class EntryTagUpdateWorker < ApplicationWorker
+  sidekiq_options queue: 'low'
 
   def perform(entry_id)
     entry = Entry.find(entry_id)

@@ -13,7 +13,6 @@ class Photo < ApplicationRecord
 
   def update_entry
     self.entry.touch
-    self.entry.update_tags
   end
 
   def self.oldest
