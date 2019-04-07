@@ -1,9 +1,8 @@
 require 'exifr/jpeg'
 class PhotoMetadataWorker < ApplicationWorker
 
-  def perform(photo_id, opts = {})
+  def perform(photo_id)
     photo = Photo.find(photo_id)
-    opts.reverse_merge!(geocode: true)
     original = open(photo.image.service_url)
     image = MiniMagick::Image.open(original.path)
     image.auto_orient
@@ -44,7 +43,7 @@ class PhotoMetadataWorker < ApplicationWorker
       end
     end
     photo.save!
-    photo.geocode if opts[:geocode]
+    photo.geocode
     photo.entry.update_tags
   end
 end

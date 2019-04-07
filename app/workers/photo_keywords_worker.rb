@@ -4,7 +4,7 @@ class PhotoKeywordsWorker < ApplicationWorker
     photo = Photo.find(photo_id)
     labels = detect_labels(photo)
     photo.keywords = labels.map(&:name).join(', ')
-    photo.save
+    photo.save!
   end
 
   private
