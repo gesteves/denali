@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_22_013908) do
+ActiveRecord::Schema.define(version: 2019_04_07_210157) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,7 +142,6 @@ ActiveRecord::Schema.define(version: 2019_01_22_013908) do
     t.string "color_vibrant"
     t.string "color_muted"
     t.string "color_palette"
-    t.string "keywords"
     t.string "postal_code"
     t.bigint "camera_id"
     t.bigint "lens_id"

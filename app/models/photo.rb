@@ -146,10 +146,6 @@ class Photo < ApplicationRecord
     PhotoGeocodeWorker.perform_async(self.id)
   end
 
-  def extract_keywords
-    PhotoKeywordsWorker.perform_async(self.id)
-  end
-
   def extract_palette
     PhotoPaletteWorker.perform_async(self.id)
   end
@@ -171,8 +167,6 @@ class Photo < ApplicationRecord
   def alt_text
     if self.caption.present?
       self.plain_caption
-    elsif self.keywords.present?
-      "Photo may contain: #{self.keywords}"
     else
       ''
     end

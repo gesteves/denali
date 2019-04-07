@@ -27,7 +27,6 @@ A simple, fast photoblogging CMS built in Ruby on Rails which features responsiv
 * Cross-posting of entries to Instagram, Twitter, and Facebook (via Buffer), and Flickr
 * Auto-tagging of entries by location, equipment, and style
 * Automatic palette extraction for image placeholders
-* Automatic alt text generation using Amazon Rekognition
 * Automatic generation of Instagram hashtags, and image crops for feed and stories
 * Google AMP support
 * Did I mention it's fast as heck?

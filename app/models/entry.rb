@@ -48,8 +48,7 @@ class Entry < ApplicationRecord
                            :plain_title,
                            :es_tags,
                            :es_tag_slugs,
-                           :es_captions,
-                           :es_keywords])
+                           :es_captions])
   end
 
   def self.published(order = 'published_at DESC')
@@ -319,10 +318,6 @@ class Entry < ApplicationRecord
 
   def es_captions
     self.photos.map { |p| p.plain_caption }.reject(&:blank?).join(' ')
-  end
-
-  def es_keywords
-    self.photos.map { |p| p.keywords }.reject(&:blank?).join(', ')
   end
 
   def instagram_hashtags(count = 30)

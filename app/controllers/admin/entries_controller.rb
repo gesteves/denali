@@ -310,7 +310,6 @@ class Admin::EntriesController < AdminController
     @entry.photos.each do |photo|
       photo.extract_metadata
       photo.extract_palette
-      photo.extract_keywords
     end
     @message = 'Your entry’s metadata is being updated. This may take a few moments.'
     respond_to do |format|
@@ -368,7 +367,6 @@ class Admin::EntriesController < AdminController
       @entry.photos.each do |photo|
         photo.extract_metadata
         photo.extract_palette
-        photo.extract_keywords
       end
     end
 end

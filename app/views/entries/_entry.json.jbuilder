@@ -24,7 +24,6 @@ json.cache! entry do
             json.(p, :caption)
             json.(p, :formatted_caption)
             json.(p, :plain_caption)
-            json.(p, :keywords)
             json.(p, :exposure)
             json.(p, :f_number)
             json.(p, :iso)

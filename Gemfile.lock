@@ -64,9 +64,6 @@ GEM
     aws-sdk-kms (1.13.0)
       aws-sdk-core (~> 3, >= 3.39.0)
       aws-sigv4 (~> 1.0)
-    aws-sdk-rekognition (1.16.0)
-      aws-sdk-core (~> 3, >= 3.39.0)
-      aws-sigv4 (~> 1.0)
     aws-sdk-s3 (1.29.0)
       aws-sdk-core (~> 3, >= 3.39.0)
       aws-sdk-kms (~> 1)
@@ -304,7 +301,6 @@ DEPENDENCIES
   acts_as_list
   autoprefixer-rails
   aws-sdk-cloudfront (~> 1)
-  aws-sdk-rekognition (~> 1)
   aws-sdk-s3 (~> 1)
   bootsnap (>= 1.1.0)
   brakeman
