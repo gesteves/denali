@@ -7,6 +7,7 @@ class PhotoPaletteWorker < ApplicationWorker
     photo.color_muted   = palette.dig('dominant_colors', 'muted', 'hex')
     photo.color_palette = palette['colors'].map { |c| c['hex'] }.join(',')
     photo.save
+    photo.entry.update_tags
   end
 
   private

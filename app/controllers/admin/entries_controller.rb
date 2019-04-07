@@ -312,7 +312,6 @@ class Admin::EntriesController < AdminController
       photo.extract_palette
       photo.extract_keywords
     end
-    @entry.update_tags
     @message = 'Your entry’s metadata is being updated. This may take a few moments.'
     respond_to do |format|
       format.html {
@@ -371,6 +370,5 @@ class Admin::EntriesController < AdminController
         photo.extract_palette
         photo.extract_keywords
       end
-      @entry.update_tags
     end
 end

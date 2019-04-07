@@ -18,6 +18,7 @@ class PhotoGeocodeWorker < ApplicationWorker
       photo.administrative_area = components.select { |c| c['types'].include? 'administrative_area_level_1' }.map {|c| c['long_name']}.join(', ')
       photo.postal_code         = components.select { |c| c['types'].include? 'postal_code' }.map {|c| c['long_name']}.join(', ')
       photo.save
+      photo.entry.update_tags
     end
   end
 end

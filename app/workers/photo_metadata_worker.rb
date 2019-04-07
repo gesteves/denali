@@ -45,5 +45,6 @@ class PhotoMetadataWorker < ApplicationWorker
     end
     photo.save!
     photo.geocode if opts[:geocode]
+    photo.entry.update_tags
   end
 end
