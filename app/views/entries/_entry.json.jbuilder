@@ -21,9 +21,7 @@ json.cache! entry do
           json.type 'photo'
           json.id p.id.to_s
           json.attributes do
-            json.(p, :caption)
-            json.(p, :formatted_caption)
-            json.(p, :plain_caption)
+            json.(p, :alt_text)
             json.(p, :exposure)
             json.(p, :f_number)
             json.(p, :iso)

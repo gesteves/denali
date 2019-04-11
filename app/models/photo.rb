@@ -80,14 +80,6 @@ class Photo < ApplicationRecord
     Ix.path(self.image.key).to_url(opts)
   end
 
-  def formatted_caption
-    markdown_to_html(self.caption)
-  end
-
-  def plain_caption
-    markdown_to_plaintext(self.caption)
-  end
-
   def is_square?
     self.width == self.height
   end
@@ -162,13 +154,5 @@ class Photo < ApplicationRecord
   def black_and_white?
     return if self.color_palette.blank?
     !self.color?
-  end
-
-  def alt_text
-    if self.caption.present?
-      self.plain_caption
-    else
-      ''
-    end
   end
 end

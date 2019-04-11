@@ -43,7 +43,7 @@
             <div class="media-content">
               <div class="field is-grouped is-grouped-multiline">
                 <div class="control is-expanded">
-                  <%= p.text_area :caption, placeholder: 'Write a caption for this photo…', class: 'textarea' %>
+                  <%= p.text_field :alt_text, placeholder: 'Write alt text for this photo…', class: 'input' %>
                   <%= p.hidden_field :position, 'data-position': '' %>
                   <%= p.hidden_field :focal_x, 'data-target': 'photo-form.focalX' %>
                   <%= p.hidden_field :focal_y, 'data-target': 'photo-form.focalY' %>
@@ -51,10 +51,10 @@
               </div>
             </div>
             <div class="media-right photo-form__controls">
-              <a class="delete" data-action="click->photo-form#delete"></a>
               <span class="icon is-small has-text-grey-light draggable-handle">
                 <i class="fas fa-sort"></i>
               </span>
+              <a class="delete" data-action="click->photo-form#delete"></a>
             </div>
           </div>
         </div>

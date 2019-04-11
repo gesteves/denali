@@ -48,7 +48,7 @@ class Entry < ApplicationRecord
                            :plain_title,
                            :es_tags,
                            :es_tag_slugs,
-                           :es_captions])
+                           :es_alt_text])
   end
 
   def self.published(order = 'published_at DESC')
@@ -316,8 +316,8 @@ class Entry < ApplicationRecord
     self.combined_tags.map { |t| t.slug.gsub(/-/, '') }.join(' ')
   end
 
-  def es_captions
-    self.photos.map { |p| p.plain_caption }.reject(&:blank?).join(' ')
+  def es_alt_text
+    self.photos.map { |p| p.alt_text }.reject(&:blank?).join(' ')
   end
 
   def instagram_hashtags(count = 30)

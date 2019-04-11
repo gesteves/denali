@@ -19,10 +19,10 @@
     </div>
   <% end %>
   <% cache entry do %>
-    <% if entry.photos.count { |p| p.caption.blank? } > 0 %>
+    <% if entry.photos.count { |p| p.alt_text.blank? } > 0 %>
       <div class="control">
         <div class="tags">
-          <span class="tag is-warning">Caption missing</span>
+          <span class="tag is-warning">Alt text missing</span>
         </div>
       </div>
     <% end %>

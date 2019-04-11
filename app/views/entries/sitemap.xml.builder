@@ -9,7 +9,7 @@ cache [@photoblog, @page] do
         e.photos.each do |p|
           xml.image :image do
             xml.image :loc, p.url(w: 1200)
-            xml.image :caption, p.plain_caption
+            xml.image :caption, p.alt_text
             xml.image :title, e.plain_title
             xml.image :geo_location, p.long_address if e.show_in_map? && p.has_location?
           end
