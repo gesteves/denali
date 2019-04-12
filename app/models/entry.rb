@@ -374,6 +374,19 @@ class Entry < ApplicationRecord
     instagram_tags.compact.uniq[0, count].shuffle.map { |t| "##{t}"}.join(' ')
   end
 
+  def facebook_place
+    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    place = nil
+    facebook_places = YAML.load_file(Rails.root.join('config/facebook_places.yml'))
+    facebook_places.each do |k, v|
+      if entry_tags.include? k
+        place = v
+        break
+      end
+    end
+    place
+  end
+
   def instagram_caption
     text = []
     if self.instagram_text.present?
