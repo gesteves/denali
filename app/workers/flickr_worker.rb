@@ -27,7 +27,7 @@ class FlickrWorker < ApplicationWorker
     if photo_id.present?
       group_ids = flickr_groups(entry)
       group_ids.each do |group_id|
-        FlickrGroupWorker(photo_id, group_id)
+        FlickrGroupWorker.perform_async(photo_id, group_id)
       end
     end
   end
