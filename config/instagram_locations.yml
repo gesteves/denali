@@ -1,0 +1,22 @@
+# Locations for Instagram geotagging. Keys are entry tag slugs,
+# values are the name of the location and the ID of the associated Facebook page.
+# To add items:
+# 1. Go to Facebook Graph Explorer: https://developers.facebook.com/tools/explorer/
+# 2. Search for `search?type=place&q=#{location-name}&fields=link,name`
+# 3. Go to the associated page, look at the page source, and find `page_id` in the source.
+# 4. Add the location name and page ID under the slug of the tag you want associated with it.
+grandtetonnationalpark:
+  name: "Grand Teton National Park"
+  id: "130250293656242"
+nationalelkrefuge:
+  name: "National Elk Refuge"
+  id: "113095802034086"
+jackson:
+  name: "Jackson, Wyoming"
+  id: "104038089632855"
+wyoming:
+  name: "Wyoming"
+  id: "104039182964473"
+sanfrancisco:
+  name: "San Francisco, California"
+  id: "114952118516947"
