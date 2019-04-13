@@ -25,32 +25,9 @@ class FlickrWorker < ApplicationWorker
     photo_id = flickr.upload_photo open(photo.image.service_url).path, title: title, description: body, tags: all_tags
 
     if photo_id.present?
-      group_ids = flickr_groups(entry)
-      group_ids.each do |group_id|
+      entry.flickr_groups.each do |group_id|
         FlickrGroupWorker.perform_async(photo_id, group_id)
       end
     end
-  end
-
-  private
-  def flickr_groups(entry, count = 60)
-    groups = []
-    extra_groups = []
-    tags = entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }
-    flickr_groups = YAML.load_file(Rails.root.join('config/flickr_groups.yml'))
-    flickr_groups.each do |k, v|
-      if tags.include? k
-        groups += flickr_groups[k]&.flatten&.uniq&.sample(5)
-      end
-    end
-    if groups.uniq.size < count
-      flickr_groups.each do |k, v|
-        if tags.include? k
-          extra_groups += flickr_groups[k]&.flatten&.uniq
-        end
-      end
-    end
-    final_groups = groups + extra_groups.shuffle
-    final_groups.compact.uniq[0, count]
   end
 end

@@ -374,6 +374,19 @@ class Entry < ApplicationRecord
     instagram_tags.compact.uniq[0, count].shuffle.map { |t| "##{t}"}.join(' ')
   end
 
+  def instagram_location
+    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    location = nil
+    locations = YAML.load_file(Rails.root.join('config/instagram_locations.yml'))
+    locations.each do |k, v|
+      if entry_tags.include? k
+        location = v
+        break
+      end
+    end
+    location
+  end
+
   def instagram_caption
     text = []
     if self.instagram_text.present?
@@ -383,6 +396,27 @@ class Entry < ApplicationRecord
       text << self.plain_body
     end
     text.reject(&:blank?).join("\n\n")
+  end
+
+  def flickr_groups(count = 60)
+    groups = []
+    extra_groups = []
+    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    flickr_groups = YAML.load_file(Rails.root.join('config/flickr_groups.yml'))
+    flickr_groups.each do |k, v|
+      if entry_tags.include? k
+        groups += flickr_groups[k]&.flatten&.uniq&.sample(5)
+      end
+    end
+    if groups.uniq.size < count
+      flickr_groups.each do |k, v|
+        if entry_tags.include? k
+          extra_groups += flickr_groups[k]&.flatten&.uniq
+        end
+      end
+    end
+    final_groups = groups + extra_groups.shuffle
+    final_groups.compact.uniq[0, count]
   end
 
   def update_tags

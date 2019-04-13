@@ -7,7 +7,7 @@ class InstagramWorker < BufferWorker
       text: entry.instagram_caption,
       media: media_hash(entry.photos.first)
     }
-    instagram_location = instagram_locations(entry)
+    instagram_location = entry.instagram_location
     if instagram_location.present?
       opts[:service_geolocation_id] = instagram_location['id']
       opts[:service_geolocation_name] = instagram_location['name']
@@ -21,18 +21,5 @@ class InstagramWorker < BufferWorker
       photo: photo.instagram_url,
       thumbnail: photo.url(w: 512, fm: 'jpg')
     }
-  end
-
-  def instagram_locations(entry)
-    entry_tags = entry.combined_tags.map { |t| t.slug.gsub(/-/, '') }
-    location = nil
-    locations = YAML.load_file(Rails.root.join('config/instagram_locations.yml'))
-    locations.each do |k, v|
-      if entry_tags.include? k
-        location = v
-        break
-      end
-    end
-    location
   end
 end
