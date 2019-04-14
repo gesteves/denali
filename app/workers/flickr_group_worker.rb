@@ -10,12 +10,9 @@ class FlickrGroupWorker < ApplicationWorker
     flickr.access_token = ENV['flickr_access_token']
     flickr.access_secret = ENV['flickr_access_token_secret']
 
-    group = flickr.groups.getInfo(group_id: group_id)
-    if group['throttle']['remaining'].blank? || group['throttle']['remaining'] > 0
-      begin
-        flickr.groups.pools.add(photo_id: photo_id, group_id: group_id)
-      rescue FlickRaw::FailedResponse
-      end
+    begin
+      flickr.groups.pools.add(photo_id: photo_id, group_id: group_id)
+    rescue FlickRaw::FailedResponse
     end
   end
 end
