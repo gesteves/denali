@@ -7,8 +7,13 @@ class TwitterWorker < BufferWorker
     caption = entry.tweet_text.present? ? entry.tweet_text : entry.plain_title
     text = "#{truncate(caption, length: max_length, omission: '…')} #{entry.permalink_url}"
     if entry.is_photo?
-      media = media_hash(entry.photos.first, alt_text: true)
-      post_to_buffer('twitter', text: text, media: media)
+      photos = entry.photos.to_a[0..4]
+      opts = {
+        text: entry.instagram_caption,
+        media: media_hash(photos.shift, alt_text: true)
+      }
+      opts[:extra_media] = photos.map { |p| media_hash(p, alt_text: true) } if photos.present?
+      post_to_buffer('twitter', opts)
     else
       post_to_buffer('twitter', text: text)
     end

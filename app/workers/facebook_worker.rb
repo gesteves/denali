@@ -9,8 +9,13 @@ class FacebookWorker < BufferWorker
     text << entry.permalink_url
     text = text.join("\n\n")
     if entry.is_photo?
-      media = media_hash(entry.photos.first)
-      post_to_buffer('facebook', text: text, media: media)
+      photos = entry.photos.to_a[0..4]
+      opts = {
+        text: entry.instagram_caption,
+        media: media_hash(photos.shift)
+      }
+      opts[:extra_media] = photos.map { |p| media_hash(p) } if photos.present?
+      post_to_buffer('facebook', opts)
     else
       post_to_buffer('facebook', text: text)
     end
