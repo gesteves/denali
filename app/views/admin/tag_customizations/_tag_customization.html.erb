@@ -1,6 +1,6 @@
 <tr>
 <td>
-  <% tag_customization.tags.each do |t| %>
+  <% tag_customization.tags.sort(&:name).each do |t| %>
     <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
   <% end %>
 </td>
