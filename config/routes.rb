@@ -56,7 +56,7 @@ Rails.application.routes.draw do
     resources :films, only: [:edit, :update]
     resources :blogs, only: [:edit, :update]
     resources :publish_schedules, only: [:create, :destroy]
-    resources :tag_customizations, only: [:index, :new, :create, :edit, :update, :destroy], concerns: :paginatable
+    resources :tag_customizations, only: [:index, :new, :create, :edit, :update, :destroy]
   end
 
 
