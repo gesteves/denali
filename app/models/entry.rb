@@ -321,57 +321,31 @@ class Entry < ApplicationRecord
   end
 
   def instagram_hashtags(count = 30)
-    entry_tags = self.tags.map { |t| t.slug.gsub(/-/, '') }
-    location_tags = self.locations.map { |t| t.slug.gsub(/-/, '') }
-    equipment_tags = self.equipment.map { |t| t.slug.gsub(/-/, '') }
-    style_tags = self.styles.map { |t| t.slug.gsub(/-/, '') }
-    all_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
+    entry_tags = self.tags
+    entry_locations = self.locations
+    entry_equipment = self.equipment
+    entry_styles = self.styles
+    tags = []
+    location_tags = []
+    equipment_tags = []
+    style_tags = []
 
-    instagram_hashtags = YAML.load_file(Rails.root.join('config/hashtags.yml'))['instagram']
-
-    tags = instagram_hashtags['featureaccounts']&.flatten&.uniq&.sample(5) || []
-    extra_tags = all_tags&.flatten&.uniq || []
-
-    # For each tag, add 5 matching Instagram tags to the array
-    instagram_hashtags.each do |k, v|
-      if entry_tags.include? k
-        tags += instagram_hashtags[k]&.flatten&.uniq&.sample(5)
+    self.blog.tag_associations.each do |tag_association|
+      hashtags = tag_association.instagram_hashtags.split(/\s+/).map { |h| h.gsub(/^#/, '') }.uniq
+      ta_tags = tag_association.tags
+      if ta_tags.all? { |t| entry_tags.include? t }
+        tags << hashtags
+      elsif ta_tags.all? { |t| entry_locations.include? t }
+        location_tags << hashtags
+      elsif ta_tags.all? { |t| entry_equipment.include? t }
+        equipment_tags << hashtags
+      elsif ta_tags.all? { |t| entry_styles.include? t }
+        style_tags << hashtags
       end
     end
 
-    instagram_hashtags.each do |k, v|
-      if location_tags.include? k
-        tags += instagram_hashtags[k]&.flatten&.uniq&.sample(5)
-      end
-    end
-
-    instagram_hashtags.each do |k, v|
-      if equipment_tags.include? k
-        tags += instagram_hashtags[k]&.flatten&.uniq&.sample(3)
-      end
-    end
-
-    instagram_hashtags.each do |k, v|
-      if style_tags.include? k
-        tags += instagram_hashtags[k]&.flatten&.uniq&.sample(3)
-      end
-    end
-
-    # We may have room for more Instagram tags, so build a second array with
-    # every Instagram tag that matches this entry's tags.
-    if tags.uniq.size < count
-      instagram_hashtags.each do |k, v|
-        if all_tags.include? k
-          extra_tags += instagram_hashtags[k]&.flatten&.uniq
-        end
-      end
-    end
-
-    # Shuffle and add them up, remove the duplicates, and grab the first `count`.
-    # That way we end up with `count` Instagram hashtags, guaranteeing there are
-    # at least a few of each matching entry tag.
-    instagram_tags = tags + extra_tags.shuffle
-    instagram_tags.compact.uniq[0, count].shuffle.map { |t| "##{t}"}.join(' ')
+    instagram_tags = tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
+    instagram_tags.flatten.compact.uniq[0, count].shuffle.map { |t| "##{t}"}.join(' ')
   end
 
   def instagram_location
@@ -399,24 +373,15 @@ class Entry < ApplicationRecord
   end
 
   def flickr_groups(count = 60)
-    groups = []
-    extra_groups = []
-    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
-    flickr_groups = YAML.load_file(Rails.root.join('config/flickr_groups.yml'))
-    flickr_groups.each do |k, v|
-      if entry_tags.include? k
-        groups += flickr_groups[k]&.flatten&.uniq&.sample(5)
+    entry_tags = self.combined_tags
+    entry_groups = []
+    self.blog.tag_associations.each do |tag_association|
+      flickr_groups = tag_association.flickr_groups.split(/\s+/).uniq
+      if tag_association.tags.all? { |t| entry_tags.include? t }
+        entry_groups << flickr_groups
       end
     end
-    if groups.uniq.size < count
-      flickr_groups.each do |k, v|
-        if entry_tags.include? k
-          extra_groups += flickr_groups[k]&.flatten&.uniq
-        end
-      end
-    end
-    final_groups = groups + extra_groups.shuffle
-    final_groups.compact.uniq[0, count]
+    entry_groups.flatten.compact.uniq[0, count]
   end
 
   def update_tags
