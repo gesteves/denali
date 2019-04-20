@@ -190,7 +190,7 @@ class Entry < ApplicationRecord
     if self.blog.publish_schedules_count == 0
       nil
     else
-      days = ((self.position - 1 + self.blog.past_publish_schedules_today.count)/self.blog.publish_schedules_count).floor
+      days = ((self.position - 1 + self.blog.past_publish_schedules_today.count)/(self.blog.publish_schedules_count || 1)).floor
       Time.current + days.days
     end
   end

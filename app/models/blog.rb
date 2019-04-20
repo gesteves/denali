@@ -59,7 +59,7 @@ class Blog < ApplicationRecord
     if self.publish_schedules_count == 0
       nil
     else
-      days = ((self.entries.queued.last.position + self.past_publish_schedules_today.count)/self.publish_schedules_count).floor
+      days = (((self.entries.queued&.last&.position || 0) + self.past_publish_schedules_today.count)/(self.publish_schedules_count || 1)).floor
       Time.current + days.days
     end
   end
