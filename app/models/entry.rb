@@ -330,7 +330,7 @@ class Entry < ApplicationRecord
     equipment_tags = []
     style_tags = []
 
-    self.blog.tag_customizations.each do |tag_customization|
+    self.blog.tag_customizations.where.not(instagram_hashtags: [nil, '']).each do |tag_customization|
       hashtags = tag_customization.instagram_hashtags_array
       if tag_customization.matches_tags? entry_tags
         tags << hashtags
@@ -348,8 +348,9 @@ class Entry < ApplicationRecord
   end
 
   def instagram_location
+    return nil if instagram_locations.blank?
     instagram_location_tags = self.instagram_locations
-    self.blog.tag_customizations.each do |tag_customization|
+    self.blog.tag_customizations.where.not(instagram_location_id: [nil, '']).each do |tag_customization|
       if tag_customization.matches_tags? instagram_location_tags
         return self.instagram_location_list.join(', '), tag_customization.instagram_location_id
       end
@@ -371,7 +372,7 @@ class Entry < ApplicationRecord
   def flickr_groups(count = 60)
     entry_tags = self.combined_tags
     entry_groups = []
-    self.blog.tag_customizations.each do |tag_customization|
+    self.blog.tag_customizations.where.not(flickr_groups: [nil, '']).each do |tag_customization|
       flickr_groups = tag_customization.flickr_groups_array
       if tag_customization.matches_tags? entry_tags
         entry_groups << flickr_groups
