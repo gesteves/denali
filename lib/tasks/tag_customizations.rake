@@ -9,8 +9,8 @@ namespace :tag_customizations do
       tags = ActsAsTaggableOn::Tag.all
       tags.each do |tag|
         slug = tag.slug.gsub(/-/, '')
-        hashtags = instagram_hashtags[slug]
-        groups = flickr_groups[slug]
+        hashtags = instagram_hashtags[slug]&.flatten&.uniq
+        groups = flickr_groups[slug]&.flatten&.uniq
         if hashtags.present? || groups.present?
           puts "#{tag.name.upcase}"
           puts hashtags.map { |h| "##{h}"}.join("\n") if hashtags.present?
