@@ -12,6 +12,7 @@ class Admin::TagCustomizationsController < AdminController
   end
 
   def create
+    @tags = ActsAsTaggableOn::Tag.order('taggings_count desc')
     @tag_customization = TagCustomization.new(association_params)
     @tag_customization.blog = @photoblog
     respond_to do |format|
@@ -32,6 +33,7 @@ class Admin::TagCustomizationsController < AdminController
   end
 
   def update
+    @tags = ActsAsTaggableOn::Tag.order('taggings_count desc')
     @tag_customization = @photoblog.tag_customizations.find(params[:id])
     respond_to do |format|
       if @tag_customization.update(association_params)
