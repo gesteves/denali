@@ -331,15 +331,14 @@ class Entry < ApplicationRecord
     style_tags = []
 
     self.blog.tag_customizations.each do |tag_customization|
-      hashtags = tag_customization.instagram_hashtags.split(/\s+/).map { |h| h.gsub(/^#/, '') }.uniq
-      ta_tags = tag_customization.tags
-      if ta_tags.all? { |t| entry_tags.include? t }
+      hashtags = tag_customization.instagram_hashtags_array
+      if tag_customization.matches_tags? entry_tags
         tags << hashtags
-      elsif ta_tags.all? { |t| entry_locations.include? t }
+      elsif tag_customization.matches_tags? entry_locations
         location_tags << hashtags
-      elsif ta_tags.all? { |t| entry_equipment.include? t }
+      elsif tag_customization.matches_tags? entry_equipment
         equipment_tags << hashtags
-      elsif ta_tags.all? { |t| entry_styles.include? t }
+      elsif tag_customization.matches_tags? entry_styles
         style_tags << hashtags
       end
     end
@@ -376,8 +375,8 @@ class Entry < ApplicationRecord
     entry_tags = self.combined_tags
     entry_groups = []
     self.blog.tag_customizations.each do |tag_customization|
-      flickr_groups = tag_customization.flickr_groups.split(/\s+/).uniq
-      if tag_customization.tags.all? { |t| entry_tags.include? t }
+      flickr_groups = tag_customization.flickr_groups_array
+      if tag_customization.matches_tags? entry_tags
         entry_groups << flickr_groups
       end
     end
