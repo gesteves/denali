@@ -1,5 +1,5 @@
 <tr data-controller="tag" data-tag-name="<%= tag.name %>">
-<td><%= link_to tag.name, admin_tagged_entries_path(tag.slug) %></td>
+<td><%= link_to tag.name, admin_tagged_entries_path(tag.slug), class: 'tag' %></td>
 <td>
   <div class="buttons is-pulled-right">
     <%= link_to 'Add', add_admin_tag_path(tag.id), class: 'button is-small', 'data-action': 'click->tag#add' %>
