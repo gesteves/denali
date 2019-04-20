@@ -34,5 +34,12 @@
         </div>
       </div>
     <% end %>
+    <% if entry.instagram_location.blank? %>
+      <div class="control">
+        <div class="tags">
+          <span class="tag is-warning">Location missing</span>
+        </div>
+      </div>
+    <% end %>
   <% end %>
 </div>
