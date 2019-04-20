@@ -1,7 +1,7 @@
 class Admin::TagCustomizationsController < AdminController
   def index
     @page = params[:page] || 1
-    @tag_customizations = @photoblog.tag_customizations.page(@page)
+    @tag_customizations = @photoblog.tag_customizations.page(@page).per(100)
     @page_title = 'Tags & social media'
   end
 
