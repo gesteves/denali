@@ -34,7 +34,19 @@
             </a>
           </div>
         </div>
-        <a href="<%= admin_tags_path %>" class="navbar-item">Tags</a>
+        <div class="navbar-item has-dropdown" data-controller="dropdown">
+          <a class="navbar-link" data-action="click->dropdown#toggle">
+            Tags
+          </a>
+          <div class="navbar-dropdown">
+            <a href="<%= admin_tags_path %>" class="navbar-item">
+              All tags
+            </a>
+            <a href="<%= admin_tag_customizations_path %>" class="navbar-item">
+              Tags & social media
+            </a>
+          </div>
+        </div>
         <% if ENV['mapbox_api_token'].present? %>
           <a href="<%= admin_map_path(trailing_slash: true) %>" class="navbar-item">Map</a>
         <% end %>

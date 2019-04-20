@@ -2,30 +2,18 @@ import { Controller } from 'stimulus';
 import { fetchStatus, fetchText } from '../../lib/utils';
 import $ from 'jquery';
 import { Sortable, Plugins } from '@shopify/draggable';
-import Awesomplete from 'awesomplete';
 
 /**
  * Controls the entry form.
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['photos', 'tags', 'datalist'];
+  static targets = ['photos'];
 
   /**
-   * Sets up the tag autocomplete, and the drag-and-drop of photos.
+   * Sets up the drag-and-drop of photos.
    */
   connect () {
-    new Awesomplete(this.tagsTarget, {
-      list: this.datalistTarget,
-      filter: function (text, input) {
-        return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
-      },
-      replace: function (text) {
-        var before = this.input.value.match(/^.+,\s*|/)[0];
-        this.input.value = `${before}${text}, `;
-      }
-    });
-
     this.sortablePhotos = new Sortable(this.photosTarget, {
       delay: 100,
       classes: {

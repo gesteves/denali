@@ -238,10 +238,48 @@ class EntryTest < ActiveSupport::TestCase
   end
 
   test 'instagram hashtags should work' do
-    entry = entries(:panda)
-    entry.add_tags('wildlife')
+    user = users(:guille)
+    blog = blogs(:allencompassingtrip)
+
+    tag = TagCustomization.new(instagram_hashtags: 'awildlifehashtag', blog: blog)
+    tag.tag_list.add('tag a', 'tag b')
+    tag.save!
+    tag.reload
+
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user)
+    entry.save!
+
+    assert_empty entry.instagram_hashtags
+
+    entry.add_tags('tag a')
+    entry.reload
+    assert_empty entry.instagram_hashtags
+
+    entry.add_tags('tag b')
     entry.reload
     assert_not_empty entry.instagram_hashtags
+  end
+
+  test 'flickr groups should work' do
+    user = users(:guille)
+    blog = blogs(:allencompassingtrip)
+
+    tag = TagCustomization.new(flickr_groups: 'https://flickr.com/whatever/', blog: blog)
+    tag.tag_list.add('tag c', 'tag d')
+    tag.save!
+    tag.reload
+
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user)
+    entry.save!
+    assert_empty entry.flickr_groups
+
+    entry.add_tags('tag c')
+    entry.reload
+    assert_empty entry.flickr_groups
+
+    entry.add_tags('tag d')
+    entry.reload
+    assert_not_empty entry.flickr_groups
   end
 
   test 'adding tags' do

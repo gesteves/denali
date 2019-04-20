@@ -3,6 +3,7 @@ class Blog < ApplicationRecord
 
   has_many :entries, dependent: :destroy
   has_many :publish_schedules, -> { order 'hour ASC' }, dependent: :destroy
+  has_many :tag_customizations, -> { order 'updated_at DESC' }, dependent: :destroy
   has_one_attached :favicon
   has_one_attached :touch_icon
   has_one_attached :logo
@@ -58,7 +59,7 @@ class Blog < ApplicationRecord
     if self.publish_schedules_count == 0
       nil
     else
-      days = ((self.entries.queued.last.position + self.past_publish_schedules_today.count)/self.publish_schedules_count).floor
+      days = (((self.entries.queued&.last&.position || 0) + self.past_publish_schedules_today.count)/(self.publish_schedules_count || 1)).floor
       Time.current + days.days
     end
   end

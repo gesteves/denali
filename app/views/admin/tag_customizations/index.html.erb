@@ -1,0 +1,36 @@
+<% cache [@photoblog, @page] do %>
+  <div class="level is-mobile">
+    <div class="level-left">
+      <div>
+      <h1 class="title is-size-5-mobile">Tags & social media</h1>
+      <h2 class="subtitle is-size-6-mobile">This allows you to customize how entries tagged a certain way are shared on social media.</h2>
+      </div>
+    </div>
+    <div class="level-right">
+      <div class="level-item">
+        <a href="<%= new_admin_tag_customization_path %>" class="button is-small">
+          <span class="icon is-small">
+            <i class="fas fa-tag"></i>
+          </span>
+          <span>Set up a tag</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <hr class="hr">
+  <table class="table is-fullwidth is-striped">
+    <thead>
+      <tr>
+      <th>Tags</th>
+      <th>Instagram hashtags</th>
+      <th>Flickr groups</th>
+      <th class="has-text-right-desktop">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: 'tag_customization', collection: @tag_customizations %>
+    </tbody>
+  </table>
+
+  <%= paginate @tag_customizations, views_prefix: 'admin', outer_window: 1, window: 1 %>
+<% end %>

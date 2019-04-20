@@ -17,7 +17,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/queued
   def queued
     @page = params[:page] || 1
-    @count = @photoblog.publish_schedules_count * 7
+    @count = (@photoblog.publish_schedules_count || 1) * 7
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued.page(@page).per(@count)
     @page_title = 'Queued'
   end

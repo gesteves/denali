@@ -1,0 +1,15 @@
+<tr>
+<td>
+  <% tag_customization.tags.each do |t| %>
+    <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
+  <% end %>
+</td>
+<td><%= tag_customization.instagram_hashtags.split("\n").count %></td>
+<td><%= tag_customization.flickr_groups.split("\n").count %></td>
+<td>
+  <div class="buttons is-pulled-right">
+    <%= link_to 'Edit', edit_admin_tag_customization_path(tag_customization.id), class: 'button is-small', 'data-action': 'click->tag#edit' %>
+    <%= link_to 'Delete', admin_tag_customization_path(tag_customization.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it forever? This can’t be undone!' }, class: 'button is-danger is-small', 'data-action': 'click->tag#delete' %>
+  </div>
+</td>
+</tr>
