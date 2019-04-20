@@ -1,11 +1,28 @@
 <tr>
 <td>
-  <% tag_customization.tags.sort{ |a,b| a.name <=> b.name }.each do |t| %>
-    <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
-  <% end %>
+  <div class="tags">
+    <% tag_customization.tags.sort{ |a,b| a.name <=> b.name }.each do |t| %>
+      <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag is-link' %>
+    <% end %>
+  </div>
 </td>
-<td><%= tag_customization.instagram_hashtags.split("\n").count %></td>
-<td><%= tag_customization.flickr_groups.split("\n").count %></td>
+<td>
+  <div class="tags">
+    <% tag_customization.instagram_hashtags.split("\n").sort.each do |t| %>
+      <%= link_to t.strip, "https://www.instagram.com/explore/tags/#{t.gsub('#', '').strip}/", class: 'tag' %><br>
+    <% end %>
+  </div>
+</td>
+<td>
+  <%= link_to_if tag_customization.instagram_location_id.present?, tag_customization.instagram_location_id, "https://www.facebook.com/#{tag_customization.instagram_location_id}/", class: 'tag' %>
+</td>
+<td>
+  <div class="tags">
+    <% tag_customization.flickr_groups.split("\n").sort.each do |g| %>
+      <%= link_to g.strip.split('/').last, g, class: 'tag' %><br>
+    <% end %>
+  </div>
+</td>
 <td>
   <div class="buttons is-pulled-right">
     <%= link_to 'Edit', edit_admin_tag_customization_path(tag_customization.id), class: 'button is-small', 'data-action': 'click->tag#edit' %>
