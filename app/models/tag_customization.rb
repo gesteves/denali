@@ -1,5 +1,6 @@
 class TagCustomization < ApplicationRecord
   validate :tag_list_must_be_unique, :hashtags_and_groups_cannot_be_blank
+  validates :tag_list, presence: true
   belongs_to :blog, optional: true
   acts_as_taggable_on :tags
 
