@@ -1,0 +1,76 @@
+<div class="field is-horizontal" data-controller="tag-autocomplete">
+  <div class="field-label is-normal">
+    <%= f.label :tag_list, 'Entry tags', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_field :tag_list, value: @tag_association.tag_list.to_s, autocomplete: 'off', required: true, placeholder: 'A list of tags, separated by commas…', class: 'input', 'data-target': 'tag-autocomplete.tags' %>
+      </div>
+      <p class="help">Entries with these tags will be shared on social media using the settings below.</p>
+    </div>
+  </div>
+  <%= render partial: 'admin/shared/tag_datalists', locals: { tags: @tags } %>
+</div>
+
+<hr class="hr">
+<h2 class="subtitle is-size-5-mobile">Instagram</h2>
+
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :instagram_hashtags, 'Hashtags', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_area :instagram_hashtags, placeholder: 'Enter hashtags, one per line…', class: 'textarea' %>
+        <p class="help">Entries with the tags selected at the top will be shared on Instagram using a random selection of these hashtags.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :instagram_hashtag_count, 'How many?', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field is-narrow">
+      <div class="control">
+        <%= f.number_field :instagram_hashtag_count, min: 1, max: 30, pattern: '\d+', class: 'input', required: true %>
+      </div>
+      <p class="help">This is the number of the hashtags above that will be used.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="hr">
+<h2 class="subtitle is-size-5-mobile">Flickr</h2>
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :flickr_groups, 'Groups', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_area :flickr_groups, placeholder: 'Enter Flickr group URLs, one per line…', class: 'textarea' %>
+        <p class="help">Entries with the tags selected at the top and shared on Flickr will be added to these groups.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="hr">
+
+<div class="field is-horizontal">
+  <div class="field-label">
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="buttons is-right">
+        <%= link_to 'Cancel', admin_tag_associations_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button' %>
+        <%= f.submit 'Save changes', class: 'button is-success' %>
+      </div>
+    </div>
+  </div>
+</div>

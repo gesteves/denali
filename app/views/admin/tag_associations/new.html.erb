@@ -1,2 +1,20 @@
-<h1>Admin::TagAssociations#new</h1>
-<p>Find me in app/views/admin/tag_associations/new.html.erb</p>
+<%= form_for([:admin, @tag_association]) do |f| %>
+  <% if @tag_association.errors.any? %>
+    <article class="message is-danger">
+      <div class="message-header">
+        <p>Welp, the changes couldn't be saved.</p>
+        <button class="delete"></button>
+      </div>
+      <div class="message-body">
+        <% @tag_association.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </div>
+    </article>
+  <% end %>
+
+  <h1 class="title is-size-5-mobile">Set up a tag</h1>
+  <hr class="hr">
+
+  <%= render partial: 'fields', locals: { f: f } %>
+<% end %>
