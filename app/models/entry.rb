@@ -16,7 +16,7 @@ class Entry < ApplicationRecord
   before_save :set_entry_slug
   before_create :set_preview_hash
 
-  acts_as_taggable_on :tags, :equipment, :locations, :styles
+  acts_as_taggable_on :tags, :equipment, :locations, :styles, :instagram_locations
   acts_as_list scope: :blog
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['image'].blank? && attributes['id'].blank? }
@@ -301,7 +301,7 @@ class Entry < ApplicationRecord
   end
 
   def combined_tags
-    ActsAsTaggableOn::Tag.joins(:taggings).where('taggings.taggable_type = ? and taggings.taggable_id = ?', 'Entry', self.id)
+    ActsAsTaggableOn::Tag.joins(:taggings).where('taggings.taggable_type = ? and taggings.taggable_id = ? and taggings.context != ?', 'Entry', self.id, 'instagram_locations')
   end
 
   def combined_tag_list
@@ -348,16 +348,13 @@ class Entry < ApplicationRecord
   end
 
   def instagram_location
-    entry_tags = self.combined_tags.map { |t| t.slug.gsub(/-/, '') }
-    location = nil
-    locations = YAML.load_file(Rails.root.join('config/instagram_locations.yml'))
-    locations.each do |k, v|
-      if entry_tags.include? k
-        location = v
-        break
+    instagram_location_tags = self.instagram_locations
+    self.blog.tag_customizations.each do |tag_customization|
+      if tag_customization.matches_tags? instagram_location_tags
+        return self.instagram_location_list.join(', '), tag_customization.instagram_location_id
       end
     end
-    location
+    nil
   end
 
   def instagram_caption

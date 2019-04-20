@@ -237,7 +237,7 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 1, entry_1.position
   end
 
-  test 'instagram hashtags should work' do
+  test 'instagram hashtags' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
 
@@ -260,7 +260,32 @@ class EntryTest < ActiveSupport::TestCase
     assert_not_empty entry.instagram_hashtags
   end
 
-  test 'flickr groups should work' do
+  test 'instagram locations' do
+    user = users(:guille)
+    blog = blogs(:allencompassingtrip)
+
+    tag = TagCustomization.new(instagram_location_id: '123456', blog: blog)
+    tag.tag_list.add('location')
+    tag.save!
+    tag.reload
+
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user)
+    entry.save!
+
+    assert_nil entry.instagram_location
+
+    entry.instagram_location_list = 'location'
+    entry.save!
+    entry.reload
+
+    assert_not_nil entry.instagram_location
+
+    name, id = entry.instagram_location
+    assert_equal name, 'location'
+    assert_equal id, '123456'
+  end
+
+  test 'flickr groups' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
 

@@ -1,5 +1,5 @@
 class TagCustomization < ApplicationRecord
-  validate :tag_list_must_be_unique, :hashtags_and_groups_cannot_be_blank
+  validate :tag_list_must_be_unique, :fields_cannot_be_blank
   validates :tag_list, presence: true
   belongs_to :blog, touch: true, optional: true
   acts_as_taggable_on :tags
@@ -25,9 +25,9 @@ class TagCustomization < ApplicationRecord
     end
   end
 
-  def hashtags_and_groups_cannot_be_blank
-    if self.instagram_hashtags.blank? && self.flickr_groups.blank?
-      errors.add(:base, 'Instagram hashtags and Flickr groups cannot be both empty')
+  def fields_cannot_be_blank
+    if self.instagram_hashtags.blank? && self.flickr_groups.blank? && self.instagram_location_id.blank?
+      errors.add(:base, 'You need to fill out at least one of the fields')
     end
   end
 end

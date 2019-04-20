@@ -15,10 +15,10 @@ class InstagramWorker < BufferWorker
     }
     opts[:extra_media] = photos.map { |p| media_hash(p) } if photos.present?
 
-    instagram_location = entry.instagram_location
-    if instagram_location.present?
-      opts[:service_geolocation_id] = instagram_location['id']
-      opts[:service_geolocation_name] = instagram_location['name']
+    geolocation_name, geolocation_id = entry.instagram_location
+    if geolocation_name.present? && geolocation_id.present?
+      opts[:service_geolocation_id] = geolocation_id
+      opts[:service_geolocation_name] = geolocation_name
     end
 
     post_to_buffer('instagram', opts)

@@ -30,6 +30,20 @@
   </div>
 </div>
 
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :instagram_location_id, 'Location ID', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_field :instagram_location_id, placeholder: 'Enter a Facebook Page ID, e.g. 130250293656242', class: 'input' %>
+        <p class="help">This is the ID of the page associated with the location returned by <a href="https://developers.facebook.com/tools/explorer/?method=GET&path=search%3Ftype%3Dplace%26q%3D%23%7Blocation-name%7D%26fields%3Dlink%2Cname&version=v3.2">Facebook Places Search API</a>, <strong>not</strong> the ID of the location itself.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <hr class="hr">
 <h2 class="subtitle is-size-5-mobile">Flickr</h2>
 <div class="field is-horizontal">
