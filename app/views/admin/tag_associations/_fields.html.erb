@@ -30,20 +30,6 @@
   </div>
 </div>
 
-<div class="field is-horizontal">
-  <div class="field-label is-normal">
-    <%= f.label :instagram_hashtag_count, 'How many?', class: 'label' %>
-  </div>
-  <div class="field-body">
-    <div class="field is-narrow">
-      <div class="control">
-        <%= f.number_field :instagram_hashtag_count, min: 1, max: 30, pattern: '\d+', class: 'input', required: true %>
-      </div>
-      <p class="help">This is the number of the hashtags above that will be used.</p>
-    </div>
-  </div>
-</div>
-
 <hr class="hr">
 <h2 class="subtitle is-size-5-mobile">Flickr</h2>
 <div class="field is-horizontal">

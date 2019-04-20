@@ -8,7 +8,6 @@ class Admin::TagAssociationsController < AdminController
   def new
     @tags = ActsAsTaggableOn::Tag.order('taggings_count desc')
     @tag_association = @photoblog.tag_associations.new
-    @tag_association.instagram_hashtag_count = 5
     @page_title = 'Set up a tag'
   end
 
@@ -60,6 +59,6 @@ class Admin::TagAssociationsController < AdminController
   private
 
   def association_params
-    params.require(:tag_association).permit(:instagram_hashtags, :instagram_hashtag_count, :flickr_groups, :tag_list)
+    params.require(:tag_association).permit(:instagram_hashtags, :flickr_groups, :tag_list)
   end
 end

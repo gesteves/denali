@@ -165,7 +165,6 @@ ActiveRecord::Schema.define(version: 2019_04_20_001908) do
   create_table "tag_associations", force: :cascade do |t|
     t.text "instagram_hashtags"
     t.text "flickr_groups"
-    t.integer "instagram_hashtag_count"
     t.bigint "blog_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
