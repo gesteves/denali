@@ -1,6 +1,6 @@
-class CreateTagAssociations < ActiveRecord::Migration[5.2]
+class CreateTagCustomizations < ActiveRecord::Migration[5.2]
   def change
-    create_table :tag_associations do |t|
+    create_table :tag_customizations do |t|
       t.text :instagram_hashtags
       t.text :flickr_groups
       t.references :blog

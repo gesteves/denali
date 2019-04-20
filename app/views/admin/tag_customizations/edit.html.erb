@@ -1,19 +1,19 @@
-<%= form_for([:admin, @tag_association]) do |f| %>
-  <% if @tag_association.errors.any? %>
+<%= form_for([:admin, @tag_customization]) do |f| %>
+  <% if @tag_customization.errors.any? %>
     <article class="message is-danger">
       <div class="message-header">
         <p>Welp, the changes couldn't be saved.</p>
         <button class="delete"></button>
       </div>
       <div class="message-body">
-        <% @tag_association.errors.full_messages.each do |message| %>
+        <% @tag_customization.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </div>
     </article>
   <% end %>
 
-  <h1 class="title is-size-5-mobile">Set up a tag</h1>
+  <h1 class="title is-size-5-mobile">Edit tag settings</h1>
   <hr class="hr">
 
   <%= render partial: 'fields', locals: { f: f } %>

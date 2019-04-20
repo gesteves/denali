@@ -1,23 +1,23 @@
-class Admin::TagAssociationsController < AdminController
+class Admin::TagCustomizationsController < AdminController
   def index
     @page = params[:page] || 1
-    @tag_associations = @photoblog.tag_associations.page(@page)
+    @tag_customizations = @photoblog.tag_customizations.page(@page)
     @page_title = 'Tags & social media'
   end
 
   def new
     @tags = ActsAsTaggableOn::Tag.order('taggings_count desc')
-    @tag_association = @photoblog.tag_associations.new
+    @tag_customization = @photoblog.tag_customizations.new
     @page_title = 'Set up a tag'
   end
 
   def create
-    @tag_association = TagAssociation.new(association_params)
-    @tag_association.blog = @photoblog
+    @tag_customization = TagCustomization.new(association_params)
+    @tag_customization.blog = @photoblog
     respond_to do |format|
-      if @tag_association.save
+      if @tag_customization.save
         flash[:success] = "Tag settings saved!"
-        format.html { redirect_to admin_tag_associations_path }
+        format.html { redirect_to admin_tag_customizations_path }
       else
         flash[:warning] = 'The tag settings couldn’t be saved…'
         format.html { render :new }
@@ -27,17 +27,17 @@ class Admin::TagAssociationsController < AdminController
 
   def edit
     @tags = ActsAsTaggableOn::Tag.order('taggings_count desc')
-    @tag_association = @photoblog.tag_associations.find(params[:id])
+    @tag_customization = @photoblog.tag_customizations.find(params[:id])
     @page_title = 'Edit tag settings'
   end
 
   def update
-    @tag_association = @photoblog.tag_associations.find(params[:id])
+    @tag_customization = @photoblog.tag_customizations.find(params[:id])
     respond_to do |format|
-      if @tag_association.update(association_params)
+      if @tag_customization.update(association_params)
         format.html {
           flash[:success] = 'Your changes were saved!'
-          redirect_to admin_tag_associations_path
+          redirect_to admin_tag_customizations_path
         }
       else
         format.html {
@@ -49,16 +49,16 @@ class Admin::TagAssociationsController < AdminController
   end
 
   def destroy
-    @tag_association = @photoblog.tag_associations.find(params[:id])
-    @tag_association.destroy
+    @tag_customization = @photoblog.tag_customizations.find(params[:id])
+    @tag_customization.destroy
     respond_to do |format|
-      format.html { redirect_to admin_tag_associations_path }
+      format.html { redirect_to admin_tag_customizations_path }
     end
   end
 
   private
 
   def association_params
-    params.require(:tag_association).permit(:instagram_hashtags, :flickr_groups, :tag_list)
+    params.require(:tag_customization).permit(:instagram_hashtags, :flickr_groups, :tag_list)
   end
 end

@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Admin::TagAssociationsControllerTest < ActionController::TestCase
+class Admin::TagCustomizationsControllerTest < ActionController::TestCase
   def setup
     session[:user_id] = users(:guille).id
     super

@@ -7,7 +7,7 @@
     </div>
     <div class="level-right">
       <div class="level-item">
-        <a href="<%= new_admin_tag_association_path %>" class="button is-small">
+        <a href="<%= new_admin_tag_customization_path %>" class="button is-small">
           <span class="icon is-small">
             <i class="fas fa-tag"></i>
           </span>
@@ -27,9 +27,9 @@
       </tr>
     </thead>
     <tbody>
-      <%= render partial: 'tag_association', collection: @tag_associations %>
+      <%= render partial: 'tag_customization', collection: @tag_customizations %>
     </tbody>
   </table>
 
-  <%= paginate @tag_associations, views_prefix: 'admin', outer_window: 1, window: 1 %>
+  <%= paginate @tag_customizations, views_prefix: 'admin', outer_window: 1, window: 1 %>
 <% end %>

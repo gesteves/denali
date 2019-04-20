@@ -162,13 +162,13 @@ ActiveRecord::Schema.define(version: 2019_04_20_001908) do
     t.index ["blog_id"], name: "index_publish_schedules_on_blog_id"
   end
 
-  create_table "tag_associations", force: :cascade do |t|
+  create_table "tag_customizations", force: :cascade do |t|
     t.text "instagram_hashtags"
     t.text "flickr_groups"
     t.bigint "blog_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["blog_id"], name: "index_tag_associations_on_blog_id"
+    t.index ["blog_id"], name: "index_tag_customizations_on_blog_id"
   end
 
   create_table "taggings", id: :serial, force: :cascade do |t|

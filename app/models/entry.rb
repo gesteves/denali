@@ -330,9 +330,9 @@ class Entry < ApplicationRecord
     equipment_tags = []
     style_tags = []
 
-    self.blog.tag_associations.each do |tag_association|
-      hashtags = tag_association.instagram_hashtags.split(/\s+/).map { |h| h.gsub(/^#/, '') }.uniq
-      ta_tags = tag_association.tags
+    self.blog.tag_customizations.each do |tag_customization|
+      hashtags = tag_customization.instagram_hashtags.split(/\s+/).map { |h| h.gsub(/^#/, '') }.uniq
+      ta_tags = tag_customization.tags
       if ta_tags.all? { |t| entry_tags.include? t }
         tags << hashtags
       elsif ta_tags.all? { |t| entry_locations.include? t }
@@ -375,9 +375,9 @@ class Entry < ApplicationRecord
   def flickr_groups(count = 60)
     entry_tags = self.combined_tags
     entry_groups = []
-    self.blog.tag_associations.each do |tag_association|
-      flickr_groups = tag_association.flickr_groups.split(/\s+/).uniq
-      if tag_association.tags.all? { |t| entry_tags.include? t }
+    self.blog.tag_customizations.each do |tag_customization|
+      flickr_groups = tag_customization.flickr_groups.split(/\s+/).uniq
+      if tag_customization.tags.all? { |t| entry_tags.include? t }
         entry_groups << flickr_groups
       end
     end

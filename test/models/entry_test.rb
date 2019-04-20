@@ -241,7 +241,7 @@ class EntryTest < ActiveSupport::TestCase
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
 
-    tag = TagAssociation.new(instagram_hashtags: 'awildlifehashtag', instagram_hashtag_count: 1, blog: blog)
+    tag = TagCustomization.new(instagram_hashtags: 'awildlifehashtag', blog: blog)
     tag.tag_list.add('tag a', 'tag b')
     tag.save!
     tag.reload
@@ -264,7 +264,7 @@ class EntryTest < ActiveSupport::TestCase
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
 
-    tag = TagAssociation.new(flickr_groups: 'https://flickr.com/whatever/', blog: blog)
+    tag = TagCustomization.new(flickr_groups: 'https://flickr.com/whatever/', blog: blog)
     tag.tag_list.add('tag c', 'tag d')
     tag.save!
     tag.reload

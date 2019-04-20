@@ -3,7 +3,7 @@ class Blog < ApplicationRecord
 
   has_many :entries, dependent: :destroy
   has_many :publish_schedules, -> { order 'hour ASC' }, dependent: :destroy
-  has_many :tag_associations, -> { order 'updated_at DESC' }, dependent: :destroy
+  has_many :tag_customizations, -> { order 'updated_at DESC' }, dependent: :destroy
   has_one_attached :favicon
   has_one_attached :touch_icon
   has_one_attached :logo
