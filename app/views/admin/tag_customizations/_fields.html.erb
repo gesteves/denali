@@ -23,7 +23,7 @@
   <div class="field-body">
     <div class="field">
       <div class="control is-expanded">
-        <%= f.text_area :instagram_hashtags, placeholder: 'Enter hashtags, one per line…', class: 'textarea' %>
+        <%= f.text_area :instagram_hashtags, placeholder: 'Enter hashtags, one per line…', class: 'textarea', rows: 10 %>
         <p class="help">Entries will be shared on Instagram using a random selection of these hashtags. Note that Instagram has a limit of 30 hashtags per post, so not all of them may get used.</p>
       </div>
     </div>
@@ -39,7 +39,7 @@
   <div class="field-body">
     <div class="field">
       <div class="control is-expanded">
-        <%= f.text_area :flickr_groups, placeholder: 'Enter Flickr group URLs, one per line…', class: 'textarea' %>
+        <%= f.text_area :flickr_groups, placeholder: 'Enter Flickr group URLs, one per line…', class: 'textarea', rows: 10 %>
         <p class="help">Entries shared on Flickr will be added to these groups. Note that Flickr has a limit of 30 groups per photo (60 for Pro users), so not all them may be used. Group limits may also apply.</p>
       </div>
     </div>
