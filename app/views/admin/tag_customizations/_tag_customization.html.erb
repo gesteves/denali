@@ -8,8 +8,8 @@
 </td>
 <td>
   <div class="tags">
-    <% tag_customization.instagram_hashtags.split("\n").sort.each do |t| %>
-      <%= link_to t.strip, "https://www.instagram.com/explore/tags/#{t.gsub('#', '').strip}/", class: 'tag' %><br>
+    <% tag_customization.instagram_hashtags_array.each do |t| %>
+      <%= link_to "##{t.strip}", "https://www.instagram.com/explore/tags/#{t}/", class: 'tag' %><br>
     <% end %>
   </div>
 </td>
@@ -18,8 +18,8 @@
 </td>
 <td>
   <div class="tags">
-    <% tag_customization.flickr_groups.split("\n").sort.each do |g| %>
-      <%= link_to g.strip.split('/').last, g, class: 'tag' %><br>
+    <% tag_customization.flickr_groups_slugs.each do |g| %>
+      <%= link_to g, "https://www.flickr.com/groups/#{g}/", class: 'tag' %><br>
     <% end %>
   </div>
 </td>

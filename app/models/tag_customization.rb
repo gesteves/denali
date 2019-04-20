@@ -5,11 +5,15 @@ class TagCustomization < ApplicationRecord
   acts_as_taggable_on :tags
 
   def instagram_hashtags_array
-    self.instagram_hashtags.split(/\s+/).reject(&:blank?).map { |h| h.gsub(/^#/, '') }.uniq
+    self.instagram_hashtags.split(/\s+/).reject(&:blank?).map { |h| h.gsub(/^#/, '') }.uniq.sort
   end
 
   def flickr_groups_array
-    self.flickr_groups.split(/\s+/).reject(&:blank?).uniq
+    self.flickr_groups.split(/\s+/).reject(&:blank?).uniq.sort
+  end
+
+  def flickr_groups_slugs
+    self.flickr_groups_array.map { |g| g.split('/').last }.sort
   end
 
   def matches_tags?(tags)
