@@ -1,7 +1,11 @@
 class FacebookWorker < BufferWorker
 
   def perform(entry_id)
-    entry = Entry.find(entry_id)
+    begin
+      entry = Entry.find(entry_id)
+    rescue ActiveRecord::RecordNotFound
+      return
+    end
     return if !entry.is_published? || !entry.is_photo?
     text = []
     text << entry.plain_title

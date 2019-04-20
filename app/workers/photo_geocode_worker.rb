@@ -1,7 +1,11 @@
 class PhotoGeocodeWorker < ApplicationWorker
 
   def perform(photo_id)
-    photo = Photo.find(photo_id)
+    begin
+      photo = Photo.find(photo_id)
+    rescue ActiveRecord::RecordNotFound
+      return
+    end
     return if ENV['google_api_key'].blank? || !photo.has_location?
     url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=#{photo.latitude},#{photo.longitude}&key=#{ENV['google_api_key']}"
     response = JSON.parse(HTTParty.get(url).body)

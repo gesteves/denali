@@ -1,6 +1,10 @@
 class ElasticsearchWorker < ApplicationWorker
   def perform(entry_id, action)
-    entry = Entry.find(entry_id)
+    begin
+      entry = Entry.find(entry_id)
+    rescue ActiveRecord::RecordNotFound
+      return
+    end
     case action
     when 'create'
       entry.__elasticsearch__.index_document

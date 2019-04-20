@@ -2,7 +2,11 @@ class FlickrWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
   def perform(photo_id)
-    photo = Photo.find(photo_id)
+    begin
+      photo = Photo.find(photo_id)
+    rescue ActiveRecord::RecordNotFound
+      return
+    end
     entry = photo.entry
     return if !entry.is_published? || !Rails.env.production?
     begin

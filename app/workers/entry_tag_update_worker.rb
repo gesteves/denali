@@ -2,7 +2,11 @@ class EntryTagUpdateWorker < ApplicationWorker
   sidekiq_options queue: 'low'
 
   def perform(entry_id)
-    entry = Entry.find(entry_id)
+    begin
+      entry = Entry.find(entry_id)
+    rescue ActiveRecord::RecordNotFound
+      return
+    end
     equipment_tags = []
     location_tags = []
     style_tags = []
