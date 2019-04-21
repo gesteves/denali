@@ -26,9 +26,11 @@ class InstagramWorker < BufferWorker
 
   private
   def media_hash(photo)
-    {
+    media = {
       photo: photo.instagram_url,
       thumbnail: photo.url(w: 512, fm: 'jpg')
     }
+    media[:alt_text] = photo.alt_text if photo.alt_text.present?
+    media
   end
 end

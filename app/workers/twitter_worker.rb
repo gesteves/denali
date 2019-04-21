@@ -14,7 +14,7 @@ class TwitterWorker < BufferWorker
       photos = entry.photos.to_a[0..4]
       opts = {
         text: entry.instagram_caption,
-        media: media_hash(photos.shift, alt_text: true)
+        media: media_hash(photos.shift)
       }
       opts[:extra_media] = photos.map { |p| media_hash(p, alt_text: true) } if photos.present?
       post_to_buffer('twitter', opts)
