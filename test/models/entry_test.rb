@@ -208,10 +208,10 @@ class EntryTest < ActiveSupport::TestCase
     blog = blogs(:allencompassingtrip)
     entry = Entry.new(title: 'This is the *title* you\'re looking for & stuff', body: 'This is the *body* you\'re looking for & stuff.', status: 'queued', blog: blog, user: user)
     entry.save
-    assert_equal entry.plain_title, 'This is the title you’re looking for & stuff'
-    assert_equal entry.formatted_body, "<p>This is the <em>body</em> you&rsquo;re looking for &amp; stuff.</p>\n"
-    assert_equal entry.plain_body, 'This is the body you’re looking for & stuff.'
-    assert_equal entry.formatted_content, "<p>This is the <em>title</em> you&rsquo;re looking for &amp; stuff</p>\n\n<p>This is the <em>body</em> you&rsquo;re looking for &amp; stuff.</p>\n"
+    assert_equal 'This is the title you’re looking for & stuff', entry.plain_title
+    assert_equal "<p>This is the <em>body</em> you&rsquo;re looking for &amp; stuff.</p>\n", entry.formatted_body
+    assert_equal 'This is the body you’re looking for & stuff.', entry.plain_body
+    assert_equal "<p>This is the <em>title</em> you&rsquo;re looking for &amp; stuff</p>\n\n<p>This is the <em>body</em> you&rsquo;re looking for &amp; stuff.</p>\n", entry.formatted_content
   end
 
   test 'entry positioning should work' do
@@ -281,8 +281,8 @@ class EntryTest < ActiveSupport::TestCase
     assert_not_nil entry.instagram_location
 
     name, id = entry.instagram_location
-    assert_equal name, 'location'
-    assert_equal id, '123456'
+    assert_equal 'location', name
+    assert_equal '123456', id
   end
 
   test 'flickr groups' do
@@ -326,9 +326,9 @@ class EntryTest < ActiveSupport::TestCase
   end
 
   test 'checking if the queue has published today' do
-    assert_equal Entry.published_today.count, 0
+    assert_equal 0, Entry.published_today.count
     entry = entries(:panda)
     entry.publish
-    assert_equal Entry.published_today.count, 1
+    assert_equal 1, Entry.published_today.count
   end
 end
