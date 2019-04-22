@@ -1,27 +1,21 @@
 <tr>
 <td>
-  <div class="tags">
-    <% tag_customization.tags.sort{ |a,b| a.name <=> b.name }.each do |t| %>
-      <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag is-link' %>
-    <% end %>
-  </div>
+   <% tag_customization.tags.sort{ |a,b| a.name <=> b.name }.each do |t| %>
+     <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag is-link' %><br>
+   <% end %>
 </td>
 <td>
-  <div class="tags">
-    <% tag_customization.instagram_hashtags_to_a.each do |t| %>
-      <%= link_to t, "https://www.instagram.com/explore/tags/#{t.gsub('#', '')}/", class: 'tag' %><br>
-    <% end %>
-  </div>
+   <% tag_customization.instagram_hashtags_to_a.each do |t| %>
+     <%= link_to t, "https://www.instagram.com/explore/tags/#{t.gsub('#', '')}/", class: 'tag' %><br>
+   <% end %>
 </td>
 <td>
   <%= link_to_if tag_customization.instagram_location_id.present?, tag_customization.instagram_location_id, "https://www.facebook.com/#{tag_customization.instagram_location_id}/", class: 'tag' %>
 </td>
 <td>
-  <div class="tags">
-    <% tag_customization.flickr_groups_slugs.each do |g| %>
-      <%= link_to g, "https://www.flickr.com/groups/#{g}/", class: 'tag' %><br>
-    <% end %>
-  </div>
+   <% tag_customization.flickr_groups_slugs.each do |g| %>
+     <%= link_to g, "https://www.flickr.com/groups/#{g}/", class: 'tag' %><br>
+   <% end %>
 </td>
 <td>
   <div class="buttons is-pulled-right">
