@@ -8,7 +8,7 @@
 </td>
 <td>
   <div class="tags">
-    <% tag_customization.instagram_hashtags_array.each do |t| %>
+    <% tag_customization.instagram_hashtags_to_a.each do |t| %>
       <%= link_to t, "https://www.instagram.com/explore/tags/#{t.gsub('#', '')}/", class: 'tag' %><br>
     <% end %>
   </div>

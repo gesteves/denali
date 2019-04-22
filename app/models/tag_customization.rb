@@ -4,16 +4,16 @@ class TagCustomization < ApplicationRecord
   belongs_to :blog, touch: true, optional: true
   acts_as_taggable_on :tags
 
-  def instagram_hashtags_array
+  def instagram_hashtags_to_a
     self.instagram_hashtags.split(/\s+/)
   end
 
-  def flickr_groups_array
+  def flickr_groups_to_a
     self.flickr_groups.split(/\s+/)
   end
 
   def flickr_groups_slugs
-    self.flickr_groups_array.map { |g| g.split('/').last }.sort
+    self.flickr_groups_to_a.map { |g| g.split('/').last }
   end
 
   def matches_tags?(tags)
