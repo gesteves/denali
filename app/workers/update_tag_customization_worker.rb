@@ -14,6 +14,7 @@ class UpdateTagCustomizationWorker < ApplicationWorker
                                               .split(/\s+/)
                                               .uniq
                                               .map { |h| h.gsub(/[^\w_]/, '')}
+                                              .reject(&:blank?)
                                               .map(&:downcase)
                                               .map { |h| "##{h}" }
                                               .sort
