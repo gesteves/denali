@@ -344,7 +344,7 @@ class Entry < ApplicationRecord
     end
 
     instagram_tags = tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
-    instagram_tags.flatten.compact.uniq[0, count].shuffle.map { |t| "##{t}"}.join(' ')
+    instagram_tags.flatten.compact.uniq[0, count].shuffle.join(' ')
   end
 
   def instagram_location
