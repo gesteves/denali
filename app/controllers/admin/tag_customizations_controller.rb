@@ -18,6 +18,7 @@ class Admin::TagCustomizationsController < AdminController
     respond_to do |format|
       if @tag_customization.save
         flash[:success] = "Tag settings saved!"
+        FlickrGroupUpdateWorker.perform_async(@tag_customization.id) if @tag_customization.flickr_groups.present?
         format.html { redirect_to admin_tag_customizations_path }
       else
         flash[:warning] = 'The tag settings couldn’t be saved…'
@@ -37,6 +38,7 @@ class Admin::TagCustomizationsController < AdminController
     @tag_customization = @photoblog.tag_customizations.find(params[:id])
     respond_to do |format|
       if @tag_customization.update(association_params)
+        FlickrGroupUpdateWorker.perform_async(@tag_customization.id) if @tag_customization.flickr_groups.present?
         format.html {
           flash[:success] = 'Your changes were saved!'
           redirect_to admin_tag_customizations_path
