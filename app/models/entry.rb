@@ -353,11 +353,9 @@ class Entry < ApplicationRecord
 
   def instagram_location
     return nil if instagram_locations.blank?
-    instagram_location_tags = self.instagram_location_list
-    tc = self.blog.tag_customizations.tagged_with(instagram_location_tags, match_all: true).where.not(instagram_location_id: [nil, '']).limit(1)&.first
+    tc = self.blog.tag_customizations.tagged_with(self.instagram_location_list, match_all: true).where.not(instagram_location_id: [nil, '']).limit(1)&.first
     if tc.present?
-      location_name = tc.instagram_location_name.present? ? tc.instagram_location_name : instagram_location_tags.join(', ')
-      return location_name, tc.instagram_location_id
+      return tc.location_name, tc.instagram_location_id
     else
       nil
     end

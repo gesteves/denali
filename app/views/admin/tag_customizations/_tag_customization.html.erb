@@ -10,7 +10,9 @@
    <% end %>
 </td>
 <td>
-  <%= link_to_if tag_customization.instagram_location_id.present?, tag_customization.instagram_location_id, "https://www.facebook.com/#{tag_customization.instagram_location_id}/", class: 'tag' %>
+  <% if tag_customization.instagram_location_id.present? %>
+    <%= link_to tag_customization.location_name, "https://www.facebook.com/#{tag_customization.instagram_location_id}/", class: 'tag' %>
+  <% end %>
 </td>
 <td>
    <% tag_customization.flickr_groups_slugs.each do |g| %>

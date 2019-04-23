@@ -20,6 +20,11 @@ class TagCustomization < ApplicationRecord
     self.tags.all? { |t| tags.include? t }
   end
 
+  def location_name
+    return nil if self.instagram_location_id.blank?
+    self.instagram_location_name.present? ? self.instagram_location_name : self.tag_list.join(', ')
+  end
+
   private
 
   def tag_list_must_be_unique
