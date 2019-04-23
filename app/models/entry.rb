@@ -349,13 +349,13 @@ class Entry < ApplicationRecord
 
   def instagram_location
     return nil if instagram_locations.blank?
-    instagram_location_tags = self.instagram_locations
-    self.blog.tag_customizations.where.not(instagram_location_id: [nil, '']).each do |tag_customization|
-      if tag_customization.matches_tags? instagram_location_tags
-        return self.instagram_location_list.join(', '), tag_customization.instagram_location_id
-      end
+    instagram_location_tags = self.instagram_location_list
+    tc = self.blog.tag_customizations.tagged_with(instagram_location_tags, match_all: true).where.not(instagram_location_id: [nil, '']).limit(1)&.first
+    if tc.present?
+      return instagram_location_tags.join(', '), tc.instagram_location_id
+    else
+      nil
     end
-    nil
   end
 
   def instagram_caption
