@@ -356,7 +356,8 @@ class Entry < ApplicationRecord
     instagram_location_tags = self.instagram_location_list
     tc = self.blog.tag_customizations.tagged_with(instagram_location_tags, match_all: true).where.not(instagram_location_id: [nil, '']).limit(1)&.first
     if tc.present?
-      return instagram_location_tags.join(', '), tc.instagram_location_id
+      location_name = tc.instagram_location_name.present? ? tc.instagram_location_name : instagram_location_tags.join(', ')
+      return location_name, tc.instagram_location_id
     else
       nil
     end

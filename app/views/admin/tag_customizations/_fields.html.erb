@@ -32,6 +32,20 @@
 
 <div class="field is-horizontal">
   <div class="field-label is-normal">
+    <%= f.label :instagram_location_name, 'Location name', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_field :instagram_location_name, placeholder: 'e.g. Jackson, Wyoming', class: 'input' %>
+        <p class="help">Name of the location, for display purposes. If left blank, will use the tags at the top.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
     <%= f.label :instagram_location_id, 'Location ID', class: 'label' %>
   </div>
   <div class="field-body">
