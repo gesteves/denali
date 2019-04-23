@@ -325,10 +325,12 @@ class Entry < ApplicationRecord
     entry_locations = self.locations
     entry_equipment = self.equipment
     entry_styles = self.styles
+    combined_tags = self.combined_tags
     tags = []
     location_tags = []
     equipment_tags = []
     style_tags = []
+    more_tags = []
 
     self.blog.tag_customizations.where.not(instagram_hashtags: [nil, '']).each do |tag_customization|
       hashtags = tag_customization.instagram_hashtags_to_a
@@ -340,10 +342,12 @@ class Entry < ApplicationRecord
         equipment_tags << hashtags
       elsif tag_customization.matches_tags? entry_styles
         style_tags << hashtags
+      elsif tag_customization.matches_tags? combined_tags
+        more_tags << hashtags
       end
     end
 
-    instagram_tags = tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
+    instagram_tags = more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
     instagram_tags.flatten.compact.uniq[0, count].shuffle.join(' ')
   end
 
