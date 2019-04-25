@@ -8,15 +8,16 @@ class UpdateTagCustomizationWorker < ApplicationWorker
                                           .split(/\s+/)
                                           .uniq
                                           .map { |g| get_group_alias_url(g) }
+                                          .uniq
                                           .sort
                                           .join("\n")
       tag_customization.instagram_hashtags = tag_customization.instagram_hashtags
                                               .split(/\s+/)
-                                              .uniq
                                               .map { |h| h.gsub(/[^\w_]/, '')}
                                               .reject(&:blank?)
                                               .map(&:downcase)
                                               .map { |h| "##{h}" }
+                                              .uniq
                                               .sort
                                               .join("\n")
       tag_customization.save
