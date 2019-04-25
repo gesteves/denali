@@ -16,6 +16,10 @@ class TagCustomization < ApplicationRecord
     self.flickr_groups_to_a.map { |g| g.split('/').last }
   end
 
+  def flickr_albums_to_a
+    self.flickr_albums.split(/\s+/)
+  end
+
   def matches_tags?(tags)
     self.tags.all? { |t| tags.include? t }
   end
@@ -35,7 +39,7 @@ class TagCustomization < ApplicationRecord
   end
 
   def fields_cannot_be_blank
-    if self.instagram_hashtags.blank? && self.flickr_groups.blank? && self.instagram_location_id.blank?
+    if self.instagram_hashtags.blank? && self.instagram_location_id.blank? && self.flickr_groups.blank? && self.flickr_albums.blank?
       errors.add(:base, 'You need to fill out at least one of the fields')
     end
   end

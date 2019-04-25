@@ -384,6 +384,18 @@ class Entry < ApplicationRecord
     entry_groups.flatten.compact.uniq[0, count]
   end
 
+  def flickr_albums
+    entry_tags = self.combined_tags
+    entry_albums = []
+    self.blog.tag_customizations.where.not(flickr_albums: [nil, '']).each do |tag_customization|
+      flickr_albums = tag_customization.flickr_albums_to_a
+      if tag_customization.matches_tags? entry_tags
+        entry_albums << flickr_albums
+      end
+    end
+    entry_albums.flatten.compact.uniq
+  end
+
   def update_tags
     EntryTagUpdateWorker.perform_async(self.id)
   end

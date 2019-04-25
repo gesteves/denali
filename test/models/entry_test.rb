@@ -307,6 +307,28 @@ class EntryTest < ActiveSupport::TestCase
     assert_not_empty entry.flickr_groups
   end
 
+  test 'flickr albums' do
+    user = users(:guille)
+    blog = blogs(:allencompassingtrip)
+
+    tag = TagCustomization.new(flickr_albums: 'https://flickr.com/whatever/', blog: blog)
+    tag.tag_list.add('tag c', 'tag d')
+    tag.save!
+    tag.reload
+
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user)
+    entry.save!
+    assert_empty entry.flickr_albums
+
+    entry.add_tags('tag c')
+    entry.reload
+    assert_empty entry.flickr_albums
+
+    entry.add_tags('tag d')
+    entry.reload
+    assert_not_empty entry.flickr_albums
+  end
+
   test 'adding tags' do
     entry = entries(:panda)
     entry.tag_list = 'Panda'

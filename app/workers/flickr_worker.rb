@@ -33,6 +33,9 @@ class FlickrWorker < ApplicationWorker
         entry.flickr_groups.each do |group_url|
           FlickrGroupWorker.perform_async(photo_id, group_url)
         end
+        entry.flickr_albums.each do |album_url|
+          FlickrAlbumWorker.perform_async(photo_id, album_url)
+        end
       end
     rescue FlickRaw::FailedResponse
     end

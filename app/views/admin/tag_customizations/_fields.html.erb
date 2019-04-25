@@ -74,6 +74,20 @@
   </div>
 </div>
 
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :flickr_albums, 'Albums', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_area :flickr_albums, placeholder: 'Enter Flickr album URLs, one per line…', class: 'textarea', rows: 10 %>
+        <p class="help">Entries shared on Flickr will be added to these albums.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <hr class="hr">
 
 <div class="field is-horizontal">
