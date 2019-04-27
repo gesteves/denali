@@ -114,6 +114,7 @@ class Admin::EntriesController < AdminController
       if @entry.save
         update_position
         enqueue_photo_jobs
+        AmpValidationWorker.perform_async(@entry.id)
         flash[:success] = "Your new entry was saved! <a href=\"#{admin_entry_path(@entry)}\">Check it out.</a>"
         format.html { redirect_to new_admin_entry_path }
       else
@@ -130,6 +131,7 @@ class Admin::EntriesController < AdminController
       if @entry.update(entry_params)
         enqueue_photo_jobs
         enqueue_cache_jobs
+        AmpValidationWorker.perform_async(@entry.id)
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else
@@ -312,6 +314,7 @@ class Admin::EntriesController < AdminController
       photo.extract_metadata
       photo.extract_palette
     end
+    AmpValidationWorker.perform_async(@entry.id)
     @message = 'Your entry’s metadata is being updated. This may take a few moments.'
     respond_to do |format|
       format.html {

@@ -151,7 +151,7 @@ class Entry < ApplicationRecord
     self.older&.touch
     self.remove_from_list
     self.status = 'published'
-    self.save && self.enqueue_sharing_jobs
+    self.save && self.enqueue_post_publish_jobs
   end
 
   def queue
@@ -279,12 +279,13 @@ class Entry < ApplicationRecord
     entry_url(self.id, url_opts(host: host))
   end
 
-  def enqueue_sharing_jobs
+  def enqueue_post_publish_jobs
     self.send_to_ifttt
     FacebookWorker.perform_async(self.id) if self.post_to_facebook
     InstagramWorker.perform_async(self.id) if self.post_to_instagram
     TwitterWorker.perform_async(self.id) if self.post_to_twitter
     self.send_photos_to_flickr if self.post_to_flickr
+    AmpValidationWorker.perform_async(self.id)
     true
   end
 

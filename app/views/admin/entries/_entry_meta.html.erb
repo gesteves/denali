@@ -30,8 +30,15 @@
           <span class="tag">Location missing</span>
         <% end %>
       </div>
-
     </div>
+    <% if !entry.valid_amp %>
+      <div class="control">
+        <div class="tags has-addons">
+          <span class="tag is-danger"><i class="fas fa-exclamation-triangle"></i></span>
+          <%= link_to 'Invalid AMP', "https://validator.ampproject.org/#url=#{CGI.escape(entry.amp_url)}", class: 'tag' %>
+        </div>
+      </div>
+    <% end %>
     <% if entry.photos.count { |p| p.alt_text.blank? } > 0 %>
       <div class="control">
         <div class="tags has-addons">
