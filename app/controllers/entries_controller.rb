@@ -9,10 +9,10 @@ class EntriesController < ApplicationController
   before_action :set_entry_max_age, only: [:show, :preview, :photo, :amp, :related]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
-  before_action :set_preview_entry, only: [:preview]
+  before_action :set_preview_entry, only: [:preview, :amp_preview]
   before_action :preload_photos, only: [:show, :preview]
 
-  layout 'amp', only: :amp
+  layout 'amp', only: [:amp, :amp_preview]
 
   def index
     if stale?(@photoblog, public: true)
@@ -128,6 +128,21 @@ class EntriesController < ApplicationController
             redirect_to "#{@entry.permalink_url}.json", status: 302
           else
             render :show
+          end
+        }
+      end
+    end
+  end
+
+  def amp_preview
+    if stale?(@photoblog, public: true)
+      respond_to do |format|
+        format.html {
+          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
+          if @entry.is_published?
+            redirect_to @entry.amp_url
+          else
+            render :amp
           end
         }
       end

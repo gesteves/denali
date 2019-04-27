@@ -266,9 +266,12 @@ class Entry < ApplicationRecord
   end
 
   def amp_url
-    return nil unless self.is_published?
-    year, month, day, id, slug = self.slug_params
-    entry_amp_url(year, month, day, id, slug)
+    if self.is_published?
+      year, month, day, id, slug = self.slug_params
+      entry_amp_url(year, month, day, id, slug)
+    else
+      amp_preview_entry_url(self.preview_hash)
+    end
   end
 
   def short_permalink_url(opts = {})
