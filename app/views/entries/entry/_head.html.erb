@@ -52,7 +52,9 @@
   <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
   <link rel="alternate" type="application/vnd.api+json" href="<%= entry.permalink_url %>">
   <link rel="canonical" href="<%= entry.permalink_url %>">
-  <link rel="amphtml" href="<%= entry.amp_url %>">
+  <% if entry.valid_amp %>
+    <link rel="amphtml" href="<%= entry.amp_url %>">
+  <% end %>
 
   <script type="application/ld+json">
     <%= sanitize render partial: 'entries/entry/schema.json.jbuilder', object: entry, as: :entry, locals: { meta_description: meta_description } %>
