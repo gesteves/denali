@@ -1,7 +1,6 @@
 Rails.application.routes.draw do
   require 'sidekiq/web'
-  require 'user_constraint'
-  mount Sidekiq::Web => '/sidekiq', :constraints => UserConstraint.new
+  mount Sidekiq::Web => '/admin/sidekiq', constraints: lambda { |request| request.session[:user_id].present? && User.find(request.session[:user_id]).present? }
 
   concern :paginatable do
     get '(page/:page)', :action => :index, :on => :collection
