@@ -7,10 +7,19 @@ class Photo < ApplicationRecord
 
   acts_as_list scope: :entry
 
-  after_save :update_entry
+  after_create :extract_metadata, :extract_palette
 
-  def update_entry
+  after_save :touch_entry, if: :changed_visible_attributes?
+  after_save :geocode, if: :changed_coordinates?
+  after_save :update_entry_tags, if: :changed_taggable_attributes?
+  after_save :validate_amp, if: :changed_dimensions?
+
+  def touch_entry
     self.entry.touch
+  end
+
+  def update_entry_tags
+    self.entry.update_tags
   end
 
   def self.oldest
@@ -154,5 +163,27 @@ class Photo < ApplicationRecord
   def black_and_white?
     return if self.color_palette.blank?
     !self.color?
+  end
+
+  def validate_amp
+    AmpValidationWorker.perform_async(self.entry.id)
+  end
+
+  private
+
+  def changed_dimensions?
+    saved_change_to_width? || saved_change_to_height?
+  end
+
+  def changed_visible_attributes?
+    saved_change_to_alt_text? || saved_change_to_focal_x? || saved_change_to_focal_y?
+  end
+
+  def changed_coordinates?
+    saved_change_to_latitude? || saved_change_to_longitude?
+  end
+
+  def changed_taggable_attributes?
+    saved_change_to_country? || saved_change_to_color_palette? || saved_change_to_camera_id? || saved_change_to_lens_id?
   end
 end

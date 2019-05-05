@@ -7,7 +7,6 @@ class PhotoMetadataWorker < ApplicationWorker
     rescue ActiveRecord::RecordNotFound
       return
     end
-    entry = photo.entry
     original = open(photo.image.service_url)
     image = MiniMagick::Image.open(original.path)
     image.auto_orient
@@ -48,8 +47,5 @@ class PhotoMetadataWorker < ApplicationWorker
       end
     end
     photo.save!
-    photo.geocode
-    entry.validate_amp
-    entry.update_tags
   end
 end

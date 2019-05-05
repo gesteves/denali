@@ -112,8 +112,6 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save
-        update_position
-        enqueue_photo_jobs
         flash[:success] = "Your new entry was saved! <a href=\"#{admin_entry_path(@entry)}\">Check it out.</a>"
         format.html { redirect_to new_admin_entry_path }
       else
@@ -128,8 +126,7 @@ class Admin::EntriesController < AdminController
     respond_to do |format|
       @entry.modified_at = Time.current if @entry.is_published?
       if @entry.update(entry_params)
-        enqueue_photo_jobs
-        enqueue_cache_jobs
+        CloudfrontInvalidationWorker.perform_async(@entry.id) if entry_params[:flush_caches] == 'true'
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else
@@ -312,7 +309,6 @@ class Admin::EntriesController < AdminController
       photo.extract_metadata
       photo.extract_palette
     end
-    AmpValidationWorker.perform_async(@entry.id)
     @message = 'Your entry’s metadata is being updated. This may take a few moments.'
     respond_to do |format|
       format.html {
@@ -344,12 +340,6 @@ class Admin::EntriesController < AdminController
       params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :instagram_location_list, :post_to_twitter, :post_to_flickr, :post_to_instagram, :post_to_facebook, :tweet_text, :instagram_text, :show_in_map, :flush_caches, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y])
     end
 
-    def update_position
-      if !@entry.is_queued?
-        @entry.remove_from_list
-      end
-    end
-
     def load_tagged_entries
       @page = params[:page] || 1
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).tagged_with(@tag_list, any: true).order('created_at DESC').page(@page)
@@ -357,18 +347,5 @@ class Admin::EntriesController < AdminController
 
     def set_redirect_url
       session[:redirect_url] = request.referer
-    end
-
-    def enqueue_cache_jobs
-      if entry_params[:flush_caches] == 'true'
-        CloudfrontInvalidationWorker.perform_async(@entry.id)
-      end
-    end
-
-    def enqueue_photo_jobs
-      @entry.photos.each do |photo|
-        photo.extract_metadata
-        photo.extract_palette
-      end
     end
 end

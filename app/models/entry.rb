@@ -16,6 +16,11 @@ class Entry < ApplicationRecord
   before_save :set_entry_slug
   before_create :set_preview_hash
 
+  after_save :enqueue_publish_jobs, if: :status_changed_to_published?
+  after_save :remove_from_list, if: :status_changed_to_not_queued?
+  after_save :add_to_list, if: :status_changed_to_queued?
+  after_save :validate_amp, if: :amp_attributes_changed?
+
   acts_as_taggable_on :tags, :equipment, :locations, :styles, :instagram_locations
   acts_as_list scope: :blog
 
@@ -148,15 +153,13 @@ class Entry < ApplicationRecord
   end
 
   def publish
-    self.older&.touch
-    self.remove_from_list
+    self.older&.touch # Bust caches on the previous entry so pagination updates
     self.status = 'published'
-    self.save && self.enqueue_post_publish_jobs
+    self.save
   end
 
   def queue
     unless status == 'published'
-      self.insert_at(Entry.queued.size)
       self.status = 'queued'
       self.save
     end
@@ -164,10 +167,13 @@ class Entry < ApplicationRecord
 
   def draft
     unless status == 'published'
-      self.remove_from_list
       self.status = 'draft'
       self.save
     end
+  end
+
+  def add_to_list
+    insert_at(Entry.queued.size)
   end
 
   def newer
@@ -279,14 +285,12 @@ class Entry < ApplicationRecord
     entry_url(self.id, url_opts(host: host))
   end
 
-  def enqueue_post_publish_jobs
+  def enqueue_publish_jobs
     self.send_to_ifttt
     FacebookWorker.perform_async(self.id) if self.post_to_facebook
     InstagramWorker.perform_async(self.id) if self.post_to_instagram
     TwitterWorker.perform_async(self.id) if self.post_to_twitter
     self.send_photos_to_flickr if self.post_to_flickr
-    AmpValidationWorker.perform_async(self.id)
-    true
   end
 
   def send_photos_to_flickr
@@ -411,7 +415,23 @@ class Entry < ApplicationRecord
   end
 
   def validate_amp
-    AmpValidationWorker.perform_async(self.id) if self.photos.where(width: nil, height: nil).blank?
+    AmpValidationWorker.perform_async(self.id)
+  end
+
+  def status_changed_to_not_queued?
+    saved_change_to_status?(to: 'published') || saved_change_to_status?(to: 'draft')
+  end
+
+  def status_changed_to_queued?
+    saved_change_to_status?(to: 'queued')
+  end
+
+  def status_changed_to_published?
+    saved_change_to_status?(to: 'published')
+  end
+
+  def amp_attributes_changed?
+    saved_change_to_body? || saved_change_to_status?
   end
 
   private

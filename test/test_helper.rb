@@ -1,12 +1,15 @@
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+require 'sidekiq/testing'
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 
   def setup
+    Sidekiq::Testing.fake!
+    Sidekiq::Worker.clear_all
     Photo.all.each do |photo|
       photo.image.attach(io: File.open(Rails.root.join('test/fixtures/images/rusty.jpg')), filename: 'rusty.jpg') unless photo.image.attached?
     end
