@@ -35,22 +35,22 @@ class TagCustomization < ApplicationRecord
 
   def cleanup_flickr_albums
     self.flickr_albums = self.flickr_albums
-                              .split(/\s+/)
-                              .uniq
-                              .sort
-                              .join("\n")
+                              &.split(/\s+/)
+                              &.uniq
+                              &.sort
+                              &.join("\n")
   end
 
   def cleaup_hashtags
     self.instagram_hashtags = self.instagram_hashtags
-                                    .split(/\s+/)
-                                    .map { |h| h.gsub(/[^\w_]/, '')}
-                                    .reject(&:blank?)
-                                    .map(&:downcase)
-                                    .map { |h| "##{h}" }
-                                    .uniq
-                                    .sort
-                                    .join("\n")
+                                    &.split(/\s+/)
+                                    &.map { |h| h.gsub(/[^\w_]/, '')}
+                                    &.reject(&:blank?)
+                                    &.map(&:downcase)
+                                    &.map { |h| "##{h}" }
+                                    &.uniq
+                                    &.sort
+                                    &.join("\n")
   end
 
   def cleanup_flickr_groups
