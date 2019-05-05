@@ -8,7 +8,6 @@ class Admin::LensesController < AdminController
     @lens = Lens.find(params[:id])
     respond_to do |format|
       if @lens.update(lens_params)
-        @lens.photos.map { |p| p.entry.update_tags }
         format.html {
           flash[:success] = 'Your changes were saved!'
           redirect_to admin_equipment_path
