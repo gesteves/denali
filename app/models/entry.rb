@@ -410,6 +410,10 @@ class Entry < ApplicationRecord
     self.save!
   end
 
+  def validate_amp
+    AmpValidationWorker.perform_async(self.id) if self.photos.where(width: nil, height: nil).blank?
+  end
+
   private
 
   def url_opts(opts)
