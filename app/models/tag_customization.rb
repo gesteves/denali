@@ -4,9 +4,9 @@ class TagCustomization < ApplicationRecord
   belongs_to :blog, touch: true, optional: true
   acts_as_taggable_on :tags
 
+  before_save :cleaup_hashtags
+  before_save :cleanup_flickr_albums
   after_save :cleanup_flickr_groups, if: :saved_change_to_flickr_groups?
-  after_save :cleaup_hashtags, if: :saved_change_to_instagram_hashtags?
-  after_save :cleanup_flickr_albums, if: :saved_change_to_flickr_albums?
 
   def instagram_hashtags_to_a
     self.instagram_hashtags.split(/\s+/)
@@ -39,7 +39,6 @@ class TagCustomization < ApplicationRecord
                               .uniq
                               .sort
                               .join("\n")
-    self.save
   end
 
   def cleaup_hashtags
@@ -52,7 +51,6 @@ class TagCustomization < ApplicationRecord
                                     .uniq
                                     .sort
                                     .join("\n")
-    self.save
   end
 
   def cleanup_flickr_groups
