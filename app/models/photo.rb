@@ -95,10 +95,12 @@ class Photo < ApplicationRecord
   end
 
   def height_from_width(width)
+    return nil if self.width.blank?
     ((self.height.to_f * width.to_f)/self.width.to_f).round
   end
 
   def width_from_height(height)
+    return nil if self.height.blank?
     ((self.width.to_f * height.to_f)/self.height.to_f).round
   end
 

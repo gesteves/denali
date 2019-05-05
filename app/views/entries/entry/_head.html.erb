@@ -21,8 +21,10 @@
   <meta property="og:locale" content="en_US">
   <% if entry.is_photo? %>
     <meta property="og:image" content="<%= photo.url(w: 1200) %>">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="<%= photo.height_from_width(1200) %>">
+    <% if photo.width.present? && photo.height.present? %>
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="<%= photo.height_from_width(1200) %>">
+    <% end %>
   <% end %>
 
   <%# Twitter meta tags %>

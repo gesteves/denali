@@ -2,14 +2,20 @@ module ApplicationHelper
 
   def responsive_image_tag(photo, photo_key, html_options = {})
     src, srcset = photo.srcset(photo_key)
-    intrinsic_size = is_variant_square?(photo_key) ? '1x1' : "#{photo.width}x#{photo.height}"
+    intrinsic_size = if is_variant_square?(photo_key)
+      '1x1'
+    elsif photo.width.present? && photo.height.present?
+      "#{photo.width}x#{photo.height}"
+    else
+      nil
+    end
     html_options.reverse_merge!({
       srcset: srcset,
       src: src,
       sizes: Photo.sizes(photo_key),
-      intrinsicsize: intrinsic_size,
       loading: 'lazy'
     })
+    html_options[:intrinsicsize] = intrinsic_size if intrinsic_size.present?
     content_tag :img, nil, html_options
   end
 
@@ -41,7 +47,7 @@ module ApplicationHelper
   end
 
   def css_aspect_ratio(photo)
-    return '' if photo.width.blank? || photo.height.blank?
+    return '--aspect-ratio:0' if photo.width.blank? || photo.height.blank?
     "--aspect-ratio:#{photo.height.to_f/photo.width.to_f};"
   end
 
