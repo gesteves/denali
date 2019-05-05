@@ -184,6 +184,6 @@ class Photo < ApplicationRecord
   end
 
   def changed_taggable_attributes?
-    saved_change_to_country? || saved_change_to_color_palette? || saved_change_to_camera_id? || saved_change_to_lens_id?
+    saved_change_to_country? || saved_change_to_locality? || saved_change_to_sublocality? || saved_change_to_color_palette? || saved_change_to_camera_id? || saved_change_to_film_id?
   end
 end
