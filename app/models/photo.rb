@@ -9,17 +9,27 @@ class Photo < ApplicationRecord
 
   after_create :extract_metadata, :extract_palette
 
-  after_save :touch_entry, if: :changed_visible_attributes?
+  after_save :touch_entry
   after_save :geocode, if: :changed_coordinates?
-  after_save :update_entry_tags, if: :changed_taggable_attributes?
+  after_save :update_entry_equipment_tags, if: :changed_equipment?
+  after_save :update_entry_location_tags, if: :changed_location?
+  after_save :update_entry_style_tags, if: :changed_style?
   after_save :validate_amp, if: :changed_dimensions?
 
   def touch_entry
     self.entry.touch
   end
 
-  def update_entry_tags
-    self.entry.update_tags
+  def update_entry_equipment_tags
+    self.entry.update_equipment_tags
+  end
+
+  def update_entry_location_tags
+    self.entry.update_location_tags
+  end
+
+  def update_entry_style_tags
+    self.entry.update_style_tags
   end
 
   def self.oldest
@@ -175,15 +185,19 @@ class Photo < ApplicationRecord
     saved_change_to_width? || saved_change_to_height?
   end
 
-  def changed_visible_attributes?
-    saved_change_to_alt_text? || saved_change_to_focal_x? || saved_change_to_focal_y?
-  end
-
   def changed_coordinates?
     saved_change_to_latitude? || saved_change_to_longitude?
   end
 
-  def changed_taggable_attributes?
-    saved_change_to_country? || saved_change_to_locality? || saved_change_to_sublocality? || saved_change_to_color_palette? || saved_change_to_camera_id? || saved_change_to_film_id?
+  def changed_equipment?
+    saved_change_to_camera_id? || saved_change_to_film_id? || saved_change_to_lens_id?
+  end
+
+  def changed_location?
+    saved_change_to_country? || saved_change_to_locality? || saved_change_to_sublocality?
+  end
+
+  def changed_style?
+    saved_change_to_color_palette? || saved_change_to_camera_id? || saved_change_to_film_id?
   end
 end
