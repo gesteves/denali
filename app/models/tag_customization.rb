@@ -4,6 +4,10 @@ class TagCustomization < ApplicationRecord
   belongs_to :blog, touch: true, optional: true
   acts_as_taggable_on :tags
 
+  after_save :cleanup_flickr_groups, if: :saved_change_to_flickr_groups?
+  after_save :cleaup_hashtags, if: :saved_change_to_instagram_hashtags?
+  after_save :cleanup_flickr_albums, if: :saved_change_to_flickr_albums?
+
   def instagram_hashtags_to_a
     self.instagram_hashtags.split(/\s+/)
   end
@@ -27,6 +31,32 @@ class TagCustomization < ApplicationRecord
   def location_name
     return nil if self.instagram_location_id.blank?
     self.instagram_location_name.present? ? self.instagram_location_name : self.tag_list.join(', ')
+  end
+
+  def cleanup_flickr_albums
+    self.flickr_albums = self.flickr_albums
+                              .split(/\s+/)
+                              .uniq
+                              .sort
+                              .join("\n")
+    self.save
+  end
+
+  def cleaup_hashtags
+    self.instagram_hashtags = self.instagram_hashtags
+                                    .split(/\s+/)
+                                    .map { |h| h.gsub(/[^\w_]/, '')}
+                                    .reject(&:blank?)
+                                    .map(&:downcase)
+                                    .map { |h| "##{h}" }
+                                    .uniq
+                                    .sort
+                                    .join("\n")
+    self.save
+  end
+
+  def cleanup_flickr_groups
+    UpdateTagCustomizationWorker.perform_async(self.id)
   end
 
   private

@@ -11,20 +11,6 @@ class UpdateTagCustomizationWorker < ApplicationWorker
                                           .uniq
                                           .sort
                                           .join("\n")
-      tag_customization.flickr_albums = tag_customization.flickr_albums
-                                          .split(/\s+/)
-                                          .uniq
-                                          .sort
-                                          .join("\n")
-      tag_customization.instagram_hashtags = tag_customization.instagram_hashtags
-                                              .split(/\s+/)
-                                              .map { |h| h.gsub(/[^\w_]/, '')}
-                                              .reject(&:blank?)
-                                              .map(&:downcase)
-                                              .map { |h| "##{h}" }
-                                              .uniq
-                                              .sort
-                                              .join("\n")
       tag_customization.save
     rescue ActiveRecord::RecordNotFound
       return
