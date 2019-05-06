@@ -377,6 +377,7 @@ class Entry < ApplicationRecord
       text << self.plain_title
       text << self.plain_body
     end
+    text << self.instagram_hashtags
     text.reject(&:blank?).join("\n\n")
   end
 
