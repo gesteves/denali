@@ -18,7 +18,7 @@ class FlickrGroupWorker < ApplicationWorker
       end
       flickr.groups.pools.add(photo_id: photo_id, group_id: group['nsid'])
     rescue FlickRaw::FailedResponse => e
-      logger.tagged('Flickr') { logger.error e }
+      logger.error e
     end
   end
 end

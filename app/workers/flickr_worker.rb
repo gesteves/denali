@@ -38,7 +38,7 @@ class FlickrWorker < ApplicationWorker
         end
       end
     rescue FlickRaw::FailedResponse => e
-      logger.tagged('Flickr') { logger.error e }
+      logger.error e
     end
   end
 end
