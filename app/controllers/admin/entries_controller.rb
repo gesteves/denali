@@ -278,7 +278,7 @@ class Admin::EntriesController < AdminController
 
   def flickr
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    entry.photos.each do |p|
+    @entry.photos.each do |p|
       FlickrWorker.perform_async(p.id)
     end
     @message = 'Your entry was sent to Flickr.'
