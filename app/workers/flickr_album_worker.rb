@@ -14,7 +14,8 @@ class FlickrAlbumWorker < ApplicationWorker
 
       flickr.photosets.addPhoto(photo_id: photo_id, photoset_id: album_id)
       flickr.photosets.reorderPhotos(photo_ids: photo_id, photoset_id: album_id)
-    rescue FlickRaw::FailedResponse
+    rescue FlickRaw::FailedResponse => e
+      logger.tagged('Flickr') { logger.error e }
     end
   end
 end

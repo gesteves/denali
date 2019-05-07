@@ -37,7 +37,8 @@ class FlickrWorker < ApplicationWorker
           FlickrAlbumWorker.perform_async(photo_id, album_url)
         end
       end
-    rescue FlickRaw::FailedResponse
+    rescue FlickRaw::FailedResponse => e
+      logger.tagged('Flickr') { logger.error e }
     end
   end
 end
