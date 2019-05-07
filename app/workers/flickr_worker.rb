@@ -38,7 +38,7 @@ class FlickrWorker < ApplicationWorker
         end
       end
     rescue FlickRaw::FailedResponse => e
-      logger.error e
+      logger.error "[Flickr] [Photo] [#{entry.permalink_url}] #{e}"
     end
   end
 end
