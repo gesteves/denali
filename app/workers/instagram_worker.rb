@@ -1,7 +1,7 @@
 class InstagramWorker < BufferWorker
 
   def perform(entry_id)
-    entry = Entry.find(entry_id)
+    entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
 
     photos = entry.photos.to_a[0..4]
