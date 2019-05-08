@@ -2,13 +2,9 @@ class FlickrWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
   def perform(photo_id)
-    begin
-      photo = Photo.find(photo_id)
-    rescue ActiveRecord::RecordNotFound
-      return
-    end
+    photo = Photo.find(photo_id)
     entry = photo.entry
-    return if !entry.is_published? || !Rails.env.production?
+    return if !Rails.env.production?
     FlickRaw.api_key = ENV['flickr_consumer_key']
     FlickRaw.shared_secret = ENV['flickr_consumer_secret']
 
