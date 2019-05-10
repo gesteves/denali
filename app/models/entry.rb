@@ -16,9 +16,7 @@ class Entry < ApplicationRecord
   before_save :set_entry_slug
   before_create :set_preview_hash
 
-  after_commit :enqueue_publish_jobs, if: :status_changed_to_published?
-  after_commit :remove_from_list, if: :status_changed_to_not_queued?
-  after_commit :add_to_list, if: :status_changed_to_queued?
+  after_commit :handle_status_change, if: :saved_change_to_status?
   after_commit :validate_amp, if: :amp_attributes_changed?
 
   acts_as_taggable_on :tags, :equipment, :locations, :styles, :instagram_locations
@@ -455,20 +453,20 @@ class Entry < ApplicationRecord
     AmpValidationWorker.perform_async(self.id)
   end
 
-  def status_changed_to_not_queued?
-    saved_change_to_status?(to: 'published') || saved_change_to_status?(to: 'draft')
-  end
-
-  def status_changed_to_queued?
-    saved_change_to_status?(to: 'queued')
-  end
-
-  def status_changed_to_published?
-    saved_change_to_status?(to: 'published')
-  end
-
   def amp_attributes_changed?
     saved_change_to_body? || saved_change_to_status?
+  end
+
+  def handle_status_change
+    case status
+    when 'published'
+      remove_from_list
+      enqueue_publish_jobs
+    when 'draft'
+      remove_from_list
+    when 'queued'
+      add_to_list
+    end
   end
 
   private
