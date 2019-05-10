@@ -17,7 +17,6 @@ class Entry < ApplicationRecord
   before_create :set_preview_hash
 
   after_commit :handle_status_change, if: :saved_change_to_status?
-  after_commit :validate_amp, if: :amp_attributes_changed?
 
   acts_as_taggable_on :tags, :equipment, :locations, :styles, :instagram_locations
   acts_as_list scope: :blog
@@ -447,10 +446,6 @@ class Entry < ApplicationRecord
     self.tag_list.add(new_tags, parse: true)
     self.tag_list.remove(self.equipment_list + self.location_list + ['Color', 'Black and White', 'Film', 'Mobile'])
     self.save!
-  end
-
-  def validate_amp
-    AmpValidationWorker.perform_async(self.id)
   end
 
   def amp_attributes_changed?

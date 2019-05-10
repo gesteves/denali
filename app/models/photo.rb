@@ -14,7 +14,6 @@ class Photo < ApplicationRecord
   after_commit :update_entry_equipment_tags, if: :changed_equipment?
   after_commit :update_entry_location_tags, if: :changed_location?
   after_commit :update_entry_style_tags, if: :changed_style?
-  after_commit :validate_amp, if: :changed_dimensions?
 
   def touch_entry
     self.entry.touch
@@ -173,10 +172,6 @@ class Photo < ApplicationRecord
   def black_and_white?
     return if self.color_palette.blank?
     !self.color?
-  end
-
-  def validate_amp
-    AmpValidationWorker.perform_async(self.entry.id)
   end
 
   def changed_dimensions?
