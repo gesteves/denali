@@ -424,7 +424,7 @@ class Entry < ApplicationRecord
   def update_location_tags
     location_tags = []
     self.photos.each do |p|
-      location_tags  << [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area] if entry.show_in_map?
+      location_tags  << [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area] if self.show_in_map?
     end
     location_tags = location_tags.flatten.uniq.reject!(&:blank?)
     self.location_list = location_tags
