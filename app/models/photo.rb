@@ -179,8 +179,6 @@ class Photo < ApplicationRecord
     AmpValidationWorker.perform_async(self.entry.id)
   end
 
-  private
-
   def changed_dimensions?
     saved_change_to_width? || saved_change_to_height?
   end
