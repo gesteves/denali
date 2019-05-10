@@ -16,10 +16,10 @@ class Entry < ApplicationRecord
   before_save :set_entry_slug
   before_create :set_preview_hash
 
-  after_save :enqueue_publish_jobs, if: :status_changed_to_published?
-  after_save :remove_from_list, if: :status_changed_to_not_queued?
-  after_save :add_to_list, if: :status_changed_to_queued?
-  after_save :validate_amp, if: :amp_attributes_changed?
+  after_commit :enqueue_publish_jobs, if: :status_changed_to_published?
+  after_commit :remove_from_list, if: :status_changed_to_not_queued?
+  after_commit :add_to_list, if: :status_changed_to_queued?
+  after_commit :validate_amp, if: :amp_attributes_changed?
 
   acts_as_taggable_on :tags, :equipment, :locations, :styles, :instagram_locations
   acts_as_list scope: :blog

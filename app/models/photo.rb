@@ -9,12 +9,12 @@ class Photo < ApplicationRecord
 
   after_create :extract_metadata, :extract_palette
 
-  after_save :touch_entry
-  after_save :geocode, if: :changed_coordinates?
-  after_save :update_entry_equipment_tags, if: :changed_equipment?
-  after_save :update_entry_location_tags, if: :changed_location?
-  after_save :update_entry_style_tags, if: :changed_style?
-  after_save :validate_amp, if: :changed_dimensions?
+  after_commit :touch_entry
+  after_commit :geocode, if: :changed_coordinates?
+  after_commit :update_entry_equipment_tags, if: :changed_equipment?
+  after_commit :update_entry_location_tags, if: :changed_location?
+  after_commit :update_entry_style_tags, if: :changed_style?
+  after_commit :validate_amp, if: :changed_dimensions?
 
   def touch_entry
     self.entry.touch
