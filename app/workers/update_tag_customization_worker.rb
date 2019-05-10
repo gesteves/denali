@@ -2,19 +2,15 @@ class UpdateTagCustomizationWorker < ApplicationWorker
   sidekiq_options queue: 'low'
 
   def perform(tag_customization_id)
-    begin
-      tag_customization = TagCustomization.find(tag_customization_id)
-      tag_customization.flickr_groups = tag_customization.flickr_groups
-                                          &.split(/\s+/)
-                                          &.uniq
-                                          &.map { |g| get_group_alias_url(g) }
-                                          &.uniq
-                                          &.sort
-                                          &.join("\n")
-      tag_customization.save
-    rescue ActiveRecord::RecordNotFound
-      return
-    end
+    tag_customization = TagCustomization.find(tag_customization_id)
+    tag_customization.flickr_groups = tag_customization.flickr_groups
+                                        &.split(/\s+/)
+                                        &.uniq
+                                        &.map { |g| get_group_alias_url(g) }
+                                        &.uniq
+                                        &.sort
+                                        &.join("\n")
+    tag_customization.save
   end
 
   private

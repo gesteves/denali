@@ -2,11 +2,7 @@ require 'exifr/jpeg'
 class PhotoMetadataWorker < ApplicationWorker
 
   def perform(photo_id)
-    begin
-      photo = Photo.find(photo_id)
-    rescue ActiveRecord::RecordNotFound
-      return
-    end
+    photo = Photo.find(photo_id)
     original = open(photo.image.service_url)
     image = MiniMagick::Image.open(original.path)
     image.auto_orient

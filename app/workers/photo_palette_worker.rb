@@ -1,11 +1,7 @@
 class PhotoPaletteWorker < ApplicationWorker
 
   def perform(photo_id)
-    begin
-      photo = Photo.find(photo_id)
-    rescue ActiveRecord::RecordNotFound
-      return
-    end
+    photo = Photo.find(photo_id)
     palette = request_palette(photo)
     photo.color_vibrant = palette.dig('dominant_colors', 'vibrant', 'hex')
     photo.color_muted   = palette.dig('dominant_colors', 'muted', 'hex')
