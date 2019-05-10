@@ -7,7 +7,7 @@ class Photo < ApplicationRecord
 
   acts_as_list scope: :entry
 
-  after_create :extract_metadata, :extract_palette
+  after_create_commit :extract_metadata, :extract_palette
 
   after_commit :touch_entry
   after_commit :geocode, if: :changed_coordinates?
