@@ -415,7 +415,7 @@ class Entry < ApplicationRecord
     self.photos.each do |p|
       equipment_tags << [p.camera&.make, p.camera&.display_name, p.film&.display_name]
     end
-    equipment_tags.flatten!.uniq!.reject!(&:blank?)
+    equipment_tags = equipment_tags.flatten.uniq.reject!(&:blank?)
     self.equipment_list = equipment_tags
     self.tag_list.remove(equipment_tags)
     self.save!
@@ -426,7 +426,7 @@ class Entry < ApplicationRecord
     self.photos.each do |p|
       location_tags  << [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area] if entry.show_in_map?
     end
-    location_tags.flatten!.uniq!.reject!(&:blank?)
+    location_tags = location_tags.flatten.uniq.reject!(&:blank?)
     self.location_list = location_tags
     self.tag_list.remove(location_tags)
     self.save!
@@ -439,7 +439,7 @@ class Entry < ApplicationRecord
       style_tags << 'Film' if p.film.present?
       style_tags << 'Mobile' if p.camera&.is_phone?
     end
-    style_tags!.flatten!.uniq!.reject!(&:blank?)
+    style_tags = style_tags.flatten.uniq.reject!(&:blank?)
     self.style_list = style_tags
     self.tag_list.remove(['Color', 'Black and White', 'Film'])
     self.save!
