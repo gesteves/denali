@@ -46,6 +46,25 @@
         </div>
       </div>
       <hr class="hr">
+      <h2 class="subtitle is-size-6">Instagram Caption</h2>
+      <form data-controller="clipboard">
+        <div class="field">
+          <div class="control">
+            <textarea rows="3" class="textarea" readonly="readonly" data-target="clipboard.source"><%= @entry.instagram_caption %></textarea>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button class="button" data-target="clipboard.button" data-action="click->clipboard#preventDefault">
+              <span class="icon">
+                <i class="fas fa-clipboard" data-target="clipboard.icon"></i>
+              </span>
+              <span data-target="clipboard.label">Copy to clipboard</span>
+            </button>
+          </div>
+        </div>
+      </form>
+      <hr class="hr">
       <h2 class="subtitle is-size-6">Instagram Hashtags</h2>
       <form data-controller="clipboard">
         <div class="field">
