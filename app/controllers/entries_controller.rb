@@ -5,7 +5,7 @@ class EntriesController < ApplicationController
   skip_before_action :set_link_headers, only: [:amp, :show, :preview]
   before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
-  before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search]
+  before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search, :sitemap, :sitemap_index]
   before_action :set_entry_max_age, only: [:show, :preview, :photo, :amp, :related]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
@@ -194,7 +194,6 @@ class EntriesController < ApplicationController
   end
 
   def sitemap_index
-    expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)
       @pages = @photoblog.entries.published('published_at ASC').page(1).per(@entries_per_sitemap).total_pages
       render format: 'xml'
@@ -202,7 +201,6 @@ class EntriesController < ApplicationController
   end
 
   def sitemap
-    expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)
       @page = params[:page]
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(@entries_per_sitemap)
