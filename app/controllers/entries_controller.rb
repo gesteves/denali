@@ -196,7 +196,7 @@ class EntriesController < ApplicationController
   def sitemap_index
     expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)
-      @pages = @photoblog.entries.published.page(1).per(@entries_per_sitemap).total_pages
+      @pages = @photoblog.entries.published('published_at ASC').page(1).per(@entries_per_sitemap).total_pages
       render format: 'xml'
     end
   end
@@ -205,7 +205,7 @@ class EntriesController < ApplicationController
     expires_in 24.hours, public: true
     if stale?(@photoblog, public: true)
       @page = params[:page]
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.page(@page).per(@entries_per_sitemap)
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(@entries_per_sitemap)
       render format: 'xml'
     end
   end

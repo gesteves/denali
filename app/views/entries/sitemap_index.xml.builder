@@ -4,7 +4,7 @@ cache @photoblog do
     @pages.times do |page|
       xml.sitemap do
         xml.loc sitemap_url(page: page + 1)
-        xml.lastmod @photoblog.entries.published.page(page + 1).per(@entries_per_sitemap).pluck(:modified_at).max.strftime('%Y-%m-%dT%H:%M:%S%:z')
+        xml.lastmod @photoblog.entries.published('published_at ASC').page(page + 1).per(@entries_per_sitemap).pluck(:modified_at).max.strftime('%Y-%m-%dT%H:%M:%S%:z')
       end
     end
   end
