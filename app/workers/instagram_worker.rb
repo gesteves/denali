@@ -10,7 +10,11 @@ class InstagramWorker < BufferWorker
       media: media_hash(photos.shift)
     }
     opts[:extra_media] = photos.map { |p| media_hash(p) } if photos.present?
-
+    hashtags = entry.instagram_hashtags
+    if hashtags.present?
+      opts[:comment_enabled] = true
+      opts[:comment_text] = hashtags
+    end
     geolocation_name, geolocation_id = entry.instagram_location
     if geolocation_name.present? && geolocation_id.present?
       opts[:service_geolocation_id] = geolocation_id
