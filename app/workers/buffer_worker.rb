@@ -4,7 +4,7 @@ class BufferWorker < ApplicationWorker
   private
 
   def get_profile_ids(service)
-    return if ENV['buffer_access_token'].blank? || !Rails.env.production?
+    return if ENV['buffer_access_token'].blank?
     response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}")
     begin
       profiles = JSON.parse(response.body)
@@ -20,7 +20,10 @@ class BufferWorker < ApplicationWorker
     opts.reverse_merge!(profile_ids: profile_ids, shorten: false, now: Rails.env.production?, access_token: ENV['buffer_access_token'])
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
     if response.code >= 400
+      logger.error "[#{service.capitalize}] #{response.body}"
       raise "Failed to post to Buffer: #{response.body}"
+    else
+      logger.info "[#{service.capitalize}] #{response.body}"
     end
   end
 

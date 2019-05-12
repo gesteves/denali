@@ -2,7 +2,6 @@ class FacebookWorker < BufferWorker
 
   def perform(entry_id)
     entry = Entry.published.find(entry_id)
-    return if !entry.is_photo?
     text = []
     text << entry.plain_title
     text << entry.plain_body if entry.body.present?
