@@ -22,8 +22,6 @@ class BufferWorker < ApplicationWorker
     if response.code >= 400
       logger.error "[#{service.capitalize}] #{response.body}"
       raise "Failed to post to Buffer: #{response.body}"
-    else
-      logger.info "[#{service.capitalize}] #{response.body}"
     end
   end
 
