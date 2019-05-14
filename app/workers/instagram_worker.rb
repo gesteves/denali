@@ -21,7 +21,8 @@ class InstagramWorker < BufferWorker
       opts[:service_geolocation_name] = geolocation_name
     end
 
-    post_to_buffer('instagram', opts)
+    updates = post_to_buffer('instagram', opts)
+    updates.map { |u| InstagramCommentWorker.perform_async(u) }
   end
 
   private
