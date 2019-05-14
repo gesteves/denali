@@ -11,7 +11,7 @@ class TwitterWorker < BufferWorker
         text: text,
         media: media_hash(photos.shift)
       }
-      opts[:extra_media] = photos.map { |p| media_hash(p, alt_text: true) } if photos.present?
+      opts[:extra_media] = photos.map { |p| media_hash(p) } if photos.present?
       post_to_buffer('twitter', opts)
     else
       post_to_buffer('twitter', text: text)
