@@ -1,4 +1,5 @@
-class InstagramCommentWorker < BufferWorker
+class InstagramCommentWorker < ApplicationWorker
+  sidekiq_options queue: 'low'
 
   def perform(update_id)
     return if ENV['buffer_access_token'].blank?
@@ -16,5 +17,4 @@ class InstagramCommentWorker < BufferWorker
       IftttWebhookWorker.perform_async('instagram-comment-failed', payload)
     end
   end
-
 end
