@@ -4,8 +4,10 @@ class InstagramCommentWorker < BufferWorker
     return if ENV['buffer_access_token'].blank?
     response = HTTParty.get("https://api.bufferapp.com/1/updates/#{update_id}.json?access_token=#{ENV['buffer_access_token']}")
     update = JSON.parse(response.body)
-    unless update.dig('comment_state', 'success')
-      logger.error "[Instagram] #{update.dig('comment_state', 'error')}"
+    if update['comment_enabled'] && update.dig('comment_state', 'success')
+      logger.info "[Instagram] Comment posted for update #{update_id}: #{update['comment_text']}"
+    else
+      logger.error "[Instagram] Comment failed for update #{update_id}: #{update.dig('comment_state', 'error')}"
       payload = {
         value1: update['text'],
         value2: update['service_link'],
