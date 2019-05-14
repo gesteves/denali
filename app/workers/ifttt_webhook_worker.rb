@@ -7,6 +7,8 @@ class IftttWebhookWorker < ApplicationWorker
     response = HTTParty.post(url, body: payload.to_json, headers: { 'Content-Type': 'application/json' })
     if response.code >= 400
       raise "Failed to send webhook to IFTTT: #{response.body}"
+    else
+      logger.info "[IFTTT] Webhook sent for #{event} event"
     end
   end
 end

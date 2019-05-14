@@ -22,6 +22,10 @@ class BufferWorker < ApplicationWorker
     if response.code >= 400
       logger.error "[#{service.capitalize}] #{response.body}"
       raise "Failed to post to Buffer"
+    else
+      updates = JSON.parse(response.body)['updates'].map { |u| u['id'] }
+      logger.info "[#{service.capitalize}] Updates sent: #{updates.join(', ')}"
+      updates
     end
   end
 
