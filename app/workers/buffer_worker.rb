@@ -32,8 +32,7 @@ class BufferWorker < ApplicationWorker
   def media_hash(photo, opts = {})
     opts.reverse_merge!(w: 2048)
     media = {
-      photo: photo.url(w: opts[:w], fm: 'jpg'),
-      thumbnail: photo.url(w: 512, fm: 'jpg')
+      photo: photo.url(w: opts[:w], fm: 'jpg')
     }
     media[:alt_text] = photo.alt_text if photo.alt_text.present?
     media
