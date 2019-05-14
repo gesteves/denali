@@ -9,6 +9,7 @@ class InstagramWorker < BufferWorker
       text: entry.instagram_caption,
       media: media_hash(photos.shift)
     }
+
     if photos.present?
       opts[:extra_media] = photos.map { |p| media_hash(p) }
     else
