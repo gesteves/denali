@@ -31,7 +31,7 @@ class InstagramWorker < BufferWorker
   private
   def media_hash(photo)
     {
-      picture: photo.instagram_url
+      photo: photo.instagram_url
     }
   end
 end
