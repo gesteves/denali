@@ -17,7 +17,6 @@ class FlickrGroupWorker < ApplicationWorker
         flickr.groups.getInfo(group_path_alias: slug)
       end
       flickr.groups.pools.add(photo_id: photo_id, group_id: group['nsid'])
-      logger.info "[Flickr] Photo #{photo_id} added to group #{group_url}"
     rescue FlickRaw::FailedResponse => e
       logger.error "[Flickr] Photo #{photo_id} failed to add to group #{group_url}: #{e}"
     end
