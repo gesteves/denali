@@ -9,16 +9,19 @@ class InstagramWorker < BufferWorker
       text: entry.instagram_caption,
       media: media_hash(photos.shift)
     }
-    opts[:extra_media] = photos.map { |p| media_hash(p) } if photos.present?
-    hashtags = entry.instagram_hashtags
-    if hashtags.present?
-      opts[:comment_enabled] = true
-      opts[:comment_text] = hashtags
-    end
-    geolocation_name, geolocation_id = entry.instagram_location
-    if geolocation_name.present? && geolocation_id.present?
-      opts[:service_geolocation_id] = geolocation_id
-      opts[:service_geolocation_name] = geolocation_name
+    if photos.present?
+      opts[:extra_media] = photos.map { |p| media_hash(p) }
+    else
+      hashtags = entry.instagram_hashtags
+      if hashtags.present?
+        opts[:comment_enabled] = true
+        opts[:comment_text] = hashtags
+      end
+      geolocation_name, geolocation_id = entry.instagram_location
+      if geolocation_name.present? && geolocation_id.present?
+        opts[:service_geolocation_id] = geolocation_id
+        opts[:service_geolocation_name] = geolocation_name
+      end
     end
 
     updates = post_to_buffer('instagram', opts)
@@ -27,10 +30,8 @@ class InstagramWorker < BufferWorker
 
   private
   def media_hash(photo)
-    media = {
-      photo: photo.instagram_url
+    {
+      picture: photo.instagram_url
     }
-    media[:alt_text] = photo.alt_text if photo.alt_text.present?
-    media
   end
 end
