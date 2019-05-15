@@ -26,7 +26,7 @@ class InstagramWorker < BufferWorker
     end
 
     updates = post_to_buffer('instagram', opts)
-    updates.map { |u| InstagramCommentWorker.perform_async(u) }
+    updates.map { |u| InstagramCommentWorker.perform_in(1.minute, u) }
   end
 
   private
