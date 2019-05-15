@@ -19,7 +19,6 @@ class BufferWorker < ApplicationWorker
     return if profile_ids.blank?
     opts.reverse_merge!(profile_ids: profile_ids, shorten: false, now: Rails.env.production?, access_token: ENV['buffer_access_token'])
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
-    status = response.code
     response = JSON.parse(response.body)
     if response['success']
       updates = response['updates'].map { |u| u['id'] }
