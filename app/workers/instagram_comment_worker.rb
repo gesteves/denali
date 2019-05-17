@@ -7,9 +7,9 @@ class InstagramCommentWorker < ApplicationWorker
     update = JSON.parse(response.body)
     if update['status'] == 'sent' && update['comment_enabled']
       if update.dig('comment_state', 'success')
-        logger.info "[Instagram] First comment posted for update #{update_id}"
+        logger.info "[Instagram] Comment posted for update #{update_id}"
       else
-        logger.error "[Instagram] First comment failed for update #{update_id}: #{update.dig('comment_state', 'error')}"
+        logger.error "[Instagram] Comment failed for update #{update_id}: #{update.dig('comment_state', 'error')}"
         payload = {
           value1: update['text'],
           value2: update['service_link'],
