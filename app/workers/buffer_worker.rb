@@ -17,13 +17,11 @@ class BufferWorker < ApplicationWorker
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
     response = JSON.parse(response.body)
     if response['success']
-      updates = response['updates'].map { |u| u['id'] }
-      logger.info "[#{service.capitalize}] Updates sent: #{updates.join(', ')}"
-      updates
+      response['updates'].map { |u| u['id'] }
     else
       code = response['code']
       message = response['message']
-      raise "[#{service.capitalize}] #{code} #{message}"
+      raise "#{code} #{message}"
     end
   end
 
