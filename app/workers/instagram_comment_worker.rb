@@ -6,7 +6,7 @@ class InstagramCommentWorker < ApplicationWorker
     response = HTTParty.get("https://api.bufferapp.com/1/updates/#{update_id}.json?access_token=#{ENV['buffer_access_token']}")
     update = JSON.parse(response.body)
     if update['status'] == 'sent' && update['comment_enabled'] && !update.dig('comment_state', 'success')
-      logger.error "[Buffer] [Instagram] [#{update_id}] #{update.dig('comment_state', 'error')}"
+      logger.error "[Instagram] [#{update_id}] #{update.dig('comment_state', 'error')}"
     end
   end
 end
