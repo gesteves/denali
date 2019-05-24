@@ -23,8 +23,10 @@ class FlickrWorker < ApplicationWorker
     all_tags = entry.combined_tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')
 
     photo_id = flickr.upload_photo open(photo.image.service_url).path, title: title, description: body, tags: all_tags
-
-    if photo_id.present?
+    
+    logger.info photo_id.inspect
+    
+    if photo_id&.is_a? Integer
       entry.flickr_groups.each do |group_url|
         FlickrGroupWorker.perform_async(photo_id, group_url)
       end
