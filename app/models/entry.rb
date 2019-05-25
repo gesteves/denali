@@ -262,18 +262,18 @@ class Entry < ApplicationRecord
   def permalink_url
     if self.is_published?
       year, month, day, id, slug = self.slug_params
-      entry_long_url(year, month, day, id, slug)
+      entry_long_url(year, month, day, id, slug, only_path: !Rails.env.production?)
     else
-      preview_entry_url(self.preview_hash)
+      preview_entry_url(self.preview_hash, only_path: !Rails.env.production?)
     end
   end
 
   def amp_url
     if self.is_published?
       year, month, day, id, slug = self.slug_params
-      entry_amp_url(year, month, day, id, slug)
+      entry_amp_url(year, month, day, id, slug, only_path: !Rails.env.production?)
     else
-      amp_preview_entry_url(self.preview_hash)
+      amp_preview_entry_url(self.preview_hash, only_path: !Rails.env.production?)
     end
   end
 
