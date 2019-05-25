@@ -9,6 +9,8 @@ class AdminController < ApplicationController
   def default_url_options
     if Rails.env.production?
       { host: "#{ENV['HEROKU_APP_NAME']}.herokuapp.com" }
+    else
+      {}
     end
   end
 
