@@ -306,7 +306,7 @@ class Entry < ApplicationRecord
   end
 
   def combined_tags
-    ActsAsTaggableOn::Tag.joins(:taggings).where('taggings.taggable_type = ? and taggings.taggable_id = ? and taggings.context != ?', 'Entry', self.id, 'instagram_locations')
+    ActsAsTaggableOn::Tag.joins(:taggings).where('taggings.taggable_type = ? and taggings.taggable_id = ? and taggings.context != ?', 'Entry', self.id, 'instagram_locations').distinct
   end
 
   def combined_tag_list
