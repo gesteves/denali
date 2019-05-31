@@ -284,9 +284,9 @@ class Entry < ApplicationRecord
 
   def enqueue_publish_jobs
     self.send_to_ifttt
-    FacebookWorker.perform_async(self.id) if self.post_to_facebook
-    InstagramWorker.perform_async(self.id) if self.post_to_instagram
-    TwitterWorker.perform_async(self.id) if self.post_to_twitter
+    FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
+    InstagramWorker.perform_async(self.id, true) if self.post_to_instagram
+    TwitterWorker.perform_async(self.id, true) if self.post_to_twitter
     self.send_photos_to_flickr if self.post_to_flickr
   end
 

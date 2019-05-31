@@ -13,7 +13,7 @@ class BufferWorker < ApplicationWorker
   def post_to_buffer(service, opts = {})
     profile_ids = get_profile_ids(service)
     return if profile_ids.blank?
-    opts.reverse_merge!(profile_ids: profile_ids, shorten: false, now: Rails.env.production?, access_token: ENV['buffer_access_token'])
+    opts.reverse_merge!(profile_ids: profile_ids, shorten: false, now: false, access_token: ENV['buffer_access_token'])
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
     response = JSON.parse(response.body)
     if response['success']

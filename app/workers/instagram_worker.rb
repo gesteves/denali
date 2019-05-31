@@ -1,13 +1,14 @@
 class InstagramWorker < BufferWorker
 
-  def perform(entry_id)
+  def perform(entry_id, now = false)
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
 
     photos = entry.photos.to_a[0..4]
     opts = {
       text: entry.instagram_caption,
-      media: media_hash(photos.shift)
+      media: media_hash(photos.shift),
+      now: Rails.env.production? ? now : false
     }
 
     if photos.present?

@@ -239,7 +239,7 @@ class Admin::EntriesController < AdminController
 
   def instagram
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    InstagramWorker.perform_async(@entry.id)
+    InstagramWorker.perform_async(@entry.id, false)
     @message = 'Your entry was sent to your Instagram queue in Buffer.'
     respond_to do |format|
       format.html {
@@ -252,7 +252,7 @@ class Admin::EntriesController < AdminController
 
   def twitter
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    TwitterWorker.perform_async(@entry.id)
+    TwitterWorker.perform_async(@entry.id, false)
     @message = 'Your entry was sent to your Twitter queue in Buffer.'
     respond_to do |format|
       format.html {
@@ -265,7 +265,7 @@ class Admin::EntriesController < AdminController
 
   def facebook
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    FacebookWorker.perform_async(@entry.id)
+    FacebookWorker.perform_async(@entry.id, false)
     @message = 'Your entry was sent to your Facebook queue in Buffer.'
     respond_to do |format|
       format.html {
