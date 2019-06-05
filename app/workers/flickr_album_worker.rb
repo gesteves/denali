@@ -4,10 +4,7 @@ class FlickrAlbumWorker < ApplicationWorker
   def perform(photo_id, album_url)
     return if !Rails.env.production?
     begin
-      FlickRaw.api_key = ENV['flickr_consumer_key']
-      FlickRaw.shared_secret = ENV['flickr_consumer_secret']
-
-      flickr = FlickRaw::Flickr.new
+      flickr = FlickRaw::Flickr.new ENV['flickr_consumer_key'], ENV['flickr_consumer_secret']
       flickr.access_token = ENV['flickr_access_token']
       flickr.access_secret = ENV['flickr_access_token_secret']
       album_id = album_url.split('/').last
