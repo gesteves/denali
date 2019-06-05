@@ -47,7 +47,7 @@ gem 'dalli'
 gem 'sidekiq'
 
 # Social Networks
-gem 'flickraw', git: 'https://github.com/gesteves/flickraw.git', branch: 'update-upload-url'
+gem 'flickraw'
 
 # Search
 gem 'elasticsearch-model', '~> 5.0'
