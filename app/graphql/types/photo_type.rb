@@ -12,7 +12,7 @@ module Types
     field :focal_y, Float, null: true
     field :color_vibrant, String, null: true
     field :color_muted, String, null: true
-    field :color_palette, String, null: true
+    field :color_palette, [String], null: true
     field :postal_code, String, null: true
     field :camera, Types::CameraType, null: true
     field :lens, Types::LensType, null: true
@@ -38,6 +38,10 @@ module Types
 
     def thumbnail_urls(widths:)
       widths.map { |w| object.url(w: w, square: true) }
+    end
+
+    def color_palette
+      object.color_palette.split(',')
     end
   end
 end
