@@ -26,10 +26,10 @@ module Types
     field :black_and_white, Boolean, null: false, method: :black_and_white?
     field :prominent_color, String, null: true
     field :urls, [String], null: false do
-      argument :widths, [Integer], required: true, prepare: -> (widths, ctx) { widths.reject { |w| w > 3360 } }
+      argument :widths, [Integer], required: false, default_value: [1280], prepare: -> (widths, ctx) { widths.reject { |w| w > 3360 } }
     end
     field :thumbnail_urls, [String], null: false do
-      argument :widths, [Integer], required: true, prepare: -> (widths, ctx) { widths.reject { |w| w > 3360 } }
+      argument :widths, [Integer], required: false, default_value: [640], prepare: -> (widths, ctx) { widths.reject { |w| w > 3360 } }
     end
 
     def urls(widths:)
