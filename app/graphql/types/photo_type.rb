@@ -25,12 +25,6 @@ module Types
     field :color, Boolean, null: false, method: :color?
     field :black_and_white, Boolean, null: false, method: :black_and_white?
     field :prominent_color, String, null: true
-    field :url, String, null: false do
-      argument :width, Integer, required: true, prepare: -> (width, ctx) { [width, 3360].min }
-    end
-    field :thumbnail_url, String, null: false do
-      argument :width, Integer, required: true, prepare: -> (width, ctx) { [width, 3360].min }
-    end
     field :urls, [String], null: false do
       argument :widths, [Integer], required: true, prepare: -> (widths, ctx) { widths.reject { |w| w > 3360 } }
     end
@@ -40,14 +34,6 @@ module Types
 
     def urls(widths:)
       widths.map { |w| object.url(w: w) }
-    end
-
-    def url(width:)
-      object.url(w: width)
-    end
-
-    def thumbnail_url(width:)
-      object.url(w: width, square: true)
     end
 
     def thumbnail_urls(widths:)
