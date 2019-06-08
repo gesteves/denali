@@ -13,6 +13,7 @@ module Types
     field :published_at, String, null: false
     field :photos_count, Integer, null: false
     field :instagram_hashtags, String, null: true
+    field :instagram_caption, String, null: true
     field :blog, Types::BlogType, null: false
     field :user, Types::UserType, null: false
     field :tags, [Types::TagType], null: true
