@@ -121,6 +121,17 @@ class Entry < ApplicationRecord
     where('published_at >= ? and published_at <= ?', Time.current.beginning_of_day, Time.current.end_of_day)
   end
 
+  def self.find_by_url(url:)
+    url = Rails.application.routes.recognize_path(url)
+    if url[:controller] == 'entries' && url[:action] == 'show' && url[:id].present?
+      Entry.published.find(url[:id])
+    elsif url[:controller] == 'entries' && url[:action] == 'preview' && url[:preview_hash].present?
+      Entry.where(preview_hash: url[:preview_hash]).limit(1).first
+    else
+      raise ActiveRecord::RecordNotFound
+    end
+  end
+
   def is_photo?
     !self.photos_count.blank? && self.photos_count > 0
   end

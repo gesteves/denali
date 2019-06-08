@@ -14,14 +14,7 @@ module Types
     end
 
     def entry(url:)
-      url = Rails.application.routes.recognize_path(url)
-      if url[:controller] == 'entries' && url[:action] == 'show' && url[:id].present?
-        Entry.published.find(url[:id])
-      elsif url[:controller] == 'entries' && url[:action] == 'preview' && url[:preview_hash].present?
-        Entry.where(preview_hash: url[:preview_hash]).limit(1).first
-      else
-        raise ActiveRecord::RecordNotFound
-      end
+      Entry.find_by_url(url: url)
     end
 
     def entries(page:, count:)
