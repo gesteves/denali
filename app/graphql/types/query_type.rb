@@ -2,7 +2,7 @@ module Types
   class QueryType < Types::BaseObject
     field :blog, Types::BlogType, null: false
     field :entry, Types::EntryType, null: false do
-      argument :id, ID, required: true
+      argument :url, String, required: true
     end
     field :entries, [Types::EntryType], null: true do
       argument :page, Integer, default_value: 1, required: false
@@ -13,8 +13,15 @@ module Types
       Blog.first
     end
 
-    def entry(id:)
-      Entry.published.find(id)
+    def entry(url:)
+      url = Rails.application.routes.recognize_path(url)
+      if url[:controller] == 'entries' && url[:action] == 'show' && url[:id].present?
+        Entry.published.find(url[:id])
+      elsif url[:controller] == 'entries' && url[:action] == 'preview' && url[:preview_hash].present?
+        Entry.where(preview_hash: url[:preview_hash]).limit(1).first
+      else
+        raise ActiveRecord::RecordNotFound
+      end
     end
 
     def entries(page:, count:)
