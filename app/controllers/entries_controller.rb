@@ -3,7 +3,6 @@ class EntriesController < ApplicationController
 
   skip_before_action :verify_authenticity_token
   skip_before_action :set_link_headers, only: [:amp, :show, :preview]
-  before_action :set_request_format, only: [:index, :tagged, :show]
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search, :sitemap, :sitemap_index]
   before_action :set_entry_max_age, only: [:show, :preview, :photo, :amp, :related]
@@ -28,7 +27,6 @@ class EntriesController < ApplicationController
             @page_title = "#{@photoblog.name} · Page #{@page}"
           end
         }
-        format.json
         format.js { render status: @entries.empty? ? 404 : 200 }
         format.atom { redirect_to feed_url(format: 'atom'), status: 301 }
         format.all {
@@ -53,7 +51,6 @@ class EntriesController < ApplicationController
           @page_title = "#{@tags.first.name} · #{@photoblog.name}"
           @page_title += " · Page #{@page}" unless @page.nil? || @page == 1
         }
-        format.json
         format.js { render status: @entries.empty? ? 404 : 200 }
         format.atom { redirect_to tag_feed_url(tag: @tag_slug, format: 'atom'), status: 301 }
         format.all {
@@ -95,7 +92,6 @@ class EntriesController < ApplicationController
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
           redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
         }
-        format.json
         format.all { redirect_to(@entry.permalink_url, status: 301) }
       end
     end
@@ -119,13 +115,6 @@ class EntriesController < ApplicationController
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
           if @entry.is_published?
             redirect_to @entry.permalink_url
-          else
-            render :show
-          end
-        }
-        format.json {
-          if @entry.is_published?
-            redirect_to "#{@entry.permalink_url}.json", status: 302
           else
             render :show
           end
@@ -213,7 +202,6 @@ class EntriesController < ApplicationController
     if stale?(@photoblog, public: true)
       @entry = Entry.published.first
       respond_to do |format|
-        format.json { redirect_to "#{@entry.permalink_url}.json", status: 302 }
         format.all { redirect_to @entry.permalink_url, status: 302 }
       end
     end
@@ -231,10 +219,6 @@ class EntriesController < ApplicationController
     month == params[:month] &&
     day == params[:day] &&
     slug == params[:slug]
-  end
-
-  def set_request_format
-    request.format = 'json' if request.headers['Content-Type']&.downcase == 'application/vnd.api+json'
   end
 
   def set_sitemap_entry_count

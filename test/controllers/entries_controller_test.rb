@@ -17,12 +17,6 @@ class EntriesControllerTest < ActionController::TestCase
     assert_redirected_to entries_url
   end
 
-  test "should generate index json" do
-    get :index, params: { format: 'json' }
-    assert_template :index
-    assert_response :success
-  end
-
   test "should generate sitemap" do
     get :sitemap, params: { format: 'xml', page: 1 }
     assert_template :sitemap
@@ -133,29 +127,11 @@ class EntriesControllerTest < ActionController::TestCase
     assert_redirected_to tag_url(format: 'html', page: nil, tag: 'washington')
   end
 
-  test 'should render tag page json' do
-    entry = entries(:peppers)
-    entry.tag_list = 'washington'
-    entry.save
-    get :tagged, params: { tag: 'washington', format: 'json' }
-    assert_template :tagged
-    assert_response :success
-  end
-
   test 'should render tag atom feed' do
     entry = entries(:peppers)
     entry.tag_list = 'washington'
     entry.save
     get :tag_feed, params: { tag: 'washington', format: 'atom' }
-    assert_template :tag_feed
-    assert_response :success
-  end
-
-  test 'should render tag json feed' do
-    entry = entries(:peppers)
-    entry.tag_list = 'washington'
-    entry.save
-    get :tag_feed, params: { tag: 'washington', format: 'json' }
     assert_template :tag_feed
     assert_response :success
   end
