@@ -15,6 +15,8 @@ module Types
 
     def entry(url:)
       Entry.find_by_url(url: url)
+    rescue ActiveRecord::RecordNotFound
+      raise GraphQL::ExecutionError, "Can't find entry with URL #{url}"
     end
 
     def entries(page:, count:)

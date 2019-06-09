@@ -1,5 +1,7 @@
 module Types
   class PhotoType < Types::BaseObject
+    MAX_WIDTH = 3360
+
     field :id, ID, null: false
     field :alt_text, String, null: true
     field :exposure, String, null: true, method: :formatted_exposure
@@ -26,10 +28,10 @@ module Types
     field :black_and_white, Boolean, null: false, method: :black_and_white?
     field :prominent_color, String, null: true
     field :urls, [String], null: false do
-      argument :widths, [Integer], required: false, default_value: [1280], prepare: -> (widths, ctx) { widths.reject { |w| w > 3360 } }
+      argument :widths, [Integer], required: false, default_value: [1280], prepare: -> (widths, ctx) { widths.reject { |w| w > MAX_WIDTH } }
     end
     field :thumbnail_urls, [String], null: false do
-      argument :widths, [Integer], required: false, default_value: [640], prepare: -> (widths, ctx) { widths.reject { |w| w > 3360 } }
+      argument :widths, [Integer], required: false, default_value: [640], prepare: -> (widths, ctx) { widths.reject { |w| w > MAX_WIDTH } }
     end
 
     def urls(widths:)
