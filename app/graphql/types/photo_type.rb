@@ -15,7 +15,6 @@ module Types
     field :color_vibrant, String, null: true
     field :color_muted, String, null: true
     field :color_palette, [String], null: true
-    field :postal_code, String, null: true
     field :camera, Types::CameraType, null: true
     field :lens, Types::LensType, null: true
     field :film, Types::FilmType, null: true
