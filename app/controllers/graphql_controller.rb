@@ -8,7 +8,6 @@ class GraphqlController < ApplicationController
       # Query context goes here, for example:
       # current_user: current_user,
     }
-    logger.info "[GraphQL] Executing #{operation_name}" if operation_name.present?
     result = DenaliSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
   rescue => e

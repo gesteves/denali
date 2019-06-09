@@ -53,6 +53,12 @@ Rails.application.configure do
   config.log_level = :info
   config.lograge.enabled = true
 
+  config.lograge.custom_options = lambda do |event|
+    {
+      graphql_operation: event.payload[:params][:operationName]
+    }
+  end
+
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :request_id ]
 
