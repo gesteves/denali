@@ -20,6 +20,7 @@ module Types
     field :tags, [Types::TagType], null: true, description: "The list of tags this entry is tagged with"
     field :photos, [Types::PhotoType], null: true, description: "The list of photos in this entry"
     field :related, [Types::EntryType], null: true, description: "A list of additional entries related to the entry"
+    field :blog, Types::BlogType, null: false, description: "The blog this entry was published in"
 
     def tags
       object.combined_tags
