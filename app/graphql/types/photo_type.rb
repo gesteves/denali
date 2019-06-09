@@ -23,8 +23,8 @@ module Types
     field :square, Boolean, null: false, method: :is_square?
     field :horizontal, Boolean, null: false, method: :is_horizontal?
     field :vertical, Boolean, null: false, method: :is_vertical?
-    field :color, Boolean, null: false, method: :color?
-    field :black_and_white, Boolean, null: false, method: :black_and_white?
+    field :color, Boolean, null: true, method: :color?
+    field :black_and_white, Boolean, null: true, method: :black_and_white?
     field :prominent_color, String, null: true
     field :urls, [String], null: false do
       argument :widths, [Integer], required: false, default_value: [1280], prepare: -> (widths, ctx) { widths.reject { |w| w > MAX_WIDTH } }
