@@ -2,20 +2,14 @@ module ApplicationHelper
 
   def responsive_image_tag(photo, photo_key, html_options = {})
     src, srcset = photo.srcset(photo_key)
-    intrinsic_size = if is_variant_square?(photo_key)
-      '1x1'
-    elsif photo.width.present? && photo.height.present?
-      "#{photo.width}x#{photo.height}"
-    else
-      nil
-    end
+    intrinsic_size = is_variant_square?(photo_key) ? '1x1' : "#{photo.width}x#{photo.height}"
     html_options.reverse_merge!({
       srcset: srcset,
       src: src,
       sizes: Photo.sizes(photo_key),
-      loading: 'lazy'
+      intrinsicsize: intrinsic_size,
+      loading: 'eager'
     })
-    html_options[:intrinsicsize] = intrinsic_size if intrinsic_size.present?
     content_tag :img, nil, html_options
   end
 
@@ -30,6 +24,31 @@ module ApplicationHelper
       layout: 'responsive'
     })
     content_tag 'amp-img', nil, html_options
+  end
+
+  def lazy_responsive_image_tag(photo, photo_key, html_options = {})
+    src, srcset = photo.srcset(photo_key)
+    sizes = Photo.sizes(photo_key)
+    intrinsic_size = is_variant_square?(photo_key) ? '1x1' : "#{photo.width}x#{photo.height}"
+    lazy_img = content_tag(:img, nil, html_options.merge({
+      'data-srcset': srcset,
+      'data-src': src,
+      'data-controller': 'lazy-load',
+      sizes: sizes,
+      src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+      intrinsicsize: intrinsic_size,
+      loading: 'lazy'
+    }))
+
+    noscript = content_tag :noscript do
+      content_tag :img, nil, html_options.merge({
+        srcset: srcset,
+        src: src,
+        sizes: sizes
+      })
+    end
+
+    lazy_img + noscript
   end
 
   def is_variant_square?(key)

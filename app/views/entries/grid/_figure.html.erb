@@ -1,6 +1,6 @@
 <a class="entry-list__link" href="<%= entry.permalink_url %>">
   <figure class="entry-list__photo">
-    <%= responsive_image_tag photo, variant, { class: 'entry-list__image', alt: photo.alt_text } %>
+    <%= lazy_responsive_image_tag photo, variant, { class: 'entry-list__image', alt: photo.alt_text } %>
     <%= render partial: 'entries/grid/caption.html.erb', object: entry, as: :entry  %>
   </figure>
 </a>

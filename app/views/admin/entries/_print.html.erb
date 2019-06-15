@@ -1,7 +1,7 @@
 <div class="card">
   <div class="card-image">
     <div style="<%= "#{css_aspect_ratio(photo)}#{css_gradient_stops(photo)}"  %>" class="image image-container">
-      <%= responsive_image_tag photo,
+      <%= lazy_responsive_image_tag photo,
             'admin_entry',
             { class: 'is-overlay', alt: photo.alt_text, 'data-controller': 'lazy-load' } %>
     </div>
