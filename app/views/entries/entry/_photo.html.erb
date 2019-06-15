@@ -6,7 +6,7 @@
           <%= responsive_image_tag photo,
               'entry',
               { class: photo.width.present? && photo.height.present? ? 'entry__photo' : 'entry_photo entry__photo--relative',
-                alt: photo.alt_text
+                alt: photo.alt_text,
                 'data-photo-width': photo.width,
                 'data-photo-height': photo.height,
                 'data-action': 'click->photo#zoom',
