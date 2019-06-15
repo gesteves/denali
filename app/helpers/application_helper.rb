@@ -44,7 +44,9 @@ module ApplicationHelper
       content_tag :img, nil, html_options.merge({
         srcset: srcset,
         src: src,
-        sizes: sizes
+        sizes: sizes,
+        intrinsicsize: intrinsic_size,
+        loading: 'lazy'
       })
     end
 
