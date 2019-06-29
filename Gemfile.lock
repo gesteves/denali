@@ -46,7 +46,7 @@ GEM
       activerecord (~> 5.0)
     acts_as_list (0.9.17)
       activerecord (>= 3.0)
-    addressable (2.6.0)
+    addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (9.0.0)
     autoprefixer-rails (9.3.1)
@@ -257,7 +257,6 @@ GEM
       redis (>= 3.3, < 5)
       resque (~> 1.26)
       rufus-scheduler (~> 3.2)
-    ruby-thumbor (2.0.1)
     ruby_dep (1.5.0)
     rufus-scheduler (3.5.2)
       fugit (~> 1.1, >= 1.1.5)
@@ -359,7 +358,6 @@ DEPENDENCIES
   redcarpet
   resque
   resque-scheduler
-  ruby-thumbor
   sanitize
   sass-rails (~> 5.0)
   scss-lint

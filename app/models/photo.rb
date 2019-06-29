@@ -36,8 +36,7 @@ class Photo < ApplicationRecord
       opts[:fit] = 'crop'
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
     end
-    opts[:image] = self.image.key
-    ThumborUrl.generate(opts.reject { |k,v| v.blank? })
+    Ix.path(self.image.key).to_url(opts.reject { |k,v| v.blank? })
   end
 
   def srcset(key, opts = {})
@@ -48,15 +47,14 @@ class Photo < ApplicationRecord
     square = variant['square'].present?
     widths = variant['srcset'].uniq.sort.reject { |width| max_width.present? && width > max_width }
     src_width = widths.first
-    opts[:image] = s3_key
     if square
       opts[:fit] = 'crop'
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
-      src = ThumborUrl.generate(opts.merge(w: src_width, h: src_width))
-      srcset = widths.map { |w| "#{ThumborUrl.generate(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
+      src = Ix.path(s3_key).to_url(opts.merge(w: src_width, h: src_width))
+      srcset = widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
     else
-      src = ThumborUrl.generate(opts.merge(w: src_width))
-      srcset = widths.map { |w| "#{ThumborUrl.generate(opts.merge(w: w))} #{w}w" }.join(', ')
+      src = Ix.path(s3_key).to_url(opts.merge(w: src_width))
+      srcset = widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w))} #{w}w" }.join(', ')
     end
     return src, srcset
   end

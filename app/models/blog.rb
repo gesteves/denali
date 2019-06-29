@@ -26,18 +26,18 @@ class Blog < ApplicationRecord
   end
 
   def favicon_url(opts = {})
-    opts.reverse_merge!(w: 16, image: self.favicon.key)
-    ThumborUrl.generate(opts)
+    opts.reverse_merge!(w: 16)
+    Ix.path(self.favicon.key).to_url(opts.reject { |k,v| v.blank? })
   end
 
   def touch_icon_url(opts = {})
-    opts.reverse_merge!(w: 32, image: self.touch_icon.key)
-    ThumborUrl.generate(opts)
+    opts.reverse_merge!(w: 32)
+    Ix.path(self.touch_icon.key).to_url(opts.reject { |k,v| v.blank? })
   end
 
   def logo_url(opts = {})
-    opts.reverse_merge!(h: 60, image: self.logo.key)
-    ThumborUrl.generate(opts)
+    opts.reverse_merge!(h: 60)
+    Ix.path(self.logo.key).to_url(opts.reject { |k,v| v.blank? })
   end
 
   def has_search?
