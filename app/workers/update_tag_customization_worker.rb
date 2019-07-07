@@ -19,10 +19,7 @@ class UpdateTagCustomizationWorker < ApplicationWorker
     old_slug = group_url.split('/').last
     new_slug = begin
       if /\d+@N\d+/.match? old_slug
-        FlickRaw.api_key = ENV['flickr_consumer_key']
-        FlickRaw.shared_secret = ENV['flickr_consumer_secret']
-
-        flickr = FlickRaw::Flickr.new
+        flickr = FlickRaw::Flickr.new ENV['flickr_consumer_key'], ENV['flickr_consumer_secret']
         flickr.access_token = ENV['flickr_access_token']
         flickr.access_secret = ENV['flickr_access_token_secret']
         group_info = flickr.groups.getInfo(group_id: old_slug)
