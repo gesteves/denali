@@ -1,5 +1,7 @@
 class GraphqlController < ApplicationController
   skip_before_action :verify_authenticity_token
+  before_action :set_cors_headers
+  
   def execute
     variables = ensure_hash(params[:variables])
     query = params[:query]
@@ -9,17 +11,13 @@ class GraphqlController < ApplicationController
       # current_user: current_user,
     }
     result = DenaliSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
-    render json: result
+    set_cors_headers
   rescue => e
     raise e unless Rails.env.development?
     handle_error_in_development e
   end
   
   def options
-    response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    response.headers['Access-Control-Allow-Methods'] = 'POST'
-    response.headers['Access-Control-Max-Age'] = 86400
     render plain: 'OK', status: 200
   end
 
@@ -48,5 +46,12 @@ class GraphqlController < ApplicationController
     logger.error e.backtrace.join("\n")
 
     render json: { error: { message: e.message, backtrace: e.backtrace }, data: {} }, status: 500
+  end
+  
+  def set_cors_headers
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    response.headers['Access-Control-Allow-Methods'] = 'POST'
+    response.headers['Access-Control-Max-Age'] = 86400
   end
 end
