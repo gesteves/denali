@@ -66,6 +66,7 @@ Rails.application.routes.draw do
   get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
   post '/graphql'                      => 'graphql#execute'
+  options '/graphql'                   => 'graphql#options'
 
   # Entries
   get '/e/:id'                              => 'entries#show',        constraints: { id: /\d+/ }, :as => :entry
