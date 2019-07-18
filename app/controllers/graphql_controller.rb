@@ -1,6 +1,5 @@
 class GraphqlController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :set_cors_headers
   
   def execute
     variables = ensure_hash(params[:variables])
@@ -11,7 +10,6 @@ class GraphqlController < ApplicationController
       # current_user: current_user,
     }
     result = DenaliSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
-    set_cors_headers
     render json: result
   rescue => e
     raise e unless Rails.env.development?
