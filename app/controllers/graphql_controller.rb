@@ -12,6 +12,7 @@ class GraphqlController < ApplicationController
     }
     result = DenaliSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     set_cors_headers
+    render json: result
   rescue => e
     raise e unless Rails.env.development?
     handle_error_in_development e
