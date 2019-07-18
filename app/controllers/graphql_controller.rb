@@ -51,7 +51,7 @@ class GraphqlController < ApplicationController
   
   def set_cors_headers
     response.headers['Access-Control-Allow-Origin'] = '*'
-    response.headers['Access-Control-Allow-Headers'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = 'x-apollo-tracing, content-type'
     response.headers['Access-Control-Allow-Methods'] = 'POST'
     response.headers['Access-Control-Max-Age'] = 86400
   end
