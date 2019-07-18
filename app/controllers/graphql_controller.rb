@@ -14,6 +14,11 @@ class GraphqlController < ApplicationController
     raise e unless Rails.env.development?
     handle_error_in_development e
   end
+  
+  def options
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    render plain: 'OK', status: 200
+  end
 
   private
 
