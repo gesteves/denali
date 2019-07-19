@@ -4,7 +4,7 @@
   <%= render partial: 'partials/amp/meta_tags' %>
   <%= yield :head %>
   <%= render partial: 'partials/amp/inline_style', locals: { filename: 'amp.css' } %>
-  <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} if ENV['typekit_id'].present? %>
+  <%= render partial: 'partials/amp/typekit', locals: { typekit_id: ENV['typekit_id']} if ENV['typekit_id'].present? %>
   <% if content_for? :typekit %>
     <%= yield :typekit %>
   <% end %>

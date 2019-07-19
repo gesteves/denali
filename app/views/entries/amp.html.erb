@@ -3,7 +3,7 @@
 <% end %>
 
 <% content_for :typekit do %>
-  <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @entry.body.present? %>
+  <%= render partial: 'partials/amp/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @entry.body.present? %>
 <% end %>
 
 <%= render partial: 'entries/entry/amp/photo', object: @entry, as: :entry if @entry.is_photo? %>

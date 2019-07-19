@@ -1,0 +1,28 @@
+@import 'vendors/reset';
+
+@import 'base/variables';
+@import 'base/functions';
+@import 'base/mixins';
+@import 'base/properties';
+@import 'base/base';
+
+@import 'blocks/entry';
+@import 'blocks/exif';
+@import 'blocks/follow';
+@import 'blocks/tooltip';
+@import 'blocks/header';
+
+
+// scss-lint:disable ImportantRule
+.entry__photo-container--zoom {
+  width: auto !important;
+}
+
+.twitter-tweet {
+  margin: 24px auto 0 !important;
+
+  @media (min-width: $bp-s) {
+    margin: 36px auto 0 !important;
+  }
+}
+// scss-lint:enable ImportantRule

@@ -37,6 +37,12 @@
   <% end %>
 <% end %>
 
+<% content_for :inline_css do %>
+  <% cache "#{@app_version}/entry_list/styles" do %>
+      <style><%= inline_asset "entry_list.css" %></style>
+  <% end %>
+<% end %>
+
 <div data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= tag_url(tag: @tag_slug, page: nil) %>" data-infinite-scroll-current-page="<%= @page %>">
   <ol class="entry-list" role="main" data-target="infinite-scroll.container" data-controller="grid">
     <%= render partial: 'entries/grid/grid', locals: { entries: @entries.to_a, page_url: @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) } if @entries.present? %>
