@@ -24,6 +24,7 @@ entry: &entry
     - "(min-width: 1680px) 1680px"
     - 100vw
   quality: 90
+  format: pjpg
 entry_list: &entry_list
   srcset:
     - 304

@@ -60,6 +60,7 @@ class Photo < ApplicationRecord
     widths = variant['srcset'].uniq.sort.reject { |width| max_width.present? && width > max_width }
     opts.merge!(auto: variant['auto']) if variant['auto'].present?
     opts.merge!(q: variant['quality']) if variant['quality'].present?
+    opts.merge!(fm: variant['format']) if variant['format'].present?
     src_width = widths.first
     if square
       opts[:fit] = 'crop'
