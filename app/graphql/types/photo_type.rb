@@ -32,6 +32,10 @@ module Types
     field :thumbnail_urls, [String], null: false, description: "List of URLs for the photo's square thumbnail in different widths" do
       argument :widths, [Integer], required: false, default_value: [640], prepare: -> (widths, ctx) { widths.reject { |w| w > MAX_WIDTH } }
     end
+    field :crop_url, String, null: false, description: "URL for the photo, cropped at the given width and height" do
+      argument :width, Integer, required: true, prepare: -> (width, ctx) { [MAX_WIDTH, width].min }
+      argument :height, Integer, required: true, prepare: -> (height, ctx) { [MAX_WIDTH, height].min }
+    end
 
     def urls(widths:)
       widths.map { |w| object.url(w: w) }
@@ -39,6 +43,10 @@ module Types
 
     def thumbnail_urls(widths:)
       widths.map { |w| object.url(w: w, square: true) }
+    end
+
+    def crop_url(width:, height:)
+      object.url(w: width, h: height)
     end
 
     def color_palette
