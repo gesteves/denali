@@ -6,9 +6,9 @@ class BufferWorker < ApplicationWorker
   def get_profile_ids(service)
     return if ENV['buffer_access_token'].blank?
     response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}")
-    profiles = JSON.parse(response.body)
+    response = JSON.parse(response.body)
     if response['success']
-      profiles.select { |profile| profile['service'].downcase.match(service) }.map { |profile| profile['id'] }
+      response.select { |profile| profile['service'].downcase.match(service) }.map { |profile| profile['id'] }
     else
       code = response['code']
       message = response['message']
