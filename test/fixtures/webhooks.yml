@@ -2,10 +2,10 @@
 
 one:
   url: MyString
-  payload: 1
+  webhook_type: 1
   blog: one
 
 two:
   url: MyString
-  payload: 1
+  webhook_type: 1
   blog: two
