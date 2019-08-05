@@ -56,6 +56,7 @@ Rails.application.routes.draw do
     resources :blogs, only: [:edit, :update]
     resources :publish_schedules, only: [:create, :destroy]
     resources :tag_customizations, only: [:index, :new, :create, :edit, :update, :destroy]
+    resources :webhooks, except: [:show]
   end
 
 

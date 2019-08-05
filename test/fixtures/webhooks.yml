@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  url: https://notarealurl.com
+  webhook_type: 0
+  blog: allencompassingtrip
+
+two:
+  url: https://anotherfakeurl.com
+  webhook_type: 1
+  blog: allencompassingtrip

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_10_025439) do
+ActiveRecord::Schema.define(version: 2019_08_05_214003) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -215,10 +215,20 @@ ActiveRecord::Schema.define(version: 2019_05_10_025439) do
     t.string "avatar_url"
   end
 
+  create_table "webhooks", force: :cascade do |t|
+    t.string "url"
+    t.integer "webhook_type"
+    t.bigint "blog_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_id"], name: "index_webhooks_on_blog_id"
+  end
+
   add_foreign_key "entries", "blogs"
   add_foreign_key "entries", "users"
   add_foreign_key "photos", "cameras"
   add_foreign_key "photos", "entries"
   add_foreign_key "photos", "films"
   add_foreign_key "photos", "lenses"
+  add_foreign_key "webhooks", "blogs"
 end

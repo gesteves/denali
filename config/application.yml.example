@@ -33,9 +33,6 @@ default: &default
   # Optional.
   google_analytics_id:
 
-  # Optional. Enables IFTTT webhooks.
-  ifttt_webhook_key:
-
   # Required.
   imgix_domain:
   imgix_secure: 'true'
@@ -93,9 +90,6 @@ production:
 
   # Optional. Used for auto-tagging entries with location info.
   google_api_key:
-
-  # Optional. Enables IFTTT webhooks.
-  ifttt_webhook_key:
 
   # Required.
   imgix_domain:

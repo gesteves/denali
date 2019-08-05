@@ -294,26 +294,17 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_publish_jobs
-    self.send_to_ifttt
-    FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
     InstagramWorker.perform_async(self.id, true) if self.post_to_instagram
     TwitterWorker.perform_async(self.id, true) if self.post_to_twitter
+    FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
     self.send_photos_to_flickr if self.post_to_flickr
+    Webhook.deliver_all(self)
   end
 
   def send_photos_to_flickr
     self.photos.each do |p|
       FlickrWorker.perform_async(p.id)
     end
-  end
-
-  def send_to_ifttt
-    payload = {
-      value1: self.plain_title,
-      value2: self.permalink_url
-    }
-    payload[:value3] = self.photos.first.url(w: 1200) if self.is_photo?
-    IftttWebhookWorker.perform_async('entry-published', payload)
   end
 
   def combined_tags
