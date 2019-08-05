@@ -1,43 +1,40 @@
-<% cache [@photoblog, @page] do %>
-  <div class="level is-mobile">
-    <div class="level-left">
-      <div>
-      <h1 class="title is-size-5-mobile">Webhooks</h1>
-      <h2 class="subtitle is-size-6-mobile">Notify other services when entries are published.</h2>
-      </div>
-    </div>
-    <div class="level-right">
-      <div class="level-item">
-        <a href="<%= new_admin_webhook_path %>" class="button is-small">
-          <span class="icon is-small">
-            <i class="fas fa-share-alt"></i>
-          </span>
-          <span>Set up a webhook</span>
-        </a>
-      </div>
+<div class="level is-mobile">
+  <div class="level-left">
+    <div>
+    <h1 class="title is-size-5-mobile">Webhooks</h1>
+    <h2 class="subtitle is-size-6-mobile">Notify other services when entries are published.</h2>
     </div>
   </div>
-  <hr class="hr">
-  <% if @webhooks.size == 0 %>
-    <article class="message is-info">
-      <div class="message-body">
-        You haven’t set up any webhooks. Why don’t you <a href="<%= new_admin_webhook_path %>">create one</a>?
-      </div>
-    </article>
-  <% else %>
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-        <th>URL</th>
-        <th>Payload</th>
-        <th class="has-text-right-desktop">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= render partial: 'webhook', collection: @webhooks %>
-      </tbody>
-    </table>
-    <%= paginate @webhooks, views_prefix: 'admin', outer_window: 1, window: 1 %>
-  <% end %>
-
+  <div class="level-right">
+    <div class="level-item">
+      <a href="<%= new_admin_webhook_path %>" class="button is-small">
+        <span class="icon is-small">
+          <i class="fas fa-share-alt"></i>
+        </span>
+        <span>Set up a webhook</span>
+      </a>
+    </div>
+  </div>
+</div>
+<hr class="hr">
+<% if @webhooks.size == 0 %>
+  <article class="message is-info">
+    <div class="message-body">
+      You haven’t set up any webhooks. Why don’t you <a href="<%= new_admin_webhook_path %>">create one</a>?
+    </div>
+  </article>
+<% else %>
+  <table class="table is-fullwidth">
+    <thead>
+      <tr>
+      <th>URL</th>
+      <th>Payload</th>
+      <th class="has-text-right-desktop">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render partial: 'webhook', collection: @webhooks %>
+    </tbody>
+  </table>
+  <%= paginate @webhooks, views_prefix: 'admin', outer_window: 1, window: 1 %>
 <% end %>
