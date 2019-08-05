@@ -37,7 +37,6 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
-    assert_equal 0, IftttWebhookWorker.jobs.size
   end
 
   test 'should be queued' do
@@ -50,7 +49,6 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
-    assert_equal 0, IftttWebhookWorker.jobs.size
   end
 
   test 'should be published' do
@@ -63,7 +61,6 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
-    assert_equal 1, IftttWebhookWorker.jobs.size
   end
 
   test 'should change drafts to published' do
@@ -153,13 +150,11 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
-    assert_equal 0, IftttWebhookWorker.jobs.size
     entry.publish
     assert_equal 1, TwitterWorker.jobs.size
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
-    assert_equal 1, IftttWebhookWorker.jobs.size
   end
 
   test 'changing drafts to queued should not enqueue jobs' do
@@ -172,7 +167,6 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
-    assert_equal 0, IftttWebhookWorker.jobs.size
   end
 
   test 'changing queued to draft should not enqueue jobs' do
@@ -185,7 +179,6 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
-    assert_equal 0, IftttWebhookWorker.jobs.size
   end
 
   test 'queuing should set a position' do

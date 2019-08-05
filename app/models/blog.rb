@@ -2,6 +2,7 @@ class Blog < ApplicationRecord
   include Formattable
 
   has_many :entries, dependent: :destroy
+  has_many :webhooks, dependent: :destroy
   has_many :publish_schedules, -> { order 'hour ASC' }, dependent: :destroy
   has_many :tag_customizations, -> { order 'updated_at DESC' }, dependent: :destroy
   has_one_attached :favicon

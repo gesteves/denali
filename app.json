@@ -98,10 +98,6 @@
       "description": "Google API Key for the Google Maps API, used to auto-tag entries by location.",
       "required": false
     },
-    "ifttt_webhook_key": {
-      "description": "Enables IFTTT webhooks, useful for push notifications.",
-      "required": false
-    },
     "imgix_domain": {
       "description": "Domain used for Imgix.",
       "required": true

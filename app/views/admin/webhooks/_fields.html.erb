@@ -1,0 +1,42 @@
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :url, 'URL', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_field :url, value: @webhook.url, autocomplete: 'off', required: true, placeholder: 'The URL to notify…', class: 'input' %>
+      </div>
+      <p class="help">The webhook will be sent as a POST request.</p>
+    </div>
+  </div>
+</div>
+
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :webhook_type, 'Contents', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="select">
+        <%= f.select :webhook_type, Webhook.webhook_types.keys.map { |w| [w.humanize, w] } %>
+      </div>
+      <p class="help">The contents of the webhook can be adjusted to what certain services expect.</p>
+    </div>
+  </div>
+</div>
+
+<hr class="hr">
+
+<div class="field is-horizontal">
+  <div class="field-label">
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="buttons is-right">
+        <%= link_to 'Cancel', admin_webhooks_path, data: { confirm: 'Are you sure you want to discard your changes?' }, class: 'button' %>
+        <%= f.submit 'Save changes', class: 'button is-success' %>
+      </div>
+    </div>
+  </div>
+</div>
