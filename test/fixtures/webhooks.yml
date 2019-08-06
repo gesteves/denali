@@ -2,10 +2,8 @@
 
 one:
   url: https://notarealurl.com
-  webhook_type: 0
   blog: allencompassingtrip
 
 two:
   url: https://anotherfakeurl.com
-  webhook_type: 1
   blog: allencompassingtrip

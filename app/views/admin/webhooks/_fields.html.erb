@@ -12,20 +12,6 @@
   </div>
 </div>
 
-<div class="field is-horizontal">
-  <div class="field-label is-normal">
-    <%= f.label :webhook_type, 'Contents', class: 'label' %>
-  </div>
-  <div class="field-body">
-    <div class="field">
-      <div class="select">
-        <%= f.select :webhook_type, Webhook.webhook_types.keys.map { |w| [w.humanize, w] } %>
-      </div>
-      <p class="help">The contents of the webhook can be adjusted to what certain services expect.</p>
-    </div>
-  </div>
-</div>
-
 <hr class="hr">
 
 <div class="field is-horizontal">

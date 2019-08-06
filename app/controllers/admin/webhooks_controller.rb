@@ -55,6 +55,6 @@ class Admin::WebhooksController < AdminController
 
   private
   def webhook_params
-    params.require(:webhook).permit(:url, :webhook_type)
+    params.require(:webhook).permit(:url)
   end
 end
