@@ -39,12 +39,7 @@ class Webhook < ApplicationRecord
   end
 
   def to_slack(entry)
-    blocks = []
-    blocks << { type: 'section', text: { type: 'mrkdwn', text: "<#{entry.permalink_url}|*#{entry.plain_title}*>" } }
-    blocks << { type: 'section', text: { type: 'mrkdwn', text: truncate(entry.plain_body, length: 200) } } if entry.body.present?
-    blocks << { type: 'image', image_url: entry.photos.first.url(w: 1200), alt_text: entry.photos.first.alt_text } if entry.is_photo?
-
-    { text: "#{entry.plain_title} #{entry.short_permalink_url}", blocks: blocks }.to_json
+    { text: "New entry published: #{entry.permalink_url}", unfurl_links: true }.to_json
   end
 
   def cleanup_url
