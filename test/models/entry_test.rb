@@ -37,6 +37,7 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
+    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
   end
 
@@ -50,6 +51,7 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
+    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
   end
 
@@ -63,6 +65,7 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
+    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 2, WebhookWorker.jobs.size
   end
 
@@ -153,12 +156,14 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
+    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
     entry.publish
     assert_equal 1, TwitterWorker.jobs.size
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
+    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 2, WebhookWorker.jobs.size
   end
 
@@ -172,6 +177,7 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
+    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
   end
 
@@ -185,6 +191,7 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
+    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
   end
 

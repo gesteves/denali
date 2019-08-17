@@ -115,6 +115,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
+    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 2, WebhookWorker.jobs.size
     assert assigns(:entry).is_published?
     assert_equal assigns(:entry).photos.count, 1
@@ -131,6 +132,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
+    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
     assert assigns(:entry).is_draft?
     assert_equal assigns(:entry).photos.count, 1
@@ -147,6 +149,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
+    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
     assert assigns(:entry).is_queued?
     assert_equal assigns(:entry).photos.count, 1

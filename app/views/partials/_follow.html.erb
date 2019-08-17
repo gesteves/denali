@@ -30,6 +30,11 @@
       <%= inline_svg 'instagram', 'follow__icon' %>
     <% end %>
   <% end %>
+  <% if @photoblog.tumblr.present? %>
+    <%= link_to @photoblog.tumblr, class: 'follow__link tooltip', title: 'Follow on Tumblr' do %>
+      <%= inline_svg 'tumblr', 'follow__icon' %>
+    <% end %>
+  <% end %>
   <% if @photoblog.twitter.present? %>
     <%= link_to @photoblog.twitter, class: 'follow__link tooltip', title: 'Follow on Twitter' do %>
       <%= inline_svg 'twitter', 'follow__icon' %>
