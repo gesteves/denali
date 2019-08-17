@@ -58,7 +58,7 @@ class EntryTest < ActiveSupport::TestCase
   test 'should be published' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog, user: user, post_to_twitter: true)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog, user: user, post_to_twitter: true, post_to_facebook: false, post_to_flickr: false, post_to_instagram: false, post_to_tumblr: false)
     entry.save
     assert entry.is_published?
     assert_equal 1, TwitterWorker.jobs.size
@@ -150,7 +150,7 @@ class EntryTest < ActiveSupport::TestCase
   test 'publish should enqueue jobs' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user, post_to_twitter: true)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user, post_to_twitter: true, post_to_facebook: false, post_to_flickr: false, post_to_instagram: false, post_to_tumblr: false)
     entry.save
     assert_equal 0, TwitterWorker.jobs.size
     assert_equal 0, FacebookWorker.jobs.size
