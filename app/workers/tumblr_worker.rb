@@ -11,10 +11,14 @@ class TumblrWorker < ApplicationWorker
       oauth_token_secret: ENV['tumblr_access_token_secret']
     })
     
-    tags = entry.combined_tags.map(&:name) + ["Photographers on Tumblr", "Original Photographers", "Lensblr", "Imiging", "Luxlit"]
-    tags = tags.uniq.sort.map(&:downcase)
+    tags = if entry.is_photo?
+      entry.combined_tags.map(&:name) + ["Photographers on Tumblr", "Original Photographers", "Lensblr", "Imiging", "Luxlit"]
+    else
+      entry.combined_tags.map(&:name)
+    end
+    tags = tags.uniq.sort.map(&:downcase).join(', ')
     opts = {
-      tags: tags.join(', '),
+      tags: tags,
       slug: entry.slug,
       caption: entry.formatted_content(link_title: true),
       link: entry.permalink_url,
