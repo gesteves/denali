@@ -1,9 +1,6 @@
 json.set! '@context', 'http://schema.org'
 json.set! '@type', 'BlogPosting'
-json.set! 'mainEntityOfPage' do
-  json.set! '@type', 'WebPage'
-  json.set! '@id', entry.permalink_url
-end
+json.set! 'mainEntityOfPage', entry.permalink_url
 json.headline entry.plain_title
 json.description meta_description
 json.set! 'datePublished', entry.published_at
