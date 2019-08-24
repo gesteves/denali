@@ -89,7 +89,7 @@ class Photo < ApplicationRecord
   # Returns the url of the image, formatted & sized fit to into instagram stories'
   # 16:9 ratio
   def instagram_story_url
-    self.url(w: 2160, h: 3840, fit: 'fill', bg: '000', q: 90, pad: 100)
+    self.url(w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90)
   end
 
   def palette_url(opts = {})
