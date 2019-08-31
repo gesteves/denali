@@ -20,7 +20,7 @@ class TumblrWorker < ApplicationWorker
     opts = {
       tags: tags,
       slug: entry.slug,
-      caption: entry.formatted_content(link_title: true),
+      caption: entry.formatted_content,
       link: entry.permalink_url,
       source_url: entry.permalink_url,
       state: now ? 'published' : 'queue'
