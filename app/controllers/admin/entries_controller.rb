@@ -350,7 +350,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :instagram_location_list, :post_to_twitter, :post_to_flickr, :post_to_instagram, :post_to_facebook, :post_to_tumblr, :tweet_text, :instagram_text, :show_in_map, :flush_caches, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :instagram_location_list, :post_to_twitter, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_facebook, :post_to_tumblr, :tweet_text, :instagram_text, :show_in_map, :flush_caches, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y])
     end
 
     def load_tagged_entries

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_08_17_222842) do
+ActiveRecord::Schema.define(version: 2019_09_10_012909) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,7 @@ ActiveRecord::Schema.define(version: 2019_08_17_222842) do
     t.datetime "modified_at"
     t.text "instagram_text"
     t.boolean "post_to_tumblr"
+    t.boolean "post_to_flickr_groups", default: true
     t.index ["blog_id"], name: "index_entries_on_blog_id"
     t.index ["photos_count"], name: "index_entries_on_photos_count"
     t.index ["preview_hash"], name: "index_entries_on_preview_hash"
