@@ -4,7 +4,7 @@ class TwitterWorker < BufferWorker
     entry = Entry.published.find(entry_id)
     max_length = 230 # 280 characters - 25 for the image url - 25 for the permalink url
     caption = entry.tweet_text.present? ? entry.tweet_text : entry.plain_title
-    text = "#{truncate(caption, length: max_length, omission: '…')} #{entry.permalink_url}"
+    text = "#{truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_length, omission: '…')} #{entry.permalink_url}"
     now = Rails.env.production? ? now : false
     if entry.is_photo?
       photos = entry.photos.to_a[0..4]
