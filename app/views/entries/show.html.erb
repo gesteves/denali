@@ -1,6 +1,6 @@
 <% content_for :head do %>
   <%= render partial: 'entries/entry/head', object: @entry, as: :entry %>
-  <link rel="amphtml" href="<%= entry.amp_url %>">
+  <link rel="amphtml" href="<%= @entry.amp_url %>">
 <% end %>
 
 <% content_for :typekit do %>
