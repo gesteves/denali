@@ -57,7 +57,7 @@ class Photo < ApplicationRecord
     max_width = self.width
     variant = PHOTOS[key]
     square = variant['square'].present?
-    widths = variant['srcset'].uniq.sort.reject { |width| max_width.present? && width > max_width }
+    widths = self.srcset_widths(key)
     opts.merge!(auto: variant['auto']) if variant['auto'].present?
     opts.merge!(q: variant['quality']) if variant['quality'].present?
     opts.merge!(fm: variant['format']) if variant['format'].present?
@@ -72,6 +72,14 @@ class Photo < ApplicationRecord
       srcset = widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w))} #{w}w" }.join(', ')
     end
     return src, srcset
+  end
+
+  def srcset_widths(key)
+    s3_key = self.image.key
+    max_width = self.width
+    variant = PHOTOS[key]
+    widths = variant['srcset'].uniq.sort.reject { |width| max_width.present? && width > max_width }
+    widths
   end
 
   # Returns the url of the image, formatted & sized fit to into instagram's

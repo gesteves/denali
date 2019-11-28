@@ -23,9 +23,9 @@ export default class extends Controller {
     // Get the viewport dimensions.
     const { clientWidth, clientHeight } = document.documentElement;
 
-    // Get the full size of the original photo (stored as data attributes in the DOM)
-    const originalHeight = parseInt(photo.getAttribute('data-photo-height'));
-    const originalWidth = parseInt(photo.getAttribute('data-photo-width'));
+    // Get the full size of the original photo
+    const originalHeight = parseInt(photo.getAttribute('height'));
+    const originalWidth = parseInt(photo.getAttribute('width'));
 
     // Get the max width this photo can be rendered at; it is the smallest of:
     // `originalWidth`     (it can't be wider than the original)
