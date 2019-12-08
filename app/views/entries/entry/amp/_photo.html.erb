@@ -1,14 +1,12 @@
 <% cache entry do %>
   <article class="entry entry--photo" role="main">
     <% entry.photos.each do |photo| %>
-      <div class="entry__photo-container entry__photo-container--amp">
-        <figure class="entry__figure">
-          <%= amp_image_tag photo,
-              'entry',
-              alt: photo.alt_text,
-              class: 'entry__photo' %>
-        </figure>
-      </div>
+      <figure class="entry__figure">
+        <%= amp_image_tag photo,
+            'entry',
+            alt: photo.alt_text,
+            class: 'entry__photo entry__photo--zoom' %>
+      </figure>
     <% end %>
 
     <div class="entry__body">

@@ -51,8 +51,7 @@ export default class extends Controller {
   zoom () {
     this.photoTargets.forEach(photo => {
       if (photo.getAttribute('data-photo-zoomable') === '1') {
-        let container = photo.parentNode.parentNode;
-        container.classList.toggle('entry__photo-container--zoom');
+        photo.classList.toggle('entry__photo--zoom');
       }
     });
   }
