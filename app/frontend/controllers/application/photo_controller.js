@@ -55,4 +55,8 @@ export default class extends Controller {
       }
     });
   }
+
+  disableContextMenu (event) {
+    event.preventDefault();
+  }
 }

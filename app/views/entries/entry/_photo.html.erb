@@ -6,7 +6,7 @@
             'entry',
             { class: 'entry__photo entry__photo--zoom',
               alt: photo.alt_text,
-              'data-action': 'click->photo#zoom',
+              'data-action': 'click->photo#zoom contextmenu->photo#disableContextMenu',
               'data-target': 'photo.photo' } %>
       </figure>
     <% end %>
