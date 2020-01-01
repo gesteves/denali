@@ -422,8 +422,19 @@ class Entry < ApplicationRecord
 
   def update_location_tags
     location_tags = []
-    self.photos.each do |p|
-      location_tags  << [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area] if self.show_in_map?
+    if self.instagram_locations.present?
+      location_tags += self.instagram_location_list if self.show_in_map?
+      self.tag_list.add('National Parks') if self.instagram_location_list.any? { |l| l.match? /national park/i }
+      self.tag_list.add('National Monuments') if self.instagram_location_list.any? { |l| l.match? /national monument/i }
+    end
+    if self.show_in_map?
+      self.photos.each do |p|
+        location_tags << if self.instagram_location_list.any? { |l| l.match? /national (park|monument)/i }
+          [p.country, p.administrative_area]
+        else
+          [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area]
+        end
+      end
     end
     location_tags = location_tags.flatten.uniq.reject(&:blank?)
     self.location_list = location_tags
