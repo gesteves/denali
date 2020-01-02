@@ -277,20 +277,6 @@
     </div>
   </div>
 
-  <div class="field is-horizontal" data-controller="tag-autocomplete">
-    <div class="field-label is-normal">
-      <%= f.label :instagram_location_list, 'Instagram location', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control is-expanded">
-          <%= f.text_field :instagram_location_list, value: @entry.instagram_location_list.to_s, autocomplete: 'off', placeholder: 'A list of tags, separated by commas…', class: 'input', 'data-target': 'tag-autocomplete.tags' %>
-        </div>
-      </div>
-    </div>
-    <%= render partial: 'admin/shared/tag_datalists', locals: { tags: @tags } %>
-  </div>
-
   <hr class="hr">
   <div class="field is-horizontal">
     <div class="field-label">
