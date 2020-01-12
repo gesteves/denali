@@ -16,7 +16,7 @@
       <% if entry.is_photo? %>
         <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
-      <% if entry.is_photo? && !entry.is_photoset? %>
+      <% if entry.is_photo? && !entry.is_photoset? && !Rails.env.test? %>
         <%= link_to icon('Download original', 'fas fa-download'), entry.photos.first.image.service_url(disposition: :attachment), class: 'dropdown-item' %>
       <% end %>
       <% if entry.is_photo? %>
