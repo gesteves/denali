@@ -43,6 +43,11 @@ Rails.application.routes.draw do
         get 'drafts'
         get 'photo'
       end
+      resources :photos, only: [] do
+        member do
+          get 'download'
+        end
+      end
     end
 
     resources :tags, only: [:index, :destroy, :show, :update], concerns: :paginatable do

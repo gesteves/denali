@@ -161,6 +161,26 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
+      "fingerprint": "d77ec4aa1c285840f50ac0ac7a1543ab0450a2e899ff4adbcf28aa02935edc9a",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/admin/photos_controller.rb",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Entry.find(params[:entry_id]).photos.find(params[:id]).image.service_url(:disposition => :attachment))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Admin::PhotosController",
+        "method": "download"
+      },
+      "user_input": "Entry.find(params[:entry_id]).photos.find(params[:id]).image.service_url(:disposition => :attachment)",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
       "fingerprint": "f135bc6b94485279758c5a28cfffd7a8ece0907bf0b228b5b1a1fa0bb37b6d97",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
@@ -179,6 +199,6 @@
       "note": ""
     }
   ],
-  "updated": "2019-08-17 16:31:21 -0600",
+  "updated": "2020-01-12 12:32:13 -0700",
   "brakeman_version": "4.3.1"
 }
