@@ -17,7 +17,7 @@
         <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <% if entry.is_photo? && !entry.is_photoset? %>
-        <%= link_to icon('Download original', 'fas fa-download'), download_admin_entry_photo_path(entry_id: entry.id, id: entry.photos.first.id), class: 'dropdown-item' %>
+        <%= link_to icon('Download', 'fas fa-download'), download_admin_entry_photo_path(entry_id: entry.id, id: entry.photos.first.id), class: 'dropdown-item' %>
       <% end %>
       <% if entry.is_photo? %>
         <%= link_to icon('Prints', 'fas fa-print'), prints_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
