@@ -413,6 +413,44 @@ class EntryTest < ActiveSupport::TestCase
     assert !entry.tag_list.include?('Washington')
   end
 
+  test 'instagram location sets tags' do
+    entry = entries(:panda)
+    entry.instagram_location_list = 'Foo'
+    entry.save!
+    entry.reload
+
+    assert entry.instagram_location_list.include? 'Foo'
+    assert_not entry.tag_list.include? 'National Parks'
+    assert_not entry.tag_list.include? 'National Monuments'
+
+    entry.instagram_location_list = 'Bar National Park'
+    entry.save!
+    entry.update_tags
+    entry.reload
+
+    assert entry.instagram_location_list.include? 'Bar National Park'
+    assert entry.tag_list.include? 'National Parks'
+    assert_not entry.tag_list.include? 'National Monuments'
+
+    entry.instagram_location_list = 'Baz National Monument'
+    entry.save!
+    entry.update_tags
+    entry.reload
+
+    assert entry.instagram_location_list.include? 'Baz National Monument'
+    assert_not entry.tag_list.include? 'National Parks'
+    assert entry.tag_list.include? 'National Monuments'
+
+    entry.instagram_location_list = 'Foo'
+    entry.save!
+    entry.update_tags
+    entry.reload
+
+    assert entry.instagram_location_list.include? 'Foo'
+    assert_not entry.tag_list.include? 'National Parks'
+    assert_not entry.tag_list.include? 'National Monuments'
+  end
+
   test 'checking if the queue has published today' do
     assert_equal 0, Entry.published_today.count
     entry = entries(:panda)

@@ -112,6 +112,7 @@ class Admin::EntriesController < AdminController
     @entry.blog = @photoblog
     respond_to do |format|
       if @entry.save
+        @entry.update_tags
         flash[:success] = "Your new entry was saved! <a href=\"#{admin_entry_path(@entry)}\">Check it out.</a>"
         format.html { redirect_to new_admin_entry_path }
       else
@@ -126,6 +127,7 @@ class Admin::EntriesController < AdminController
     respond_to do |format|
       @entry.modified_at = Time.current if @entry.is_published?
       if @entry.update(entry_params)
+        @entry.update_tags
         CloudfrontInvalidationWorker.perform_async(@entry.id) if entry_params[:flush_caches] == 'true'
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
@@ -318,6 +320,7 @@ class Admin::EntriesController < AdminController
   end
 
   def refresh_metadata
+    @entry.update_tags
     @entry.photos.each do |photo|
       photo.extract_metadata
       photo.extract_palette

@@ -422,23 +422,26 @@ class Entry < ApplicationRecord
 
   def update_location_tags
     location_tags = []
+    tags = []
+    self.tag_list.remove(['National Parks', 'National Monuments', 'State Parks'])
     if self.instagram_locations.present?
       location_tags += self.instagram_location_list if self.show_in_map?
-      self.tag_list.add('National Parks') if self.instagram_location_list.any? { |l| l.match? /national park/i }
-      self.tag_list.add('National Monuments') if self.instagram_location_list.any? { |l| l.match? /national monument/i }
+      tags << 'National Parks' if self.instagram_location_list.any? { |l| l.match? /national park/i }
+      tags << 'National Monuments' if self.instagram_location_list.any? { |l| l.match? /national monument/i }
+      tags << 'State Parks' if self.instagram_location_list.any? { |l| l.match? /state park/i }
     end
     if self.show_in_map?
       self.photos.each do |p|
-        location_tags << if self.instagram_location_list.any? { |l| l.match? /national (park|monument)/i }
+        location_tags += if tags.any? { |l| l.match? /^(national|state) (park|monument)s$/i }
           [p.country, p.administrative_area]
         else
           [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area]
         end
       end
     end
-    location_tags = location_tags.flatten.uniq.reject(&:blank?)
+    location_tags = location_tags.uniq.reject(&:blank?)
     self.location_list = location_tags
-    self.tag_list.remove(location_tags)
+    self.tag_list.add(tags)
     self.save!
   end
 
