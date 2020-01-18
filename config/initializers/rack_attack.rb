@@ -1,7 +1,6 @@
 class Rack::Attack
 
-  throttle('req/ip', limit: ENV.fetch("IP_THROTTLE_LIMIT") { 100 }.to_i, period: 1.minute) do |req|
-    puts "REMOTE IP: #{req.remote_ip}"
+  throttle('req/ip', limit: ENV.fetch("IP_THROTTLE_LIMIT_PER_MINUTE") { 100 }.to_i, period: 1.minute) do |req|
     req.remote_ip
   end
 
