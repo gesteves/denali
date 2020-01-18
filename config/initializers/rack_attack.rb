@@ -7,7 +7,8 @@ class Rack::Attack
 
   class Request < ::Rack::Request
     def remote_ip
-      @remote_ip ||= (env['action_dispatch.remote_ip'] || ip).to_s
+      remote = env['HTTP_X_FORWARDED_FOR'].present? ? env['HTTP_X_FORWARDED_FOR'].split(',')[-2] : nil
+      @remote_ip ||= (remote || ip).to_s
     end
   end
 
