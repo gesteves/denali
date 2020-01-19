@@ -65,7 +65,7 @@ class EntriesController < ApplicationController
   end
 
   def search
-    raise ActionController::RoutingError unless @photoblog.has_search?
+    raise ActionController::RoutingError.new('Not Found') unless @photoblog.has_search?
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
     @query = params[:q]
@@ -139,7 +139,7 @@ class EntriesController < ApplicationController
   end
 
   def related
-    raise ActionController::RoutingError unless @photoblog.show_related_entries? && @photoblog.lazy_load_related_entries?
+    raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_related_entries? && @photoblog.lazy_load_related_entries?
     if stale?(@photoblog, public: true)
       @entry = @photoblog.entries.find(params[:id])
       respond_to do |format|
