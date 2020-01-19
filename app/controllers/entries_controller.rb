@@ -139,7 +139,7 @@ class EntriesController < ApplicationController
   end
 
   def related
-    raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_related_entries? && @photoblog.lazy_load_related_entries?
+    raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_related_entries?
     if stale?(@photoblog, public: true)
       @entry = @photoblog.entries.find(params[:id])
       respond_to do |format|
