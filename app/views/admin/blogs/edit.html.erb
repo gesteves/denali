@@ -313,6 +313,33 @@
   </div>
 
   <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :lazy_load_related_entries, 'Lazy load related entries', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>
+                  Yes
+                </a>
+              </li>
+              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>
+                  No
+                </a>
+              </li>
+            </ul>
+            <%= f.hidden_field :lazy_load_related_entries, 'data-target': 'radio-tab.field' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
     <div class="field-label is-normal">
       <%= f.label :time_zone, 'Time zone', class: 'label' %>
     </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_10_012909) do
+ActiveRecord::Schema.define(version: 2020_01_19_214803) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,6 +56,7 @@ ActiveRecord::Schema.define(version: 2019_09_10_012909) do
     t.string "time_zone", default: "UTC"
     t.text "meta_description"
     t.string "tumblr"
+    t.boolean "lazy_load_related_entries", default: false
   end
 
   create_table "cameras", force: :cascade do |t|
