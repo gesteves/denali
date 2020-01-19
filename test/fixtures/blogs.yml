@@ -7,4 +7,5 @@ allencompassingtrip:
   posts_per_page: 60
   copyright: 'Guillermo Esteves'
   show_related_entries: true
+  lazy_load_related_entries: true
   publish_schedules_count: 2
