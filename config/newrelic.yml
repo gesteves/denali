@@ -2,6 +2,10 @@ common: &default_settings
   license_key: <%= ENV["NEW_RELIC_LICENSE_KEY"] %>
   app_name: <%= ENV["HEROKU_APP_NAME"] %>
   log_level: info
+  browser_monitoring:
+    auto_instrument: <%= ENV["NEW_RELIC_BROWSER_MONITORING_AUTO_INSTRUMENT"].present? %>
+  error_collector:
+    ignore_errors: <%= ENV["NEW_RELIC_ERROR_COLLECTOR_IGNORE_ERRORS"] %>
 development:
   <<: *default_settings
   app_name: <%= ENV["HEROKU_APP_NAME"] %> (Development)
@@ -13,4 +17,4 @@ staging:
   app_name: <%= ENV["HEROKU_APP_NAME"] %> (Staging)
 production:
   <<: *default_settings
-  
+
