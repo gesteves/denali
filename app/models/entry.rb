@@ -368,7 +368,7 @@ class Entry < ApplicationRecord
         tumblr_tags += tags
       end
     end
-    tumblr_tags.map(&:downcase).flatten.compact.uniq.sort.join(', ')
+    tumblr_tags.map(&:downcase).flatten.compact.uniq.shuffle.join(', ')
   end
 
   def instagram_location
