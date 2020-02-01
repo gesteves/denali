@@ -357,6 +357,20 @@ class Entry < ApplicationRecord
     instagram_tags.flatten.compact.uniq[0, count].shuffle.join(' ')
   end
 
+  def tumblr_tags
+    entry_tags = self.combined_tags
+    tumblr_tags = self.combined_tag_list
+    tumblr_tags += ["Photographers on Tumblr", "Original Photographers", "Lensblr"] if self.is_photo?
+
+    self.blog.tag_customizations.where.not(tumblr_tags: [nil, '']).each do |tag_customization|
+      tags = tag_customization.tumblr_tags_to_a
+      if tag_customization.matches_tags? entry_tags
+        tumblr_tags += tags
+      end
+    end
+    tumblr_tags.map(&:downcase).flatten.compact.uniq.sort.join(', ')
+  end
+
   def instagram_location
     return nil if instagram_locations.blank?
     tc = self.blog.tag_customizations.tagged_with(self.instagram_location_list, match_all: true).where.not(instagram_location_id: [nil, '']).limit(1)&.first
