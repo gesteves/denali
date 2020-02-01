@@ -358,17 +358,35 @@ class Entry < ApplicationRecord
   end
 
   def tumblr_tags
-    entry_tags = self.combined_tags
-    tumblr_tags = self.combined_tag_list
-    tumblr_tags += ["Photographers on Tumblr", "Original Photographers", "Lensblr"] if self.is_photo?
+    entry_tags = self.tags
+    entry_locations = self.locations
+    entry_equipment = self.equipment
+    entry_styles = self.styles
+    combined_tags = self.combined_tags
+    tags = self.tag_list
+    location_tags = self.location_list
+    equipment_tags = self.equipment_list
+    style_tags = self.style_list
+    more_tags = self.combined_tag_list
+    more_tags += ["Photographers on Tumblr", "Original Photographers", "Lensblr"] if self.is_photo?
 
     self.blog.tag_customizations.where.not(tumblr_tags: [nil, '']).each do |tag_customization|
-      tags = tag_customization.tumblr_tags_to_a
+      hashtags = tag_customization.tumblr_tags_to_a
       if tag_customization.matches_tags? entry_tags
-        tumblr_tags += tags
+        tags << hashtags
+      elsif tag_customization.matches_tags? entry_locations
+        location_tags << hashtags
+      elsif tag_customization.matches_tags? entry_equipment
+        equipment_tags << hashtags
+      elsif tag_customization.matches_tags? entry_styles
+        style_tags << hashtags
+      elsif tag_customization.matches_tags? combined_tags
+        more_tags << hashtags
       end
     end
-    tumblr_tags.map(&:downcase).flatten.compact.uniq.shuffle.join(', ')
+
+    tumblr_tags = tags.shuffle + location_tags.shuffle + more_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
+    tumblr_tags.flatten.compact.uniq.map(&:downcase).join(', ')
   end
 
   def instagram_location
