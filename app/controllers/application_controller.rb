@@ -114,7 +114,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_time_zone(&block)
-    Time.use_zone(@photoblog.time_zone, &block)
+    Time.use_zone(@photoblog.time_zone, &block) if @photoblog.present?
   end
 
   def is_repeat_visit?
