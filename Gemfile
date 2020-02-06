@@ -4,7 +4,6 @@ ruby '2.6.5'
 gem 'rails', '5.2.2.1'
 gem 'pg', '~> 0.21'
 gem 'puma'
-gem 'puma_worker_killer'
 
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
