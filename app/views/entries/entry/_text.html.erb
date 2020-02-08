@@ -1,9 +1,9 @@
 <% cache entry do %>
   <article class="entry entry--text" role="main">
     <div class="entry__body">
-      <h1 class="entry__headline">
+      <h2 class="entry__headline">
         <%= link_to sanitize(entry.plain_title), entry.permalink_url %>
-      </h1>
+      </h2>
       <%= sanitize entry.formatted_body unless entry.body.blank? %>
     </div>
 
