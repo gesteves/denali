@@ -18,19 +18,23 @@
     </div>
   </div>
   <hr class="hr">
-  <table class="table is-fullwidth">
-    <thead>
-      <tr>
-      <th>Tags</th>
-      <th>Location</th>
-      <th>Hashtags</th>
-      <th>Groups</th>
-      <th class="has-text-right-desktop">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= render partial: 'tag_customization', collection: @tag_customizations %>
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+        <th>Tags</th>
+        <th>Instagram Location</th>
+        <th>Instagram Hashtags</th>
+        <th>Flickr Groups</th>
+        <th>Flickr Albums</th>
+        <th>Tumblr Tags</th>
+        <th class="has-text-right-desktop">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= render partial: 'tag_customization', collection: @tag_customizations %>
+      </tbody>
+    </table>
+  </div>
 
 <% end %>

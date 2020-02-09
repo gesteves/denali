@@ -15,13 +15,23 @@
    <% end %>
 </td>
 <td>
-   <% tag_customization.flickr_groups_slugs.each do |g| %>
-     <%= link_to g, "https://www.flickr.com/groups/#{g}/", class: 'tag' %><br>
+   <% tag_customization.flickr_groups_slugs.each do |group| %>
+     <%= link_to group, "https://www.flickr.com/groups/#{group}", class: 'tag' %><br>
+   <% end %>
+</td>
+<td>
+   <% tag_customization.flickr_albums_to_a.each do |album| %>
+     <%= link_to album.split('/').last, album, class: 'tag' %><br>
+   <% end %>
+</td>
+<td>
+   <% tag_customization.tumblr_tags_to_a.each do |tag| %>
+     <%= link_to tag, "https://www.tumblr.com/search/#{tag.gsub(/\s+/, '+')}/recent", class: 'tag' %><br>
    <% end %>
 </td>
 <td>
   <div class="buttons is-pulled-right">
-    <%= link_to 'Edit', edit_admin_tag_customization_path(tag_customization.id), class: 'button is-small', 'data-action': 'click->tag#edit' %>
+    <%= link_to 'Edit', edit_admin_tag_customization_path(tag_customization.id), class: 'button is-small' %>
     <%= link_to 'Delete', admin_tag_customization_path(tag_customization.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it forever? This can’t be undone!' }, class: 'button is-danger is-small', 'data-action': 'click->tag#delete' %>
   </div>
 </td>

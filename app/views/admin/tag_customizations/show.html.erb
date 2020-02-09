@@ -1,0 +1,65 @@
+<div class="level is-mobile">
+  <div class="level-left">
+    <div>
+    <h1 class="title is-size-5-mobile">Tags & social media</h1>
+    </div>
+  </div>
+  <div class="level-right">
+    <div class="level-item">
+      <a href="<%= admin_tag_customizations_path %>" class="button is-small">
+        <span class="icon is-small">
+          <i class="fas fa-arrow-left"></i>
+        </span>
+        <span>Go back</span>
+      </a>
+    </div>
+  </div>
+</div>
+<hr class="hr">
+
+<table class="table is-fullwidth">
+    <thead>
+      <tr>
+      <th>Tags</th>
+      <th>Location</th>
+      <th>Instagram Hashtags</th>
+      <th>Flickr Groups</th>
+      <th>Flickr Albums</th>
+      <th>Tumblr Tags</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <% @tag_customization.tags.sort{ |a,b| a.name <=> b.name }.each do |t| %>
+            <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag is-link' %><br>
+          <% end %>
+        </td>
+        <td>
+          <% if @tag_customization.instagram_location_id.present? %>
+            <%= link_to @tag_customization.location_name, "https://www.facebook.com/#{@tag_customization.instagram_location_id}/", class: 'tag' %>
+          <% end %>
+        </td>
+        <td>
+          <% @tag_customization.instagram_hashtags_to_a.each do |t| %>
+            <%= link_to t, "https://www.instagram.com/explore/tags/#{t.gsub('#', '')}/", class: 'tag' %><br>
+          <% end %>
+        </td>
+        <td>
+          <% @tag_customization.flickr_groups_to_a.each do |group| %>
+            <%= link_to group, group, class: 'tag' %><br>
+          <% end %>
+        </td>
+        <td>
+          <% @tag_customization.flickr_albums_to_a.each do |album| %>
+            <%= link_to album, album, class: 'tag' %><br>
+          <% end %>
+        </td>
+        <td>
+          <% @tag_customization.tumblr_tags_to_a.each do |tag| %>
+            <%= link_to tag, "https://www.tumblr.com/search/#{tag.gsub(/\s+/, '+')}/recent", class: 'tag' %><br>
+          <% end %>
+        </td>
+      </tr>
+    </tbody>
+  </table>

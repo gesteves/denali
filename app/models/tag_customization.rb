@@ -14,19 +14,22 @@ class TagCustomization < ApplicationRecord
   end
 
   def tumblr_tags_to_a
+    return [] if self.tumblr_tags.blank?
     self.tumblr_tags.split(/[\r\n]+/)
   end
 
   def flickr_groups_to_a
+    return [] if self.flickr_groups.blank?
     self.flickr_groups.split(/\s+/)
+  end
+
+  def flickr_albums_to_a
+    return [] if self.flickr_albums.blank?
+    self.flickr_albums.split(/\s+/)
   end
 
   def flickr_groups_slugs
     self.flickr_groups_to_a.map { |g| g.split('/').last }
-  end
-
-  def flickr_albums_to_a
-    self.flickr_albums.split(/\s+/)
   end
 
   def matches_tags?(tags)
