@@ -399,6 +399,11 @@ class Entry < ApplicationRecord
     end
   end
 
+  def instagram_location_name
+    location_name, location_id = self.instagram_location
+    location_name
+  end
+
   def instagram_caption
     text = []
     if self.instagram_text.present?
@@ -511,6 +516,10 @@ class Entry < ApplicationRecord
     when 'queued'
       add_to_list
     end
+  end
+
+  def is_parks_entry?
+    self.combined_tag_list.any? { |t| ['National Parks', 'National Monuments', 'National Wildlife Refuges', 'State Parks'].include? t }
   end
 
   private

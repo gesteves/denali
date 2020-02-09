@@ -11,7 +11,7 @@ cache [@photoblog, @page] do
             xml.image :loc, p.url(w: 1200)
             xml.image :caption, p.alt_text
             xml.image :title, e.plain_title
-            xml.image :geo_location, p.long_address if e.show_in_map? && p.has_location?
+            xml.image :geo_location, p.location if e.show_in_map? && p.location.present?
           end
         end
       end

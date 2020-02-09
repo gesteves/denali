@@ -149,12 +149,14 @@ class Photo < ApplicationRecord
     "#{formatted}″"
   end
 
-  def long_address
-    [self.neighborhood, self.sublocality, self.locality, self.administrative_area, self.postal_code, self.country].uniq.reject(&:blank?).join(', ')
-  end
-
-  def short_address
-    [self.locality, self.administrative_area, self.country].uniq.reject(&:blank?).reject { |a| a.match? /^united (states|kingdom)/i }.join(', ')
+  def location
+    locations = []
+    locations += if self.entry.is_parks_entry? && entry.instagram_location.present?
+      [entry.instagram_location_name, self.administrative_area, self.country].uniq.reject(&:blank?)
+    else
+      [self.neighborhood, self.sublocality, self.locality, self.administrative_area, self.postal_code, self.country].uniq.reject(&:blank?)
+    end
+    locations.join(', ')
   end
 
   def extract_metadata
