@@ -22,8 +22,9 @@ export default class extends Controller {
     const bounds = L.latLngBounds(southWest, northEast);
     const zoom = this.getZoom();
     const containerId = this.containerTarget.id;
+    const mapStyle = this.data.get('style');
     L.mapbox.accessToken = this.data.get('apiToken');
-    this.map = L.mapbox.map(containerId, 'gesteves.ce0e3aae', { minZoom: zoom, maxZoom: 18, maxBounds: bounds });
+    this.map = L.mapbox.map(containerId, null, { minZoom: zoom, maxZoom: 18, maxBounds: bounds }).addLayer(L.mapbox.styleLayer(mapStyle));
     let layer = L.mapbox.featureLayer();
     layer.on('layeradd', e => this.setUpMarker(e));
     layer.loadURL(this.data.get('markersUrl')).on('ready', e => this.setUpMarkerClusters(e));
