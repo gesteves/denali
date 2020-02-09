@@ -2,6 +2,14 @@ class Admin::BlogsController < AdminController
   # GET /admin/blogs/1/edit
   def edit
     @page_title = 'Blog settings'
+    @map_styles = [
+      ['Streets', 'mapbox://styles/mapbox/streets-v11'],
+      ['Outdoors', 'mapbox://styles/mapbox/outdoors-v11'],
+      ['Light', 'mapbox://styles/mapbox/light-v10'],
+      ['Dark', 'mapbox://styles/mapbox/dark-v10'],
+      ['Satellite', 'mapbox://styles/mapbox/satellite-v9'],
+      ['Satellite streets', 'mapbox://styles/mapbox/satellite-streets-v11'],
+    ]
   end
 
   # PATCH/PUT /admin/blogs/1
@@ -29,6 +37,6 @@ class Admin::BlogsController < AdminController
                                  :show_related_entries, :lazy_load_related_entries, :analytics_code,
                                  :instagram, :twitter, :tumblr, :email, :flickr,
                                  :header_logo_svg, :additional_meta_tags,
-                                 :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description)
+                                 :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description, :map_style)
   end
 end

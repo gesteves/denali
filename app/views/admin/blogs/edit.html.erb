@@ -354,6 +354,21 @@
     </div>
   </div>
 
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :map_style, 'Map style', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field is-narrow">
+        <div class="control">
+          <div class="select is-fullwidth">
+            <%= f.select :map_style, options_for_select(@map_styles, @photoblog.map_style) %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <hr class="hr">
 
   <div class="field is-horizontal">
