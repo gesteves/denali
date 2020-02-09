@@ -26,7 +26,7 @@
 </td>
 <td>
    <% tag_customization.tumblr_tags_to_a.each do |tag| %>
-     <%= link_to tag, "https://www.tumblr.com/search/#{tag.gsub(/\s+/, '+')}/recent", class: 'tag' %><br>
+     <%= link_to tag, "https://www.tumblr.com/search/#{tag.downcase.gsub(/\s+/, '+')}/recent", class: 'tag' %><br>
    <% end %>
 </td>
 <td>
