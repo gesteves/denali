@@ -38,13 +38,13 @@ export default class extends Controller {
 
   /**
    * Sets up the bottom of the page for lazy loading: show the spinner,
-   * hide the footer, remove the pagination links.
+   * hide the footer and the pagination links.
    */
   preparePage () {
     this.spinnerTarget.classList.add('loading--active');
     this.footer = document.querySelector('.footer');
     this.footer.style.display = 'none';
-    this.paginatorTarget.parentNode.removeChild(this.paginatorTarget);
+    this.paginatorTarget.style.display = 'none';
   }
 
   /**
