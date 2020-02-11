@@ -1,8 +1,6 @@
 <% content_for :head do %>
   <% cache [@photoblog, @tag_slug, @page, @count, :head] do %>
-    <% if @page > 1 %>
-      <meta name="robots" content="noindex">
-    <% end %>
+    <meta name="robots" content="noindex">
     <title><%= sanitize @page_title %></title>
     <meta name="description" content="<%= number_with_delimiter @tags.first.taggings_count %> photos tagged “<%= @tags.first.name %>” on <%= @photoblog.name %>.">
     <link rel="canonical" href="<%= @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) %>">
