@@ -183,16 +183,17 @@ class EntriesController < ApplicationController
   end
 
   def sitemap_index
-    if stale?(@photoblog, public: true)
-      @pages = @photoblog.entries.published('published_at ASC').page(1).per(@entries_per_sitemap).total_pages
+    entries = @photoblog.entries.published('published_at ASC').page(1).per(@entries_per_sitemap)
+    @pages = entries.total_pages
+    if stale?(etag: entries, last_modified: entries.map(&:updated_at).max, public: true)
       render format: 'xml'
     end
   end
 
   def sitemap
-    if stale?(@photoblog, public: true)
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(@entries_per_sitemap)
+    if stale?(etag: @entries, last_modified: @entries.map(&:updated_at).max, public: true)
       @page = params[:page]
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(@entries_per_sitemap)
       render format: 'xml'
     end
   end
