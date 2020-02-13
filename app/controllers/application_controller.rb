@@ -125,7 +125,7 @@ class ApplicationController < ActionController::Base
 
   def log_conditional_get
     if is_cloudfront?
-      logger.info "[conditional get] #{request.headers.to_s}"
+      logger.info "[conditional get] #{request.headers.inspect}"
     end
   end
 end
