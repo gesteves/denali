@@ -124,7 +124,9 @@ class ApplicationController < ActionController::Base
   end
 
   def log_conditional_get
-    logger.info "[conditional get] If-None-Match header present? #{request.headers['If-None-Match'].present?}"
-    logger.info "[conditional get] If-Modified-Since header present? #{request.headers['If-Modified-Since'].present?}"
+    if is_cloudfront?
+      logger.info "[conditional get] If-None-Match header present? #{request.headers['If-None-Match'].present?}"
+      logger.info "[conditional get] If-Modified-Since header present? #{request.headers['If-Modified-Since'].present?}"
+    end
   end
 end
