@@ -9,7 +9,6 @@ class ApplicationController < ActionController::Base
   before_action :set_link_headers
   before_action :set_referrer_policy
   before_action :is_repeat_visit?
-  before_action :log_conditional_get
   around_action :set_time_zone
 
   helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preload_link_header, :add_preconnect_link_header
@@ -121,13 +120,5 @@ class ApplicationController < ActionController::Base
   def is_repeat_visit?
     @has_visited = cookies[:has_visited] == @app_version
     cookies[:has_visited] = { value: @app_version, expires: 1.month.from_now }
-  end
-
-  def log_conditional_get
-    if is_cloudfront?
-      logger.info "[conditional get] If-None-Match header: #{request.headers['If-None-Match']}"
-      logger.info "[conditional get] If-Match  header: #{request.headers['If-Match ']}"
-      logger.info "[conditional get] If-Modified-Since header: #{request.headers['If-Modified-Since']}"
-    end
   end
 end
