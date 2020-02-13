@@ -3,11 +3,11 @@
 <head>
   <%= render partial: 'partials/meta_tags' %>
   <%= yield :head %>
-  <% if @has_visited || !content_for?(:inline_css) %>
-    <%= stylesheet_link_tag 'application', media: 'all' %>
-  <% else %>
+  <% if content_for?(:inline_css) %>
     <%= yield :inline_css %>
     <%= stylesheet_link_tag 'application', media: 'print', onload: "this.media='all'" %>
+  <% else %>
+    <%= stylesheet_link_tag 'application', media: 'all' %>
   <% end %>
   <%= yield :stylesheets %>
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} if ENV['typekit_id'].present? %>
