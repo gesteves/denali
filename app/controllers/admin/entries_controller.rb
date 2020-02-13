@@ -3,7 +3,7 @@ class Admin::EntriesController < AdminController
 
   before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :share, :crops, :prints, :instagram, :facebook, :twitter, :tumblr, :flickr, :flush_caches, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
-  before_action :load_tags, :load_tagged_entries, only: [:tagged]
+  before_action :load_tags, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
   skip_before_action :require_login, only: [:latest_hashtags]
 
@@ -31,8 +31,12 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/tagged/film
   def tagged
-    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     @page_title = "Entries tagged \"#{@tag_list.first}\""
+    @page = params[:page] || 1
+    entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).tagged_with(@tag_list, any: true).order('created_at DESC')
+    @entries = entries.page(@page)
+    @tagged_count = entries.size
+    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
   end
 
   # GET /admin/entries/:id
@@ -354,11 +358,6 @@ class Admin::EntriesController < AdminController
 
     def entry_params
       params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :instagram_location_list, :post_to_twitter, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_facebook, :post_to_tumblr, :tweet_text, :instagram_text, :show_in_map, :flush_caches, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y])
-    end
-
-    def load_tagged_entries
-      @page = params[:page] || 1
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).tagged_with(@tag_list, any: true).order('created_at DESC').page(@page)
     end
 
     def set_redirect_url
