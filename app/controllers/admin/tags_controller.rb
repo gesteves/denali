@@ -12,7 +12,9 @@ class Admin::TagsController < AdminController
 
   def destroy
     tag = ActsAsTaggableOn::Tag.find(params[:id])
+    entries = @photoblog.entries.tagged_with(tag.name).to_a
     tag.destroy
+    entries.each(&:touch)
     respond_to do |format|
       format.html { redirect_to admin_tags_path }
       format.json {
@@ -32,8 +34,10 @@ class Admin::TagsController < AdminController
 
   def update
     @tag = ActsAsTaggableOn::Tag.find(params[:id])
+    entries = @photoblog.entries.tagged_with(@tag.name).to_a
     respond_to do |format|
       if @tag.update(name: params[:name])
+        entries.each(&:touch)
         format.json
       else
         format.json { render plain: 'Could not update tag', status: 400 }
@@ -45,7 +49,7 @@ class Admin::TagsController < AdminController
     new_tags = params[:tags]
     tag = ActsAsTaggableOn::Tag.find(params[:id])
     entries = @photoblog.entries.tagged_with(tag.name)
-    entries.map { |e| e.add_tags(new_tags) }
+    entries.each { |e| e.add_tags(new_tags) }.each(&:touch)
     respond_to do |format|
       format.html { redirect_to admin_tags_path }
       format.json {
