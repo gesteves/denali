@@ -54,7 +54,7 @@ Rails.application.configure do
   config.lograge.enabled = true
 
   config.lograge.custom_options = lambda do |event|
-    event.payload
+    { pop: event.payload[:pop] }
   end
 
   # Prepend all log lines with the following tags.
