@@ -4,9 +4,9 @@ class OembedController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def show
-    @url, @width, @height = get_photo(@entry, 1200, params[:maxwidth], params[:maxheight])
-    @thumb_url, @thumb_width, @thumb_height = get_photo(@entry, 300, params[:maxwidth], params[:maxheight])
     if stale?(@entry, public: true)
+      @url, @width, @height = get_photo(@entry, 1200, params[:maxwidth], params[:maxheight])
+      @thumb_url, @thumb_width, @thumb_height = get_photo(@entry, 300, params[:maxwidth], params[:maxheight])
       respond_to do |format|
         format.json
         format.xml

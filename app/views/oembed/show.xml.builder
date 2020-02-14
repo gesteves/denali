@@ -7,7 +7,6 @@ xml.ombed do
   xml.author_url about_url
   xml.provider_name @entry.blog.name
   xml.provider_url root_url
-  xml.cache_age @max_age.minutes.seconds
   if @entry.is_photo?
     xml.thumbnail_url @thumb_url
     xml.thumbnail_width @thumb_width

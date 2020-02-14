@@ -5,7 +5,6 @@ json.author_name @entry.user.name
 json.author_url about_url
 json.provider_name @entry.blog.name
 json.provider_url root_url
-json.cache_age @max_age.minutes.seconds
 if @entry.is_photo?
   json.thumbnail_url @thumb_url
   json.thumbnail_width @thumb_width
