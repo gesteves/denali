@@ -3,21 +3,30 @@ class Admin::MapsController < AdminController
   skip_before_action :verify_authenticity_token
 
   def index
-    @page_title = 'Map'
-    @no_container = true
+    if stale?(@photoblog)
+      @page_title = 'Map'
+      @no_container = true
+      respond_to do |format|
+        format.html
+      end
+    end
   end
 
   def photos
-    respond_to do |format|
-      format.json
+    if stale?(@photoblog)
+      respond_to do |format|
+        format.json
+      end
     end
   end
 
   def photo
-    @photo = Photo.joins(:entry).where(photos: { id: params[:id] }).limit(1).first
-    raise ActiveRecord::RecordNotFound if @photo.nil?
-    respond_to do |format|
-      format.json
+    if stale?(@photoblog)
+      @photo = Photo.joins(:entry).where(photos: { id: params[:id] }).limit(1).first
+      raise ActiveRecord::RecordNotFound if @photo.nil?
+      respond_to do |format|
+        format.json
+      end
     end
   end
 

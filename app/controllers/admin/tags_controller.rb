@@ -1,8 +1,13 @@
 class Admin::TagsController < AdminController
   def index
-    @page = params[:page] || 1
-    @tags = ActsAsTaggableOn::Tag.order('name asc').page(@page).per(100)
-    @page_title = 'Tags'
+    if stale?(@photoblog)
+      @page = params[:page] || 1
+      @tags = ActsAsTaggableOn::Tag.order('name asc').page(@page).per(100)
+      @page_title = 'Tags'
+      respond_to do |format|
+        format.html
+      end
+    end
   end
 
   def destroy
