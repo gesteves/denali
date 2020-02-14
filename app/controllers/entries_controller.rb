@@ -4,8 +4,7 @@ class EntriesController < ApplicationController
   skip_before_action :verify_authenticity_token
   skip_before_action :set_link_headers, only: [:amp, :show, :preview]
   before_action :load_tags, only: [:tagged, :tag_feed]
-  before_action :set_max_age, only: [:index, :tagged, :feed, :tag_feed, :search, :sitemap, :sitemap_index]
-  before_action :set_entry_max_age, only: [:show, :preview, :photo, :amp, :related]
+  before_action :set_max_age
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
   before_action :set_preview_entry, only: [:preview, :amp_preview]
@@ -198,7 +197,6 @@ class EntriesController < ApplicationController
   end
 
   def latest
-    expires_in 5.minutes, public: true
     if stale?(@photoblog, public: true)
       @entry = Entry.published.first
       respond_to do |format|

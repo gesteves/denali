@@ -65,14 +65,8 @@ class ApplicationController < ActionController::Base
     expires_now
   end
 
-  def set_max_age
-    @max_age = ENV['config_caching_minutes']&.to_i || 5
-    response.headers['Cache-Control'] = "s-maxage=#{@max_age.minutes}, max-age=0, public"
-  end
-
-  def set_entry_max_age
-    @max_age = ENV['config_entry_caching_minutes']&.to_i || ENV['config_caching_minutes']&.to_i || 5
-    response.headers['Cache-Control'] = "s-maxage=#{@max_age.minutes}, max-age=0, public"
+  def set_max_age(minutes: ENV['config_cloudfront_ttl_minutes'].to_i)
+    response.headers['Cache-Control'] = "s-maxage=#{minutes.minutes}, max-age=0, public"
   end
 
   def set_app_version
