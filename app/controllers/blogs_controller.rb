@@ -3,7 +3,12 @@ class BlogsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def about
-    @page_title = "About · #{@photoblog.name} · #{@photoblog.tag_line}"
+    if stale?(@photoblog, public: true)
+      @page_title = "About · #{@photoblog.name} · #{@photoblog.tag_line}"
+      respond_to do |format|
+        format.html
+      end
+    end
   end
 
   def manifest

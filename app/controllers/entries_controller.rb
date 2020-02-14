@@ -85,7 +85,7 @@ class EntriesController < ApplicationController
   end
 
   def show
-    if stale?(@photoblog, public: true)
+    if stale?(@entry, public: true)
       respond_to do |format|
         format.html {
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
@@ -97,7 +97,7 @@ class EntriesController < ApplicationController
   end
 
   def amp
-    if stale?(@photoblog, public: true)
+    if stale?(@entry, public: true)
       respond_to do |format|
         format.html {
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
@@ -108,7 +108,7 @@ class EntriesController < ApplicationController
   end
 
   def preview
-    if stale?(@photoblog, public: true)
+    if stale?(@entry, public: true, template: 'entries/show')
       respond_to do |format|
         format.html {
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
@@ -123,7 +123,7 @@ class EntriesController < ApplicationController
   end
 
   def amp_preview
-    if stale?(@photoblog, public: true)
+    if stale?(@entry, public: true, template: 'entries/amp')
       respond_to do |format|
         format.html {
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
