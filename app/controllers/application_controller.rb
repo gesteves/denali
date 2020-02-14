@@ -115,9 +115,4 @@ class ApplicationController < ActionController::Base
   def set_time_zone(&block)
     Time.use_zone(@photoblog.time_zone, &block) if @photoblog.present?
   end
-
-  def append_info_to_payload(payload)
-    super
-    payload[:pop] = request.headers['x-amz-cf-pop']
-  end
 end
