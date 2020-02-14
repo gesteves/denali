@@ -53,6 +53,10 @@ Rails.application.configure do
   config.log_level = :info
   config.lograge.enabled = true
 
+  config.lograge.custom_options = lambda do |event|
+    event.payload
+  end
+
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :request_id ]
 
