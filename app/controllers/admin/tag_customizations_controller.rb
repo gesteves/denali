@@ -1,8 +1,13 @@
 class Admin::TagCustomizationsController < AdminController
   def index
-    # TODO: Find a better way to sort this.
-    @tag_customizations = @photoblog.tag_customizations.all.sort { |a,b| a.tags.map { |t| t.slug.gsub('-', '') }.sort.join('') <=> b.tags.map { |t| t.slug.gsub('-', '') }.sort.join('') }
-    @page_title = 'Tags & social media'
+    if stale?(@photoblog)
+      # TODO: Find a better way to sort this.
+      @tag_customizations = @photoblog.tag_customizations.all.sort { |a,b| a.tags.map { |t| t.slug.gsub('-', '') }.sort.join('') <=> b.tags.map { |t| t.slug.gsub('-', '') }.sort.join('') }
+      @page_title = 'Tags & social media'
+      respond_to do |format|
+        format.html
+      end
+    end
   end
 
   def new

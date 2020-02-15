@@ -14,11 +14,11 @@ class EntriesController < ApplicationController
   layout 'amp', only: [:amp, :amp_preview]
 
   def index
-    if stale?(@photoblog, public: true)
-      @page = (params[:page] || 1).to_i
-      @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
-      raise ActiveRecord::RecordNotFound if @page > 1 && @entries.empty? && request.format != 'js'
+    @page = (params[:page] || 1).to_i
+    @count = @photoblog.posts_per_page
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
+    raise ActiveRecord::RecordNotFound if @page > 1 && @entries.empty? && request.format != 'js'
+    if stale?(@entries, public: true)
       respond_to do |format|
         format.html {
           if @page.nil? || @page == 1
@@ -41,11 +41,11 @@ class EntriesController < ApplicationController
   end
 
   def tagged
-    if stale?(@photoblog, public: true)
-      @page = (params[:page] || 1).to_i
-      @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
-      raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
+    @page = (params[:page] || 1).to_i
+    @count = @photoblog.posts_per_page
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
+    raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
+    if stale?(@entries, public: true)
       respond_to do |format|
         format.html {
           @page_title = "#{@tags.first.name} · #{@photoblog.name}"
@@ -157,10 +157,10 @@ class EntriesController < ApplicationController
   end
 
   def feed
-    if stale?(@photoblog, public: true)
-      @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.page(1).per(@count)
-      raise ActiveRecord::RecordNotFound if @entries.empty?
+    @count = @photoblog.posts_per_page
+    @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.page(1).per(@count)
+    raise ActiveRecord::RecordNotFound if @entries.empty?
+    if stale?(@entries, public: true)
       respond_to do |format|
         format.atom
         format.json
@@ -170,10 +170,10 @@ class EntriesController < ApplicationController
   end
 
   def tag_feed
-    if stale?(@photoblog, public: true)
-      @count = @photoblog.posts_per_page
-      @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
-      raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    @count = @photoblog.posts_per_page
+    @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
+    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    if stale?(@entries, public: true)
       respond_to do |format|
         format.atom
         format.json
@@ -198,11 +198,9 @@ class EntriesController < ApplicationController
   end
 
   def latest
-    if stale?(@photoblog, public: true)
-      @entry = Entry.published.first
-      respond_to do |format|
-        format.all { redirect_to @entry.permalink_url, status: 302 }
-      end
+    @entry = Entry.published.first
+    respond_to do |format|
+      format.all { redirect_to @entry.permalink_url, status: 302 }
     end
   end
 

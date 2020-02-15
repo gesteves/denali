@@ -13,4 +13,4 @@
 <%= render partial: 'entries/entry/related', object: @entry, as: :entry if @photoblog.show_related_entries? && !@photoblog.lazy_load_related_entries? %>
 <%= render partial: 'entries/entry/lazy_related', object: @entry, as: :entry if @photoblog.show_related_entries? && @photoblog.lazy_load_related_entries? %>
 <%= render partial: 'partials/elsewhere' %>
-<%= render partial: 'entries/entry/version' %>
+<%= render partial: 'partials/version' %>
