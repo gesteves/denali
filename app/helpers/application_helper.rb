@@ -15,19 +15,6 @@ module ApplicationHelper
     content_tag :img, nil, html_options
   end
 
-  def amp_image_tag(photo, photo_key, html_options = {})
-    src, srcset = photo.srcset(photo_key)
-    html_options.reverse_merge!({
-      srcset: srcset,
-      src: src,
-      sizes: Photo.sizes(photo_key),
-      width: photo.width,
-      height: photo.height,
-      layout: 'responsive'
-    })
-    content_tag 'amp-img', nil, html_options
-  end
-
   def lazy_responsive_image_tag(photo, photo_key, html_options = {})
     src, srcset = photo.srcset(photo_key)
     sizes = Photo.sizes(photo_key)

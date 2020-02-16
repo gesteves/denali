@@ -80,7 +80,6 @@ Rails.application.routes.draw do
   get '/photo/:id'                          => 'entries#photo',       constraints: { id: /\d+/ }, :as => :photo
   get '/related/:id.:format'                => 'entries#related',     constraints: { id: /\d+/ }, :as => :related
   get '/preview/:preview_hash'              => 'entries#preview',     defaults: { format: 'html' }, :as => :preview_entry
-  get '/amp/preview/:preview_hash'          => 'entries#amp_preview', defaults: { format: 'html' }, :as => :amp_preview_entry
   get '/:year/:month/:day/:id(/:slug)'      => 'entries#show',        constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_long
   get '/amp/:year/:month/:day/:id(/:slug)'  => 'entries#amp',         constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_amp
   get '/latest'                             => 'entries#latest',      defaults: { format: 'html' }, :as => :latest_entry

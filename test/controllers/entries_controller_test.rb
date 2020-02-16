@@ -59,17 +59,10 @@ class EntriesControllerTest < ActionController::TestCase
     assert_select '.entry__headline', 1
   end
 
-  test 'photo amp page should render correctly' do
+  test 'photo amp page should redirect to canonical page' do
     entry = entries(:peppers)
     get :amp, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug }
-    assert_response :success
-    assert_not_nil assigns(:entry)
-    assert_template layout: 'layouts/amp'
-    assert_template :amp
-    assert_select '.entry', 1
-    assert_select '.entry--photo', 1
-    assert_select '.entry__figure', 1
-    assert_select '.entry__headline', 1
+    assert_redirected_to entry.permalink_url
   end
 
   test 'should preview page' do

@@ -2,16 +2,14 @@ class EntriesController < ApplicationController
   include TagList
 
   skip_before_action :verify_authenticity_token
-  skip_before_action :set_link_headers, only: [:amp, :show, :preview]
+  skip_before_action :set_link_headers, only: [:show, :preview, :amp]
   before_action :load_tags, only: [:tagged, :tag_feed]
-  before_action :set_max_age, except: [:show, :amp, :preview, :amp_preview]
-  before_action -> { set_max_age(minutes: ENV['config_cloudfront_ttl_minutes_entries'].to_i) }, only: [:show, :amp, :preview, :amp_preview]
+  before_action :set_max_age, except: [:show, :amp, :preview]
+  before_action -> { set_max_age(minutes: ENV['config_cloudfront_ttl_minutes_entries'].to_i) }, only: [:show, :preview]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
-  before_action :set_preview_entry, only: [:preview, :amp_preview]
+  before_action :set_preview_entry, only: [:preview]
   before_action :preload_photos, only: [:show, :preview]
-
-  layout 'amp', only: [:amp, :amp_preview]
 
   def index
     @page = (params[:page] || 1).to_i
@@ -98,13 +96,8 @@ class EntriesController < ApplicationController
   end
 
   def amp
-    if stale?(@entry, public: true)
-      respond_to do |format|
-        format.html {
-          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
-          redirect_to(@entry.amp_url, status: 301) unless params_match(@entry, params)
-        }
-      end
+    http_cache_forever(public: true) do
+      redirect_to(@entry.permalink_url, status: 301)
     end
   end
 
@@ -117,21 +110,6 @@ class EntriesController < ApplicationController
             redirect_to @entry.permalink_url
           else
             render :show
-          end
-        }
-      end
-    end
-  end
-
-  def amp_preview
-    if stale?(@entry, public: true, template: 'entries/amp')
-      respond_to do |format|
-        format.html {
-          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
-          if @entry.is_published?
-            redirect_to @entry.amp_url
-          else
-            render :amp
           end
         }
       end

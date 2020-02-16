@@ -262,27 +262,12 @@ class Entry < ApplicationRecord
     end
   end
 
-  def amp_path
-    return nil unless self.is_published?
-    year, month, day, id, slug = self.slug_params
-    entry_amp_path(year, month, day, id, slug)
-  end
-
   def permalink_url
     if self.is_published?
       year, month, day, id, slug = self.slug_params
       entry_long_url(year, month, day, id, slug, only_path: !Rails.env.production?)
     else
       preview_entry_url(self.preview_hash, only_path: !Rails.env.production?)
-    end
-  end
-
-  def amp_url
-    if self.is_published?
-      year, month, day, id, slug = self.slug_params
-      entry_amp_url(year, month, day, id, slug, only_path: !Rails.env.production?)
-    else
-      amp_preview_entry_url(self.preview_hash, only_path: !Rails.env.production?)
     end
   end
 
@@ -500,10 +485,6 @@ class Entry < ApplicationRecord
     self.tag_list.add(new_tags, parse: true)
     self.tag_list.remove(self.equipment_list + self.location_list + ['Color', 'Black and White', 'Film', 'Mobile'])
     self.save!
-  end
-
-  def amp_attributes_changed?
-    saved_change_to_body? || saved_change_to_status?
   end
 
   def handle_status_change

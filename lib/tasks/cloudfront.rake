@@ -5,7 +5,7 @@ namespace :cloudfront do
     if ENV['ENTRY_ID'].present?
       entry = Entry.find(ENV['ENTRY_ID'])
       if entry.present?
-        paths = [entry.permalink_path, entry.amp_path].compact
+        paths = [entry.permalink_path].compact
         quantity = paths.size
         response = client.create_invalidation({
           distribution_id: ENV['aws_cloudfront_distribution_id'],
@@ -24,7 +24,7 @@ namespace :cloudfront do
     elsif ENV['ENTRY_IDS'].present?
       entry_ids = ENV['ENTRY_IDS'].split(',').map(&:to_i)
       entries = Entry.where(id: entry_ids)
-      paths = entries.map { |e| [e.permalink_path, e.amp_path] }.flatten.compact
+      paths = entries.map { |e| [e.permalink_path] }.flatten.compact
       quantity = paths.size
       response = client.create_invalidation({
         distribution_id: ENV['aws_cloudfront_distribution_id'],
@@ -39,7 +39,7 @@ namespace :cloudfront do
       puts "Invalidation request sent for the following #{quantity} paths: #{paths.join(', ')}"
     elsif ENV['COUNT'].present?
       count = ENV['COUNT'].to_i
-      paths = Entry.published.limit(count).map { |e| [e.permalink_path, e.amp_path] }.flatten.compact
+      paths = Entry.published.limit(count).map { |e| [e.permalink_path] }.flatten.compact
       quantity = paths.size
       response = client.create_invalidation({
         distribution_id: ENV['aws_cloudfront_distribution_id'],

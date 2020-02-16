@@ -9,7 +9,6 @@ module Types
     field :slug, String, null: false, description: "The slug at the end of the entry's URL"
     field :url, String, null: false, method: :permalink_url, description: "Permalink URL for the entry"
     field :short_url, String, null: true, method: :short_permalink_url, description: "Shorter version of the permalink URL for the entry"
-    field :amp_url, String, null: true, description: "URL for the AMP version of the entry"
     field :published_at, String, null: false, description: "Date & time the entry was published at"
     field :modified_at, String, null: false, description: "Date & time the entry was last publicly modified"
     field :photos_count, Integer, null: false, description: "Number of photos in this entry"

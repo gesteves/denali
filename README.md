@@ -28,7 +28,6 @@ A simple, fast photoblogging CMS built in Ruby on Rails which features responsiv
 * Auto-tagging of entries by location, equipment, and style
 * Automatic palette extraction for image placeholders
 * Automatic generation of Instagram hashtags, and image crops for feed and stories
-* Google AMP support
 * GraphQL API
 * Did I mention it's fast as heck?
 
