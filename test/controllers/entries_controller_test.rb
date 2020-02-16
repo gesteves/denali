@@ -85,13 +85,6 @@ class EntriesControllerTest < ActionController::TestCase
     assert_redirected_to entry.permalink_url
   end
 
-  test 'should redirect from photo url' do
-    photo = photos(:peppers)
-    entry = entries(:peppers)
-    get :photo, params: { id: photo.id }
-    assert_redirected_to entry.permalink_url
-  end
-
   test 'should redirect from unknown format' do
     entry = entries(:peppers)
     get :show, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug, format: 'foo' }
@@ -135,11 +128,5 @@ class EntriesControllerTest < ActionController::TestCase
     entry.save
     get :tag_feed, params: { tag: 'washington', format: 'rss' }
     assert_redirected_to tag_feed_url(format: 'atom', page: nil, tag: 'washington')
-  end
-
-  test "should redirect to latest entry" do
-    get :latest
-    entry = Entry.published.first
-    assert_redirected_to entry.permalink_url
   end
 end

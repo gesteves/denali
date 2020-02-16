@@ -126,14 +126,6 @@ class EntriesController < ApplicationController
     end
   end
 
-  def photo
-    if stale?(@photoblog, public: true)
-      entry = @photoblog.entries.joins(:photos).published.where('photos.id = ?', params[:id]).first
-      raise ActiveRecord::RecordNotFound if entry.nil?
-      redirect_to(entry.permalink_url, status: 301)
-    end
-  end
-
   def feed
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.page(1).per(@count)
@@ -172,13 +164,6 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(@entries_per_sitemap)
     if stale?(etag: @entries, last_modified: @entries.map(&:updated_at).max, public: true)
       render format: 'xml'
-    end
-  end
-
-  def latest
-    @entry = Entry.published.first
-    respond_to do |format|
-      format.all { redirect_to @entry.permalink_url, status: 302 }
     end
   end
 

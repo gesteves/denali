@@ -61,26 +61,6 @@
       "note": ""
     },
     {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "80718f7e47bb33528060035f48ab67f8c595f32f392997a2624e03b6a666dcf0",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 181,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Entry.published.first.permalink_url, :status => 302)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "latest"
-      },
-      "user_input": "Entry.published.first.permalink_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "affb44d15a29678b164651c0e809abe9e2f9ff17193f581c1fe26f6fe85964fd",
@@ -157,28 +137,8 @@
       "user_input": "Entry.find(params[:entry_id]).photos.find(params[:id]).image.service_url(:disposition => :attachment)",
       "confidence": "High",
       "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "f135bc6b94485279758c5a28cfffd7a8ece0907bf0b228b5b1a1fa0bb37b6d97",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 133,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Blog.first.entries.joins(:photos).published.where(\"photos.id = ?\", params[:id]).first.permalink_url, :status => 301)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "photo"
-      },
-      "user_input": "Blog.first.entries.joins(:photos).published.where(\"photos.id = ?\", params[:id]).first.permalink_url",
-      "confidence": "High",
-      "note": ""
     }
   ],
-  "updated": "2020-02-15 17:56:40 -0700",
+  "updated": "2020-02-15 17:57:58 -0700",
   "brakeman_version": "4.3.1"
 }
