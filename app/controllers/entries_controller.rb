@@ -87,8 +87,8 @@ class EntriesController < ApplicationController
     if stale?(@entry, public: true)
       respond_to do |format|
         format.html {
+          redirect_to(@entry.permalink_url, status: 301) if request.path != @entry.permalink_path
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
-          redirect_to(@entry.permalink_url, status: 301) unless params_match(@entry, params)
         }
         format.all { redirect_to(@entry.permalink_url, status: 301) }
       end
@@ -168,18 +168,6 @@ class EntriesController < ApplicationController
   end
 
   private
-  def params_match(entry, params)
-    entry_date = entry.published_at
-    year = entry_date.strftime('%Y')
-    month = entry_date.strftime('%-m')
-    day = entry_date.strftime('%-d')
-    slug = entry.slug
-
-    year == params[:year] &&
-    month == params[:month] &&
-    day == params[:day] &&
-    slug == params[:slug]
-  end
 
   def set_sitemap_entry_count
     @entries_per_sitemap = 100
