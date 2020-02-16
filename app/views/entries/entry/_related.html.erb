@@ -1,14 +1,3 @@
-<% cache @entry, expires_in: 1.day do %>
-  <% related = @entry.related %>
-  <% if related.present? %>
-    <aside role="complementary">
-      <h2 class="entry__related">Other Photos You Might Like</h2>
-      <ol class="entry-list entry-list--related">
-        <%= render partial: 'entries/grid/square',
-                    collection: related,
-                    as: :entry,
-                    cached: true %>
-      </ol>
-    </aside>
-  <% end %>
-<% end %>
+<div data-controller="related-entries" data-related-entries-url="<%= related_url(entry, format: 'js') %>">
+  <%= render partial: 'partials/loading', locals: { target: 'related-entries.spinner' } %>
+</div>
