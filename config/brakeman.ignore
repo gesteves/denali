@@ -43,6 +43,26 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
+      "fingerprint": "21664128d18bcb21fe8275a21b3884ce4898454db8b77f269c561cf440d64875",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/entries_controller.rb",
+      "line": 174,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Blog.first.entries.published.offset(rand(Blog.first.entries.published.count)).first.permalink_url, :status => 302)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EntriesController",
+        "method": "random"
+      },
+      "user_input": "Blog.first.entries.published.offset(rand(Blog.first.entries.published.count)).first.permalink_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
       "fingerprint": "30765f45976d7da9017ec6ae863281c65499ba693555792da5dfe57f3f8b1e7b",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
@@ -101,26 +121,6 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
-      "fingerprint": "cc0c60ef69c97fd0af1b674d7c74ed66437f1de617c931201e16fc7525990931",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 174,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Entry.published.offset(rand(Entry.published.count)).first.permalink_url, :status => 302)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "random"
-      },
-      "user_input": "Entry.published.offset(rand(Entry.published.count)).first.permalink_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
       "fingerprint": "cd0fcda410baf9192b1323dfc87f86c6aee744df89f99075490c1a1b346b11b9",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
@@ -159,6 +159,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-02-19 08:49:49 -0700",
+  "updated": "2020-02-19 08:50:30 -0700",
   "brakeman_version": "4.3.1"
 }

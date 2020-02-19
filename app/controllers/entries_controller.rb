@@ -169,8 +169,8 @@ class EntriesController < ApplicationController
 
   def random
     expires_now
-    count = Entry.published.count
-    entry = Entry.published.offset(rand(count)).first
+    count = @photoblog.entries.published.count
+    entry = @photoblog.entries.published.offset(rand(count)).first
     redirect_to entry.permalink_url, status: 302
   end
 
