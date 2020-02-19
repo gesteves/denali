@@ -7,7 +7,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 91,
+      "line": 90,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Blog.first.entries.published.find(params[:id]).permalink_url, :status => 301)",
       "render_path": null,
@@ -101,6 +101,26 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
+      "fingerprint": "cc0c60ef69c97fd0af1b674d7c74ed66437f1de617c931201e16fc7525990931",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/entries_controller.rb",
+      "line": 174,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Entry.published.offset(rand(Entry.published.count)).first.permalink_url, :status => 302)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EntriesController",
+        "method": "random"
+      },
+      "user_input": "Entry.published.offset(rand(Entry.published.count)).first.permalink_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
       "fingerprint": "cd0fcda410baf9192b1323dfc87f86c6aee744df89f99075490c1a1b346b11b9",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
@@ -139,6 +159,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-02-15 17:57:58 -0700",
+  "updated": "2020-02-19 08:49:49 -0700",
   "brakeman_version": "4.3.1"
 }
