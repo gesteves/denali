@@ -167,13 +167,6 @@ class EntriesController < ApplicationController
     end
   end
 
-  def random
-    expires_now
-    count = @photoblog.entries.published.count
-    entry = @photoblog.entries.published.offset(rand(count)).first
-    redirect_to entry.permalink_url, status: 302
-  end
-
   private
 
   def set_sitemap_entry_count
