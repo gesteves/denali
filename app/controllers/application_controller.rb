@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
 
   before_action :get_photoblog
   before_action :domain_redirect
-  before_action :set_app_version
   before_action :set_link_headers
   before_action :set_referrer_policy
   around_action :set_time_zone
@@ -67,12 +66,6 @@ class ApplicationController < ActionController::Base
 
   def set_max_age(minutes: ENV['config_cloudfront_ttl_minutes'].to_i)
     response.headers['Cache-Control'] = "s-maxage=#{minutes.minutes}, max-age=0, public"
-  end
-
-  def set_app_version
-    # Requires enabling dyno metadata with `heroku labs:enable runtime-dyno-metadata`
-    # See: https://devcenter.heroku.com/articles/dyno-metadata
-    @app_version = ENV['HEROKU_RELEASE_VERSION'] || 'v1'
   end
 
   def add_preload_link_header(url, opts = {})
