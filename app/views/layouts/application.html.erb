@@ -11,7 +11,7 @@
   <% end %>
   <%= yield :javascript %>
   <%= javascript_pack_tag 'application', defer: true %>
-  <%= render partial: 'partials/analytics' %>
+  <%= @photoblog.analytics&.html_safe if Rails.env.production? %>
 </head>
 <body>
 <%= render partial: 'partials/header.html.erb' %>
