@@ -8,4 +8,12 @@ class ApplicationRecord < ActiveRecord::Base
       super
     end
   end
+
+  def self.collection_cache_key(collection, timestamp_column)
+    if heroku_release_version = ENV['HEROKU_RELEASE_VERSION']
+      "#{heroku_release_version}/#{super}"
+    else
+      super
+    end
+  end
 end
