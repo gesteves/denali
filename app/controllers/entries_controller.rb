@@ -65,7 +65,7 @@ class EntriesController < ApplicationController
   def search
     raise ActionController::RoutingError.new('Not Found') unless @photoblog.has_search?
     @page = (params[:page] || 1).to_i
-    @count = @photoblog.posts_per_page
+    @count = 48
     @query = params[:q]
     if @query.present?
       results = Entry.published_search(@query, @page, @count)
