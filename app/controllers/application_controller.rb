@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
 
   before_action :get_photoblog
   before_action :domain_redirect
-  before_action :set_link_headers
   before_action :set_referrer_policy
   around_action :set_time_zone
 
@@ -85,14 +84,6 @@ class ApplicationController < ActionController::Base
     link += "; crossorigin=#{opts[:crossorigin]}" if opts[:crossorigin].present?
     links << link
     response.headers['Link'] = links.compact.join(', ')
-  end
-
-  def set_link_headers
-    if request.format.html?
-      ENV['imgix_domain'].split(',').each do |domain|
-        add_preconnect_link_header("http#{'s' if ENV['imgix_secure'].present?}://#{domain}")
-      end
-    end
   end
 
   def set_referrer_policy

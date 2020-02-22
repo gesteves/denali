@@ -2,14 +2,12 @@ class EntriesController < ApplicationController
   include TagList
 
   skip_before_action :verify_authenticity_token
-  skip_before_action :set_link_headers, only: [:show, :preview, :amp]
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, except: [:show, :amp, :preview]
   before_action -> { set_max_age(minutes: ENV['config_cloudfront_ttl_minutes_entries'].to_i) }, only: [:show, :preview]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
   before_action :set_preview_entry, only: [:preview]
-  before_action :preload_photos, only: [:show, :preview]
 
   def index
     @page = (params[:page] || 1).to_i
@@ -17,6 +15,7 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @page > 1 && @entries.empty? && request.format != 'js'
     if stale?(@entries, public: true)
+      set_link_headers
       respond_to do |format|
         format.html {
           if @page.nil? || @page == 1
@@ -44,6 +43,7 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
     if stale?(@entries, public: true)
+      set_link_headers
       respond_to do |format|
         format.html {
           @page_title = "#{@tags.first.name} · #{@photoblog.name}"
@@ -85,6 +85,7 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@entry, public: true)
+      preload_photos
       respond_to do |format|
         format.html {
           redirect_to(@entry.permalink_url, status: 301) if request.path != @entry.permalink_path
@@ -103,6 +104,7 @@ class EntriesController < ApplicationController
 
   def preview
     if stale?(@entry, public: true, template: 'entries/show')
+      preload_photos
       respond_to do |format|
         format.html {
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
@@ -186,6 +188,14 @@ class EntriesController < ApplicationController
     @entry.photos.each do |photo|
       src, srcset = photo.srcset('entry')
       add_preload_link_header(src, as: 'image', imagesizes: sizes, imagesrcset: srcset)
+    end
+  end
+
+  def set_link_headers
+    if request.format.html?
+      ENV['imgix_domain'].split(',').each do |domain|
+        add_preconnect_link_header("http#{'s' if ENV['imgix_secure'].present?}://#{domain}")
+      end
     end
   end
 end
