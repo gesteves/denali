@@ -1,6 +1,6 @@
 <% if photo.camera.present? %>
   <p class="exif">
-    Taken with <%= "#{photo.camera.article} #{photo.camera.display_name}" %>
+    Photographed with <%= "#{photo.camera.article} #{photo.camera.display_name}" %>
     <% if photo.lens.present? && !photo.camera.is_phone? %>
       + <%= photo.lens.display_name %>
     <% end %>
