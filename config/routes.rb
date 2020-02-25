@@ -87,9 +87,9 @@ Rails.application.routes.draw do
   get '/sitemap/:page.:format'         => 'entries#sitemap', defaults: { format: 'xml' }, :as => :sitemap
 
   # Legacy routes & redirects
-  get '/archive(/:year)(/:month)'      => 'legacy#archive'
-  get '/rss'                           => 'legacy#rss'
-  get '/index.html',                   to: redirect('/')
+  get '/archive(/:year)(/:month)'      => 'legacy#home'
+  get '/index.html'                    => 'legacy#home'
+  get '/rss'                           => 'legacy#feed'
   get '/service_worker.:format'        => 'errors#file_not_found'
 
   # Feeds
