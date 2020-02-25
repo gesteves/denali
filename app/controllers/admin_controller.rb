@@ -1,7 +1,7 @@
 class AdminController < ApplicationController
   layout 'admin'
   before_action :block_cloudfront
-  before_action :block_heroku
+  before_action :redirect_heroku
   before_action :no_cache
   before_action :require_login
   skip_before_action :domain_redirect
@@ -27,7 +27,7 @@ class AdminController < ApplicationController
     response.headers['Referrer-Policy'] = 'same-origin'
   end
 
-  def block_heroku
-    raise ActionController::RoutingError.new('Not Found') if request.host.match? /herokuapp\.com/
+  def redirect_heroku
+    redirect_to root_url(host: ENV['domain']) if request.host.match? /herokuapp\.com/
   end
 end
