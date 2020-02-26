@@ -31,7 +31,7 @@
     <% end %>
     <meta name="twitter:card" content="summary">
     <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'atom', tag: @tag_slug), title: sanitize("#{@tags.first.name} · #{@photoblog.name}") %>
-    <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'rss', tag: @tag_slug), title: sanitize("#{@tags.first.name} · #{@photoblog.name}") %>
+    <%= auto_discovery_link_tag :rss, tag_feed_url(format: 'rss', tag: @tag_slug), title: sanitize("#{@tags.first.name} · #{@photoblog.name}") %>
     <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'json', tag: @tag_slug), title: sanitize("#{@tags.first.name} · #{@photoblog.name}"), type: 'application/json' %>
   <% end %>
 <% end %>
