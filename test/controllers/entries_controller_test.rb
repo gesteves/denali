@@ -41,6 +41,12 @@ class EntriesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "should generate rss feed" do
+    get :feed, params: { format: 'rss' }
+    assert_template :feed
+    assert_response :success
+  end
+
   test "should redirect to atom feed from unknown format" do
     get :feed, params: { format: 'foo' }
     assert_redirected_to feed_url(format: 'atom', page: nil)
@@ -118,6 +124,15 @@ class EntriesControllerTest < ActionController::TestCase
     entry.tag_list = 'washington'
     entry.save
     get :tag_feed, params: { tag: 'washington', format: 'atom' }
+    assert_template :tag_feed
+    assert_response :success
+  end
+
+  test 'should render tag rss feed' do
+    entry = entries(:peppers)
+    entry.tag_list = 'washington'
+    entry.save
+    get :tag_feed, params: { tag: 'washington', format: 'rss' }
     assert_template :tag_feed
     assert_response :success
   end
