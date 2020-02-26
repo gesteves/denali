@@ -42,7 +42,7 @@ class EntriesControllerTest < ActionController::TestCase
   end
 
   test "should redirect to atom feed from unknown format" do
-    get :feed, params: { format: 'rss' }
+    get :feed, params: { format: 'foo' }
     assert_redirected_to feed_url(format: 'atom', page: nil)
   end
 
@@ -126,7 +126,7 @@ class EntriesControllerTest < ActionController::TestCase
     entry = entries(:peppers)
     entry.tag_list = 'washington'
     entry.save
-    get :tag_feed, params: { tag: 'washington', format: 'rss' }
+    get :tag_feed, params: { tag: 'washington', format: 'foo' }
     assert_redirected_to tag_feed_url(format: 'atom', page: nil, tag: 'washington')
   end
 end
