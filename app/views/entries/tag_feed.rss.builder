@@ -1,4 +1,4 @@
-cache @photoblog do
+cache [@photoblog, @tag_slug] do
   xml.instruct!
   xml.rss version: '2.0', 'xmlns:atom': 'http://www.w3.org/2005/Atom', 'xmlns:media': 'http://search.yahoo.com/mrss/' do
     xml.channel do
