@@ -33,8 +33,6 @@
     <% end %>
     <meta name="twitter:card" content="summary">
     <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
-    <%= auto_discovery_link_tag :rss, feed_url(format: 'rss'), title: @photoblog.name %>
-    <%= auto_discovery_link_tag :atom, feed_url(format: 'json'), title: @photoblog.name, type: 'application/json' %>
   <% end %>
 <% end %>
 

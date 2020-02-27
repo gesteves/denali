@@ -29,6 +29,7 @@
     <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
   <% end %>
   <meta name="twitter:card" content="summary">
+  <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
 <% end %>
 <% end %>
 
