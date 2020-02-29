@@ -7,7 +7,6 @@ class EntriesController < ApplicationController
   before_action -> { set_max_age(minutes: ENV['config_cloudfront_ttl_minutes_entries'].to_i) }, only: [:show, :preview, :related]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
-  before_action :set_preview_entry, only: [:preview]
 
   def index
     @page = (params[:page] || 1).to_i
@@ -88,7 +87,7 @@ class EntriesController < ApplicationController
       preload_photos
       respond_to do |format|
         format.html {
-          redirect_to(@entry.permalink_url, status: 301) if request.path != @entry.permalink_path
+          redirect_to @entry.permalink_url, status: 301 if @entry.is_published? && request.path != @entry.permalink_path
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
         }
         format.all { redirect_to(@entry.permalink_url, status: 301) }
@@ -99,22 +98,6 @@ class EntriesController < ApplicationController
   def amp
     http_cache_forever(public: true) do
       redirect_to(@entry.permalink_url, status: 301)
-    end
-  end
-
-  def preview
-    if stale?(@entry, public: true, template: 'entries/show')
-      preload_photos
-      respond_to do |format|
-        format.html {
-          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
-          if @entry.is_published?
-            redirect_to @entry.permalink_url
-          else
-            render :show
-          end
-        }
-      end
     end
   end
 
@@ -184,11 +167,11 @@ class EntriesController < ApplicationController
   end
 
   def set_entry
-    @entry = @photoblog.entries.published.find(params[:id])
-  end
-
-  def set_preview_entry
-    @entry = @photoblog.entries.find_by!(preview_hash: params[:preview_hash])
+    @entry = if params[:id].present?
+      @photoblog.entries.published.find(params[:id])
+     elsif params[:preview_hash].present?
+       @photoblog.entries.find_by!(preview_hash: params[:preview_hash])
+     end
   end
 
   def preload_photos
