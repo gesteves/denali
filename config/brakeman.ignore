@@ -1,66 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "019a04ce72debbe6a20b331b6af4a7a047a79fc244b3e8eac1c91afc328e5020",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 91,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Blog.first.entries.published.find(params[:id]).permalink_url, :status => 301)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "show"
-      },
-      "user_input": "Blog.first.entries.published.find(params[:id]).permalink_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "019a04ce72debbe6a20b331b6af4a7a047a79fc244b3e8eac1c91afc328e5020",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 94,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Blog.first.entries.published.find(params[:id]).permalink_url, :status => 301)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "show"
-      },
-      "user_input": "Blog.first.entries.published.find(params[:id]).permalink_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "30765f45976d7da9017ec6ae863281c65499ba693555792da5dfe57f3f8b1e7b",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 101,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Blog.first.entries.published.find(params[:id]).permalink_url, :status => 301)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "amp"
-      },
-      "user_input": "Blog.first.entries.published.find(params[:id]).permalink_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "affb44d15a29678b164651c0e809abe9e2f9ff17193f581c1fe26f6fe85964fd",
@@ -89,7 +29,7 @@
       "line": 6,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Blog.first.header_logo_svg",
-      "render_path": [{"type":"controller","class":"AdminController","method":"default_url_options","line":11,"file":"app/controllers/admin_controller.rb"},{"type":"template","name":"layouts/admin","line":20,"file":"app/views/layouts/admin.html.erb"}],
+      "render_path": [{"type":"controller","class":"AdminController","method":"default_url_options","line":12,"file":"app/controllers/admin_controller.rb"},{"type":"template","name":"layouts/admin","line":20,"file":"app/views/layouts/admin.html.erb"}],
       "location": {
         "type": "template",
         "template": "admin/shared/_nav"
@@ -117,28 +57,8 @@
       "user_input": "Entry.find(params[:entry_id]).photos.find(params[:id]).image.service_url(:disposition => :attachment)",
       "confidence": "High",
       "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "fcd0779680c2d163e862b0bed4a141e254614b79d94bf2a37234bb5ef94e7bfc",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 112,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Blog.first.entries.find_by!(:preview_hash => params[:preview_hash]).permalink_url)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "preview"
-      },
-      "user_input": "Blog.first.entries.find_by!(:preview_hash => params[:preview_hash]).permalink_url",
-      "confidence": "High",
-      "note": ""
     }
   ],
-  "updated": "2020-02-22 13:41:12 -0700",
+  "updated": "2020-02-29 07:12:09 -0700",
   "brakeman_version": "4.3.1"
 }
