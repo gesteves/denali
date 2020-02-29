@@ -122,11 +122,15 @@ class Entry < ApplicationRecord
   end
 
   def self.find_by_url(url:)
+    valid_controllers = ['entries']
+    valid_actions = ['show', 'amp']
     url = Rails.application.routes.recognize_path(url)
-    if url[:controller] == 'entries' && url[:action] == 'show' && url[:id].present?
+    raise ActiveRecord::RecordNotFound unless valid_controllers.include?(url[:controller]) && valid_actions.include?(url[:action])
+
+    if url[:id].present?
       Entry.published.find(url[:id])
-    elsif url[:controller] == 'entries' && url[:action] == 'show' && url[:preview_hash].present?
-      Entry.where(preview_hash: url[:preview_hash]).limit(1).first
+    elsif url[:preview_hash].present?
+      Entry.find_by!(preview_hash: url[:preview_hash])
     else
       raise ActiveRecord::RecordNotFound
     end

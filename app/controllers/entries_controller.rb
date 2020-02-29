@@ -167,11 +167,7 @@ class EntriesController < ApplicationController
   end
 
   def set_entry
-    @entry = if params[:id].present?
-      @photoblog.entries.published.find(params[:id])
-     elsif params[:preview_hash].present?
-       @photoblog.entries.find_by!(preview_hash: params[:preview_hash])
-     end
+    @entry = Entry.find_by_url(url: request.path)
   end
 
   def preload_photos
