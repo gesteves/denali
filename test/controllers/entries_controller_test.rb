@@ -85,6 +85,19 @@ class EntriesControllerTest < ActionController::TestCase
     assert_template :related
   end
 
+  test 'should render related entries for previews' do
+    panda = entries(:panda)
+    get :related, params: { preview_hash: panda.preview_hash, format: 'js' }
+    assert_response :success
+    assert_template :related
+  end
+
+  test 'should redirect related entries previews if entry published' do
+    peppers = entries(:peppers)
+    get :related, params: { preview_hash: peppers.preview_hash, format: 'js' }
+    assert_redirected_to related_url(peppers, format: 'js')
+  end
+
   test 'should redirect published photos from preview page' do
     entry = entries(:peppers)
     get :preview, params: { preview_hash: entry.preview_hash }

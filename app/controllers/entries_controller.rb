@@ -121,9 +121,15 @@ class EntriesController < ApplicationController
   def related
     raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_related_entries?
     if stale?(@photoblog, public: true)
-      @entry = @photoblog.entries.find(params[:id])
+      @entry = if params[:id].present?
+       @photoblog.entries.published.find(params[:id])
+      elsif params[:preview_hash].present?
+        @photoblog.entries.find_by!(preview_hash: params[:preview_hash])
+      end
       respond_to do |format|
-        format.js
+        format.js {
+          redirect_to related_url(@entry, format: 'js'), status: 301 if params[:preview_hash].present? && @entry.is_published?
+        }
       end
     end
   end

@@ -79,6 +79,7 @@ Rails.application.routes.draw do
   get '/e/:id'                              => 'entries#show',        constraints: { id: /\d+/ }, :as => :entry
   get '/related/:id.:format'                => 'entries#related',     constraints: { id: /\d+/ }, :as => :related
   get '/preview/:preview_hash'              => 'entries#preview',     defaults: { format: 'html' }, :as => :preview_entry
+  get '/related/:preview_hash.:format'      => 'entries#related',     :as => :related_preview
   get '/:year/:month/:day/:id(/:slug)'      => 'entries#show',        constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_long
   get '/amp/:year/:month/:day/:id(/:slug)'  => 'entries#amp',         constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_amp
 
