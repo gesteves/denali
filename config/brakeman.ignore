@@ -1,6 +1,26 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "605ddb785e21c9dac0eba35f0b914b3373d41913e3373c3a670a87452a24391d",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/entries_controller.rb",
+      "line": 100,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EntriesController",
+        "method": "amp"
+      },
+      "user_input": "Entry.find_by_url(:url => request.path).permalink_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "affb44d15a29678b164651c0e809abe9e2f9ff17193f581c1fe26f6fe85964fd",
@@ -41,6 +61,46 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
+      "fingerprint": "cb4fa5a9c2f7dac630d20485578a8617209de4d65887b070f95de182cff1f84c",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/entries_controller.rb",
+      "line": 90,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EntriesController",
+        "method": "show"
+      },
+      "user_input": "Entry.find_by_url(:url => request.path).permalink_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
+      "fingerprint": "cb4fa5a9c2f7dac630d20485578a8617209de4d65887b070f95de182cff1f84c",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/entries_controller.rb",
+      "line": 93,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EntriesController",
+        "method": "show"
+      },
+      "user_input": "Entry.find_by_url(:url => request.path).permalink_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
       "fingerprint": "d77ec4aa1c285840f50ac0ac7a1543ab0450a2e899ff4adbcf28aa02935edc9a",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
@@ -59,6 +119,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-02-29 07:12:09 -0700",
+  "updated": "2020-02-29 13:53:46 -0700",
   "brakeman_version": "4.3.1"
 }
