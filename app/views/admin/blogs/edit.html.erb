@@ -94,6 +94,37 @@
   </div>
 
   <hr class="hr">
+  <h2 class="subtitle is-size-5-mobile">Analytics</h2>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :analytics_head, 'Head analytics', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_area :analytics_head, class: 'textarea' %>
+        </div>
+        <p class="help">Use this for analytics script tags; these will appear at the end of the &lt;head&gt; element.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :analytics_body, 'Body analytics', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_area :analytics_body, class: 'textarea' %>
+        </div>
+        <p class="help">Use this for analytics tracking pixels; these will appear at the end of the &lt;body&gt; element.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
   <h2 class="subtitle is-size-5-mobile">Social & links</h2>
 
   <div class="field is-horizontal">

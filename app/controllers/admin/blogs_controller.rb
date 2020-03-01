@@ -34,7 +34,7 @@ class Admin::BlogsController < AdminController
 
   def blog_params
     params.require(:blog).permit(:name, :tag_line, :posts_per_page, :about, :copyright,
-                                 :show_related_entries, :analytics_code,
+                                 :show_related_entries, :analytics_head, :analytics_body,
                                  :instagram, :twitter, :tumblr, :email, :flickr,
                                  :header_logo_svg, :additional_meta_tags,
                                  :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description, :map_style)

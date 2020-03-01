@@ -11,11 +11,12 @@
   <% end %>
   <%= yield :javascript %>
   <%= javascript_pack_tag 'application', defer: true %>
-  <%= render partial: 'partials/analytics' %>
+  <%= render partial: 'partials/analytics_head' %>
 </head>
 <body>
-<%= render partial: 'partials/header.html.erb' %>
+<%= render partial: 'partials/header' %>
 <%= yield %>
-<%= render partial: 'partials/footer.html.erb' %>
+<%= render partial: 'partials/footer' %>
+<%= render partial: 'partials/analytics_body' %>
 </body>
 </html>
