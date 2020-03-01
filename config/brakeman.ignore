@@ -1,6 +1,25 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "422698cf1cf8c9a53922b81e2ee40912363c81569321b23a3c3f05dc577c90f4",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/partials/_analytics_body.html.erb",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Blog.first.analytics_body",
+      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":6,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":20,"file":"app/views/layouts/application.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "partials/_analytics_body"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "605ddb785e21c9dac0eba35f0b914b3373d41913e3373c3a670a87452a24391d",
@@ -17,6 +36,44 @@
         "method": "amp"
       },
       "user_input": "Entry.find_by_url(:url => request.path).permalink_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "8256767b6116f7c53b02bbcbf8ab0588ed75b9ff68fa39c2dfadfaac124fef56",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/partials/_header.html.erb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Blog.first.header_logo_svg",
+      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":6,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":17,"file":"app/views/layouts/application.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "partials/_header"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "a67b26dab6a355399f3b49c17a9cbf79c8feec15d3bda99304a20bcb18b80510",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/partials/_analytics_head.html.erb",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Blog.first.analytics_head",
+      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":6,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":14,"file":"app/views/layouts/application.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "partials/_analytics_head"
+      },
+      "user_input": null,
       "confidence": "High",
       "note": ""
     },
@@ -65,7 +122,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 90,
+      "line": 93,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
       "render_path": null,
@@ -85,7 +142,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 93,
+      "line": 90,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
       "render_path": null,
@@ -119,6 +176,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-02-29 13:53:46 -0700",
+  "updated": "2020-03-01 15:11:32 -0700",
   "brakeman_version": "4.3.1"
 }
