@@ -87,7 +87,7 @@ class EntriesController < ApplicationController
       preload_photos
       respond_to do |format|
         format.html {
-          redirect_to @entry.permalink_url, status: 301 if @entry.is_published? && request.path != @entry.permalink_path
+          redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
           @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
         }
         format.all { redirect_to(@entry.permalink_url, status: 301) }
