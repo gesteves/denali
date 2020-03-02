@@ -17,7 +17,7 @@ class Admin::BlogsController < AdminController
   def update
     respond_to do |format|
       if @photoblog.update(blog_params)
-        CacheVersionWorker.perform_async if blog_params[:update_cache_version] == 'true'
+        HerokuConfigWorker.perform_async(heroku_configs(blog_params))
         format.html {
           flash[:success] = 'Your changes were saved!'
           redirect_to edit_admin_blog_path(@photoblog)
@@ -39,5 +39,11 @@ class Admin::BlogsController < AdminController
                                  :instagram, :twitter, :tumblr, :email, :flickr,
                                  :header_logo_svg, :additional_meta_tags, :update_cache_version,
                                  :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description, :map_style)
+  end
+
+  def heroku_configs(params)
+    config = {}
+    config['CACHE_VERSION'] = Time.now.to_i if params[:update_cache_version] == 'true'
+    config.compact
   end
 end
