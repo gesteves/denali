@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
     expires_now
   end
 
-  def set_max_age(minutes: ENV['config_cloudfront_ttl_minutes'].to_i)
+  def set_max_age(minutes: ENV['CACHE_TTL'].to_i)
     response.headers['Cache-Control'] = "s-maxage=#{minutes.minutes}, max-age=0, public"
   end
 

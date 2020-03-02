@@ -11,7 +11,7 @@ class Blog < ApplicationRecord
 
   validates :name, :tag_line, :about, presence: true
 
-  attr_accessor :update_cache_version
+  attr_accessor :update_cache_version, :cache_ttl, :cache_entry_ttl
 
   def formatted_tag_line
     markdown_to_html(self.tag_line)

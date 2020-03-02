@@ -374,6 +374,32 @@
   </div>
 
   <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :cache_ttl, 'Minutes to cache pages for', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field is-narrow">
+        <div class="control">
+          <%= f.number_field :cache_ttl, value: ENV['CACHE_TTL'].to_i, min: 0, max: 10080, pattern: '\d+', class: 'input', required: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :cache_entry_ttl, 'Minutes to cache entries for', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field is-narrow">
+        <div class="control">
+          <%= f.number_field :cache_entry_ttl, value: ENV['CACHE_ENTRY_TTL'].to_i, min: 0, max: 10080, pattern: '\d+', class: 'input', required: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
     <div class="field-label">
       <%= f.label :update_cache_version, 'Expire caches after saving', class: 'label' %>
     </div>

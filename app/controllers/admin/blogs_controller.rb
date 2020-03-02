@@ -37,13 +37,17 @@ class Admin::BlogsController < AdminController
     params.require(:blog).permit(:name, :tag_line, :posts_per_page, :about, :copyright,
                                  :show_related_entries, :analytics_head, :analytics_body,
                                  :instagram, :twitter, :tumblr, :email, :flickr,
-                                 :header_logo_svg, :additional_meta_tags, :update_cache_version,
-                                 :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description, :map_style)
+                                 :header_logo_svg, :additional_meta_tags,
+                                 :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description, :map_style,
+                                 :update_cache_version, :cache_entry_ttl, :cache_ttl)
   end
 
   def heroku_configs(params)
-    config = {}
-    config['CACHE_VERSION'] = Time.now.to_i if params[:update_cache_version] == 'true'
-    config.compact
+    config = {
+      CACHE_TTL: params[:cache_ttl]&.to_s,
+      CACHE_ENTRY_TTL: params[:cache_entry_ttl]&.to_s,
+    }.compact
+    config.merge!(CACHE_VERSION: Time.now.to_i.to_s) if params[:update_cache_version] == 'true'
+    config.reject { |k,v| v == ENV[k.to_s] }
   end
 end

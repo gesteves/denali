@@ -4,7 +4,7 @@ class EntriesController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, except: [:show, :amp, :preview, :related]
-  before_action -> { set_max_age(minutes: ENV['config_cloudfront_ttl_minutes_entries'].to_i) }, only: [:show, :preview, :related]
+  before_action -> { set_max_age(minutes: ENV['CACHE_ENTRY_TTL'].to_i) }, only: [:show, :preview, :related]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
 
