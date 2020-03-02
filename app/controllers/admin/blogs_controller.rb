@@ -17,6 +17,7 @@ class Admin::BlogsController < AdminController
   def update
     respond_to do |format|
       if @photoblog.update(blog_params)
+        CacheVersionWorker.perform_async if blog_params[:update_cache_version] == 'true'
         format.html {
           flash[:success] = 'Your changes were saved!'
           redirect_to edit_admin_blog_path(@photoblog)
@@ -36,7 +37,7 @@ class Admin::BlogsController < AdminController
     params.require(:blog).permit(:name, :tag_line, :posts_per_page, :about, :copyright,
                                  :show_related_entries, :analytics_head, :analytics_body,
                                  :instagram, :twitter, :tumblr, :email, :flickr,
-                                 :header_logo_svg, :additional_meta_tags,
+                                 :header_logo_svg, :additional_meta_tags, :update_cache_version,
                                  :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description, :map_style)
   end
 end
