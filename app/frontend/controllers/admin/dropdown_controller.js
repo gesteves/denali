@@ -20,8 +20,22 @@ export default class extends Controller {
    */
   toggle (event) {
     event.preventDefault();
+    event.stopPropagation();
     if (!this.isHoverable) {
+      if (!this.element.classList.contains('is-active')) {
+        document.dispatchEvent(new CustomEvent('closeDropdowns'));
+      }
       this.element.classList.toggle('is-active');
+    }
+  }
+
+  /**
+   * Closes the dropdown menu
+   * @param {Event} event Click event from the document.
+   */
+  close () {
+    if (!this.isHoverable) {
+      this.element.classList.remove('is-active');
     }
   }
 }
