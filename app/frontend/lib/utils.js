@@ -52,5 +52,5 @@ export function sendNotification (message, status = 'success') {
  * @return {boolean} Whether or not the device supports hover
  */
 export function supportsHover () {
-  return window.matchMedia('(hover: hover)').matches
+  return window.matchMedia('(hover: hover)').matches;
 }
