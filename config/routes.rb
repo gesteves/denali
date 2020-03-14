@@ -92,6 +92,7 @@ Rails.application.routes.draw do
   get '/index.html'                    => 'legacy#home'
   get '/rss'                           => 'legacy#feed'
   get '/service_worker.:format'        => 'errors#file_not_found'
+  get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
 
   # Feeds
   get '/feed(.:format)'             => 'entries#feed', defaults: { format: 'atom' }, :as => :feed

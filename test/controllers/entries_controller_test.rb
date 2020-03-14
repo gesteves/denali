@@ -157,4 +157,10 @@ class EntriesControllerTest < ActionController::TestCase
     get :tag_feed, params: { tag: 'washington', format: 'foo' }
     assert_redirected_to tag_feed_url(format: 'atom', page: nil, tag: 'washington')
   end
+
+  test 'should redirect from tumblr url' do
+    get :tumblr, params: { tumblr_id: '17444976847' }
+    entry = entries(:peppers)
+    assert_redirected_to entry.permalink_url
+  end
 end

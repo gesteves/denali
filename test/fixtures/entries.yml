@@ -14,6 +14,7 @@ peppers:
   post_to_facebook: true
   post_to_flickr: true
   preview_hash: 2fe91153a0f6b165854a632f4c0a9d9c43f3a62321f8c6d3453ef758b6a4c815
+  tumblr_id: '17444976847'
 
 potomac:
   title: Potomac Avenue Metro station, Washington, DC. July 3rd, 2011.

@@ -3,6 +3,26 @@
     {
       "warning_type": "Redirect",
       "warning_code": 18,
+      "fingerprint": "2a5db2d1e524117ffcd3d3efa02578006ca7af74b33e5a4c43d9416a6499cb07",
+      "check_name": "Redirect",
+      "message": "Possible unprotected redirect",
+      "file": "app/controllers/entries_controller.rb",
+      "line": 166,
+      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
+      "code": "redirect_to(Blog.first.entries.published.where(:tumblr_id => params[:tumblr_id]).order(\"published_at ASC\").first.permalink_url, :status => 301)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "EntriesController",
+        "method": "tumblr"
+      },
+      "user_input": "Blog.first.entries.published.where(:tumblr_id => params[:tumblr_id]).order(\"published_at ASC\").first.permalink_url",
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Redirect",
+      "warning_code": 18,
       "fingerprint": "605ddb785e21c9dac0eba35f0b914b3373d41913e3373c3a670a87452a24391d",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
@@ -176,6 +196,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-03-01 15:33:24 -0700",
+  "updated": "2020-03-14 17:29:36 -0600",
   "brakeman_version": "4.3.1"
 }

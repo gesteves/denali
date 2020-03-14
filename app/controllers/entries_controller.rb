@@ -160,6 +160,13 @@ class EntriesController < ApplicationController
     end
   end
 
+  def tumblr
+    http_cache_forever(public: true) do
+      @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').limit(1).first
+      redirect_to(@entry.permalink_url, status: 301)
+    end
+  end
+
   private
 
   def set_sitemap_entry_count
