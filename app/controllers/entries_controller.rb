@@ -163,8 +163,10 @@ class EntriesController < ApplicationController
   def tumblr
     @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').limit(1).first
     raise ActiveRecord::RecordNotFound if @entry.blank?
-    http_cache_forever(public: true) do
-      redirect_to(@entry.permalink_url, status: 301)
+    if stale?(@entry, public: true)
+      respond_to do |format|
+        format.all { redirect_to(@entry.permalink_url, status: 301) }
+      end
     end
   end
 
