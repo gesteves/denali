@@ -12,5 +12,5 @@
   <% else %>
     entry
   <% end %>
-   , titled “<%= link_to entry.plain_title %>”, was originally published on <%= link_to @photoblog.name, root_url %>.
+   , titled “<%= link_to entry.plain_title, entry.permalink_url %>”, was originally published on <%= link_to @photoblog.name, root_url %>.
 </p>
