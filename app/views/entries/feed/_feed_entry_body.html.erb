@@ -4,5 +4,5 @@
 <%= sanitize entry.formatted_body unless entry.body.blank? %>
 <hr>
 <p>
-  This <% if entry.is_photoset? %>set of photographs<% elsif entry.is_photo? %>photograph<% else %>entry<% end %>, titled “<%= link_to entry.plain_title, entry.permalink_url %>”, was originally published on <%= link_to @photoblog.name, root_url %>.
+  This <% if entry.is_photoset? %>set of photographs<% elsif entry.is_photo? %>photograph<% else %>entry<% end %>, titled “<%= link_to entry.plain_title, entry.permalink_url %>”, was originally published by <%= entry.user.name %> on <%= link_to @photoblog.name, root_url %>.
 </p>
