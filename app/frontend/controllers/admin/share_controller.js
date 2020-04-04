@@ -19,7 +19,7 @@ export default class extends Controller {
   open (event) {
     event.preventDefault();
     navigator.share({
-      url: this.data.get('url'),
+      url: event.target.href,
     });
   }
 }
