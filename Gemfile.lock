@@ -333,7 +333,7 @@ DEPENDENCIES
   aws-sdk-cloudfront (~> 1)
   aws-sdk-s3 (~> 1)
   barnes
-  bootsnap (>= 1.1.0)
+  bootsnap
   brakeman
   byebug
   dalli
@@ -376,7 +376,7 @@ DEPENDENCIES
   webpacker
 
 RUBY VERSION
-   ruby 2.6.5p114
+   ruby 2.6.6p146
 
 BUNDLED WITH
    1.17.2

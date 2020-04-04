@@ -1,12 +1,12 @@
 source 'https://rubygems.org'
-ruby '2.6.5'
+ruby '2.6.6'
 
 gem 'rails', '5.2.2.1'
 gem 'pg', '~> 0.21'
 gem 'puma'
 
 # Reduces boot times through caching; required in config/boot.rb
-gem 'bootsnap', '>= 1.1.0', require: false
+gem 'bootsnap', require: false
 
 # Auth
 gem 'omniauth-google-oauth2'
