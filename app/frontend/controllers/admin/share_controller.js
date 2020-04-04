@@ -20,6 +20,6 @@ export default class extends Controller {
     event.preventDefault();
     navigator.share({
       url: event.target.href,
-    });
+    }).then(() => {}).catch(() => {});
   }
 }
