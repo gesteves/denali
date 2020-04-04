@@ -33,10 +33,6 @@
 <% end %>
 <% end %>
 
-<% content_for :typekit do %>
-  <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_body_id'] } if ENV['typekit_body_id'].present? && @photoblog.about.present? %>
-<% end %>
-
 <article class="entry entry--text">
   <div class="entry__body">
     <h2 class="entry__headline">About <%= @photoblog.name %></h2>

@@ -138,11 +138,7 @@
       "required": false
     },
     "typekit_id": {
-      "description": "Typekit ID for headlines and other text.",
-      "required": false
-    },
-    "typekit_body_id": {
-      "description": "Typekit ID for body text.",
+      "description": "Typekit ID.",
       "required": false
     },
     "HEROKU_APP_NAME": {

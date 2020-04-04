@@ -6,9 +6,6 @@
   <%= stylesheet_link_tag 'application', media: 'all' %>
   <%= yield :stylesheets %>
   <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} if ENV['typekit_id'].present? %>
-  <% if content_for? :typekit %>
-    <%= yield :typekit %>
-  <% end %>
   <%= yield :javascript %>
   <%= javascript_pack_tag 'application', defer: true %>
   <%= render partial: 'partials/analytics_head' %>
