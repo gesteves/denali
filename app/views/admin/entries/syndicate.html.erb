@@ -2,12 +2,12 @@
   <div class="modal-background" data-action="click->modal#close"></div>
   <div class="modal-card">
     <header class="modal-card-head">
-      <h1 class="modal-card-title">Share</h1>
+      <h1 class="modal-card-title">Syndication</h1>
       <button class="delete" data-action="click->modal#close"></button>
     </header>
     <section class="modal-card-body">
       <div class="buttons">
-        <% if @entry.is_photo? && @entry.is_published? %>
+        <% if @entry.is_photo? %>
           <%= link_to icon('Facebook', 'fab fa-facebook'), facebook_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Facebook queue in Buffer. Do you want to continue?' }, class: 'button' %>
           <%= link_to icon('Flickr', 'fab fa-flickr'), flickr_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to Flickr immediately. Do you want to continue?' }, class: 'button' %>
           <%= link_to icon('Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Instagram queue in Buffer. Do you want to continue?' }, class: 'button' %>
@@ -15,8 +15,6 @@
           <%= link_to icon('Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Twitter queue in Buffer. Do you want to continue?' }, class: 'button' %>
         <% end %>
       </div>
-      <hr class="hr">
-      <%= link_to icon('More options', 'fas fa-share-square'), '#', 'data-controller': 'share', 'data-action': 'click->share#open', 'data-share-url': @entry.permalink_url, class: 'button' %>
     </section>
     <footer class="modal-card-foot">
       <button class="button" data-action="click->modal#close">Done</button>

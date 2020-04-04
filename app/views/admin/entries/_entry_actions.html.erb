@@ -11,9 +11,7 @@
     <div class="dropdown-content">
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
       <% if entry.is_photo? && entry.is_published? %>
-        <%= link_to icon('Share', 'fas fa-share-square'), share_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
-      <% else %>
-        <%= link_to icon('Share', 'fas fa-share-square'), '#', 'data-controller': 'share', 'data-action': 'click->share#open', 'data-share-url': entry.permalink_url, class: 'dropdown-item' %>
+        <%= link_to icon('Syndication', 'fas fa-paper-plane'), syndicate_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <% if entry.is_photo? %>
         <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>

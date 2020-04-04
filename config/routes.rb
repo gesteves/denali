@@ -23,7 +23,7 @@ Rails.application.routes.draw do
 
     resources :entries, concerns: :paginatable do
       member do
-        get 'share'
+        get 'syndicate'
         get 'crops'
         get 'prints'
         post 'resize_photos'

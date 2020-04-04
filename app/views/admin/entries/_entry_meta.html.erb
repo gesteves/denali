@@ -18,6 +18,12 @@
       </div>
     </div>
   <% end %>
+  <div class="control" data-controller="share">
+    <div class="tags has-addons">
+        <span class="tag is-info"><i class="fas fa-share-square"></i></span>
+        <%= link_to 'Share', '#', 'data-action': 'click->share#open', 'data-share-url': entry.permalink_url, class: 'tag' %>
+    </div>
+  </div>
   <% cache entry do %>
     <div class="control">
       <div class="tags has-addons">

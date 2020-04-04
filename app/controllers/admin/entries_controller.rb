@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :share, :crops, :prints, :instagram, :facebook, :twitter, :tumblr, :flickr, :flush_caches, :refresh_metadata, :resize_photos]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :instagram, :facebook, :twitter, :tumblr, :flickr, :flush_caches, :refresh_metadata, :resize_photos]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
@@ -224,7 +224,8 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def share
+  def syndicate
+    @entry = @photoblog.entries.published.find(params[:id])
     if stale?(@photoblog)
       respond_to do |format|
         format.html {
