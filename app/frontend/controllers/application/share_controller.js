@@ -10,6 +10,7 @@ export default class extends Controller {
   connect () {
     if (navigator.share) {
       this.element.classList.remove('share--hidden');
+      document.body.classList.add('has-share-button');
     } else {
       this.element.remove();
     }
