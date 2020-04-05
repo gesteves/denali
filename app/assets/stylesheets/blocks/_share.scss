@@ -3,6 +3,7 @@
   background: var(--color-share-background);
   border-radius: 20px;
   bottom: 24px;
+  box-shadow: var(--share-shadow);
   color: var(--color-share-text);
   display: flex;
   font-size: 14px;
@@ -12,7 +13,6 @@
   position: fixed;
   width: 100px;
   z-index: 100;
-  box-shadow: var(--share-shadow);
 
   &:link,
   &:visited,
