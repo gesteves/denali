@@ -1,17 +1,30 @@
 .share {
   align-items: center;
   background: var(--color-share-background);
-  border-radius: 100%;
+  border-radius: 22px;
+  border: 2px solid var(--color-border);
   bottom: 20px;
-  box-shadow: 0 2px 5px var(--color-share-shadow);
+  box-shadow: var(--share-shadow);
   color: var(--color-text-alt);
   display: flex;
+  font-size: 14px;
   height: 44px;
   justify-content: center;
+  padding: 0 var(--gutter-vertical);
   position: fixed;
   right: 20px;
-  width: 44px;
   z-index: 100;
+
+  &:link,
+  &:visited {
+    color: var(--color-text-alt);
+  }
+
+  &:hover,
+  &:active {
+    color: var(--color-links);
+    text-decoration: none;
+  }
 }
 
 .share--hidden {
@@ -19,7 +32,9 @@
 }
 
 .share__icon {
-  fill: var(--color-text-alt);
-  height: 16px;
-  width: 16px;
+  display: inline-block;
+  fill: currentColor;
+  height: 14px;
+  margin-right: 0.5rem;
+  width: 14px;
 }
