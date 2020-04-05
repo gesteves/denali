@@ -15,16 +15,11 @@
   z-index: 100;
 
   &:link,
-  &:visited {
-    color: var(--color-text-alt);
-  }
-
+  &:visited,
   &:hover,
   &:active {
-    @media (-moz-touch-enabled: 0), (hover: hover) {
-      color: var(--color-links);
-      text-decoration: none;
-    }
+    color: var(--color-text-alt);
+    text-decoration: none;
   }
 }
 
