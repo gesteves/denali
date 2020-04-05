@@ -50,6 +50,17 @@
   </div>
 
   <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :amazon_url, 'Amazon URL', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :amazon_url, placeholder: 'A link to purchase this camera on Amazon…', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
     <div class="field-label">
       <%= f.label :is_phone, 'Is this a phone?', class: 'label' %>
     </div>

@@ -72,4 +72,14 @@ module ApplicationHelper
       Rails.application.assets[filename].to_s.html_safe
     end
   end
+
+  def sponsored_link_to(name = nil, options = nil, html_options = nil, &block)
+    html_options.merge!(rel: 'sponsored nofollow noopener', target: '_blank')
+    link_to(name, options, html_options, &block)
+  end
+
+  def sponsored_link_to_if(condition, name, options = {}, html_options = {}, &block)
+    html_options.merge!(rel: 'sponsored nofollow noopener', target: '_blank')
+    link_to_if(condition, name, options, html_options, &block)
+  end
 end

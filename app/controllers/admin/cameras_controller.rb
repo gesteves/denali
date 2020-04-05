@@ -23,6 +23,6 @@ class Admin::CamerasController < AdminController
 
   private
   def camera_params
-    params.require(:camera).permit(:make, :model, :display_name, :is_phone)
+    params.require(:camera).permit(:make, :model, :display_name, :is_phone, :amazon_url)
   end
 end

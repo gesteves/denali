@@ -1,14 +1,14 @@
 <% if photo.camera.present? %>
   <p class="exif">
-    Photographed with <%= "#{photo.camera.article} #{photo.camera.display_name}" %>
+    Photographed with <%= photo.camera.article %> <%= sponsored_link_to_if photo.camera.amazon_url.present?, photo.camera.display_name, photo.camera.amazon_url %>
     <% if photo.lens.present? && !photo.camera.is_phone? %>
-      + <%= photo.lens.display_name %>
+      + <%= sponsored_link_to_if photo.lens.amazon_url.present?, photo.lens.display_name, photo.lens.amazon_url %>
     <% end %>
     <% if photo.film.present? %>
-      on <%= photo.film.display_name %>
+      on <%= sponsored_link_to_if photo.film.amazon_url.present?, photo.film.display_name, photo.film.amazon_url %>
     <% end %>
   </p>
-  <% unless photo.film.present? || photo.camera.is_phone? %>
+  <% if !photo.film.present? && !photo.camera.is_phone? %>
     <p class="exif">
       <% if photo.focal_length.present? %>
         <span class="exif__field"><%= photo.focal_length_with_unit %> focal length</span>

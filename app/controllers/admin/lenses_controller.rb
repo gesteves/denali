@@ -23,6 +23,6 @@ class Admin::LensesController < AdminController
 
   private
   def lens_params
-    params.require(:lens).permit(:make, :model, :display_name)
+    params.require(:lens).permit(:make, :model, :display_name, :amazon_url)
   end
 end
