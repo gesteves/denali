@@ -12,7 +12,8 @@
   --color-pagination-text  : #{$color-gray-light};
   --color-icon-fill        : #{$color-gray-light};
   --color-input-background : white;
-  --color-share-background : white;
+  --color-share-background : #{$color-red};
+  --color-share-text       : white;
 
   --gutter-horizontal      : 24px;
   --gutter-vertical        : 20px;
@@ -22,6 +23,7 @@
   --border-thin            : 1px;
   --border-thick           : 4px;
   --border-radius          : 4px;
+  --share-shadow           : 0 0 0 2px #{shade($color-red, 25%)}, 0 2px 4px 0 black;
 
   --entry-list-gutters: 8px;
   --entry-list-columns: 2;
@@ -35,7 +37,6 @@
     --color-tooltip          : #{$color-gray-very-dark};
     --color-tooltip-text     : #{$color-gray-very-light};
     --color-input-background : #{$color-gray-very-dark};
-    --color-share-background : black;
   }
 
   @media (min-width: $bp-xxxs) {

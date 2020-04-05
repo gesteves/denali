@@ -1,24 +1,24 @@
 .share {
   align-items: center;
   background: var(--color-share-background);
-  border-radius: 22px;
-  border: 2px solid var(--color-border);
+  border-radius: 20px;
   bottom: 20px;
-  color: var(--color-text-alt);
+  color: var(--color-share-text);
   display: flex;
   font-size: 14px;
-  height: 44px;
+  height: 40px;
   justify-content: center;
   left: calc(50vw - 50px);
   position: fixed;
   width: 100px;
   z-index: 100;
+  box-shadow: var(--share-shadow);
 
   &:link,
   &:visited,
   &:hover,
   &:active {
-    color: var(--color-text-alt);
+    color: var(--color-share-text);
     text-decoration: none;
   }
 }
@@ -30,7 +30,7 @@
 .share__icon {
   display: inline-block;
   fill: currentColor;
-  height: 14px;
+  height: 16px;
   margin-right: 0.5rem;
-  width: 14px;
+  width: 16px;
 }
