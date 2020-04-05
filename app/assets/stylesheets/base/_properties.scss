@@ -12,6 +12,8 @@
   --color-pagination-text  : #{$color-gray-light};
   --color-icon-fill        : #{$color-gray-light};
   --color-input-background : white;
+  --color-share-background : white;
+  --color-share-shadow     : #{transparentize(black, 0.5)};
 
   --gutter-horizontal      : 24px;
   --gutter-vertical        : 20px;

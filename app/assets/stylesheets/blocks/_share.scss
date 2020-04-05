@@ -1,0 +1,25 @@
+.share {
+  align-items: center;
+  background: var(--color-share-background);
+  border-radius: 100%;
+  bottom: 20px;
+  box-shadow: 0 2px 5px var(--color-share-shadow);
+  color: var(--color-text-alt);
+  display: flex;
+  height: 44px;
+  justify-content: center;
+  position: fixed;
+  right: 20px;
+  width: 44px;
+  z-index: 100;
+}
+
+.share--hidden {
+  display: none;
+}
+
+.share__icon {
+  fill: var(--color-text-alt);
+  height: 16px;
+  width: 16px;
+}

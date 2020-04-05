@@ -1,0 +1,28 @@
+import { Controller } from 'stimulus';
+import { trackEvent } from '../../lib/analytics';
+
+/**
+ * Controls the native share options.
+ * @extends Controller
+ */
+export default class extends Controller {
+
+  connect () {
+    if (navigator.share) {
+      this.element.classList.remove('share--hidden');
+    } else {
+      this.element.remove();
+    }
+  }
+
+  /**
+   * Opens the native share pane
+   * @param {Event} event Click event from the share button.
+   */
+  open (event) {
+    event.preventDefault();
+    navigator.share({
+      url: this.element.href,
+    }).then(() => { trackEvent(this.element.href, 'Share', 'click'); }).catch(() => { trackEvent(this.element.href, 'Canceled share', 'click'); });
+  }
+}
