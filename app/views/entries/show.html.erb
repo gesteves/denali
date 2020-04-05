@@ -7,4 +7,4 @@
 <%= render partial: 'entries/entry/pagination', object: @entry, as: :entry %>
 <%= render partial: 'entries/entry/related', object: @entry, as: :entry if @photoblog.show_related_entries? %>
 <%= render partial: 'partials/elsewhere' %>
-<%= render partial: 'partials/share', locals: { url: @entry.permalink_url } %>
+<%= render partial: 'entries/entry/share', object: @entry, as: :entry %>

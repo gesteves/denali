@@ -41,4 +41,3 @@
   <%= paginate @entries, target: 'infinite-scroll.paginator' %>
   <%= render partial: 'partials/loading', locals: { target: 'infinite-scroll.spinner' } %>
 </div>
-<%= render partial: 'partials/share', locals: { url: tag_url(tag: @tag_slug, page: nil) } %>
