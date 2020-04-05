@@ -100,6 +100,14 @@
     }
   }
 
+  a {
+    text-decoration: none;
+  }
+
+  a[rel^=sponsored] {
+    text-decoration: underline;
+  }
+
   a:link,
   a:visited {
     color: var(--color-text-alt);
@@ -108,7 +116,6 @@
   a:hover,
   a:active {
     color: var(--color-links);
-    text-decoration: none;
   }
 }
 
