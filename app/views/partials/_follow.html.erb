@@ -7,13 +7,13 @@
       <%= inline_svg 'search', 'follow__icon' %>
     <% end %>
   <% end %>
-  <%= link_to feed_url(format: 'atom', page: nil), class: 'follow__link tooltip', title: 'Subscribe to Feed' do %>
-    <%= inline_svg 'feed', 'follow__icon' %>
-  <% end %>
   <% if @photoblog.email.present? %>
     <%= link_to "mailto:#{@photoblog.email}", class: 'follow__link tooltip', title: 'Contact by email' do %>
       <%= inline_svg 'email', 'follow__icon' %>
     <% end %>
+  <% end %>
+  <%= link_to feed_url(format: 'atom', page: nil), class: 'follow__link tooltip', title: 'Subscribe to Feed' do %>
+    <%= inline_svg 'feed', 'follow__icon' %>
   <% end %>
   <% if @photoblog.facebook.present? %>
     <%= link_to @photoblog.facebook, class: 'follow__link tooltip', title: 'Like on Facebook' do %>
