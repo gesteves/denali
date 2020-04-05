@@ -9,9 +9,9 @@
   font-size: 14px;
   height: 44px;
   justify-content: center;
-  padding: 0 22px;
+  left: calc(50vw - 50px);
   position: fixed;
-  right: 20px;
+  width: 100px;
   z-index: 100;
 
   &:link,
