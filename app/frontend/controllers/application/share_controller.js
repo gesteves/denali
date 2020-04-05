@@ -21,6 +21,7 @@ export default class extends Controller {
    */
   open (event) {
     event.preventDefault();
+    event.stopPropagation();
     navigator.share({
       url: this.element.href,
     }).then(() => { trackEvent(this.element.href, 'Share', 'click'); }).catch(() => { trackEvent(this.element.href, 'Canceled share', 'click'); });
