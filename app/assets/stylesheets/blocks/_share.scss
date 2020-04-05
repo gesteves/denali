@@ -21,8 +21,10 @@
 
   &:hover,
   &:active {
-    color: var(--color-links);
-    text-decoration: none;
+    @media (-moz-touch-enabled: 0), (hover: hover) {
+      color: var(--color-links);
+      text-decoration: none;
+    }
   }
 }
 
