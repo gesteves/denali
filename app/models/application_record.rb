@@ -2,18 +2,10 @@ class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
   def cache_key
-    if cache_version = ENV['CACHE_VERSION']
-      "#{cache_version}/#{super}"
-    else
-      super
-    end
+    "#{ENV['HEROKU_RELEASE_VERSION']}/#{ENV['CACHE_VERSION']}/#{super}"
   end
 
   def self.collection_cache_key(collection, timestamp_column)
-    if cache_version = ENV['CACHE_VERSION']
-      "#{cache_version}/#{super}"
-    else
-      super
-    end
+    "#{ENV['HEROKU_RELEASE_VERSION']}/#{ENV['CACHE_VERSION']}/#{super}"
   end
 end
