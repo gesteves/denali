@@ -1,0 +1,15 @@
+<% if photo.camera.present? %>
+  <hr>
+  <p>
+    Photographed with <%= photo.camera.article %> <%= sponsored_link_to_if photo.camera.amazon_url.present?, photo.camera.display_name, photo.camera.amazon_url %>
+    <% if photo.lens.present? && !photo.camera.is_phone? %>
+      + <%= sponsored_link_to_if photo.lens.amazon_url.present?, photo.lens.display_name, photo.lens.amazon_url %>
+    <% end %>
+    <% if photo.film.present? %>
+      on <%= sponsored_link_to_if photo.film.amazon_url.present?, photo.film.display_name, photo.film.amazon_url %>
+    <% end %>
+  <% if !photo.film.present? && !photo.camera.is_phone? %>
+    <br/><%= exif_for_feeds(photo) %>
+  <% end %>
+  </p>
+<% end %>

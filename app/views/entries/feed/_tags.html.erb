@@ -1,0 +1,5 @@
+<p>
+  <% tags.sort_by { |t| t.name }.each do |tag| %>
+    <%= link_to "##{tag.name.downcase}", tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”" } %>
+  <% end %>
+</p>
