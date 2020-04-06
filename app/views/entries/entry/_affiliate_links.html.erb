@@ -1,6 +1,6 @@
 <%# cache entry do %>
-  <% cameras = entry.photos.map(&:camera).uniq.reject { |c| c.amazon_url.blank? } %>
-  <% lenses = entry.photos.map(&:lens).uniq.reject { |c| c.amazon_url.blank? } %>
+  <% cameras = entry.photos.map(&:camera).compact.uniq.reject { |c| c.amazon_url.blank? } %>
+  <% lenses = entry.photos.map(&:lens).compact.uniq.reject { |c| c.amazon_url.blank? } %>
   <% if cameras.present? || lenses.present? %>
     <aside class="elsewhere" role="complementary">
       <h2 class="elsewhere__heading">Affiliate Links</h2>
