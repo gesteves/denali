@@ -61,3 +61,16 @@
   margin-right: 0.5rem;
   width: 20px;
 }
+
+.elsewhere--affiliate {
+  .elsewhere__list {
+    flex-flow: row wrap;
+  }
+
+  .elsewhere__label {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(100vw - 20px - 0.5rem - ( 2 * var(--gutter-vertical)));
+  }
+}

@@ -2,7 +2,7 @@
   <% cameras = entry.photos.map(&:camera).compact.uniq.reject { |c| c.amazon_url.blank? } %>
   <% lenses = entry.photos.map(&:lens).compact.uniq.reject { |c| c.amazon_url.blank? } %>
   <% if cameras.present? || lenses.present? %>
-    <aside class="elsewhere" role="complementary">
+    <aside class="elsewhere elsewhere--affiliate" role="complementary">
       <h2 class="elsewhere__heading">Affiliate Links</h2>
       <ul class="elsewhere__list">
         <% cameras.each do |camera|%>
@@ -15,7 +15,7 @@
         <% lenses.each do |lens|%>
           <li class="elsewhere__item">
             <%= link_to lens.amazon_url, rel: 'sponsored nofollow noopener', target: '_blank' do %>
-              <%= inline_svg 'amazon', 'elsewhere__icon' %><span class="elsewhere__label"><%= lens.display_name %></span>
+              <%= inline_svg 'amazon', 'elsewhere__icon' %><span class="elsewhere__label elsewhere__label"><%= lens.display_name %></span>
             <% end %>
           </li>
         <% end %>
