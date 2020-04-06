@@ -1,17 +1,8 @@
 .tags {
   [rel="tag"] {
-    border-radius: 4px;
-    font-size: 14px;
-    line-height: (24/14);
-    margin: 0 0.25rem;
-    padding: 0 0.5rem;
+    margin: 0 2px;
     text-transform: lowercase;
     white-space: nowrap;
-
-    @media (min-width: $bp-s) {
-      font-size: 14px;
-      line-height: (36/14);
-    }
 
     &::before {
       content: '#';
@@ -19,15 +10,13 @@
 
     &:link,
     &:visited {
-      background: var(--color-tag-background);
-      color: var(--color-tag-text);
+      color: var(--color-text-alt);
       text-decoration: none;
     }
 
     &:hover,
     &:active {
-      background: var(--color-tag-background);
-      color: var(--color-tag-text);
+      color: var(--color-links);
       text-decoration: underline;
     }
   }
