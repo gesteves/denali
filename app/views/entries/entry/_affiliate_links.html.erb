@@ -8,14 +8,14 @@
         <% cameras.each do |camera|%>
           <li class="elsewhere__item">
             <%= link_to camera.amazon_url, rel: 'sponsored nofollow noopener', target: '_blank' do %>
-              <%= inline_svg 'amazon', 'elsewhere__icon' %><span class="elsewhere__label"><%= camera.display_name %></span>
+              <%= inline_svg 'amazon', 'elsewhere__icon' %><span class="elsewhere__label">Shop <%= camera.display_name %></span>
             <% end %>
           </li>
         <% end %>
         <% lenses.each do |lens|%>
           <li class="elsewhere__item">
             <%= link_to lens.amazon_url, rel: 'sponsored nofollow noopener', target: '_blank' do %>
-              <%= inline_svg 'amazon', 'elsewhere__icon' %><span class="elsewhere__label elsewhere__label"><%= lens.display_name %></span>
+              <%= inline_svg 'amazon', 'elsewhere__icon' %><span class="elsewhere__label elsewhere__label">Shop <%= lens.display_name %></span>
             <% end %>
           </li>
         <% end %>
