@@ -1,0 +1,5 @@
+<li class="elsewhere__item">
+  <%= link_to product.amazon_url, rel: 'sponsored nofollow noopener', target: '_blank' do %>
+    <%= inline_svg 'amazon', 'elsewhere__icon' %><span class="elsewhere__label elsewhere__label">Shop <%= product.display_name %></span>
+  <% end %>
+</li>

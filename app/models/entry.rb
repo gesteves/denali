@@ -507,6 +507,14 @@ class Entry < ApplicationRecord
     self.combined_tag_list.any? { |t| ['National Parks', 'National Monuments', 'National Wildlife Refuges', 'State Parks'].include? t }
   end
 
+  def affiliate_cameras
+    Camera.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil)
+  end
+
+  def affiliate_lenses
+    Lens.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil)
+  end
+
   private
 
   def url_opts(opts)

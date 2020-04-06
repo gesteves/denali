@@ -1,25 +1,11 @@
-<%# cache entry do %>
-  <% cameras = entry.photos.map(&:camera).compact.uniq.reject { |c| c.amazon_url.blank? } %>
-  <% lenses = entry.photos.map(&:lens).compact.uniq.reject { |c| c.amazon_url.blank? } %>
-  <% if cameras.present? || lenses.present? %>
+<% cache entry do %>
+  <% if entry.affiliate_cameras.present? || entry.affiliate_lenses.present? %>
     <aside class="elsewhere elsewhere--affiliate" role="complementary">
       <h2 class="elsewhere__heading">Affiliate Links</h2>
       <ul class="elsewhere__list">
-        <% cameras.each do |camera|%>
-          <li class="elsewhere__item">
-            <%= link_to camera.amazon_url, rel: 'sponsored nofollow noopener', target: '_blank' do %>
-              <%= inline_svg 'amazon', 'elsewhere__icon' %><span class="elsewhere__label">Shop <%= camera.display_name %></span>
-            <% end %>
-          </li>
-        <% end %>
-        <% lenses.each do |lens|%>
-          <li class="elsewhere__item">
-            <%= link_to lens.amazon_url, rel: 'sponsored nofollow noopener', target: '_blank' do %>
-              <%= inline_svg 'amazon', 'elsewhere__icon' %><span class="elsewhere__label elsewhere__label">Shop <%= lens.display_name %></span>
-            <% end %>
-          </li>
-        <% end %>
+        <%= render partial: 'entries/entry/affiliate_link', collection: entry.affiliate_cameras, as: :product %>
+        <%= render partial: 'entries/entry/affiliate_link', collection: entry.affiliate_lenses, as: :product %>
       </ul>
     </aside>
   <% end %>
-<%# end %>
+<% end %>
