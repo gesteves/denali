@@ -1,12 +1,12 @@
 <% if photo.camera.present? %>
   <hr>
   <p>
-    Photographed with <%= photo.camera.article %> <%= affiliate_link_to_if photo.camera.amazon_url.present?, photo.camera.display_name, photo.camera.amazon_url %>
+    Photographed with <%= photo.camera.article %> <%= photo.camera.display_name %>
     <% if photo.lens.present? && !photo.camera.is_phone? %>
-      + <%= affiliate_link_to_if photo.lens.amazon_url.present?, photo.lens.display_name, photo.lens.amazon_url %>
+      + <%= photo.lens.display_name %>
     <% end %>
     <% if photo.film.present? %>
-      on <%= affiliate_link_to_if photo.film.amazon_url.present?, photo.film.display_name, photo.film.amazon_url %>
+      on <%= photo.film.display_name %>
     <% end %>
   <% if !photo.film.present? && !photo.camera.is_phone? %>
     <br/><%= exif_for_feeds(photo) %>
