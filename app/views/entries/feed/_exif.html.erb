@@ -9,7 +9,7 @@
       on <%= photo.film.display_name %>
     <% end %>
   <% if !photo.film.present? && !photo.camera.is_phone? %>
-    <br/><%= exif_for_feeds(photo) %>
+     · <%= exif_for_feeds(photo) %>
   <% end %>
   </p>
 <% end %>
