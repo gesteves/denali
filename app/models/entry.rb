@@ -508,11 +508,11 @@ class Entry < ApplicationRecord
   end
 
   def affiliate_cameras
-    Camera.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil)
+    Camera.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
   end
 
   def affiliate_lenses
-    Lens.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil)
+    Lens.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
   end
 
   private
