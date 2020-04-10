@@ -29,8 +29,13 @@
   @media (min-width: $bp-s) {
     display: inline;
 
+    a::after,
     &::before {
       content: ' · ';
+    }
+
+    a:last-of-type::after {
+      content: none;
     }
   }
 }
