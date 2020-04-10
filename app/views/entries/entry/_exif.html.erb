@@ -9,20 +9,20 @@
     <% end %>
   </p>
   <% if !photo.film.present? && !photo.camera.is_phone? %>
-    <p class="exif">
+    <ul class="exif">
       <% if photo.focal_length.present? %>
-        <span class="exif__field"><%= photo.focal_length_with_unit %> focal length</span>
+        <li class="exif__field"><%= photo.focal_length_with_unit %> focal length</li>
       <% end %>
       <% if photo.exposure.present? && photo.f_number.present? %>
-        <span class="exif__field"><%= photo.formatted_exposure %> at <%= photo.formatted_aperture %></span>
+        <li class="exif__field"><span aria-label="<%= pluralize(photo.exposure, 'second') %>"><%= photo.formatted_exposure %></span> at <%= photo.formatted_aperture %></li>
       <% elsif photo.exposure.present? %>
-        <span class="exif__field"><%= photo.formatted_exposure %></span>
+        <li class="exif__field"><span aria-label="<%= pluralize(photo.exposure, 'second') %>"><%= photo.formatted_exposure %></span></li>
       <% elsif photo.f_number.present? %>
-        <span class="exif__field"><%= photo.formatted_aperture %></span>
+        <li class="exif__field"><%= photo.formatted_aperture %></li>
       <% end %>
       <% if photo.iso.present? %>
-        <span class="exif__field">ISO <%= photo.iso %></span>
+        <li class="exif__field">ISO <%= photo.iso %></li>
       <% end %>
-    </p>
+    </ul>
   <% end %>
 <% end %>

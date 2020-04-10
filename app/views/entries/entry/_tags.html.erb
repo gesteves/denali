@@ -1,5 +1,5 @@
-<p class="tags">
+<ul class="tags">
   <% tags.sort_by { |t| t.name }.each do |tag| %>
-    <%= link_to tag.name, tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”" } %>
+    <li><%= link_to tag.name, tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”" } %></li>
   <% end %>
-</p>
+</ul>

@@ -87,7 +87,8 @@
   max-width: $bp-m;
   padding: var(--gutter-horizontal) var(--gutter-vertical);
 
-  p {
+  p,
+  ul {
     color: var(--color-text-alt);
     font-size: 14px;
     font-style: italic;

@@ -3,6 +3,7 @@
 }
 
 .exif__field {
+  display: inline;
   white-space: nowrap;
 
   &::after {

@@ -1,4 +1,9 @@
 .tags {
+
+  li {
+    display: inline;
+  }
+
   [rel="tag"] {
     margin: 0 2px;
     text-transform: lowercase;
