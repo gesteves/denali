@@ -9,6 +9,7 @@
     <% end %>
   </p>
   <% if !photo.film.present? && !photo.camera.is_phone? %>
+    <h2 class="sr-only">EXIF data</h2>
     <ul class="exif">
       <% if photo.focal_length.present? %>
         <li class="exif__field"><%= photo.focal_length_with_unit %> focal length</li>
