@@ -12,7 +12,7 @@ module ApplicationHelper
       height: height,
       loading: 'eager'
     })
-    content_tag :img, nil, html_options
+    tag :img, html_options
   end
 
   def lazy_responsive_image_tag(photo, photo_key, html_options = {})
@@ -20,7 +20,7 @@ module ApplicationHelper
     sizes = Photo.sizes(photo_key)
     width = is_variant_square?(photo_key) ? photo.srcset_widths(photo_key).last : photo.width
     height = is_variant_square?(photo_key) ? photo.srcset_widths(photo_key).last : photo.height
-    lazy_img = content_tag(:img, nil, html_options.merge({
+    lazy_img = tag(:img, html_options.merge({
       'data-srcset': srcset,
       'data-src': src,
       'data-controller': 'lazy-load',
