@@ -6,6 +6,5 @@
 <%= render partial: 'entries/entry/text', object: @entry, as: :entry if @entry.is_text? %>
 <%= render partial: 'entries/entry/pagination', object: @entry, as: :entry %>
 <%= render partial: 'entries/entry/related', object: @entry, as: :entry if @photoblog.show_related_entries? %>
-<%= render partial: 'entries/entry/affiliate_links', object: @entry, as: :entry if @entry.is_photo? %>
 <%= render partial: 'partials/elsewhere' %>
 <%= render partial: 'entries/entry/share', object: @entry, as: :entry %>
