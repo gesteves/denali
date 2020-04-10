@@ -19,10 +19,10 @@
       <%= sanitize entry.formatted_body unless entry.body.blank? %>
     </div>
 
-    <div class="entry__meta">
+    <aside class="entry__meta">
       <%= render partial: 'entries/entry/byline', object: entry, as: :entry %>
       <%= render partial: 'entries/entry/exif', object: entry.photos.first, as: :photo if entry.is_single_photo? %>
       <%= render partial: 'entries/entry/tags', object: entry.combined_tags, as: :tags %>
-    </div>
+    </aside>
   </article>
 <% end %>

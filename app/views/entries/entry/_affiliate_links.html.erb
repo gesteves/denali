@@ -1,6 +1,6 @@
 <% cache entry do %>
   <% if entry.affiliate_cameras.present? || entry.affiliate_lenses.present? %>
-    <aside class="elsewhere elsewhere--affiliate" role="complementary">
+    <aside class="elsewhere elsewhere--affiliate">
       <h2 class="elsewhere__heading">Affiliate Links</h2>
       <ul class="elsewhere__list">
         <%= render partial: 'entries/entry/affiliate_link', collection: entry.affiliate_cameras, as: :product %>

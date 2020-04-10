@@ -1,7 +1,7 @@
 <% cache @entry, expires_in: 1.day do %>
   <% related = @entry.related %>
   <% if related.present? %>
-    <aside role="complementary">
+    <aside>
       <h2 class="entry__related">Other Photos You Might Like</h2>
       <ol class="entry-list entry-list--related">
         <%= render partial: 'entries/grid/square',
