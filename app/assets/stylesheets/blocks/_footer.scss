@@ -26,16 +26,19 @@
 .footer__links {
   display: block;
 
+  a::after {
+    content: ' · ';
+  }
+
+  a:last-of-type::after {
+    content: none;
+  }
+
   @media (min-width: $bp-s) {
     display: inline;
 
-    a::after,
     &::before {
       content: ' · ';
-    }
-
-    a:last-of-type::after {
-      content: none;
     }
   }
 }
