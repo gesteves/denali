@@ -32,7 +32,7 @@ module ApplicationHelper
     }))
 
     noscript = content_tag :noscript do
-      content_tag :img, nil, html_options.merge({
+      tag :img, html_options.merge({
         srcset: srcset,
         src: src,
         sizes: sizes,
