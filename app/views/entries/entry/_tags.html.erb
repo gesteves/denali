@@ -1,3 +1,4 @@
+<span class="sr-only">Tagged with</span>
 <ul class="tags">
   <% tags.sort_by { |t| t.name }.each do |tag| %>
     <li><%= link_to tag.name, tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”" } %></li>
