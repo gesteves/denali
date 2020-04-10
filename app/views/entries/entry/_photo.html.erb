@@ -1,14 +1,14 @@
 <% cache entry do %>
   <article class="entry entry--photo" role="main" data-controller="photo" data-photo-container-max-width="1680">
     <% entry.photos.each do |photo| %>
-      <figure class="entry__figure" style="<%= css_gradient_stops(photo) %>">
+      <div class="entry__figure" style="<%= css_gradient_stops(photo) %>">
         <%= responsive_image_tag photo,
             'entry',
             { class: 'entry__photo entry__photo--zoom',
               alt: photo.alt_text,
               'data-action': 'click->photo#zoom contextmenu->photo#disableContextMenu',
               'data-target': 'photo.photo' } %>
-      </figure>
+      </div>
     <% end %>
 
     <div class="entry__body">
