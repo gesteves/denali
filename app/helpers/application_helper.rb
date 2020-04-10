@@ -49,8 +49,8 @@ module ApplicationHelper
     PHOTOS[key]['square'].present?
   end
 
-  def inline_svg(icon, svg_class = "icon")
-    render partial: "partials/svg/#{icon}.html.erb", locals: { svg_class: "#{svg_class} #{svg_class}--#{icon}" }
+  def inline_svg(icon, svg_class = "icon", aria_hidden = true)
+    render partial: "partials/svg/#{icon}.html.erb", locals: { svg_class: "#{svg_class} #{svg_class}--#{icon}", aria_hidden: aria_hidden }
   end
 
   def css_gradient_stops(photo)

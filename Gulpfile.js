@@ -40,7 +40,8 @@ gulp.task('svg', function () {
     .pipe(cheerio({
       run: function ($) {
         $('svg').attr({
-          'class': '{{{%= svg_class %}}}'
+          'class': '{{{%= svg_class %}}}',
+          'aria-hidden': '{{{%= aria_hidden %}}}'
         });
         $('svg').removeAttr('xmlns');
       },
