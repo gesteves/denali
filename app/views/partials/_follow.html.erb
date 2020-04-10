@@ -1,43 +1,11 @@
-<div class="follow">
-  <%= link_to about_url, class: 'follow__link tooltip', title: "About #{@photoblog.name}" do %>
-    <%= inline_svg 'about', 'follow__icon' %>
-  <% end %>
-  <% if @photoblog.has_search? %>
-    <%= link_to search_url, class: 'follow__link tooltip', title: "Search #{@photoblog.name}" do %>
-      <%= inline_svg 'search', 'follow__icon' %>
-    <% end %>
-  <% end %>
-  <% if @photoblog.email.present? %>
-    <%= link_to "mailto:#{@photoblog.email}", class: 'follow__link tooltip', title: 'Contact by email' do %>
-      <%= inline_svg 'email', 'follow__icon' %>
-    <% end %>
-  <% end %>
-  <%= link_to feed_url(format: 'atom', page: nil), class: 'follow__link tooltip', title: 'Subscribe to Feed' do %>
-    <%= inline_svg 'feed', 'follow__icon' %>
-  <% end %>
-  <% if @photoblog.facebook.present? %>
-    <%= link_to @photoblog.facebook, class: 'follow__link tooltip', title: 'Like on Facebook' do %>
-      <%= inline_svg 'facebook', 'follow__icon' %>
-    <% end %>
-  <% end %>
-  <% if @photoblog.flickr.present? %>
-    <%= link_to @photoblog.flickr, class: 'follow__link tooltip', title: 'Follow on Flickr' do %>
-      <%= inline_svg 'flickr', 'follow__icon' %>
-    <% end %>
-  <% end %>
-  <% if @photoblog.instagram.present? %>
-    <%= link_to @photoblog.instagram, class: 'follow__link tooltip', title: 'Follow on Instagram' do %>
-      <%= inline_svg 'instagram', 'follow__icon' %>
-    <% end %>
-  <% end %>
-  <% if @photoblog.tumblr.present? %>
-    <%= link_to @photoblog.tumblr, class: 'follow__link tooltip', title: 'Follow on Tumblr' do %>
-      <%= inline_svg 'tumblr', 'follow__icon' %>
-    <% end %>
-  <% end %>
-  <% if @photoblog.twitter.present? %>
-    <%= link_to @photoblog.twitter, class: 'follow__link tooltip', title: 'Follow on Twitter' do %>
-      <%= inline_svg 'twitter', 'follow__icon' %>
-    <% end %>
-  <% end %>
-</div>
+<ul class="follow">
+  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: about_url,                           icon: 'about',     label: "About #{@photoblog.name}" } %>
+  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: search_url,                          icon: 'search',    label: "Search #{@photoblog.name}" } if @photoblog.has_search? %>
+  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: "mailto:#{@photoblog.email}",        icon: 'email',     label: 'Contact by email' }          if @photoblog.email.present? %>
+  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: feed_url(format: 'atom', page: nil), icon: 'feed',      label: 'Subscribe to Feed' } %>
+  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: @photoblog.facebook,                 icon: 'facebook',  label: 'Like on Facebook' }          if @photoblog.facebook.present? %>
+  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: @photoblog.flickr,                   icon: 'flickr',    label: 'Follow on Flickr' }          if @photoblog.flickr.present? %>
+  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: @photoblog.instagram,                icon: 'instagram', label: 'Follow on Instagram' }       if @photoblog.instagram.present? %>
+  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: @photoblog.tumblr,                   icon: 'tumblr',    label: 'Follow on Tumblr' }          if @photoblog.tumblr.present? %>
+  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: @photoblog.twitter,                  icon: 'twitter',   label: 'Follow on Twitter' }         if @photoblog.twitter.present? %>
+</ul>

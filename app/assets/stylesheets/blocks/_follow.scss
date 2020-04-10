@@ -1,13 +1,57 @@
 .follow {
   text-align: center;
+
+  li {
+    display: inline-block;
+  }
 }
 
 .follow__link {
-  display: inline-block;
+  display: block;
   height: 20px;
   margin: 12px 5px;
   padding: 2px;
+  position: relative;
   width: 20px;
+
+  span {
+    background-color: var(--color-tooltip);
+    border-radius: var(--border-radius);
+    bottom: 150%;
+    color: var(--color-tooltip-text);
+    cursor: pointer;
+    font-size: 14px;
+    left: 50%;
+    line-height: 1.2;
+    margin-bottom: 5px;
+    margin-left: -90px;
+    padding: 7px;
+    position: absolute;
+    text-align: center;
+    width: 180px;
+    z-index: 2;
+  }
+
+  span,
+  span::after {
+    display: none;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  span::after {
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--color-tooltip);
+    bottom: -5px;
+    content: ' ';
+    font-size: 0;
+    left: 50%;
+    line-height: 0;
+    margin-left: -5px;
+    position: absolute;
+    width: 0;
+  }
 
   &:link,
   &:visited {
@@ -23,4 +67,14 @@
 .follow__icon {
   height: 16px;
   width: 16px;
+}
+
+@media (-moz-touch-enabled: 0), (hover: hover) {
+  .follow__link:hover {
+    span,
+    span::after {
+      display: block;
+      opacity: 1;
+    }
+  }
 }

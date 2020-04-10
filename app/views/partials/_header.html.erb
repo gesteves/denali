@@ -3,7 +3,7 @@
     <div class="header__section">
       <p class="header__tagline"><%= sanitize @photoblog.tag_line %></p>
     </div>
-    <a href="/" class="header__link">
+    <a href="/" class="header__link" aria-label="<%= @photoblog.name %>">
       <h1>
         <% if @photoblog.header_logo_svg.present? %>
           <%= @photoblog.header_logo_svg.html_safe %>
