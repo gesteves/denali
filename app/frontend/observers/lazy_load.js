@@ -56,6 +56,8 @@ function handleIntersection (entries) {
  */
 function loadImage (image) {
   if (image.hasAttribute('data-srcset') && typeof image.srcset !== 'undefined' && typeof image.sizes !== 'undefined') {
+    image.sizes = image.getAttribute('data-sizes');
+    image.removeAttribute('data-sizes');
     image.srcset = image.getAttribute('data-srcset');
     image.removeAttribute('data-srcset');
   } else if (image.hasAttribute('data-src')) {

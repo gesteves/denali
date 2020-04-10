@@ -24,7 +24,7 @@ module ApplicationHelper
       'data-srcset': srcset,
       'data-src': src,
       'data-controller': 'lazy-load',
-      sizes: sizes,
+      'data-sizes': sizes,
       src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
       width: width,
       height: height,
