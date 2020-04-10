@@ -8,7 +8,7 @@
 -%>
 
 <%= paginator.render do -%>
-  <nav class="pagination" role="navigation" <% if defined? target %>data-target="<%= target %>"<% end %>>
+  <nav class="pagination" <% if defined? target %>data-target="<%= target %>"<% end %>>
     <%= prev_page_tag %>
     <%= next_page_tag %>
   </nav>
