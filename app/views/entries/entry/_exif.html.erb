@@ -14,9 +14,9 @@
         <li class="exif__field"><%= photo.focal_length_with_unit %> focal length</li>
       <% end %>
       <% if photo.exposure.present? && photo.f_number.present? %>
-        <li class="exif__field"><span aria-label="<%= pluralize(photo.exposure, 'second') %>"><%= photo.formatted_exposure %></span> at <%= photo.formatted_aperture %></li>
+        <li class="exif__field"><%= photo.formatted_exposure %> at <%= photo.formatted_aperture %></li>
       <% elsif photo.exposure.present? %>
-        <li class="exif__field"><span aria-label="<%= pluralize(photo.exposure, 'second') %>"><%= photo.formatted_exposure %></span></li>
+        <li class="exif__field"><%= photo.formatted_exposure %></li>
       <% elsif photo.f_number.present? %>
         <li class="exif__field"><%= photo.formatted_aperture %></li>
       <% end %>
