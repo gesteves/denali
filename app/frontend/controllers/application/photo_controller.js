@@ -46,14 +46,17 @@ export default class extends Controller {
   }
 
   /**
-   * Click handler that zooms in all zoomable images on the page.
+   * Event handler that zooms in all zoomable images on the page.
    */
-  zoom () {
-    this.photoTargets.forEach(photo => {
-      if (photo.getAttribute('data-photo-zoomable') === '1') {
-        photo.classList.toggle('entry__photo--zoom');
-      }
-    });
+  zoom (event) {
+    if (event.type !== 'keydown' || event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.photoTargets.forEach(photo => {
+        if (photo.getAttribute('data-photo-zoomable') === '1') {
+          photo.classList.toggle('entry__photo--zoom');
+        }
+      });
+    }
   }
 
   disableContextMenu (event) {
