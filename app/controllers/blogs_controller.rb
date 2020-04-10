@@ -4,7 +4,7 @@ class BlogsController < ApplicationController
 
   def about
     if stale?(@photoblog, public: true)
-      @page_title = "About · #{@photoblog.name} · #{@photoblog.tag_line}"
+      @page_title = "About · #{@photoblog.name}"
       respond_to do |format|
         format.html
       end

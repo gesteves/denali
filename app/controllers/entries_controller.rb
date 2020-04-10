@@ -18,7 +18,7 @@ class EntriesController < ApplicationController
       respond_to do |format|
         format.html {
           if @page.nil? || @page == 1
-            @page_title = "#{@photoblog.name} · #{@photoblog.tag_line}"
+            @page_title = @photoblog.name
           else
             @page_title = "#{@photoblog.name} · Page #{@page}"
           end
@@ -88,7 +88,7 @@ class EntriesController < ApplicationController
       respond_to do |format|
         format.html {
           redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
-          @page_title = "#{@entry.plain_title} · #{@photoblog.name} · #{@photoblog.tag_line}"
+          @page_title = "#{@entry.plain_title} · #{@photoblog.name}"
         }
         format.all { redirect_to(@entry.permalink_url, status: 301) }
       end
