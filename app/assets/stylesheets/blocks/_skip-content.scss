@@ -1,0 +1,18 @@
+.skip-content {
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+  display: block;
+  font-size: 24px;
+  line-height: 1;
+  padding: 2rem 0;
+  position: absolute;
+  text-align: center;
+  top: 0;
+  transform: translateY(-100%);
+  transition: transform 0.3s;
+  width: 100vw;
+
+  &:focus {
+    transform: translateY(0%);
+  }
+}

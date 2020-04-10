@@ -11,8 +11,12 @@
   <%= render partial: 'partials/analytics_head' %>
 </head>
 <body>
+<a class="skip-content" href="#main-content">Skip to content</a>
 <%= render partial: 'partials/header' %>
-<%= yield %>
+<main id="main-content">
+  <%= yield %>
+</main>
 <%= render partial: 'partials/footer' %>
+<%= render partial: 'partials/analytics_body' %>
 </body>
 </html>
