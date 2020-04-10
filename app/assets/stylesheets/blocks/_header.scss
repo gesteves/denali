@@ -16,8 +16,11 @@
 }
 
 .header__section {
+  order: 3;
+
   &:first-of-type {
     border-bottom: var(--border-thin) solid var(--color-border);
+    order: 2;
   }
 
   @media (min-width: $bp-m) {
@@ -26,6 +29,10 @@
     margin-bottom: 45px;
     padding: 0 20px;
     width: calc((100vw - 240px - 40px)/2);
+
+    &:first-of-type {
+      order: 1;
+    }
   }
 
   @media (min-width: $bp-xl) {
@@ -55,7 +62,7 @@
   font-size: 24px;
   margin: 0 auto 12px;
   max-width: 320px;
-  order: -1;
+  order: 1;
   width: 200px;
 
   &:link,
@@ -71,7 +78,7 @@
 
   @media (min-width: $bp-m) {
     margin: 0 auto;
-    order: inherit;
+    order: 2;
     padding: 0 20px;
     width: 240px;
   }
