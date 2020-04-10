@@ -1,6 +1,25 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "422698cf1cf8c9a53922b81e2ee40912363c81569321b23a3c3f05dc577c90f4",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/partials/_analytics_body.html.erb",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Blog.first.analytics_body",
+      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":6,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":20,"file":"app/views/layouts/application.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "partials/_analytics_body"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "605ddb785e21c9dac0eba35f0b914b3373d41913e3373c3a670a87452a24391d",
@@ -27,7 +46,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 166,
+      "line": 168,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Blog.first.entries.published.where(:tumblr_id => params[:tumblr_id]).order(\"published_at ASC\").limit(1).first.permalink_url, :status => 301)",
       "render_path": null,
@@ -47,32 +66,13 @@
       "check_name": "CrossSiteScripting",
       "message": "Unescaped model attribute",
       "file": "app/views/partials/_header.html.erb",
-      "line": 9,
+      "line": 6,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Blog.first.header_logo_svg",
-      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":6,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":17,"file":"app/views/layouts/application.html.erb"}],
+      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":6,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":15,"file":"app/views/layouts/application.html.erb"}],
       "location": {
         "type": "template",
         "template": "partials/_header"
-      },
-      "user_input": null,
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "9d069986a41695761ca1c323823e89eb4274216008b71caff170cf849e923dc8",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/partials/_analytics_body.html.erb",
-      "line": 1,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Blog.first.analytics_body",
-      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":6,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":19,"file":"app/views/layouts/application.html.erb"},{"type":"template","name":"partials/_footer","line":17,"file":"app/views/partials/_footer.html.erb"}],
-      "location": {
-        "type": "template",
-        "template": "partials/_analytics_body"
       },
       "user_input": null,
       "confidence": "High",
@@ -88,7 +88,7 @@
       "line": 1,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Blog.first.analytics_head",
-      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":6,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":14,"file":"app/views/layouts/application.html.erb"}],
+      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":6,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":11,"file":"app/views/layouts/application.html.erb"}],
       "location": {
         "type": "template",
         "template": "partials/_analytics_head"
@@ -196,6 +196,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-03-14 17:37:14 -0600",
+  "updated": "2020-04-10 12:49:50 -0600",
   "brakeman_version": "4.3.1"
 }
