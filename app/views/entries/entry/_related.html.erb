@@ -1,3 +1,3 @@
-<div data-controller="related-entries" data-related-entries-url="<%= entry.is_published? ? related_url(entry, format: 'js') : related_preview_url(entry.preview_hash, format: 'js')  %>">
+<div role="complementary" data-controller="related-entries" data-related-entries-url="<%= entry.is_published? ? related_url(entry, format: 'js') : related_preview_url(entry.preview_hash, format: 'js')  %>">
   <%= render partial: 'partials/loading', locals: { target: 'related-entries.spinner' } %>
 </div>
