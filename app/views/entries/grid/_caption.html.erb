@@ -1,5 +1,5 @@
-<figcaption class="entry-list__photo-caption" id="<%= "entry-list-caption-#{entry.id}" %>">
+<div class="entry-list__photo-caption" id="<%= "entry-list-caption-#{entry.id}" %>">
   <p class="entry-list__photo-title"><%= sanitize truncate(entry.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></p>
   <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
-</figcaption>
+</div>
 

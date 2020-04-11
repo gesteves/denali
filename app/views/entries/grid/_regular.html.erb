@@ -2,7 +2,7 @@
   <% photo = entry.photos.first %>
   <li class="entry-list__item">
     <div class="entry-list__wrapper" style="<%= "#{css_aspect_ratio(photo)}#{css_gradient_stops(photo)}" %>">
-      <%= render partial: 'entries/grid/figure.html.erb', locals: { entry: entry, photo: photo, variant: 'entry_list' } %>
+      <%= render partial: 'entries/grid/link.html.erb', locals: { entry: entry, photo: photo, variant: 'entry_list' } %>
     </div>
   </li>
 <% end %>
