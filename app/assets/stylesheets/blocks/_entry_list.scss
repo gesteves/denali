@@ -51,6 +51,10 @@
       text-decoration: underline;
     }
   }
+
+  &:focus .entry-list__photo-caption {
+    opacity: 1;
+  }
 }
 
 .entry-list__item--map {
@@ -83,10 +87,6 @@
     @media (-moz-touch-enabled: 0), (hover: hover) {
       opacity: 1;
     }
-  }
-
-  &:focus .entry-list__photo-caption {
-    opacity: 1;
   }
 
   noscript {
