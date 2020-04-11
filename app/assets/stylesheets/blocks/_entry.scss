@@ -101,20 +101,6 @@
       line-height: (36/16);
     }
   }
-
-  a {
-    text-decoration: none;
-  }
-
-  a:link,
-  a:visited {
-    color: var(--color-text-alt);
-  }
-
-  a:hover,
-  a:active {
-    color: var(--color-links);
-  }
 }
 
 .entry__related {

@@ -12,17 +12,5 @@
     &::before {
       content: '#';
     }
-
-    &:link,
-    &:visited {
-      color: var(--color-text-alt);
-      text-decoration: none;
-    }
-
-    &:hover,
-    &:active {
-      color: var(--color-links);
-      text-decoration: underline;
-    }
   }
 }
