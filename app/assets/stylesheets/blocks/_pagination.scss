@@ -10,16 +10,19 @@
 }
 
 .pagination__item {
+  align-items: stretch;
   color: var(--color-text-alt);
+  display: flex;
   flex-basis: 50%;
+  justify-content: center;
   padding: 24px 0;
   text-align: center;
 }
 
 .pagination__link {
+  align-items: center;
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .pagination__icon {
