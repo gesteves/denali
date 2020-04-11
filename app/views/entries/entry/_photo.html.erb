@@ -19,7 +19,8 @@
       <%= sanitize entry.formatted_body unless entry.body.blank? %>
     </div>
 
-    <aside class="entry__meta">
+    <aside class="entry__meta" aria-labelledby="entry-meta">
+      <h2 id="entry-meta" class="sr-only">About <%= entry.is_photoset? ? 'these photos' : 'this photo' %></h2>
       <%= render partial: 'entries/entry/byline', object: entry, as: :entry %>
       <%= render partial: 'entries/entry/exif', object: entry.photos.first, as: :photo if entry.is_single_photo? %>
       <%= render partial: 'entries/entry/tags', object: entry.combined_tags, as: :tags %>
