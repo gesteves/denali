@@ -1,8 +1,9 @@
 <% cache entry do %>
   <% photo = entry.photos.first %>
+  <% index = local_assigns[:offset].presence.to_i + local_assigns[:entry_counter].presence.to_i + 1 + ((page - 1) * per_page) %>
   <li class="entry-list__item">
     <div class="entry-list__wrapper" style="<%= "#{css_aspect_ratio(photo)}#{css_gradient_stops(photo)}" %>">
-      <%= render partial: 'entries/grid/link.html.erb', locals: { entry: entry, photo: photo, variant: 'entry_list' } %>
+      <%= render partial: 'entries/grid/link.html.erb', locals: { entry: entry, photo: photo, variant: 'entry_list', total_entries: total_entries, index: index } %>
     </div>
   </li>
 <% end %>

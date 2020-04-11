@@ -1,12 +1,14 @@
 <% cache @entry, expires_in: 1.day do %>
-  <% related = @entry.related %>
+  <% count = 12 %>
+  <% related = @entry.related(count: count) %>
   <% if related.present? %>
     <aside aria-labelledby="related-entries">
       <h2 class="entry__related" id="related-entries">Other Photos You Might Like</h2>
-      <ol class="entry-list entry-list--related">
+      <ol class="entry-list entry-list--related" aria-role="feed" aria-busy="false" aria-labelledby="related-entries">
         <%= render partial: 'entries/grid/square',
                     collection: related,
                     as: :entry,
+                    locals: { total_entries: related.size, page: 1, per_page: count },
                     cached: true %>
       </ol>
     </aside>

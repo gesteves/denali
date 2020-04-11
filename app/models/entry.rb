@@ -213,7 +213,7 @@ class Entry < ApplicationRecord
     end
   end
 
-  def related(count = 12)
+  def related(count: 12)
     begin
       Entry.search(related_query(count)).records.includes(photos: [:image_attachment, :image_blob])
     rescue => e
