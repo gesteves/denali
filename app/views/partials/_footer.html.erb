@@ -1,18 +1,16 @@
 <% cache @photoblog do %>
   <footer class="footer">
-    <p>
-        &copy; <%= Time.current.strftime('%Y') %> <%= sanitize @photoblog.copyright %>
-      <span class="footer__links">
-        <%= link_to 'Home', root_url %>
-        <%= link_to 'About', about_url %>
-        <% if @photoblog.has_search? %>
-          <%= link_to 'Search', search_url %>
-        <% end %>
-        <%= link_to 'Feed', feed_url(format: 'atom', page: nil) %>
-        <% if @photoblog.email.present? %>
-          <a href="mailto:<%= @photoblog.email %>">Contact</a>
-        <% end %>
-      </span>
-    </p>
+    <p>&copy; <%= Time.current.strftime('%Y') %> <%= sanitize @photoblog.copyright %></p>
+    <ul class="footer__links">
+      <li><%= link_to 'Home', root_url %></li>
+      <li><%= link_to 'About', about_url %></li>
+      <% if @photoblog.has_search? %>
+        <li><%= link_to 'Search', search_url %></li>
+      <% end %>
+      <li><%= link_to 'Feed', feed_url(format: 'atom', page: nil) %></li>
+      <% if @photoblog.email.present? %>
+        <li><a href="mailto:<%= @photoblog.email %>">Contact</a></li>
+      <% end %>
+    </ul>
   </footer>
 <% end %>

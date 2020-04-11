@@ -1,12 +1,15 @@
 .footer {
   border-top: var(--border-thin) solid var(--color-border);
-  display: block;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
   margin: 0 auto;
   max-width: $bp-m;
   padding: var(--gutter-horizontal) var(--gutter-vertical);
   width: 100%;
 
-  p {
+  p,
+  ul {
     font-size: 14px;
     line-height: (24/14);
     margin: 0;
@@ -18,27 +21,29 @@
     }
   }
 
+  @media (min-width: $bp-xxs) {
+    flex-flow: row nowrap;
+  }
+
   @media (min-width: $bp-s) {
     margin: 0 auto;
   }
 }
 
 .footer__links {
-  display: block;
+  li {
+    display: inline-block;
+  }
 
-  a::after {
+  li::after {
     content: ' · ';
   }
 
-  a:last-of-type::after {
+  li:last-of-type::after {
     content: none;
   }
 
-  @media (min-width: $bp-s) {
-    display: inline;
-
-    &::before {
-      content: ' · ';
-    }
+  @media (min-width: $bp-xxs) {
+    padding-left: 1rem;
   }
 }
