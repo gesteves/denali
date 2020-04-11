@@ -18,6 +18,6 @@
 <div class="map__container" data-controller="map" data-map-style="<%= @photoblog.map_style %>" data-map-api-token="<%= ENV['mapbox_api_token'] %>" data-map-markers-url="<%= admin_map_markers_path(format: 'json') %>">
   <div id="map" class="map" role="main" data-target="map.container"></div>
   <div class="map__loading" data-target="map.spinner">
-    <%= inline_svg 'spinner', 'map__loading-spinner' %>
+    <%= inline_svg :spinner, class_name: 'map__loading-spinner' %>
   </div>
 </div>
