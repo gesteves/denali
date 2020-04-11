@@ -8,7 +8,8 @@
 -%>
 
 <%= paginator.render do -%>
-  <nav class="pagination" <% if defined? target %>data-target="<%= target %>"<% end %>>
+  <nav class="pagination" <% if defined? target %>data-target="<%= target %>"<% end %> aria-labelledby="pagination">
+    <h2 id="pagination" class="sr-only">Pagination</h2>
     <%= prev_page_tag %>
     <%= next_page_tag %>
   </nav>
