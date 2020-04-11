@@ -31,7 +31,7 @@
   <% if @entries.present? %>
     <%= render partial: 'entries/search/search_form' %>
     <h2 class="sr-only" id="search-results">Search Results</h2>
-    <ol class="entry-list" aria-role="feed" aria-labelledby="search-results">
+    <ol class="entry-list" role="feed" aria-labelledby="search-results">
       <%= render partial: 'entries/grid/entry', collection: @entries, as: :entry, locals: { total_entries: @entries.size, page: 1, per_page: @count, square: true } %>
     </ol>
     <%= paginate @entries %>
