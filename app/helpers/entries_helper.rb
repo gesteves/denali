@@ -17,7 +17,7 @@ module EntriesHelper
     ]
   end
 
-  def exif_for_feeds(photo, separator: ' · ')
+  def exif_for_feeds(photo, separator: ' – ')
     exif = []
     exif << "#{photo.focal_length_with_unit} focal length" if photo.focal_length.present?
     if photo.exposure.present? && photo.f_number.present?

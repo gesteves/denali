@@ -5,7 +5,7 @@
     <meta name="description" content="<%= number_with_delimiter @tags.first.taggings_count %> photos tagged “<%= @tags.first.name %>” on <%= @photoblog.name %>.">
     <link rel="canonical" href="<%= @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) %>">
 
-    <meta property="og:title" content="<%= sanitize "#{@tags.first.name} · #{@photoblog.name}" %>">
+    <meta property="og:title" content="<%= sanitize "#{@tags.first.name} – #{@photoblog.name}" %>">
     <% if @photoblog.logo.present? %>
       <meta property="og:image" content="<%= @photoblog.logo_url(w: 1200, h: 628, fm: 'png', pad: 50, fit: 'fill', bg: 'fff') %>">
     <% else %>
@@ -23,14 +23,14 @@
       <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
       <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '') %>">
     <% end %>
-    <meta name="twitter:title" content="<%= sanitize "#{@tags.first.name} · #{@photoblog.name}" %>">
+    <meta name="twitter:title" content="<%= sanitize "#{@tags.first.name} – #{@photoblog.name}" %>">
     <meta name="twitter:url" content="<%= @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) %>">
     <meta name="twitter:description" content="<%= number_with_delimiter @tags.first.taggings_count %> photos tagged “<%= @tags.first.name %>” on <%= @photoblog.name %>.">
     <% if @photoblog.touch_icon.attached? %>
       <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
     <% end %>
     <meta name="twitter:card" content="summary">
-    <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'atom', tag: @tag_slug), title: sanitize("#{@tags.first.name} · #{@photoblog.name}") %>
+    <%= auto_discovery_link_tag :atom, tag_feed_url(format: 'atom', tag: @tag_slug), title: sanitize("#{@tags.first.name} – #{@photoblog.name}") %>
   <% end %>
 <% end %>
 

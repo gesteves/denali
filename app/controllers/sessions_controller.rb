@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
   skip_before_action :domain_redirect
 
   def new
-    @page_title = "Sign in · #{@photoblog.name}"
+    @page_title = "Sign in – #{@photoblog.name}"
     render
   end
 

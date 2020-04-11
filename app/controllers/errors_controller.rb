@@ -23,7 +23,7 @@ class ErrorsController < ApplicationController
   def respond
     respond_to do |format|
       format.html {
-        @page_title = "#{@errors.first[:message]} · #{@photoblog.name }"
+        @page_title = "#{@errors.first[:message]} – #{@photoblog.name }"
         render 'error', status: @errors.first[:status]
       }
       format.json { render 'error', status: @errors.first[:status] }

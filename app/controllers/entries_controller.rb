@@ -20,7 +20,7 @@ class EntriesController < ApplicationController
           if @page.nil? || @page == 1
             @page_title = @photoblog.name
           else
-            @page_title = "#{@photoblog.name} · Page #{@page}"
+            @page_title = "#{@photoblog.name} – Page #{@page}"
           end
         }
         format.js { render status: @entries.empty? ? 404 : 200 }
@@ -45,8 +45,8 @@ class EntriesController < ApplicationController
       set_link_headers
       respond_to do |format|
         format.html {
-          @page_title = "#{@tags.first.name} · #{@photoblog.name}"
-          @page_title += " · Page #{@page}" unless @page.nil? || @page == 1
+          @page_title = "#{@tags.first.name} – #{@photoblog.name}"
+          @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
         }
         format.js { render status: @entries.empty? ? 404 : 200 }
         format.atom { redirect_to tag_feed_url(tag: @tag_slug, format: 'atom'), status: 301 }
@@ -71,10 +71,10 @@ class EntriesController < ApplicationController
       total_count = results.results.total
       records = results.records.includes(photos: [:image_attachment, :image_blob])
       @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
-      @page_title = "Search results for “#{@query}” · #{@photoblog.name}"
-      @page_title += " · Page #{@page}" unless @page.nil? || @page == 1
+      @page_title = "Search results for “#{@query}” – #{@photoblog.name}"
+      @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
     else
-      @page_title = "Search · #{@photoblog.name}"
+      @page_title = "Search – #{@photoblog.name}"
     end
     respond_to do |format|
       format.html
@@ -88,7 +88,7 @@ class EntriesController < ApplicationController
       respond_to do |format|
         format.html {
           redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
-          @page_title = "#{@entry.plain_title} · #{@photoblog.name}"
+          @page_title = "#{@entry.plain_title} – #{@photoblog.name}"
         }
         format.all { redirect_to(@entry.permalink_url, status: 301) }
       end
