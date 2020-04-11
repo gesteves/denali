@@ -1,5 +1,0 @@
-<div class="entry-list__photo-caption" id="<%= "entry-list-caption-#{entry.id}" %>">
-  <h3 class="entry-list__photo-title"><%= sanitize truncate(entry.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></h3>
-  <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
-</div>
-

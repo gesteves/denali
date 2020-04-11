@@ -1,6 +1,0 @@
-<a class="entry-list__link" role="article" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>" aria-posinset="<%= index %>" aria-setsize="<%= total_entries %>">
-  <div class="entry-list__photo">
-    <%= lazy_responsive_image_tag photo, variant, { class: 'entry-list__image', alt: '', 'aria-hidden': true } %>
-    <%= render partial: 'entries/grid/caption.html.erb', object: entry, as: :entry  %>
-  </div>
-</a>
