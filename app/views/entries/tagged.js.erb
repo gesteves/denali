@@ -1,1 +1,1 @@
-<%= render partial: 'entries/grid/grid', locals: { entries: @entries.to_a, page_url: @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page), page: @page, per_page: @count, total_entries: @total_entries } if @entries.present? %>
+<%= render partial: 'entries/grid/grid', locals: { entries: @entries.to_a, page_url: @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) } if @entries.present? %>

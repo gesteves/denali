@@ -1,12 +1,11 @@
 <% photo = entry.photos.first %>
-<% index = local_assigns[:offset].presence.to_i + local_assigns[:entry_counter].presence.to_i + 1 + ((page - 1) * per_page) %>
 <% style = local_assigns[:square].presence ? css_gradient_stops(photo) : "#{css_aspect_ratio(photo)}#{css_gradient_stops(photo)}" %>
 <% observer = local_assigns[:page_url].presence ? "data-controller=\"pagination\" data-pagination-page-url=\"#{page_url}\"" : ''%>
 <% photo_variant = local_assigns[:square].presence ? 'entry_list_square' : 'entry_list' %>
 
 <li class="entry-list__item" <%= observer.html_safe %>>
   <div class="entry-list__wrapper" style="<%= style %>">
-    <a class="entry-list__link" role="article" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>" aria-posinset="<%= index %>" aria-setsize="<%= total_entries %>">
+    <a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
       <div class="entry-list__photo">
         <%= lazy_responsive_image_tag photo, photo_variant, { class: 'entry-list__image', alt: '', 'aria-hidden': true } %>
         <div class="entry-list__photo-caption" id="<%= "entry-list-caption-#{entry.id}" %>">

@@ -1,4 +1,4 @@
 <% cache [@photoblog, page_url] do %>
-  <%= render partial: 'entries/grid/entry', object: entries.shift, as: :entry, locals: { page_url: page_url, total_entries: total_entries, page: page, per_page: per_page } %>
-  <%= render partial: 'entries/grid/entry', collection: entries, as: :entry, locals: { total_entries: total_entries, page: page, per_page: per_page, offset: 1 } %>
+  <%= render partial: 'entries/grid/entry', object: entries.shift, as: :entry, locals: { page_url: page_url } %>
+  <%= render partial: 'entries/grid/entry', collection: entries, as: :entry %>
 <% end %>

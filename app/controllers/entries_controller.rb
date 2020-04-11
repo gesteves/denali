@@ -14,7 +14,6 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @page > 1 && @entries.empty? && request.format != 'js'
     if stale?(@entries, public: true)
-      @total_entries = @photoblog.entries.published.photo_entries.count
       set_link_headers
       respond_to do |format|
         format.html {
@@ -43,7 +42,6 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
     if stale?(@entries, public: true)
-      @total_entries = @photoblog.entries.published.photo_entries.tagged_with(@tag_list, any: true).count
       set_link_headers
       respond_to do |format|
         format.html {
