@@ -144,9 +144,16 @@ class Photo < ApplicationRecord
 
   def formatted_exposure
     return '' if self.exposure.blank?
-    exp = self.exposure.to_r
-    formatted = exp >= 1 ? "%g" % ("%.2f" % exp) : exp
-    "#{formatted}″"
+    exp = self.exposure.to_r.rationalize
+    formatted = exp >= 1 ? "%g" % ("%.2f" % exp) : exp.to_s
+    unit = if exp < 1
+      "#{exp.denominator.ordinal} of a second"
+    elsif exp == 1
+      " second"
+    else
+      " seconds"
+    end
+    "#{formatted}#{unit}"
   end
 
   def location
