@@ -68,5 +68,7 @@ export default class extends Controller {
    */
   animateSpinner () {
     this.spinnerTarget.classList.add('loading--visible');
+    this.spinnerTarget.setAttribute('aria-hidden', false);
+    this.element.setAttribute('aria-busy', true);
   }
 }

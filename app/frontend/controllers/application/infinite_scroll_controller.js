@@ -44,7 +44,9 @@ export default class extends Controller {
     this.spinnerTarget.classList.add('loading--active');
     this.footer = document.querySelector('.footer');
     this.footer.style.display = 'none';
+    this.footer.setAttribute('aria-hidden', true);
     this.paginatorTarget.style.display = 'none';
+    this.paginatorTarget.setAttribute('aria-hidden', true);
   }
 
   /**
@@ -90,7 +92,9 @@ export default class extends Controller {
   endInfiniteScroll () {
     this.observer.unobserve(this.spinnerTarget);
     this.footer.style.display = 'block';
+    this.footer.setAttribute('aria-hidden', false);
     this.spinnerTarget.parentNode.removeChild(this.spinnerTarget);
+    this.containerTarget.setAttribute('aria-busy', false);
   }
 
   /**
@@ -98,6 +102,8 @@ export default class extends Controller {
    */
   animateSpinner () {
     this.spinnerTarget.classList.add('loading--visible');
+    this.spinnerTarget.setAttribute('aria-hidden', false);
+    this.containerTarget.setAttribute('aria-busy', true);
   }
 
   /**
@@ -105,5 +111,7 @@ export default class extends Controller {
    */
   stopSpinner () {
     this.spinnerTarget.classList.remove('loading--visible');
+    this.spinnerTarget.setAttribute('aria-hidden', true);
+    this.containerTarget.setAttribute('aria-busy', false);
   }
 }
