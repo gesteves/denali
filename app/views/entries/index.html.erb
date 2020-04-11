@@ -37,7 +37,8 @@
 <% end %>
 
 <main data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= entries_url(page: nil).sub(/\/$/, '') %>" data-infinite-scroll-current-page="<%= @page %>">
-  <ol class="entry-list" data-target="infinite-scroll.container" data-controller="grid">
+  <h2 id="entry-list-heading" class="sr-only">Latest entries</h2>
+  <ol class="entry-list" data-target="infinite-scroll.container" data-controller="grid" aria-labelledby="entry-list-heading">
     <%= render partial: 'entries/grid/grid', locals: { entries: @entries.to_a, page_url: @page == 1 ? entries_url(page: nil) : entries_url(page: @page) } if @entries.present? %>
   </ol>
   <%= paginate @entries, target: 'infinite-scroll.paginator' %>
