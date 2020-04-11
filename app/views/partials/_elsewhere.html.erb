@@ -1,22 +1,22 @@
 <% cache @photoblog do %>
-  <aside class="elsewhere">
-    <h2 class="elsewhere__heading">Elsewhere on the Web</h2>
+  <aside class="elsewhere" aria-labelledby="elsewhere">
+    <h2 class="elsewhere__heading" id="elsewhere">Elsewhere on the Web</h2>
     <ul class="elsewhere__list">
       <% if @photoblog.facebook.present? %>
-        <li class="elsewhere__item"><a href="<%= @photoblog.facebook %>" rel="me" title="Like on Facebook"><%= inline_svg 'facebook', 'elsewhere__icon' %><span class="elsewhere__label">Facebook</span></a></li>
+        <li class="elsewhere__item"><a href="<%= @photoblog.facebook %>" rel="me" title="Like on Facebook" aria-label="Like on Facebook"><%= inline_svg 'facebook', 'elsewhere__icon' %><span class="elsewhere__label">Facebook</span></a></li>
       <% end %>
-      <li class="elsewhere__item"><a href="<%= feed_url %>" title="Subscribe to Feed"><%= inline_svg 'feed', 'elsewhere__icon' %><span class="elsewhere__label">Feed</span></a></li>
+      <li class="elsewhere__item"><a href="<%= feed_url %>" title="Subscribe to Feed" aria-label="Subscribe to Feed"><%= inline_svg 'feed', 'elsewhere__icon' %><span class="elsewhere__label">Feed</span></a></li>
       <% if @photoblog.flickr.present? %>
-        <li class="elsewhere__item"><a href="<%= @photoblog.flickr %>" rel="me" title="Follow on Flickr"><%= inline_svg 'flickr', 'elsewhere__icon' %><span class="elsewhere__label">Flickr</span></a></li>
+        <li class="elsewhere__item"><a href="<%= @photoblog.flickr %>" rel="me" title="Follow on Flickr" aria-label="Follow on Flickr"><%= inline_svg 'flickr', 'elsewhere__icon' %><span class="elsewhere__label">Flickr</span></a></li>
       <% end %>
       <% if @photoblog.instagram.present? %>
-        <li class="elsewhere__item"><a href="<%= @photoblog.instagram %>" rel="me" title="Follow on Instagram"><%= inline_svg 'instagram', 'elsewhere__icon' %><span class="elsewhere__label">Instagram</span></a></li>
+        <li class="elsewhere__item"><a href="<%= @photoblog.instagram %>" rel="me" title="Follow on Instagram" aria-label="Follow on Instagram"><%= inline_svg 'instagram', 'elsewhere__icon' %><span class="elsewhere__label">Instagram</span></a></li>
       <% end %>
       <% if @photoblog.tumblr.present? %>
-        <li class="elsewhere__item"><a href="<%= @photoblog.tumblr %>" rel="me" title="Follow on Tumblr"><%= inline_svg 'tumblr', 'elsewhere__icon' %><span class="elsewhere__label">Tumblr</span></a></li>
+        <li class="elsewhere__item"><a href="<%= @photoblog.tumblr %>" rel="me" title="Follow on Tumblr" aria-label="Follow on Tumblr"><%= inline_svg 'tumblr', 'elsewhere__icon' %><span class="elsewhere__label">Tumblr</span></a></li>
       <% end %>
       <% if @photoblog.twitter.present? %>
-        <li class="elsewhere__item"><a href="<%= @photoblog.twitter %>" rel="me" title="Follow on Twitter"><%= inline_svg 'twitter', 'elsewhere__icon' %><span class="elsewhere__label">Twitter</span></a></li>
+        <li class="elsewhere__item"><a href="<%= @photoblog.twitter %>" rel="me" title="Follow on Twitter" aria-label="Follow on Twitter"><%= inline_svg 'twitter', 'elsewhere__icon' %><span class="elsewhere__label">Twitter</span></a></li>
       <% end %>
     </ul>
   </aside>

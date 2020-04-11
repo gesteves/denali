@@ -1,5 +1,4 @@
-<h2 class="sr-only">Tags</h2>
-<ul class="tags">
+<ul class="tags" aria-label="Tags">
   <% tags.sort_by { |t| t.name }.each do |tag| %>
     <li><%= link_to tag.name, tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”" } %></li>
   <% end %>
