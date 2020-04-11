@@ -30,7 +30,7 @@
 <% cache [@photoblog, @query.parameterize, @page, @count] do %>
   <% if @entries.present? %>
     <%= render partial: 'entries/search/search_form' %>
-    <ol class="entry-list" role="main">
+    <ol class="entry-list">
       <%= render partial: 'entries/grid/square',
           collection: @entries,
           as: :entry,
