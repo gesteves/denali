@@ -85,6 +85,10 @@
     }
   }
 
+  &:focus .entry-list__photo-caption {
+    opacity: 1;
+  }
+
   noscript {
     bottom: 0;
     left: 0;
