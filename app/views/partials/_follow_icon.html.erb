@@ -1,5 +1,6 @@
 <li>
-  <%= link_to url, class: 'follow__link', title: label, 'aria-label': label do %>
+  <%= link_to url, class: 'follow__link', title: label, 'aria-labelledby': "follow-icon-#{icon}" do %>
     <%= inline_svg icon, 'follow__icon' %>
+    <span class="sr-only" id="follow-icon-<%= icon %>%"><%= label %></span>
   <% end %>
 </li>

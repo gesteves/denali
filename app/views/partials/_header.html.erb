@@ -1,8 +1,9 @@
 <% cache @photoblog do %>
-  <header class="header">67
-    <a href="/" class="header__link" id="header-logo">
-      <h1 aria-label="<%= @photoblog.name %>">
+  <header class="header">
+    <a href="/" class="header__link" aria-labelledby="header-photoblog-name">
+      <h1>
         <% if @photoblog.header_logo_svg.present? %>
+          <span class="sr-only" id="header-photoblog-name"><%= @photoblog.name %></span>
           <%= @photoblog.header_logo_svg.html_safe %>
         <% else %>
           <%= @photoblog.name %>
