@@ -1,6 +1,8 @@
 class GraphqlController < ApplicationController
   skip_before_action :verify_authenticity_token
-  
+  skip_before_action :domain_redirect
+  before_action :block_cloudfront
+
   def execute
     variables = ensure_hash(params[:variables])
     query = params[:query]
@@ -15,7 +17,7 @@ class GraphqlController < ApplicationController
     raise e unless Rails.env.development?
     handle_error_in_development e
   end
-  
+
   def options
     render plain: 'OK', status: 200
   end
@@ -46,7 +48,7 @@ class GraphqlController < ApplicationController
 
     render json: { error: { message: e.message, backtrace: e.backtrace }, data: {} }, status: 500
   end
-  
+
   def set_cors_headers
     response.headers['Access-Control-Allow-Origin'] = '*'
     response.headers['Access-Control-Allow-Headers'] = 'x-apollo-tracing, content-type, authorization'
