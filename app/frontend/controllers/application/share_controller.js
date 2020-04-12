@@ -1,5 +1,5 @@
 import { Controller } from 'stimulus';
-import { trackClickyEvent } from '../../lib/analytics';
+import { trackClickyGoal } from '../../lib/analytics';
 
 /**
  * Controls the native share options.
@@ -25,6 +25,6 @@ export default class extends Controller {
     event.stopPropagation();
     navigator.share({
       url: this.element.href,
-    }).then(() => { trackClickyEvent('#share', 'share:success', 'click'); }).catch(() => { trackClickyEvent('#share', 'share:cancel', 'click'); });
+    }).then(() => { trackClickyGoal('share:success'); }).catch(() => { trackClickyGoal('share:cancel'); });
   }
 }

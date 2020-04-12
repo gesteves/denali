@@ -11,3 +11,13 @@ export function trackClickyEvent (href, label, type) {
     clicky.log(href, label, type);
   }
 }
+
+/**
+ * Tracks a goal in Clicky
+ * @param {string} label The label for the goal to be tracked.
+ */
+export function trackClickyGoal (label) {
+  if (typeof clicky !== 'undefined') {
+    clicky.goal(label);
+  }
+}
