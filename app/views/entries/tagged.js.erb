@@ -1,1 +1,1 @@
-<%= render partial: 'entries/list/entry', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) }, cached: true   %>
+<%= render partial: 'entries/list/entry', collection: @entries, as: :entry, locals: { page_url: @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) }  %>
