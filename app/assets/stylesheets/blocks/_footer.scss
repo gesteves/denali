@@ -5,7 +5,7 @@
   justify-content: space-between;
   margin: 0 auto;
   max-width: $bp-m;
-  padding: var(--gutter-horizontal) 0;
+  padding: var(--gutter-horizontal) var(--gutter-vertical);
   width: 100%;
 
   p,
@@ -27,6 +27,10 @@
 
   @media (min-width: $bp-s) {
     margin: 0 auto;
+  }
+
+  @media (min-width: $bp-m) {
+    padding: var(--gutter-horizontal) 0;
   }
 
   @media print {
