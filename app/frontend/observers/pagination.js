@@ -1,5 +1,5 @@
 import 'intersection-observer';
-import { trackEvent } from '../lib/analytics';
+import { trackClickyEvent } from '../lib/analytics';
 
 let _observer;
 
@@ -47,6 +47,6 @@ function handleIntersection (entries) {
   const previous_path = window.location.pathname;
   window.history.replaceState(null, null, entry.target.getAttribute('data-pagination-page-url'));
   if (previous_path !== window.location.pathname) {
-    trackEvent(window.location.pathname, document.title, 'pageview');
+    trackClickyEvent(window.location.pathname, document.title, 'pageview');
   }
 }
