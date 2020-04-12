@@ -5,10 +5,7 @@
     <aside aria-labelledby="related-entries">
       <h2 class="entry__related" id="related-entries">Other Photos You Might Like</h2>
       <ol class="entry-list entry-list--related" aria-labelledby="related-entries">
-        <%= render partial: 'entries/grid/entry',
-                    collection: related,
-                    as: :entry,
-                    locals: { square: true } %>
+        <%= render partial: 'entries/list/entry', collection: related, as: :entry, locals: { square: true } %>
       </ol>
     </aside>
   <% end %>

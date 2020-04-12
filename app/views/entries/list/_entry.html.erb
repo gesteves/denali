@@ -1,6 +1,6 @@
 <% photo = entry.photos.first %>
 <% style = local_assigns[:square].presence ? css_gradient_stops(photo) : "#{css_aspect_ratio(photo)}#{css_gradient_stops(photo)}" %>
-<% observer = local_assigns[:page_url].presence ? "data-controller=\"pagination\" data-pagination-page-url=\"#{page_url}\"" : ''%>
+<% observer = local_assigns[:page_url].presence && entry_counter == 0 ? "data-controller=\"pagination\" data-pagination-page-url=\"#{page_url}\"" : ''%>
 <% photo_variant = local_assigns[:square].presence ? 'entry_list_square' : 'entry_list' %>
 
 <li class="entry-list__item" <%= observer.html_safe %>>
