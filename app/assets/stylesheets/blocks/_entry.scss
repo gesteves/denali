@@ -103,6 +103,12 @@
   }
 }
 
+.entry__related-entries {
+  @media print {
+    display: none;
+  }
+}
+
 .entry__related {
   border-top: var(--border-thick) solid var(--color-border);
   display: block;
@@ -112,10 +118,6 @@
   max-width: $bp-m;
   padding: var(--gutter-horizontal) var(--gutter-vertical);
   text-align: center;
-
-  @media print {
-    display: none;
-  }
 }
 
 .entry__permalink::after {

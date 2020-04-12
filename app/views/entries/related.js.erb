@@ -2,7 +2,7 @@
   <% count = 12 %>
   <% related = @entry.related(count: count) %>
   <% if related.present? %>
-    <aside aria-labelledby="related-entries">
+    <aside class="entry__related-entries" aria-labelledby="related-entries">
       <h2 class="entry__related" id="related-entries">Other Photos You Might Like</h2>
       <ol class="entry-list entry-list--related" aria-labelledby="related-entries">
         <%= render partial: 'entries/list/entry', collection: related, as: :entry, locals: { square: true } %>
