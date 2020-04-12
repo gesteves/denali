@@ -13,6 +13,12 @@
   svg g {
     fill: var(--color-logo-fill);
   }
+
+  @media print {
+    align-items: center;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+  }
 }
 
 .header__section {
@@ -39,6 +45,19 @@
     width: calc((#{$bp-max} - 320px - 40px)/2);
   }
 
+  @media print {
+    margin: 0;
+    order: 2;
+    width: auto;
+
+    &:first-of-type {
+      text-align: right;
+    }
+
+    &:last-of-type {
+      display: none;
+    }
+  }
 }
 
 .header__tagline {
@@ -85,5 +104,11 @@
 
   @media (min-width: $bp-xl) {
     width: 320px;
+  }
+
+  @media print {
+    margin: 0;
+    order: 1;
+    width: 150px;
   }
 }

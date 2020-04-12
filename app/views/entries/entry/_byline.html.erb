@@ -9,12 +9,12 @@
     Updated
   <% end %>
   <% if entry.is_published? %>
-    on <%= link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url %>
+    on <%= link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url, 'data-short-url': entry.short_permalink_url, class: 'entry__permalink' %>
   <% elsif entry.is_queued? %>
     <% if entry.publish_date_for_queued.present? %>
-      for <%= link_to entry.publish_date_for_queued.strftime('%B %-d, %Y'), entry.permalink_url %>
+      for <%= link_to entry.publish_date_for_queued.strftime('%B %-d, %Y'), entry.permalink_url, 'data-short-url': entry.short_permalink_url, class: 'entry__permalink' %>
     <% end %>
   <% else %>
-    on <%= link_to entry.updated_at.strftime('%B %-d, %Y'), entry.permalink_url %>
+    on <%= link_to entry.updated_at.strftime('%B %-d, %Y'), entry.permalink_url, 'data-short-url': entry.short_permalink_url, class: 'entry__permalink' %>
   <% end %>
 </p>

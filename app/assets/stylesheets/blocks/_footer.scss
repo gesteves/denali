@@ -28,6 +28,10 @@
   @media (min-width: $bp-s) {
     margin: 0 auto;
   }
+
+  @media print {
+    display: block;
+  }
 }
 
 .footer__links {
@@ -45,5 +49,9 @@
 
   @media (min-width: $bp-xxs) {
     padding-left: 1rem;
+  }
+
+  @media print {
+    display: none;
   }
 }

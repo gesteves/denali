@@ -1,5 +1,4 @@
 .tags {
-
   li {
     display: inline;
   }
@@ -12,5 +11,9 @@
     &::before {
       content: '#';
     }
+  }
+
+  @media print {
+    display: none;
   }
 }

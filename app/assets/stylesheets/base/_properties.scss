@@ -53,4 +53,9 @@
     --margin-content: 72px auto;
     --entry-list-columns: 4;
   }
+
+  @media print {
+    --border-thin            : 0;
+    --border-thick           : 0;
+  }
 }
