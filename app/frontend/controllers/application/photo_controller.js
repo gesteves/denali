@@ -42,6 +42,7 @@ export default class extends Controller {
     if (height > clientHeight) {
       photo.classList.add('entry__photo--zoomable');
       photo.setAttribute('data-photo-zoomable', 1);
+      photo.setAttribute('tabindex', 0);
     }
   }
 
