@@ -1,3 +1,3 @@
-<%= link_to entry.permalink_url, class: 'share share--hidden', 'data-controller': 'share', 'data-action': 'click->share#open' do %>
+<%= link_to entry.permalink_url, id: 'share', class: 'share share--hidden', 'data-controller': 'share', 'data-action': 'click->share#open', 'data-share-entry-id': entry.id do %>
   <%= inline_svg :share, class_name: 'share__icon' %> <span class="share__label">Share</span>
 <% end %>

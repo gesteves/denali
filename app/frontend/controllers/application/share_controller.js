@@ -25,6 +25,6 @@ export default class extends Controller {
     event.stopPropagation();
     navigator.share({
       url: this.element.href,
-    }).then(() => { trackClickyEvent(window.location.pathname, 'share:success', 'click'); }).catch(() => { trackClickyEvent(window.location.pathname, 'share:cancel', 'click'); });
+    }).then(() => { trackClickyEvent('#share', 'share:success', 'click'); }).catch(() => { trackClickyEvent('#share', 'share:cancel', 'click'); });
   }
 }
