@@ -1,13 +1,22 @@
 /* global clicky */
 
 /**
- * Tracks an event in Clicky
- * @param {string} href The url or path for the event to be tracked.
- * @param {string} label The label for the event to be tracked.
- * @param {string} type The type of event to be tracked.
+ * Product-agnostic function to make a page view tracking call.
+ * Currently supports Clicky.
+ * @param {string} path The pathname for the page to be tracked.
  */
-export function trackClickyEvent (href, label, type) {
+export function trackPageView (path) {
   if (typeof clicky !== 'undefined') {
-    clicky.log(href, label, type);
+    clicky.log(path, document.title, 'pageview');
+  }
+}
+
+/**
+ * Tracks an event in Clicky
+ * @param {string} label The label for the event to be tracked.
+ */
+export function trackEvent (label) {
+  if (typeof clicky !== 'undefined') {
+    clicky.log(`${window.location.pathname}#${label}`, label, 'click');
   }
 }
