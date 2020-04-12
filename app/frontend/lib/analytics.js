@@ -10,13 +10,3 @@ export function trackPageView (path) {
     clicky.log(path, document.title, 'pageview');
   }
 }
-
-/**
- * Tracks an event in Clicky
- * @param {string} label The label for the event to be tracked.
- */
-export function trackEvent (label) {
-  if (typeof clicky !== 'undefined') {
-    clicky.log(`${window.location.pathname}#${label}`, label, 'click');
-  }
-}
