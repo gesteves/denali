@@ -351,7 +351,6 @@ class Admin::EntriesController < AdminController
   end
 
   def flush_caches
-    @entry.touch
     CloudfrontInvalidationWorker.perform_async(@entry.id)
     @message = 'Your entry is being cleared from cache. This may take a few moments.'
     respond_to do |format|
