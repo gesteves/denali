@@ -165,7 +165,8 @@ class Entry < ApplicationRecord
   end
 
   def publish
-    self.older&.touch # Bust caches on the previous entry so pagination updates
+    # Bust caches on the previous entry so pagination updates
+    CloudfrontInvalidationWorker.perform_async(self.older&.id)
     self.status = 'published'
     self.save
   end
