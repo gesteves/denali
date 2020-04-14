@@ -1,5 +1,6 @@
 class CloudfrontInvalidationWorker < ApplicationWorker
   def perform(entry_id)
+    return if entry_id.blank?
     return if !Rails.env.production?
     entry = Entry.find(entry_id)
     entry.touch
