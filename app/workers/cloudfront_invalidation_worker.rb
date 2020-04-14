@@ -2,6 +2,7 @@ class CloudfrontInvalidationWorker < ApplicationWorker
   def perform(entry_id)
     return if !Rails.env.production?
     entry = Entry.find(entry_id)
+    entry.touch
     client = Aws::CloudFront::Client.new(access_key_id: ENV['aws_access_key_id'], secret_access_key: ENV['aws_secret_access_key'], region: ENV['s3_region'])
     paths = [entry.permalink_path].compact
     response = client.create_invalidation({
