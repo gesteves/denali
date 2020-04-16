@@ -37,6 +37,7 @@ gem 'figaro'
 gem 'oauth'
 gem 'mini_magick'
 gem 'rack-attack'
+gem 'htmlcompressor'
 
 # Monitoring
 gem 'newrelic_rpm'
