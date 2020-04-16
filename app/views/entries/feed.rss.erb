@@ -1,0 +1,12 @@
+<% cache @photoblog do %>
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+<channel>
+  <title><%= @photoblog.name %></title>
+  <link><%= root_url %></link>
+  <description><%= @photoblog.plain_tag_line %></description>
+  <pubDate><%= @entries.map(&:modified_at).max.utc.rfc822 %></pubDate>
+  <atom:link href="<%= feed_url(format: 'rss') %>" rel="self" type="application/rss+xml"/>
+  <%= render partial: 'entries/feed/entry.rss.erb', collection: @entries, as: :entry, cached: true %>
+</channel>
+<% end %>
