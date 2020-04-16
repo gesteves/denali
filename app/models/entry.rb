@@ -537,8 +537,8 @@ class Entry < ApplicationRecord
 
     if include_self
       paths << (self.is_published? ? related_path(self.id) : related_preview_path(self.preview_hash))
-      paths << entry_path(self.id)
-      paths << self.permalink_path  if self.is_published?
+      paths << entry_path(self.id) if self.is_published?
+      paths << self.permalink_path
     end
 
     paths.flatten.uniq.sort.reject(&:blank?)
