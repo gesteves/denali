@@ -524,7 +524,8 @@ class Entry < ApplicationRecord
         '/',
         '/page/*',
         '/sitemap*',
-        '/feed*'
+        '/feed*',
+        '/oembed*
       ]
       paths = paths + self.combined_tags.map(&:slug).map { |tag| "/tagged/#{tag}/*"}
     end
