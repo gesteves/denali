@@ -1,0 +1,19 @@
+<% cache @photoblog do %>
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:webfeeds="http://webfeeds.org/rss/1.0">
+  <id><%= atom_tag(root_url, @entries.map(&:modified_at).max) %></id>
+  <title><%= @photoblog.name %></title>
+  <link rel="alternate" type="text/html" href="<%= root_url %>"/>
+  <link rel="self" type="application/atom+xml" href="<%= feed_url(format: 'atom') %>"/>
+  <updated><%= @entries.map(&:modified_at).max.utc.strftime('%FT%TZ') %></updated>
+  <webfeeds:accentColor>#BF0222</webfeeds:accentColor>
+  <% if @photoblog.logo.attached? %>
+    <webfeeds:wordmark><%= @photoblog.logo_url(w: 192) %></webfeeds:wordmark>
+  <% end %>
+  <% if @photoblog.touch_icon.attached? %>
+    <webfeeds:icon><%=  @photoblog.touch_icon_url(w: 192) %></webfeeds:icon>
+  <% end %>
+  <webfeeds:related layout="card" target="browser"/>
+  <%= render partial: 'entries/feed/entry.atom.erb', collection: @entries, as: :entry, cached: true %>
+</feed>
+<% end %>
