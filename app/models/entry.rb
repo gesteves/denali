@@ -280,15 +280,18 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_publish_jobs
+    Webhook.deliver_all(self)
     InstagramWorker.perform_async(self.id, true) if self.post_to_instagram
     TwitterWorker.perform_async(self.id, true) if self.post_to_twitter
     FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
     TumblrWorker.perform_async(self.id, true) if self.post_to_tumblr
     self.send_photos_to_flickr if self.post_to_flickr
-    Webhook.deliver_all(self)
-    paths = self.paths_for_invalidation(include_self: false)
-    paths << self.older&.permalink_path
-    CloudfrontInvalidationWorker.perform_async(paths)
+    self.invalidate_after_publish
+  end
+
+  def invalidate_after_publish
+    self.older&.touch
+    CloudfrontInvalidationWorker.perform_async(self.paths_for_invalidation(include_self: false) + [self.older&.permalink_path])
   end
 
   def send_photos_to_flickr
