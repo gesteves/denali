@@ -522,12 +522,12 @@ class Entry < ApplicationRecord
     if self.is_published?
       paths = paths + [
         '/',
-        '/page/*',
+        '/page*',
         '/sitemap*',
         '/feed*',
         '/oembed*'
       ]
-      paths = paths + self.combined_tags.map(&:slug).map { |tag| "/tagged/#{tag}/*"}
+      paths = paths + self.combined_tags.map(&:slug).map { |tag| "/tagged/#{tag}*"}
     end
 
     if include_self
