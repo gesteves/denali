@@ -17,7 +17,7 @@ class Admin::BlogsController < AdminController
   def update
     respond_to do |format|
       if @photoblog.update(blog_params)
-        CloudfrontInvalidationWorker.perform_async if params[:update_cache_version] == 'true'
+        CloudfrontInvalidationWorker.perform_async(['/*']) if params[:update_cache_version] == 'true'
         HerokuConfigWorker.perform_async(heroku_configs(blog_params))
         format.html {
           flash[:success] = 'Your changes were saved!'
