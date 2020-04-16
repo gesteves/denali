@@ -532,7 +532,7 @@ class Entry < ApplicationRecord
         '/search*',
         '/related*'
       ]
-      paths = paths + self.combined_tags.map(&:slug).map { |tag| "/tagged/#{tag}*"}
+      paths = paths + self.combined_tags.map { |tag| "/tagged/#{tag.slug}*"}
     end
 
     if include_self
