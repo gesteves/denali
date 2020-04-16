@@ -286,7 +286,7 @@ class Entry < ApplicationRecord
     TumblrWorker.perform_async(self.id, true) if self.post_to_tumblr
     self.send_photos_to_flickr if self.post_to_flickr
     Webhook.deliver_all(self)
-    CloudfrontInvalidationWorker.perform_async(self.older&.id)
+    CloudfrontInvalidationWorker.perform_async(self.older&.permalink_path)
   end
 
   def send_photos_to_flickr
