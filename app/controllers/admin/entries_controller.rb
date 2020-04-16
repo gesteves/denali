@@ -175,6 +175,7 @@ class Admin::EntriesController < AdminController
   # DELETE /admin/entries/1
   def destroy
     paths = @entry.paths_for_invalidation
+    paths = paths + @entry.newer.&paths_for_invalidation + @entry.older.&paths_for_invalidation if @entry.is_published?
     @entry.destroy
     CloudfrontInvalidationWorker.perform_async(paths)
     respond_to do |format|
