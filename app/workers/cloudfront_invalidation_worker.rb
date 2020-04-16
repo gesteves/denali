@@ -1,6 +1,6 @@
 class CloudfrontInvalidationWorker < ApplicationWorker
   def perform(paths = ['/*'])
-    paths = [paths].flatten.uniq.reject(&:blank?).reject { |path| path.start_with? '/' }
+    paths = [paths].flatten.uniq.reject(&:blank?).reject { |path| !path.start_with? '/' }
     return if ENV['CACHE_TTL'].to_i <= 60
     return if paths.blank?
     return if !Rails.env.production?
