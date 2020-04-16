@@ -286,7 +286,7 @@ class Entry < ApplicationRecord
     TumblrWorker.perform_async(self.id, true) if self.post_to_tumblr
     self.send_photos_to_flickr if self.post_to_flickr
     Webhook.deliver_all(self)
-    CloudfrontInvalidationWorker.perform_async(self.older&.permalink_path)
+    CloudfrontInvalidationWorker.perform_async(self.paths_for_invalidation(include_self: false, include_previous: true))
   end
 
   def send_photos_to_flickr
@@ -513,6 +513,31 @@ class Entry < ApplicationRecord
 
   def affiliate_lenses
     Lens.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
+  end
+
+  def paths_for_invalidation(include_self: true, include_previous: false)
+    paths = []
+    if self.is_published?
+      paths = paths + [
+        '/',
+        '/page/*',
+        '/sitemap*',
+        '/feed*'
+      ]
+      paths = paths + self.combined_tags.map(&:slug).map { |tag| "/tagged/#{tag}/*"}
+    end
+
+    if include_self
+      paths << (self.is_published? ? related_path(self.id) : related_preview_path(self.preview_hash))
+      paths << entry_path(self.id)
+      paths << self.permalink_path  if self.is_published?
+    end
+
+    if include_previous
+      paths << self.older&.permalink_path
+    end
+
+    paths.flatten.uniq.sort.reject(&:blank?)
   end
 
   private

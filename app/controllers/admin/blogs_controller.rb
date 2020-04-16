@@ -17,6 +17,7 @@ class Admin::BlogsController < AdminController
   def update
     respond_to do |format|
       if @photoblog.update(blog_params)
+        CloudfrontInvalidationWorker.perform_async if params[:update_cache_version] == 'true'
         HerokuConfigWorker.perform_async(heroku_configs(blog_params))
         format.html {
           flash[:success] = 'Your changes were saved!'
@@ -39,13 +40,12 @@ class Admin::BlogsController < AdminController
                                  :instagram, :twitter, :tumblr, :email, :flickr,
                                  :header_logo_svg, :additional_meta_tags,
                                  :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description, :map_style,
-                                 :update_cache_version, :cache_entry_ttl, :cache_ttl)
+                                 :update_cache_version, :cache_ttl)
   end
 
   def heroku_configs(params)
     config = {
-      CACHE_TTL: params[:cache_ttl]&.to_s,
-      CACHE_ENTRY_TTL: params[:cache_entry_ttl]&.to_s,
+      CACHE_TTL: params[:cache_ttl]&.to_s
     }.compact
     config.merge!(CACHE_VERSION: Time.now.to_i.to_s) if params[:update_cache_version] == 'true'
     config.reject { |k,v| v == ENV[k.to_s] }
