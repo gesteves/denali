@@ -291,7 +291,6 @@ class Entry < ApplicationRecord
 
   def invalidate(include_adjacents: false, include_self: true)
     paths = []
-
     wildcard_paths = %w{
       /
       /page*
@@ -324,7 +323,7 @@ class Entry < ApplicationRecord
     end
 
     invalidations = paths.flatten.reject(&:blank?).uniq.sort.each_slice(15).to_a
-    invalidations.each_with_index { |paths, i| CloudfrontInvalidationWorker.perform_in(i.minute, paths) }
+    invalidations.each_with_index { |paths, i| CloudfrontInvalidationWorker.perform_in((i*2).minute, paths) }
   end
 
   def send_photos_to_flickr
