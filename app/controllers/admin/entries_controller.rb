@@ -174,7 +174,7 @@ class Admin::EntriesController < AdminController
 
   # DELETE /admin/entries/1
   def destroy
-    paths = @entry.paths_for_invalidation
+    paths = @entry.paths_for_invalidation.push(entry_path(@entry.id))
     if @entry.is_published?
       paths << @entry.newer&.permalink_path
       paths << @entry.older&.permalink_path
