@@ -1,12 +1,13 @@
 <% cache [@photoblog, @tag_slug] do %>
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
-<channel>
-  <title><%= "#{@tags.first.name} - #{@photoblog.name}" %></title>
-  <link><%= tag_url(tag: @tag_slug) %></link>
-  <description><%= "#{@photoblog.plain_tag_line} – Photos tagged “#{@tags.first.name}”" %></description>
-  <pubDate><%= @entries.map(&:modified_at).max.utc.rfc822 %></pubDate>
-  <atom:link href="<%= tag_feed_url(tag: @tag_slug, format: 'rss') %>" rel="self" type="application/rss+xml"/>
-  <%= render partial: 'entries/feed/entry.rss.erb', collection: @entries, as: :entry, cached: true %>
-</channel>
+  <channel>
+    <title><%= "#{@tags.first.name} - #{@photoblog.name}" %></title>
+    <link><%= tag_url(tag: @tag_slug) %></link>
+    <description><%= "#{@photoblog.plain_tag_line} – Photos tagged “#{@tags.first.name}”" %></description>
+    <pubDate><%= @entries.map(&:modified_at).max.utc.rfc822 %></pubDate>
+    <atom:link href="<%= tag_feed_url(tag: @tag_slug, format: 'rss') %>" rel="self" type="application/rss+xml"/>
+    <%= render partial: 'entries/feed/entry.rss.erb', collection: @entries, as: :entry, cached: true %>
+  </channel>
+</rss>
 <% end %>
