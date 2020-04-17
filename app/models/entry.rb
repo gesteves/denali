@@ -286,12 +286,45 @@ class Entry < ApplicationRecord
     FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
     TumblrWorker.perform_async(self.id, true) if self.post_to_tumblr
     self.send_photos_to_flickr if self.post_to_flickr
-    self.invalidate_after_publish
+    self.invalidate(invalidate_adjacents: true, include_self: false)
   end
 
-  def invalidate_after_publish
-    self.older&.touch
-    CloudfrontInvalidationWorker.perform_async(self.paths_for_invalidation.push(self.older&.permalink_path))
+  def invalidate(include_adjacents: false, include_self: true)
+    paths = []
+
+    wildcard_paths = %w{
+      /
+      /page*
+      /sitemap*
+      /feed*
+      /oembed*
+      /search*
+      /related*
+      /preview*
+    }
+
+    if include_self
+      paths.push(self.permalink_path)
+    end
+
+    if self.is_published?
+      paths.concat(wildcard_paths)
+      paths.concat(self.combined_tags.map { |tag| "/tagged/#{tag.slug}*"})
+    end
+
+    if include_self && self.is_published?
+      paths.push(entry_path(self.id))
+    end
+
+    if include_adjacents
+      self.older&.touch
+      self.newer&.touch
+      paths.push(self.newer&.permalink_path)
+      paths.push(self.older&.permalink_path)
+    end
+
+    invalidations = paths.flatten.reject(&:blank?).uniq.sort.each_slice(15).to_a
+    invalidations.each { |invalidation| CloudfrontInvalidationWorker.perform_async(invalidation) }
   end
 
   def send_photos_to_flickr
@@ -518,24 +551,6 @@ class Entry < ApplicationRecord
 
   def affiliate_lenses
     Lens.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
-  end
-
-  def paths_for_invalidation
-    wildcard_paths = %w{
-      /
-      /page*
-      /sitemap*
-      /feed*
-      /oembed*
-      /search*
-      /related*
-      /preview*
-      /tagged*
-    }
-
-    paths = [self.permalink_path]
-    paths.concat(wildcard_paths) if self.is_published?
-    paths.flatten.uniq.sort.reject(&:blank?)
   end
 
   private

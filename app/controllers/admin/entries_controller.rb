@@ -162,7 +162,7 @@ class Admin::EntriesController < AdminController
       @entry.modified_at = Time.current if @entry.is_published?
       if @entry.update(entry_params)
         @entry.update_tags
-        CloudfrontInvalidationWorker.perform_async(@entry.paths_for_invalidation) if entry_params[:flush_caches] == 'true'
+        @entry.invalidate if entry_params[:flush_caches] == 'true'
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else
@@ -174,13 +174,8 @@ class Admin::EntriesController < AdminController
 
   # DELETE /admin/entries/1
   def destroy
-    paths = @entry.paths_for_invalidation.push(entry_path(@entry.id))
-    if @entry.is_published?
-      paths << @entry.newer&.permalink_path
-      paths << @entry.older&.permalink_path
-    end
+    @entry.invalidate(include_adjacents: true)
     @entry.destroy
-    CloudfrontInvalidationWorker.perform_async(paths)
     respond_to do |format|
       flash[:danger] = 'Your entry was deleted forever.'
       format.html { redirect_to session[:redirect_url] || admin_entries_path }
@@ -357,7 +352,7 @@ class Admin::EntriesController < AdminController
   end
 
   def flush_caches
-    CloudfrontInvalidationWorker.perform_async(@entry.paths_for_invalidation)
+    entry.invalidate
     @message = 'Your entry is being cleared from cache. This may take a few moments.'
     respond_to do |format|
       format.html {
