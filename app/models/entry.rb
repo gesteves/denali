@@ -291,7 +291,7 @@ class Entry < ApplicationRecord
 
   def invalidate_after_publish
     self.older&.touch
-    CloudfrontInvalidationWorker.perform_async(self.paths_for_invalidation(include_self: false) + [self.older&.permalink_path])
+    CloudfrontInvalidationWorker.perform_async(self.paths_for_invalidation + [self.older&.permalink_path])
   end
 
   def send_photos_to_flickr
@@ -520,25 +520,24 @@ class Entry < ApplicationRecord
     Lens.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
   end
 
-  def paths_for_invalidation(include_self: true)
-    paths = []
-    if self.is_published?
-      paths = paths + [
-        '/',
-        '/page*',
-        '/sitemap*',
-        '/feed*',
-        '/oembed*',
-        '/search*',
-        '/related*'
-      ]
-      paths = paths + self.combined_tags.map { |tag| "/tagged/#{tag.slug}*"}
-    end
+  def paths_for_invalidation
+    wildcard_paths = %w{
+      /
+      /page*
+      /sitemap*
+      /feed*
+      /oembed*
+      /search*
+      /related*
+      /preview*
+    }
 
-    if include_self
-      paths << (self.is_published? ? related_path(self.id) : related_preview_path(self.preview_hash))
-      paths << entry_path(self.id) if self.is_published?
-      paths << self.permalink_path
+    paths = [self.permalink_path]
+
+    if self.is_published?
+      paths.concat(wildcard_paths)
+      paths.concat(self.combined_tags.map { |tag| "/tagged/#{tag.slug}*"})
+      paths << entry_path(self.id)
     end
 
     paths.flatten.uniq.sort.reject(&:blank?)
