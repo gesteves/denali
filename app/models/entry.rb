@@ -530,16 +530,11 @@ class Entry < ApplicationRecord
       /search*
       /related*
       /preview*
+      /tagged*
     }
 
     paths = [self.permalink_path]
-
-    if self.is_published?
-      paths.concat(wildcard_paths)
-      paths.concat(self.combined_tags.map { |tag| "/tagged/#{tag.slug}*"})
-      paths << entry_path(self.id)
-    end
-
+    paths.concat(wildcard_paths) if self.is_published?
     paths.flatten.uniq.sort.reject(&:blank?)
   end
 
