@@ -291,7 +291,7 @@ class Entry < ApplicationRecord
 
   def invalidate_after_publish
     self.older&.touch
-    CloudfrontInvalidationWorker.perform_async(self.paths_for_invalidation + [self.older&.permalink_path])
+    CloudfrontInvalidationWorker.perform_async(self.paths_for_invalidation.push(self.older&.permalink_path))
   end
 
   def send_photos_to_flickr
