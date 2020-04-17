@@ -286,7 +286,7 @@ class Entry < ApplicationRecord
     FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
     TumblrWorker.perform_async(self.id, true) if self.post_to_tumblr
     self.send_photos_to_flickr if self.post_to_flickr
-    self.invalidate(invalidate_adjacents: true, include_self: false)
+    self.invalidate(include_adjacents: true, include_self: false)
   end
 
   def invalidate(include_adjacents: false, include_self: true)
