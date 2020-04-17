@@ -324,7 +324,7 @@ class Entry < ApplicationRecord
     end
 
     invalidations = paths.flatten.reject(&:blank?).uniq.sort.each_slice(15).to_a
-    invalidations.each_with_index { |paths, i| CloudfrontInvalidationWorker.perform_in((i*5).minute, paths) }
+    invalidations.each_with_index { |paths, i| CloudfrontInvalidationWorker.perform_in(i.minute, paths) }
   end
 
   def send_photos_to_flickr
