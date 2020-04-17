@@ -352,7 +352,7 @@ class Admin::EntriesController < AdminController
   end
 
   def flush_caches
-    entry.invalidate
+    @entry.invalidate
     @message = 'Your entry is being cleared from cache. This may take a few moments.'
     respond_to do |format|
       format.html {
