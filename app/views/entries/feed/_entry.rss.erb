@@ -3,12 +3,13 @@
     <guid isPermaLink="true"><%= entry.permalink_url %></guid>
     <pubDate><%= entry.published_at.utc.rfc822 %></pubDate>
     <link><%= entry.permalink_url %></link>
-    <% entry.photos.each do |photo| %>
-      <media:content url="<%= photo.url(w: 1280, fm: 'jpg') %>" />
-    <% end %>
     <title><%= entry.plain_title %></title>
     <description>
       <%= html_escape render(partial: 'entries/feed/feed_entry_body.html.erb', object: entry, as: :entry).to_str %>
     </description>
+    <% entry.photos.each do |photo| %>
+      <media:content url="<%= photo.url(w: 1280, fm: 'jpg') %>" />
+    <% end %>
+    <media:keywords><%= entry.combined_tags.sort_by { |t| t.name }.join(', ') %></media:keywords>
   </item>
 <% end %>
