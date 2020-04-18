@@ -183,8 +183,8 @@ class Admin::EntriesController < AdminController
   end
 
   def organize_queue
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued
-    if stale?(@entries)
+    if stale?(@photoblog)
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued
       @page_title = 'Organize queue'
       respond_to do |format|
         format.html
