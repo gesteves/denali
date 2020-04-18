@@ -118,7 +118,7 @@ class EntriesController < ApplicationController
 
   def feed
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.page(1).per(@count)
+    @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob], taggings: :tag).published.photo_entries.page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
     if stale?(@entries, public: true)
       respond_to do |format|
@@ -132,7 +132,7 @@ class EntriesController < ApplicationController
 
   def tag_feed
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
+    @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob], taggings: :tag).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     if stale?(@entries, public: true)
       respond_to do |format|
