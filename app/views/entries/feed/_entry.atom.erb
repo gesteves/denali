@@ -11,6 +11,10 @@
     <% if entry.is_photo?%>
       <webfeeds:featuredImage url="<%= entry.photos.first.url(w: 2560, fm: 'jpg') %>" type="image/jpg" width="2560" height="<%= entry.photos.first.height_from_width(2560) %>"/>
     <% end %>
+    <% entry.photos.each do |photo| %>
+      <media:content url="<%= photo.url(w: 1280, fm: 'jpg') %>" />
+    <% end %>
+    <media:keywords><%= entry.combined_tags.sort_by { |t| t.name }.join(', ') %></media:keywords>
     <author>
       <name><%= entry.user.name %></name>
     </author>
