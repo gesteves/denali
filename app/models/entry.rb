@@ -53,15 +53,15 @@ class Entry < ApplicationRecord
                            :es_alt_text])
   end
 
-  def self.published(order = 'published_at DESC')
+  def self.published(order = 'entries.published_at DESC')
     where(status: 'published').order(order)
   end
 
-  def self.drafted(order = 'updated_at DESC')
+  def self.drafted(order = 'entries.updated_at DESC')
     where(status: 'draft').order(order)
   end
 
-  def self.queued(order = 'position ASC')
+  def self.queued(order = 'entries.position ASC')
     where(status: 'queued').order(order)
   end
 
