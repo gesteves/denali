@@ -1,3 +1,4 @@
+<% cache @entry do %>
 <div class="modal is-active" data-controller="photo-resizer modal">
   <div class="modal-background" data-action="click->modal#close"></div>
   <div class="modal-card">
@@ -6,10 +7,11 @@
       <button class="delete" data-action="click->modal#close"></button>
     </header>
     <section class="modal-card-body">
-      <%= render partial: 'print', collection: @entry.photos, as: :photo, cached: true %>
+      <%= render partial: 'print', collection: @entry.photos, as: :photo %>
     </section>
     <footer class="modal-card-foot">
       <button class="button" data-action="click->modal#close">Done</button>
     </footer>
   </div>
 </div>
+<% end %>

@@ -1,19 +1,21 @@
-<div class="card">
-  <%= render partial: 'entry_image', locals: { entry: entry } %>
-  <div class="card-content">
-    <%= render partial: 'entry_content', locals: { entry: entry } %>
-    <hr class="hr">
-    <div class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <%= render partial: 'entry_meta', locals: { entry: entry } %>
+<% cache entry do %>
+  <div class="card">
+    <%= render partial: 'entry_image', locals: { entry: entry } %>
+    <div class="card-content">
+      <%= render partial: 'entry_content', locals: { entry: entry } %>
+      <hr class="hr">
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <%= render partial: 'entry_meta', locals: { entry: entry } %>
+          </div>
         </div>
-      </div>
-      <div class="level-right">
-        <div class="level-item">
-          <%= render partial: 'entry_actions', locals: { entry: entry } %>
+        <div class="level-right">
+          <div class="level-item">
+            <%= render partial: 'entry_actions', locals: { entry: entry } %>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+<% end %>

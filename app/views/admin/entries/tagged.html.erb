@@ -1,4 +1,4 @@
-<% cache [@photoblog, @tag_list.first, @page] do %>
+<% cache [@entries, @tag_list.first] do %>
   <h1 class="title is-size-5-mobile"><%= @tag_list.first %></h1>
   <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', @tagged_count %></h2>
   <hr class="hr">
