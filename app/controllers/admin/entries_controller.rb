@@ -47,7 +47,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/tagged/film
   def tagged
     @page = params[:page] || 1
-    entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).tagged_with(@tag_list, any: true).order('created_at DESC')
+    entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).tagged_with(@tag_list, any: true).order('entries.created_at DESC')
     @entries = entries.page(@page)
     if stale?(@entries)
       @page_title = "Entries tagged \"#{@tag_list.first}\""
