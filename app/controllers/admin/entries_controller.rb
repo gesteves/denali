@@ -9,9 +9,9 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries
   def index
-    if stale?(@photoblog)
-      @page = params[:page] || 1
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).published.page(@page)
+    @page = params[:page] || 1
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).published.page(@page)
+    if stale?(@entries)
       @page_title = 'Published'
       respond_to do |format|
         format.html
@@ -21,10 +21,10 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/queued
   def queued
-    if stale?(@photoblog)
-      @page = params[:page] || 1
-      @count = (@photoblog.publish_schedules_count || 1) * 7
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).queued.page(@page).per(@count)
+    @page = params[:page] || 1
+    @count = (@photoblog.publish_schedules_count || 1) * 7
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).queued.page(@page).per(@count)
+    if stale?(@entries)
       @page_title = 'Queued'
       respond_to do |format|
         format.html
@@ -34,9 +34,9 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/drafts
   def drafts
-    if stale?(@photoblog)
-      @page = params[:page] || 1
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).drafted.page(@page)
+    @page = params[:page] || 1
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).drafted.page(@page)
+    if stale?(@entries)
       @page_title = 'Drafts'
       respond_to do |format|
         format.html
@@ -46,11 +46,11 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/tagged/film
   def tagged
-    if stale?(@photoblog)
+    @page = params[:page] || 1
+    entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).tagged_with(@tag_list, any: true).order('created_at DESC')
+    @entries = entries.page(@page)
+    if stale?(@entries)
       @page_title = "Entries tagged \"#{@tag_list.first}\""
-      @page = params[:page] || 1
-      entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).tagged_with(@tag_list, any: true).order('created_at DESC')
-      @entries = entries.page(@page)
       @tagged_count = entries.size
       raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
       respond_to do |format|
@@ -61,7 +61,7 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/:id
   def show
-    if stale?(@photoblog)
+    if stale?(@entry)
       @page_title = @entry.plain_title
       respond_to do |format|
         format.html
@@ -183,9 +183,9 @@ class Admin::EntriesController < AdminController
   end
 
   def organize_queue
-    if stale?(@photoblog)
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued
+    if stale?(@entries)
       @page_title = 'Organize queue'
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued
       respond_to do |format|
         format.html
       end
@@ -227,7 +227,7 @@ class Admin::EntriesController < AdminController
 
   def syndicate
     @entry = @photoblog.entries.published.find(params[:id])
-    if stale?(@photoblog)
+    if stale?(@entry)
       respond_to do |format|
         format.html {
           if params[:modal]
@@ -269,7 +269,7 @@ class Admin::EntriesController < AdminController
   end
 
   def prints
-    if stale?(@photoblog)
+    if stale?(@entry)
       @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
       @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
       respond_to do |format|
