@@ -157,13 +157,7 @@ class Photo < ApplicationRecord
   end
 
   def location
-    locations = []
-    locations += if self.entry.is_parks_entry? && entry.instagram_location.present?
-      [entry.instagram_location_name, self.administrative_area, self.country].uniq.reject(&:blank?)
-    else
-      [self.neighborhood, self.sublocality, self.locality, self.administrative_area, self.postal_code, self.country].uniq.reject(&:blank?)
-    end
-    locations.join(', ')
+    [self.neighborhood, self.sublocality, self.locality, self.administrative_area, self.postal_code, self.country].reject(&:blank?).uniq.join(', ')
   end
 
   def extract_metadata
