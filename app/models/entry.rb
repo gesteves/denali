@@ -303,6 +303,7 @@ class Entry < ApplicationRecord
     }
 
     if include_self
+      self.touch
       paths.push(self.permalink_path)
     end
 
@@ -322,8 +323,8 @@ class Entry < ApplicationRecord
       paths.push(self.older&.permalink_path)
     end
 
-    invalidations = paths.flatten.reject(&:blank?).uniq.sort.each_slice(15).to_a
-    invalidations.each_with_index { |paths, i| CloudfrontInvalidationWorker.perform_in((i*2).minute, paths) }
+    paths = paths.flatten.reject(&:blank?).uniq.sort
+    CloudfrontInvalidationWorker.perform_async(paths)
   end
 
   def send_photos_to_flickr
