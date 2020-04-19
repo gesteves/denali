@@ -1,28 +1,27 @@
-<% cache entry do %>
-  <article class="entry entry--photo" role="main" data-controller="photo" data-photo-container-max-width="1680">
-    <% entry.photos.each do |photo| %>
-      <div class="entry__figure" style="<%= css_gradient_stops(photo) %>">
-        <%= responsive_image_tag photo,
-            'entry',
-            { class: 'entry__photo entry__photo--zoom',
-              alt: photo.alt_text,
-              'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu',
-              'data-target': 'photo.photo' } %>
-      </div>
-    <% end %>
-
-    <div class="entry__body">
-      <h2 class="entry__headline">
-        <%= sanitize entry.plain_title %>
-      </h2>
-      <%= sanitize entry.formatted_body unless entry.body.blank? %>
+<article class="entry entry--photo" role="main" data-controller="photo" data-photo-container-max-width="1680">
+  <% entry.photos.each do |photo| %>
+    <div class="entry__figure" style="<%= css_gradient_stops(photo) %>">
+      <%= responsive_image_tag photo,
+          'entry',
+          { class: 'entry__photo entry__photo--zoom',
+            alt: photo.alt_text,
+            'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu',
+            'data-target': 'photo.photo' } %>
     </div>
+  <% end %>
 
-    <aside class="entry__meta" aria-labelledby="entry-meta">
-      <h2 id="entry-meta" class="sr-only">About <%= entry.is_photoset? ? 'these photos' : 'this photo' %></h2>
-      <%= render partial: 'entries/entry/byline', object: entry, as: :entry %>
-      <%= render partial: 'entries/entry/exif', object: entry.photos.first, as: :photo if entry.is_single_photo? %>
-      <%= render partial: 'entries/entry/tags', object: entry.combined_tags, as: :tags %>
-    </aside>
-  </article>
-<% end %>
+  <div class="entry__body">
+    <h2 class="entry__headline">
+      <%= sanitize entry.plain_title %>
+    </h2>
+    <%= sanitize entry.formatted_body unless entry.body.blank? %>
+  </div>
+
+  <aside class="entry__meta" aria-labelledby="entry-meta">
+    <h2 id="entry-meta" class="sr-only">About <%= entry.is_photoset? ? 'these photos' : 'this photo' %></h2>
+    <%= render partial: 'entries/entry/byline', object: entry, as: :entry %>
+    <%= render partial: 'entries/entry/exif', object: entry.photos.first, as: :photo if entry.is_single_photo? %>
+    <%= render partial: 'entries/entry/tags', object: entry.combined_tags, as: :tags %>
+  </aside>
+</article>
+
