@@ -2,10 +2,6 @@
   <%= render partial: 'entries/entry/head', object: @entry, as: :entry %>
 <% end %>
 
-<% cache @entry do %>
-  <%= render partial: 'entries/entry/photo', object: @entry, as: :entry if @entry.is_photo? %>
-  <%= render partial: 'entries/entry/text', object: @entry, as: :entry if @entry.is_text? %>
-  <%= render partial: 'entries/entry/pagination', object: @entry, as: :entry %>
-  <%= render partial: 'entries/entry/related', object: @entry, as: :entry if @photoblog.show_related_entries? %>
-  <%= render partial: 'partials/elsewhere' %>
-<% end %>
+<%= render partial: 'entries/entry/body', object: @entry, as: :entry %>
+<%= render partial: 'entries/entry/related', object: @entry, as: :entry if @photoblog.show_related_entries? %>
+<%= render partial: 'partials/elsewhere' %>

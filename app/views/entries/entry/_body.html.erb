@@ -1,0 +1,5 @@
+<% cache entry do %>
+  <%= render partial: 'entries/entry/photo', object: entry, as: :entry if entry.is_photo? %>
+  <%= render partial: 'entries/entry/text', object: entry, as: :entry if entry.is_text? %>
+  <%= render partial: 'entries/entry/pagination', object: entry, as: :entry %>
+<% end %>
