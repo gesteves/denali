@@ -10,6 +10,15 @@ class Admin::BlogsController < AdminController
       ['Satellite', 'mapbox://styles/mapbox/satellite-v9'],
       ['Satellite streets', 'mapbox://styles/mapbox/satellite-streets-v11'],
     ]
+    @ttls = [
+      ['Don’t cache', 0],
+      ['5 minutes',   5.minutes],
+      ['1 hour',      1.hour],
+      ['1 day',       1.day],
+      ['1 week',      1.week],
+      ['1 month',     1.month],
+      ['1 year',      1.year]
+    ]
   end
 
   # PATCH/PUT /admin/blogs/1
@@ -17,7 +26,7 @@ class Admin::BlogsController < AdminController
   def update
     respond_to do |format|
       if @photoblog.update(blog_params)
-        HerokuConfigWorker.perform_async(heroku_configs(blog_params))
+        HerokuConfigWorker.perform_async({ CACHE_TTL: blog_params[:cache_ttl]&.to_s }.compact)
         format.html {
           flash[:success] = 'Your changes were saved!'
           redirect_to edit_admin_blog_path(@photoblog)
@@ -54,12 +63,5 @@ class Admin::BlogsController < AdminController
                                  :header_logo_svg, :additional_meta_tags,
                                  :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description, :map_style,
                                  :cache_ttl)
-  end
-
-  def heroku_configs(params)
-    config = {
-      CACHE_TTL: params[:cache_ttl]&.to_s
-    }.compact
-    config.reject { |k,v| v == ENV[k.to_s] }
   end
 end

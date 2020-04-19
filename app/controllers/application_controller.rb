@@ -63,8 +63,8 @@ class ApplicationController < ActionController::Base
     expires_now
   end
 
-  def set_max_age(minutes: ENV['CACHE_TTL'].to_i)
-    response.headers['Cache-Control'] = "s-maxage=#{minutes.minutes}, max-age=0, public"
+  def set_max_age(seconds: ENV['CACHE_TTL'].to_i)
+    response.headers['Cache-Control'] = "s-maxage=#{seconds}, max-age=0, public"
   end
 
   def add_preload_link_header(url, opts = {})
