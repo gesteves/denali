@@ -293,7 +293,7 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
-      format.js { render :notify }
+      format.js { render 'admin/shared/notify' }
     end
   end
 
@@ -306,7 +306,7 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
-      format.js { render :notify }
+      format.js { render 'admin/shared/notify' }
     end
   end
 
@@ -319,7 +319,7 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
-      format.js { render :notify }
+      format.js { render 'admin/shared/notify' }
     end
   end
 
@@ -334,7 +334,7 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
-      format.js { render :notify }
+      format.js { render 'admin/shared/notify' }
     end
   end
 
@@ -347,7 +347,7 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
-      format.js { render :notify }
+      format.js { render 'admin/shared/notify' }
     end
   end
 
@@ -359,7 +359,7 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
-      format.js { render :notify }
+      format.js { render 'admin/shared/notify' }
     end
   end
 
@@ -375,7 +375,7 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
-      format.js { render :notify }
+      format.js { render 'admin/shared/notify' }
     end
   end
 

@@ -17,7 +17,6 @@ class Admin::BlogsController < AdminController
   def update
     respond_to do |format|
       if @photoblog.update(blog_params)
-        CloudfrontInvalidationWorker.perform_async(['/*']) if blog_params[:update_cache_version] == 'true'
         HerokuConfigWorker.perform_async(heroku_configs(blog_params))
         format.html {
           flash[:success] = 'Your changes were saved!'
@@ -32,6 +31,20 @@ class Admin::BlogsController < AdminController
     end
   end
 
+  def flush_caches
+    Rails.cache.clear
+    CloudfrontInvalidationWorker.perform_async('/*')
+    HerokuConfigWorker.perform_async({ CACHE_VERSION: Time.now.to_i.to_s })
+    @message = 'Caches are being cleared. This may take a few moments.'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render 'admin/shared/notify' }
+    end
+  end
+
   private
 
   def blog_params
@@ -40,14 +53,13 @@ class Admin::BlogsController < AdminController
                                  :instagram, :twitter, :tumblr, :email, :flickr,
                                  :header_logo_svg, :additional_meta_tags,
                                  :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description, :map_style,
-                                 :update_cache_version, :cache_ttl)
+                                 :cache_ttl)
   end
 
   def heroku_configs(params)
     config = {
       CACHE_TTL: params[:cache_ttl]&.to_s
     }.compact
-    config.merge!(CACHE_VERSION: Time.now.to_i.to_s) if params[:update_cache_version] == 'true'
     config.reject { |k,v| v == ENV[k.to_s] }
   end
 end

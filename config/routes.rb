@@ -56,10 +56,15 @@ Rails.application.routes.draw do
       end
     end
 
+    resources :blogs, only: [:edit, :update] do
+      member do
+        post 'flush_caches'
+      end
+    end
+
     resources :cameras, only: [:edit, :update]
     resources :lenses, only: [:edit, :update]
     resources :films, only: [:edit, :update]
-    resources :blogs, only: [:edit, :update]
     resources :publish_schedules, only: [:create, :destroy]
     resources :tag_customizations, only: [:index, :new, :create, :edit, :update, :destroy]
     resources :webhooks, except: [:show]
