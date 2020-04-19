@@ -1,52 +1,49 @@
 <div class="field is-grouped is-grouped-multiline">
-  <% cache_if entry.is_queued?, [@photoblog, entry] do %>
+  <div class="control">
+    <div class="tags has-addons">
+      <% if entry.is_published? %>
+        <span class="tag is-success">Published</span>
+        <span class="tag"><%= entry.published_at.strftime('%A, %B %-d, %Y') %></span>
+      <% elsif entry.is_queued? %>
+        <% if entry.publish_date_for_queued.present? %>
+          <span class="tag is-info">Queued</span>
+          <span class="tag"><%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y')%></span>
+        <% else %>
+          <span class="tag is-info">Queued</span>
+        <% end %>
+      <% elsif entry.is_draft? %>
+        <span class="tag">Draft</span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="control">
+    <div class="tags has-addons">
+      <% if entry.instagram_location.present? %>
+        <% location_name, location_id = entry.instagram_location %>
+        <span class="tag is-info"><i class="fas fa-map-marker-alt"></i></span>
+        <%= link_to location_name, "https://www.facebook.com/#{location_id}/", class: 'tag'%>
+      <% else %>
+        <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
+        <span class="tag">Location missing</span>
+      <% end %>
+    </div>
+  </div>
+  <% if entry.photos.count { |p| p.alt_text.blank? } > 0 %>
     <div class="control">
       <div class="tags has-addons">
-        <% if entry.is_published? %>
-          <span class="tag is-success">Published</span>
-          <span class="tag"><%= entry.published_at.strftime('%A, %B %-d, %Y') %></span>
-        <% elsif entry.is_queued? %>
-          <% if entry.publish_date_for_queued.present? %>
-            <span class="tag is-info">Queued</span>
-            <span class="tag"><%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y')%></span>
-          <% else %>
-            <span class="tag is-info">Queued</span>
-          <% end %>
-        <% elsif entry.is_draft? %>
-          <span class="tag">Draft</span>
-        <% end %>
+        <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
+        <span class="tag">Alt text missing</span>
       </div>
     </div>
   <% end %>
-  <% cache entry do %>
+
+  <% if entry.photos.count { |p| p.focal_x.blank? || p.focal_y.blank?  } > 0 %>
     <div class="control">
       <div class="tags has-addons">
-        <% if entry.instagram_location.present? %>
-          <% location_name, location_id = entry.instagram_location %>
-          <span class="tag is-info"><i class="fas fa-map-marker-alt"></i></span>
-          <%= link_to location_name, "https://www.facebook.com/#{location_id}/", class: 'tag'%>
-        <% else %>
-          <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
-          <span class="tag">Location missing</span>
-        <% end %>
+        <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
+        <span class="tag">Focal point missing</span>
       </div>
     </div>
-    <% if entry.photos.count { |p| p.alt_text.blank? } > 0 %>
-      <div class="control">
-        <div class="tags has-addons">
-          <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
-          <span class="tag">Alt text missing</span>
-        </div>
-      </div>
-    <% end %>
-
-    <% if entry.photos.count { |p| p.focal_x.blank? || p.focal_y.blank?  } > 0 %>
-      <div class="control">
-        <div class="tags has-addons">
-          <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
-          <span class="tag">Focal point missing</span>
-        </div>
-      </div>
-    <% end %>
   <% end %>
 </div>

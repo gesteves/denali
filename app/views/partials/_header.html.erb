@@ -1,20 +1,18 @@
-<% cache @photoblog do %>
-  <header class="header">
-    <a href="/" class="header__link" aria-labelledby="header-photoblog-name">
-      <h1>
-        <% if @photoblog.header_logo_svg.present? %>
-          <span class="sr-only" id="header-photoblog-name"><%= @photoblog.name %></span>
-          <%= @photoblog.header_logo_svg.html_safe %>
-        <% else %>
-          <%= @photoblog.name %>
-        <% end %>
-      </h1>
-    </a>
-    <div class="header__section">
-      <p class="header__tagline"><%= sanitize @photoblog.tag_line %></p>
-    </div>
-    <div class="header__section">
-      <%= render partial: 'partials/follow.html.erb' %>
-    </div>
-  </header>
-<% end %>
+<header class="header">
+  <a href="/" class="header__link" aria-labelledby="header-photoblog-name">
+    <h1>
+      <% if @photoblog.header_logo_svg.present? %>
+        <span class="sr-only" id="header-photoblog-name"><%= @photoblog.name %></span>
+        <%= @photoblog.header_logo_svg.html_safe %>
+      <% else %>
+        <%= @photoblog.name %>
+      <% end %>
+    </h1>
+  </a>
+  <div class="header__section">
+    <p class="header__tagline"><%= sanitize @photoblog.tag_line %></p>
+  </div>
+  <div class="header__section">
+    <%= render partial: 'partials/follow.html.erb' %>
+  </div>
+</header>

@@ -1,18 +1,18 @@
-<% cache entry do %>
+<% cache [@photoblog, entry] do %>
   <div class="card">
-    <%= render partial: 'entry_image', locals: { entry: entry } %>
+    <%= render partial: 'entry_image', object: entry, as: :entry %>
     <div class="card-content">
-      <%= render partial: 'entry_content', locals: { entry: entry } %>
+      <%= render partial: 'entry_content', object: entry, as: :entry %>
       <hr class="hr">
       <div class="level">
         <div class="level-left">
           <div class="level-item">
-            <%= render partial: 'entry_meta', locals: { entry: entry } %>
+            <%= render partial: 'entry_meta', object: entry, as: :entry %>
           </div>
         </div>
         <div class="level-right">
           <div class="level-item">
-            <%= render partial: 'entry_actions', locals: { entry: entry } %>
+            <%= render partial: 'entry_actions', object: entry, as: :entry %>
           </div>
         </div>
       </div>
