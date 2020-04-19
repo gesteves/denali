@@ -2,7 +2,8 @@ class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
   def cache_key
-    if cache_version = ENV['CACHE_VERSION']
+    cache_version = Rails.env.production? ? ENV['CACHE_VERSION'] : Time.now.to_i
+    if cache_version.present?
       "#{cache_version}/#{super}"
     else
       super
@@ -10,7 +11,8 @@ class ApplicationRecord < ActiveRecord::Base
   end
 
   def self.collection_cache_key(collection, timestamp_column)
-    if cache_version = ENV['CACHE_VERSION']
+    cache_version = Rails.env.production? ? ENV['CACHE_VERSION'] : Time.now.to_i
+    if cache_version.present?
       "#{cache_version}/#{super}"
     else
       super
