@@ -1,6 +1,5 @@
 <% cache [@photoblog, @entry] do %>
-  <% count = 12 %>
-  <% related = @entry.related(count: count) %>
+  <% related = @entry.related %>
   <% if related.present? %>
     <aside class="entry__related-entries" aria-labelledby="related-entries">
       <h2 class="entry__related" id="related-entries">Other Photos You Might Like</h2>
