@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
     expires_now
   end
 
-  def set_max_age(seconds: ENV['CACHE_TTL'].to_i)
+  def set_max_age(seconds: ENV['CACHE_TTL'])
     response.headers['Cache-Control'] = "s-maxage=#{seconds}, max-age=0, public"
   end
 

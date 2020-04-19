@@ -381,7 +381,7 @@
       <div class="field is-narrow">
         <div class="control">
           <div class="select is-fullwidth">
-            <%= f.select :cache_ttl, options_for_select(@ttls, ENV['CACHE_TTL'].to_i) %>
+            <%= f.select :cache_ttl, options_for_select(@ttls, ENV['CACHE_TTL']) %>
           </div>
         </div>
       </div>

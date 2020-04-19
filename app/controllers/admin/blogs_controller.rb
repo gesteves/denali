@@ -26,7 +26,7 @@ class Admin::BlogsController < AdminController
   def update
     respond_to do |format|
       if @photoblog.update(blog_params)
-        HerokuConfigWorker.perform_async({ CACHE_TTL: blog_params[:cache_ttl]&.to_s }.compact)
+        HerokuConfigWorker.perform_async({ CACHE_TTL: blog_params[:cache_ttl] }.compact)
         format.html {
           flash[:success] = 'Your changes were saved!'
           redirect_to edit_admin_blog_path(@photoblog)
