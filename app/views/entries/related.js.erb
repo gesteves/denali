@@ -1,4 +1,4 @@
-<% cache @entry, expires_in: 1.day do %>
+<% cache [@photoblog, @entry] do %>
   <% count = 12 %>
   <% related = @entry.related(count: count) %>
   <% if related.present? %>
