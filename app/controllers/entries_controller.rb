@@ -17,9 +17,9 @@ class EntriesController < ApplicationController
       respond_to do |format|
         format.html {
           if @page.nil? || @page == 1
-            @page_title = @photoblog.name
+            @page_title = "#{@photoblog.name} – #{@photoblog.tag_line}"
           else
-            @page_title = "#{@photoblog.name} – Page #{@page}"
+            @page_title = "#{@photoblog.name} – #{@photoblog.tag_line} – Page #{@page}"
           end
         }
         format.js { render status: @entries.empty? ? 404 : 200 }
