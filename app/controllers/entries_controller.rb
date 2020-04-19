@@ -154,7 +154,7 @@ class EntriesController < ApplicationController
   def sitemap
     @page = params[:page]
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(@entries_per_sitemap)
-    if stale?(etag: @entries, last_modified: @entries.map(&:updated_at).max, public: true)
+    if stale?(@entries, public: true)
       render format: 'xml'
     end
   end
