@@ -13,5 +13,7 @@ Rails.application.config.assets.paths << Rails.root.join('node_modules')
 Rails.application.config.assets.precompile += %w(
   admin.css
   application.css
+  entry.css
+  entry_list.css
   vendor/map.js
 )

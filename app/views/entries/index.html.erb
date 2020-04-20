@@ -36,6 +36,12 @@
   <% end %>
 <% end %>
 
+<% content_for :inline_css do %>
+  <% cache "#{ENV['CACHE_VERSION']}/entry_list/styles" do %>
+      <style><%= inline_asset "entry_list.css" %></style>
+  <% end %>
+<% end %>
+
 <main data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= entries_url(page: nil).sub(/\/$/, '') %>" data-infinite-scroll-current-page="<%= @page %>">
   <h2 id="entry-list-heading" class="sr-only">Latest entries</h2>
   <ol class="entry-list" data-target="infinite-scroll.container" data-controller="grid" aria-busy="false" aria-labelledby="entry-list-heading">
