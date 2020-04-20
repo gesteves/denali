@@ -37,9 +37,7 @@
 <% end %>
 
 <% content_for :inline_css do %>
-  <% cache "#{ENV['CACHE_VERSION']}/entry_list/styles" do %>
-      <style><%= inline_asset "entry_list.css" %></style>
-  <% end %>
+  <%= render partial: 'partials/inline_styles', locals: { stylesheet: 'entry_list.css' } %>
 <% end %>
 
 <main data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= entries_url(page: nil).sub(/\/$/, '') %>" data-infinite-scroll-current-page="<%= @page %>">
