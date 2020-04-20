@@ -25,6 +25,7 @@ entry: &entry
     - 100vw
   quality: 90
   format: pjpg
+  auto: format
 entry_list: &entry_list
   srcset:
     - 304
@@ -52,6 +53,7 @@ entry_list: &entry_list
     - "(min-width: 400px) calc(100vw/3 - 8px)"
     - "calc(50vw - 8px)"
   format: pjpg
+  auto: format
 entry_list_square:
   <<: *entry_list
   square: Yes
@@ -75,6 +77,7 @@ admin_entry:
     - "(min-width: 1088px) 960px"
     - "calc(100vw - 3rem)"
   format: pjpg
+  auto: format
 admin_edit:
   srcset:
     - 544
@@ -94,6 +97,7 @@ admin_edit:
     - "(min-width: 769px) calc(((100vw - 4.5rem)/6) * 5)"
     - "calc(100vw - 3rem)"
   format: pjpg
+  auto: format
 admin_queue:
   srcset:
     - 224
@@ -115,6 +119,7 @@ admin_queue:
     - "calc((100vw - 3rem)/2 - 1.5rem)"
   square: Yes
   format: pjpg
+  auto: format
 map:
   srcset:
     - 300
@@ -124,6 +129,7 @@ map:
     - 300px
   square: Yes
   format: pjpg
+  auto: format
 admin_prints:
   srcset:
     - 600
@@ -137,4 +143,5 @@ admin_prints:
     - "(min-width: 769px) 600px"
     - "calc(100vw - 40px)"
   format: pjpg
+  auto: format
 
