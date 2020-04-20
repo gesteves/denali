@@ -14,11 +14,3 @@
     content: none;
   }
 }
-
-.exif__optional {
-  display: none;
-
-  @media (min-width: $bp-m) {
-    display: inline;
-  }
-}
