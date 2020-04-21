@@ -41,9 +41,7 @@ class Admin::BlogsController < AdminController
   end
 
   def flush_caches
-    Rails.cache.clear
-    CloudfrontInvalidationWorker.perform_async('/*')
-    HerokuConfigWorker.perform_async({ CACHE_VERSION: Time.now.to_i.to_s })
+    @photoblog.invalidate
     @message = 'Caches are being cleared. This may take a few moments.'
     respond_to do |format|
       format.html {

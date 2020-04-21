@@ -1,4 +1,5 @@
 class Blog < ApplicationRecord
+  include Rails.application.routes.url_helpers
   include Formattable
 
   has_many :entries, dependent: :destroy
@@ -8,6 +9,8 @@ class Blog < ApplicationRecord
   has_one_attached :favicon
   has_one_attached :touch_icon
   has_one_attached :logo
+
+  after_commit :check_for_invalidation, if: :saved_changes?
 
   validates :name, :tag_line, :about, presence: true
 
@@ -74,5 +77,41 @@ class Blog < ApplicationRecord
   def time_to_publish_queued_entry?
     current_time = Time.current.in_time_zone(self.time_zone)
     self.publish_schedules.where(hour: current_time.hour).count > 0
+  end
+
+  def check_for_invalidation
+    attributes = %w{
+      additional_meta_tags
+      analytics_body
+      analytics_head
+      copyright
+      email
+      facebook
+      flickr
+      header_logo_svg
+      instagram
+      meta_description
+      name
+      posts_per_page
+      show_related_entries
+      tag_line
+      time_zone
+      tumblr
+      twitter
+    }
+
+    if attributes.any? { |attr| saved_change_to_attribute? (attr) }
+      self.invalidate
+    elsif saved_change_to_about?
+      self.invalidate(paths: about_path, clear_cache: false)
+    end
+  end
+
+  def invalidate(paths: '/*', clear_cache: true)
+    if clear_cache
+      Rails.cache.clear
+      HerokuConfigWorker.perform_async({ CACHE_VERSION: Time.now.to_i.to_s })
+    end
+    CloudfrontInvalidationWorker.perform_async(paths)
   end
 end
