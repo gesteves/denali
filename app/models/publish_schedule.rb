@@ -3,10 +3,10 @@ class PublishSchedule < ApplicationRecord
 
   validates :hour, uniqueness: true
   
-  after_save :touch_blog
-  before_destroy :touch_blog
+  after_save :touch_entries
+  before_destroy :touch_entries
   
-  def touch_blog
-    self.blog.touch
+  def touch_entries
+    self.blog.entries.queued.each(&:touch)
   end
 end
