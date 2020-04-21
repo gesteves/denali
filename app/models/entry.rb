@@ -23,8 +23,6 @@ class Entry < ApplicationRecord
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['image'].blank? && attributes['id'].blank? }
 
-  attr_accessor :flush_caches
-
   settings index: { number_of_shards: 1 }
 
   after_commit on: [:create] do

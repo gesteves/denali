@@ -162,7 +162,7 @@ class Admin::EntriesController < AdminController
       @entry.modified_at = Time.current if @entry.is_published?
       if @entry.update(entry_params)
         @entry.update_tags
-        @entry.invalidate if entry_params[:flush_caches] == 'true'
+        @entry.invalidate
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else
@@ -397,7 +397,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :instagram_location_list, :post_to_twitter, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_facebook, :post_to_tumblr, :tweet_text, :instagram_text, :show_in_map, :flush_caches, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :instagram_location_list, :post_to_twitter, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_facebook, :post_to_tumblr, :tweet_text, :instagram_text, :show_in_map, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y])
     end
 
     def set_redirect_url
