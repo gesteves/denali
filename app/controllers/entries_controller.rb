@@ -6,6 +6,7 @@ class EntriesController < ApplicationController
   before_action :set_max_age, except: [:amp]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
+  before_action :set_link_headers, only: [:index, :tagged, :show]
 
   def index
     @page = (params[:page] || 1).to_i
@@ -13,7 +14,6 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @page > 1 && @entries.empty? && request.format != 'js'
     if stale?(@entries, public: true)
-      set_link_headers
       respond_to do |format|
         format.html {
           if @page.nil? || @page == 1
@@ -41,7 +41,6 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
     if stale?(@entries, public: true)
-      set_link_headers
       respond_to do |format|
         format.html {
           @page_title = "#{@tags.first.name} – #{@photoblog.name}"
@@ -84,7 +83,6 @@ class EntriesController < ApplicationController
   def show
     if stale?(@entry, public: true)
       @photos = @entry.photos.includes(:image_attachment, :image_blob)
-      preload_photos
       respond_to do |format|
         format.html {
           redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
@@ -180,19 +178,9 @@ class EntriesController < ApplicationController
     @entry = Entry.find_by_url(url: request.path)
   end
 
-  def preload_photos
-    sizes = Photo.sizes('entry')
-    @photos.each do |photo|
-      src, srcset = photo.srcset('entry')
-      add_preload_link_header(src, as: 'image', imagesizes: sizes, imagesrcset: srcset)
-    end
-  end
-
   def set_link_headers
     if request.format.html?
-      ENV['imgix_domain'].split(',').each do |domain|
-        add_preconnect_link_header("http#{'s' if ENV['imgix_secure'].present?}://#{domain}")
-      end
+      add_preconnect_link_header("https://#{ENV['imgix_domain']}")
     end
   end
 end
