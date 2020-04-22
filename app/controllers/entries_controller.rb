@@ -4,6 +4,7 @@ class EntriesController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, except: [:amp]
+  before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
   before_action :set_link_headers, only: [:index, :tagged, :show]
 
@@ -143,14 +144,14 @@ class EntriesController < ApplicationController
 
   def sitemap_index
     if stale?(@photoblog, public: true)
-      @pages = @photoblog.entries.published.page(1).per(ENV['entries_per_sitemap'].to_i).total_pages
+      @pages = @photoblog.entries.published.page(1).per(@entries_per_sitemap).total_pages
       render format: 'xml'
     end
   end
 
   def sitemap
     @page = params[:page]
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(ENV['entries_per_sitemap'].to_i)
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(@entries_per_sitemap)
     if stale?(@entries, public: true)
       render format: 'xml'
     end
@@ -167,6 +168,10 @@ class EntriesController < ApplicationController
   end
 
   private
+
+  def set_sitemap_entry_count
+    @entries_per_sitemap = (ENV['entries_per_sitemap'] || 100).to_i
+  end
 
   def set_entry
     @entry = Entry.find_by_url(url: request.path)
