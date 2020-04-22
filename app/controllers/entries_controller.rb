@@ -143,14 +143,14 @@ class EntriesController < ApplicationController
 
   def sitemap_index
     if stale?(@photoblog, public: true)
-      @pages = @photoblog.entries.published.page(1).per(ENV['entries_per_sitemap']).total_pages
+      @pages = @photoblog.entries.published.page(1).per(ENV['entries_per_sitemap'].to_i).total_pages
       render format: 'xml'
     end
   end
 
   def sitemap
     @page = params[:page]
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(ENV['entries_per_sitemap'])
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(ENV['entries_per_sitemap'].to_i)
     if stale?(@entries, public: true)
       render format: 'xml'
     end
