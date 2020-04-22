@@ -5,8 +5,8 @@ json.headline entry.plain_title
 json.description meta_description
 json.set! 'datePublished', entry.published_at
 json.set! 'dateModified', entry.modified_at
-if entry.is_photo?
-  json.image json_schema_images(entry.photos.first)
+if entry.is_photo? && @photos.present?
+  json.image json_schema_images(@photos.first)
 end
 json.author do
   json.set! '@type', 'Person'

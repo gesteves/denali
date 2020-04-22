@@ -83,6 +83,7 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@entry, public: true)
+      @photos = @entry.photos.includes(:image_attachment, :image_blob)
       preload_photos
       respond_to do |format|
         format.html {
@@ -181,7 +182,7 @@ class EntriesController < ApplicationController
 
   def preload_photos
     sizes = Photo.sizes('entry')
-    @entry.photos.each do |photo|
+    @photos.each do |photo|
       src, srcset = photo.srcset('entry')
       add_preload_link_header(src, as: 'image', imagesizes: sizes, imagesrcset: srcset)
     end
