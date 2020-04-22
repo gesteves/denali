@@ -1,5 +1,20 @@
 <% cache entry do %>
-  <%= render partial: 'entries/entry/photo', object: entry, as: :entry if entry.is_photo? %>
-  <%= render partial: 'entries/entry/text', object: entry, as: :entry if entry.is_text? %>
+  <article role="main" class="entry <%= entry.is_text? ? 'entry--text' : 'entry--photo' %>%" <% if entry.is_photo? %>data-controller="photo" data-photo-container-max-width="1680"<% end %>>
+    <%= render partial: 'entries/entry/photo', collection: @photos, as: :photo %>
+
+    <div class="entry__body">
+      <h2 class="entry__headline">
+        <%= sanitize entry.plain_title %>
+      </h2>
+      <%= sanitize entry.formatted_body unless entry.body.blank? %>
+    </div>
+
+    <aside class="entry__meta" aria-labelledby="entry-meta">
+      <h2 id="entry-meta" class="sr-only">About <% if entry.is_photoset? %>these photos<% elsif entry.is_photo? %>this photo<% else %>this entry<% end %></h2>
+      <%= render partial: 'entries/entry/byline', object: entry, as: :entry %>
+      <%= render partial: 'entries/entry/exif', object: @photos.first, as: :photo if entry.is_single_photo? %>
+      <%= render partial: 'entries/entry/tags', object: entry.combined_tags, as: :tags %>
+    </aside>
+  </article>
   <%= render partial: 'entries/entry/pagination', object: entry, as: :entry %>
 <% end %>
