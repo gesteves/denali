@@ -4,7 +4,7 @@
   <% end %>
 
   <% if entry.is_photo? %>
-    <% photo = @photos.first %>
+    <% photo = entry.photos.first %>
     <% meta_description = truncate(photo.alt_text, length: 200) %>
   <% else %>
     <% meta_description = truncate(entry.plain_body, length: 200) %>

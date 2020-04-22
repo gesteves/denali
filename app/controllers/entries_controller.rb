@@ -82,7 +82,6 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@entry, public: true)
-      @photos = @entry.photos.includes(:image_attachment, :image_blob)
       respond_to do |format|
         format.html {
           redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
