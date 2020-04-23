@@ -1,5 +1,5 @@
 <% cache entry do %>
-  <article role="main" class="entry <%= entry.is_text? ? 'entry--text' : 'entry--photo' %>%" <% if entry.is_photo? %>data-controller="photo" data-photo-container-max-width="1680"<% end %>>
+  <article role="main" class="entry <%= entry.is_text? ? 'entry--text' : 'entry--photo' %>" <% if entry.is_photo? %>data-controller="photo" data-photo-container-max-width="1680"<% end %>>
     <%= render partial: 'entries/entry/photo', collection: entry.photos, as: :photo %>
 
     <div class="entry__body">
