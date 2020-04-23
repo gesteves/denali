@@ -2,7 +2,7 @@
   <%= render partial: 'head' %>
 <% end %>
 
-<article class="entry entry--text">
+<article class="entry">
   <div class="entry__body">
     <h2 class="entry__headline">About <%= @photoblog.name %></h2>
     <%= sanitize @photoblog.formatted_about %>

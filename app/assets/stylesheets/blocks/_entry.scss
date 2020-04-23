@@ -56,24 +56,12 @@
 .entry__body {
   margin: 0 auto;
   max-width: $bp-m;
-  padding: var(--gutter-horizontal) var(--gutter-vertical);
+  padding: 0 var(--gutter-vertical) var(--gutter-horizontal) var(--gutter-vertical);
 }
 
-.entry--text {
-  .entry__body {
-    padding-top: 0;
-  }
-}
-
-.entry--photo {
-  .entry__body {
-    border-top: var(--border-thick) solid var(--color-border);
-    padding-top: var(--gutter-horizontal);
-  }
-}
-
-.entry--photo #{&}__body {
-  border-top: var(--border-thin) solid var(--color-border);
+.entry__figure + .entry__body {
+  border-top: var(--border-thick) solid var(--color-border);
+  padding-top: var(--gutter-horizontal);
 }
 
 .entry__body {
