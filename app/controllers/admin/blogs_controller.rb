@@ -12,7 +12,9 @@ class Admin::BlogsController < AdminController
     ]
     @ttls = [
       ['Don’t cache', 0],
+      ['1 minute',    1.minute],
       ['5 minutes',   5.minutes],
+      ['15 minutes',  15.minutes],
       ['1 hour',      1.hour],
       ['1 day',       1.day],
       ['1 week',      1.week],
