@@ -99,7 +99,7 @@ Rails.application.routes.draw do
   get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
 
   #PWA
-  get '/service_worker.js'             => 'service_worker#index', defaults: { format: 'js' }
+  get '/service_worker.js'             => 'service_worker#index', defaults: { format: 'js' }, :as => :service_worker
 
   # Feeds
   get '/feed(.:format)'             => 'entries#feed', defaults: { format: 'atom' }, :as => :feed
