@@ -70,7 +70,7 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     arel (9.0.0)
-    autoprefixer-rails (9.3.1)
+    autoprefixer-rails (9.7.6)
       execjs
     aws-eventstream (1.0.1)
     aws-partitions (1.121.0)
