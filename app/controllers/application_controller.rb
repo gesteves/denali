@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :get_photoblog
   before_action :domain_redirect
   before_action :set_referrer_policy
+  before_action :is_repeat_visit?
   around_action :set_time_zone
 
   helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preload_link_header, :add_preconnect_link_header
@@ -92,5 +93,11 @@ class ApplicationController < ActionController::Base
 
   def set_time_zone(&block)
     Time.use_zone(@photoblog.time_zone, &block) if @photoblog.present?
+  end
+
+  def is_repeat_visit?
+    if request.format.html?
+      @has_visited = request.headers['X-Denali-Cache'] == ENV['CACHE_VERSION']
+    end
   end
 end

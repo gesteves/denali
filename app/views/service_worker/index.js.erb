@@ -1,0 +1,31 @@
+(function() {
+  'use strict';
+
+  const version = '<%= ENV['CACHE_VERSION'] || 1 %>';
+
+  self.addEventListener('fetch', event => {
+    let request = event.request;
+    let url = new URL(request.url);
+
+    // Ignore non-GET and non-HTML requests
+    if ((request.method !== 'GET') || (request.headers.get('Accept').indexOf('text/html') === -1)) {
+      return;
+    }
+
+    // For HTML requests, make a new request that includes the version as an HTTP header
+    let newRequest;
+    let newHeaders = new Headers();
+    for (let i in event.request.headers) {
+      newHeaders.set(i, event.request.headers[i]);
+    }
+    newHeaders.set('X-Denali-Cache', version);
+
+    newRequest = new Request(event.request.url, {
+      method: 'GET',
+      headers: newHeaders
+    });
+
+    event.respondWith(fetch(newRequest).then(response => { return response; }));
+    return;
+  });
+})();
