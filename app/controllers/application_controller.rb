@@ -97,7 +97,7 @@ class ApplicationController < ActionController::Base
 
   def is_repeat_visit?
     if request.format.html?
-      @has_visited = request.headers['X-Denali-Cache'] == ENV['CACHE_VERSION']
+      @has_visited = request.headers['X-Denali-Version'] == ENV['CACHE_VERSION']
     end
   end
 end

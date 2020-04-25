@@ -18,7 +18,7 @@
     for (let i in event.request.headers) {
       newHeaders.set(i, event.request.headers[i]);
     }
-    newHeaders.set('X-Denali-Cache', version);
+    newHeaders.set('X-Denali-Version', version);
 
     newRequest = new Request(event.request.url, {
       method: 'GET',
