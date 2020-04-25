@@ -6,7 +6,7 @@ class EntriesController < ApplicationController
   before_action :set_max_age, except: [:amp]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
-  before_action :set_link_headers, only: [:index, :tagged, :show]
+  before_action :set_link_headers, only: [:index, :tagged]
 
   def index
     @page = (params[:page] || 1).to_i
@@ -82,6 +82,7 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@entry, public: true)
+      preload_photos
       respond_to do |format|
         format.html {
           redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
@@ -180,6 +181,15 @@ class EntriesController < ApplicationController
   def set_link_headers
     if request.format.html?
       add_preconnect_link_header("https://#{ENV['imgix_domain']}")
+    end
+  end
+
+  def preload_photos
+    @photos = @entry.photos
+    sizes = Photo.sizes('entry')
+    @photos.each do |photo|
+      src, srcset = photo.srcset('entry')
+      add_preload_link_header(src, as: 'image', imagesizes: sizes, imagesrcset: srcset)
     end
   end
 end

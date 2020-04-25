@@ -6,7 +6,7 @@ json.description meta_description
 json.set! 'datePublished', entry.published_at
 json.set! 'dateModified', entry.modified_at
 if entry.is_photo?
-  json.image json_schema_images(entry.photos.first)
+  json.image json_schema_images(@photos.first)
 end
 json.author do
   json.set! '@type', 'Person'
