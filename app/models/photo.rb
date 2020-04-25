@@ -86,11 +86,11 @@ class Photo < ApplicationRecord
   # 5:4 ratio
   def instagram_url
     if self.is_vertical? && self.height_from_width(1080) > 1350
-      self.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff', q: 90)
+      self.url(w: 1080, h: 1350, fit: 'fill', bg: 'fff', q: 90, pad: 50)
     elsif self.is_horizontal? && self.height_from_width(1080) < 566
-      self.url(w: 1080, h: 566, fit: 'fill', bg: 'fff', q: 90)
+      self.url(w: 1080, h: 566, fit: 'fill', bg: 'fff', q: 90, pad: 50)
     else
-      self.url(w: 1080, q: 90)
+      self.url(w: 1080, q: 90, pad: 50)
     end
   end
 
