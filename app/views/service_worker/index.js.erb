@@ -3,6 +3,10 @@
 
   const version = '<%= ENV['CACHE_VERSION'] || 1 %>';
 
+  self.addEventListener('install', event => {
+    self.skipWaiting();
+  });
+
   self.addEventListener('fetch', event => {
     let request = event.request;
     let url = new URL(request.url);
