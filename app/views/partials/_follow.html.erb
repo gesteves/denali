@@ -1,6 +1,6 @@
 <ul class="follow">
   <%= render partial: 'partials/follow_icon.html.erb', locals: { url: about_url,                           icon: 'about',     label: "About #{@photoblog.name}" } %>
-  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: search_url,                          icon: 'search',    label: "Search #{@photoblog.name}" } if @photoblog.show_search? %>
+  <%= render partial: 'partials/follow_icon.html.erb', locals: { url: search_url,                          icon: 'search',    label: "Search #{@photoblog.name}" } if @photoblog.show_search? && @photoblog.has_search? %>
   <%= render partial: 'partials/follow_icon.html.erb', locals: { url: "mailto:#{@photoblog.email}",        icon: 'email',     label: 'Contact by email' }          if @photoblog.email.present? %>
   <%= render partial: 'partials/follow_icon.html.erb', locals: { url: feed_url(format: 'atom', page: nil), icon: 'feed',      label: 'Subscribe to Feed' } %>
   <%= render partial: 'partials/follow_icon.html.erb', locals: { url: @photoblog.facebook,                 icon: 'facebook',  label: 'Like on Facebook' }          if @photoblog.facebook.present? %>

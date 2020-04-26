@@ -3,7 +3,7 @@
   <ul class="footer__links">
     <li><%= link_to 'Home', root_url %></li>
     <li><%= link_to 'About', about_url %></li>
-    <% if @photoblog.show_search? %>
+    <% if @photoblog.show_search? && @photoblog.has_search? %>
       <li><%= link_to 'Search', search_url %></li>
     <% end %>
     <li><%= link_to 'Feed', feed_url(format: 'atom', page: nil) %></li>

@@ -60,7 +60,7 @@ class EntriesController < ApplicationController
   end
 
   def search
-    raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_search?
+    raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_search? && @photoblog.has_search?
     @page = (params[:page] || 1).to_i
     @count = 48
     @query = params[:q]
