@@ -97,7 +97,6 @@ class ApplicationController < ActionController::Base
 
   def is_repeat_visit?
     @has_visited = request.headers['X-Denali-Version'] == ENV['CACHE_VERSION']
-    logger.info "X-Denali-Version: #{request.headers['X-Denali-Version']}"
   end
 
   def redirect_heroku
