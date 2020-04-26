@@ -100,4 +100,8 @@ class ApplicationController < ActionController::Base
       @has_visited = request.headers['X-Denali-Version'] == ENV['CACHE_VERSION']
     end
   end
+
+  def redirect_heroku
+    redirect_to root_url(host: ENV['domain']) if request.host.match? /herokuapp\.com/
+  end
 end

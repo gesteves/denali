@@ -27,8 +27,4 @@ class AdminController < ApplicationController
   def set_referrer_policy
     response.headers['Referrer-Policy'] = 'same-origin'
   end
-
-  def redirect_heroku
-    redirect_to root_url(host: ENV['domain']) if request.host.match? /herokuapp\.com/
-  end
 end
