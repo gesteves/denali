@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :is_repeat_visit?
   around_action :set_time_zone
 
-  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preload_link_header, :add_preconnect_link_header
+  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preload_link_header, :add_preconnect_link_header, :is_repeat_visit?
 
   def default_url_options
     Rails.application.routes.default_url_options
@@ -96,7 +96,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_repeat_visit?
-    @has_visited = request.headers['X-Denali-Version'] == ENV['CACHE_VERSION']
+    request.headers['X-Denali-Version'] == ENV['CACHE_VERSION']
   end
 
   def redirect_heroku
