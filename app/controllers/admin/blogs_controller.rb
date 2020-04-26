@@ -62,6 +62,6 @@ class Admin::BlogsController < AdminController
                                  :instagram, :twitter, :tumblr, :email, :flickr,
                                  :header_logo_svg, :additional_meta_tags,
                                  :favicon, :touch_icon, :logo, :facebook, :time_zone, :meta_description, :map_style,
-                                 :cache_ttl)
+                                 :cache_ttl, :show_search)
   end
 end

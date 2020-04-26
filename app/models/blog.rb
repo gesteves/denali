@@ -94,6 +94,7 @@ class Blog < ApplicationRecord
       name
       posts_per_page
       show_related_entries
+      show_search
       tag_line
       time_zone
       tumblr

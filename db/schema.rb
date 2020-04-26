@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_05_172710) do
+ActiveRecord::Schema.define(version: 2020_04_26_030516) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(version: 2020_04_05_172710) do
     t.string "map_style"
     t.text "analytics_head"
     t.text "analytics_body"
+    t.boolean "show_search", default: false
   end
 
   create_table "cameras", force: :cascade do |t|
