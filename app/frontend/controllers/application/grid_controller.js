@@ -7,6 +7,11 @@ import Masonry        from 'masonry-layout';
  */
 export default class extends Controller {
   connect () {
+    // Do nothing if the browser supports native masonry!
+    if (CSS.supports('grid-template-rows: masonry')) {
+      return;
+    }
+
     const itemSelector = this.data.get('item-selector') ? this.data.get('item-selector') : 'li';
 
     // Initialize Masonry.

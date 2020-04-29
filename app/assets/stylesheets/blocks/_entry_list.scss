@@ -3,6 +3,13 @@
   display: block;
   margin: var(--margin-content);
   max-width: $bp-max;
+
+  @supports (grid-template-rows: masonry) {
+    display: grid;
+    gap: var(--entry-list-gutters);
+    grid-template-columns: repeat(var(--entry-list-columns), 1fr);
+    grid-template-rows: masonry;
+  }
 }
 
 .entry_list__heading {
@@ -25,6 +32,12 @@
   overflow: hidden;
   position: relative;
   width: calc((100%/var(--entry-list-columns)) - var(--entry-list-gutters));
+
+  @supports (grid-template-rows: masonry) {
+    float: none;
+    margin: 0;
+    width: 100%;
+  }
 }
 
 .entry-list__wrapper {
