@@ -12,6 +12,7 @@
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.1",
     "bulma": "^0.7.2",
+    "caniuse-lite": "^1.0.30001048",
     "clipboard": "^2.0.4",
     "intersection-observer": "^0.5.1",
     "jquery": "^3.5.0",
