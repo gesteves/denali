@@ -6,10 +6,6 @@
   margin: 0 auto;
   max-width: $bp-m;
   padding: var(--gutter-horizontal) var(--gutter-vertical);
-
-  @media print {
-    display: none;
-  }
 }
 
 .elsewhere__heading {

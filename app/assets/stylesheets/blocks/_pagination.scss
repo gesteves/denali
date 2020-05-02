@@ -7,10 +7,6 @@
   max-width: $bp-m;
   text-align: center;
   width: 100%;
-
-  @media print {
-    display: none;
-  }
 }
 
 .pagination__item {

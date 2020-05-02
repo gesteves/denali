@@ -15,5 +15,6 @@ Rails.application.config.assets.precompile += %w(
   application.css
   entry.css
   entry_list.css
+  print.css
   vendor/map.js
 )

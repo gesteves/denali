@@ -1,0 +1,42 @@
+.elsewhere,
+.entry__related-entries,
+.follow,
+.footer__links,
+.pagination,
+.tags {
+  display: none;
+}
+
+.footer {
+  display: block;
+}
+
+.entry__permalink::after {
+  content: " at " attr(data-short-url);
+}
+
+.header {
+  align-items: center;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
+.header__section {
+  margin: 0;
+  order: 2;
+  width: auto;
+
+  &:first-of-type {
+    text-align: right;
+  }
+
+  &:last-of-type {
+    display: none;
+  }
+}
+
+.header__link {
+  margin: 0;
+  order: 1;
+  width: 150px;
+}
