@@ -15,36 +15,6 @@ module ApplicationHelper
     tag :img, html_options
   end
 
-  def lazy_responsive_image_tag(photo, photo_key, html_options = {})
-    src, srcset = photo.srcset(photo_key)
-    sizes = Photo.sizes(photo_key)
-    width = is_variant_square?(photo_key) ? photo.srcset_widths(photo_key).last : photo.width
-    height = is_variant_square?(photo_key) ? photo.srcset_widths(photo_key).last : photo.height
-    lazy_img = tag(:img, html_options.merge({
-      'data-srcset': srcset,
-      'data-src': src,
-      'data-controller': 'lazy-load',
-      'data-sizes': sizes,
-      src: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-      width: width,
-      height: height,
-      loading: 'lazy'
-    }))
-
-    noscript = content_tag :noscript do
-      tag :img, html_options.merge({
-        srcset: srcset,
-        src: src,
-        sizes: sizes,
-        width: width,
-        height: height,
-        loading: 'lazy'
-      })
-    end
-
-    lazy_img + noscript
-  end
-
   def is_variant_square?(key)
     PHOTOS[key]['square'].present?
   end

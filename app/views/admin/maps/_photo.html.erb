@@ -2,9 +2,9 @@
 <div class="card is-marginless">
   <div class="card-image">
     <a style="<%= "#{css_gradient_stops(photo)}" %>" target="_blank" class="image image-container" href="<%= entry.permalink_url %>">
-      <%= lazy_responsive_image_tag photo,
+      <%= responsive_image_tag photo,
             'map',
-            { class: 'is-overlay', alt: photo.alt_text, 'data-controller': 'lazy-load' } %>
+            { class: 'is-overlay', alt: photo.alt_text, loading: 'lazy' } %>
     </a>
   </div>
   <div class="card-content">
