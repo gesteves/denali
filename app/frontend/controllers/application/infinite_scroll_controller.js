@@ -1,4 +1,3 @@
-import 'intersection-observer';
 import { fetchStatus, fetchText } from '../../lib/utils';
 import { Controller }             from 'stimulus';
 
@@ -13,8 +12,8 @@ export default class extends Controller {
   connect () {
     // If there's no loading spinner, there's nothing to observe.
     // If there's no paginator, it means there are no more pages to load.
-    // In either of these cases, return early.
-    if (!this.hasSpinnerTarget || !this.hasPaginatorTarget) {
+    // In either of these cases, or if intersection observer isn't supported, return early.
+    if (!this.hasSpinnerTarget || !this.hasPaginatorTarget || !('IntersectionObserver' in window)) {
       return;
     }
 
@@ -24,8 +23,6 @@ export default class extends Controller {
     // When it's in view, fetch the next page.
     this.observer = new IntersectionObserver(e => this.handleIntersect(e), { rootMargin: '50%' });
     this.observer.observe(this.spinnerTarget);
-    // Enable polling on the polyfill to work around some Safari weirdness
-    this.observer.POLL_INTERVAL = 50;
   }
 
   /**

@@ -1,5 +1,3 @@
-import 'intersection-observer';
-
 let _observer;
 
 /**
@@ -7,7 +5,9 @@ let _observer;
  */
 export default class LazyLoad {
   static observe (element) {
-    if ('loading' in HTMLImageElement.prototype) {
+    // Fallback to native browser loading behavior if lazy-loading is supported
+    // or intersection observer is not (in which case they'll be eager-loaded)
+    if (('loading' in HTMLImageElement.prototype) || !('IntersectionObserver' in window)) {
       loadImage(element);
     } else if (!element.getAttribute('data-lazy-loaded')) {
       observer().observe(element);
@@ -15,6 +15,9 @@ export default class LazyLoad {
   }
 
   static unobserve (element) {
+    if (!('IntersectionObserver' in window)) {
+      return;
+    }
     observer().unobserve(element);
   }
 }
@@ -25,10 +28,7 @@ export default class LazyLoad {
  */
 function observer () {
   if (!_observer) {
-    IntersectionObserver.prototype.POLL_INTERVAL = 50;
     _observer = new IntersectionObserver(handleIntersection, { rootMargin: '25%', threshold: 0 });
-    // Enable polling on the polyfill to work around some Safari weirdness
-    _observer.POLL_INTERVAL = 50;
   }
   return _observer;
 }

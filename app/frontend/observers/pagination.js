@@ -1,4 +1,3 @@
-import 'intersection-observer';
 import { trackPageView } from '../lib/analytics';
 
 let _observer;
@@ -8,10 +7,16 @@ let _observer;
  */
 export default class Pagination {
   static observe (element) {
+    if (!('IntersectionObserver' in window)) {
+      return;
+    }
     observer().observe(element);
   }
 
   static unobserve (element) {
+    if (!('IntersectionObserver' in window)) {
+      return;
+    }
     observer().unobserve(element);
   }
 }
@@ -22,10 +27,7 @@ export default class Pagination {
  */
 function observer () {
   if (!_observer) {
-    IntersectionObserver.prototype.POLL_INTERVAL = 50;
     _observer = new IntersectionObserver(handleIntersection, { threshold: 1.0 });
-    // Enable polling on the polyfill to work around some Safari weirdness
-    _observer.POLL_INTERVAL = 50;
   }
   return _observer;
 }

@@ -1,4 +1,3 @@
-import 'intersection-observer';
 import { fetchStatus, fetchText } from '../../lib/utils';
 import { Controller }             from 'stimulus';
 
@@ -10,13 +9,14 @@ export default class extends Controller {
   static targets = ['spinner'];
 
   connect () {
+    if (!('IntersectionObserver' in window)) {
+      return;
+    }
     this.spinnerTarget.classList.add('loading--active');
     this.element.classList.add('entry__related');
     // Set up an intersection observer to observe the sentinel element.
     this.observer = new IntersectionObserver(e => this.handleIntersect(e), { rootMargin: '50%' });
     this.observer.observe(this.spinnerTarget);
-    // Enable polling on the polyfill to work around some Safari weirdness
-    this.observer.POLL_INTERVAL = 50;
   }
 
   /**
