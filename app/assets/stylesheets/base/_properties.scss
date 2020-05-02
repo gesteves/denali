@@ -49,8 +49,11 @@
     --line-height-heading: #{36 / 24};
   }
 
-  @media (min-width: $bp-xl) {
+  @media (min-width: $bp-l) {
     --margin-content: 72px auto;
+  }
+
+  @media (min-width: $bp-xl) {
     --entry-list-columns: 4;
   }
 
