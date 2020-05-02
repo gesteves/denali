@@ -1,4 +1,6 @@
 class Admin::BlogsController < AdminController
+  skip_before_action :verify_authenticity_token, only: [:flush_caches]
+
   # GET /admin/blogs/1/edit
   def edit
     @page_title = 'Blog settings'
