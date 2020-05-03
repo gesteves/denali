@@ -9,9 +9,9 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries
   def index
-    @page = params[:page] || 1
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).published.page(@page)
-    if stale?(@entries)
+    if stale?(@photoblog)
+      @page = params[:page] || 1
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).published.page(@page)
       @page_title = 'Published'
       respond_to do |format|
         format.html
@@ -21,10 +21,10 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/queued
   def queued
-    @page = params[:page] || 1
-    @count = (@photoblog.publish_schedules_count || 1) * 7
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).queued.page(@page).per(@count)
-    if stale?(@entries)
+    if stale?(@photoblog)
+      @page = params[:page] || 1
+      @count = (@photoblog.publish_schedules_count || 1) * 7
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).queued.page(@page).per(@count)
       @page_title = 'Queued'
       respond_to do |format|
         format.html
@@ -34,9 +34,9 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/drafts
   def drafts
-    @page = params[:page] || 1
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).drafted.page(@page)
-    if stale?(@entries)
+    if stale?(@photoblog)
+      @page = params[:page] || 1
+      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).drafted.page(@page)
       @page_title = 'Drafts'
       respond_to do |format|
         format.html
@@ -46,10 +46,10 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/tagged/film
   def tagged
-    @page = params[:page] || 1
-    entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).tagged_with(@tag_list, any: true).order('entries.created_at DESC')
-    @entries = entries.page(@page)
-    if stale?(@entries)
+    if stale?(@photoblog)
+      @page = params[:page] || 1
+      entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).tagged_with(@tag_list, any: true).order('entries.created_at DESC')
+      @entries = entries.page(@page)
       @page_title = "Entries tagged \"#{@tag_list.first}\""
       @tagged_count = entries.size
       raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
