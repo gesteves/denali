@@ -73,6 +73,14 @@
   &:active {
     color: var(--color-links);
     text-decoration: none;
+
+    g {
+      fill: currentColor;
+    }
+  }
+
+  g {
+    transition: fill var(--transition-duration);
   }
 
   @media (min-width: $bp-m) {

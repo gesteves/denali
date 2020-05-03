@@ -22,7 +22,7 @@
   --border-thin            : 1px;
   --border-thick           : 4px;
   --border-radius          : 4px;
-  --share-shadow           : 0 0 0 2px #{shade($color-red, 25%)}, 0 2px 4px 0 black;
+  --transition-duration    : 150ms;
 
   --entry-list-gutters: 8px;
   --entry-list-columns: 2;
@@ -60,5 +60,13 @@
   @media print {
     --border-thin            : 0;
     --border-thick           : 0;
+  }
+
+  @media (prefers-reduced-motion) {
+    --transition-duration    : 0;
+  }
+
+  @media (prefers-reduced-transparency) {
+    --color-photo-hover      : black;
   }
 }

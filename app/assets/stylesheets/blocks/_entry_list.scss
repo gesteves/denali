@@ -125,7 +125,7 @@
   padding: 20px;
   position: absolute;
   right: 0;
-  transition: opacity 150ms linear;
+  transition: opacity var(--transition-duration);
   width: 100%;
   z-index: 1;
 }

@@ -9,7 +9,7 @@
   text-align: center;
   top: 0;
   transform: translateY(-100%);
-  transition: transform 0.3s;
+  transition: transform var(--transition-duration);
   width: 100vw;
 
   &:focus {
@@ -25,4 +25,17 @@
   position: absolute;
   white-space: nowrap;
   width: 1px;
+}
+
+@media (inverted-colors) {
+  img {
+    filter: invert(1);
+  }
+
+  // scss-lint:disable ImportantRule
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  // scss-lint:enable ImportantRule
 }
