@@ -22,6 +22,7 @@ module Types
     field :instagram_url, String, null: false, description: "URL of a version of the photo optimized for the Instagram feed"
     field :iso, Integer, null: true, description: "ISO the photo was taken at"
     field :lens, Types::LensType, null: true, description: "The lens used to take the photo"
+    field :original_url, String, null: false, description: "The URL of the original uploaded image"
     field :prominent_color, String, null: true, description: "Hex representation of the photo's most prominent color"
     field :square, Boolean, null: false, method: :is_square?, description: "Whether or not the photo is square"
     field :vertical, Boolean, null: false, method: :is_vertical?, description: "Whether or not the photo is in portrait orientation"
@@ -51,6 +52,10 @@ module Types
 
     def color_palette
       object.color_palette.split(',')
+    end
+
+    def original_url
+      object.image.service_url
     end
   end
 end
