@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 2020_04_26_030516) do
     t.string "preview_hash"
     t.datetime "modified_at"
     t.text "instagram_text"
-    t.boolean "post_to_tumblr"
+    t.boolean "post_to_tumblr", default: true
     t.boolean "post_to_flickr_groups", default: true
     t.string "tumblr_id"
     t.index ["blog_id"], name: "index_entries_on_blog_id"
@@ -145,7 +145,6 @@ ActiveRecord::Schema.define(version: 2020_04_26_030516) do
     t.integer "focal_length"
     t.float "focal_x"
     t.float "focal_y"
-    t.string "geocoded_address"
     t.string "country"
     t.string "locality"
     t.string "sublocality"

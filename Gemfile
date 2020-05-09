@@ -74,7 +74,6 @@ end
 
 group :development, :test do
   gem 'scss-lint'
-  gem 'foreman'
   gem 'byebug'
   gem 'brakeman', require: nil
 end
