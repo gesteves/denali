@@ -1,0 +1,16 @@
+.DS_Store
+.env
+.git
+.yarn-integrity
+*.rdb
+*.sqlite3
+/.bundle
+/log/*
+!/log/.keep
+/node_modules
+/public/packs
+/public/packs-test
+/storage
+/tmp
+yarn-debug.log*
+yarn-error.log*

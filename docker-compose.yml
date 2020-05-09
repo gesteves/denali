@@ -1,0 +1,80 @@
+version: '3.7'
+volumes:
+  postgres-data:
+  elasticsearch-data:
+  bundle:
+  node-modules:
+services:
+  postgres:
+    image: postgres:11.7
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.14
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+    ports:
+      - '9200:9200'
+      - '9300:9300'
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+  sidekiq:
+    build: .
+    command: bundle exec sidekiq
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - ELASTICSEARCH_URL=elasticsearch
+      - ELASTICSEARCH_TIMEOUT=60
+    env_file:
+      - '.env'
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+      - node-modules:/app/node_modules
+  webpacker:
+    build: .
+    command: ./bin/webpack-dev-server
+    ports:
+      - '3035:3035'
+    environment:
+      - NODE_ENV=development
+      - RAILS_ENV=development
+      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
+    env_file:
+      - '.env'
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+      - node-modules:/app/node_modules
+  app:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/app
+      - bundle:/usr/local/bundle
+      - node-modules:/app/node_modules
+    ports:
+      - '3000:3000'
+    depends_on:
+      - postgres
+      - redis
+      - elasticsearch
+    environment:
+      - WEBPACKER_DEV_SERVER_HOST=webpacker
+      - ELASTICSEARCH_URL=elasticsearch
+      - ELASTICSEARCH_TIMEOUT=60
+      - REDIS_URL=redis://redis:6379/0
+    env_file:
+      - '.env'
