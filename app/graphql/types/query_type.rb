@@ -15,7 +15,7 @@ module Types
     end
     field :cameras, [Types::CameraType], null: true
     field :lenses, [Types::LensType], null: true
-    field :films, [Types::FilmsType], null: true
+    field :films, [Types::FilmType], null: true
 
     def blog
       Blog.first
