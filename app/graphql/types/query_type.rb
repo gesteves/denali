@@ -13,9 +13,18 @@ module Types
       argument :page, Integer, default_value: 1, required: false
       argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }
     end
-    field :cameras, [Types::CameraType], null: true
-    field :lenses, [Types::LensType], null: true
-    field :films, [Types::FilmType], null: true
+    field :cameras, [Types::CameraType], null: true do
+      argument :page, Integer, default_value: 1, required: false
+      argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }
+    end
+    field :lenses, [Types::LensType], null: true do
+      argument :page, Integer, default_value: 1, required: false
+      argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }
+    end
+    field :films, [Types::FilmType], null: true do
+      argument :page, Integer, default_value: 1, required: false
+      argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }
+    end
 
     def blog
       Blog.first
