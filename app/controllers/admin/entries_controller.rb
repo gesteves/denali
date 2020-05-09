@@ -90,7 +90,7 @@ class Admin::EntriesController < AdminController
       raise ActionController::RoutingError.new('Not Found') unless @photoblog.has_search?
       @page = (params[:page] || 1).to_i
       @count = 10
-      @query = html_escape(params[:q])
+      @query = params[:q]
       @page_title = "Search"
       if @query.present?
         @page_title = "Search results for \"#{@query}\""
