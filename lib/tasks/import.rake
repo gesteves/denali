@@ -30,11 +30,17 @@ namespace :import do
           name
         }
         photos {
+          urls(widths: [3360])
           filename
-          originalUrl
           altText
           focalX
           focalY
+          aperture
+          exposure
+          focalLength
+          iso
+          latitude
+          longitude
           camera {
             slug
             make
@@ -120,7 +126,7 @@ namespace :import do
   desc 'Import a number of entries'
   task :entries => :environment do
     next if ENV['IMPORT_URL'].blank?
-    per_page = 10
+    per_page = 100
     total_entries = (ENV['COUNT'] || 100).to_f
     puts "\nFetching #{total_entries.to_i} entries in batches of #{per_page}…"
 
@@ -204,8 +210,8 @@ def import_entry(data)
     entry.instagram_location_list = data[:instagramLocationName]
     entry.tag_list = data[:tags].map { |t| t[:name] }.join(', ')
     entry.photos = data[:photos].map do |p|
-      photo = Photo.new(alt_text: p[:altText], focal_x: p[:focalX], focal_y: p[:focalY])
-      file_path = open(p[:originalUrl]).path
+      photo = Photo.new(alt_text: p[:altText], focal_x: p[:focalX], focal_y: p[:focalY], f_number: p[:aperture], focal_length: p[:focalLength], iso: p[:iso], exposure: p[:exposure], latitude: p[:latitude], longitude: p[:longitude])
+      file_path = open(p[:urls][0]).path
       photo.image.attach(io: File.open(file_path), filename: p[:filename])
       photo.camera = Camera.find_or_initialize_by(slug: p[:camera][:slug], make: p[:camera][:make], model: p[:camera][:model], display_name: p[:camera][:name]) if p[:camera].present?
       photo.lens = Lens.find_or_initialize_by(slug: p[:lens][:slug], make: p[:lens][:make], model: p[:lens][:model], display_name: p[:lens][:name]) if p[:lens].present?
