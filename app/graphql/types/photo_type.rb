@@ -11,7 +11,7 @@ module Types
     field :color_palette, [String], null: true, description: "List of hex values of the 6 most prominent colors in the photo"
     field :color_vibrant, String, null: true, description: "Hex representation of the photo's most prominent vibrant color"
     field :color, Boolean, null: true, method: :color?, description: "Whether or not the photo is in color"
-    field :exposure, String, null: true description: "Exposure time of the photo"
+    field :exposure, String, null: true, description: "Exposure time of the photo"
     field :filename, String, null: false, description: "The file name of the original uploaded image"
     field :film, Types::FilmType, null: true, description: "The film used to take the photo"
     field :focal_length, Integer, null: true, description: "Focal length the photo was made at"
