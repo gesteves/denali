@@ -6,16 +6,60 @@ namespace :import do
     import:setup
     import:destroy
     import:blog
-    import:equipment
     import:entries
   }
 
   desc 'Set up GraphQL queries'
   task :setup => :environment do
-    return if ENV['IMPORT_API_ENDPOINT'].blank?
-    HTTP = GraphQL::Client::HTTP.new(ENV['IMPORT_API_ENDPOINT'])
+    next if ENV['IMPORT_URL'].blank?
+    HTTP = GraphQL::Client::HTTP.new(ENV['IMPORT_URL'])
     Schema = GraphQL::Client.load_schema(HTTP)
     Client = GraphQL::Client.new(schema: Schema, execute: HTTP)
+    EntryFragment = Client.parse <<-'GRAPHQL'
+      fragment on Entry {
+        url
+        slug
+        title
+        body
+        instagramLocationName
+        status
+        publishedAt
+        modifiedAt
+        tags {
+          name
+        }
+        photos {
+          filename
+          originalUrl
+          altText
+          focalX
+          focalY
+          camera {
+            slug
+            make
+            model
+            name
+          }
+          lens {
+            slug
+            make
+            model
+            name
+          }
+          film {
+            slug
+            make
+            model
+            name
+          }
+        }
+        user {
+          name
+          firstName
+          lastName
+        }
+      }
+    GRAPHQL
     Queries = Client.parse <<-'GRAPHQL'
     query ImportBlog {
       blog {
@@ -39,80 +83,15 @@ namespace :import do
       }
     }
 
-    query ImportEquipment {
-      cameras(count: 100) {
-        slug
-        make
-        model
-        name
-      }
-      lenses(count: 100) {
-        slug
-        make
-        model
-        name
-      }
-      films(count: 100) {
-        slug
-        make
-        model
-        name
-      }
-    }
-
     query ImportEntries($page: Int!, $count: Int!) {
       entries(page: $page, count: $count) {
-        url
-        slug
-        title
-        body
-        instagramLocationName
-        status
-        publishedAt
-        modifiedAt
-        tags {
-          name
-        }
-        photos {
-          filename
-          originalUrl
-          altText
-          focalX
-          focalY
-        }
-        user {
-          name
-          firstName
-          lastName
-        }
+        ...EntryFragment
       }
     }
 
     query ImportEntry($url: String!) {
       entry(url: $url) {
-        url
-        slug
-        title
-        body
-        instagramLocationName
-        status
-        publishedAt
-        modifiedAt
-        tags {
-          name
-        }
-        photos {
-          filename
-          originalUrl
-          altText
-          focalX
-          focalY
-        }
-        user {
-          name
-          firstName
-          lastName
-        }
+        ...EntryFragment
       }
     }
     GRAPHQL
@@ -120,30 +99,16 @@ namespace :import do
 
   desc 'Destroy existing content'
   task :destroy => :environment do
-    return if ENV['IMPORT_API_ENDPOINT'].blank?
-
-    puts "Destroying entries…"
-    Entry.destroy_all
+    next if ENV['IMPORT_URL'].blank?
 
     puts "Destroying blogs…"
     Blog.destroy_all
-
-    puts "Destroying cameras…"
-    Camera.destroy_all
-
-    puts "Destroying lenses…"
-    Lens.destroy_all
-
-    puts "Destroying films…"
-    Film.destroy_all
   end
 
   desc 'Import blog content'
   task :blog => :environment do
-    return if ENV['IMPORT_API_ENDPOINT'].blank?
+    next if ENV['IMPORT_URL'].blank?
     puts "Fetching import data for blog…\n\n"
-
-
 
     response = Client.query(Queries::ImportBlog)
     data = response.data.to_h.with_indifferent_access
@@ -151,22 +116,9 @@ namespace :import do
     import_blog(data[:blog])
   end
 
-  desc 'Import equipment'
-  task :equipment => :environment do
-    return if ENV['IMPORT_API_ENDPOINT'].blank?
-    puts "Fetching import data for equipment…\n\n"
-
-    response = Client.query(Queries::ImportEquipment)
-    data = response.data.to_h.with_indifferent_access
-
-    import_cameras(data[:cameras])
-    import_lenses(data[:lenses])
-    import_films(data[:films])
-  end
-
   desc 'Import a number of entries'
   task :entries => :environment do
-    return if ENV['IMPORT_API_ENDPOINT'].blank?
+    next if ENV['IMPORT_URL'].blank?
 
     total_entries = (ENV['COUNT'] || 100).to_f
     puts "Fetching data for #{total_entries.to_i} entries…\n\n"
@@ -176,7 +128,7 @@ namespace :import do
 
     total_pages.times do |page|
       count = [remaining_entries, 10].min
-      puts "Fetching #{count} entries…"
+      puts "Fetching #{count.to_i} entries…"
       response = Client.query(Queries::ImportEntries, variables: { page: page + 1, count: count })
       data = response.data.to_h.with_indifferent_access
       data[:entries].each { |entry| import_entry(entry) }
@@ -187,7 +139,7 @@ namespace :import do
 
   desc 'Import an entry'
   task :entry => [:environment, :setup] do
-    return if ENV['IMPORT_API_ENDPOINT'].blank? || ENV['ENTRY_URL'].blank?
+    next if ENV['IMPORT_URL'].blank? || ENV['ENTRY_URL'].blank?
 
     puts "Fetching data for entry “#{ENV['ENTRY_URL']}”…\n\n"
     response = Client.query(Queries::ImportEntry, variables: { url: ENV['ENTRY_URL'] })
@@ -280,6 +232,9 @@ def import_entry(data)
       file_path = open(p[:originalUrl]).path
       photo.image.attach(io: File.open(file_path), filename: p[:filename])
       puts "  Saved!"
+      photo.camera = Camera.find_or_initialize_by(slug: p[:camera][:slug], make: p[:camera][:make], model: p[:camera][:model], display_name: p[:camera][:name]) if p[:camera].present?
+      photo.lens = Lens.find_or_initialize_by(slug: p[:lens][:slug], make: p[:lens][:make], model: p[:lens][:model], display_name: p[:lens][:name]) if p[:lens].present?
+      photo.film = Film.find_or_initialize_by(slug: p[:film][:slug], make: p[:film][:make], model: p[:film][:model], display_name: p[:film][:name]) if p[:film].present?
       photo
     end
     entry.status = 'published'
