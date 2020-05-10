@@ -12,6 +12,7 @@ module Types
     field :color_vibrant, String, null: true, description: "Hex representation of the photo's most prominent vibrant color"
     field :color, Boolean, null: true, method: :color?, description: "Whether or not the photo is in color"
     field :exposure, String, null: true, method: :formatted_exposure, description: "Exposure time of the photo"
+    field :filename, String, null: false, description: "The file name of the original uploaded image"
     field :film, Types::FilmType, null: true, description: "The film used to take the photo"
     field :focal_length, String, null: true, method: :focal_length_with_unit, description: "Focal length the photo was taken at"
     field :focal_x, Float, null: true, description: "X coordinate of the focal point of the photo, as float between 0 and 1"
@@ -56,6 +57,10 @@ module Types
 
     def original_url
       object.image.service_url
+    end
+    
+    def filename
+      object.image.filename.to_s
     end
   end
 end
