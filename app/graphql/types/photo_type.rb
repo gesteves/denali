@@ -4,7 +4,7 @@ module Types
 
     field :id, ID, null: false
     field :alt_text, String, null: true, description: "Text description of the image"
-    field :aperture, String, null: true, method: :formatted_aperture, description: "f/number the photo was taken at"
+    field :aperture, String, null: true, method: :formatted_aperture, description: "f/number the photo was made at"
     field :black_and_white, Boolean, null: true, method: :black_and_white?, description: "Whether or not the photo is in black & white"
     field :camera, Types::CameraType, null: true, description: "The camera used to take the photo"
     field :color_muted, String, null: true, description: "Hex representation of the photo's most prominent muted color"
@@ -14,16 +14,17 @@ module Types
     field :exposure, String, null: true, method: :formatted_exposure, description: "Exposure time of the photo"
     field :filename, String, null: false, description: "The file name of the original uploaded image"
     field :film, Types::FilmType, null: true, description: "The film used to take the photo"
-    field :focal_length, String, null: true, method: :focal_length_with_unit, description: "Focal length the photo was taken at"
+    field :focal_length, String, null: true, method: :focal_length_with_unit, description: "Focal length the photo was made at"
     field :focal_x, Float, null: true, description: "X coordinate of the focal point of the photo, as float between 0 and 1"
     field :focal_y, Float, null: true, description: "Y coordinate of the focal point of the photo, as float between 0 and 1"
     field :height, Integer, null: false, description: "Height of the original image"
     field :horizontal, Boolean, null: false, method: :is_horizontal?, description: "Whether or not the photo is in landscape orientation"
     field :instagram_story_url, String, null: false, description: "URL of a version of the photo optimized for Instagram Stories"
     field :instagram_url, String, null: false, description: "URL of a version of the photo optimized for the Instagram feed"
-    field :iso, Integer, null: true, description: "ISO the photo was taken at"
-    field :lens, Types::LensType, null: true, description: "The lens used to take the photo"
-    field :original_url, String, null: false, description: "The URL of the original uploaded image"
+    field :iso, Integer, null: true, description: "ISO the photo was made at"
+    field :latitude, Float, null: true, description: "Latitude the photo was made at"
+    field :longitude, Float, null: true, description: "Longitude the photo was made at"
+    field :lens, Types::LensType, null: true, description: "The lens used to make the photo"
     field :prominent_color, String, null: true, description: "Hex representation of the photo's most prominent color"
     field :square, Boolean, null: false, method: :is_square?, description: "Whether or not the photo is square"
     field :vertical, Boolean, null: false, method: :is_vertical?, description: "Whether or not the photo is in portrait orientation"
@@ -55,10 +56,14 @@ module Types
       object.color_palette.split(',')
     end
 
-    def original_url
-      object.image.service_url
+    def latitude
+      object.latitude if object.entry.show_in_map?
     end
-    
+
+    def longitude
+      object.longitude if object.entry.show_in_map?
+    end
+
     def filename
       object.image.filename.to_s
     end
