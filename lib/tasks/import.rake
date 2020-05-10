@@ -1,75 +1,114 @@
-require 'graphql/client'
-require 'graphql/client/http'
-
 namespace :import do
   task :reset => %w{
-    import:setup
     import:destroy
     import:blog
     import:entries
   }
 
-  desc 'Set up GraphQL queries'
-  task :setup => :environment do
+  desc 'Destroy existing content'
+  task :destroy => :environment do
     next if ENV['IMPORT_URL'].blank?
-    puts "Setting up GraphQL queries…"
-    HTTP = GraphQL::Client::HTTP.new(ENV['IMPORT_URL'])
-    Schema = GraphQL::Client.load_schema(HTTP)
-    Client = GraphQL::Client.new(schema: Schema, execute: HTTP)
-    EntryFragment = Client.parse <<-'GRAPHQL'
-      fragment on Entry {
-        url
-        slug
-        title
-        body
-        instagramLocationName
-        status
-        publishedAt
-        modifiedAt
-        tags {
+
+    puts "Destroying blogs…"
+    Blog.destroy_all
+  end
+
+  desc 'Import blog content'
+  task :blog => :environment do
+    next if ENV['IMPORT_URL'].blank?
+    puts "\nFetching import data for blog…"
+
+    response = graphql_query(operation_name: 'ImportBlog')
+    import_blog(response.dig(:data, :blog))
+  end
+
+  desc 'Import a number of entries'
+  task :entries => :environment do
+    next if ENV['IMPORT_URL'].blank?
+    per_page = 100
+    total_entries = (ENV['COUNT'] || 100).to_f
+    puts "\nFetching #{total_entries.to_i} entries in batches of #{per_page}…"
+
+    total_pages = (total_entries / per_page.to_f).ceil
+    remaining_entries = total_entries
+
+    total_pages.times do |page|
+      count = [remaining_entries, per_page].min
+      puts "\nFetching batch of #{count.to_i} entries…"
+
+      response = graphql_query(operation_name: 'ImportEntries', variables: { page: page + 1, count: count })
+      response.dig(:data, :entries)&.each { |entry| import_entry(entry) }
+      remaining_entries = remaining_entries - per_page
+    end
+
+  end
+
+  desc 'Import an entry'
+  task :entry => :environment do
+    next if ENV['IMPORT_URL'].blank? || ENV['ENTRY_URL'].blank?
+
+    puts "Fetching data for entry “#{ENV['ENTRY_URL']}”…"
+
+    response = graphql_query(operation_name: 'ImportEntry', variables: { url: ENV['ENTRY_URL'] })
+    import_entry(response.dig(:data, :entry))
+  end
+end
+
+def graphql_query(operation_name:, variables: nil)
+  return if ENV['IMPORT_URL'].blank?
+  query = <<~GRAPHQL
+    fragment entryFragment on Entry {
+      url
+      slug
+      title
+      body
+      instagramLocationName
+      status
+      publishedAt
+      modifiedAt
+      tags {
+        name
+      }
+      photos {
+        urls(widths: [3360])
+        filename
+        altText
+        focalX
+        focalY
+        aperture
+        exposure
+        focalLength
+        iso
+        latitude
+        longitude
+        camera {
+          slug
+          make
+          model
           name
         }
-        photos {
-          urls(widths: [3360])
-          filename
-          altText
-          focalX
-          focalY
-          aperture
-          exposure
-          focalLength
-          iso
-          latitude
-          longitude
-          camera {
-            slug
-            make
-            model
-            name
-          }
-          lens {
-            slug
-            make
-            model
-            name
-          }
-          film {
-            slug
-            make
-            model
-            name
-          }
-        }
-        user {
+        lens {
+          slug
+          make
+          model
           name
-          firstName
-          lastName
+        }
+        film {
+          slug
+          make
+          model
+          name
         }
       }
-    GRAPHQL
-    Queries = Client.parse <<-'GRAPHQL'
+      user {
+        name
+        firstName
+        lastName
+      }
+    }
+
     query ImportBlog {
-      blog {
+        blog {
         name
         tagLine
         about
@@ -92,66 +131,27 @@ namespace :import do
 
     query ImportEntries($page: Int!, $count: Int!) {
       entries(page: $page, count: $count) {
-        ...EntryFragment
+        ...entryFragment
       }
     }
 
     query ImportEntry($url: String!) {
       entry(url: $url) {
-        ...EntryFragment
+        ...entryFragment
       }
     }
-    GRAPHQL
-  end
+  GRAPHQL
 
-  desc 'Destroy existing content'
-  task :destroy => :environment do
-    next if ENV['IMPORT_URL'].blank?
-
-    puts "Destroying blogs…"
-    Blog.destroy_all
-  end
-
-  desc 'Import blog content'
-  task :blog => :environment do
-    next if ENV['IMPORT_URL'].blank?
-    puts "\nFetching import data for blog…"
-
-    response = Client.query(Queries::ImportBlog)
-    data = response.data.to_h.with_indifferent_access
-
-    import_blog(data[:blog])
-  end
-
-  desc 'Import a number of entries'
-  task :entries => :environment do
-    next if ENV['IMPORT_URL'].blank?
-    per_page = 100
-    total_entries = (ENV['COUNT'] || 100).to_f
-    puts "\nFetching #{total_entries.to_i} entries in batches of #{per_page}…"
-
-    total_pages = (total_entries / per_page.to_f).ceil
-    remaining_entries = total_entries
-
-    total_pages.times do |page|
-      count = [remaining_entries, per_page].min
-      puts "\nFetching batch of #{count.to_i} entries…"
-      response = Client.query(Queries::ImportEntries, variables: { page: page + 1, count: count })
-      data = response.data.to_h.with_indifferent_access
-      data[:entries].each { |entry| import_entry(entry) }
-      remaining_entries = remaining_entries - per_page
-    end
-
-  end
-
-  desc 'Import an entry'
-  task :entry => [:environment, :setup] do
-    next if ENV['IMPORT_URL'].blank? || ENV['ENTRY_URL'].blank?
-
-    puts "Fetching data for entry “#{ENV['ENTRY_URL']}”…"
-    response = Client.query(Queries::ImportEntry, variables: { url: ENV['ENTRY_URL'] })
-    data = response.data.to_h.with_indifferent_access
-    import_entry(data[:entry])
+  body = {
+    query: query,
+    variables: variables,
+    operationName: operation_name
+  }.compact
+  begin
+    response = HTTParty.post(ENV['IMPORT_URL'], body: body.to_json, headers: { 'Content-Type': 'application/json' })
+    JSON.parse(response.body).with_indifferent_access
+  rescue StandardError
+    nil
   end
 end
 
@@ -188,8 +188,8 @@ end
 
 def import_entry(data)
   blog = Blog.first
-  return if blog.blank? || data.blank?
-  puts "Importing entry “#{data[:url]}”"
+  return if data.blank? || blog.blank?
+  puts "  Importing entry “#{data[:url]}”"
   begin
     entry = Entry.new(
       blog: blog,

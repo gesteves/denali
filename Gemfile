@@ -58,7 +58,6 @@ gem 'elasticsearch-model', '~> 5.0'
 gem 'elasticsearch-rails', '~> 5.0'
 
 gem 'graphql'
-gem 'graphql-client'
 
 group :production do
   gem 'lograge'
