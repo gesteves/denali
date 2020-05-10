@@ -559,7 +559,7 @@ class Entry < ApplicationRecord
   end
 
   def set_published_date
-    if self.is_published? && self.published_at.nil?
+    if self.is_published? && self.published_at.blank?
       time = Time.current
       self.published_at = time
       self.modified_at  = time
