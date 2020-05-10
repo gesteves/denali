@@ -16,7 +16,7 @@ class Photo < ApplicationRecord
   after_commit :update_entry_style_tags, if: :changed_style?
 
   def touch_entry
-    self.entry.touch
+    self.entry&.touch
   end
 
   def update_entry_equipment_tags
