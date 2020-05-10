@@ -108,7 +108,7 @@ namespace :import do
   desc 'Import blog content'
   task :blog => :environment do
     next if ENV['IMPORT_URL'].blank?
-    puts "Fetching import data for blog…\n\n"
+    puts "\nFetching import data for blog…"
 
     response = Client.query(Queries::ImportBlog)
     data = response.data.to_h.with_indifferent_access
@@ -119,20 +119,20 @@ namespace :import do
   desc 'Import a number of entries'
   task :entries => :environment do
     next if ENV['IMPORT_URL'].blank?
-
+    per_page = 10
     total_entries = (ENV['COUNT'] || 100).to_f
-    puts "Fetching data for #{total_entries.to_i} entries…"
+    puts "Fetching #{total_entries.to_i} entries in batches of #{per_page}…"
 
-    total_pages = (total_entries / 10.0).ceil
+    total_pages = (total_entries / per_page.to_f).ceil
     remaining_entries = total_entries
 
     total_pages.times do |page|
-      count = [remaining_entries, 10].min
+      count = [remaining_entries, per_page].min
       puts "\nFetching batch of #{count.to_i} entries…"
       response = Client.query(Queries::ImportEntries, variables: { page: page + 1, count: count })
       data = response.data.to_h.with_indifferent_access
       data[:entries].each { |entry| import_entry(entry) }
-      remaining_entries = remaining_entries - 10
+      remaining_entries = remaining_entries - per_page
     end
 
   end
@@ -151,10 +151,10 @@ end
 def import_blog(data)
   return if data.blank?
   blog = if Blog.first.present?
-    puts "\nUpdating blog"
+    puts "Updating blog"
     Blog.first
   else
-    puts "\nCreating new blog"
+    puts "Creating new blog"
     Blog.new
   end
 
@@ -176,7 +176,7 @@ def import_blog(data)
   blog.tumblr = data[:tumblr]
   blog.twitter = data[:twitter]
   blog.save!
-  puts "Saved changes to “#{blog.name}”\n\n"
+  puts "Saved changes to “#{blog.name}”"
 end
 
 def import_entry(data)
