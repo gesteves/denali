@@ -12,6 +12,7 @@ namespace :import do
   desc 'Set up GraphQL queries'
   task :setup => :environment do
     next if ENV['IMPORT_URL'].blank?
+    puts "Setting up GraphQL queries…"
     HTTP = GraphQL::Client::HTTP.new(ENV['IMPORT_URL'])
     Schema = GraphQL::Client.load_schema(HTTP)
     Client = GraphQL::Client.new(schema: Schema, execute: HTTP)
@@ -121,7 +122,7 @@ namespace :import do
     next if ENV['IMPORT_URL'].blank?
     per_page = 10
     total_entries = (ENV['COUNT'] || 100).to_f
-    puts "Fetching #{total_entries.to_i} entries in batches of #{per_page}…"
+    puts "\nFetching #{total_entries.to_i} entries in batches of #{per_page}…"
 
     total_pages = (total_entries / per_page.to_f).ceil
     remaining_entries = total_entries
