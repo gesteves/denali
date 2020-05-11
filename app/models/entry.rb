@@ -425,8 +425,7 @@ class Entry < ApplicationRecord
   end
 
   def instagram_location_name
-    location_name, location_id = self.instagram_location
-    location_name
+    self.instagram_location_list.join(', ')
   end
 
   def instagram_caption
