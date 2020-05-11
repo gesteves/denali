@@ -31,7 +31,7 @@ module Types
     end
 
     def entries(page:, count:)
-      object.entries.includes(photos: [:image_attachment, :image_blob, :camera, :lens, :film], taggings: :tag).published.page(page).per(count)
+      object.entries.includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film], taggings: :tag).published.page(page).per(count)
     end
   end
 end
