@@ -27,15 +27,11 @@ module Types
     field :twitter, String, null: true, description: "Twitter account for the blog"
     field :entries, [Types::EntryType], null: true, description: "The list of published entries in this blog" do
       argument :page, Integer, default_value: 1, required: false
-      argument :count, Integer, default_value: 1, required: false, prepare: -> (count, ctx) { [count, 100].min }
+      argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }
     end
 
     def entries(page:, count:)
-      if count.present?
-        object.entries.published.limit(count)
-      elsif page.present?
-        object.entries.published.page(page).per(object.posts_per_page)
-      end
+      object.entries.includes(photos: [:image_attachment, :image_blob, :camera, :lens, :film], taggings: :tag, :user).published.page(page).per(count)
     end
   end
 end
