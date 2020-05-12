@@ -39,7 +39,6 @@ gem 'mini_magick'
 gem 'rack-attack'
 
 # Monitoring
-gem 'newrelic_rpm'
 gem 'sentry-raven'
 gem 'barnes'
 gem 'skylight'
