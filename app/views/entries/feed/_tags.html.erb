@@ -1,5 +1,0 @@
-<p>
-  <% tags.sort_by { |t| t.slug }.each do |tag| %>
-    <%= link_to "##{tag.slug.gsub(/-/, '')}", tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”" } %>
-  <% end %>
-</p>

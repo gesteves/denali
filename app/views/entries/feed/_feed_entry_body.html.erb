@@ -3,6 +3,5 @@
 <% end %>
 <%= sanitize entry.formatted_body unless entry.body.blank? %>
 <%= render partial: 'entries/feed/exif.html.erb', object: entry.photos.first, as: :photo if entry.is_single_photo? %>
-<%= render partial: 'entries/feed/tags.html.erb', object: entry.combined_tags, as: :tags if entry.combined_tags.present? %>
 <%= render partial: 'entries/feed/disclaimer.html.erb', object: entry, as: :entry %>
 

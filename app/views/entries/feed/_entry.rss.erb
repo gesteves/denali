@@ -13,6 +13,5 @@
     <% entry.photos.each do |photo| %>
       <media:content url="<%= photo.url(w: 1280, fm: 'jpg') %>" />
     <% end %>
-    <media:keywords><%= entry.combined_tags.sort_by { |t| t.name }.join(', ') %></media:keywords>
   </item>
 <% end %>
