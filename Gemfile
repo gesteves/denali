@@ -42,6 +42,7 @@ gem 'rack-attack'
 gem 'newrelic_rpm'
 gem 'sentry-raven'
 gem 'barnes'
+gem 'skylight'
 
 # Caching
 gem 'dalli'
