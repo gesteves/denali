@@ -14,7 +14,7 @@ class Entry < ApplicationRecord
 
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
-  before_create :set_preview_hash
+  before_save :set_preview_hash
 
   after_commit :handle_status_change, if: :saved_change_to_status?
 
@@ -575,8 +575,10 @@ class Entry < ApplicationRecord
   end
 
   def set_preview_hash
-    sha256 = Digest::SHA256.new
-    self.preview_hash = sha256.hexdigest(Time.current.to_i.to_s)
+    if self.preview_hash.blank?
+      sha256 = Digest::SHA256.new
+      self.preview_hash = sha256.hexdigest(Time.current.to_i.to_s)
+    end
   end
 
   def related_query(count = 12)

@@ -1,56 +1,63 @@
-namespace :import do
-  task :reset => %w{
-    import:destroy
+namespace :blog do
+  task :import => %w{
     import:blog
     import:entries
   }
 
-  desc 'Destroy existing content'
-  task :destroy => :environment do
-    next if ENV['IMPORT_URL'].blank?
+  namespace :import do
+    task :reset => %w{
+      import:destroy
+      import:blog
+      import:entries
+    }
 
-    puts "Destroying blogs…"
-    Blog.destroy_all
-  end
+    desc 'Destroy existing content'
+    task :destroy => :environment do
+      next if ENV['IMPORT_URL'].blank?
 
-  desc 'Import blog content'
-  task :blog => :environment do
-    next if ENV['IMPORT_URL'].blank?
-    puts "\nFetching import data for blog…"
-
-    response = graphql_query(operation_name: 'ImportBlog')
-    import_blog(response.dig(:data, :blog))
-  end
-
-  desc 'Import a number of entries'
-  task :entries => :environment do
-    next if ENV['IMPORT_URL'].blank?
-    per_page = 100
-    total_entries = (ENV['COUNT'] || 100).to_f
-    puts "\nFetching #{total_entries.to_i} entries in batches of #{per_page}…"
-
-    total_pages = (total_entries / per_page.to_f).ceil
-    remaining_entries = total_entries
-
-    total_pages.times do |page|
-      count = [remaining_entries, per_page].min
-      puts "\nFetching batch of #{count.to_i} entries…"
-
-      response = graphql_query(operation_name: 'ImportEntries', variables: { page: page + 1, count: count })
-      response.dig(:data, :entries)&.each { |entry| import_entry(entry) }
-      remaining_entries = remaining_entries - per_page
+      puts "Destroying blogs…"
+      Blog.destroy_all
     end
 
-  end
+    desc 'Import blog content'
+    task :blog => :environment do
+      next if ENV['IMPORT_URL'].blank?
+      puts "\nFetching import data for blog…"
 
-  desc 'Import an entry'
-  task :entry => :environment do
-    next if ENV['IMPORT_URL'].blank? || ENV['ENTRY_URL'].blank?
+      response = graphql_query(operation_name: 'ImportBlog')
+      import_blog(response.dig(:data, :blog))
+    end
 
-    puts "Fetching data for entry “#{ENV['ENTRY_URL']}”…"
+    desc 'Import a number of entries'
+    task :entries => :environment do
+      next if ENV['IMPORT_URL'].blank?
+      per_page = 100
+      total_entries = (ENV['COUNT'] || 100).to_f
+      puts "\nFetching #{total_entries.to_i} entries in batches of #{per_page}…"
 
-    response = graphql_query(operation_name: 'ImportEntry', variables: { url: ENV['ENTRY_URL'] })
-    import_entry(response.dig(:data, :entry))
+      total_pages = (total_entries / per_page.to_f).ceil
+      remaining_entries = total_entries
+
+      total_pages.times do |page|
+        count = [remaining_entries, per_page].min
+        puts "\nFetching batch of #{count.to_i} entries…"
+
+        response = graphql_query(operation_name: 'ImportEntries', variables: { page: page + 1, count: count })
+        response.dig(:data, :entries)&.each { |entry| import_entry(entry) }
+        remaining_entries = remaining_entries - per_page
+      end
+
+    end
+
+    desc 'Import an entry'
+    task :entry => :environment do
+      next if ENV['IMPORT_URL'].blank? || ENV['ENTRY_URL'].blank?
+
+      puts "Fetching data for entry “#{ENV['ENTRY_URL']}”…"
+
+      response = graphql_query(operation_name: 'ImportEntry', variables: { url: ENV['ENTRY_URL'] })
+      import_entry(response.dig(:data, :entry))
+    end
   end
 end
 
@@ -65,6 +72,7 @@ def graphql_query(operation_name:, variables: nil)
       status
       publishedAt
       modifiedAt
+      previewHash
       tags {
         name
       }
@@ -190,20 +198,23 @@ def import_entry(data)
   return if data.blank? || blog.blank?
   puts "  Importing entry “#{data[:url]}”"
   begin
-    entry = Entry.new(
-      blog: blog,
-      user: User.find_or_create_by!(name: data[:user][:name], first_name: data[:user][:firstName], last_name: data[:user][:lastName]),
-      slug: data[:slug],
-      title: data[:title],
-      body: data[:body],
-      status: data[:status],
-      post_to_instagram: false,
-      post_to_twitter: false,
-      post_to_facebook: false,
-      post_to_tumblr: false,
-      post_to_flickr: false,
-      post_to_flickr_groups: false
-    )
+    entry = Entry.find_or_initialize_by(preview_hash: data[:previewHash])
+    if entry.persisted?
+      puts "    Entry exists, skipping…"
+      return
+    end
+    entry.blog = blog
+    entry.user = User.find_or_create_by!(name: data[:user][:name], first_name: data[:user][:firstName], last_name: data[:user][:lastName])
+    entry.slug = data[:slug]
+    entry.title = data[:title]
+    entry.body = data[:body]
+    entry.status = data[:status]
+    entry.post_to_instagram = false
+    entry.post_to_twitter = false
+    entry.post_to_facebook = false
+    entry.post_to_tumblr = false
+    entry.post_to_flickr = false
+    entry.post_to_flickr_groups = false
     entry.published_at = Time.parse(data[:publishedAt]) if data[:publishedAt].present?
     entry.modified_at = Time.parse(data[:modifiedAt]) if data[:modifiedAt].present?
     entry.tag_list = data[:tags].map { |t| t[:name] }.join(', ')
