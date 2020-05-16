@@ -128,7 +128,7 @@ GEM
       thor (~> 0.14)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
-    graphql (1.10.9)
+    graphql (1.9.6)
     hashie (3.6.0)
     httparty (0.16.3)
       mime-types (~> 3.0)
