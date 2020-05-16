@@ -62,7 +62,6 @@ def graphql_query(operation_name:, variables: nil)
       slug
       title
       body
-      instagramLocationName
       status
       publishedAt
       modifiedAt
@@ -207,7 +206,6 @@ def import_entry(data)
     )
     entry.published_at = Time.parse(data[:publishedAt]) if data[:publishedAt].present?
     entry.modified_at = Time.parse(data[:modifiedAt]) if data[:modifiedAt].present?
-    entry.instagram_location_list = data[:instagramLocationName]
     entry.tag_list = data[:tags].map { |t| t[:name] }.join(', ')
     entry.photos = data[:photos].map do |p|
       photo = Photo.new(alt_text: p[:altText], focal_x: p[:focalX], focal_y: p[:focalY], f_number: p[:aperture], focal_length: p[:focalLength], iso: p[:iso], exposure: p[:exposure], latitude: p[:latitude], longitude: p[:longitude])

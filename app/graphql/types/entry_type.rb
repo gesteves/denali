@@ -14,7 +14,6 @@ module Types
     field :photos_count, Integer, null: false, description: "Number of photos in this entry"
     field :instagram_hashtags, String, null: true, description: "List of Instagram hashtags this entry can be tagged with"
     field :instagram_caption, String, null: true, description: "A full Instagram-friendly caption for this entry"
-    field :instagram_location_name, String, null: true, description: "The name of the tagged Instagram location"
     field :status, String, null: false, description: "The publish status of the entry"
     field :blog, Types::BlogType, null: false, description: "The blog this entry belongs to"
     field :user, Types::UserType, null: false, description: "The author of this entry"
