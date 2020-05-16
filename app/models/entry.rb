@@ -484,10 +484,11 @@ class Entry < ApplicationRecord
   def update_location_tags
     location_tags = []
     tags = []
-    self.tag_list.remove(['National Parks', 'National Monuments', 'National Wildlife Refuges', 'State Parks'])
+    self.tag_list.remove(['National Parks', 'National Monuments', 'National Wildlife Refuges', 'State Parks', 'National Forests'])
     if self.instagram_locations.present?
       location_tags += self.instagram_location_list if self.show_in_map?
       tags << 'National Parks' if self.instagram_location_list.any? { |l| l.match? /national park/i }
+      tags << 'National Forests' if self.instagram_location_list.any? { |l| l.match? /national forest/i }
       tags << 'National Monuments' if self.instagram_location_list.any? { |l| l.match? /national monument/i }
       tags << 'National Wildlife Refuges' if self.instagram_location_list.any? { |l| l.match? /national (wildlife|elk) refuge/i }
       tags << 'State Parks' if self.instagram_location_list.any? { |l| l.match? /state park/i }
