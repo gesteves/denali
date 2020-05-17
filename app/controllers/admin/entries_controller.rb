@@ -255,7 +255,7 @@ class Admin::EntriesController < AdminController
         ['Large 2048', 2048],
         ['Original', 'original']
       ],
-      'Instagram': [['Feed', 'instagram_feed'], ['Story', 'instagram_story']]
+      'Instagram': [['Feed', 'instagram_feed'], ['Story', 'instagram_story']],
       'Cards': [['Facebook', 'facebook'], ['Twitter', 'twitter']]
     }
     respond_to do |format|
