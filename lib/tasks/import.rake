@@ -13,7 +13,7 @@ namespace :blog do
 
     desc 'Destroy existing content'
     task :destroy => :environment do
-      next if ENV['IMPORT_URL'].blank?
+      next if Rails.env.production? || ENV['IMPORT_URL'].blank?
 
       puts "Destroying blogs…"
       Blog.destroy_all
@@ -21,7 +21,7 @@ namespace :blog do
 
     desc 'Import blog content'
     task :blog => :environment do
-      next if ENV['IMPORT_URL'].blank?
+      next if Rails.env.production? || ENV['IMPORT_URL'].blank?
       puts "\nFetching import data for blog…"
 
       response = graphql_query(operation_name: 'ImportBlog')
@@ -30,7 +30,7 @@ namespace :blog do
 
     desc 'Import a number of entries'
     task :entries => :environment do
-      next if ENV['IMPORT_URL'].blank?
+      next if Rails.env.production? || ENV['IMPORT_URL'].blank?
       per_page = 100
       total_entries = (ENV['COUNT'] || 100).to_f
       puts "\nFetching #{total_entries.to_i} entries in batches of #{per_page}…"
@@ -51,7 +51,7 @@ namespace :blog do
 
     desc 'Import an entry'
     task :entry => :environment do
-      next if ENV['IMPORT_URL'].blank? || ENV['ENTRY_URL'].blank?
+      next if Rails.env.production? || ENV['IMPORT_URL'].blank? || ENV['ENTRY_URL'].blank?
 
       puts "Fetching data for entry “#{ENV['ENTRY_URL']}”…"
 
@@ -62,7 +62,7 @@ namespace :blog do
 end
 
 def graphql_query(operation_name:, variables: nil)
-  return if ENV['IMPORT_URL'].blank?
+  return if Rails.env.production? || ENV['IMPORT_URL'].blank?
   query = <<~GRAPHQL
     fragment entryFragment on Entry {
       url
@@ -163,7 +163,7 @@ def graphql_query(operation_name:, variables: nil)
 end
 
 def import_blog(data)
-  return if data.blank?
+  return if Rails.env.production? || data.blank?
   blog = if Blog.first.present?
     puts "Updating blog"
     Blog.first
@@ -194,8 +194,9 @@ def import_blog(data)
 end
 
 def import_entry(data)
+  return if Rails.env.production? || data.blank?
   blog = Blog.first
-  return if data.blank? || blog.blank?
+  return if blog.blank?
   puts "  Importing entry “#{data[:url]}”"
   begin
     entry = Entry.find_or_initialize_by(preview_hash: data[:previewHash])
