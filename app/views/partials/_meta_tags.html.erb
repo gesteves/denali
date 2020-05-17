@@ -1,5 +1,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, viewport-fit=cover">
+<% if !Rails.env.production? %>
+  <meta name="robots" content="noindex">
+<% end %>
 <%= @photoblog.additional_meta_tags&.html_safe %>
 <% if @photoblog.favicon.attached? %>
   <link rel="icon" href="<%= @photoblog.favicon_url(w: 96) %>" type="image/png">

@@ -1,6 +1,5 @@
-<% if Rails.env.production? %>
-Sitemap: <%= sitemap_index_url %>
-<% else %>
 User-agent: *
-Disallow: /
-<% end %>
+Disallow: /photo
+Disallow: /latest
+
+Sitemap: <%= sitemap_index_url %>
