@@ -11,7 +11,7 @@
     <noscript><%= stylesheet_link_tag 'application', media: 'all' %></noscript>
   <% end %>
   <%= stylesheet_link_tag 'print', media: 'print' %>
-  <%= render partial: 'partials/typekit', locals: { typekit_id: ENV['typekit_id']} if ENV['typekit_id'].present? %>
+  <%= render partial: 'partials/webfonts' if @photoblog.webfonts_url.present? %>
   <%= yield :javascript %>
   <%= javascript_pack_tag 'application', defer: true %>
   <%= render partial: 'partials/analytics_head' %>

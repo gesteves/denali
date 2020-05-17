@@ -93,6 +93,19 @@
     </div>
   </div>
 
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :webfonts_url, 'Webfonts', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :webfonts_url, placeholder: 'The URL for a webfonts stylesheet, e.g. https://use.typekit.net/abc123.css', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <hr class="hr">
   <h2 class="subtitle is-size-5-mobile">Analytics</h2>
 

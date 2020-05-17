@@ -25,6 +25,7 @@ module Types
     field :time_zone, String, null: true, description: "Time zone the blog publishes in"
     field :tumblr, String, null: true, description: "Tumblr account for the blog"
     field :twitter, String, null: true, description: "Twitter account for the blog"
+    field :webfonts_url, String, null: true, description: "URL for a webfonts stylesheet (e.g. Typekit or Google Fonts)"
     field :entries, [Types::EntryType], null: true, description: "The list of published entries in this blog" do
       argument :page, Integer, default_value: 1, required: false
       argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }

@@ -133,6 +133,7 @@ def graphql_query(operation_name:, variables: nil)
         headerLogoSvg
         showSearch
         showRelatedEntries
+        webfontsUrl
       }
     }
 
@@ -189,6 +190,7 @@ def import_blog(data)
   blog.time_zone = data[:timeZone]
   blog.tumblr = data[:tumblr]
   blog.twitter = data[:twitter]
+  blog.webfonts_url = data[:webfontsUrl]
   blog.save!
   puts "Saved changes to “#{blog.name}”"
 end
