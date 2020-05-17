@@ -1,4 +1,4 @@
-if Rails.env.production?
+if Rails.env.production? || Rails.env.staging?
   host = if ENV['HEROKU_PARENT_APP_NAME'].present?
     "#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
   else

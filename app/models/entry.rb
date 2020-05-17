@@ -266,9 +266,9 @@ class Entry < ApplicationRecord
   def permalink_url
     if self.is_published?
       year, month, day, id, slug = self.slug_params
-      entry_long_url(year, month, day, id, slug, only_path: !Rails.env.production?)
+      entry_long_url(year, month, day, id, slug, only_path: !Rails.env.production? && !Rails.env.staging?)
     else
-      preview_entry_url(self.preview_hash, only_path: !Rails.env.production?)
+      preview_entry_url(self.preview_hash, only_path: !Rails.env.production? && !Rails.env.staging?)
     end
   end
 
@@ -550,7 +550,7 @@ class Entry < ApplicationRecord
   private
 
   def url_opts(opts)
-    if Rails.env.production?
+    if Rails.env.production? || Rails.env.staging?
       opts.reverse_merge!(protocol: Rails.configuration.force_ssl ? 'https' : 'http')
     else
       opts.reverse_merge!(only_path: true)

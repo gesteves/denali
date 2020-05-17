@@ -9,7 +9,7 @@ class AdminController < ApplicationController
   helper_method :is_admin?
 
   def default_url_options
-    if Rails.env.production?
+    if Rails.env.production? || Rails.env.staging?
       { host: ENV['admin_domain'] }
     else
       {}
