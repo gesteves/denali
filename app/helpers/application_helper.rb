@@ -2,14 +2,12 @@ module ApplicationHelper
 
   def responsive_image_tag(photo, photo_key, html_options = {})
     src, srcset = photo.srcset(photo_key)
-    width = is_variant_square?(photo_key) ? photo.srcset_widths(photo_key).last: photo.width
-    height = is_variant_square?(photo_key) ? photo.srcset_widths(photo_key).last : photo.height
     html_options.reverse_merge!({
       srcset: srcset,
       src: src,
       sizes: Photo.sizes(photo_key),
-      width: width,
-      height: height,
+      width: photo.width,
+      height: is_variant_square?(photo_key) ? width : photo.height,
       loading: 'eager'
     })
     tag :img, html_options

@@ -186,10 +186,10 @@ class EntriesController < ApplicationController
 
   def preload_photos
     @photos = @entry.photos.includes(:image_attachment, :image_blob)
-    sizes = Photo.sizes('entry')
+    @sizes = Photo.sizes('entry')
     @photos.each do |photo|
       src, srcset = photo.srcset('entry')
-      add_preload_link_header(src, as: 'image', imagesizes: sizes, imagesrcset: srcset)
+      add_preload_link_header(src, as: 'image', imagesizes: @sizes, imagesrcset: srcset)
     end
   end
 end
