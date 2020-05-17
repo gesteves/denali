@@ -256,6 +256,7 @@ class Admin::EntriesController < AdminController
         ['Original', 'original']
       ],
       'Instagram': [['Feed', 'instagram_feed'], ['Story', 'instagram_story']]
+      'Cards': [['Facebook', 'facebook'], ['Twitter', 'twitter']]
     }
     respond_to do |format|
       format.html {

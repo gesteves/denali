@@ -7,10 +7,18 @@
   <% @entry.photos.each do |photo| %>
     <%= image_tag photo.instagram_url %>
   <% end %>
-  <% elsif @size == 'instagram_story' %>
-    <% @entry.photos.each do |photo| %>
-      <%= image_tag photo.instagram_story_url %>
-    <% end %>
+<% elsif @size == 'instagram_story' %>
+  <% @entry.photos.each do |photo| %>
+    <%= image_tag photo.instagram_story_url %>
+  <% end %>
+<% elsif @size == 'facebook' %>
+  <% @entry.photos.each do |photo| %>
+    <%= image_tag photo.url(w: 1200, h: 630) %>
+  <% end %>
+<% elsif @size == 'twitter' %>
+  <% @entry.photos.each do |photo| %>
+    <%= image_tag photo.url(w: 1200, h: 600) %>
+  <% end %>
 <% else %>
   <% @entry.photos.each do |photo| %>
     <%= image_tag photo.url(w: [photo.width, @size.to_i].min, fm: 'jpg')%>
