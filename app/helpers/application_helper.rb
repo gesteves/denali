@@ -7,7 +7,7 @@ module ApplicationHelper
       src: src,
       sizes: Photo.sizes(photo_key),
       width: photo.width,
-      height: is_variant_square?(photo_key) ? width : photo.height,
+      height: is_variant_square?(photo_key) ? photo.width : photo.height,
       loading: 'eager'
     })
     tag :img, html_options
