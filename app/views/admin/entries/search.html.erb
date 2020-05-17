@@ -11,10 +11,8 @@
       </article>
     <% else %>
       <%= render partial: 'entry', collection: @entries, cached: true %>
+      <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
     <% end %>
-  <% end %>
-  <% if @entries.size > 0 %>
-    <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
   <% end %>
 <% else %>
   <h1 class="title is-size-5-mobile">Search</h1>

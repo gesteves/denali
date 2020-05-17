@@ -1,4 +1,4 @@
-<% cache @entries do %>
+<% cache [@photoblog, @page] do %>
   <div class="level is-mobile">
     <div class="level-left">
       <div>
@@ -36,9 +36,6 @@
     </article>
   <% else %>
     <%= render partial: 'entry', collection: @entries, cached: true %>
+    <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
   <% end %>
-<% end %>
-
-<% if @entries.size > 0 %>
-  <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
 <% end %>

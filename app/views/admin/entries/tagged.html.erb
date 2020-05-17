@@ -1,4 +1,4 @@
-<% cache [@entries, @tag_list.first] do %>
+<% cache [@photoblog, @tag_list.first, @page] do %>
   <h1 class="title is-size-5-mobile"><%= @tag_list.first %></h1>
   <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', @tagged_count %></h2>
   <hr class="hr">
@@ -10,9 +10,6 @@
     </article>
   <% else %>
     <%= render partial: 'entry', collection: @entries, cached: true %>
+    <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
   <% end %>
-<% end %>
-
-<% if @entries.size > 0 %>
-  <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
 <% end %>
