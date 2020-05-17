@@ -185,7 +185,7 @@ class EntriesController < ApplicationController
   end
 
   def preload_photos
-    @photos = @entry.photos
+    @photos = @entry.photos.includes(:image_attachment, :image_blob)
     sizes = Photo.sizes('entry')
     @photos.each do |photo|
       src, srcset = photo.srcset('entry')
