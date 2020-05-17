@@ -35,20 +35,6 @@
       "description": "Your access token for the Buffer API, for sharing on social media.",
       "required": false
     },
-    "clicky_id": {
-      "description": "Clicky site ID, for analytics.",
-      "required": false
-    },
-    "config_caching_minutes": {
-      "description": "Number of minutes pages are cached for.",
-      "required": true,
-      "value": "60"
-    },
-    "config_entry_caching_minutes": {
-      "description": "Number of minutes entry pages are cached for.",
-      "required": true,
-      "value": "60"
-    },
     "denali_secret": {
       "description": "A secret token, used for various purposes.",
       "required": true,
@@ -76,10 +62,6 @@
     },
     "flickr_consumer_secret": {
       "description": "Used for sharing on Flickr.",
-      "required": false
-    },
-    "google_analytics_id": {
-      "description": "Google Analytics property ID",
       "required": false
     },
     "google_apps_domain": {
@@ -135,10 +117,6 @@
     },
     "sentry_dsn": {
       "description": "Used for exception reporting in Sentry.",
-      "required": false
-    },
-    "typekit_id": {
-      "description": "Typekit ID.",
       "required": false
     },
     "HEROKU_APP_NAME": {
