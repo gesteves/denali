@@ -15,14 +15,14 @@ namespace :blog do
     task :destroy => :environment do
       next if Rails.env.production? || ENV['IMPORT_ENDPOINT'].blank?
 
-      puts "Destroying blogs…"
-      Blog.destroy_all
+      puts "Removing existing entries…\n\n"
+      Entry.destroy_all
     end
 
     desc 'Import blog content'
     task :blog => :environment do
       next if Rails.env.production? || ENV['IMPORT_ENDPOINT'].blank?
-      puts "\nFetching import data for blog…"
+      puts "Fetching import data for blog…"
 
       response = graphql_query(operation_name: 'ImportBlog')
       import_blog(response.dig(:data, :blog))
@@ -40,8 +40,6 @@ namespace :blog do
 
       total_pages.times do |page|
         count = [remaining_entries, per_page].min
-        puts "\nFetching batch of #{count.to_i} entries…"
-
         response = graphql_query(operation_name: 'ImportEntries', variables: { page: page + 1, count: count })
         response.dig(:data, :entries)&.each { |entry| import_entry(entry) }
         remaining_entries = remaining_entries - per_page
@@ -166,10 +164,8 @@ end
 def import_blog(data)
   return if Rails.env.production? || data.blank?
   blog = if Blog.first.present?
-    puts "Updating blog"
     Blog.first
   else
-    puts "Creating new blog"
     Blog.new
   end
 
@@ -192,7 +188,7 @@ def import_blog(data)
   blog.twitter = data[:twitter]
   blog.webfonts_url = data[:webfontsUrl]
   blog.save!
-  puts "Saved changes to “#{blog.name}”"
+  puts "Saved changes to blog “#{blog.name}”"
 end
 
 def import_entry(data)
@@ -203,7 +199,7 @@ def import_entry(data)
   begin
     entry = Entry.find_or_initialize_by(preview_hash: data[:previewHash])
     if entry.persisted?
-      puts "    Entry exists, skipping…"
+      puts "    Entry already exists, skipping…"
       return
     end
     entry.blog = blog
@@ -232,7 +228,8 @@ def import_entry(data)
     end
     entry.status = 'published'
     entry.save!
+    puts "    Entry saved."
   rescue StandardError => e
-    puts "Failed to save entry: #{e}"
+    puts "    Failed to save entry: #{e}"
   end
 end
