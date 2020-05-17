@@ -56,7 +56,7 @@ class Photo < ApplicationRecord
     s3_key = self.image.key
     max_width = self.width
     variant = PHOTOS[key]
-    square = variant['square'].present?
+    square = variant['square'].presence
     widths = self.srcset_widths(key)
     opts.merge!(auto: variant['auto']) if variant['auto'].present?
     opts.merge!(q: variant['quality']) if variant['quality'].present?

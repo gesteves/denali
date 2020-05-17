@@ -6,15 +6,9 @@ module ApplicationHelper
       srcset: srcset,
       src: src,
       sizes: Photo.sizes(photo_key),
-      width: photo.width,
-      height: is_variant_square?(photo_key) ? photo.width : photo.height,
       loading: 'eager'
     })
     tag :img, html_options
-  end
-
-  def is_variant_square?(key)
-    PHOTOS[key]['square'].present?
   end
 
   def inline_svg(icon, class_name: '', aria_hidden: true)

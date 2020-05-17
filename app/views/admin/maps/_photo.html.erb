@@ -4,7 +4,7 @@
     <a style="<%= "#{css_gradient_stops(photo)}" %>" target="_blank" class="image image-container" href="<%= entry.permalink_url %>">
       <%= responsive_image_tag photo,
             'map',
-            { class: 'is-overlay', alt: photo.alt_text, loading: 'lazy' } %>
+            { class: 'is-overlay', alt: photo.alt_text, loading: 'lazy', width: photo.width, height: photo.width } %>
     </a>
   </div>
   <div class="card-content">
