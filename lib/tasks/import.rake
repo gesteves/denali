@@ -13,7 +13,7 @@ namespace :blog do
 
     desc 'Destroy existing content'
     task :destroy => :environment do
-      next if Rails.env.production? || ENV['IMPORT_URL'].blank?
+      next if Rails.env.production? || ENV['IMPORT_ENDPOINT'].blank?
 
       puts "Destroying blogs…"
       Blog.destroy_all
@@ -21,7 +21,7 @@ namespace :blog do
 
     desc 'Import blog content'
     task :blog => :environment do
-      next if Rails.env.production? || ENV['IMPORT_URL'].blank?
+      next if Rails.env.production? || ENV['IMPORT_ENDPOINT'].blank?
       puts "\nFetching import data for blog…"
 
       response = graphql_query(operation_name: 'ImportBlog')
@@ -30,7 +30,7 @@ namespace :blog do
 
     desc 'Import a number of entries'
     task :entries => :environment do
-      next if Rails.env.production? || ENV['IMPORT_URL'].blank?
+      next if Rails.env.production? || ENV['IMPORT_ENDPOINT'].blank?
       per_page = 100
       total_entries = (ENV['COUNT'] || 100).to_f
       puts "\nFetching #{total_entries.to_i} entries in batches of #{per_page}…"
@@ -51,7 +51,7 @@ namespace :blog do
 
     desc 'Import an entry'
     task :entry => :environment do
-      next if Rails.env.production? || ENV['IMPORT_URL'].blank? || ENV['ENTRY_URL'].blank?
+      next if Rails.env.production? || ENV['IMPORT_ENDPOINT'].blank? || ENV['ENTRY_URL'].blank?
 
       puts "Fetching data for entry “#{ENV['ENTRY_URL']}”…"
 
@@ -62,7 +62,7 @@ namespace :blog do
 end
 
 def graphql_query(operation_name:, variables: nil)
-  return if Rails.env.production? || ENV['IMPORT_URL'].blank?
+  return if Rails.env.production? || ENV['IMPORT_ENDPOINT'].blank?
   query = <<~GRAPHQL
     fragment entryFragment on Entry {
       url
@@ -156,7 +156,7 @@ def graphql_query(operation_name:, variables: nil)
     operationName: operation_name
   }.compact
   begin
-    response = HTTParty.post(ENV['IMPORT_URL'], body: body.to_json, headers: { 'Content-Type': 'application/json' })
+    response = HTTParty.post(ENV['IMPORT_ENDPOINT'], body: body.to_json, headers: { 'Content-Type': 'application/json' })
     JSON.parse(response.body).with_indifferent_access
   rescue StandardError
     nil
