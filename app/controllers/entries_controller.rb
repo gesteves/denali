@@ -12,7 +12,7 @@ class EntriesController < ApplicationController
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
-    raise ActiveRecord::RecordNotFound if @page > 1 && @entries.empty? && request.format != 'js'
+    raise ActiveRecord::RecordNotFound if @entries.empty?
     if stale?(@entries, public: true)
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
@@ -41,7 +41,7 @@ class EntriesController < ApplicationController
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
-    raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
+    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     if stale?(@entries, public: true)
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')

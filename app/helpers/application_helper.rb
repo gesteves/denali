@@ -1,6 +1,7 @@
 module ApplicationHelper
 
-  def responsive_image_tag(photo:, srcset:, sizes:, square: false, html_options: {})
+  def responsive_image_tag(photo:, srcset: [3360], sizes: '100vw', square: false, html_options: {})
+    return if photo.blank?
     src, srcset = photo.srcset(srcset: srcset, square: square)
     html_options.reverse_merge!({
       srcset: srcset,
@@ -25,7 +26,7 @@ module ApplicationHelper
   end
 
   def css_aspect_ratio(photo)
-    return '--aspect-ratio:0' if photo.width.blank? || photo.height.blank?
+    return '--aspect-ratio:0' if photo.blank? || photo.width.blank? || photo.height.blank?
     "--aspect-ratio:#{photo.height.to_f/photo.width.to_f};"
   end
 
