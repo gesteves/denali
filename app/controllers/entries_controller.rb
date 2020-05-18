@@ -6,7 +6,7 @@ class EntriesController < ApplicationController
   before_action :set_max_age, except: [:amp]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
-  before_action :set_link_headers, only: [:index, :tagged]
+  before_action :set_link_headers, only: [:index, :tagged, :show]
 
   def index
     @page = (params[:page] || 1).to_i
