@@ -1,23 +1,7 @@
 <% cache entry do %>
-  <% photo = entry.photos.first %>
   <li class="entry-list__item">
-    <div class="entry-list__wrapper" style="<%= css_aspect_ratio(photo) %>">
-      <a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
-        <%= responsive_image_tag(
-          photo: photo,
-          srcset: @srcset,
-          sizes: @sizes,
-          html_options: {
-            class: 'entry-list__image',
-            alt: '',
-            'aria-hidden': true,
-            loading: 'lazy'
-          }) %>
-        <div class="entry-list__photo-caption" id="<%= "entry-list-caption-#{entry.id}" %>">
-          <h3 class="entry-list__photo-title"><%= truncate(entry.plain_title, length: 80, separator: ' ', omission: '…') %></h3>
-          <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
-        </div>
-      </a>
+    <div class="entry-list__wrapper" style="<%= css_aspect_ratio(entry.photos.first) %>">
+      <%= render partial: 'entries/list/entry_link', object: entry, as: :entry %>
     </div>
   </li>
 <% end %>
