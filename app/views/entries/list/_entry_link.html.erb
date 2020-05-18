@@ -3,7 +3,7 @@
     photo: entry.photos.first,
     srcset: @srcset,
     sizes: @sizes,
-    square: local_assigns[:square],
+    square: local_assigns[:square].presence,
     html_options: {
       class: 'entry-list__image',
       alt: '',
