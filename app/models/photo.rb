@@ -50,8 +50,7 @@ class Photo < ApplicationRecord
 
   def srcset(srcset:, square: false, opts: { q: 90, fm: 'pjpg'})
     imgix_path = Ix.path(self.image.key)
-    max_width = self.width
-    widths = srcset.reject { |width| width > max_width }
+    widths = srcset.reject { |width| width > self.width }
     src_width = widths.first
     if square.presence
       opts.merge!(fit: 'crop')
