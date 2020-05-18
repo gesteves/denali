@@ -159,10 +159,6 @@ class Photo < ApplicationRecord
     PhotoPaletteWorker.perform_async(self.id)
   end
 
-  def prominent_color
-    self.color_palette&.split(',')&.first
-  end
-
   def color?
     return if self.color_palette.blank?
     !self.color_palette.split(',').map { |c| c.gsub('#', '') }.reject { |c| c.scan(/../).uniq.size == 1 }.empty?
