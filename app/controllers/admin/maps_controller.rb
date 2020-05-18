@@ -22,7 +22,7 @@ class Admin::MapsController < AdminController
 
   def photo
     if stale?(@photoblog)
-      @srcset = PHOTOS[:map][:srcset].uniq.sort
+      @srcset = PHOTOS[:map][:srcset]
       @sizes = PHOTOS[:map][:sizes]
       @photo = Photo.joins(:entry).where(photos: { id: params[:id] }).limit(1).first
       raise ActiveRecord::RecordNotFound if @photo.nil?

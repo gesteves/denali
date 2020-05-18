@@ -14,7 +14,7 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @page > 1 && @entries.empty? && request.format != 'js'
     if stale?(@entries, public: true)
-      @srcset = PHOTOS[:entry_list][:srcset].uniq.sort
+      @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes]
       respond_to do |format|
         format.html {
@@ -43,7 +43,7 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
     if stale?(@entries, public: true)
-      @srcset = PHOTOS[:entry_list][:srcset].uniq.sort
+      @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes]
       respond_to do |format|
         format.html {
@@ -69,7 +69,7 @@ class EntriesController < ApplicationController
     @count = 48
     @query = params[:q]
     if @query.present?
-      @srcset = PHOTOS[:entry_list_square][:srcset].uniq.sort
+      @srcset = PHOTOS[:entry_list_square][:srcset]
       @sizes = PHOTOS[:entry_list_square][:sizes]
       results = Entry.published_search(@query, @page, @count)
       total_count = results.results.total
@@ -108,7 +108,7 @@ class EntriesController < ApplicationController
   def related
     raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_related_entries?
     if stale?(@photoblog, public: true)
-      @srcset = PHOTOS[:entry_list_square][:srcset].uniq.sort
+      @srcset = PHOTOS[:entry_list_square][:srcset]
       @sizes = PHOTOS[:entry_list_square][:sizes]
       @entry = if params[:id].present?
        @photoblog.entries.published.find(params[:id])
@@ -194,7 +194,7 @@ class EntriesController < ApplicationController
 
   def preload_photos
     @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film)
-    @srcset = PHOTOS[:entry][:srcset].uniq.sort
+    @srcset = PHOTOS[:entry][:srcset]
     @sizes = PHOTOS[:entry][:sizes]
     @photos.each do |photo|
       src, srcset = photo.srcset(srcset: @srcset)
