@@ -113,7 +113,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/1/edit
   def edit
     @page_title = "Editing “#{@entry.title}”"
-    @srcset = PHOTOS[:admin_edit][:srcset]
+    @srcset = PHOTOS[:admin_edit][:srcset].uniq.sort
     @sizes = PHOTOS[:admin_edit][:sizes]
   end
 
@@ -192,7 +192,7 @@ class Admin::EntriesController < AdminController
 
   def organize_queue
     if stale?(@photoblog)
-      @srcset = PHOTOS[:admin_queue][:srcset]
+      @srcset = PHOTOS[:admin_queue][:srcset].uniq.sort
       @sizes = PHOTOS[:admin_queue][:sizes]
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued
       @page_title = 'Organize queue'
@@ -281,7 +281,7 @@ class Admin::EntriesController < AdminController
 
   def prints
     if stale?(@entry)
-      @srcset = PHOTOS[:admin_prints][:srcset]
+      @srcset = PHOTOS[:admin_prints][:srcset].uniq.sort
       @sizes = PHOTOS[:admin_prints][:sizes]
       @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
       @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
@@ -418,7 +418,7 @@ class Admin::EntriesController < AdminController
     end
 
     def set_srcset
-      @srcset = PHOTOS[:admin_entry][:srcset]
+      @srcset = PHOTOS[:admin_entry][:srcset].uniq.sort
       @sizes = PHOTOS[:admin_entry][:sizes]
     end
 end
