@@ -2,14 +2,13 @@
   <div class="card-image">
     <% if entry.is_photo? %>
     <% photo = entry.photos.first %>
-    <div style="<%= "#{css_gradient_stops(photo)}"  %>" class="image image-container">
+    <div style="<%= css_gradient_stops(photo) %>" class="image image-container">
       <%= responsive_image_tag(
         photo: photo,
         srcset: @srcset,
         sizes: @sizes,
         square: true,
         html_options: {
-          class: 'is-overlay',
           loading: 'lazy'
         }) %>
     </div>
