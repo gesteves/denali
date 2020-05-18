@@ -68,7 +68,7 @@ class Photo < ApplicationRecord
   # Returns the url of the image, formatted & sized fit to into instagram's
   # 5:4 ratio
   def instagram_url
-    opts = { w: 1080, fit: 'fill', bg: 'fff', q: 90, pad: 50 }
+    opts = { w: 1080, fit: 'fill', bg: 'fff', q: 90, pad: 50, fm: 'jpg' }
     opts[:h] = self.is_vertical? ? 1350 : 1080
     self.url(opts)
   end
@@ -76,7 +76,7 @@ class Photo < ApplicationRecord
   # Returns the url of the image, formatted & sized fit to into instagram stories'
   # 16:9 ratio
   def instagram_story_url
-    self.url(w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90)
+    self.url(w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90, fm: 'jpg')
   end
 
   def facebook_open_graph_url
