@@ -20,7 +20,7 @@
   <meta property="og:site_name" content="<%= @photoblog.name %>">
   <meta property="og:locale" content="en_US">
   <% if entry.is_photo? %>
-    <meta property="og:image" content="<%= photo.url(w: 1200, h: 630) %>">
+    <meta property="og:image" content="<%= photo.facebook_open_graph_url %>">
     <% if photo.alt_text.present? %>
       <meta name="og:image:alt" content="<%= photo.alt_text %>">
     <% end %>
@@ -38,7 +38,7 @@
   <meta name="twitter:description" content="<%= meta_description %>">
   <meta name="twitter:url" content="<%= entry.permalink_url %>">
   <% if entry.is_photo? %>
-    <meta name="twitter:image" content="<%= photo.url(w: 1200, h: 600) %>">
+    <meta name="twitter:image" content="<%= photo.twitter_card_url %>">
     <% if photo.alt_text.present? %>
       <meta name="twitter:image:alt" content="<%= photo.alt_text %>">
     <% end %>

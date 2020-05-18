@@ -79,6 +79,14 @@ class Photo < ApplicationRecord
     self.url(w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90)
   end
 
+  def facebook_open_graph_url
+    self.url(w: 1200, h: 630)
+  end
+
+  def twitter_card_url
+    self.url(w: 1200, h: 600)
+  end
+
   def palette_url(opts = {})
     opts.reverse_merge!(palette: 'json', colors: 6)
     Ix.path(self.image.key).to_url(opts)
