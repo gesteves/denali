@@ -156,6 +156,7 @@ class EntriesController < ApplicationController
   def sitemap_index
     if stale?(@photoblog, public: true)
       total_pages = (@photoblog.entries.published.count / @entries_per_sitemap.to_f).ceil
+      @lastmods = @photoblog.entries.published('published_at ASC').pluck(:modified_at).each_slice(@entries_per_sitemap).map { |page| page.max.strftime('%Y-%m-%dT%H:%M:%S%:z') }
       @pages = [*1..total_pages]
       render format: 'xml'
     end
