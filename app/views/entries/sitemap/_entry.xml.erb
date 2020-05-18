@@ -1,14 +1,4 @@
 <url>
-  <loc><%= entry.permalink_url %></loc>
-  <lastmod><%= entry.modified_at.strftime('%Y-%m-%dT%H:%M:%S%:z') %></lastmod>
-  <% entry.photos.each do |photo| %>
-    <image:image>
-      <image:loc><%= photo.url(w: 1200) %></image:loc>
-      <image:caption><%= photo.alt_text %></image:caption>
-      <image:title><%= entry.plain_title %></image:title>
-      <% if entry.show_in_map? && photo.location.present? %>
-        <image:geo_location><%= photo.location %></image:geo_location>
-      <% end %>
-    </image:image>
-  <% end %>
+  <loc><%= entry_long_url(entry[2].strftime('%Y'), entry[2].strftime('%-m'), entry[2].strftime('%-d'), entry[0], entry[1], only_path: !Rails.env.production? && !Rails.env.staging?) %></loc>
+  <lastmod><%= entry[3].strftime('%Y-%m-%dT%H:%M:%S%:z') %></lastmod>
 </url>

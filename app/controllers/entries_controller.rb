@@ -155,14 +155,15 @@ class EntriesController < ApplicationController
 
   def sitemap_index
     if stale?(@photoblog, public: true)
-      @pages = @photoblog.entries.published.page(1).per(@entries_per_sitemap).total_pages
+      total_pages = (@photoblog.entries.published.count / @entries_per_sitemap.to_f).ceil
+      @pages = [*1..total_pages]
       render format: 'xml'
     end
   end
 
   def sitemap
     @page = params[:page]
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published('published_at ASC').page(@page).per(@entries_per_sitemap)
+    @entries = @photoblog.entries.published('published_at ASC').page(@page).per(@entries_per_sitemap).pluck(:id, :slug, :published_at, :modified_at)
     if stale?(@entries, public: true)
       render format: 'xml'
     end
@@ -181,7 +182,7 @@ class EntriesController < ApplicationController
   private
 
   def set_sitemap_entry_count
-    @entries_per_sitemap = (ENV['entries_per_sitemap'] || 100).to_i
+    @entries_per_sitemap = 10000
   end
 
   def set_entry
