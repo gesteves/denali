@@ -48,12 +48,12 @@ class Photo < ApplicationRecord
     Ix.path(self.image.key).to_url(opts.compact)
   end
 
-  def srcset(srcset:, square: true, opts: { q: 90, fm: 'pjpg'})
+  def srcset(srcset:, square: false, opts: { q: 90, fm: 'pjpg'})
     imgix_path = Ix.path(self.image.key)
     max_width = self.width
     widths = srcset.uniq.sort.reject { |width| max_width.present? && width > max_width }
     src_width = widths.first
-    if square
+    if square.presence
       opts.merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
       src = imgix_path.to_url(opts.merge(w: src_width, h: src_width))
