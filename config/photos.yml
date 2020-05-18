@@ -51,7 +51,6 @@ entry_list: &entry_list
     - "calc(50vw - 8px)"
 entry_list_square:
   <<: *entry_list
-  square: Yes
 admin_entry:
   srcset:
     - 544

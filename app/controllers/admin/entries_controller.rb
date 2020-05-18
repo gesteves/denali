@@ -114,7 +114,7 @@ class Admin::EntriesController < AdminController
   def edit
     @page_title = "Editing “#{@entry.title}”"
     @srcset = PHOTOS[:admin_edit][:srcset]
-    @sizes = PHOTOS[:admin_edit][:sizes]
+    @sizes = PHOTOS[:admin_edit][:sizes].join(', ')
   end
 
   # PATCH /admin/entries/1/publish
@@ -193,7 +193,7 @@ class Admin::EntriesController < AdminController
   def organize_queue
     if stale?(@photoblog)
       @srcset = PHOTOS[:admin_queue][:srcset]
-      @sizes = PHOTOS[:admin_queue][:sizes]
+      @sizes = PHOTOS[:admin_queue][:sizes].join(', ')
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued
       @page_title = 'Organize queue'
       respond_to do |format|
@@ -282,7 +282,7 @@ class Admin::EntriesController < AdminController
   def prints
     if stale?(@entry)
       @srcset = PHOTOS[:admin_prints][:srcset]
-      @sizes = PHOTOS[:admin_prints][:sizes]
+      @sizes = PHOTOS[:admin_prints][:sizes].join(', ')
       @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
       @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
       respond_to do |format|
@@ -419,6 +419,6 @@ class Admin::EntriesController < AdminController
 
     def set_srcset
       @srcset = PHOTOS[:admin_entry][:srcset]
-      @sizes = PHOTOS[:admin_entry][:sizes]
+      @sizes = PHOTOS[:admin_entry][:sizes].join(', ')
     end
 end

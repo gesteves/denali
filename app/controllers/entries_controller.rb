@@ -15,7 +15,7 @@ class EntriesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @page > 1 && @entries.empty? && request.format != 'js'
     if stale?(@entries, public: true)
       @srcset = PHOTOS[:entry_list][:srcset]
-      @sizes = PHOTOS[:entry_list][:sizes]
+      @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       respond_to do |format|
         format.html {
           if @page.nil? || @page == 1
@@ -44,7 +44,7 @@ class EntriesController < ApplicationController
     raise ActiveRecord::RecordNotFound if (@tags.empty? || @entries.empty?) && request.format != 'js'
     if stale?(@entries, public: true)
       @srcset = PHOTOS[:entry_list][:srcset]
-      @sizes = PHOTOS[:entry_list][:sizes]
+      @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       respond_to do |format|
         format.html {
           @page_title = "#{@tags.first.name} – #{@photoblog.name}"
@@ -70,7 +70,7 @@ class EntriesController < ApplicationController
     @query = params[:q]
     if @query.present?
       @srcset = PHOTOS[:entry_list_square][:srcset]
-      @sizes = PHOTOS[:entry_list_square][:sizes]
+      @sizes = PHOTOS[:entry_list_square][:sizes].join(', ')
       results = Entry.published_search(@query, @page, @count)
       total_count = results.results.total
       records = results.records.includes(photos: [:image_attachment, :image_blob])
@@ -90,7 +90,7 @@ class EntriesController < ApplicationController
     if stale?(@entry, public: true)
       @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film)
       @srcset = PHOTOS[:entry][:srcset]
-      @sizes = PHOTOS[:entry][:sizes]
+      @sizes = PHOTOS[:entry][:sizes].join(', ')
       respond_to do |format|
         format.html {
           redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
@@ -111,7 +111,7 @@ class EntriesController < ApplicationController
     raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_related_entries?
     if stale?(@photoblog, public: true)
       @srcset = PHOTOS[:entry_list_square][:srcset]
-      @sizes = PHOTOS[:entry_list_square][:sizes]
+      @sizes = PHOTOS[:entry_list_square][:sizes].join(', ')
       @entry = if params[:id].present?
        @photoblog.entries.published.find(params[:id])
       elsif params[:preview_hash].present?
