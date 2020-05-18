@@ -1,4 +1,4 @@
-<% cache [@photoblog, @page] do %>
+<% cache @photoblog do %>
 <?xml version="1.0" encoding="UTF-8"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <%= render partial: 'entries/sitemap/sitemap.xml.erb', collection: @pages, as: :page %>
