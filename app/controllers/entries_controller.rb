@@ -182,7 +182,7 @@ class EntriesController < ApplicationController
   private
 
   def set_sitemap_entry_count
-    @entries_per_sitemap = 10000
+    @entries_per_sitemap = 1000
   end
 
   def set_entry
