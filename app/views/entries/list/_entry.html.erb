@@ -1,7 +1,5 @@
 <% photo = entry.photos.first %>
 <% style = local_assigns[:square].presence ? '--aspect-ratio:1' : css_aspect_ratio(photo) %>
-<% width = photo.width %>
-<% height = local_assigns[:square].presence ? width : photo.height %>
 <% observer = local_assigns[:page_url].presence && entry_counter == 0 ? "data-controller=\"pagination\" data-pagination-page-url=\"#{page_url}\"" : ''%>
 
 <li class="entry-list__item" <%= observer.html_safe %>>
