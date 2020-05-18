@@ -163,10 +163,9 @@ class EntriesController < ApplicationController
 
   def sitemap
     @page = params[:page]
-    @entries = @photoblog.entries.published('published_at ASC').page(@page).per(@entries_per_sitemap).pluck(:id, :slug, :published_at, :modified_at)
-    @last_modified = @entries.map(&:last).max
+    @entries = @photoblog.entries.published('published_at ASC').page(@page).per(@entries_per_sitemap)
     raise ActiveRecord::RecordNotFound if @entries.empty?
-    if stale?(etag: @entries, last_modified: @last_modified, public: true)
+    if stale?(@entries, public: true)
       render format: 'xml'
     end
   end
@@ -184,7 +183,7 @@ class EntriesController < ApplicationController
   private
 
   def set_sitemap_entry_count
-    @entries_per_sitemap = 1000
+    @entries_per_sitemap = 100
   end
 
   def set_entry

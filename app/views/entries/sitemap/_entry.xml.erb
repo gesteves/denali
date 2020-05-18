@@ -1,4 +1,4 @@
 <url>
-  <loc><%= entry_long_url(entry[2].strftime('%Y'), entry[2].strftime('%-m'), entry[2].strftime('%-d'), entry[0], entry[1], only_path: !Rails.env.production? && !Rails.env.staging?) %></loc>
-  <lastmod><%= entry[3].strftime('%Y-%m-%dT%H:%M:%S%:z') %></lastmod>
+  <loc><%= entry.permalink_url %></loc>
+  <lastmod><%= entry.modified_at.strftime('%Y-%m-%dT%H:%M:%S%:z') %></lastmod>
 </url>
