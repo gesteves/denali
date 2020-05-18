@@ -41,7 +41,7 @@
 <main data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= tag_url(tag: @tag_slug, page: nil) %>" data-infinite-scroll-current-page="<%= @page %>">
   <h2 id="entry-list-heading" class="sr-only">Entries tagged “<%= @tags.first.name %>”</h2>
   <ol class="entry-list" data-target="infinite-scroll.container" data-controller="grid" aria-busy="false" aria-labelledby="entry-list-heading" aria-live="polite">
-    <%= render partial: 'entries/list/page', object: @entries, as: :entries, locals: { page_url: @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) }  %>
+    <%= render partial: 'entries/list/page', object: @entries.to_a, as: :entries, locals: { page_url: @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) }  %>
   </ol>
   <%= paginate @entries, target: 'infinite-scroll.paginator' %>
   <%= render partial: 'partials/loading', locals: { target: 'infinite-scroll.spinner' } %>

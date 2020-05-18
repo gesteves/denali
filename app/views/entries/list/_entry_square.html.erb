@@ -1,12 +1,13 @@
 <% cache entry do %>
   <% photo = entry.photos.first %>
   <li class="entry-list__item">
-    <div class="entry-list__wrapper" style="<%= css_aspect_ratio(photo) %>">
+    <div class="entry-list__wrapper">
       <a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
         <%= responsive_image_tag(
           photo: photo,
           srcset: @srcset,
           sizes: @sizes,
+          square: true,
           html_options: {
             class: 'entry-list__image',
             alt: '',

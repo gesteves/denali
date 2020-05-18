@@ -1,6 +1,6 @@
-<% cache entry do %>
+<% cache [entry, page_url] do %>
   <% photo = entry.photos.first %>
-  <li class="entry-list__item">
+  <li class="entry-list__item" data-controller="pagination" data-pagination-page-url="<%= page_url %>">
     <div class="entry-list__wrapper" style="<%= css_aspect_ratio(photo) %>">
       <a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
         <%= responsive_image_tag(
