@@ -2,4 +2,8 @@
   background: linear-gradient(to bottom right, var(--gradient-start, $color-gray-very-light), var(--gradient-end, $color-gray-light));
   background-repeat: no-repeat;
   background-size: cover;
+
+  img {
+    display: block;
+  }
 }
