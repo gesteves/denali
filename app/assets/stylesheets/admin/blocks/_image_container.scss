@@ -1,5 +1,5 @@
 .image-container {
-  background: linear-gradient(to bottom right, var(--gradient-start, $color-gray-very-light), var(--gradient-end, $color-gray-light));
+  background: radial-gradient(at top left, var(--gradient-start, $color-gray-very-light), var(--gradient-end, $color-gray-light));
   background-repeat: no-repeat;
   background-size: cover;
 

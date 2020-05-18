@@ -21,13 +21,13 @@ module ApplicationHelper
 
   def css_gradient_stops(photo)
     return '' if photo.color_palette.blank?
-    palette = photo.color_palette.split(',').sample(2)
+    palette = photo.color_palette.split(',')
     "--gradient-start:#{palette.first};--gradient-end:#{palette.last};".html_safe
   end
 
   def css_aspect_ratio(photo)
     return '--aspect-ratio:0' if photo.blank? || photo.width.blank? || photo.height.blank?
-    "--aspect-ratio:#{photo.height.to_f/photo.width.to_f};"
+    "--aspect-ratio:#{(photo.height.to_f/photo.width.to_f).floor(2)};"
   end
 
   def inline_asset(filename, opts = {})

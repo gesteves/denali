@@ -1,6 +1,7 @@
-<a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
+<% photo = entry.photos.first %>
+<a class="entry-list__link" style="<%= css_gradient_stops(photo) %>" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
   <%= responsive_image_tag(
-    photo: entry.photos.first,
+    photo: photo,
     srcset: @srcset,
     sizes: @sizes,
     square: local_assigns[:square].presence,
