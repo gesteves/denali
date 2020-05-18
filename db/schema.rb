@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_17_201038) do
+ActiveRecord::Schema.define(version: 2020_05_18_223529) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -151,8 +151,6 @@ ActiveRecord::Schema.define(version: 2020_05_17_201038) do
     t.string "sublocality"
     t.string "neighborhood"
     t.string "administrative_area"
-    t.string "color_vibrant"
-    t.string "color_muted"
     t.string "color_palette"
     t.string "postal_code"
     t.bigint "camera_id"

@@ -160,7 +160,7 @@ class Photo < ApplicationRecord
   end
 
   def prominent_color
-    self.color_vibrant || self.color_muted || '#EEEEEE'
+    self.color_palette&.split(',')&.first
   end
 
   def color?
