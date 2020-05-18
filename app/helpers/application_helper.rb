@@ -21,7 +21,7 @@ module ApplicationHelper
 
   def css_gradient_stops(photo)
     return '' if photo.color_palette.blank?
-    palette = photo.color_palette.split(',')
+    palette = photo.color_palette.split(',').sample(2)
     "--gradient-start:#{palette.first};--gradient-end:#{palette.last};".html_safe
   end
 
