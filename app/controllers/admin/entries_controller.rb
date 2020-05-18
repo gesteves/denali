@@ -10,6 +10,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries
   def index
     if stale?(@photoblog)
+      set_srcset
       @page = params[:page] || 1
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).published.page(@page)
       @page_title = 'Published'
@@ -22,6 +23,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/queued
   def queued
     if stale?(@photoblog)
+      set_srcset
       @page = params[:page] || 1
       @count = (@photoblog.publish_schedules_count || 1) * 7
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).queued.page(@page).per(@count)
@@ -35,6 +37,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/drafts
   def drafts
     if stale?(@photoblog)
+      set_srcset
       @page = params[:page] || 1
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).drafted.page(@page)
       @page_title = 'Drafts'
@@ -47,6 +50,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/tagged/film
   def tagged
     if stale?(@photoblog)
+      set_srcset
       @page = params[:page] || 1
       entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).tagged_with(@tag_list, any: true).order('entries.created_at DESC')
       @entries = entries.page(@page)
@@ -62,6 +66,7 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/:id
   def show
     if stale?(@entry)
+      set_srcset
       @page_title = @entry.plain_title
       respond_to do |format|
         format.html
@@ -88,6 +93,7 @@ class Admin::EntriesController < AdminController
   def search
     if stale?(@photoblog)
       raise ActionController::RoutingError.new('Not Found') unless @photoblog.has_search?
+      set_srcset
       @page = (params[:page] || 1).to_i
       @count = 10
       @query = params[:q]
@@ -107,6 +113,8 @@ class Admin::EntriesController < AdminController
   # GET /admin/entries/1/edit
   def edit
     @page_title = "Editing “#{@entry.title}”"
+    @srcset = PHOTOS[:admin_edit][:srcset]
+    @sizes = PHOTOS[:admin_edit][:sizes]
   end
 
   # PATCH /admin/entries/1/publish
@@ -184,6 +192,8 @@ class Admin::EntriesController < AdminController
 
   def organize_queue
     if stale?(@photoblog)
+      @srcset = PHOTOS[:admin_queue][:srcset]
+      @sizes = PHOTOS[:admin_queue][:sizes]
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued
       @page_title = 'Organize queue'
       respond_to do |format|
@@ -271,6 +281,8 @@ class Admin::EntriesController < AdminController
 
   def prints
     if stale?(@entry)
+      @srcset = PHOTOS[:admin_prints][:srcset]
+      @sizes = PHOTOS[:admin_prints][:sizes]
       @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
       @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
       respond_to do |format|
@@ -403,5 +415,10 @@ class Admin::EntriesController < AdminController
 
     def set_redirect_url
       session[:redirect_url] = request.referer
+    end
+
+    def set_srcset
+      @srcset = PHOTOS[:admin_entry][:srcset]
+      @sizes = PHOTOS[:admin_entry][:sizes]
     end
 end

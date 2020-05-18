@@ -32,9 +32,7 @@
     <%= render partial: 'entries/search/search_form' %>
     <h2 class="sr-only" id="search-results">Search Results</h2>
     <ol class="entry-list" aria-labelledby="search-results">
-      <% photo_variant = 'entry_list_square' %>
-      <% sizes = Photo.sizes(photo_variant) %>
-      <%= render partial: 'entries/list/entry', collection: @entries, as: :entry, locals: { photo_variant: photo_variant, sizes: sizes, square: true } %>
+      <%= render partial: 'entries/list/entry', collection: @entries, as: :entry, locals: { square: true } %>
     </ol>
     <%= paginate @entries %>
   <% else %>

@@ -1,11 +1,11 @@
 <div class="entry__figure" style="<%= css_gradient_stops(photo) %>">
-  <%= responsive_image_tag photo,
-      'entry',
-      { class: 'entry__photo entry__photo--zoom',
-        alt: photo.alt_text,
-        sizes: @sizes,
-        width: photo.width,
-        height: photo.height,
-        'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu',
-        'data-target': 'photo.photo' } %>
+  <%= responsive_image_tag(
+    photo: photo,
+    srcset: @srcset,
+    sizes: @sizes,
+    html_options: {
+      class: 'entry__photo entry__photo--zoom',
+      'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu',
+      'data-target': 'photo.photo'
+    }) %>
 </div>

@@ -1,5 +1,3 @@
 <% cache [entries, page_url] do %>
-  <% photo_variant = 'entry_list' %>
-  <% sizes = Photo.sizes(photo_variant) %>
-  <%= render partial: 'entries/list/entry', collection: entries, as: :entry, locals: { page_url: page_url, photo_variant: photo_variant, sizes: sizes }  %>
+  <%= render partial: 'entries/list/entry', collection: entries, as: :entry, locals: { page_url: page_url }  %>
 <% end %>

@@ -3,9 +3,14 @@
     <% if entry.is_photo? %>
     <% photo = entry.photos.first %>
     <div style="<%= "#{css_gradient_stops(photo)}"  %>" class="image image-container">
-      <%= responsive_image_tag photo,
-            'admin_queue',
-            { class: 'is-overlay', alt: photo.alt_text, loading: 'lazy', width: photo.width, height: photo.width } %>
+      <%= responsive_image_tag(
+        photo: photo,
+        srcset: @srcset,
+        sizes: @sizes,
+        html_options: {
+          class: 'is-overlay',
+          loading: 'lazy'
+        }) %>
     </div>
     <% else %>
       <div style="padding-top:100%;background-color:#EEE;"><div>
