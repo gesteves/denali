@@ -1,8 +1,7 @@
 <% photo = entry.photos.first %>
 <% style = local_assigns[:square].presence ? '--aspect-ratio:1' : css_aspect_ratio(photo) %>
-<% observer = local_assigns[:page_url].presence && entry_counter == 0 ? "data-controller=\"pagination\" data-pagination-page-url=\"#{page_url}\"" : ''%>
 
-<li class="entry-list__item" <%= observer.html_safe %>>
+<li class="entry-list__item" <%= "data-controller=\"pagination\" data-pagination-page-url=\"#{page_url}\"".html_safe if local_assigns[:page_url].presence && entry_counter == 0 %>>
   <div class="entry-list__wrapper" style="<%= style %>">
     <a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
       <%= responsive_image_tag(
@@ -17,7 +16,7 @@
           loading: 'lazy'
         }) %>
       <div class="entry-list__photo-caption" id="<%= "entry-list-caption-#{entry.id}" %>">
-        <h3 class="entry-list__photo-title"><%= sanitize truncate(entry.plain_title, length: 80, separator: ' ', omission: '…', escape: false) %></h3>
+        <h3 class="entry-list__photo-title"><%= truncate(entry.plain_title, length: 80, separator: ' ', omission: '…') %></h3>
         <p class="entry-list__photo-meta">Published on <%= entry.published_at.strftime('%B %-d, %Y') %></p>
       </div>
     </a>
