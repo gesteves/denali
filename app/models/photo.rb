@@ -46,40 +46,29 @@ class Photo < ApplicationRecord
       opts.delete(:square)
     end
     if opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]) && !opts[:fit].present?
-      opts[:fit] = 'crop'
+      opts.merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
     end
-    Ix.path(self.image.key).to_url(opts.reject { |k,v| v.blank? })
+    Ix.path(self.image.key).to_url(opts.compact)
   end
 
   def srcset(key, opts = {})
-    s3_key = self.image.key
-    max_width = self.width
     variant = PHOTOS[key]
-    square = variant['square'].presence
-    widths = self.srcset_widths(key)
-    opts.merge!(auto: variant['auto']) if variant['auto'].present?
-    opts.merge!(q: variant['quality']) if variant['quality'].present?
-    opts.merge!(fm: variant['format']) if variant['format'].present?
+    imgix_path = Ix.path(self.image.key)
+    max_width = self.width
+    widths = variant['srcset'].uniq.sort.reject { |width| max_width.present? && width > max_width }
     src_width = widths.first
-    if square
-      opts[:fit] = 'crop'
+    opts.merge!(auto: variant['auto'].presence, q: variant['quality'].presence, fm: variant['format'].presence).compact
+    if variant['square'].present?
+      opts.merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
-      src = Ix.path(s3_key).to_url(opts.merge(w: src_width, h: src_width))
-      srcset = widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
+      src = imgix_path.to_url(opts.merge(w: src_width, h: src_width))
+      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
     else
-      src = Ix.path(s3_key).to_url(opts.merge(w: src_width))
-      srcset = widths.map { |w| "#{Ix.path(s3_key).to_url(opts.merge(w: w))} #{w}w" }.join(', ')
+      src = imgix_path.to_url(opts.merge(w: src_width))
+      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w))} #{w}w" }.join(', ')
     end
     return src, srcset
-  end
-
-  def srcset_widths(key)
-    s3_key = self.image.key
-    max_width = self.width
-    variant = PHOTOS[key]
-    widths = variant['srcset'].uniq.sort.reject { |width| max_width.present? && width > max_width }
-    widths
   end
 
   # Returns the url of the image, formatted & sized fit to into instagram's
