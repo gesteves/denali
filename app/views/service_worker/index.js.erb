@@ -12,7 +12,7 @@
     let url = new URL(request.url);
 
     // Ignore non-GET and non-HTML requests
-    if ((request.method !== 'GET') || (request.headers.get('Accept').indexOf('text/html') === -1)) {
+    if ((request.method !== 'GET') || (request.headers.get('Accept').indexOf('text/html') === -1) || event.request.url.match(/\/admin\//)) {
       return;
     }
 
