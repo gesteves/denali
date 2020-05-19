@@ -79,7 +79,7 @@ class Photo < ApplicationRecord
     self.url(w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90, fm: 'jpg')
   end
 
-  def facebook_open_graph_url
+  def facebook_card_url
     self.url(w: 1200, h: 630)
   end
 

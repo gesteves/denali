@@ -20,7 +20,7 @@
   <meta property="og:site_name" content="<%= @photoblog.name %>">
   <meta property="og:locale" content="en_US">
   <% if entry.is_photo? %>
-    <meta property="og:image" content="<%= photo.facebook_open_graph_url %>">
+    <meta property="og:image" content="<%= photo.facebook_card_url %>">
     <% if photo.alt_text.present? %>
       <meta name="og:image:alt" content="<%= photo.alt_text %>">
     <% end %>
