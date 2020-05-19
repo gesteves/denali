@@ -1,4 +1,46 @@
 <hr class="hr">
-<%= render partial: 'admin/entries/crop_crop', locals: { title: '1:1',   url: photo.url(w: 1200, square: true), width: 1200, height: 1200 } %>
-<%= render partial: 'admin/entries/crop_crop', locals: { title: 'Facebook', url: photo.facebook_card_url, width: 1200, height: 630 } %>
-<%= render partial: 'admin/entries/crop_crop', locals: { title: 'Twitter',  url: photo.twitter_card_url, width: 1200, height: 600 } %>
+<div class="media">
+  <div class="media-left crop__label">
+    <div class="tags has-addons">
+      <span class="tag">1:1</span>
+    </div>
+  </div>
+  <div class="media-content">
+    <%= image_tag photo.url(w: 1200, square: true), width: 1200, height: 1200 %>
+  </div>
+</div>
+
+<div class="media">
+  <div class="media-left crop__label">
+    <div class="tags has-addons">
+      <span class="tag">Facebook</span>
+    </div>
+  </div>
+  <div class="media-content">
+    <div class="social-media-card social-media-card--facebook">
+      <%= image_tag photo.facebook_card_url, width: 1200, height: 630 %>
+      <div class="social-media-card__caption">
+        <div class="social-media-card__site"><%= ENV['domain'] || 'example.com' %></div>
+        <div class="social-media-card__title"><%= @entry.title %></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="media">
+  <div class="media-left crop__label">
+    <div class="tags has-addons">
+      <span class="tag">Twitter</span>
+    </div>
+  </div>
+  <div class="media-content">
+    <div class="social-media-card social-media-card--twitter">
+      <%= image_tag photo.twitter_card_url, width: 1200, height: 600 %>
+      <div class="social-media-card__caption">
+        <div class="social-media-card__title"><%= @entry.title %></div>
+        <div class="social-media-card__subtitle"><%= photo.alt_text %></div>
+        <div class="social-media-card__site"><%= ENV['domain'] || 'example.com' %></div>
+      </div>
+    </div>
+  </div>
+</div>

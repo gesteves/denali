@@ -1,0 +1,78 @@
+.social-media-card {
+  max-width: 400px;
+
+  img {
+    display: block;
+  }
+}
+
+.social-media-card--facebook {
+  .social-media-card__caption {
+    background-color: #f2f3f5;
+    border: 1px solid #dadde1;
+    padding: 10px 12px;
+  }
+
+  .social-media-card__site {
+    color: #606770;
+    font-size: 12px;
+    line-height: 16px;
+    overflow: hidden;
+    padding: 0;
+    text-overflow: ellipsis;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .social-media-card__title {
+    color: black;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    margin: 3px 0 0;
+    overflow: hidden;
+    padding-top: 2px;
+  }
+}
+
+.social-media-card--twitter {
+  border: 1px solid #E1E8ED;
+  border-radius: 12px;
+
+  img {
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+
+  .social-media-card__caption {
+    border-top: 1px solid #E1E8ED;
+    overflow: hidden;
+    padding: 10px 14px;
+  }
+
+  .social-media-card__site {
+    color: #8899A6;
+    overflow: hidden;
+    font-size: 14px;
+    text-overflow: ellipsis;
+    text-transform: lowercase;
+    white-space: nowrap;
+  }
+
+  .social-media-card__title {
+    color: black;
+    font-size: 14px;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .social-media-card__subtitle {
+    color: black;
+    font-size: 14px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
