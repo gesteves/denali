@@ -47,6 +47,10 @@ class Blog < ApplicationRecord
     Ix.path(self.logo.key).to_url(opts.reject { |k,v| v.blank? })
   end
 
+  def twitter_handle
+    self.twitter&.gsub(/^https:\/\/(www\.)?twitter.com\//, '@')
+  end
+
   def has_search?
     Rails.env.development? || ENV['ELASTICSEARCH_URL'].present? || ENV['SEARCHBOX_URL'].present?
   end

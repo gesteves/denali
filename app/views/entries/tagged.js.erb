@@ -1,1 +1,0 @@
-<%= render partial: 'entries/list/page', object: @entries.to_a, as: :entries, locals: { page_url: @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page) }  %>

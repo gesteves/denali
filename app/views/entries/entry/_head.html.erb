@@ -30,9 +30,8 @@
 
   <%# Twitter meta tags %>
   <% if @photoblog.twitter.present? %>
-    <% twitter_username = "@#{@photoblog.twitter.gsub(/^https:\/\/(www\.)?twitter.com\//, '')}" %>
-    <meta name="twitter:site" content="<%= twitter_username %>">
-    <meta name="twitter:creator" content="<%= twitter_username %>">
+    <meta name="twitter:site" content="<%= @photoblog.twitter_handle %>">
+    <meta name="twitter:creator" content="<%= @photoblog.twitter_handle %>">
   <% end %>
   <meta name="twitter:title" content="<%= entry.plain_title %>">
   <meta name="twitter:description" content="<%= meta_description %>">

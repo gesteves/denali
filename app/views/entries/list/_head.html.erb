@@ -1,0 +1,33 @@
+<% cache [@photoblog, @page_url] do %>
+    <% if @page > 1 %>
+      <meta name="robots" content="noindex">
+    <% end %>
+    <title><%= @page_title %></title>
+    <meta name="description" content="<%= @page_description %>">
+    <link rel="canonical" href="<%= @page_url %>">
+
+    <meta property="og:title" content="<%= @photoblog.name %>">
+    <% if @photoblog.logo.attached? %>
+      <meta property="og:image" content="<%= @photoblog.logo_url(w: 1200, h: 630, fm: 'png', pad: 50, fit: 'fill', bg: 'fff') %>">
+      <meta property="og:image:width" content="1200">
+      <meta property="og:image:height" content="630">
+    <% end %>
+    <meta property="og:description" content="<%= @og_description %>">
+    <meta property="og:url" content="<%= @page_url %>">
+    <meta property="og:type" content="Website">
+    <meta property="og:site_name" content="<%= @photoblog.name %>">
+    <meta property="og:locale" content="en_US">
+
+    <% if @photoblog.twitter.present? %>
+      <meta name="twitter:site" content="<%= @photoblog.twitter_handle %>">
+      <meta name="twitter:creator" content="<%= @photoblog.twitter_handle %>">
+    <% end %>
+    <meta name="twitter:title" content="<%= @photoblog.name %>">
+    <meta name="twitter:url" content="<%= @page_url %>">
+    <meta name="twitter:description" content="<%= @og_description %>">
+    <% if @photoblog.touch_icon.attached? %>
+      <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
+    <% end %>
+    <meta name="twitter:card" content="summary">
+    <%= auto_discovery_link_tag :atom, @feed_url, title: @page_title %>
+  <% end %>

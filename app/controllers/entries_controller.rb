@@ -1,4 +1,5 @@
 class EntriesController < ApplicationController
+  include ActionView::Helpers::NumberHelper
   include TagList
 
   skip_before_action :verify_authenticity_token
@@ -16,8 +17,14 @@ class EntriesController < ApplicationController
     if stale?(@entries, public: true)
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
+      @page_url = @page == 1 ? entries_url(page: nil) : entries_url(page: @page)
       respond_to do |format|
         format.html {
+          @page_description = @photoblog.meta_description
+          @og_description = @photoblog.tag_line
+          @feed_url = feed_url(format: 'atom')
+          @base_url = entries_url(page: nil).sub(/\/$/, '')
+          @heading_title = "Latest entries"
           if @page.nil? || @page == 1
             @page_title = "#{@photoblog.name} – #{@photoblog.tag_line}"
           else
@@ -45,12 +52,19 @@ class EntriesController < ApplicationController
     if stale?(@entries, public: true)
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
+      @page_url = @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page)
       respond_to do |format|
         format.html {
+          @page_description = "Browse all #{number_with_delimiter @tags.first.taggings_count} photos tagged “#{@tags.first.name}” on #{@photoblog.name}."
+          @og_description = @page_description
+          @feed_url = tag_feed_url(format: 'atom', tag: @tag_slug)
+          @base_url = tag_url(tag: @tag_slug, page: nil)
+          @heading_title = "Entries tagged “#{@tags.first.name}”"
           @page_title = "#{@tags.first.name} – #{@photoblog.name}"
           @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
+          render :index
         }
-        format.js { render status: @entries.empty? ? 404 : 200 }
+        format.js { render :index, status: @entries.empty? ? 404 : 200 }
         format.atom { redirect_to tag_feed_url(tag: @tag_slug, format: 'atom'), status: 301 }
         format.all {
           if @page == 1
