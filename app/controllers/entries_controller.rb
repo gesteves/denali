@@ -22,6 +22,7 @@ class EntriesController < ApplicationController
         format.html {
           @page_description = @photoblog.meta_description
           @og_description = @photoblog.tag_line
+          @og_title = @photoblog.name
           @feed_url = feed_url(format: 'atom')
           @base_url = entries_url(page: nil).sub(/\/$/, '')
           @heading_title = "Latest entries"
@@ -57,6 +58,7 @@ class EntriesController < ApplicationController
         format.html {
           @page_description = "Browse all #{number_with_delimiter @tags.first.taggings_count} photos tagged “#{@tags.first.name}” on #{@photoblog.name}."
           @og_description = @page_description
+          @og_title = "#{@tags.first.name} on #{@photoblog.name}"
           @feed_url = tag_feed_url(format: 'atom', tag: @tag_slug)
           @base_url = tag_url(tag: @tag_slug, page: nil)
           @heading_title = "Entries tagged “#{@tags.first.name}”"
