@@ -17,19 +17,19 @@
     <div class="field is-extended">
       <div data-target="entry-form.photos">
         <%= f.fields_for :photos do |p| %>
-          <div class="draggable-source" data-controller="photo-form" data-photo-form-empty="0" data-photo-form-focal-x="<%= p.object.focal_x %>" data-photo-form-focal-y="<%= p.object.focal_y %>">
+          <div class="draggable-source" data-controller="photo-form focal-point" data-photo-form-empty="0" data-focal-point-focal-x="<%= p.object.focal_x %>" data-focal-point-focal-y="<%= p.object.focal_y %>">
             <div class="card" data-target="photo-form.fields">
-              <div class="card-image image photo-form__image-container is-clipped image-container" style="<%= css_gradient_stops(p.object) %>">
+              <div class="card-image image focal-point__image-container is-clipped image-container" style="<%= css_gradient_stops(p.object) %>">
                 <%= responsive_image_tag(
                   photo: p.object,
                   srcset: @srcset,
                   sizes: @sizes,
                   html_options: {
-                    class: 'photo-form__thumbnail',
-                    'data-action': 'click->photo-form#setFocalPoint load->photo-form#showFocalPoint',
-                    'data-target': 'photo-form.thumbnail'
+                    class: 'focal-point__thumbnail',
+                    'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint',
+                    'data-target': 'photo-form.thumbnail focal-point.thumbnail'
                   }) %>
-                <div class="is-hidden photo-form__focal-marker" data-target="photo-form.focalMarker"></div>
+                <div class="is-hidden focal-point__focal-marker" data-target="focal-point.focalMarker"></div>
               </div>
               <div class="card-content">
                 <div class="media photo-form">
@@ -43,10 +43,10 @@
                           <div class="control is-expanded">
                             <%= p.text_field :alt_text, placeholder: 'Write alt text for this photo…', class: 'input' %>
                             <%= p.hidden_field :id %>
-                        <%= p.hidden_field :position, 'data-position': '' %>
-                        <%= p.hidden_field :_destroy, 'data-target': 'photo-form.destroy' %>
-                        <%= p.hidden_field :focal_x, 'data-target': 'photo-form.focalX' %>
-                        <%= p.hidden_field :focal_y, 'data-target': 'photo-form.focalY' %>
+                            <%= p.hidden_field :position, 'data-position': '' %>
+                            <%= p.hidden_field :_destroy, 'data-target': 'photo-form.destroy' %>
+                            <%= p.hidden_field :focal_x, 'data-target': 'focal-point.focalX' %>
+                            <%= p.hidden_field :focal_y, 'data-target': 'focal-point.focalY' %>
                           </div>
                         </div>
                       </div>

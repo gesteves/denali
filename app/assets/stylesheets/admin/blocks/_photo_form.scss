@@ -7,38 +7,6 @@
   }
 }
 
-.photo-form__focal-marker {
-  border: 4px solid currentColor;
-  border-radius: 100%;
-  box-shadow: 0 0 2px 1px transparentize(black, 0.2), inset 0 0 2px 1px transparentize(black, 0.5);
-  color: white;
-  display: block;
-  height: 100px;
-  opacity: 0.9;
-  pointer-events: none;
-  position: absolute;
-  width: 100px;
-  z-index: 1;
-}
-
-.photo-form__image-container {
-  @media (hover: hover) {
-    .photo-form__focal-marker {
-      display: none;
-    }
-
-    &:hover {
-      .photo-form__focal-marker {
-        display: block;
-      }
-    }
-  }
-}
-
-.photo-form__thumbnail:hover {
-  cursor: crosshair;
-}
-
 .photo-form__controls {
   align-items: center;
   display: flex;
