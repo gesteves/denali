@@ -10,11 +10,8 @@
     <%= stylesheet_link_tag 'application', media: 'print', onload: "this.media='all'" %>
     <noscript><%= stylesheet_link_tag 'application', media: 'all' %></noscript>
   <% end %>
-  <%= stylesheet_link_tag 'print', media: 'print' %>
-  <%= render partial: 'partials/webfonts' if @photoblog.webfonts_url.present? %>
-  <%= yield :javascript %>
   <%= javascript_pack_tag 'application', defer: true %>
-  <%= render partial: 'partials/analytics_head' %>
+  <%= stylesheet_link_tag 'print', media: 'print' %>
 </head>
 <body>
 <a class="skip-link sr-only" href="#main-content">Skip to content</a>
@@ -23,6 +20,5 @@
   <%= yield %>
 </div>
 <%= render partial: 'partials/footer' %>
-<%= render partial: 'partials/analytics_body' %>
 </body>
 </html>

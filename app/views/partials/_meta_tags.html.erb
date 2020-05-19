@@ -16,4 +16,6 @@
     <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(w: 76) %>" sizes="76x76">
   <% end %>
   <link rel="manifest" href="<%= app_manifest_path %>">
+  <%= render partial: 'partials/analytics_head' %>
+  <%= render partial: 'partials/webfonts' if @photoblog.webfonts_url.present? %>
 <% end %>
