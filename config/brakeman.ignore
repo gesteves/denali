@@ -117,13 +117,32 @@
       "note": ""
     },
     {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "b0b6e562c021ed6bb2f247bfb5380f4199a50cb80a5e9290a3bdaa7d77a96b33",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/admin/shared/_nav.html.erb",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Blog.first.header_logo_svg",
+      "render_path": [{"type":"controller","class":"AdminController","method":"default_url_options","line":14,"file":"app/controllers/admin_controller.rb"},{"type":"template","name":"layouts/admin","line":20,"file":"app/views/layouts/admin.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "admin/shared/_nav"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "cb4fa5a9c2f7dac630d20485578a8617209de4d65887b070f95de182cff1f84c",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 110,
+      "line": 113,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
       "render_path": null,
@@ -143,7 +162,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 113,
+      "line": 110,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
       "render_path": null,
@@ -177,6 +196,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-05-19 20:52:36 +0000",
+  "updated": "2020-05-19 14:58:37 -0600",
   "brakeman_version": "4.3.1"
 }
