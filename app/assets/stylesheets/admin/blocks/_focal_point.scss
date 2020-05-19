@@ -13,6 +13,8 @@
 }
 
 .focal-point__image-container {
+  overflow: hidden;
+
   @media (hover: hover) {
     .focal-point__focal-marker {
       display: none;
