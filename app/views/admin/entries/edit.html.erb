@@ -33,17 +33,27 @@
               <div class="card-content">
                 <div class="media photo-form">
                   <div class="media-content">
-                    <div class="field is-grouped is-grouped-multiline">
-                      <div class="control is-expanded">
-                        <%= p.text_field :alt_text, placeholder: 'Write alt text for this photo…', class: 'input' %>
-                        <%= p.hidden_field :id %>
+                    <div class="field is-horizontal">
+                      <div class="field-label is-normal">
+                        <%= p.label :alt_text, 'Alt text', class: 'label' %>
+                      </div>
+                      <div class="field-body">
+                        <div class="field">
+                          <div class="control is-expanded">
+                            <%= p.text_field :alt_text, placeholder: 'Write alt text for this photo…', class: 'input' %>
+                            <%= p.hidden_field :id %>
                         <%= p.hidden_field :position, 'data-position': '' %>
                         <%= p.hidden_field :_destroy, 'data-target': 'photo-form.destroy' %>
                         <%= p.hidden_field :focal_x, 'data-target': 'photo-form.focalX' %>
                         <%= p.hidden_field :focal_y, 'data-target': 'photo-form.focalY' %>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
+                </div>
+                <div class="media">
+                  <div class="media-content"></div>
                   <div class="media-right photo-form__controls">
                     <span class="icon is-small has-text-grey-light draggable-handle">
                       <i class="fas fa-sort"></i>
