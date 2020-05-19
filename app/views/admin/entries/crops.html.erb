@@ -1,24 +1,17 @@
-<div class="modal is-active" data-controller="photo-resizer modal">
-  <div class="modal-background" data-action="click->modal#close"></div>
-  <div class="modal-card">
-    <header class="modal-card-head">
-      <p class="modal-card-title">Crops & sizes</p>
-      <button class="delete" data-action="click->modal#close"></button>
-    </header>
-    <section class="modal-card-body">
-      <%= form_tag(resize_photos_admin_entry_path(@entry), method: 'get', 'data-target': 'photo-resizer.form', 'data-action': 'change->photo-resizer#fetch') do %>
-        <div class="field">
-          <div class="control is-expanded">
-            <div class="select is-fullwidth">
-              <%= select_tag(:size, grouped_options_for_select(@sizes), prompt: 'Choose a size', 'data-target': 'photo-resizer.select') %>
-            </div>
-          </div>
-        </div>
-      <% end %>
-      <div class="share-image" data-target="photo-resizer.thumbnails"></div>
-    </section>
-    <footer class="modal-card-foot">
-      <button class="button" data-action="click->modal#close">Done</button>
-    </footer>
+<% cache @entry do %>
+  <div class="modal is-active" data-controller="modal">
+    <div class="modal-background" data-action="click->modal#close"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Crops</p>
+        <button class="delete" data-action="click->modal#close"></button>
+      </header>
+      <section class="modal-card-body">
+          <%= render partial: 'crop_card', collection: @entry.photos, as: :photo %>
+      </section>
+      <footer class="modal-card-foot">
+        <button class="button" data-action="click->modal#close">Done</button>
+      </footer>
+    </div>
   </div>
-</div>
+<% end %>

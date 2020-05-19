@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :instagram, :facebook, :twitter, :tumblr, :flickr, :flush_caches, :refresh_metadata, :resize_photos]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :instagram, :facebook, :twitter, :tumblr, :flickr, :flush_caches, :refresh_metadata]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
@@ -166,6 +166,7 @@ class Admin::EntriesController < AdminController
 
   # PATCH/PUT /admin/entries/1
   def update
+    logger.info params
     respond_to do |format|
       @entry.modified_at = Time.current if @entry.is_published?
       if @entry.update(entry_params)
@@ -251,23 +252,8 @@ class Admin::EntriesController < AdminController
   end
 
   def crops
-    @sizes = {
-      'Sizes': [
-        ['Thumbnail 100', 100],
-        ['Small 240', 240],
-        ['Small 320', 320],
-        ['Medium 500', 500],
-        ['Medium 640', 640],
-        ['Medium 800', 800],
-        ['Large 1024', 1024],
-        ['Large 1200', 1200],
-        ['Large 1600', 1600],
-        ['Large 2048', 2048],
-        ['Original', 'original']
-      ],
-      'Instagram': [['Feed', 'instagram_feed'], ['Story', 'instagram_story']],
-      'Cards': [['Facebook', 'facebook'], ['Twitter', 'twitter']]
-    }
+    @srcset = PHOTOS[:admin_modal][:srcset]
+    @sizes = PHOTOS[:admin_modal][:sizes].join(', ')
     respond_to do |format|
       format.html {
         if params[:modal]
@@ -281,8 +267,8 @@ class Admin::EntriesController < AdminController
 
   def prints
     if stale?(@entry)
-      @srcset = PHOTOS[:admin_prints][:srcset]
-      @sizes = PHOTOS[:admin_prints][:sizes].join(', ')
+      @srcset = PHOTOS[:admin_modal][:srcset]
+      @sizes = PHOTOS[:admin_modal][:sizes].join(', ')
       @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
       @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
       respond_to do |format|
@@ -389,13 +375,6 @@ class Admin::EntriesController < AdminController
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
       format.js { render 'admin/shared/notify' }
-    end
-  end
-
-  def resize_photos
-    @size = params[:size]
-    respond_to do |format|
-      format.js
     end
   end
 

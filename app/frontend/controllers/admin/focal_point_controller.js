@@ -1,13 +1,16 @@
 import { Controller } from 'stimulus';
+import { fetchStatus, fetchText } from '../../lib/utils';
+import $ from 'jquery';
 
 /**
  * Controls setting the focal point on photos.
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['focalMarker', 'focalX', 'focalY', 'thumbnail'];
+  static targets = ['focalMarker', 'focalX', 'focalY', 'thumbnail', 'responseContainer'];
   connect () {
     this.showFocalPoint();
+    this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
   }
 
   /**
@@ -39,9 +42,43 @@ export default class extends Controller {
 
     this.data.set('focal-x', focalX);
     this.data.set('focal-y', focalY);
-    this.focalXTarget.value = focalX;
-    this.focalYTarget.value = focalY;
+    if (this.hasFocalXTarget) {
+      this.focalXTarget.value = focalX;
+    }
+    if (this.hasFocalYTarget) {
+      this.focalYTarget.value = focalY;
+    }
+    if (this.data.get('endpoint')) {
+      this.updateFocalPoint();
+    }
 
     this.showFocalPoint();
+  }
+
+  /**
+   * Updates the focal point and inserts the result into the container
+   * TODO: Remove the jQuery dependency.
+   */
+  updateFocalPoint () {
+    event.preventDefault();
+    const url = this.data.get('endpoint');
+    let formData = new FormData();
+
+    formData.append('photo[focal_x]', this.data.get('focal-x'));
+    formData.append('photo[focal_y]', this.data.get('focal-y'));
+
+    const fetchOpts = {
+      method: 'POST',
+      headers: new Headers({
+        'X-CSRF-Token': this.csrfToken
+      }),
+      credentials: 'include',
+      body: formData
+    };
+
+    fetch(`${url}`, fetchOpts)
+      .then(fetchStatus)
+      .then(fetchText)
+      .then(html => $(this.responseContainerTarget).html(html));
   }
 }

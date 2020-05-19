@@ -1,0 +1,22 @@
+<% cache photo do %>
+  <div class="card" data-controller="focal-point" data-focal-point-endpoint=<%= crops_admin_entry_photo_url(entry_id: @entry.id, id: photo.id, format: 'js') %> data-focal-point-photo-id="<%= photo.id %>" data-focal-point-focal-x="<%= photo.focal_x %>" data-focal-point-focal-y="<%= photo.focal_y %>">
+    <div class="card-image">
+      <div style="<%= css_gradient_stops(photo) %>" class="image image-container focal-point__image-container">
+        <%= responsive_image_tag(
+          photo: photo,
+          srcset: @srcset,
+          sizes: @sizes,
+          html_options: {
+            class: 'focal-point__thumbnail',
+            loading: 'lazy',
+            'data-target': 'focal-point.thumbnail',
+            'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint'
+          }) %>
+          <div class="is-hidden focal-point__focal-marker" data-target="focal-point.focalMarker"></div>
+      </div>
+    </div>
+    <div class="card-content" data-target="focal-point.responseContainer">
+      <%= render partial: 'crop_crops', object: photo, as: :photo %>
+    </div>
+  </div>
+<% end %>

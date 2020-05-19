@@ -114,7 +114,7 @@ map:
     - 900
   sizes:
     - 300px
-admin_prints:
+admin_modal:
   srcset:
     - 600
     - 1200

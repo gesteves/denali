@@ -26,7 +26,6 @@ Rails.application.routes.draw do
         get 'syndicate'
         get 'crops'
         get 'prints'
-        post 'resize_photos'
         patch 'publish'
         patch 'queue'
         patch 'draft'
@@ -46,6 +45,7 @@ Rails.application.routes.draw do
       resources :photos, only: [] do
         member do
           get 'download'
+          post 'crops'
         end
       end
     end
