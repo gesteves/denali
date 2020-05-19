@@ -1,4 +1,5 @@
 <h1 class="title is-size-5-mobile">Editing entry</h1>
+<h2 class="subtitle is-size-6-mobile"><%= @entry.plain_title %></h2>
 <hr class="hr">
 
 <%= form_for([:admin, @entry], html: { multipart: true, 'data-controller': 'entry-form', 'data-entry-form-photo-endpoint': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
