@@ -1,4 +1,4 @@
 <hr class="hr">
-<%= render partial: 'admin/entries/crop_crop', locals: { title: '1:1',   url: photo.url(w: 1200, square: true) } %>
-<%= render partial: 'admin/entries/crop_crop', locals: { title: 'Facebook', url: photo.facebook_open_graph_url } %>
-<%= render partial: 'admin/entries/crop_crop', locals: { title: 'Twitter',  url: photo.twitter_card_url } %>
+<%= render partial: 'admin/entries/crop_crop', locals: { title: '1:1',   url: photo.url(w: 1200, square: true), width: 1200, height: 1200 } %>
+<%= render partial: 'admin/entries/crop_crop', locals: { title: 'Facebook', url: photo.facebook_open_graph_url, width: 1200, height: 630 } %>
+<%= render partial: 'admin/entries/crop_crop', locals: { title: 'Twitter',  url: photo.twitter_card_url, width: 1200, height: 600 } %>
