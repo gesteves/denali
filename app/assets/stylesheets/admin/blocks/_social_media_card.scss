@@ -36,8 +36,8 @@
 }
 
 .social-media-card--twitter {
-  border: 1px solid #E1E8ED;
   border-radius: 12px;
+  border: 1px solid #E1E8ED;
 
   img {
     border-top-left-radius: 12px;
@@ -52,8 +52,8 @@
 
   .social-media-card__site {
     color: #8899A6;
-    overflow: hidden;
     font-size: 14px;
+    overflow: hidden;
     text-overflow: ellipsis;
     text-transform: lowercase;
     white-space: nowrap;
