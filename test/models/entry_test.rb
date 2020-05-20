@@ -265,7 +265,6 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 'This is the title you’re looking for & stuff', entry.plain_title
     assert_equal "<p>This is the <em>body</em> you&rsquo;re looking for &amp; stuff.</p>\n", entry.formatted_body
     assert_equal 'This is the body you’re looking for & stuff.', entry.plain_body
-    assert_equal "<p>This is the <em>title</em> you&rsquo;re looking for &amp; stuff</p>\n\n<p>This is the <em>body</em> you&rsquo;re looking for &amp; stuff.</p>\n", entry.formatted_content
   end
 
   test 'entry positioning should work' do

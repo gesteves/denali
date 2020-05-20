@@ -15,10 +15,11 @@ class TumblrWorker < ApplicationWorker
     opts = {
       tags: entry.tumblr_tags,
       slug: entry.slug,
-      caption: entry.formatted_content,
+      caption: [entry.title, entry.body].join("\n\n"),
       link: entry.permalink_url,
       source_url: entry.permalink_url,
-      state: now ? 'published' : 'queue'
+      state: now ? 'published' : 'queue',
+      format: 'markdown'
     }
 
     response = if entry.is_photo?

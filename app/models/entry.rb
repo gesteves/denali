@@ -231,19 +231,6 @@ class Entry < ApplicationRecord
     markdown_to_plaintext(self.title)
   end
 
-  def formatted_content(opts = {})
-    opts.reverse_merge!(link_title: false)
-
-    content = if opts[:link_title]
-      "[#{self.title}](#{self.permalink_url})"
-    else
-      self.title
-    end
-
-    content += "\n\n#{self.body}" unless self.body.blank?
-    markdown_to_html(content)
-  end
-
   def meta_description
     self&.photos&.first&.alt_text.presence || self.plain_body
   end
