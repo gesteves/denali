@@ -5,7 +5,11 @@
     <meta name="robots" content="noindex">
   <% end %>
   <%= @photoblog.additional_meta_tags&.html_safe %>
-  <% if @photoblog.favicon.attached? %>
+  <%# Super hacky, but imgix doesn't support SVGs and I don't like the way Active Storage links work %>
+  <% if ENV['ENABLE_SVG_FAVICON'].present? %>
+    <link rel="icon" href="<%= image_url('svg/a.svg') %>" type="image/svg+xml">
+    <link rel="mask-icon" href="<%= image_url('svg/a.svg') %>" color="black">
+  <% else %>
     <link rel="icon" href="<%= @photoblog.favicon_url(w: 96) %>" type="image/png">
   <% end %>
   <% if @photoblog.touch_icon.attached? %>
