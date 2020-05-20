@@ -5,7 +5,7 @@ module Formattable
   def markdown_to_html(text)
     renderer = HTMLWithPants.new
     markdown = Redcarpet::Markdown.new(renderer, extensions = {})
-    text.nil? ? '' : markdown.render(text)
+    text.nil? ? '' : markdown.render(text).html_safe
   end
 
   def markdown_to_plaintext(text)

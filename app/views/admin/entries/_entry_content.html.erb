@@ -1,7 +1,7 @@
 <h3 class="title is-size-5"><%= entry.plain_title %></h3>
 <% if entry.body.present? %>
   <div class="content">
-    <%= sanitize(entry.formatted_body) %>
+    <%= entry.formatted_body %>
   </div>
 <% end %>
 <% if entry.combined_tags.present? %>

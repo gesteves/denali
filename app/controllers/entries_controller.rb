@@ -21,15 +21,15 @@ class EntriesController < ApplicationController
       respond_to do |format|
         format.html {
           @page_description = @photoblog.meta_description
-          @og_description = @photoblog.tag_line
+          @og_description = @photoblog.plain_tag_line
           @og_title = @photoblog.name
           @feed_url = feed_url(format: 'atom')
           @base_url = entries_url(page: nil).sub(/\/$/, '')
           @heading_title = "Latest entries"
           if @page.nil? || @page == 1
-            @page_title = "#{@photoblog.name} – #{@photoblog.tag_line}"
+            @page_title = "#{@photoblog.name} – #{@photoblog.plain_tag_line}"
           else
-            @page_title = "#{@photoblog.name} – #{@photoblog.tag_line} – Page #{@page}"
+            @page_title = "#{@photoblog.name} – #{@photoblog.plain_tag_line} – Page #{@page}"
           end
         }
         format.js { render status: @entries.empty? ? 404 : 200 }

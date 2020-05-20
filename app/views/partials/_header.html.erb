@@ -11,7 +11,7 @@
       </h1>
     </a>
     <div class="header__section">
-      <p class="header__tagline"><%= sanitize @photoblog.tag_line %></p>
+      <p class="header__tagline"><%= @photoblog.tag_line %></p>
     </div>
     <div class="header__section">
       <%= render partial: 'partials/follow.html.erb' %>

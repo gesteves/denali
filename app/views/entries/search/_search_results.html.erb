@@ -1,7 +1,7 @@
 <% content_for :head do %>
   <% cache [@photoblog, @query.parameterize, @page, @count, :head] do %>
     <title><%= sanitize @page_title %></title>
-    <meta name="description" content="<%= sanitize @photoblog.meta_description %>">
+    <meta name="description" content="<%= @photoblog.meta_description %>">
     <link rel="canonical" href="<%=  search_url %>">
 
     <meta property="og:title" content="<%= "Search results for “#{@query}” – #{@photoblog.name}" %>">
@@ -10,7 +10,7 @@
       <meta property="og:image:width" content="1200">
       <meta property="og:image:height" content="628">
     <% end %>
-    <meta property="og:description" content="<%= sanitize @photoblog.tag_line %>">
+    <meta property="og:description" content="<%= @photoblog.plain_tag_line %>">
     <meta property="og:url" content="<%= @page == 1 ? search_url(page: nil) : search_url(query: @query, page: @page) %>">
     <meta property="og:type" content="Website">
     <meta property="og:site_name" content="<%= @photoblog.name %>">
@@ -22,7 +22,7 @@
     <% end %>
     <meta name="twitter:title" content="<%= "Search results for “#{@query}” – #{@photoblog.name}" %>">
     <meta name="twitter:url" content="<%= @page == 1 ? search_url(page: nil) : search_url(query: @query, page: @page) %>">
-    <meta name="twitter:description" content="<%= sanitize @photoblog.tag_line %>">
+    <meta name="twitter:description" content="<%= @photoblog.plain_tag_line %>">
     <meta name="twitter:card" content="summary">
   <% end %>
 <% end %>
@@ -37,6 +37,6 @@
     <%= paginate @entries %>
   <% else %>
     <%= render partial: 'entries/search/search_form' %>
-    <h1 class="entry_list__heading">No results found for “<%= @query %>”. Try searching for something else, like “film”, “nikon”, or “cats”.</h1>
+    <h1 class="entry_list__heading">No results found for “<%= sanitize @query %>”. Try searching for something else, like “film”, “fujifilm”, or “bears”.</h1>
   <% end %>
 <% end %>

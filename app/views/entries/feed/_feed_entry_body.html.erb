@@ -1,7 +1,7 @@
 <% entry.photos.each do |photo| %>
   <%= link_to image_tag(photo.url(w: 1280).html_safe, srcset: "#{photo.url(w: 1280)} 1x, #{photo.url(w: 2560)} 2x".html_safe, alt: photo.alt_text), entry.permalink_url %>
 <% end %>
-<%= sanitize entry.formatted_body unless entry.body.blank? %>
+<%= entry.formatted_body unless entry.body.blank? %>
 <%= render partial: 'entries/feed/exif.html.erb', object: entry.photos.first, as: :photo if entry.is_single_photo? %>
 <%= render partial: 'entries/feed/disclaimer.html.erb', object: entry, as: :entry %>
 

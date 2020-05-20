@@ -1,7 +1,7 @@
 <% if @query.present? %>
   <% content_for :head do %>
     <meta name="robots" content="noindex">
-    <title><%= sanitize @page_title %></title>
+    <title><%= @page_title %></title>
   <% end %>
   <%= render partial: 'entries/search/search_results' %>
 <% else %>
