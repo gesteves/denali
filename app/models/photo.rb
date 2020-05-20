@@ -39,12 +39,12 @@ class Photo < ApplicationRecord
     opts.reverse_merge!(w: 1200, square: false)
     if opts[:square]
       opts[:h] = opts[:w]
-      opts.delete(:square)
     end
     if opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]) && !opts[:fit].present?
       opts.merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
     end
+    opts.delete(:square)
     Ix.path(self.image.key).to_url(opts.compact)
   end
 
