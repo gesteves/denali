@@ -103,7 +103,6 @@ class Blog < ApplicationRecord
       time_zone
       tumblr
       twitter
-      webfonts_url
     }
 
     if attributes.any? { |attr| saved_change_to_attribute? (attr) }
