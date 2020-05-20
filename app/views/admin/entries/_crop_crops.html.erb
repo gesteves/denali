@@ -20,7 +20,7 @@
     <div class="social-media-card social-media-card--facebook">
       <%= image_tag photo.facebook_card_url, width: 1200, height: 630 %>
       <div class="social-media-card__caption">
-        <div class="social-media-card__site"><%= ENV['domain'].sub('www.', '') || 'example.com' %></div>
+        <div class="social-media-card__site"><%= ENV['domain']&.sub('www.', '') || 'example.com' %></div>
         <div class="social-media-card__title"><%= @entry.title %></div>
       </div>
     </div>
@@ -39,7 +39,7 @@
       <div class="social-media-card__caption">
         <div class="social-media-card__title"><%= @entry.title %></div>
         <div class="social-media-card__subtitle"><%= photo.alt_text %></div>
-        <div class="social-media-card__site"><%= ENV['domain'].sub('www.', '') || 'example.com' %></div>
+        <div class="social-media-card__site"><%= ENV['domain']&.sub('www.', '') || 'example.com' %></div>
       </div>
     </div>
   </div>
