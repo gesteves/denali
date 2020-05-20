@@ -9,7 +9,7 @@
   <% if ENV['ENABLE_SVG_FAVICON'].present? %>
     <link rel="icon" href="<%= image_url('svg/a.svg') %>" type="image/svg+xml">
     <link rel="mask-icon" href="<%= image_url('svg/a.svg') %>" color="black">
-  <% else %>
+  <% elsif @photoblog.favicon.attached? %>
     <link rel="icon" href="<%= @photoblog.favicon_url(w: 96) %>" type="image/png">
   <% end %>
   <% if @photoblog.touch_icon.attached? %>
