@@ -75,7 +75,6 @@ Rails.application.routes.draw do
   get '/tagged/:tag(/page/:page)'      => 'entries#tagged',  constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :tag
   get '/search'                        => 'entries#search', :as => :search
   get '/about'                         => 'blogs#about', :as => :about
-  get '/manifest.json'                 => 'blogs#manifest', :as => :app_manifest
   get '/oembed'                        => 'oembed#show', :as => :oembed
   match '/graphql'                     => 'graphql#options', via: :options
   post '/graphql'                      => 'graphql#execute'
