@@ -2,10 +2,10 @@
   <article role="main" class="entry" data-controller="photo" data-photo-container-max-width="1680">
     <%= render partial: 'entries/entry/photo', collection: @photos, as: :photo %>
     <div class="entry__body">
-      <h2 class="entry__headline">
-        <%= sanitize entry.plain_title %>
+      <h2 class="entry__headline <%= 'entry__headline--no-body' if entry.body.blank? %>">
+        <%= remove_widows(entry.plain_title).html_safe %>
       </h2>
-      <%= sanitize entry.formatted_body unless entry.body.blank? %>
+      <%= entry.formatted_body unless entry.body.blank? %>
     </div>
     <aside class="entry__meta" aria-labelledby="entry-meta">
       <h2 id="entry-meta" class="sr-only">About <% if entry.is_photoset? %>these photos<% elsif entry.is_photo? %>this photo<% else %>this entry<% end %></h2>
