@@ -3,6 +3,8 @@
     <meta name="robots" content="noindex">
   <% end %>
 
+  <% photo = @photos&.first %>
+
   <title><%= @page_title %></title>
   <meta name="description" content="<%= entry.meta_description %>">
 
@@ -13,7 +15,7 @@
   <meta property="og:type" content="Article">
   <meta property="og:site_name" content="<%= @photoblog.name %>">
   <meta property="og:locale" content="en_US">
-  <% if entry.is_photo? %>
+  <% if photo.present? %>
     <meta property="og:image" content="<%= photo.facebook_card_url %>">
     <% if photo.alt_text.present? %>
       <meta name="og:image:alt" content="<%= photo.alt_text %>">
@@ -30,7 +32,7 @@
   <meta name="twitter:title" content="<%= entry.plain_title %>">
   <meta name="twitter:description" content="<%= entry.meta_description %>">
   <meta name="twitter:url" content="<%= entry.permalink_url %>">
-  <% if entry.is_photo? %>
+  <% if photo.present? %>
     <meta name="twitter:image" content="<%= photo.twitter_card_url %>">
     <% if photo.alt_text.present? %>
       <meta name="twitter:image:alt" content="<%= photo.alt_text %>">
