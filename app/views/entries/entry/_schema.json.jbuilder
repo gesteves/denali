@@ -2,7 +2,7 @@ json.set! '@context', 'http://schema.org'
 json.set! '@type', 'BlogPosting'
 json.set! 'mainEntityOfPage', entry.permalink_url
 json.headline entry.plain_title
-json.description meta_description
+json.description entry.meta_description
 json.set! 'datePublished', entry.published_at
 json.set! 'dateModified', entry.modified_at
 if entry.is_photo?

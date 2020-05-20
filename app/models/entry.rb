@@ -244,6 +244,10 @@ class Entry < ApplicationRecord
     markdown_to_html(content)
   end
 
+  def meta_description
+    self&.photos&.first&.alt_text.presence || self.plain_body
+  end
+
   def slug_params
     entry_date = self.published_at || self.updated_at
     year = entry_date.strftime('%Y')
