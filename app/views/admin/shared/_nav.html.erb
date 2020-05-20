@@ -72,7 +72,7 @@
             <%= link_to 'Blog', edit_admin_blog_path(@photoblog), class: 'navbar-item' %>
             <%= link_to 'Equipment', admin_equipment_path, class: 'navbar-item' %>
             <%= link_to 'Webhooks', admin_webhooks_path, class: 'navbar-item' %>
-            <%= link_to 'Expire caches', flush_caches_admin_blog_path(@photoblog), class: 'navbar-item', remote: true, method: :post, data: { confirm: "This will invalidate all caches, including CDN, and restart the server. Do you want to proceed?" } %>
+            <%= link_to 'Expire caches', flush_caches_admin_blog_path(@photoblog), class: 'navbar-item', remote: true, method: :post, data: { confirm: "This will clear all caches and restart the server. Do you want to proceed?" } %>
             <%= link_to 'Sidekiq', sidekiq_web_path, class: 'navbar-item' %>
           </div>
         </div>
