@@ -37,9 +37,7 @@ class Photo < ApplicationRecord
 
   def url(opts = {})
     opts.reverse_merge!(w: 1200, square: false)
-    if opts[:square]
-      opts[:h] = opts[:w]
-    end
+    opts[:h] = opts[:w] if opts[:square]
     if opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]) && !opts[:fit].present?
       opts.merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
