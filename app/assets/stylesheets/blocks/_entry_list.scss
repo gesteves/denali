@@ -104,24 +104,24 @@
 .entry-list__photo-title {
   color: var(--color-photo-text);
   font-size: 14px;
-  line-height: (24/14);
+  line-height: calc(24/14);
   margin: 0;
   text-align: center;
   width: 100%;
 
   @media (min-width: $bp-xs) {
     font-size: 16px;
-    line-height: (24/16);
+    line-height: calc(24/16);
   }
 
   @media (min-width: $bp-s) {
     font-size: 20px;
-    line-height: (36/20);
+    line-height: calc(36/20);
   }
 
   @media (min-width: $bp-m) {
-    font-size: 24px;
-    line-height: (36/24);
+    font-size: 22px;
+    line-height: calc(36/22);
   }
 }
 
