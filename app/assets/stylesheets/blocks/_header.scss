@@ -42,7 +42,7 @@
 
 .header__tagline {
   color: var(--color-text-alt);
-  font-size: 14px;
+  font-size: var(--font-size-text-alt);
   line-height: 44px;
 
   a:link,

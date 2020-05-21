@@ -19,13 +19,21 @@
 
   --font-size-heading      : 20px;
   --font-weight-heading    : 400;
-  --line-height-heading    : #{24 / 20};
+  --line-height-heading    : calc(24 / 20);
   --margin-heading         : calc(2.4rem / 1.8) 0;
 
   --font-size-subheading   : 18px;
   --font-weight-subheading : 400;
-  --line-height-subheading : #{24 / 18};
+  --line-height-subheading : calc(24 / 18);
   --margin-subheading      : calc(2.4rem / 1.8) 0;
+
+  --font-size-text         : 16px;
+  --line-height-text       : calc(24 / 16);
+  --margin-text            : calc(2.4rem / 1.6) 0;
+
+  --font-size-text-alt     : 14px;
+  --line-height-text-alt   : calc(24 / 14);
+  --margin-text-alt        : calc(2.4rem / 1.4) 0;
 
   --margin-content         : 24px auto;
   --border-thin            : 1px;
@@ -58,12 +66,19 @@
     --gutter-vertical        : 90px;
 
     --font-size-heading      : 28px;
-    --line-height-heading    : #{36 / 28};
-    --margin-heading         : calc(3.6rem / 2.8) 0;
+    --line-height-heading    : calc(36 / 28);
+    --margin-heading         : calc(36rem / 28) 0;
 
     --font-size-subheading   : 24px;
-    --line-height-subheading : #{36 / 24};
-    --margin-subheading      : calc(3.6rem / 2.4) 0;
+    --line-height-subheading : calc(36 / 24);
+    --margin-subheading      : calc(36rem / 24) 0;
+
+    --font-size-text         : 20px;
+    --line-height-text       : calc(36 / 20);
+    --margin-text            : calc(36rem / 20) 0;
+
+    --line-height-text-alt   : calc(36 / 14);
+    --margin-text-alt        : calc(36rem / 14) 0;
   }
 
   @media (min-width: $bp-l) {

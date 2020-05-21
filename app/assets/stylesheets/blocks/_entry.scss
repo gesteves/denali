@@ -70,14 +70,10 @@
   p,
   ul {
     color: var(--color-text-alt);
-    font-size: 14px;
-    line-height: (24/14);
+    font-size: var(--font-size-text-alt);
+    line-height: var(--line-height-text-alt);
     margin: 0;
     text-align: center;
-
-    @media (min-width: $bp-s) {
-      line-height: (36/14);
-    }
   }
 }
 
@@ -118,15 +114,9 @@
   ul,
   ol,
   dl {
-    font-size: 16px;
-    line-height: (24/16);
-    margin: (2.4rem/1.6) 0;
-
-    @media (min-width: $bp-s) {
-      font-size: 20px;
-      line-height: (36/20);
-      margin: (3.6rem/2) 0;
-    }
+    font-size: var(--font-size-text);
+    line-height: var(--line-height-text );
+    margin: var(--margin-text);
   }
 
   h2 {
@@ -147,11 +137,7 @@
   }
 
   p {
-    margin: (2.4rem/1.6) 0 0;
-
-    @media (min-width: $bp-s) {
-      margin: (3.6rem/2) 0 0;
-    }
+    margin-bottom: 0;
   }
 
   p + p {
@@ -185,13 +171,8 @@
   }
 
   small {
-    font-size: 14px;
-    line-height: (24/14);
-
-    @media (min-width: $bp-s) {
-      font-size: 16px;
-      line-height: (36/16);
-    }
+    font-size: var(--font-size-text-alt);
+    line-height: var(--line-height-text-alt);
   }
 
   q:before {

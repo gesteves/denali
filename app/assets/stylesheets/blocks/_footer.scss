@@ -10,14 +10,10 @@
 
   p,
   ul {
-    font-size: 14px;
-    line-height: (24/14);
+    font-size: var(--font-size-text-alt);
+    line-height: var(--line-height-text-alt);
     margin: 0;
     text-align: center;
-
-    @media (min-width: $bp-s) {
-      line-height: (36/14);
-    }
   }
 
   @media (min-width: $bp-xxs) {

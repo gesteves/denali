@@ -32,8 +32,8 @@
   a {
     align-items: center;
     display: flex;
-    font-size: 14px;
-    line-height: (36/14);
+    font-size: var(--font-size-text-alt);
+    line-height: var(--line-height-text-alt);
 
     &:link,
     &:visited {
