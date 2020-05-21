@@ -9,9 +9,9 @@
 }
 
 .elsewhere__heading {
-  font-size: var(--font-size-heading);
-  font-weight: 400;
-  line-height: var(--line-height-heading);
+  font-size: var(--font-size-subheading);
+  font-weight: var(--font-weight-subheading);
+  line-height: var(--line-height-subheading);
   padding-bottom: var(--gutter-horizontal);
   text-align: center;
 }
