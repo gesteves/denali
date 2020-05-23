@@ -6,10 +6,12 @@
 @import 'base/properties';
 @import 'base/fonts';
 @import 'base/base';
+@import 'base/btf';
 
 @import 'blocks/accessibility';
 @import 'blocks/entry';
 @import 'blocks/exif';
 @import 'blocks/follow';
 @import 'blocks/header';
+@import 'blocks/loading';
 @import 'blocks/tags';

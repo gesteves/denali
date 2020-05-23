@@ -3,6 +3,7 @@
   display: block;
   margin: var(--margin-content);
   max-width: $bp-max;
+  position: relative;
 
   @supports (grid-template-rows: masonry) {
     display: grid;
