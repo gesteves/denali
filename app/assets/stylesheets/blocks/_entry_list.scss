@@ -43,6 +43,7 @@
 
 .entry-list__wrapper {
   padding-top: calc(var(--aspect-ratio, 1) * 100%);
+  overflow: hidden;
 }
 
 .entry-list__link {
