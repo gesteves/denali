@@ -26,7 +26,8 @@ export default class extends Controller {
         opacity: 1
       }
     });
-    this.masonry.layout();
+
+    setTimeout(() => this.masonry.layout(), 10);
 
     // Set up a mutation observer to observe the grid container for any
     // changes in the `childList`, so that if any nodes get added to the container,
