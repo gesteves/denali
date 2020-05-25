@@ -19,12 +19,7 @@ export default class extends Controller {
       initLayout: false,
       itemSelector: itemSelector,
       percentPosition: true,
-      hiddenStyle: {
-        opacity: 0
-      },
-      visibleStyle: {
-        opacity: 1
-      }
+      transitionDuration: 0
     });
 
     this.masonry.layout();
