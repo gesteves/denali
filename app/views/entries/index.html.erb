@@ -1,3 +1,9 @@
+<% content_for :link_tags do %>
+  <%= tag :link, rel: 'preconnect', href: "https://#{ENV['imgix_domain']}" %>
+  <%= tag :link, rel: 'preload', as: 'style' href: stylesheet_url('application') %>
+<% end %>
+
+
 <% content_for :head do %>
   <%= render partial: 'entries/list/head' %>
 <% end %>

@@ -1,0 +1,6 @@
+<% cache entry do %>
+  <% @photos.each do |photo| %>
+    <% src, srcset = photo.srcset(srcset: @srcset)%>
+    <%= tag :link, rel: 'preload', as: 'image', imagesizes: @sizes, imagesrcset: srcset, href: src %>
+  <% end %>
+<% end %>

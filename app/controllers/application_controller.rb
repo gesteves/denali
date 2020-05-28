@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :is_repeat_visit?
   around_action :set_time_zone
 
-  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preload_link_header, :add_preconnect_link_header, :is_repeat_visit?
+  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preconnect_link_header, :is_repeat_visit?
 
   def default_url_options
     Rails.application.routes.default_url_options
@@ -66,17 +66,6 @@ class ApplicationController < ActionController::Base
 
   def set_max_age(seconds: ENV['CACHE_TTL'])
     response.headers['Cache-Control'] = "s-maxage=#{seconds}, max-age=0, public"
-  end
-
-  def add_preload_link_header(url, opts = {})
-    opts.reverse_merge!({ as: 'style' })
-    links = [response.headers['Link']]
-    link = "<#{url}>; rel=preload; as=#{opts[:as]}"
-    link += "; crossorigin=#{opts[:crossorigin]}" if opts[:crossorigin].present?
-    link += "; imagesizes=\"#{opts[:imagesizes]}\"" if opts[:imagesizes].present?
-    link += "; imagesrcset=\"#{opts[:imagesrcset]}\"" if opts[:imagesrcset].present?
-    links << link
-    response.headers['Link'] = links.compact.join(', ')
   end
 
   def add_preconnect_link_header(url, opts = {})

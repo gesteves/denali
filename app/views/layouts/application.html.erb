@@ -2,6 +2,7 @@
 <html lang="en" id="top">
 <head>
   <%= render partial: 'partials/meta_tags' %>
+  <%= yield :link_tags %>
   <%= yield :head %>
   <% if is_repeat_visit? || !content_for?(:inline_css) %>
     <%= stylesheet_link_tag 'application', media: 'all' %>
