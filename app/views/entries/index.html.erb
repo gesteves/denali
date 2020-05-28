@@ -6,4 +6,8 @@
   <%= render partial: 'partials/inline_styles', locals: { stylesheet: 'entry_list.css' } %>
 <% end %>
 
+<% content_for :javascript do %>
+  <%= javascript_pack_tag 'entry_list', defer: true %>
+<% end %>
+
 <%= render partial: 'entries/list/body' %>

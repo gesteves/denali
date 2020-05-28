@@ -12,7 +12,7 @@
     <noscript><%= stylesheet_link_tag 'application', media: 'all' %></noscript>
   <% end %>
   <%= stylesheet_link_tag 'print', media: 'print' %>
-  <%= javascript_pack_tag 'application', defer: true %>
+  <%= yield :javascript %>
 </head>
 <body>
 <a class="skip-link sr-only" href="#main-content">Skip to content</a>

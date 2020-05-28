@@ -6,6 +6,10 @@
   <%= render partial: 'partials/inline_styles', locals: { stylesheet: 'entry.css' } %>
 <% end %>
 
+<% content_for :javascript do %>
+  <%= javascript_pack_tag 'entry', defer: true %>
+<% end %>
+
 <%= render partial: 'entries/entry/body', object: @entry, as: :entry %>
 <%= render partial: 'entries/entry/related', object: @entry, as: :entry if @photoblog.show_related_entries? %>
 <%= render partial: 'partials/elsewhere' %>
