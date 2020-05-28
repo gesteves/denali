@@ -46,8 +46,7 @@ class Photo < ApplicationRecord
     Ix.path(self.image.key).to_url(opts.compact)
   end
 
-  def srcset(srcset:, square: false)
-    opts = {}
+  def srcset(srcset:, square: false, opts: { q: 75 })
     imgix_path = Ix.path(self.image.key)
     widths = srcset.reject { |width| width > self.width }
     src_width = widths.first
