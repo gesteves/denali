@@ -16,7 +16,6 @@ class EntriesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @entries.empty?
     if stale?(@entries, public: true)
       preconnect_imgix
-      preload_stylesheet
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       @page_url = @page == 1 ? entries_url(page: nil) : entries_url(page: @page)
@@ -54,7 +53,6 @@ class EntriesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     if stale?(@entries, public: true)
       preconnect_imgix
-      preload_stylesheet
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       @page_url = @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page)
@@ -108,7 +106,6 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@entry, public: true)
-      preload_stylesheet
       preload_photos
       respond_to do |format|
         format.html {
@@ -225,12 +222,6 @@ class EntriesController < ApplicationController
         src, srcset = photo.srcset(srcset: @srcset)
         add_preload_link_header(src, as: 'image', imagesizes: @sizes, imagesrcset: srcset)
       end
-    end
-  end
-
-  def preload_stylesheet
-    if request.format.html? && !is_repeat_visit?
-      add_preload_link_header(stylesheet_path('application'), as: 'style')
     end
   end
 end
