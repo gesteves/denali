@@ -1,5 +1,5 @@
-<% content_for :link_tags do %>
-  <%= render partial: 'entries/entry/link_tags', object: @entry, as: :entry %>
+<% content_for :preload_preconnect do %>
+  <%= render partial: 'entries/entry/preload', object: @entry, as: :entry %>
   <%= tag :link, rel: 'preload', as: 'style', href: stylesheet_url('application') %>
 <% end %>
 

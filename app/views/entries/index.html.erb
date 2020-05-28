@@ -1,4 +1,4 @@
-<% content_for :link_tags do %>
+<% content_for :preload_preconnect do %>
   <%= tag :link, rel: 'preconnect', href: "https://#{ENV['imgix_domain']}" %>
   <%= tag :link, rel: 'preload', as: 'style', href: stylesheet_url('application') %>
 <% end %>

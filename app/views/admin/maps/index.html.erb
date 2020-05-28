@@ -1,4 +1,4 @@
-<% content_for :link_tags do %>
+<% content_for :preload_preconnect do %>
   <%= tag :link, rel: 'preload', href: admin_map_markers_url(format: 'json'), as: 'fetch', crossorigin: 'anonymous' %>
   <%= tag :link, rel: 'preconnect', href: "https://a.tiles.mapbox.com" %>
 <% end %>
