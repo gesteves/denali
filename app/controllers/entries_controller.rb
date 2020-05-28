@@ -104,9 +104,7 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@entry, public: true)
-      @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film)
-      @srcset = PHOTOS[:entry][:srcset]
-      @sizes = PHOTOS[:entry][:sizes].join(', ')
+      preload_photos
       respond_to do |format|
         format.html {
           redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
@@ -210,6 +208,16 @@ class EntriesController < ApplicationController
   def set_link_headers
     if request.format.html?
       add_preconnect_link_header("https://#{ENV['imgix_domain']}")
+    end
+  end
+
+  def preload_photos
+    @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film)
+    @srcset = PHOTOS[:entry][:srcset]
+    @sizes = PHOTOS[:entry][:sizes].join(', ')
+    @photos.each do |photo|
+      src, srcset = photo.srcset(srcset: @srcset)
+      add_preload_link_header(src, as: 'image', imagesizes: @sizes, imagesrcset: srcset)
     end
   end
 end
