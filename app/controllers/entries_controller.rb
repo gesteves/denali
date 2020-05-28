@@ -215,9 +215,11 @@ class EntriesController < ApplicationController
     @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film)
     @srcset = PHOTOS[:entry][:srcset]
     @sizes = PHOTOS[:entry][:sizes].join(', ')
-    @photos.each do |photo|
-      src, srcset = photo.srcset(srcset: @srcset)
-      add_preload_link_header(src, as: 'image', imagesizes: @sizes, imagesrcset: srcset)
+    if request.format.html?
+      @photos.each do |photo|
+        src, srcset = photo.srcset(srcset: @srcset)
+        add_preload_link_header(src, as: 'image', imagesizes: @sizes, imagesrcset: srcset)
+      end
     end
   end
 end
