@@ -230,7 +230,7 @@ class EntriesController < ApplicationController
 
   def preload_stylesheet
     if request.format.html? && !is_repeat_visit?
-      add_preload_link_header(stylesheet_url('application'), as: 'style')
+      add_preload_link_header(stylesheet_path('application'), as: 'style')
     end
   end
 end
