@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width">
   <meta name="turbolinks-cache-control" content="no-cache">
   <meta name="robots" content="noindex">
+  <%= yield :link_tags %>
   <%= yield :meta %>
   <%= yield :head %>
   <title><%= @page_title.nil? ? '' : "#{@page_title} – " %><%= @photoblog.name %></title>
