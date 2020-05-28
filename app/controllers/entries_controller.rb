@@ -1,5 +1,6 @@
 class EntriesController < ApplicationController
   include ActionView::Helpers::NumberHelper
+  include ActionView::Helpers::AssetUrlHelper
   include TagList
 
   skip_before_action :verify_authenticity_token
@@ -7,7 +8,6 @@ class EntriesController < ApplicationController
   before_action :set_max_age, except: [:amp]
   before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
-  before_action :set_link_headers, only: [:index, :tagged, :show]
 
   def index
     @page = (params[:page] || 1).to_i
@@ -15,6 +15,8 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
     if stale?(@entries, public: true)
+      preconnect_imgix
+      preload_stylesheet
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       @page_url = @page == 1 ? entries_url(page: nil) : entries_url(page: @page)
@@ -51,6 +53,8 @@ class EntriesController < ApplicationController
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     if stale?(@entries, public: true)
+      preconnect_imgix
+      preload_stylesheet
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       @page_url = @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page)
@@ -104,6 +108,7 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@entry, public: true)
+      preload_stylesheet
       preload_photos
       respond_to do |format|
         format.html {
@@ -205,7 +210,7 @@ class EntriesController < ApplicationController
     @entry = Entry.find_by_url(url: request.path)
   end
 
-  def set_link_headers
+  def preconnect_imgix
     if request.format.html?
       add_preconnect_link_header("https://#{ENV['imgix_domain']}")
     end
@@ -220,6 +225,12 @@ class EntriesController < ApplicationController
         src, srcset = photo.srcset(srcset: @srcset)
         add_preload_link_header(src, as: 'image', imagesizes: @sizes, imagesrcset: srcset)
       end
+    end
+  end
+
+  def preload_stylesheet
+    if request.format.html? && !is_repeat_visit?
+      add_preload_link_header(stylesheet_url('application'), as: 'style')
     end
   end
 end

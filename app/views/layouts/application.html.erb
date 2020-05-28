@@ -7,7 +7,6 @@
     <%= stylesheet_link_tag 'application', media: 'all' %>
   <% else %>
     <%= yield :inline_css %>
-    <link rel="preload" as="style" href="<%= stylesheet_url 'application' %>">
     <%= stylesheet_link_tag 'application', media: 'print', onload: "this.media='all'" %>
     <noscript><%= stylesheet_link_tag 'application', media: 'all' %></noscript>
   <% end %>
