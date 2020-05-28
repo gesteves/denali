@@ -1,32 +1,13 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "0a4dad81d224d15b2ba0ab8957f8c5592b038b1d3546852883043e481f6acad9",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/partials/_analytics_head.html.erb",
-      "line": 1,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Blog.first.analytics_head",
-      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":16,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":4,"file":"app/views/layouts/application.html.erb"},{"type":"template","name":"partials/_meta_tags","line":19,"file":"app/views/partials/_meta_tags.html.erb"}],
-      "location": {
-        "type": "template",
-        "template": "partials/_analytics_head"
-      },
-      "user_input": null,
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "605ddb785e21c9dac0eba35f0b914b3373d41913e3373c3a670a87452a24391d",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 120,
+      "line": 122,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
       "render_path": null,
@@ -46,7 +27,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 193,
+      "line": 195,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Blog.first.entries.published.where(:tumblr_id => params[:tumblr_id]).order(\"published_at ASC\").limit(1).first.permalink_url, :status => 301)",
       "render_path": null,
@@ -69,7 +50,7 @@
       "line": 7,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Blog.first.header_logo_svg",
-      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":16,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":18,"file":"app/views/layouts/application.html.erb"}],
+      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":16,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":20,"file":"app/views/layouts/application.html.erb"}],
       "location": {
         "type": "template",
         "template": "partials/_header"
@@ -88,10 +69,29 @@
       "line": 1,
       "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
       "code": "Blog.first.analytics_body",
-      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":16,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":22,"file":"app/views/layouts/application.html.erb"},{"type":"template","name":"partials/_footer","line":17,"file":"app/views/partials/_footer.html.erb"}],
+      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":16,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":24,"file":"app/views/layouts/application.html.erb"},{"type":"template","name":"partials/_footer","line":17,"file":"app/views/partials/_footer.html.erb"}],
       "location": {
         "type": "template",
         "template": "partials/_analytics_body"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": ""
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "a67b26dab6a355399f3b49c17a9cbf79c8feec15d3bda99304a20bcb18b80510",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/partials/_analytics_head.html.erb",
+      "line": 1,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Blog.first.analytics_head",
+      "render_path": [{"type":"controller","class":"Admin::BlogsController","method":"edit","line":16,"file":"app/controllers/admin/blogs_controller.rb"},{"type":"template","name":"layouts/application","line":14,"file":"app/views/layouts/application.html.erb"}],
+      "location": {
+        "type": "template",
+        "template": "partials/_analytics_head"
       },
       "user_input": null,
       "confidence": "High",
@@ -117,32 +117,13 @@
       "note": ""
     },
     {
-      "warning_type": "Cross-Site Scripting",
-      "warning_code": 2,
-      "fingerprint": "b0b6e562c021ed6bb2f247bfb5380f4199a50cb80a5e9290a3bdaa7d77a96b33",
-      "check_name": "CrossSiteScripting",
-      "message": "Unescaped model attribute",
-      "file": "app/views/admin/shared/_nav.html.erb",
-      "line": 6,
-      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
-      "code": "Blog.first.header_logo_svg",
-      "render_path": [{"type":"controller","class":"AdminController","method":"default_url_options","line":14,"file":"app/controllers/admin_controller.rb"},{"type":"template","name":"layouts/admin","line":20,"file":"app/views/layouts/admin.html.erb"}],
-      "location": {
-        "type": "template",
-        "template": "admin/shared/_nav"
-      },
-      "user_input": null,
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "Redirect",
       "warning_code": 18,
       "fingerprint": "cb4fa5a9c2f7dac630d20485578a8617209de4d65887b070f95de182cff1f84c",
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 113,
+      "line": 112,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
       "render_path": null,
@@ -162,7 +143,7 @@
       "check_name": "Redirect",
       "message": "Possible unprotected redirect",
       "file": "app/controllers/entries_controller.rb",
-      "line": 110,
+      "line": 115,
       "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
       "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
       "render_path": null,
@@ -196,6 +177,6 @@
       "note": ""
     }
   ],
-  "updated": "2020-05-19 14:58:37 -0600",
+  "updated": "2020-05-28 20:51:05 +0000",
   "brakeman_version": "4.3.1"
 }
