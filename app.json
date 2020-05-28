@@ -135,7 +135,7 @@
         "heroku-redis:in-dyno"
       ],
       "scripts": {
-        "test": "bundle exec rails test && bundle exec rake brakeman:check"
+        "test": "bundle exec rails test"
       }
     }
   },
