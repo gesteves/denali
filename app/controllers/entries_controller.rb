@@ -240,8 +240,6 @@ class EntriesController < ApplicationController
     if request.format.html? && !is_repeat_visit?
       add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-300.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
       add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-regular.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
-      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-300.woff'), as: 'font', type: 'font/woff', crossorigin: true)
-      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-regular.woff'), as: 'font', type: 'font/woff', crossorigin: true)
     end
   end
 end
