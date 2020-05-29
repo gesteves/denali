@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :is_repeat_visit?
   around_action :set_time_zone
 
-  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :is_repeat_visit?
+  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :is_repeat_visit?, :add_preconnect_link_header, :add_preload_link_header
 
   def default_url_options
     Rails.application.routes.default_url_options
@@ -82,5 +82,24 @@ class ApplicationController < ActionController::Base
 
   def redirect_heroku
     redirect_to root_url(host: ENV['domain']) if request.host.match? /herokuapp\.com/
+  end
+
+  def add_preload_link_header(url, opts = {})
+    opts.reverse_merge!({ as: 'style' })
+    links = [response.headers['Link']]
+    link = "<#{url}>; rel=preload; as=#{opts[:as]}"
+    link += "; crossorigin=#{opts[:crossorigin]}" if opts[:crossorigin].present?
+    link += "; imagesizes=\"#{opts[:imagesizes]}\"" if opts[:imagesizes].present?
+    link += "; imagesrcset=\"#{opts[:imagesrcset]}\"" if opts[:imagesrcset].present?
+    links << link
+    response.headers['Link'] = links.compact.join(', ')
+  end
+
+  def add_preconnect_link_header(url, opts = {})
+    links = [response.headers['Link']]
+    link = "<#{url}>; rel=preconnect"
+    link += "; crossorigin=#{opts[:crossorigin]}" if opts[:crossorigin].present?
+    links << link
+    response.headers['Link'] = links.compact.join(', ')
   end
 end
