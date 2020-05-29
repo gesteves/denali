@@ -229,7 +229,7 @@ class EntriesController < ApplicationController
 
   def preload_stylesheet
     if request.format.html? && !is_repeat_visit?
-      add_preload_link_header(ActionController::Base.helpers.asset_url('application.css'), as: 'style')
+      add_preload_link_header(ActionController::Base.helpers.stylesheet_url('application'), as: 'style')
     end
   end
 end
