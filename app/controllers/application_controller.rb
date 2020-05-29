@@ -88,7 +88,8 @@ class ApplicationController < ActionController::Base
     opts.reverse_merge!({ as: 'style' })
     links = [response.headers['Link']]
     link = "<#{url}>; rel=preload; as=#{opts[:as]}"
-    link += "; crossorigin=#{opts[:crossorigin]}" if opts[:crossorigin].present?
+    link += "; type=\"#{opts[:type]}\"" if opts[:type].present?
+    link += "; crossorigin" if opts[:crossorigin].present?
     link += "; imagesizes=\"#{opts[:imagesizes]}\"" if opts[:imagesizes].present?
     link += "; imagesrcset=\"#{opts[:imagesrcset]}\"" if opts[:imagesrcset].present?
     links << link

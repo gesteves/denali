@@ -16,6 +16,7 @@ class EntriesController < ApplicationController
     if stale?(@entries, public: true)
       preconnect_imgix
       preload_stylesheet
+      preload_fonts
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       @page_url = @page == 1 ? entries_url(page: nil) : entries_url(page: @page)
@@ -54,6 +55,7 @@ class EntriesController < ApplicationController
     if stale?(@entries, public: true)
       preconnect_imgix
       preload_stylesheet
+      preload_fonts
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       @page_url = @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page)
@@ -109,6 +111,7 @@ class EntriesController < ApplicationController
     if stale?(@entry, public: true)
       preload_photos
       preload_stylesheet
+      preload_fonts
       respond_to do |format|
         format.html {
           redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
@@ -230,6 +233,15 @@ class EntriesController < ApplicationController
   def preload_stylesheet
     if request.format.html? && !is_repeat_visit?
       add_preload_link_header(ActionController::Base.helpers.stylesheet_path('application'), as: 'style')
+    end
+  end
+
+  def preload_fonts
+    if request.format.html? && !is_repeat_visit?
+      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-300.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
+      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-regular.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
+      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-300.woff'), as: 'font', type: 'font/woff', crossorigin: true)
+      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-regular.woff'), as: 'font', type: 'font/woff', crossorigin: true)
     end
   end
 end
