@@ -228,7 +228,7 @@ class EntriesController < ApplicationController
   end
 
   def preload_fonts
-    if request.format.html? && !is_repeat_visit?
+    if request.format.html?
       add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-300.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
       add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-regular.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
     end
