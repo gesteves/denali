@@ -5,11 +5,11 @@
         <span class="tag is-success">Published</span>
         <span class="tag"><%= entry.published_at.strftime('%A, %B %-d, %Y') %></span>
       <% elsif entry.is_queued? %>
+        <span class="tag is-info">Queued</span>
         <% if entry.publish_date_for_queued.present? %>
-          <span class="tag is-info">Queued</span>
           <span class="tag"><%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y')%></span>
         <% else %>
-          <span class="tag is-info">Queued</span>
+          <span class="tag">∞</span>
         <% end %>
       <% elsif entry.is_draft? %>
         <span class="tag">Draft</span>
