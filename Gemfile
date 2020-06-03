@@ -54,7 +54,7 @@ gem 'flickraw', git: 'https://github.com/gesteves/flickraw.git', branch: 'update
 gem 'tumblr_client', git: 'https://github.com/gesteves/tumblr_client', branch: 'master'
 
 # Search
-gem 'elasticsearch-model', '~> 5.0'
+gem 'elasticsearch-model', '~> 7.1'
 gem 'elasticsearch-rails', '~> 5.0'
 
 gem 'graphql'
