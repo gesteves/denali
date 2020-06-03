@@ -19,7 +19,7 @@
     "leaflet.markercluster": "^0.4.0",
     "masonry-layout": "^4.2.2",
     "moment-timezone": "^0.5.31",
-    "rails-ujs": "^5.2.2",
+    "rails-ujs": "^5.2.4",
     "stimulus": "^1.1.1",
     "turbolinks": "^5.2.0"
   },
