@@ -89,6 +89,12 @@ class Photo < ApplicationRecord
     Ix.path(self.image.key).to_url(opts)
   end
 
+  def purge
+    url = Ix.path(self.image.key).to_url
+    uri = URI.parse(url)
+    Ix.purge(uri.path)
+  end
+
   def is_square?
     self.width == self.height
   end
