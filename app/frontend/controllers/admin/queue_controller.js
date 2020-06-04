@@ -79,7 +79,7 @@ export default class extends Controller {
       const position = i + 1;
       let publish_date;
       if (this.publishSchedulesCount === 0) {
-        publish_date = 'N/A';
+        publish_date = '∞';
       } else {
         const days = Math.floor((position - 1 + this.pastPublishSchedulesToday)/this.publishSchedulesCount);
         publish_date = moment().tz(this.timeZone).add(days, 'days').format('dddd, MMMM D, YYYY');
