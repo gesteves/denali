@@ -27,7 +27,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^4.0.0",
     "eslint-loader": "^2.0",
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.2",
     "gulp-cheerio": "^0.6",
     "gulp-jshint": "^2.0",
     "gulp-rename": "^1.0",
