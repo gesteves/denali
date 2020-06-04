@@ -137,9 +137,8 @@ GEM
       concurrent-ruby (~> 1.0)
     imgix (3.2.1)
       addressable
-    jbuilder (2.8.0)
-      activesupport (>= 4.2.0)
-      multi_json (>= 1.2)
+    jbuilder (2.10.0)
+      activesupport (>= 5.0.0)
     jmespath (1.4.0)
     json (2.2.0)
     jwt (2.1.0)
@@ -182,7 +181,7 @@ GEM
     minitest (5.14.1)
     mock_redis (0.19.0)
     msgpack (1.2.4)
-    multi_json (1.13.1)
+    multi_json (1.14.1)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
     nio4r (2.5.2)
@@ -348,7 +347,7 @@ DEPENDENCIES
   graphql
   httparty
   imgix
-  jbuilder (~> 2.5)
+  jbuilder (~> 2.10)
   kaminari
   listen (>= 3.0.5, < 3.2)
   lograge

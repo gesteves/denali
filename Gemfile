@@ -24,7 +24,7 @@ gem 'webpacker'
 gem 'turbolinks', '~> 5.1.0'
 
 # Misc
-gem 'jbuilder', '~> 2.5'
+gem 'jbuilder', '~> 2.10'
 gem 'sdoc', '~> 1.0', group: :doc
 gem 'acts_as_list'
 gem 'redcarpet'
