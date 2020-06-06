@@ -34,7 +34,7 @@
     "gulp-replace": "^1.0.0",
     "gulp-scss-lint": "^0.6.0",
     "gulp-scss-lint-stylish": "^1.0",
-    "gulp-svgmin": "^1.0",
+    "gulp-svgmin": "^2.2",
     "gulp-svgstore": "^6.0",
     "webpack-dev-server": "^3.11.0"
   },
