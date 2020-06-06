@@ -206,7 +206,7 @@ GEM
     omniauth-oauth2 (1.6.0)
       oauth2 (~> 1.1)
       omniauth (~> 1.9)
-    pg (0.21.0)
+    pg (1.2.3)
     public_suffix (4.0.5)
     puma (4.3.5)
       nio4r (~> 2.0)
@@ -355,7 +355,7 @@ DEPENDENCIES
   mock_redis
   oauth
   omniauth-google-oauth2
-  pg (~> 0.21)
+  pg (~> 1.2)
   puma
   rack-attack
   rails (= 5.2.4.3)
