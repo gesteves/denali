@@ -4082,9 +4082,10 @@ graceful-fs@^4.1.2:
   version "4.1.15"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
 
-gulp-cheerio@^0.6:
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/gulp-cheerio/-/gulp-cheerio-0.6.3.tgz#40271c1703368c88408ab8750ba9bf3e1aea9c68"
+gulp-cheerio@^1.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/gulp-cheerio/-/gulp-cheerio-1.0.0.tgz#01c5324dba0fbe5f1b3ddce9e61ef1a8b43278d0"
+  integrity sha512-4dgOVngKJK0+Re+prT/nuXtKM7+F92XeidxjuCeOpOlmYA5rkVaoKrH+xMN/JWOd2iI5OP/NJ6BIjWxeU+ozXQ==
   dependencies:
     cheerio "0.*"
     plugin-error "^0.1.2"
@@ -8890,14 +8891,7 @@ through2@^0.6.0, through2@^0.6.3:
     readable-stream ">=1.0.33-1 <1.1.0-0"
     xtend ">=4.0.0 <4.1.0-0"
 
-through2@^2.0.0, through2@^2.0.1, through2@~2.0.0:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.3.tgz#0004569b37c7c74ba39c43f3ced78d1ad94140be"
-  dependencies:
-    readable-stream "^2.1.5"
-    xtend "~4.0.1"
-
-through2@^2.0.3:
+through2@^2.0.0, through2@^2.0.1, through2@^2.0.3, through2@~2.0.0:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/through2/-/through2-2.0.5.tgz#01c1e39eb31d07cb7d03a96a70823260b23132cd"
   integrity sha512-/mrRod8xqpA+IHSLyGCQ2s8SPHiCDEeQJSep1jqLYeEUClOFG2Qsh+4FU6G9VeqpZnGW/Su8LQGc4YKni5rYSQ==
