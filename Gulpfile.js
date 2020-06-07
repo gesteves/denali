@@ -3,7 +3,6 @@
 var cheerio     = require('gulp-cheerio');
 var gulp        = require('gulp');
 var rename      = require('gulp-rename');
-var rename      = require('gulp-rename');
 var scsslint    = require('gulp-scss-lint');
 var scssstylish = require('gulp-scss-lint-stylish');
 var svgmin      = require('gulp-svgmin');
@@ -54,8 +53,8 @@ gulp.task('svg', function () {
 });
 
 gulp.task('watch', function () {
-  gulp.watch(paths.svg, ['svg']);
-  gulp.watch(paths.sass, ['sass']);
+  gulp.watch(paths.svg, gulp.series('svg'));
+  gulp.watch(paths.sass, gulp.series('sass'));
 });
 
-gulp.task('default', ['watch']);
+gulp.task('default', gulp.series('watch'));
