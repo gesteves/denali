@@ -48,7 +48,7 @@
 .entry__body {
   margin: 0 auto;
   max-width: $bp-m;
-  padding: 0 var(--gutter-vertical) var(--gutter-horizontal) var(--gutter-vertical);
+  padding: 0 var(--gutter-vertical) var(--gutter-horizontal);
 }
 
 .entry__figure + .entry__body {
@@ -115,7 +115,7 @@
   ol,
   dl {
     font-size: var(--font-size-text);
-    line-height: var(--line-height-text );
+    line-height: var(--line-height-text);
     margin: var(--margin-text);
   }
 

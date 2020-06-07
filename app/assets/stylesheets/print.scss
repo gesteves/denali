@@ -13,7 +13,7 @@
 }
 
 .entry__permalink::after {
-  content: " at " attr(data-short-url);
+  content: ' at ' attr(data-short-url);
 }
 
 .header {

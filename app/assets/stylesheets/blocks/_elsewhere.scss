@@ -70,8 +70,8 @@
 
   .elsewhere__label {
     display: inline-block;
+    max-width: calc(100vw - 20px - 0.5rem - (2 * var(--gutter-vertical)));
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: calc(100vw - 20px - 0.5rem - ( 2 * var(--gutter-vertical)));
   }
 }

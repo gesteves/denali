@@ -1,27 +1,27 @@
 :root {
-  --color-logo-fill        : black;
-  --color-background       : white;
-  --color-text             : $color-gray-dark;
-  --color-text-alt         : $color-gray-medium;
-  --color-links            : $color-red;
-  --color-border           : $color-gray-very-light;
-  --color-photo-hover      : transparentize(black, 0.25);
-  --color-photo-text       : white;
-  --color-tooltip          : black;
-  --color-tooltip-text     : white;
-  --color-icon-fill        : $color-gray-light;
-  --color-input-background : white;
+  --color-background: white;
+  --color-border: $color-gray-very-light;
+  --color-icon-fill: $color-gray-light;
+  --color-input-background: white;
+  --color-links: $color-red;
+  --color-logo-fill: black;
+  --color-photo-hover: transparentize(black, 0.25);
+  --color-photo-text: white;
+  --color-text: $color-gray-dark;
+  --color-text-alt: $color-gray-medium;
+  --color-tooltip: black;
+  --color-tooltip-text: white;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-logo-fill        : white;
-    --color-background       : black;
-    --color-border           : $color-gray-very-dark;
-    --color-text             : $color-gray-very-light;
-    --color-text-alt         : $color-gray-light;
-    --color-tooltip          : $color-gray-very-dark;
-    --color-tooltip-text     : $color-gray-very-light;
-    --color-input-background : $color-gray-very-dark;
+    --color-background: black;
+    --color-border: $color-gray-very-dark;
+    --color-input-background: $color-gray-very-dark;
+    --color-logo-fill: white;
+    --color-text: $color-gray-very-light;
+    --color-text-alt: $color-gray-light;
+    --color-tooltip: $color-gray-very-dark;
+    --color-tooltip-text: $color-gray-very-light;
   }
 }

@@ -18,7 +18,7 @@
   line-height: var(--line-height-heading);
   margin: 0 auto;
   max-width: $bp-max;
-  padding: 0 var(--gutter-vertical) var(--gutter-horizontal) ;
+  padding: 0 var(--gutter-vertical) var(--gutter-horizontal);
   text-align: center;
 }
 
@@ -42,8 +42,8 @@
 }
 
 .entry-list__wrapper {
-  padding-top: calc(var(--aspect-ratio, 1) * 100%);
   overflow: hidden;
+  padding-top: calc(var(--aspect-ratio, 1) * 100%);
 }
 
 .entry-list__link {
