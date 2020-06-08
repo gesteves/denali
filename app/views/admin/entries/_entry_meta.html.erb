@@ -9,7 +9,7 @@
         <% if entry.publish_date_for_queued.present? %>
           <span class="tag"><%= entry.publish_date_for_queued.strftime('%A, %B %-d, %Y')%></span>
         <% else %>
-          <span class="tag">∞</span>
+          <span class="tag">TBD</span>
         <% end %>
       <% elsif entry.is_draft? %>
         <span class="tag">Draft</span>
