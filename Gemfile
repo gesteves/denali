@@ -55,7 +55,7 @@ gem 'tumblr_client', git: 'https://github.com/gesteves/tumblr_client', branch: '
 
 # Search
 gem 'elasticsearch-model', '~> 5.0'
-gem 'elasticsearch-rails', '~> 5.0'
+gem 'elasticsearch-rails', '~> 6.1'
 
 gem 'graphql'
 
