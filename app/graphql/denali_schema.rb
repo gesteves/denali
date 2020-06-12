@@ -1,4 +1,4 @@
 class DenaliSchema < GraphQL::Schema
-  max_depth 5
+  max_depth 18
   query(Types::QueryType)
 end
