@@ -104,18 +104,18 @@ GEM
     connection_pool (2.2.2)
     crass (1.0.6)
     dalli (2.7.9)
-    elasticsearch (5.0.5)
-      elasticsearch-api (= 5.0.5)
-      elasticsearch-transport (= 5.0.5)
-    elasticsearch-api (5.0.5)
+    elasticsearch (7.5.0)
+      elasticsearch-api (= 7.5.0)
+      elasticsearch-transport (= 7.5.0)
+    elasticsearch-api (7.5.0)
       multi_json
-    elasticsearch-model (5.1.0)
+    elasticsearch-model (6.1.0)
       activesupport (> 3)
-      elasticsearch (~> 5)
+      elasticsearch (> 1)
       hashie
     elasticsearch-rails (5.1.0)
-    elasticsearch-transport (5.0.5)
-      faraday
+    elasticsearch-transport (7.5.0)
+      faraday (>= 0.14, < 1)
       multi_json
     erubi (1.9.0)
     execjs (2.7.0)
@@ -340,7 +340,7 @@ DEPENDENCIES
   brakeman
   byebug
   dalli
-  elasticsearch-model (~> 5.0)
+  elasticsearch-model (~> 6.1)
   elasticsearch-rails (~> 5.0)
   exifr
   figaro
