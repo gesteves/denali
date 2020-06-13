@@ -16,7 +16,7 @@ gem 'aws-sdk-cloudfront', '~> 1'
 gem 'aws-sdk-s3', '~> 1'
 
 # Front-end things
-gem 'sass-rails', '~> 5.0'
+gem 'sass-rails', '~> 6.0'
 gem 'autoprefixer-rails'
 gem 'imgix'
 gem 'uglifier', '>= 1.3.0'
