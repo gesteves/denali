@@ -1,5 +1,5 @@
 class OpenGraphWorker < ApplicationWorker
-  sidekiq_options queue: 'low'
+  sidekiq_options queue: 'high'
 
   def perform(entry_id)
     return if !Rails.env.production?
