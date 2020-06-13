@@ -17,6 +17,7 @@ class Entry < ApplicationRecord
   before_save :set_preview_hash
 
   after_commit :handle_status_change, if: :saved_change_to_status?
+  after_commit :refresh_open_graph, if: :changed_open_graph_fields?
 
   acts_as_taggable_on :tags, :equipment, :locations, :styles, :instagram_locations
   acts_as_list scope: :blog
@@ -270,6 +271,7 @@ class Entry < ApplicationRecord
 
   def enqueue_publish_jobs
     Webhook.deliver_all(self)
+    OpenGraphWorker.perform_async(self.id)
     InstagramWorker.perform_async(self.id, true) if self.post_to_instagram
     TwitterWorker.perform_async(self.id, true) if self.post_to_twitter
     FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
@@ -530,12 +532,20 @@ class Entry < ApplicationRecord
     end
   end
 
+  def changed_open_graph_fields?
+    saved_change_to_title? || saved_change_to_body?
+  end
+
   def affiliate_cameras
     Camera.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
   end
 
   def affiliate_lenses
     Lens.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
+  end
+
+  def refresh_open_graph
+    OpenGraphWorker.perform_async(self.id) if self.is_published?
   end
 
   private

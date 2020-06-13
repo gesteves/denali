@@ -1,6 +1,9 @@
 <% cache @photoblog do %>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, viewport-fit=cover">
+  <% if ENV['facebook_app_id'].present? %>
+    <meta property="fb:app_id" content="<%= ENV['facebook_app_id'] %>">
+  <% end %>
   <% if !Rails.env.production? %>
     <meta name="robots" content="noindex">
   <% end %>
