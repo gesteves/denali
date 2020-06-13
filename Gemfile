@@ -21,7 +21,7 @@ gem 'autoprefixer-rails'
 gem 'imgix'
 gem 'uglifier', '>= 1.3.0'
 gem 'webpacker'
-gem 'turbolinks', '~> 5.1.0'
+gem 'turbolinks', '~> 5.2.1'
 
 # Misc
 gem 'jbuilder', '~> 2.10'
