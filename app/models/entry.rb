@@ -17,7 +17,6 @@ class Entry < ApplicationRecord
   before_save :set_preview_hash
 
   after_commit :handle_status_change, if: :saved_change_to_status?
-  after_commit :refresh_open_graph, if: :changed_open_graph_fields?
 
   acts_as_taggable_on :tags, :equipment, :locations, :styles, :instagram_locations
   acts_as_list scope: :blog
@@ -277,10 +276,10 @@ class Entry < ApplicationRecord
     FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
     TumblrWorker.perform_async(self.id, true) if self.post_to_tumblr
     self.send_photos_to_flickr if self.post_to_flickr
-    self.invalidate(include_adjacents: true, include_self: false)
+    self.invalidate(include_adjacents: true, include_self: false, refresh_open_graph: false)
   end
 
-  def invalidate(include_adjacents: false, include_self: true)
+  def invalidate(include_adjacents: false, include_self: true, refresh_open_graph: true)
     paths = []
     wildcard_paths = %w{
       /
@@ -316,6 +315,10 @@ class Entry < ApplicationRecord
 
     paths = paths.flatten.reject(&:blank?).uniq.sort
     CloudfrontInvalidationWorker.perform_async(paths)
+
+    if refresh_open_graph
+      OpenGraphWorker.perform_in(2.minutes, self.id)
+    end
   end
 
   def send_photos_to_flickr
@@ -532,20 +535,12 @@ class Entry < ApplicationRecord
     end
   end
 
-  def changed_open_graph_fields?
-    saved_change_to_title? || saved_change_to_body?
-  end
-
   def affiliate_cameras
     Camera.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
   end
 
   def affiliate_lenses
     Lens.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
-  end
-
-  def refresh_open_graph
-    OpenGraphWorker.perform_async(self.id) if self.is_published?
   end
 
   private

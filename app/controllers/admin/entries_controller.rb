@@ -183,7 +183,7 @@ class Admin::EntriesController < AdminController
 
   # DELETE /admin/entries/1
   def destroy
-    @entry.invalidate(include_adjacents: true)
+    @entry.invalidate(include_adjacents: true, refresh_open_graph: false)
     @entry.destroy
     respond_to do |format|
       flash[:danger] = 'Your entry was deleted forever.'

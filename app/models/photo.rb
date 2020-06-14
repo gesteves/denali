@@ -14,7 +14,6 @@ class Photo < ApplicationRecord
   after_commit :update_entry_equipment_tags, if: :changed_equipment?
   after_commit :update_entry_location_tags, if: :changed_location?
   after_commit :update_entry_style_tags, if: :changed_style?
-  after_commit :refresh_open_graph, if: :changed_open_graph_fields?
 
   def touch_entry
     self.entry&.touch
@@ -191,13 +190,5 @@ class Photo < ApplicationRecord
 
   def changed_style?
     saved_change_to_color_palette? || saved_change_to_camera_id? || saved_change_to_film_id?
-  end
-
-  def changed_open_graph_fields?
-    saved_change_to_focal_x? || saved_change_to_focal_y? || saved_change_to_alt_text?
-  end
-
-  def refresh_open_graph
-    OpenGraphWorker.perform_async(self.entry.id) if self.entry.is_published?
   end
 end
