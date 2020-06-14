@@ -166,12 +166,12 @@ class Admin::EntriesController < AdminController
 
   # PATCH/PUT /admin/entries/1
   def update
-    logger.info params
     respond_to do |format|
       @entry.modified_at = Time.current if @entry.is_published?
       if @entry.update(entry_params)
         @entry.update_tags
         @entry.invalidate
+        OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else
@@ -183,7 +183,7 @@ class Admin::EntriesController < AdminController
 
   # DELETE /admin/entries/1
   def destroy
-    @entry.invalidate(include_adjacents: true, refresh_open_graph: false)
+    @entry.invalidate(include_adjacents: true)
     @entry.destroy
     respond_to do |format|
       flash[:danger] = 'Your entry was deleted forever.'
@@ -352,6 +352,7 @@ class Admin::EntriesController < AdminController
 
   def flush_caches
     @entry.invalidate
+    OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
     @message = 'Your entry is being cleared from cache. This may take a few moments.'
     respond_to do |format|
       format.html {

@@ -276,10 +276,10 @@ class Entry < ApplicationRecord
     FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
     TumblrWorker.perform_async(self.id, true) if self.post_to_tumblr
     self.send_photos_to_flickr if self.post_to_flickr
-    self.invalidate(include_adjacents: true, include_self: false, refresh_open_graph: false)
+    self.invalidate(include_adjacents: true, include_self: false)
   end
 
-  def invalidate(include_adjacents: false, include_self: true, refresh_open_graph: true)
+  def invalidate(include_adjacents: false, include_self: true)
     paths = []
     wildcard_paths = %w{
       /
@@ -315,10 +315,6 @@ class Entry < ApplicationRecord
 
     paths = paths.flatten.reject(&:blank?).uniq.sort
     CloudfrontInvalidationWorker.perform_async(paths)
-
-    if refresh_open_graph && self.is_published?
-      OpenGraphWorker.perform_in(1.minute, self.id)
-    end
   end
 
   def send_photos_to_flickr
