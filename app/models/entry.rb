@@ -316,7 +316,7 @@ class Entry < ApplicationRecord
     paths = paths.flatten.reject(&:blank?).uniq.sort
     CloudfrontInvalidationWorker.perform_async(paths)
 
-    if refresh_open_graph
+    if refresh_open_graph && self.is_published?
       OpenGraphWorker.perform_in(2.minutes, self.id)
     end
   end
