@@ -317,7 +317,7 @@ class Entry < ApplicationRecord
     CloudfrontInvalidationWorker.perform_async(paths)
 
     if refresh_open_graph && self.is_published?
-      OpenGraphWorker.perform_in(2.minutes, self.id)
+      OpenGraphWorker.perform_in(1.minute, self.id)
     end
   end
 
