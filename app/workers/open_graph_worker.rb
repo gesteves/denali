@@ -12,6 +12,13 @@ class OpenGraphWorker < ApplicationWorker
       access_token: "#{ENV['facebook_app_id']}|#{ENV['facebook_app_secret']}"
     }
 
-    HTTParty.post('https://graph.facebook.com', query: params)
+    response = HTTParty.post('https://graph.facebook.com', query: params)
+    response = JSON.parse(response.body)
+
+    if response['error'].present?
+      code = response['error']['code']
+      message = response['error']['message']
+      raise "#{code} #{message}"
+    end
   end
 end
