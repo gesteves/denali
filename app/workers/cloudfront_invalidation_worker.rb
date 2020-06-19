@@ -1,7 +1,7 @@
 class CloudfrontInvalidationWorker < ApplicationWorker
   def perform(paths)
     paths = [paths].flatten.reject(&:blank?).reject { |path| !path.start_with? '/' }.uniq.sort.each_slice(15).to_a
-    return if ENV['CACHE_TTL'].to_i <= 60
+    return if ENV['CACHE_TTL'].to_i <= 1
     return if paths.blank?
     return if !Rails.env.production?
     paths.each { |p| create_invalidation(p, await_completion: !p.equal?(paths.last)) }
