@@ -44,6 +44,7 @@ services:
       - .:/app
       - bundle:/usr/local/bundle
       - node-modules:/app/node_modules
+      - /app/tmp
   webpacker:
     build: .
     command: ./bin/webpack-dev-server
@@ -59,6 +60,7 @@ services:
       - .:/app
       - bundle:/usr/local/bundle
       - node-modules:/app/node_modules
+      - /app/tmp
   app:
     build: .
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
@@ -66,6 +68,7 @@ services:
       - .:/app
       - bundle:/usr/local/bundle
       - node-modules:/app/node_modules
+      - /app/tmp
     ports:
       - '3000:3000'
     depends_on:
