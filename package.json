@@ -12,7 +12,7 @@
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
     "bulma": "^0.9.0",
-    "caniuse-lite": "^1.0.30001084",
+    "caniuse-lite": "^1.0.30001088",
     "clipboard": "^2.0.6",
     "jquery": "^3.5.1",
     "leaflet-hash": "^0.2.1",
@@ -34,7 +34,7 @@
     "gulp-replace": "^1.0.0",
     "gulp-scss-lint": "^1.0.0",
     "gulp-scss-lint-stylish": "^1.0",
-    "gulp-svgmin": "^2.2",
+    "gulp-svgmin": "^3.0",
     "gulp-svgstore": "^7.0",
     "webpack-dev-server": "^3.11.0"
   },
