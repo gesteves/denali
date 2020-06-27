@@ -109,6 +109,9 @@ class EntriesController < ApplicationController
 
   def show
     if stale?(@entry, public: true)
+      @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film)
+      @srcset = PHOTOS[:entry][:srcset]
+      @sizes = PHOTOS[:entry][:sizes].join(', ')
       preload_images
       preload_stylesheet
       preload_fonts
@@ -220,9 +223,6 @@ class EntriesController < ApplicationController
 
   def preload_images
     if request.format.html?
-      @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film)
-      @srcset = PHOTOS[:entry][:srcset]
-      @sizes = PHOTOS[:entry][:sizes].join(', ')
       @photos.each do |photo|
         src, srcset = photo.srcset(srcset: @srcset)
         add_preload_link_header(src, as: 'image', imagesizes: @sizes, imagesrcset: srcset)
