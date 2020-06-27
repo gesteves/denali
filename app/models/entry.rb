@@ -269,12 +269,12 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_publish_jobs
-    Webhook.deliver_all(self)
     OpenGraphWorker.perform_async(self.id)
     InstagramWorker.perform_async(self.id, true) if self.post_to_instagram
     TwitterWorker.perform_async(self.id, true) if self.post_to_twitter
     FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
     TumblrWorker.perform_async(self.id, true) if self.post_to_tumblr
+    Webhook.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
     self.invalidate(include_adjacents: true, include_self: false)
   end
