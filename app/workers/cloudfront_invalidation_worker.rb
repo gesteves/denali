@@ -25,7 +25,7 @@ class CloudfrontInvalidationWorker < ApplicationWorker
     invalidation_id = response&.invalidation&.id
     if await_completion && invalidation_id.present?
       while client.get_invalidation({ distribution_id: ENV['aws_cloudfront_distribution_id'], id: invalidation_id })&.invalidation&.status != 'Completed'
-        sleep 10.seconds
+        sleep 5.seconds
       end
     end
   end
