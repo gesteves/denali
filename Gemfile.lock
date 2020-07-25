@@ -136,7 +136,7 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (1.8.3)
       concurrent-ruby (~> 1.0)
-    imgix (3.2.1)
+    imgix (3.3.0)
       addressable
     jbuilder (2.10.0)
       activesupport (>= 5.0.0)
