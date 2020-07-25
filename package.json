@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@rails/webpacker": "^5.1.1",
-    "@shopify/draggable": "1.0.0-beta.7",
+    "@shopify/draggable": "1.0.0-beta.8",
     "awesomplete": "^1.1.5",
     "bulma": "^0.9.0",
     "caniuse-lite": "^1.0.30001105",
