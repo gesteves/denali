@@ -25,7 +25,7 @@ class Admin::EntriesController < AdminController
     if stale?(@photoblog)
       set_srcset
       @page = params[:page] || 1
-      @count = ([@photoblog.publish_schedules_count, 1].max) * 7
+      @count = ([@photoblog.publish_schedules_count.presence || 0, 1].max) * 7
       @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).queued.page(@page).per(@count)
       @page_title = 'Queued'
       respond_to do |format|

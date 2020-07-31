@@ -13,15 +13,22 @@
 }
 
 .queue__item-meta {
-  background-color: transparentize($black, 0.1);
   bottom: 0;
-  padding: $size-7;
+  height: 100%;
   position: absolute;
   width: 100%;
 
-  @supports (backdrop-filter: none) {
-    backdrop-filter: blur($backdrop-blur);
-    background-color: transparentize($black, 0.35);
+  span {
+    background-color: transparentize($black, 0.1);
+    bottom: 0;
+    padding: $size-7;
+    position: absolute;
+
+    @supports (backdrop-filter: none) {
+      backdrop-filter: blur($backdrop-blur);
+      background-color: transparentize($black, 0.35);
+      width: 100%;
+    }
   }
 }
 
