@@ -1,17 +1,12 @@
 <div class="entry__figure" style="<%= css_gradient_stops(photo) %>">
-  <% custom_metric = "mark_entry_photo_rendered" %>
   <%= responsive_image_tag(
     photo: photo,
     srcset: @srcset,
     sizes: @sizes,
-    onload: "performance.clearMarks(\"#{custom_metric}\"); performance.mark(\"#{custom_metric}\");"
+    elementtiming: "mark_entry_photo_rendered",
     html_options: {
       class: 'entry__photo entry__photo--zoom',
       'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu',
       'data-target': 'photo.photo'
     }) %>
-    <script>
-      performance.clearMarks("<%= custom_metric %>");
-      performance.mark("<%= custom_metric %>");
-    </script>
 </div>
