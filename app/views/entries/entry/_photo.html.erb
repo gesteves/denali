@@ -3,10 +3,10 @@
     photo: photo,
     srcset: @srcset,
     sizes: @sizes,
-    elementtiming: "mark_entry_photo_rendered",
     html_options: {
       class: 'entry__photo entry__photo--zoom',
       'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu',
-      'data-target': 'photo.photo'
+      'data-target': 'photo.photo',
+      elementtiming: 'mark_entry_photo_rendered'
     }) %>
 </div>
