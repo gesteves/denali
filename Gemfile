@@ -25,7 +25,7 @@ gem 'turbolinks', '~> 5.2.1'
 
 # Misc
 gem 'jbuilder', '~> 2.10'
-gem 'sdoc', '~> 1.0', group: :doc
+gem 'sdoc', '~> 1.1', group: :doc
 gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
