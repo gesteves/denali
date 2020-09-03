@@ -132,6 +132,8 @@ class Entry < ApplicationRecord
     else
       raise ActiveRecord::RecordNotFound
     end
+  rescue StandardError
+    raise ActiveRecord::RecordNotFound
   end
 
   def is_photo?

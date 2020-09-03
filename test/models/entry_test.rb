@@ -444,4 +444,15 @@ class EntryTest < ActiveSupport::TestCase
     entry.publish
     assert_equal 1, Entry.published_today.count
   end
+
+  test 'find by url should return the correct entry' do
+    entry = entries(:peppers)
+    assert_equal entry, Entry.find_by_url(url: entry.permalink_url)
+  end
+
+  test 'find by url should 404 invalid urls' do
+    assert_raises ActiveRecord::RecordNotFound do
+      Entry.find_by_url(url: 'foo')
+    end
+  end
 end
