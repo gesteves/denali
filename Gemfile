@@ -52,6 +52,7 @@ gem 'sidekiq'
 # Social Networks
 gem 'flickraw', git: 'https://github.com/gesteves/flickraw.git', branch: 'update-upload-url'
 gem 'tumblr_client', git: 'https://github.com/gesteves/tumblr_client', branch: 'master'
+gem 'twitter'
 
 # Search
 gem 'elasticsearch-model', '~> 5.0'

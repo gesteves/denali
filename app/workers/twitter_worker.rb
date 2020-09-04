@@ -1,12 +1,34 @@
-class TwitterWorker < BufferWorker
+class TwitterWorker < ApplicationWorker
+  sidekiq_options queue: 'high'
 
-  def perform(entry_id, now = false)
+  def perform(entry_id)
     return if !Rails.env.production?
     entry = Entry.published.find(entry_id)
-    max_length = 230 # 280 characters - 25 for the image url - 25 for the permalink url
+
+    twitter = Twitter::REST::Client.new do |config|
+      config.consumer_key        = ENV['twitter_consumer_key']
+      config.consumer_secret     = ENV['twitter_consumer_secret']
+      config.access_token        = ENV['twitter_access_token']
+      config.access_token_secret = ENV['twitter_access_token_secret']
+    end
+    config = twitter.configuration
+    max_length = config.short_url_length_https + 1
+
     caption = entry.tweet_text.present? ? entry.tweet_text : entry.plain_title
-    text = "#{truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_length, omission: '…')} #{entry.permalink_url}"
-    now = now
-    post_to_buffer('twitter', text: text, now: now)
+    tweet = "#{truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_length, omission: '…')} #{entry.permalink_url}"
+
+    opts = set_coordinates(entry)
+    twitter.update(tweet, opts)
+  end
+
+  def set_coordinates(entry)
+    opts = {}
+    photo = entry.photos.first
+    if entry.show_in_map? && photo.latitude.present? && photo.longitude.present?
+      opts[:lat] = photo.latitude
+      opts[:long] = photo.longitude
+      opts[:display_coordinates] = true
+    end
+    opts
   end
 end
