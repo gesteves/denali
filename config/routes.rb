@@ -31,6 +31,7 @@ Rails.application.routes.draw do
         patch 'draft'
         post 'instagram'
         post 'twitter'
+        post 'twitter_banner'
         post 'facebook'
         post 'flickr'
         post 'flush_caches'
