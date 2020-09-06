@@ -10,10 +10,13 @@ export default class extends Controller {
   static targets = ['container', 'paginator', 'spinner'];
 
   connect () {
+    const botUserAgents = /(googlebot|google-structured-data-testing-tool|bingbot|mediapartners-google)/i
+
     // If there's no loading spinner, there's nothing to observe.
     // If there's no paginator, it means there are no more pages to load.
-    // In either of these cases, or if intersection observer isn't supported, return early.
-    if (!this.hasSpinnerTarget || !this.hasPaginatorTarget || !('IntersectionObserver' in window)) {
+    // If it's a bot, we don't want infinite scrolling.
+    // In any of these cases, or if intersection observer isn't supported, return early.
+    if (navigator.userAgent.match(botUserAgents) || !this.hasSpinnerTarget || !this.hasPaginatorTarget || !('IntersectionObserver' in window)) {
       return;
     }
 
