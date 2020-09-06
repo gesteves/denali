@@ -20,6 +20,7 @@ class EntriesController < ApplicationController
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       @page_url = @page == 1 ? entries_url(page: nil) : entries_url(page: @page)
+      @show_schema = true if @page == 1
       respond_to do |format|
         format.html {
           @page_description = @photoblog.meta_description

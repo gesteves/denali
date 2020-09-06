@@ -30,4 +30,9 @@
     <% end %>
     <meta name="twitter:card" content="summary">
     <%= auto_discovery_link_tag :atom, @feed_url, title: @page_title %>
+    <% if @show_schema %>
+      <script type="application/ld+json">
+        <%= sanitize render partial: 'entries/list/schema.json.jbuilder' %>
+      </script>
+    <% end %>
   <% end %>
