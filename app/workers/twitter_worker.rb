@@ -27,7 +27,7 @@ class TwitterWorker < ApplicationWorker
     if entry.show_in_map? && photo.latitude.present? && photo.longitude.present?
       opts[:lat] = photo.latitude
       opts[:long] = photo.longitude
-      opts[:display_coordinates] = true
+      opts[:display_coordinates] = false
     end
     opts
   end
