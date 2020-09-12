@@ -45,8 +45,8 @@
     <meta name="twitter:card" content="summary">
   <% end %>
   <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
-  <link rel="alternate" type="application/json+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=json" %>">
-  <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url + "?url=#{URI.encode entry.permalink_url}&format=xml" %>">
+  <link rel="alternate" type="application/json+oembed" href="<%= oembed_url(url: entry.permalink_url, format: 'json') %>">
+  <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url(url: entry.permalink_url, format: 'xml') %>">
   <link rel="canonical" href="<%= entry.permalink_url %>">
   <script type="application/ld+json">
     <%= sanitize render partial: 'entries/entry/schema.json.jbuilder', object: entry, as: :entry %>

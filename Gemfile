@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
-ruby '2.6.6'
+ruby '2.7.1'
 
-gem 'rails', '5.2.4.3'
+gem 'rails', '6.0.3.3'
 gem 'pg', '~> 1.2'
 gem 'puma'
 
@@ -39,7 +39,7 @@ gem 'mini_magick'
 gem 'rack-attack'
 
 # Monitoring
-gem 'sentry-raven'
+gem 'sentry-raven', '~> 3.0'
 gem 'barnes'
 gem 'skylight'
 
