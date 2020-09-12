@@ -217,7 +217,7 @@ def import_entry(data)
     entry.tag_list = data[:tags].map { |t| t[:name] }.join(', ')
     entry.photos = data[:photos].map do |p|
       photo = Photo.new(alt_text: p[:altText], focal_x: p[:focalX], focal_y: p[:focalY], f_number: p[:aperture], focal_length: p[:focalLength], iso: p[:iso], exposure: p[:exposure], latitude: p[:latitude], longitude: p[:longitude])
-      file_path = open(p[:urls][0]).path
+      file_path = URI.open(p[:urls][0]).path
       photo.image.attach(io: File.open(file_path), filename: p[:filename])
       photo.camera = Camera.find_or_initialize_by(slug: p[:camera][:slug], make: p[:camera][:make], model: p[:camera][:model], display_name: p[:camera][:name]) if p[:camera].present?
       photo.lens = Lens.find_or_initialize_by(slug: p[:lens][:slug], make: p[:lens][:make], model: p[:lens][:model], display_name: p[:lens][:name]) if p[:lens].present?

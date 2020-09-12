@@ -3,7 +3,7 @@ class PhotoMetadataWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
-    original = open(photo.image.service_url)
+    original = URI.open(photo.image.service_url)
     image = MiniMagick::Image.open(original.path)
     image.auto_orient
     photo.width = image.width.to_i
