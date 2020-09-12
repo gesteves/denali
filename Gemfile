@@ -39,7 +39,7 @@ gem 'mini_magick'
 gem 'rack-attack'
 
 # Monitoring
-gem 'sentry-raven'
+gem 'sentry-raven', '~> 3.0'
 gem 'barnes'
 gem 'skylight'
 
