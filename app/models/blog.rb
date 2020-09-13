@@ -51,8 +51,7 @@ class Blog < ApplicationRecord
     imgix_path = Ix.path(self.logo.key)
     src_width = srcset.first
     src = imgix_path.to_url(opts.merge(w: src_width, pad: (src_width.to_f * 0.25).round))
-    srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w, pad: (w.to_f * 0.25).round))} #{w}w" }.join(', ')
-    return src, srcset
+    return src, srcset.map { |w| "#{imgix_path.to_url(opts.merge(w: w, pad: (w.to_f * 0.25).round))} #{w}w" }.join(', ')
   end
 
   def twitter_handle
