@@ -48,7 +48,7 @@ class Photo < ApplicationRecord
 
   def srcset(srcset:, square: false, opts: { q: 75 })
     imgix_path = Ix.path(self.image.key)
-    widths = srcset.reject { |width| width > self.width }
+    widths = processed? ? srcset.reject { |width| width > self.width } : srcset
     src_width = widths.first
     if square.presence
       opts.merge!(fit: 'crop')
@@ -112,14 +112,17 @@ class Photo < ApplicationRecord
   end
 
   def is_square?
+    return false unless processed?
     width == height
   end
 
   def is_horizontal?
+    return false unless processed?
     width > height
   end
 
   def is_vertical?
+    return false unless processed?
     width < height
   end
 

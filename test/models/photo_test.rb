@@ -2,13 +2,6 @@ require 'test_helper'
 
 class PhotoTest < ActiveSupport::TestCase
 
-  test 'photo dimensions' do
-    photo = photos(:peppers)
-    assert photo.is_vertical?
-    assert_not photo.is_square?
-    assert_not photo.is_horizontal?
-  end
-
   test 'updating a photo should update entry' do
     entry = entries(:peppers)
 
