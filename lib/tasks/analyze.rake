@@ -3,8 +3,7 @@ namespace :analyze do
   task :photos => :environment do
     Photo.find_each do |photo|
       if photo.image.metadata[:width].blank? || photo.image.metadata[:height].blank?
-        puts "Analyzing photo ID #{photo.id}"
-        photo.image.analyze_later
+        PhotoAnalyzeWorker.perform_async(photo.id)
       end
     end
   end
