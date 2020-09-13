@@ -3,10 +3,8 @@ class PhotoMetadataWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
-    while !photo.uploaded?
-      sleep 1
-      photo.reload
-    end
+    raise PhotoNotUploadedError unless photo.uploaded?
+
     photo.width = photo.image.metadata[:width]
     photo.height = photo.image.metadata[:height]
 

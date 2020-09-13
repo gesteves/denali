@@ -3,6 +3,7 @@ class PhotoGeocodeWorker < ApplicationWorker
   def perform(photo_id)
     photo = Photo.find(photo_id)
     return if ENV['google_api_key'].blank? || !photo.has_location?
+    raise PhotoNotUploadedError unless photo.uploaded?
     url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=#{photo.latitude},#{photo.longitude}&key=#{ENV['google_api_key']}"
     response = JSON.parse(HTTParty.get(url).body)
     if response['status'] != 'OK'

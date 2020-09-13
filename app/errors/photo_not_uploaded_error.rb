@@ -1,0 +1,1 @@
+class PhotoNotUploadedError < StandardError; end

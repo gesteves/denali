@@ -4,6 +4,7 @@ class TwitterWorker < ApplicationWorker
   def perform(entry_id)
     return if !Rails.env.production?
     entry = Entry.published.find(entry_id)
+    raise PhotoNotUploadedError if entry.is_photo? && !entry.all_photos_uploaded?
 
     twitter = Twitter::REST::Client.new do |config|
       config.consumer_key        = ENV['twitter_consumer_key']
