@@ -8,8 +8,6 @@ peppers:
   f_number: 2.500000
   latitude: 38.887333
   longitude: -76.996167
-  width: 960
-  height: 1280
   iso: 200
   focal_length: 24
   color_palette: "#0f0f0d,#53354c,#87847a,#a52352,#a5abb6,#b0b5d0"
@@ -23,8 +21,6 @@ potomac:
   f_number: 2.000000
   latitude: 38.880833
   longitude: -76.985333
-  width: 960
-  height: 1280
   iso: 200
   focal_length: 6
   camera: xz1
@@ -37,8 +33,6 @@ panda:
   f_number: 2.500000
   latitude: 38.927833
   longitude: -77.048000
-  width: 1024
-  height: 768
   iso: 100
   focal_length: 24
   camera: xz1
@@ -51,8 +45,6 @@ franklin:
   f_number: 2.500000
   latitude: 38.894333
   longitude: -77.027667
-  width: 1024
-  height: 768
   iso: 100
   focal_length: 24
   color_palette: "#010101,#424242,#696969,#929292,#b8b8b8,#cdcdcd"
