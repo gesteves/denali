@@ -541,6 +541,10 @@ class Entry < ApplicationRecord
     Lens.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
   end
 
+  def all_photos_uploaded?
+    photos.all? { |p| p.uploaded? }
+  end
+
   private
 
   def url_opts(opts)
