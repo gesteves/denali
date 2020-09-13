@@ -5,9 +5,6 @@ class PhotoMetadataWorker < ApplicationWorker
     photo = Photo.find(photo_id)
     raise PhotoNotUploadedError unless photo.processed?
 
-    photo.width = photo.image.metadata[:width]
-    photo.height = photo.image.metadata[:height]
-
     original = URI.open(photo.image.service_url)
     exif = EXIFR::JPEG.new(original)
     if exif.present? && exif.exif?

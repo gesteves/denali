@@ -103,16 +103,24 @@ class Photo < ApplicationRecord
     image&.analyzed? && image&.identified?
   end
 
+  def width
+    image.metadata[:width]
+  end
+
+  def height
+    image.metadata[:height]
+  end
+
   def is_square?
-    self.width == self.height
+    width == height
   end
 
   def is_horizontal?
-    self.width > self.height
+    width > height
   end
 
   def is_vertical?
-    self.width < self.height
+    width < height
   end
 
   def has_location?
