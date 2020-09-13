@@ -5,6 +5,7 @@ class PhotoMetadataWorker < ApplicationWorker
     photo = Photo.find(photo_id)
     while !photo.analyzed?
       sleep 1
+      photo.reload
     end
     photo.width = photo.image.metadata[:width]
     photo.height = photo.image.metadata[:height]
