@@ -6,12 +6,10 @@ class PhotoMetadataWorker < ApplicationWorker
     while !photo.analyzed?
       sleep 1
     end
-    original = URI.open(photo.image.service_url)
-    image = MiniMagick::Image.open(original.path)
-    image.auto_orient
-    photo.width = image.width.to_i
-    photo.height = image.height.to_i
+    photo.width = photo.image.metadata[:width]
+    photo.height = photo.image.metadata[:height]
 
+    original = URI.open(photo.image.service_url)
     exif = EXIFR::JPEG.new(original)
     if exif.present? && exif.exif?
       camera_make = exif.make&.encode('UTF-8')&.strip
