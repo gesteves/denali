@@ -100,7 +100,7 @@ class Photo < ApplicationRecord
   end
 
   def uploaded?
-    image.analyzed?
+    image&.analyzed?
   end
 
   def is_square?

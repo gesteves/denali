@@ -1,7 +1,7 @@
 module ApplicationHelper
 
   def responsive_image_tag(photo:, srcset: [3360], sizes: '100vw', square: false, html_options: {})
-    return if photo.blank?
+    return placeholder_image_tag(srcset: srcset, sizes: sizes, square: square, html_options: html_options) unless photo&.uploaded?
     src, srcset = photo.srcset(srcset: srcset, square: square)
     html_options.reverse_merge!({
       srcset: srcset,
@@ -10,6 +10,19 @@ module ApplicationHelper
       width: photo.width,
       height: square ? photo.width : photo.height,
       alt: photo.alt_text,
+      loading: 'eager'
+    })
+    tag :img, html_options
+  end
+
+  def placeholder_image_tag(srcset: [3360], sizes: '100vw', square: false, html_options: {})
+    return '' unless @photoblog.logo.attached?
+    src, srcset = @photoblog.placeholder_srcset(srcset: srcset)
+    html_options.reverse_merge!({
+      srcset: srcset,
+      src: src,
+      sizes: sizes,
+      alt: '',
       loading: 'eager'
     })
     tag :img, html_options
@@ -26,7 +39,7 @@ module ApplicationHelper
   end
 
   def css_aspect_ratio(photo)
-    return '--aspect-ratio:0' if photo.blank? || photo.width.blank? || photo.height.blank?
+    return '--aspect-ratio:0' unless photo.uploaded?
     "--aspect-ratio:#{(photo.height.to_f/photo.width.to_f).floor(2)};"
   end
 

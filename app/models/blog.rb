@@ -47,6 +47,15 @@ class Blog < ApplicationRecord
     Ix.path(self.logo.key).to_url(opts.compact)
   end
 
+  def placeholder_srcset(srcset:, opts: { fm: 'jpg', q: 75, bg: 'fff' })
+    imgix_path = Ix.path(self.logo.key)
+    widths = srcset.reject { |width| width > logo.metadata[:width] } if logo.metadata[:width].present?
+    src_width = widths.first
+    src = imgix_path.to_url(opts.merge(w: src_width, pad: (src_width.to_f * 0.25).round))
+    srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w, pad: (w.to_f * 0.25).round))} #{w}w" }.join(', ')
+    return src, srcset
+  end
+
   def twitter_handle
     self.twitter&.gsub(/^https:\/\/(www\.)?twitter.com\//, '@')
   end
