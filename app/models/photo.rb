@@ -99,7 +99,7 @@ class Photo < ApplicationRecord
     Ix.purge(uri.path)
   end
 
-  def analyzed?
+  def uploaded?
     image.analyzed?
   end
 

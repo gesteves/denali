@@ -2,7 +2,7 @@ class PhotoPaletteWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
-    while !photo.analyzed?
+    while !photo.uploaded?
       sleep 1
       photo.reload
     end

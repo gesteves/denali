@@ -11,16 +11,16 @@
     <div class="dropdown-content">
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
       <%= link_to icon('Share', 'fas fa-share-square'), entry.permalink_url, 'data-controller': 'share', 'data-action': 'click->share#open', class: 'dropdown-item' %>
-      <% if entry.is_photo? && entry.is_published? && entry.photos.all? { |p| p.analyzed? } %>
+      <% if entry.is_photo? && entry.is_published? && entry.photos.all? { |p| p.uploaded? } %>
         <%= link_to icon('Syndication', 'fas fa-paper-plane'), syndicate_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
-      <% if entry.is_photo? && entry.photos.all? { |p| p.analyzed? } %>
+      <% if entry.is_photo? && entry.photos.all? { |p| p.uploaded? } %>
         <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <% if entry.is_photo? && !entry.is_photoset? %>
         <%= link_to icon('Download', 'fas fa-download'), download_admin_entry_photo_path(entry_id: entry.id, id: entry.photos.first.id), class: 'dropdown-item' %>
       <% end %>
-      <% if entry.is_photo? && entry.photos.all? { |p| p.analyzed? } %>
+      <% if entry.is_photo? && entry.photos.all? { |p| p.uploaded? } %>
         <%= link_to icon('Prints', 'fas fa-print'), prints_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <hr class="dropdown-divider">
