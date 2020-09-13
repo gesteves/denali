@@ -3,7 +3,7 @@ class FlickrWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
-    raise PhotoNotUploadedError unless photo.processed?
+    raise UnprocessedPhotoError unless photo.processed?
 
     entry = photo.entry
     return if !Rails.env.production?

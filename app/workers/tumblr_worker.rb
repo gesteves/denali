@@ -5,7 +5,7 @@ class TumblrWorker < ApplicationWorker
     entry = Entry.published.find(entry_id)
     return if !Rails.env.production?
     return if ENV['tumblr_consumer_key'].blank? || ENV['tumblr_consumer_secret'].blank? || ENV['tumblr_access_token'].blank? || ENV['tumblr_access_token_secret'].blank?
-    raise PhotoNotUploadedError if entry.is_photo? && !entry.photos_processed?
+    raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_processed?
 
     tumblr = Tumblr::Client.new({
       consumer_key: ENV['tumblr_consumer_key'],

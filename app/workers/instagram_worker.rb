@@ -4,7 +4,7 @@ class InstagramWorker < BufferWorker
     return if !Rails.env.production?
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
-    raise PhotoNotUploadedError unless entry.photos_processed?
+    raise UnprocessedPhotoError unless entry.photos_processed?
 
     photos = entry.photos.to_a[0..4]
     opts = {

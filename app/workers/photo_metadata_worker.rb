@@ -3,7 +3,7 @@ class PhotoMetadataWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
-    raise PhotoNotUploadedError unless photo.processed?
+    raise UnprocessedPhotoError unless photo.processed?
 
     original = URI.open(photo.image.service_url)
     exif = EXIFR::JPEG.new(original)
