@@ -3,7 +3,7 @@ class PhotoMetadataWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
-    raise PhotoNotUploadedError unless photo.uploaded?
+    raise PhotoNotUploadedError unless photo.processed?
 
     photo.width = photo.image.metadata[:width]
     photo.height = photo.image.metadata[:height]

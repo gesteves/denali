@@ -1,7 +1,7 @@
 module ApplicationHelper
 
   def responsive_image_tag(photo:, srcset: [3360], sizes: '100vw', square: false, html_options: {})
-    return placeholder_image_tag(srcset: srcset, sizes: sizes, square: square, html_options: html_options) unless photo&.uploaded?
+    return placeholder_image_tag(srcset: srcset, sizes: sizes, square: square, html_options: html_options) unless photo&.processed?
     src, srcset = photo.srcset(srcset: srcset, square: square)
     html_options.reverse_merge!({
       srcset: srcset,
@@ -39,7 +39,7 @@ module ApplicationHelper
   end
 
   def css_aspect_ratio(photo)
-    return '--aspect-ratio:0' unless photo.uploaded?
+    return '--aspect-ratio:0' unless photo.processed?
     "--aspect-ratio:#{(photo.height.to_f/photo.width.to_f).floor(2)};"
   end
 
