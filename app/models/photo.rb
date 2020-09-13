@@ -99,8 +99,8 @@ class Photo < ApplicationRecord
     Ix.purge(uri.path)
   end
 
-  def uploaded?
-    image&.analyzed?
+  def processed?
+    image&.analyzed? && image&.identified?
   end
 
   def is_square?

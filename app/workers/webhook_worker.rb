@@ -6,7 +6,7 @@ class WebhookWorker < ApplicationWorker
 
     webhook = Webhook.find(webhook_id)
     entry = Entry.published.find(entry_id)
-    raise PhotoNotUploadedError if entry.is_photo? && !entry.all_photos_uploaded?
+    raise PhotoNotUploadedError if entry.is_photo? && !entry.photos_processed?
     payload = webhook.payload(entry)
 
     response = if payload.present?

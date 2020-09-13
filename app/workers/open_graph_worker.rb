@@ -5,7 +5,7 @@ class OpenGraphWorker < ApplicationWorker
     return if !Rails.env.production?
     return if ENV['facebook_app_id'].blank? || ENV['facebook_app_secret'].blank?
     entry = Entry.published.find(entry_id)
-    raise PhotoNotUploadedError if entry.is_photo? && !entry.all_photos_uploaded?
+    raise PhotoNotUploadedError if entry.is_photo? && !entry.photos_processed?
 
     params = {
       id: entry.permalink_url,
