@@ -99,8 +99,8 @@ class Photo < ApplicationRecord
     Ix.purge(uri.path)
   end
 
-  def has_metadata?
-    width.present? && height.present?
+  def analyzed?
+    image.analyzed?
   end
 
   def is_square?

@@ -1,5 +1,5 @@
 <% photo = entry.photos&.first %>
-<% if photo&.has_metadata? %>
+<% if photo&.analyzed? %>
   <div class="card-image">
     <a style="<%= css_gradient_stops(photo) %>" class="image image-container" href="<%= entry.permalink_url %>">
       <%= responsive_image_tag(
@@ -12,4 +12,3 @@
     </a>
   </div>
 <% end %>
-

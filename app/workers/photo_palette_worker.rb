@@ -2,6 +2,9 @@ class PhotoPaletteWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
+    while !photo.analyzed?
+      sleep 1
+    end
     palette = request_palette(photo)
     photo.color_palette = palette['colors'].map { |c| c['hex'] }.join(',')
     photo.save
