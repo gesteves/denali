@@ -100,7 +100,7 @@ class Photo < ApplicationRecord
   end
 
   def processed?
-    image&.analyzed? && image&.identified?
+    image&.attached? && image&.analyzed? && image&.identified?
   end
 
   def width

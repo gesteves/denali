@@ -72,6 +72,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should render crops page' do
+    set_up_images(@entry)
     get :crops, params: { id: @entry.id }
     assert_not_nil assigns(:entry)
     assert_response :success

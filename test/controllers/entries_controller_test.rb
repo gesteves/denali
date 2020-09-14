@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class EntriesControllerTest < ActionController::TestCase
+
   test 'entries index should render correctly' do
     get :index
     assert_response :success
@@ -30,18 +31,21 @@ class EntriesControllerTest < ActionController::TestCase
   end
 
   test "should generate atom feed" do
+    set_up_all_images
     get :feed, params: { format: 'atom' }
     assert_template :feed
     assert_response :success
   end
 
   test "should generate json feed" do
+    set_up_all_images
     get :feed, params: { format: 'json' }
     assert_template :feed
     assert_response :success
   end
 
   test "should generate rss feed" do
+    set_up_all_images
     get :feed, params: { format: 'rss' }
     assert_template :feed
     assert_response :success
@@ -54,6 +58,7 @@ class EntriesControllerTest < ActionController::TestCase
 
   test 'photo page should render correctly' do
     entry = entries(:peppers)
+    set_up_images(entry)
     get :show, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug }
     assert_response :success
     assert_not_nil assigns(:entry)
@@ -73,6 +78,7 @@ class EntriesControllerTest < ActionController::TestCase
 
   test 'should preview page' do
     panda = entries(:panda)
+    set_up_images(panda)
     get :show, params: { preview_hash: panda.preview_hash }
     assert_response :success
     assert_template :show
@@ -100,6 +106,7 @@ class EntriesControllerTest < ActionController::TestCase
 
   test 'should redirect published photos from preview page' do
     entry = entries(:peppers)
+    set_up_images(entry)
     get :show, params: { preview_hash: entry.preview_hash }
     assert_redirected_to entry.permalink_url
   end
@@ -136,6 +143,7 @@ class EntriesControllerTest < ActionController::TestCase
     entry = entries(:peppers)
     entry.tag_list = 'washington'
     entry.save
+    set_up_images(entry)
     get :tag_feed, params: { tag: 'washington', format: 'atom' }
     assert_template :tag_feed
     assert_response :success
@@ -145,6 +153,7 @@ class EntriesControllerTest < ActionController::TestCase
     entry = entries(:peppers)
     entry.tag_list = 'washington'
     entry.save
+    set_up_images(entry)
     get :tag_feed, params: { tag: 'washington', format: 'rss' }
     assert_template :tag_feed
     assert_response :success

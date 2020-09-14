@@ -10,16 +10,21 @@ class ActiveSupport::TestCase
   def setup
     Sidekiq::Testing.fake!
     Sidekiq::Worker.clear_all
-    Photo.all.each do |photo|
-      photo.image.attach(io: File.open(Rails.root.join('test/fixtures/images/rusty.jpg')), filename: 'rusty.jpg') unless photo.image.attached?
-    end
-
-    Blog.all.each do |blog|
-      blog.favicon.attach(io: File.open(Rails.root.join('test/fixtures/images/a.png')), filename: 'a.png') unless blog.favicon.attached?
-      blog.touch_icon.attach(io: File.open(Rails.root.join('test/fixtures/images/a.png')), filename: 'a.png') unless blog.touch_icon.attached?
-      blog.logo.attach(io: File.open(Rails.root.join('test/fixtures/images/a.png')), filename: 'a.png') unless blog.logo.attached?
-    end
   end
 
   # Add more helper methods to be used by all tests here...
+
+  def set_up_images(entry)
+    entry.photos.each do |photo|
+      photo.image.attach(io: File.open(Rails.root.join('test/fixtures/images/rusty.jpg')), filename: 'rusty.jpg')
+      photo.image.analyze
+    end
+  end
+
+  def set_up_all_images
+    Photo.all.each do |photo|
+      photo.image.attach(io: File.open(Rails.root.join('test/fixtures/images/rusty.jpg')), filename: 'rusty.jpg')
+      photo.image.analyze
+    end
+  end
 end
