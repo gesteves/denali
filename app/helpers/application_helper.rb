@@ -16,15 +16,17 @@ module ApplicationHelper
   end
 
   def placeholder_image_tag(srcset: [3360], sizes: '100vw', square: false, html_options: {})
-    return '' unless @photoblog.logo.attached?
-    src, srcset = @photoblog.placeholder_srcset(srcset: srcset)
+    return '' unless @photoblog.placeholder.attached?
+    src, srcset = @photoblog.placeholder_srcset(srcset: srcset, square: square)
     html_options.reverse_merge!({
       srcset: srcset,
       src: src,
       sizes: sizes,
+      width: @photoblog.placeholder.metadata[:width],
+      height: square ? @photoblog.placeholder.metadata[:width] : @photoblog.placeholder.metadata[:height],
       alt: '',
       loading: 'eager'
-    })
+    }.compact)
     tag :img, html_options
   end
 
@@ -39,8 +41,13 @@ module ApplicationHelper
   end
 
   def css_aspect_ratio(photo)
-    return '--aspect-ratio:0' unless photo.processed?
-    "--aspect-ratio:#{(photo.height.to_f/photo.width.to_f).floor(2)};"
+    if photo.processed?
+      "--aspect-ratio:#{(photo.height.to_f/photo.width.to_f).floor(2)};"
+    elsif @photoblog.placeholder.attached? && @photoblog.placeholder.metadata[:width].present?
+      "--aspect-ratio:#{(@photoblog.placeholder.metadata[:height].to_f/@photoblog.placeholder.metadata[:width].to_f).floor(2)};"
+    else
+      '--aspect-ratio:0'
+    end
   end
 
   def inline_asset(filename, opts = {})

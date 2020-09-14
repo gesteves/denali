@@ -250,6 +250,32 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
+      <%= f.label :placeholder, 'Placeholder (PNG)', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="file">
+          <label class="file-label">
+            <%= f.file_field :placeholder, accept: '.png', class: 'file-input' %>
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-image"></i>
+              </span>
+              <span class="file-label">
+                Choose an image…
+              </span>
+            </span>
+          </label>
+        </div>
+      </div>
+      <% if @photoblog.placeholder.attached? %>
+        <div><%= image_tag @photoblog.placeholder_url(h: 60) %></div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
       <%= f.label :touch_icon, 'Icon', class: 'label' %>
     </div>
     <div class="field-body">

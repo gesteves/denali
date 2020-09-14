@@ -9,6 +9,7 @@ class Blog < ApplicationRecord
   has_one_attached :favicon
   has_one_attached :touch_icon
   has_one_attached :logo
+  has_one_attached :placeholder
 
   after_commit :check_for_invalidation, if: :saved_changes?
 
@@ -47,11 +48,23 @@ class Blog < ApplicationRecord
     Ix.path(self.logo.key).to_url(opts.compact)
   end
 
-  def placeholder_srcset(srcset:, opts: { fm: 'jpg', q: 75, bg: 'fff' })
-    imgix_path = Ix.path(self.logo.key)
-    src_width = srcset.first
-    src = imgix_path.to_url(opts.merge(w: src_width, pad: (src_width.to_f * 0.25).round))
-    return src, srcset.map { |w| "#{imgix_path.to_url(opts.merge(w: w, pad: (w.to_f * 0.25).round))} #{w}w" }.join(', ')
+  def placeholder_url(opts = {})
+    Ix.path(self.placeholder.key).to_url(opts.compact)
+  end
+
+  def placeholder_srcset(srcset:, square: false, opts: { fm: 'jpg', q: 75, bg: 'fff' })
+    imgix_path = Ix.path(self.placeholder.key)
+    widths = srcset.reject { |width| width > self.placeholder.metadata[:width] }
+    src_width = widths.first
+    if square.presence
+      opts.merge!(fit: 'crop')
+      src = imgix_path.to_url(opts.merge(w: src_width, h: src_width))
+      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
+    else
+      src = imgix_path.to_url(opts.merge(w: src_width))
+      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w))} #{w}w" }.join(', ')
+    end
+    return src, srcset
   end
 
   def twitter_handle
