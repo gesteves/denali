@@ -67,6 +67,15 @@ class Blog < ApplicationRecord
     return src, srcset
   end
 
+  def placeholder_processed?
+    placeholder&.attached? && placeholder&.analyzed? && placeholder&.identified?
+  end
+
+  def placeholder_aspect_ratio
+    return 0 if !placeholder_processed?
+    (placeholder.metadata[:height].to_f/placeholder.metadata[:width].to_f).floor(2)
+  end
+
   def twitter_handle
     self.twitter&.gsub(/^https:\/\/(www\.)?twitter.com\//, '@')
   end

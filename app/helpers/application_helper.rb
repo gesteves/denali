@@ -16,7 +16,7 @@ module ApplicationHelper
   end
 
   def placeholder_image_tag(srcset: [3360], sizes: '100vw', square: false, html_options: {})
-    return '' unless @photoblog.placeholder.attached?
+    return '' unless @photoblog.placeholder_processed?
     src, srcset = @photoblog.placeholder_srcset(srcset: srcset, square: square)
     html_options.reverse_merge!({
       srcset: srcset,
@@ -43,8 +43,8 @@ module ApplicationHelper
   def css_aspect_ratio(photo)
     if photo.processed?
       "--aspect-ratio:#{(photo.height.to_f/photo.width.to_f).floor(2)};"
-    elsif @photoblog.placeholder.attached? && @photoblog.placeholder.metadata[:width].present?
-      "--aspect-ratio:#{(@photoblog.placeholder.metadata[:height].to_f/@photoblog.placeholder.metadata[:width].to_f).floor(2)};"
+    elsif @photoblog.placeholder_processed?
+      "--aspect-ratio:#{@photoblog.placeholder_aspect_ratio};"
     else
       '--aspect-ratio:0'
     end
