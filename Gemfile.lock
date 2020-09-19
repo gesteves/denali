@@ -108,7 +108,7 @@ GEM
       multi_json (~> 1)
       statsd-ruby (~> 1.1)
     bindex (0.5.0)
-    bootsnap (1.4.6)
+    bootsnap (1.4.8)
       msgpack (~> 1.0)
     brakeman (4.8.2)
     buftok (0.2.0)
