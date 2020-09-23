@@ -7,6 +7,8 @@ class ApplicationWorker
     case exception
     when UnprocessedPhotoError
       count
+    when Aws::CloudFront::Errors::TooManyInvalidationsInProgress
+      60
     end
   end
 end
