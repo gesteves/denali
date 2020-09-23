@@ -17,7 +17,12 @@ class CloudfrontInvalidationWorker < ApplicationWorker
   def create_invalidation(paths)
     return if paths.blank?
     client = Aws::CloudFront::Client.new(access_key_id: ENV['aws_access_key_id'], secret_access_key: ENV['aws_secret_access_key'], region: ENV['s3_region'])
-    response = client.create_invalidation({
+
+    response = client.list_invalidations(distribution_id: ENV['aws_cloudfront_distribution_id'])
+
+    raise RetrySidekiq if response.invalidation_list.items.map(&:status).any? { |i| i == 'InProgress' }
+
+    client.create_invalidation({
       distribution_id: ENV['aws_cloudfront_distribution_id'],
       invalidation_batch: {
         paths: {
