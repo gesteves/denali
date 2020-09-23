@@ -29,8 +29,13 @@ class CloudfrontInvalidationWorker < ApplicationWorker
           quantity: paths.size,
           items: paths,
         },
-        caller_reference: Time.current.to_i.to_s,
+        caller_reference: caller_reference(paths),
       },
     })
+  end
+
+  def caller_reference(paths)
+    sha256 = Digest::SHA256.new
+    sha256.hexdigest([paths, Time.current.to_i.to_s, rand.to_s].flatten.join(' ').parameterize)
   end
 end
