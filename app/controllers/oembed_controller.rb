@@ -5,7 +5,7 @@ class OembedController < ApplicationController
 
   def show
     raise ActiveRecord::RecordNotFound unless @entry.photos_processed?
-    logger.info "oEmbed requested for url: #{params[:url]}, maxwidth: #{params[:maxwidth] || 'none'}, maxheight: #{params[:maxheight] || 'none'}, format: #{request.format}"
+    logger.tagged('oEmbed') { logger.info { "oEmbed requested for url: #{params[:url]}, maxwidth: #{params[:maxwidth] || 'none'}, maxheight: #{params[:maxheight] || 'none'}, format: #{request.format}" } }
     if stale?(@entry, public: true)
       @url, @width, @height = get_photo(@entry, 1200, params[:maxwidth], params[:maxheight])
       @thumb_url, @thumb_width, @thumb_height = get_photo(@entry, 300, params[:maxwidth], params[:maxheight])
