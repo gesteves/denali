@@ -279,6 +279,7 @@ class Entry < ApplicationRecord
     Webhook.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
     self.invalidate(include_adjacents: true, include_self: false)
+    self.enqueue_performance_tests
   end
 
   def invalidate(include_adjacents: false, include_self: true)
@@ -323,6 +324,11 @@ class Entry < ApplicationRecord
     self.photos.each do |p|
       FlickrWorker.perform_async(p.id)
     end
+  end
+
+  def enqueue_performance_tests
+    PagespeedInsightsWorker.perform_async(id, 'mobile')
+    PagespeedInsightsWorker.perform_async(id, 'desktop')
   end
 
   def combined_tags
