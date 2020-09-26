@@ -26,10 +26,11 @@ class PagespeedInsightsWorker < ApplicationWorker
 
     logger.info "#{preamble} Results for #{url}"
     logger.info "#{preamble} First Contentful Paint: #{metrics&.dig(:firstContentfulPaint)&.to_i} ms"
+    logger.info "#{preamble} Time to Interactive: #{metrics&.dig(:interactive)&.to_i} ms"
+    logger.info "#{preamble} Speed Index: #{metrics&.dig(:speedIndex)}"
+    logger.info "#{preamble} Total Blocking Time: #{metrics&.dig(:totalBlockingTime)&.to_i} ms"
     logger.info "#{preamble} Largest Contentful Paint: #{metrics&.dig(:largestContentfulPaint)&.to_i} ms"
     logger.info "#{preamble} Cumulative Layout Shift: #{metrics&.dig(:cumulativeLayoutShift)&.to_f&.round(3)}"
-    logger.info "#{preamble} Total Blocking Time: #{metrics&.dig(:totalBlockingTime)&.to_i} ms"
-    logger.info "#{preamble} Speed Index: #{metrics&.dig(:speedIndex)}"
     logger.info "#{preamble} Performance Score: #{(performance_score * 100).to_i}"
   end
 end
