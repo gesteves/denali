@@ -22,12 +22,14 @@ class PagespeedInsightsWorker < ApplicationWorker
     metrics = response.dig(:lighthouseResult, :audits, :metrics, :details, :items)&.first
     performance_score = response.dig(:lighthouseResult, :categories, :performance, :score)
 
-    logger.info "[Pagespeed Insights] #{strategy.titlecase} results for #{url}"
-    logger.info "[Pagespeed Insights] First Contentful Paint: #{metrics&.dig(:firstContentfulPaint)&.to_i} ms"
-    logger.info "[Pagespeed Insights] Largest Contentful Paint: #{metrics&.dig(:largestContentfulPaint)&.to_i} ms"
-    logger.info "[Pagespeed Insights] Cumulative Layout Shift: #{metrics&.dig(:cumulativeLayoutShift)&.to_f&.round(3)}"
-    logger.info "[Pagespeed Insights] Total Blocking Time: #{metrics&.dig(:totalBlockingTime)&.to_i} ms"
-    logger.info "[Pagespeed Insights] Speed Index: #{metrics&.dig(:speedIndex)}"
-    logger.info "[Pagespeed Insights] Performance Score: #{(performance_score * 100).to_i}"
+    preamble = "[Pagespeed Insights] #{strategy.titlecase}"
+
+    logger.info "#{preamble} Results for #{url}"
+    logger.info "#{preamble} First Contentful Paint: #{metrics&.dig(:firstContentfulPaint)&.to_i} ms"
+    logger.info "#{preamble} Largest Contentful Paint: #{metrics&.dig(:largestContentfulPaint)&.to_i} ms"
+    logger.info "#{preamble} Cumulative Layout Shift: #{metrics&.dig(:cumulativeLayoutShift)&.to_f&.round(3)}"
+    logger.info "#{preamble} Total Blocking Time: #{metrics&.dig(:totalBlockingTime)&.to_i} ms"
+    logger.info "#{preamble} Speed Index: #{metrics&.dig(:speedIndex)}"
+    logger.info "#{preamble} Performance Score: #{(performance_score * 100).to_i}"
   end
 end
