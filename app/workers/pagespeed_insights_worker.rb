@@ -28,6 +28,6 @@ class PagespeedInsightsWorker < ApplicationWorker
     logger.info "[Pagespeed Insights] Cumulative Layout Shift: #{metrics&.dig(:cumulativeLayoutShift)&.to_f&.round(3)}"
     logger.info "[Pagespeed Insights] Total Blocking Time: #{metrics&.dig(:totalBlockingTime)&.to_i} ms"
     logger.info "[Pagespeed Insights] Speed Index: #{metrics&.dig(:speedIndex)}"
-    logger.info "[Pagespeed Insights] Score: #{performance_score}"
+    logger.info "[Pagespeed Insights] Performance Score: #{(performance_score * 100).to_i}"
   end
 end
