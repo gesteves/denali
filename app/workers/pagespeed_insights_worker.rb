@@ -57,7 +57,7 @@ class PagespeedInsightsWorker < ApplicationWorker
     end
 
     if cls.present?
-      msg = "#{preamble} Cumulative Layout Shift: #{cls} ms"
+      msg = "#{preamble} Cumulative Layout Shift: #{cls}"
       if cls <= 0.1
         logger.info { msg }
       elsif cls <= 0.25
@@ -67,9 +67,48 @@ class PagespeedInsightsWorker < ApplicationWorker
       end
     end
 
-    logger.info { "#{preamble} Time to Interactive: #{tti} ms" } if tti.present?
-    logger.info { "#{preamble} Total Blocking Time: #{tbt} ms" } if tbt.present?
-    logger.info { "#{preamble} Speed Index: #{si}" } if si.present?
-    logger.info { "#{preamble} Performance Score: #{score}" } if score.present?
+    if tti.present?
+      msg = "#{preamble} Time to Interactive: #{tti} ms"
+      if tti <= 100
+        logger.info { msg }
+      elsif tti <= 300
+        logger.warn { msg }
+      else
+        logger.error { msg }
+      end
+    end
+
+    if tbt.present?
+      msg = "#{preamble} Total Blocking Time: #{tbt} ms"
+      if tbt <= 100
+        logger.info { msg }
+      elsif tbt <= 300
+        logger.warn { msg }
+      else
+        logger.error { msg }
+      end
+    end
+
+    if si.present?
+      msg = "#{preamble} Speed Index: #{si}"
+      if si <= 1500
+        logger.info { msg }
+      elsif si <= 3000
+        logger.warn { msg }
+      else
+        logger.error { msg }
+      end
+    end
+
+    if score.present?
+      msg = "#{preamble} Performance Score: #{score}"
+      if score <= 90
+        logger.info { msg }
+      elsif score <= 80
+        logger.warn { msg }
+      else
+        logger.error { msg }
+      end
+    end
   end
 end
