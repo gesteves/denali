@@ -36,9 +36,9 @@ class PagespeedInsightsWorker < ApplicationWorker
 
     if fcp.present?
       msg = "#{preamble} First Contentful Paint: #{fcp} ms"
-      if fcp <= 1000
+      if fcp <= 2000
         logger.info { msg }
-      elsif fcp <= 3000
+      elsif fcp <= 4000
         logger.warn { msg }
       else
         logger.error { msg }
@@ -47,7 +47,7 @@ class PagespeedInsightsWorker < ApplicationWorker
 
     if lcp.present?
       msg = "#{preamble} Largest Contentful Paint: #{lcp} ms"
-      if lcp <= 2500
+      if lcp <= 2000
         logger.info { msg }
       elsif lcp <= 4000
         logger.warn { msg }
@@ -69,9 +69,9 @@ class PagespeedInsightsWorker < ApplicationWorker
 
     if tti.present?
       msg = "#{preamble} Time to Interactive: #{tti} ms"
-      if tti <= 100
+      if tti <= 3800
         logger.info { msg }
-      elsif tti <= 300
+      elsif tti <= 7300
         logger.warn { msg }
       else
         logger.error { msg }
@@ -80,9 +80,9 @@ class PagespeedInsightsWorker < ApplicationWorker
 
     if tbt.present?
       msg = "#{preamble} Total Blocking Time: #{tbt} ms"
-      if tbt <= 100
+      if tbt <= 300
         logger.info { msg }
-      elsif tbt <= 300
+      elsif tbt <= 600
         logger.warn { msg }
       else
         logger.error { msg }
@@ -91,9 +91,9 @@ class PagespeedInsightsWorker < ApplicationWorker
 
     if si.present?
       msg = "#{preamble} Speed Index: #{si}"
-      if si <= 1500
+      if si <= 4300
         logger.info { msg }
-      elsif si <= 3000
+      elsif si <= 5800
         logger.warn { msg }
       else
         logger.error { msg }
@@ -102,9 +102,9 @@ class PagespeedInsightsWorker < ApplicationWorker
 
     if score.present?
       msg = "#{preamble} Performance Score: #{score}"
-      if score <= 90
+      if score >= 90
         logger.info { msg }
-      elsif score <= 80
+      elsif score >= 80
         logger.warn { msg }
       else
         logger.error { msg }
