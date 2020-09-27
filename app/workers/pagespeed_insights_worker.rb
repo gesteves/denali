@@ -22,15 +22,54 @@ class PagespeedInsightsWorker < ApplicationWorker
     metrics = response.dig(:lighthouseResult, :audits, :metrics, :details, :items)&.first
     performance_score = response.dig(:lighthouseResult, :categories, :performance, :score)
 
-    preamble = "[Pagespeed Insights] #{strategy.titlecase}"
+    preamble = "[Pagespeed Insights] [#{strategy.titlecase}]"
+
+    fcp = metrics&.dig(:firstContentfulPaint)&.to_i
+    tti = metrics&.dig(:interactive)&.to_i
+    si = metrics&.dig(:speedIndex)&.to_i
+    tbt = metrics&.dig(:totalBlockingTime)&.to_i
+    lcp = metrics&.dig(:largestContentfulPaint)&.to_i
+    cls = metrics&.dig(:cumulativeLayoutShift)&.to_f&.round(3)
+    score = (performance_score * 100).to_i
 
     logger.info "#{preamble} Results for #{url}"
-    logger.info "#{preamble} First Contentful Paint: #{metrics&.dig(:firstContentfulPaint)&.to_i} ms"
-    logger.info "#{preamble} Time to Interactive: #{metrics&.dig(:interactive)&.to_i} ms"
-    logger.info "#{preamble} Speed Index: #{metrics&.dig(:speedIndex)}"
-    logger.info "#{preamble} Total Blocking Time: #{metrics&.dig(:totalBlockingTime)&.to_i} ms"
-    logger.info "#{preamble} Largest Contentful Paint: #{metrics&.dig(:largestContentfulPaint)&.to_i} ms"
-    logger.info "#{preamble} Cumulative Layout Shift: #{metrics&.dig(:cumulativeLayoutShift)&.to_f&.round(3)}"
-    logger.info "#{preamble} Performance Score: #{(performance_score * 100).to_i}"
+
+    if fcp.present?
+      msg = "#{preamble} First Contentful Paint: #{fcp} ms"
+      if fcp <= 1000
+        logger.info { msg }
+      elsif fcp <= 3000
+        logger.warn { msg }
+      else
+        logger.error { msg }
+      end
+    end
+
+    if lcp.present?
+      msg = "#{preamble} Largest Contentful Paint: #{lcp} ms"
+      if lcp <= 2500
+        logger.info { msg }
+      elsif lcp <= 4000
+        logger.warn { msg }
+      else
+        logger.error { msg }
+      end
+    end
+
+    if cls.present?
+      msg = "#{preamble} Cumulative Layout Shift: #{cls} ms"
+      if cls <= 0.1
+        logger.info { msg }
+      elsif cls <= 0.25
+        logger.warn { msg }
+      else
+        logger.error { msg }
+      end
+    end
+
+    logger.info { "#{preamble} Time to Interactive: #{tti} ms" } if tti.present?
+    logger.info { "#{preamble} Total Blocking Time: #{tbt} ms" } if tbt.present?
+    logger.info { "#{preamble} Speed Index: #{si}" } if si.present?
+    logger.info { "#{preamble} Performance Score: #{score}" } if score.present?
   end
 end
