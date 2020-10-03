@@ -11,7 +11,7 @@
     "@rails/webpacker": "^5.2.1",
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
-    "bulma": "^0.9.0",
+    "bulma": "^0.9.1",
     "caniuse-lite": "^1.0.30001142",
     "clipboard": "^2.0.6",
     "jquery": "^3.5.1",
