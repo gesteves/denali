@@ -200,7 +200,7 @@
   }
 
   hr {
-    border-bottom: var(--border-thick) solid var(--color-border);
+    border: none;
     border-top: var(--border-thin) solid var(--color-border);
     margin: var(--margin-text);
   }
