@@ -56,10 +56,6 @@
   padding-top: var(--gutter-horizontal);
 }
 
-.entry__body {
-  @extend %default-entry-styles;
-}
-
 .entry__meta {
   border-bottom: var(--border-thick) solid var(--color-border);
   border-top: var(--border-thin) solid var(--color-border);
@@ -109,7 +105,7 @@
   cursor: zoom-out;
 }
 
-%default-entry-styles {
+.entry__body {
   p,
   ul,
   ol,
