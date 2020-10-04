@@ -6,6 +6,8 @@
         <%= remove_widows(entry.plain_title).html_safe %>
       </h2>
       <%= entry.formatted_body unless entry.body.blank? %>
+      <hr>
+      <p>Did you like this photo? If so, please consider supporting me by <a target="_blank" rel="sponsored nofollow noopener" href="https://www.amazon.com/ref=as_li_ss_tl?ie=UTF8&linkCode=ll2&tag=allencompassingtrip-20&linkId=58a87fa67f923f504c8022fde5e86819&language=en_US">shopping at Amazon from this link</a> or buying something from my <a href="https://www.gesteves.com/books/photography/">list of recommended photography books</a>. I'll get a small commission from anything you buy during your visit, which helps me keep this website and some of my other projects running. Thanks!</p>
     </div>
     <aside class="entry__meta" aria-labelledby="entry-meta">
       <h2 id="entry-meta" class="sr-only">About <% if entry.is_photoset? %>these photos<% elsif entry.is_photo? %>this photo<% else %>this entry<% end %></h2>
