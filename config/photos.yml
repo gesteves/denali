@@ -22,6 +22,8 @@ entry: &entry
     - 2880
     - 1680
     - 1280
+    - 1170
+    - 1284
   sizes:
     - "(min-width: 1680px) 1680px"
     - 100vw
@@ -46,6 +48,8 @@ entry_list: &entry_list
     - 838
     - 944
     - 412
+    - 561
+    - 405
   sizes:
     - "(min-width: 1680px) 412px"
     - "(min-width: 1280px) calc(25vw - 8px)"
@@ -67,6 +71,7 @@ admin_entry:
     - 2304
     - 1344
     - 2688
+    - 1140
   sizes:
     - "(min-width: 1472px) 1344px"
     - "(min-width: 1280px) 1152px"
@@ -84,6 +89,7 @@ admin_edit:
     - 1880
     - 1100
     - 2200
+    - 1140
   sizes:
     - "(min-width: 1472px) 1100px"
     - "(min-width: 1280px) 940px"
@@ -103,6 +109,7 @@ admin_queue:
     - 414
     - 245
     - 490
+    - 498
   sizes:
     - "(min-width: 1472px) 245px"
     - "(min-width: 1280px) 207px"
@@ -125,6 +132,7 @@ admin_modal:
     - 670
     - 1005
     - 1122
+    - 1164
   sizes:
     - "(min-width: 769px) 600px"
     - "calc(100vw - 40px)"
