@@ -86,7 +86,7 @@ GEM
     autoprefixer-rails (10.0.1.0)
       execjs
     aws-eventstream (1.1.0)
-    aws-partitions (1.390.0)
+    aws-partitions (1.393.0)
     aws-sdk-cloudfront (1.46.0)
       aws-sdk-core (~> 3, >= 3.109.0)
       aws-sigv4 (~> 1.1)
@@ -98,7 +98,7 @@ GEM
     aws-sdk-kms (1.39.0)
       aws-sdk-core (~> 3, >= 3.109.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-s3 (1.83.2)
+    aws-sdk-s3 (1.84.1)
       aws-sdk-core (~> 3, >= 3.109.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
