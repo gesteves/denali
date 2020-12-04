@@ -21,11 +21,6 @@ class InstagramWorker < BufferWorker
         opts[:comment_enabled] = true
         opts[:comment_text] = hashtags
       end
-      geolocation_name, geolocation_id = entry.instagram_location
-      if geolocation_name.present? && geolocation_id.present?
-        opts[:service_geolocation_id] = geolocation_id
-        opts[:service_geolocation_name] = geolocation_name
-      end
     end
 
     updates = post_to_buffer('instagram', opts)
