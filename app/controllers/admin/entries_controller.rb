@@ -86,7 +86,6 @@ class Admin::EntriesController < AdminController
       @entry.title = previous_entry.title
       @entry.slug = previous_entry.slug
       @entry.tag_list = previous_entry.tag_list
-      @entry.instagram_location_list = previous_entry.instagram_location_list
     end
   end
 
@@ -403,7 +402,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :instagram_location_list, :post_to_twitter, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_facebook, :post_to_tumblr, :tweet_text, :instagram_text, :show_in_map, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_facebook, :post_to_tumblr, :tweet_text, :instagram_text, :show_in_map, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y])
     end
 
     def set_redirect_url

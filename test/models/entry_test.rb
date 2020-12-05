@@ -313,31 +313,6 @@ class EntryTest < ActiveSupport::TestCase
     assert_not_empty entry.instagram_hashtags
   end
 
-  test 'instagram locations' do
-    user = users(:guille)
-    blog = blogs(:allencompassingtrip)
-
-    tag = TagCustomization.new(instagram_location_id: '123456', blog: blog)
-    tag.tag_list.add('location')
-    tag.save!
-    tag.reload
-
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user)
-    entry.save!
-
-    assert_nil entry.instagram_location
-
-    entry.instagram_location_list = 'location'
-    entry.save!
-    entry.reload
-
-    assert_not_nil entry.instagram_location
-
-    name, id = entry.instagram_location
-    assert_equal 'location', name
-    assert_equal '123456', id
-  end
-
   test 'flickr groups' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
@@ -400,40 +375,40 @@ class EntryTest < ActiveSupport::TestCase
     assert !entry.tag_list.include?('Washington')
   end
 
-  test 'instagram location sets tags' do
+  test 'locations set tags' do
     entry = entries(:panda)
-    entry.instagram_location_list = 'Foo'
+    entry.tag_list = 'Foo'
     entry.save!
     entry.reload
 
-    assert entry.instagram_location_list.include? 'Foo'
+    assert entry.tag_list.include? 'Foo'
     assert_not entry.tag_list.include? 'National Parks'
     assert_not entry.tag_list.include? 'National Monuments'
 
-    entry.instagram_location_list = 'Bar National Park'
+    entry.tag_list = 'Bar National Park'
     entry.save!
     entry.update_tags
     entry.reload
 
-    assert entry.instagram_location_list.include? 'Bar National Park'
+    assert entry.tag_list.include? 'Bar National Park'
     assert entry.tag_list.include? 'National Parks'
     assert_not entry.tag_list.include? 'National Monuments'
 
-    entry.instagram_location_list = 'Baz National Monument'
+    entry.tag_list = 'Baz National Monument'
     entry.save!
     entry.update_tags
     entry.reload
 
-    assert entry.instagram_location_list.include? 'Baz National Monument'
+    assert entry.tag_list.include? 'Baz National Monument'
     assert_not entry.tag_list.include? 'National Parks'
     assert entry.tag_list.include? 'National Monuments'
 
-    entry.instagram_location_list = 'Foo'
+    entry.tag_list = 'Foo'
     entry.save!
     entry.update_tags
     entry.reload
 
-    assert entry.instagram_location_list.include? 'Foo'
+    assert entry.tag_list.include? 'Foo'
     assert_not entry.tag_list.include? 'National Parks'
     assert_not entry.tag_list.include? 'National Monuments'
   end

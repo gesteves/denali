@@ -6,7 +6,7 @@
 <% end %>
 <% if entry.combined_tags.present? %>
   <div class="tags">
-    <% entry.combined_tags.each do |t| %>
+    <% entry.combined_tags.sort_by { |t| t.name }.each do |t| %>
       <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag' %>
     <% end %>
   </div>

@@ -18,7 +18,7 @@ class Entry < ApplicationRecord
 
   after_commit :handle_status_change, if: :saved_change_to_status?
 
-  acts_as_taggable_on :tags, :equipment, :locations, :styles, :instagram_locations
+  acts_as_taggable_on :tags, :equipment, :locations, :styles
   acts_as_list scope: :blog
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['image'].blank? && attributes['id'].blank? }
@@ -408,20 +408,6 @@ class Entry < ApplicationRecord
     tumblr_tags.flatten.compact.uniq.map(&:downcase).join(', ')
   end
 
-  def instagram_location
-    return nil if instagram_locations.blank?
-    tc = self.blog.tag_customizations.tagged_with(self.instagram_location_list, match_all: true).where.not(instagram_location_id: [nil, '']).limit(1)&.first
-    if tc.present?
-      return tc.location_name, tc.instagram_location_id
-    else
-      nil
-    end
-  end
-
-  def instagram_location_name
-    self.instagram_location_list.join(', ')
-  end
-
   def instagram_caption
     text = []
     if self.instagram_text.present?
@@ -479,13 +465,12 @@ class Entry < ApplicationRecord
     location_tags = []
     tags = []
     self.tag_list.remove(['National Parks', 'National Monuments', 'National Wildlife Refuges', 'State Parks', 'National Forests'])
-    if self.instagram_locations.present?
-      location_tags += self.instagram_location_list if self.show_in_map?
-      tags << 'National Parks' if self.instagram_location_list.any? { |l| l.match? /national park/i }
-      tags << 'National Forests' if self.instagram_location_list.any? { |l| l.match? /national forest/i }
-      tags << 'National Monuments' if self.instagram_location_list.any? { |l| l.match? /national monument/i }
-      tags << 'National Wildlife Refuges' if self.instagram_location_list.any? { |l| l.match? /national (wildlife|elk) refuge/i }
-      tags << 'State Parks' if self.instagram_location_list.any? { |l| l.match? /state park/i }
+    if self.tag_list.present?
+      tags << 'National Parks' if self.tag_list.any? { |l| l.match? /national park/i }
+      tags << 'National Forests' if self.tag_list.any? { |l| l.match? /national forest/i }
+      tags << 'National Monuments' if self.tag_list.any? { |l| l.match? /national monument/i }
+      tags << 'National Wildlife Refuges' if self.tag_list.any? { |l| l.match? /national (wildlife|elk) refuge/i }
+      tags << 'State Parks' if self.tag_list.any? { |l| l.match? /state park/i }
     end
     if self.show_in_map?
       self.photos.each do |p|

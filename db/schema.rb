@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_13_221808) do
+ActiveRecord::Schema.define(version: 2020_12_05_002251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -175,8 +175,6 @@ ActiveRecord::Schema.define(version: 2020_09_13_221808) do
     t.bigint "blog_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.string "instagram_location_id"
-    t.string "instagram_location_name"
     t.text "flickr_albums"
     t.text "tumblr_tags"
     t.index ["blog_id"], name: "index_tag_customizations_on_blog_id"

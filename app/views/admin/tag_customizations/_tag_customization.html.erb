@@ -5,11 +5,6 @@
    <% end %>
 </td>
 <td>
-  <% if tag_customization.instagram_location_id.present? %>
-    <%= link_to tag_customization.location_name, "https://www.facebook.com/#{tag_customization.instagram_location_id}/", class: 'tag' %>
-  <% end %>
-</td>
-<td>
    <% tag_customization.instagram_hashtags_to_a.each do |t| %>
      <%= link_to t, "https://www.instagram.com/explore/tags/#{t.gsub('#', '')}/", class: 'tag' %><br>
    <% end %>
