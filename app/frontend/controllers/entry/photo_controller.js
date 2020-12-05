@@ -8,6 +8,9 @@ import { Controller } from 'stimulus';
  */
 export default class extends Controller {
   static targets = ['photo'];
+  static values = {
+    containerMaxWidth: Number
+  }
 
   connect () {
     this.photoTargets.forEach(p => this.checkIfZoomable(p));
@@ -31,7 +34,7 @@ export default class extends Controller {
     // `originalWidth`     (it can't be wider than the original)
     // `clientWidth`       (it can't be wider than the viewport)
     // `containerMaxWidth` (it can't be wider than the max width of its container)
-    const maxWidth = Math.min(originalWidth, clientWidth, parseInt(this.data.get('containerMaxWidth')));
+    const maxWidth = Math.min(originalWidth, clientWidth, this.containerMaxWidthValue);
 
     // Based on this `maxWidth`, calculate how tall the image would be if rendered
     // at that width.

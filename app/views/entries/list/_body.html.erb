@@ -1,4 +1,4 @@
-<main data-controller="infinite-scroll" data-infinite-scroll-base-url="<%= @base_url %>" data-infinite-scroll-current-page="<%= @page %>">
+<main data-controller="infinite-scroll" data-infinite-scroll-base-url-value="<%= @base_url %>" data-infinite-scroll-current-page-value="<%= @page %>">
   <h2 id="entry-list-heading" class="sr-only"><%= @heading_title %></h2>
   <ol class="entry-list" data-infinite-scroll-target="container" data-controller="grid" aria-busy="false" aria-labelledby="entry-list-heading">
     <%= render partial: 'entries/list/page', object: @entries.to_a, as: :entries, locals: { page_url: @page_url }  %>

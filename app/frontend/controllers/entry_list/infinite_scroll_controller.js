@@ -8,6 +8,10 @@ import { Controller }             from 'stimulus';
  */
 export default class extends Controller {
   static targets = ['container', 'paginator', 'spinner'];
+  static values = {
+    currentPage: Number,
+    baseUrl: String
+  }
 
   connect () {
     const botUserAgents = /(googlebot|google-structured-data-testing-tool|bingbot|mediapartners-google)/i
@@ -26,14 +30,6 @@ export default class extends Controller {
     // When it's in view, fetch the next page.
     this.observer = new IntersectionObserver(e => this.handleIntersect(e), { rootMargin: '50%' });
     this.observer.observe(this.spinnerTarget);
-  }
-
-  /**
-   * Getter for the current page
-   * @return {int} The current page
-   */
-  getCurrentPage () {
-    return parseInt(this.data.get('currentPage'));
   }
 
   /**
@@ -60,14 +56,14 @@ export default class extends Controller {
     }).length) {
       return;
     }
-    const nextPage = this.getCurrentPage() + 1;
+    const nextPage = this.currentPageValue + 1;
     this.animateSpinner();
-    fetch(`${this.data.get('baseUrl')}/page/${nextPage}.js`)
+    fetch(`${this.baseUrlValue}/page/${nextPage}.js`)
       .then(fetchStatus)
       .then(fetchText)
       .then(text => {
         this.stopSpinner();
-        this.data.set('currentPage', nextPage);
+        this.currentPageValue = nextPage;
         this.appendPage(text);
       })
       .catch(() => this.endInfiniteScroll());

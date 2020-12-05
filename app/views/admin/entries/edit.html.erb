@@ -2,7 +2,7 @@
 <h2 class="subtitle is-size-6-mobile"><%= @entry.plain_title %></h2>
 <hr class="hr">
 
-<%= form_for([:admin, @entry], html: { multipart: true, 'data-controller': 'entry-form', 'data-entry-form-photo-endpoint': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
+<%= form_for([:admin, @entry], html: { multipart: true, 'data-controller': 'entry-form', 'data-entry-form-photo-endpoint-value': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
 
 <div class="field is-horizontal">
   <div class="field-label">
@@ -17,7 +17,7 @@
     <div class="field is-extended">
       <div data-entry-form-target="photos">
         <%= f.fields_for :photos do |p| %>
-          <div class="draggable-source" data-controller="photo-form focal-point" data-photo-form-empty="0" data-focal-point-focal-x="<%= p.object.focal_x %>" data-focal-point-focal-y="<%= p.object.focal_y %>">
+          <div class="draggable-source" data-controller="photo-form focal-point" data-photo-form-empty-value="false" data-focal-point-focal-x-value="<%= p.object.focal_x %>" data-focal-point-focal-y-value="<%= p.object.focal_y %>">
             <div class="card" data-photo-form-target="fields">
               <div class="card-image image focal-point__image-container is-clipped image-container" style="<%= css_gradient_stops(p.object) %>">
                 <%= responsive_image_tag(

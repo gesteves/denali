@@ -10,13 +10,16 @@ import moment from 'moment-timezone';
  */
 export default class extends Controller {
   static targets = ['container', 'card', 'buttons'];
+  static values = {
+    pastPublishSchedulesToday: Number,
+    publishSchedulesCount: Number,
+    timeZone: String,
+    endpoint: String
+  }
 
   connect () {
     // Grab the CSRF token from the document head so we can send it in Fetch requests
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
-    this.pastPublishSchedulesToday = parseInt(this.data.get('past-publish-schedules-today'), 10);
-    this.publishSchedulesCount = parseInt(this.data.get('publish-schedules-count'), 10);
-    this.timeZone = this.data.get('time-zone');
     this.sortableQueue = new Sortable(this.containerTarget, {
       draggable: '.draggable-handle',
       delay: 100,
@@ -81,8 +84,8 @@ export default class extends Controller {
       if (this.publishSchedulesCount === 0) {
         publish_date = 'TBD';
       } else {
-        const days = Math.floor((position - 1 + this.pastPublishSchedulesToday)/this.publishSchedulesCount);
-        publish_date = moment().tz(this.timeZone).add(days, 'days').format('dddd, MMMM D, YYYY');
+        const days = Math.floor((position - 1 + this.pastPublishSchedulesTodayValue)/this.publishSchedulesCountValue);
+        publish_date = moment().tz(this.timeZoneValue).add(days, 'days').format('dddd, MMMM D, YYYY');
       }
       card.setAttribute('data-entry-position', position);
       card.querySelector('[data-timestamp]').innerHTML = publish_date;
@@ -139,7 +142,6 @@ export default class extends Controller {
     this.hideButtons();
     this.disableDrag();
     const entry_ids = this.cardTargets.map(card => parseInt(card.getAttribute('data-entry-id'), 10));
-    const url = this.data.get('endpoint');
     const fetchOpts = {
       method: 'POST',
       body: JSON.stringify({ entry_ids: entry_ids }),
@@ -152,7 +154,7 @@ export default class extends Controller {
 
     const firstWarning = setTimeout(() => sendNotification('Your changes are being saved, this will take a few seconds.', 'warning'), 1000);
     const secondWarning = setTimeout(() => sendNotification('Hang tight, your changes are still being saved.', 'warning'), 5000);
-    fetch(`${url}.json`, fetchOpts)
+    fetch(`${this.endpointValue}.json`, fetchOpts)
       .then(fetchStatus)
       .then(fetchJson)
       .then(json => {

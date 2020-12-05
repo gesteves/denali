@@ -1,5 +1,5 @@
 <% cache entry do %>
-  <article role="main" class="entry" data-controller="photo" data-photo-container-max-width="1680">
+  <article role="main" class="entry" data-controller="photo" data-photo-container-max-width-value="1680">
     <%= render partial: 'entries/entry/photo', collection: @photos, as: :photo %>
     <div class="entry__body">
       <h2 class="entry__headline <%= 'entry__headline--no-body' if entry.body.blank? %>">

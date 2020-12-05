@@ -8,6 +8,12 @@ import $ from 'jquery';
  */
 export default class extends Controller {
   static targets = ['focalMarker', 'focalX', 'focalY', 'thumbnail', 'responseContainer'];
+  static values = {
+    focalX: Number,
+    focalY: Number,
+    endpoint: String
+  }
+
   connect () {
     this.showFocalPoint();
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
@@ -18,13 +24,13 @@ export default class extends Controller {
    * and displays it.
    */
   showFocalPoint () {
-    if (!this.data.get('focal-x') || !this.data.get('focal-y')) {
+    if (!this.hasFocalXValue || !this.hasFocalYValue) {
       return;
     }
 
     const { offsetWidth, offsetHeight } = this.thumbnailTarget;
-    this.focalMarkerTarget.style.top  = `${(offsetHeight * parseFloat(this.data.get('focal-y'))) - 50}px`;
-    this.focalMarkerTarget.style.left = `${(offsetWidth  * parseFloat(this.data.get('focal-x'))) - 50}px`;
+    this.focalMarkerTarget.style.top  = `${(offsetHeight * this.focalYValue) - 50}px`;
+    this.focalMarkerTarget.style.left = `${(offsetWidth  * this.focalXValue) - 50}px`;
     this.focalMarkerTarget.classList.remove('is-hidden');
   }
 
@@ -40,15 +46,15 @@ export default class extends Controller {
     const focalX = (event.pageX - (window.scrollX + left))/offsetWidth;
     const focalY = (event.pageY - (window.scrollY + top))/offsetHeight;
 
-    this.data.set('focal-x', focalX);
-    this.data.set('focal-y', focalY);
+    this.focalXValue = focalX;
+    this.focalYValue = focalY;
     if (this.hasFocalXTarget) {
       this.focalXTarget.value = focalX;
     }
     if (this.hasFocalYTarget) {
       this.focalYTarget.value = focalY;
     }
-    if (this.data.get('endpoint')) {
+    if (this.hasEndpointValue) {
       this.updateFocalPoint();
     }
 
@@ -61,11 +67,10 @@ export default class extends Controller {
    */
   updateFocalPoint () {
     event.preventDefault();
-    const url = this.data.get('endpoint');
     let formData = new FormData();
 
-    formData.append('photo[focal_x]', this.data.get('focal-x'));
-    formData.append('photo[focal_y]', this.data.get('focal-y'));
+    formData.append('photo[focal_x]', this.focalXValue);
+    formData.append('photo[focal_y]', this.focalYValue);
 
     const fetchOpts = {
       method: 'POST',
@@ -76,7 +81,7 @@ export default class extends Controller {
       body: formData
     };
 
-    fetch(`${url}`, fetchOpts)
+    fetch(this.endpointValue, fetchOpts)
       .then(fetchStatus)
       .then(fetchText)
       .then(html => $(this.responseContainerTarget).html(html));
