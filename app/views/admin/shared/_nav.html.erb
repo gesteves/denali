@@ -5,14 +5,14 @@
         <a href="<%= root_path %>" class="navbar-item logo" data-turbolinks="false">
           <%= @photoblog.header_logo_svg.html_safe %>
         </a>
-        <a role="button" class="navbar-burger" data-action="click->nav#toggle" data-target="nav.burger">
+        <a role="button" class="navbar-burger" data-action="click->nav#toggle" data-nav-target="burger">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
         </a>
       </div>
     <% end %>
-    <div class="navbar-menu" data-target="nav.menu">
+    <div class="navbar-menu" data-nav-target="menu">
       <div class="navbar-start">
         <div class="navbar-item has-dropdown" data-controller="dropdown">
           <a class="navbar-link" data-action="click->dropdown#toggle">

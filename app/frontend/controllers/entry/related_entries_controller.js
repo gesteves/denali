@@ -7,6 +7,9 @@ import { Controller }             from 'stimulus';
  */
 export default class extends Controller {
   static targets = ['spinner'];
+  static values = {
+    url: String
+  }
 
   connect () {
     if (!('IntersectionObserver' in window)) {
@@ -31,7 +34,7 @@ export default class extends Controller {
       return;
     }
     this.animateSpinner();
-    fetch(this.data.get('url'), { credentials: 'same-origin' })
+    fetch(this.urlValue, { credentials: 'same-origin' })
       .then(fetchStatus)
       .then(fetchText)
       .then(text => {

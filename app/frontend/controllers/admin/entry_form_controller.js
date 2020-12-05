@@ -9,6 +9,9 @@ import { Sortable, Plugins } from '@shopify/draggable';
  */
 export default class extends Controller {
   static targets = ['photos'];
+  static values = {
+    photoEndpoint: String
+  }
 
   /**
    * Sets up the drag-and-drop of photos.
@@ -35,7 +38,6 @@ export default class extends Controller {
    */
   addPhoto (event) {
     event.preventDefault();
-    const url = this.data.get('photo-endpoint');
 
     const fetchOpts = {
       method: 'GET',
@@ -45,7 +47,7 @@ export default class extends Controller {
       credentials: 'include'
     };
 
-    fetch(`${url}`, fetchOpts)
+    fetch(this.photoEndpointValue, fetchOpts)
       .then(fetchStatus)
       .then(fetchText)
       .then(html => $(this.photosTarget).append(html));

@@ -10,6 +10,11 @@ import { Controller }             from 'stimulus';
  */
 export default class extends Controller {
   static targets = ['container', 'spinner'];
+  static values = {
+    style: String,
+    apiToken: String,
+    markersUrl: String
+  }
 
   connect () {
     if (!window.location.hash) {
@@ -22,12 +27,11 @@ export default class extends Controller {
     const bounds = L.latLngBounds(southWest, northEast);
     const zoom = this.getZoom();
     const containerId = this.containerTarget.id;
-    const mapStyle = this.data.get('style');
-    L.mapbox.accessToken = this.data.get('apiToken');
-    this.map = L.mapbox.map(containerId, null, { minZoom: zoom, maxZoom: 18, maxBounds: bounds }).addLayer(L.mapbox.styleLayer(mapStyle));
+    L.mapbox.accessToken = this.apiTokenValue;
+    this.map = L.mapbox.map(containerId, null, { minZoom: zoom, maxZoom: 18, maxBounds: bounds }).addLayer(L.mapbox.styleLayer(this.mapStyleValue));
     let layer = L.mapbox.featureLayer();
     layer.on('layeradd', e => this.setUpMarker(e));
-    layer.loadURL(this.data.get('markersUrl')).on('ready', e => this.setUpMarkerClusters(e));
+    layer.loadURL(this.markersUrlValue).on('ready', e => this.setUpMarkerClusters(e));
   }
 
   showLoadingSpinner () {

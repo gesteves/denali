@@ -15,9 +15,9 @@
   <meta name="turbolinks-visit-control" content="reload">
 <% end %>
 
-<div class="map__container" data-controller="map" data-map-style="<%= @photoblog.map_style %>" data-map-api-token="<%= ENV['mapbox_api_token'] %>" data-map-markers-url="<%= admin_map_markers_path(format: 'json') %>">
-  <div id="map" class="map" role="main" data-target="map.container"></div>
-  <div class="map__loading" data-target="map.spinner">
+<div class="map__container" data-controller="map" data-map-style-value="<%= @photoblog.map_style %>" data-map-api-token-value="<%= ENV['mapbox_api_token'] %>" data-map-markers-url-value="<%= admin_map_markers_path(format: 'json') %>">
+  <div id="map" class="map" role="main" data-map-target="container"></div>
+  <div class="map__loading" data-map-target="spinner">
     <%= inline_svg :spinner, class_name: 'map__loading-spinner' %>
   </div>
 </div>

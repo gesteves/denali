@@ -351,18 +351,18 @@
         <div class="control">
           <div class="tabs is-toggle is-small" data-controller="radio-tab">
             <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
                 <a>
                   Yes
                 </a>
               </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
                 <a>
                   No
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :show_related_entries, 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :show_related_entries, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
       </div>
@@ -378,18 +378,18 @@
         <div class="control">
           <div class="tabs is-toggle is-small" data-controller="radio-tab">
             <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
                 <a>
                   Yes
                 </a>
               </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
                 <a>
                   No
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :show_search, 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :show_search, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
       </div>

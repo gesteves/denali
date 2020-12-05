@@ -7,6 +7,10 @@ import $ from 'jquery';
  * @extends Controller
  */
 export default class extends Controller {
+  static values = {
+    name: String
+  }
+
   connect () {
     // Grab the CSRF token from the document head so we can send it in Fetch requests
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
@@ -20,8 +24,7 @@ export default class extends Controller {
    */
   add (event) {
     event.preventDefault();
-    const tagName = this.data.get('name');
-    const prompt = window.prompt(`Which tag do you want to add to entries tagged with “${tagName}”?`);
+    const prompt = window.prompt(`Which tag do you want to add to entries tagged with “${this.nameValue}”?`);
     if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
       return;
     }
@@ -52,8 +55,7 @@ export default class extends Controller {
    */
   edit (event) {
     event.preventDefault();
-    const tagName = this.data.get('name');
-    const prompt = window.prompt(`What do you want to rename the “${tagName}” tag to?`, tagName);
+    const prompt = window.prompt(`What do you want to rename the “${this.nameValue}” tag to?`, tagName);
     if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
       return;
     }
@@ -86,8 +88,7 @@ export default class extends Controller {
    */
   delete (event) {
     event.preventDefault();
-    const tagName = this.data.get('name');
-    if (!window.confirm(`Are you sure you want to delete the “${tagName}” tag?`)) {
+    if (!window.confirm(`Are you sure you want to delete the “${this.nameValue}” tag?`)) {
       return;
     }
 

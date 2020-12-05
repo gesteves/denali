@@ -69,18 +69,18 @@
         <div class="control">
           <div class="tabs is-toggle is-small" data-controller="radio-tab">
             <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
                 <a>
                   Yes
                 </a>
               </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
                 <a>
                   No
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :is_phone, 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :is_phone, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
         <p class="help">Exif information is hidden for phones.</p>

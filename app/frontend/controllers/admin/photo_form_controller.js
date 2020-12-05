@@ -6,6 +6,9 @@ import { Controller } from 'stimulus';
  */
 export default class extends Controller {
   static targets = ['thumbnail', 'position', 'fields', 'destroy'];
+  static values = {
+    empty: Boolean
+  }
 
   /**
    * Removes the photo form from the page.
@@ -13,7 +16,7 @@ export default class extends Controller {
    */
   delete (event) {
     event.preventDefault();
-    if (parseInt(this.data.get('empty')) || window.confirm('Are you sure you want to remove this photo?')) {
+    if (this.emptyValue || window.confirm('Are you sure you want to remove this photo?')) {
       if (this.hasDestroyTarget) {
         this.destroyTarget.value = 'true';
         this.element.style.display = 'none';
@@ -32,7 +35,7 @@ export default class extends Controller {
   setThumbnail (url) {
     this.thumbnailTarget.src = url;
     this.fieldsTargets.forEach(element => element.classList.toggle('is-hidden'));
-    this.data.set('empty', 0);
+    this.emptyValue = false;
   }
 
   /**

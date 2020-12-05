@@ -2,7 +2,7 @@
 <h2 class="subtitle is-size-6-mobile"><%= @entry.plain_title %></h2>
 <hr class="hr">
 
-<%= form_for([:admin, @entry], html: { multipart: true, 'data-controller': 'entry-form', 'data-entry-form-photo-endpoint': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
+<%= form_for([:admin, @entry], html: { multipart: true, 'data-controller': 'entry-form', 'data-entry-form-photo-endpoint-value': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
 
 <div class="field is-horizontal">
   <div class="field-label">
@@ -15,10 +15,10 @@
   </div>
   <div class="field-body">
     <div class="field is-extended">
-      <div data-target="entry-form.photos">
+      <div data-entry-form-target="photos">
         <%= f.fields_for :photos do |p| %>
-          <div class="draggable-source" data-controller="photo-form focal-point" data-photo-form-empty="0" data-focal-point-focal-x="<%= p.object.focal_x %>" data-focal-point-focal-y="<%= p.object.focal_y %>">
-            <div class="card" data-target="photo-form.fields">
+          <div class="draggable-source" data-controller="photo-form focal-point" data-photo-form-empty-value="false" data-focal-point-focal-x-value="<%= p.object.focal_x %>" data-focal-point-focal-y-value="<%= p.object.focal_y %>">
+            <div class="card" data-photo-form-target="fields">
               <div class="card-image image focal-point__image-container is-clipped image-container" style="<%= css_gradient_stops(p.object) %>">
                 <%= responsive_image_tag(
                   photo: p.object,
@@ -27,9 +27,10 @@
                   html_options: {
                     class: 'focal-point__thumbnail',
                     'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint',
-                    'data-target': 'photo-form.thumbnail focal-point.thumbnail'
+                    'data-photo-form-target': 'thumbnail',
+                    'data-focal-point-target': 'thumbnail'
                   }) %>
-                <div class="is-hidden focal-point__focal-marker" data-target="focal-point.focalMarker"></div>
+                <div class="is-hidden focal-point__focal-marker" data-focal-point-target="focalMarker"></div>
               </div>
               <div class="card-content">
                 <div class="media photo-form">
@@ -44,9 +45,9 @@
                             <%= p.text_field :alt_text, placeholder: 'Write alt text for this photo…', class: 'input' %>
                             <%= p.hidden_field :id %>
                             <%= p.hidden_field :position, 'data-position': '' %>
-                            <%= p.hidden_field :_destroy, 'data-target': 'photo-form.destroy' %>
-                            <%= p.hidden_field :focal_x, 'data-target': 'focal-point.focalX' %>
-                            <%= p.hidden_field :focal_y, 'data-target': 'focal-point.focalY' %>
+                            <%= p.hidden_field :_destroy, 'data-photo-form-target': 'destroy' %>
+                            <%= p.hidden_field :focal_x, 'data-focal-point-target': 'focalX' %>
+                            <%= p.hidden_field :focal_y, 'data-focal-point-target': 'focalY' %>
                           </div>
                         </div>
                       </div>
@@ -84,18 +85,18 @@
         <div class="control">
           <div class="tabs is-toggle is-small" data-controller="radio-tab">
             <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
                 <a>
                   Yes
                 </a>
               </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
                 <a>
                   No
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :show_in_map, 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :show_in_map, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
         <p class="help">Turning this off also prevents the entry from being automatically tagged with location names.</p>
@@ -112,18 +113,18 @@
         <div class="control">
           <div class="tabs is-toggle is-small" data-controller="radio-tab">
             <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
                 <a>
                   Yes
                 </a>
               </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
                 <a>
                   No
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :post_to_facebook, 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :post_to_facebook, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
       </div>
@@ -139,18 +140,18 @@
         <div class="control">
           <div class="tabs is-toggle is-small" data-controller="radio-tab">
             <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
                 <a>
                   Yes
                 </a>
               </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
                 <a>
                   No
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :post_to_flickr, 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :post_to_flickr, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
       </div>
@@ -166,18 +167,18 @@
         <div class="control">
           <div class="tabs is-toggle is-small" data-controller="radio-tab">
             <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
                 <a>
                   Yes
                 </a>
               </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
                 <a>
                   No
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :post_to_flickr_groups, 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :post_to_flickr_groups, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
       </div>
@@ -193,18 +194,18 @@
         <div class="control">
           <div class="tabs is-toggle is-small" data-controller="radio-tab">
             <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
                 <a>
                   Yes
                 </a>
               </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
                 <a>
                   No
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :post_to_tumblr, 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :post_to_tumblr, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
       </div>
@@ -220,18 +221,18 @@
         <div class="control">
           <div class="tabs is-toggle is-small" data-controller="radio-tab">
             <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
                 <a>
                   Yes
                 </a>
               </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
                 <a>
                   No
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :post_to_twitter, 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :post_to_twitter, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
       </div>
@@ -259,18 +260,18 @@
         <div class="control">
           <div class="tabs is-toggle is-small" data-controller="radio-tab">
             <ul>
-              <li data-target="radio-tab.tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
                 <a>
                   Yes
                 </a>
               </li>
-              <li data-target="radio-tab.tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
                 <a>
                   No
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :post_to_instagram, 'data-target': 'radio-tab.field' %>
+            <%= f.hidden_field :post_to_instagram, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
       </div>
