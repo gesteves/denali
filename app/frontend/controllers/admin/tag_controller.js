@@ -55,8 +55,7 @@ export default class extends Controller {
    */
   edit (event) {
     event.preventDefault();
-    const tagName = this.nameValue;
-    const prompt = window.prompt(`What do you want to rename the “${tagName}” tag to?`, tagName);
+    const prompt = window.prompt(`What do you want to rename the “${this.nameValue}” tag to?`, tagName);
     if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
       return;
     }
@@ -89,8 +88,7 @@ export default class extends Controller {
    */
   delete (event) {
     event.preventDefault();
-    const tagName = this.nameValue;
-    if (!window.confirm(`Are you sure you want to delete the “${tagName}” tag?`)) {
+    if (!window.confirm(`Are you sure you want to delete the “${this.nameValue}” tag?`)) {
       return;
     }
 
