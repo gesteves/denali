@@ -1,7 +1,7 @@
 <%= fields_for :entry, @entry do |f| %>
   <%= f.fields_for :photos, child_index: "#{(Time.current.to_f * 1000).to_i}#{i}" do |p| %>
     <div class="draggable-source" data-controller="photo-form focal-point" data-photo-form-empty="1">
-      <div class="card" data-target="photo-form.fields">
+      <div class="card" data-photo-form-target="fields">
         <div class="card-content">
           <div class="media photo-form">
             <div class="media-content">
@@ -36,10 +36,10 @@
         </div>
       </div>
 
-      <div class="card is-hidden" data-target="photo-form.fields">
+      <div class="card is-hidden" data-photo-form-target="fields">
         <div class="card-image focal-point__image-container is-clipped">
-          <img class="focal-point__thumbnail" data-target="photo-form.thumbnail focal-point.thumbnail" data-action="click->focal-point#setFocalPoint load->focal-point#showFocalPoint" />
-          <div class="is-hidden focal-point__focal-marker" data-target="focal-point.focalMarker"></div>
+          <img class="focal-point__thumbnail" data-photo-form-target="thumbnail" data-focal-point-target="thumbnail" data-action="click->focal-point#setFocalPoint load->focal-point#showFocalPoint" />
+          <div class="is-hidden focal-point__focal-marker" data-focal-point-target="focalMarker"></div>
         </div>
         <div class="card-content">
           <div class="media photo-form">
@@ -53,8 +53,8 @@
                     <div class="control is-expanded">
                       <%= p.text_field :alt_text, placeholder: 'Write alt text for this photo…', class: 'input' %>
                       <%= p.hidden_field :position, 'data-position': '' %>
-                      <%= p.hidden_field :focal_x, 'data-target': 'focal-point.focalX' %>
-                      <%= p.hidden_field :focal_y, 'data-target': 'focal-point.focalY' %>
+                      <%= p.hidden_field :focal_x, 'data-focal-point-target': 'focalX' %>
+                      <%= p.hidden_field :focal_y, 'data-focal-point-target': 'focalY' %>
                     </div>
                   </div>
                 </div>

@@ -1,4 +1,4 @@
-<div class="card queue__item draggable-handle" data-target="queue.card" data-entry-id="<%= entry.id %>" data-entry-position-original="<%= entry.position %>">
+<div class="card queue__item draggable-handle" data-queue-target="card" data-entry-id="<%= entry.id %>" data-entry-position-original="<%= entry.position %>">
   <div class="card-image">
     <% if entry.is_photo? %>
     <% photo = entry.photos.first %>

@@ -9,13 +9,13 @@
           html_options: {
             class: 'focal-point__thumbnail',
             loading: 'lazy',
-            'data-target': 'focal-point.thumbnail',
+            'data-focal-point-target': 'thumbnail',
             'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint'
           }) %>
-          <div class="is-hidden focal-point__focal-marker" data-target="focal-point.focalMarker"></div>
+          <div class="is-hidden focal-point__focal-marker" data-focal-point-target="focalMarker"></div>
       </div>
     </div>
-    <div class="card-content" data-target="focal-point.responseContainer">
+    <div class="card-content" data-focal-point-target="responseContainer">
       <%= render partial: 'crop_crops', object: photo, as: :photo %>
     </div>
   </div>

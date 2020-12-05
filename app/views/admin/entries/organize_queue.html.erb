@@ -23,7 +23,7 @@
   </div>
 
   <hr class="hr">
-  <div class="is-clearfix" data-target="queue.container">
+  <div class="is-clearfix" data-queue-target="container">
     <%= render partial: 'queue_item', collection: @entries, as: :entry %>
   </div>
 
@@ -40,7 +40,7 @@
             </a>
           </div>
         </div>
-        <div class="navbar-end is-hidden" data-target="queue.buttons">
+        <div class="navbar-end is-hidden" data-queue-target="buttons">
           <div class="navbar-item">
             <a href="<%= admin_entries_queued_organize_path %>" class="button is-small is-danger" data-action="click->queue#discard">
               <span class="icon is-small">
