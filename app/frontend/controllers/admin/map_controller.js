@@ -11,7 +11,7 @@ import { Controller }             from 'stimulus';
 export default class extends Controller {
   static targets = ['container', 'spinner'];
   static values = {
-    style: String,
+    mapStyle: String,
     apiToken: String,
     markersUrl: String
   }
