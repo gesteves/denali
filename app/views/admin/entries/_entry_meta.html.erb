@@ -17,7 +17,16 @@
     </div>
   </div>
 
-  <% if entry.photos.count { |p| p.alt_text.blank? } > 0 %>
+  <% if entry.show_in_map? && entry.photos.any? { |p| !p.has_location? } %>
+    <div class="control">
+      <div class="tags has-addons">
+        <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
+        <span class="tag">Location missing</span>
+      </div>
+    </div>
+  <% end %>
+
+  <% if entry.photos.any? { |p| p.alt_text.blank? } %>
     <div class="control">
       <div class="tags has-addons">
         <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
@@ -26,7 +35,7 @@
     </div>
   <% end %>
 
-  <% if entry.photos.count { |p| p.focal_x.blank? || p.focal_y.blank?  } > 0 %>
+  <% if entry.photos.any? { |p| p.focal_x.blank? || p.focal_y.blank?  } %>
     <div class="control">
       <div class="tags has-addons">
         <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
