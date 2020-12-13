@@ -4,6 +4,7 @@ class BlogsController < ApplicationController
 
   def about
     if stale?(@photoblog, public: true)
+      preload_fonts
       @page_title = "About – #{@photoblog.name}"
       respond_to do |format|
         format.html

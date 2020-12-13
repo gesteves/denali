@@ -15,7 +15,6 @@ class EntriesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @entries.empty?
     if stale?(@entries, public: true)
       preconnect_imgix
-      preload_stylesheet
       preload_fonts
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
@@ -55,7 +54,6 @@ class EntriesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     if stale?(@entries, public: true)
       preconnect_imgix
-      preload_stylesheet
       preload_fonts
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
@@ -113,8 +111,7 @@ class EntriesController < ApplicationController
       @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film)
       @srcset = PHOTOS[:entry][:srcset]
       @sizes = PHOTOS[:entry][:sizes].join(', ')
-      preload_images
-      preload_stylesheet
+      preconnect_imgix
       preload_fonts
       respond_to do |format|
         format.html {
@@ -214,33 +211,5 @@ class EntriesController < ApplicationController
 
   def set_entry
     @entry = Entry.find_by_url(url: request.path)
-  end
-
-  def preconnect_imgix
-    if request.format.html?
-      add_preconnect_link_header("https://#{ENV['imgix_domain']}")
-    end
-  end
-
-  def preload_images
-    if request.format.html?
-      @photos.each do |photo|
-        src, srcset = photo.srcset(srcset: @srcset)
-        add_preload_link_header(src, as: 'image', imagesizes: @sizes, imagesrcset: srcset)
-      end
-    end
-  end
-
-  def preload_stylesheet
-    if request.format.html? && !is_repeat_visit?
-      add_preload_link_header(ActionController::Base.helpers.stylesheet_path('application'), as: 'style')
-    end
-  end
-
-  def preload_fonts
-    if request.format.html?
-      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-300.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
-      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-regular.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
-    end
   end
 end
