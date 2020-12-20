@@ -322,9 +322,9 @@ GEM
       rack (~> 2.0)
       redis (>= 4.2.0)
     simple_oauth (0.3.1)
-    skylight (4.3.1)
-      skylight-core (= 4.3.1)
-    skylight-core (4.3.1)
+    skylight (4.3.2)
+      skylight-core (= 4.3.2)
+    skylight-core (4.3.2)
       activesupport (>= 4.2.0)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
@@ -355,7 +355,7 @@ GEM
       multipart-post (~> 2.0)
       naught (~> 1.0)
       simple_oauth (~> 0.3.0)
-    tzinfo (1.2.7)
+    tzinfo (1.2.9)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
@@ -375,7 +375,7 @@ GEM
     websocket-driver (0.7.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    zeitwerk (2.4.1)
+    zeitwerk (2.4.2)
 
 PLATFORMS
   ruby
