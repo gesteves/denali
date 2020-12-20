@@ -30,13 +30,13 @@
   display: block;
   height: auto;
   max-height: 100vh;
-  max-width: 100%;
   position: relative;
   width: auto;
   z-index: 101;
 
   &.entry__photo--zoom {
     max-height: none;
+    width: 100%;
   }
 }
 
