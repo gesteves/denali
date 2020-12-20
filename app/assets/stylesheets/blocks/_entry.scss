@@ -5,22 +5,13 @@
 }
 
 .entry__figure {
-  display: flex;
   font-size: 0;
-  justify-content: center;
   margin: 0 0 var(--gutter-horizontal);
   max-width: 100vw;
   padding: 0;
   position: relative;
   text-align: center;
   width: 100%;
-
-  a {
-    display: inline-block;
-    font-size: 0;
-    margin: 0;
-    padding: 0;
-  }
 }
 
 .entry__photo {
@@ -29,6 +20,7 @@
   background-size: cover;
   display: block;
   height: auto;
+  margin: 0 auto;
   max-height: 100vh;
   position: relative;
   width: auto;
