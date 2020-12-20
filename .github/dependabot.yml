@@ -3,10 +3,8 @@ updates:
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "saturday"
+      interval: "daily"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "saturday"
+      interval: "daily"
