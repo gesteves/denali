@@ -48,6 +48,7 @@ class Photo < ApplicationRecord
     opts.reverse_merge!(q: 75)
     imgix_path = Ix.path(self.image.key)
     widths = processed? ? srcset.reject { |width| width > self.width } : srcset
+    widths = widths.uniq.sort
     src_width = widths.first
     if opts[:ar].present?
       opts.merge!(fit: 'crop')
