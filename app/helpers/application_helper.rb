@@ -1,29 +1,29 @@
 module ApplicationHelper
 
-  def responsive_image_tag(photo:, srcset: [3360], sizes: '100vw', square: false, html_options: {})
-    return placeholder_image_tag(srcset: srcset, sizes: sizes, square: square, html_options: html_options) unless photo&.processed?
-    src, srcset = photo.srcset(srcset: srcset, square: square)
+  def responsive_image_tag(photo:, srcset: [3360], sizes: '100vw', aspect_ratio: nil, html_options: {})
+    return placeholder_image_tag(srcset: srcset, sizes: sizes, aspect_ratio: aspect_ratio, html_options: html_options) unless photo&.processed?
+    src, srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio })
     html_options.reverse_merge!({
       srcset: srcset,
       src: src,
       sizes: sizes,
       width: photo.width,
-      height: square ? photo.width : photo.height,
+      height: aspect_ratio.present? ? photo.height_from_aspect_ratio(aspect_ratio) : photo.height,
       alt: photo.alt_text,
       loading: 'eager'
     })
     tag :img, html_options
   end
 
-  def placeholder_image_tag(srcset: [3360], sizes: '100vw', square: false, html_options: {})
+  def placeholder_image_tag(srcset: [3360], sizes: '100vw', aspect_ratio: nil, html_options: {})
     return '' unless @photoblog.placeholder_processed?
-    src, srcset = @photoblog.placeholder_srcset(srcset: srcset, square: square)
+    src, srcset = @photoblog.placeholder_srcset(srcset: srcset, opts: { ar: aspect_ratio })
     html_options.reverse_merge!({
       srcset: srcset,
       src: src,
       sizes: sizes,
       width: @photoblog.placeholder.metadata[:width],
-      height: square ? @photoblog.placeholder.metadata[:width] : @photoblog.placeholder.metadata[:height],
+      height: aspect_ratio.present? ? photo.height_from_aspect_ratio(aspect_ratio) : @photoblog.placeholder.metadata[:height],
       alt: '',
       loading: 'eager'
     }.compact)

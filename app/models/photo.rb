@@ -36,29 +36,25 @@ class Photo < ApplicationRecord
   end
 
   def url(opts = {})
-    opts.reverse_merge!(w: 1200, square: false)
-    opts[:h] = opts[:w] if opts[:square]
-    if opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]) && !opts[:fit].present?
+    opts.reverse_merge!(w: 1200)
+    if opts[:ar].present? && !opts[:fit].present?
       opts.merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
     end
-    opts.delete(:square)
     Ix.path(self.image.key).to_url(opts.compact)
   end
 
-  def srcset(srcset:, square: false, opts: { q: 75 })
+  def srcset(srcset:, opts: {})
+    opts.reverse_merge!(q: 75)
     imgix_path = Ix.path(self.image.key)
     widths = processed? ? srcset.reject { |width| width > self.width } : srcset
     src_width = widths.first
-    if square.presence
+    if opts[:ar].present?
       opts.merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
-      src = imgix_path.to_url(opts.merge(w: src_width, h: src_width))
-      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
-    else
-      src = imgix_path.to_url(opts.merge(w: src_width))
-      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w))} #{w}w" }.join(', ')
     end
+    src = imgix_path.to_url(opts.merge(w: src_width).compact)
+      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w).compact)} #{w}w" }.join(', ')
     return src, srcset
   end
 
@@ -138,6 +134,12 @@ class Photo < ApplicationRecord
   def width_from_height(height)
     return nil if self.height.blank?
     ((self.width.to_f * height.to_f)/self.height.to_f).round
+  end
+
+  def height_from_aspect_ratio(aspect_ratio)
+    return nil if self.width.blank?
+    ar = aspect_ratio.split(':').map(&:to_f)
+    ((self.width.to_f * ar.last)/ar.first).round
   end
 
   def focal_length_with_unit

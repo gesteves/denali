@@ -1,7 +1,7 @@
 <% cache entry do %>
   <li class="entry-list__item">
     <div class="entry-list__wrapper">
-      <%= render partial: 'entries/list/entry_link', object: entry, as: :entry, locals: { square: true } %>
+      <%= render partial: 'entries/list/entry_link', object: entry, as: :entry, locals: { aspect_ratio: '1:1' } %>
     </div>
   </li>
 <% end %>

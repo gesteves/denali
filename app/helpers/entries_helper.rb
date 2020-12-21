@@ -13,7 +13,7 @@ module EntriesHelper
     [
       photo.url(w: 1200, h: 675, fm: 'jpg'),
       photo.url(w: 1200, h: 900, fm: 'jpg'),
-      photo.url(w: 1200, square: true)
+      photo.url(w: 1200, aspect_ratio: '1:1')
     ]
   end
 

@@ -52,18 +52,16 @@ class Blog < ApplicationRecord
     Ix.path(self.placeholder.key).to_url(opts.compact)
   end
 
-  def placeholder_srcset(srcset:, square: false, opts: { fm: 'jpg', q: 75, bg: 'fff' })
+  def placeholder_srcset(srcset:, opts: {})
+    opts.reverse_merge!(fm: 'jpg', q: 75, bg: 'fff')
     imgix_path = Ix.path(self.placeholder.key)
     widths = srcset.reject { |width| width > self.placeholder.metadata[:width] }
     src_width = widths.first
-    if square.presence
+    if opts[:ar].present?
       opts.merge!(fit: 'crop')
-      src = imgix_path.to_url(opts.merge(w: src_width, h: src_width))
-      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
-    else
-      src = imgix_path.to_url(opts.merge(w: src_width))
-      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w))} #{w}w" }.join(', ')
     end
+    src = imgix_path.to_url(opts.merge(w: src_width).compact)
+    srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w).compact)} #{w}w" }.join(', ')
     return src, srcset
   end
 
