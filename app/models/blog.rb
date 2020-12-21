@@ -74,6 +74,12 @@ class Blog < ApplicationRecord
     (placeholder.metadata[:height].to_f/placeholder.metadata[:width].to_f).floor(2)
   end
 
+  def placeholder_height_from_aspect_ratio(aspect_ratio)
+    return nil if placeholder.metadata[:width].blank?
+    ar = aspect_ratio.split(':').map(&:to_f)
+    ((placeholder.metadata[:width].to_f * ar.last)/ar.first).round
+  end
+
   def twitter_handle
     self.twitter&.gsub(/^https:\/\/(www\.)?twitter.com\//, '@')
   end

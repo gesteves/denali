@@ -23,7 +23,7 @@ module ApplicationHelper
       src: src,
       sizes: sizes,
       width: @photoblog.placeholder.metadata[:width],
-      height: aspect_ratio.present? ? photo.height_from_aspect_ratio(aspect_ratio) : @photoblog.placeholder.metadata[:height],
+      height: aspect_ratio.present? ? @photoblog.placeholder_height_from_aspect_ratio(aspect_ratio) : @photoblog.placeholder.metadata[:height],
       alt: '',
       loading: 'eager'
     }.compact)
