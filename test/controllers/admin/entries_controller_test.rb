@@ -111,12 +111,11 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   test 'should create published entries' do
     file = fixture_file_upload(Rails.root.join('test/fixtures/images/rusty.jpg'), 'image/jpg')
 
-    post :create, params: { entry: { title: 'Published', status: 'published', photos_attributes: [image: file],  post_to_twitter: true, post_to_facebook: false, post_to_flickr: false, post_to_instagram: false, post_to_tumblr: false } }
+    post :create, params: { entry: { title: 'Published', status: 'published', photos_attributes: [image: file],  post_to_twitter: true, post_to_facebook: false, post_to_flickr: false, post_to_instagram: false } }
     assert_equal 1, TwitterWorker.jobs.size
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
-    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 2, WebhookWorker.jobs.size
     assert assigns(:entry).is_published?
     assert_equal assigns(:entry).photos.count, 1
@@ -133,7 +132,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
-    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
     assert assigns(:entry).is_draft?
     assert_equal assigns(:entry).photos.count, 1
@@ -150,7 +148,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_equal 0, FacebookWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
-    assert_equal 0, TumblrWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
     assert assigns(:entry).is_queued?
     assert_equal assigns(:entry).photos.count, 1

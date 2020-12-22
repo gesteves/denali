@@ -36,7 +36,6 @@ Rails.application.routes.draw do
         post 'flickr'
         post 'flush_caches'
         post 'refresh_metadata'
-        post 'tumblr'
       end
       collection do
         get 'queued'

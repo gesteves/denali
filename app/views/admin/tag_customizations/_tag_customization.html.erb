@@ -20,11 +20,6 @@
    <% end %>
 </td>
 <td>
-   <% tag_customization.tumblr_tags_to_a.each do |tag| %>
-     <%= link_to tag, "https://www.tumblr.com/search/#{tag.downcase.gsub(/\s+/, '+')}/recent", class: 'tag' %><br>
-   <% end %>
-</td>
-<td>
   <div class="buttons is-pulled-right">
     <%= link_to 'Edit', edit_admin_tag_customization_path(tag_customization.id), class: 'button is-small' %>
     <%= link_to 'Delete', admin_tag_customization_path(tag_customization.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it forever? This can’t be undone!' }, class: 'button is-danger is-small', 'data-action': 'click->tag#delete' %>

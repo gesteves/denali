@@ -66,6 +66,6 @@ class Admin::TagCustomizationsController < AdminController
   private
 
   def association_params
-    params.require(:tag_customization).permit(:instagram_hashtags, :flickr_groups, :flickr_albums, :tag_list, :tumblr_tags)
+    params.require(:tag_customization).permit(:instagram_hashtags, :flickr_groups, :flickr_albums, :tag_list)
   end
 end

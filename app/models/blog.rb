@@ -134,7 +134,6 @@ class Blog < ApplicationRecord
       show_search
       tag_line
       time_zone
-      tumblr
       twitter
     }
 

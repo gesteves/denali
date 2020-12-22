@@ -11,9 +11,6 @@
     <% if @photoblog.instagram.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.instagram %>" rel="me" title="Follow on Instagram" aria-label="Follow on Instagram"><%= inline_svg :instagram, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Instagram</span></a></li>
     <% end %>
-    <% if @photoblog.tumblr.present? %>
-      <li class="elsewhere__item"><a href="<%= @photoblog.tumblr %>" rel="me" title="Follow on Tumblr" aria-label="Follow on Tumblr"><%= inline_svg :tumblr, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Tumblr</span></a></li>
-    <% end %>
     <% if @photoblog.twitter.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.twitter %>" rel="me" title="Follow on Twitter" aria-label="Follow on Twitter"><%= inline_svg :twitter, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Twitter</span></a></li>
     <% end %>

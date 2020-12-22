@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :instagram, :facebook, :twitter, :twitter_banner, :tumblr, :flickr, :flush_caches, :refresh_metadata]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :instagram, :facebook, :twitter, :twitter_banner, :flickr, :flush_caches, :refresh_metadata]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
@@ -349,19 +349,6 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def tumblr
-    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    TumblrWorker.perform_async(@entry.id, false)
-    @message = 'Your entry was sent to Tumblr.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
-    end
-  end
-
   def flush_caches
     @entry.invalidate
     OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
@@ -402,7 +389,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_facebook, :post_to_tumblr, :tweet_text, :instagram_text, :show_in_map, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_facebook, :tweet_text, :instagram_text, :show_in_map, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y])
     end
 
     def set_redirect_url

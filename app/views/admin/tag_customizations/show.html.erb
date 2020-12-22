@@ -24,7 +24,6 @@
       <th>Instagram Hashtags</th>
       <th>Flickr Groups</th>
       <th>Flickr Albums</th>
-      <th>Tumblr Tags</th>
       </tr>
     </thead>
     <tbody>
@@ -47,11 +46,6 @@
         <td>
           <% @tag_customization.flickr_albums_to_a.each do |album| %>
             <%= link_to album, album, class: 'tag' %><br>
-          <% end %>
-        </td>
-        <td>
-          <% @tag_customization.tumblr_tags_to_a.each do |tag| %>
-            <%= link_to tag, "https://www.tumblr.com/search/#{tag.gsub(/\s+/, '+')}/recent", class: 'tag' %><br>
           <% end %>
         </td>
       </tr>
