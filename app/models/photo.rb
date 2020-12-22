@@ -37,8 +37,8 @@ class Photo < ApplicationRecord
 
   def url(opts = {})
     opts.reverse_merge!(w: 1200)
-    if opts[:ar].present? && !opts[:fit].present?
-      opts.merge!(fit: 'crop')
+    if opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w])
+      opts.reverse_merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
     end
     Ix.path(self.image.key).to_url(opts.compact)
@@ -50,8 +50,8 @@ class Photo < ApplicationRecord
     widths = processed? ? srcset.reject { |width| width > self.width } : srcset
     widths = widths.uniq.sort
     src_width = widths.first
-    if opts[:ar].present?
-      opts.merge!(fit: 'crop')
+    if opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w])
+      opts.reverse_merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
     end
     src = imgix_path.to_url(opts.merge(w: src_width).compact)
