@@ -52,18 +52,16 @@ class Blog < ApplicationRecord
     Ix.path(self.placeholder.key).to_url(opts.compact)
   end
 
-  def placeholder_srcset(srcset:, square: false, opts: { fm: 'jpg', q: 75, bg: 'fff' })
+  def placeholder_srcset(srcset:, opts: {})
+    opts.reverse_merge!(fm: 'jpg', q: 75, bg: 'fff')
     imgix_path = Ix.path(self.placeholder.key)
     widths = srcset.reject { |width| width > self.placeholder.metadata[:width] }
     src_width = widths.first
-    if square.presence
+    if opts[:ar].present?
       opts.merge!(fit: 'crop')
-      src = imgix_path.to_url(opts.merge(w: src_width, h: src_width))
-      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
-    else
-      src = imgix_path.to_url(opts.merge(w: src_width))
-      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w))} #{w}w" }.join(', ')
     end
+    src = imgix_path.to_url(opts.merge(w: src_width).compact)
+    srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w).compact)} #{w}w" }.join(', ')
     return src, srcset
   end
 
@@ -74,6 +72,12 @@ class Blog < ApplicationRecord
   def placeholder_aspect_ratio
     return 0 if !placeholder_processed?
     (placeholder.metadata[:height].to_f/placeholder.metadata[:width].to_f).floor(2)
+  end
+
+  def placeholder_height_from_aspect_ratio(aspect_ratio)
+    return nil if placeholder.metadata[:width].blank?
+    ar = aspect_ratio.split(':').map(&:to_f)
+    ((placeholder.metadata[:width].to_f * ar.last)/ar.first).round
   end
 
   def twitter_handle

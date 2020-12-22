@@ -45,7 +45,7 @@ module Types
     end
 
     def thumbnail_urls(widths:)
-      widths.map { |w| object.url(w: w, square: true) }
+      widths.map { |w| object.url(w: w, ar: '1:1') }
     end
 
     def crop_url(width:, height:)
