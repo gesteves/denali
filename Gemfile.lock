@@ -127,7 +127,7 @@ GEM
     faraday (1.1.0)
       multipart-post (>= 1.2, < 3)
       ruby2_keywords
-    ffi (1.13.1)
+    ffi (1.14.2)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
@@ -170,7 +170,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
-    listen (3.3.3)
+    listen (3.4.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     lograge (0.11.2)
@@ -385,7 +385,7 @@ DEPENDENCIES
   imgix
   jbuilder (~> 2.10)
   kaminari
-  listen (>= 3.0.5, < 3.4)
+  listen (>= 3.0.5, < 3.5)
   lograge
   mini_magick
   mock_redis
