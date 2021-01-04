@@ -5,6 +5,7 @@
     sizes: @sizes,
     html_options: {
       class: 'entry__photo entry__photo--zoom',
+      loading: 'lazy',
       'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu',
       'data-photo-target': 'photo'
     }) %>
