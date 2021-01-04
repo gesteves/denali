@@ -30,6 +30,15 @@
     max-height: unset;
     width: 100%;
   }
+
+  &.entry__photo--lazy {
+    // Use `Min` instead of `min` because Sass is case-sensitive and CSS isn't.
+    // In this case, I want to use CSS's native min(), not Sass's min() function,
+    // so I need to use Min to ensure Sass doesn't think I'm trying to use its own min() function.
+    // Source: https://css-tricks.com/when-sass-and-new-css-features-collide/
+    contain-intrinsic-size: Min(var(--max-width), 100vw) Min(calc(var(--max-width) * var(--aspect-ratio, 1)), calc(100vw * var(--aspect-ratio, 1)));
+    content-visibility: auto;
+  }
 }
 
 .entry__headline--no-body {
