@@ -2,7 +2,7 @@
   @include clearfix;
   display: block;
   margin: var(--margin-content);
-  max-width: $bp-max;
+  max-width: var(--max-width);
   position: relative;
 
   @supports (grid-template-rows: masonry) {
@@ -17,7 +17,7 @@
   font-size: var(--font-size-heading);
   line-height: var(--line-height-heading);
   margin: 0 auto;
-  max-width: $bp-max;
+  max-width: var(--max-width);
   padding: 0 var(--gutter-vertical) var(--gutter-horizontal);
   text-align: center;
 }

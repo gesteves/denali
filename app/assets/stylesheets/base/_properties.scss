@@ -37,6 +37,7 @@
   --margin-text: calc(2.4rem / 1.6) 0;
   --margin-text-alt: calc(2.4rem / 1.4) 0;
   --transition-duration: 150ms;
+  --max-width: #{$bp-max};
 
   @media (prefers-color-scheme: dark) {
     --color-background: black;

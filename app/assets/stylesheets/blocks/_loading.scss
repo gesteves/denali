@@ -3,7 +3,7 @@
   flex-flow: row nowrap;
   justify-content: center;
   margin: var(--margin-content);
-  max-width: $bp-max;
+  max-width: var(--max-width);
 }
 
 .loading__spinner {
