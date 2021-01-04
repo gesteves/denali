@@ -18,7 +18,7 @@
   background: radial-gradient(at top left, var(--gradient-start, $color-gray-very-light), var(--gradient-end, $color-gray-light));
   background-repeat: no-repeat;
   background-size: cover;
-  contain-intrinsic-size: min(var(--main-width), 100vw) min(calc(var(--main-width) * var(--aspect-ratio)), calc(100vw * var(--aspect-ratio)));
+  contain-intrinsic-size: min(var(--max-width), 100vw) min(calc(var(--max-width) * var(--aspect-ratio)), calc(100vw * var(--aspect-ratio)));
   content-visibility: auto;
   display: block;
   height: auto;
