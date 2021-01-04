@@ -50,6 +50,14 @@ module ApplicationHelper
     end
   end
 
+  def css_dimensions(photo)
+    if photo.processed?
+      "--photo-height:#{photo.height};--photo-width:#{photo.width}"
+    elsif @photoblog.placeholder_processed?
+      "--photo-height:#{@photoblog.placeholder.metadata[:height]};--photo-width:#{@photoblog.placeholder.metadata[:width]}"
+    end
+  end
+
   def inline_asset(filename, opts = {})
     opts.reverse_merge!(strip_charset: false)
     if opts[:strip_charset]
