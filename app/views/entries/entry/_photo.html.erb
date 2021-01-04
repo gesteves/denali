@@ -1,4 +1,4 @@
-<div class="entry__figure" style="<%= "#{css_gradient_stops(photo)};#{css_aspect_ratio(photo)}" %>">
+<div class="entry__figure" style="<%= css_gradient_stops(photo) %>">
   <%= responsive_image_tag(
     photo: photo,
     srcset: @srcset,
