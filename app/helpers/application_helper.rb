@@ -44,9 +44,9 @@ module ApplicationHelper
 
   def css_aspect_ratio(photo)
     if photo.processed?
-      "--aspect-ratio:calc(#{photo.height}/#{photo.width});"
+      "--aspect-ratio:#{(photo.height.to_f/photo.width.to_f).floor(2)};"
     elsif @photoblog.placeholder_processed?
-      "--aspect-ratio:calc(#{placeholder.metadata[:height]}/#{placeholder.metadata[:width]})"
+      "--aspect-ratio:#{@photoblog.placeholder_aspect_ratio};"
     end
   end
 
