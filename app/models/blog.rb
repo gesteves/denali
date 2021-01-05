@@ -145,9 +145,7 @@ class Blog < ApplicationRecord
   end
 
   def invalidate(paths: '/*', clear_cache: true)
-    if clear_cache
-      HerokuConfigWorker.perform_async({ CACHE_VERSION: Time.now.to_i.to_s })
-    end
+    HerokuRestartWorker.perform_async if clear_cache
     CloudfrontInvalidationWorker.perform_async(paths)
   end
 end
