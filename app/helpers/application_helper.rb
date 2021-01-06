@@ -10,8 +10,7 @@ module ApplicationHelper
       width: photo.width,
       height: aspect_ratio.present? ? photo.height_from_aspect_ratio(aspect_ratio) : photo.height,
       alt: photo.alt_text,
-      loading: 'eager',
-      decoding: 'async'
+      loading: 'eager'
     })
     tag :img, html_options
   end
@@ -26,8 +25,7 @@ module ApplicationHelper
       width: @photoblog.placeholder.metadata[:width],
       height: aspect_ratio.present? ? @photoblog.placeholder_height_from_aspect_ratio(aspect_ratio) : @photoblog.placeholder.metadata[:height],
       alt: '',
-      loading: 'eager',
-      decoding: 'async'
+      loading: 'eager'
     }.compact)
     tag :img, html_options
   end
