@@ -35,8 +35,8 @@ gem 'httparty'
 gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
-gem 'mini_magick'
 gem 'rack-attack'
+gem "image_processing", "~> 1.0"
 
 # Monitoring
 gem 'sentry-raven', '~> 3.1'
