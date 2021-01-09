@@ -32,7 +32,7 @@
     <%= auto_discovery_link_tag :atom, @feed_url, title: @page_title %>
     <% if @show_schema %>
       <script type="application/ld+json">
-        <%= sanitize render partial: 'entries/list/schema.json.jbuilder' %>
+        <%= sanitize render partial: 'entries/list/schema', formats: :json %>
       </script>
     <% end %>
   <% end %>

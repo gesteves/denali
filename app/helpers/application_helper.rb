@@ -31,7 +31,7 @@ module ApplicationHelper
   end
 
   def inline_svg(icon, class_name: '', aria_hidden: true)
-    render partial: "partials/svg/#{icon.to_s}.html.erb", locals: { class_name: "#{class_name} #{class_name}--#{icon}".strip, aria_hidden: aria_hidden }
+    render partial: "partials/svg/#{icon.to_s}", locals: { class_name: "#{class_name} #{class_name}--#{icon}".strip, aria_hidden: aria_hidden }
   end
 
   def css_gradient_stops(photo)

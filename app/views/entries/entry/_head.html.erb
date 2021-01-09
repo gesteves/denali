@@ -49,6 +49,6 @@
   <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url(url: entry.permalink_url, format: 'xml') %>">
   <link rel="canonical" href="<%= entry.permalink_url %>">
   <script type="application/ld+json">
-    <%= sanitize render partial: 'entries/entry/schema.json.jbuilder', object: entry, as: :entry %>
+    <%= sanitize render partial: 'entries/entry/schema', formats: :json, object: entry, as: :entry %>
   </script>
 <% end %>

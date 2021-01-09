@@ -154,7 +154,6 @@ class EntriesController < ApplicationController
     if stale?(@entries, public: true)
       respond_to do |format|
         format.atom
-        format.json
         format.rss
         format.all { redirect_to feed_url(format: 'atom') }
       end
@@ -168,7 +167,6 @@ class EntriesController < ApplicationController
     if stale?(@entries, public: true)
       respond_to do |format|
         format.atom
-        format.json
         format.rss
         format.all { redirect_to tag_feed_url(format: 'atom', tag: @tag_slug) }
       end
