@@ -1,5 +1,4 @@
 require 'exifr/jpeg'
-require 'open-uri'
 class PhotoMetadataWorker < ApplicationWorker
 
   def perform(photo_id)
