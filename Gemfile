@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.7.2'
 
-gem 'rails', '6.0.3.4'
+gem 'rails', '6.1.1'
 gem 'pg', '~> 1.2'
 gem 'puma'
 
@@ -35,8 +35,8 @@ gem 'httparty'
 gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
-gem 'mini_magick'
 gem 'rack-attack'
+gem "image_processing", "~> 1.0"
 
 # Monitoring
 gem 'sentry-raven', '~> 3.1'

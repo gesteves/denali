@@ -37,13 +37,6 @@ class EntriesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
-  test "should generate json feed" do
-    set_up_all_images
-    get :feed, params: { format: 'json' }
-    assert_template :feed
-    assert_response :success
-  end
-
   test "should generate rss feed" do
     set_up_all_images
     get :feed, params: { format: 'rss' }

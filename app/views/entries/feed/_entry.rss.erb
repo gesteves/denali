@@ -5,7 +5,7 @@
     <link><%= entry.permalink_url %></link>
     <title><%= entry.plain_title %></title>
     <description>
-      <%= html_escape render(partial: 'entries/feed/feed_entry_body.html.erb', object: entry, as: :entry).to_str %>
+      <%= html_escape render(partial: 'entries/feed/feed_entry_body', formats: :html, object: entry, as: :entry).to_str %>
     </description>
     <% if entry.is_photo?%>
       <webfeeds:featuredImage url="<%= entry.photos.first.url(w: 2560, fm: 'jpg') %>" type="image/jpg" width="2560" height="<%= entry.photos.first.height_from_width(2560) %>"/>

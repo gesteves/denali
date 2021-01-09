@@ -15,7 +15,7 @@
       <webfeeds:icon><%=  @photoblog.touch_icon_url(w: 192) %></webfeeds:icon>
     <% end %>
     <webfeeds:related layout="card" target="browser"/>
-    <%= render partial: 'entries/feed/entry.rss.erb', collection: @entries, as: :entry, cached: true %>
+    <%= render partial: 'entries/feed/entry', formats: :rss, collection: @entries, as: :entry, cached: true %>
   </channel>
 </rss>
 <% end %>

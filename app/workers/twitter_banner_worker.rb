@@ -13,7 +13,7 @@ class TwitterBannerWorker < ApplicationWorker
       config.access_token_secret = ENV['twitter_access_token_secret']
     end
 
-    twitter.update_profile_banner(Base64.encode64(URI.open(entry.photos.first.twitter_banner_url).read))
+    twitter.update_profile_banner(Base64.encode64(open(entry.photos.first.twitter_banner_url).read))
   end
 
 end
