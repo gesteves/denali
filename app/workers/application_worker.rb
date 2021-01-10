@@ -1,3 +1,4 @@
+require 'open-uri'
 class ApplicationWorker
   include Sidekiq::Worker
   include ActionView::Helpers::TextHelper

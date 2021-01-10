@@ -1,11 +1,12 @@
 require 'exifr/jpeg'
+require 'open-uri'
 class PhotoMetadataWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
     raise UnprocessedPhotoError unless photo.processed?
 
-    original = open(photo.image.url)
+    original = URI.open(photo.image.url)
     exif = EXIFR::JPEG.new(original)
     if exif.present? && exif.exif?
       camera_make = exif.make&.encode('UTF-8')&.strip
