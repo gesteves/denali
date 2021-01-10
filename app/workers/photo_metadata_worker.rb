@@ -5,7 +5,7 @@ class PhotoMetadataWorker < ApplicationWorker
     photo = Photo.find(photo_id)
     raise UnprocessedPhotoError unless photo.processed?
 
-    original = open(photo.image.service_url)
+    original = open(photo.image.url)
     exif = EXIFR::JPEG.new(original)
     if exif.present? && exif.exif?
       camera_make = exif.make&.encode('UTF-8')&.strip
