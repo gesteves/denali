@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  const version = '<%= "#{ENV['HEROKU_RELEASE_VERSION']}/#{ENV['CACHE_VERSION']}" %>';
+  const version = '<%= ENV['CACHE_VERSION'] %>';
 
   self.addEventListener('install', event => {
     self.skipWaiting();
