@@ -3,7 +3,7 @@
     <title><%= sanitize @page_title %></title>
     <meta name="description" content="<%= @photoblog.meta_description %>">
     <link rel="canonical" href="<%=  search_url %>">
-
+    <meta name="robots" content="noindex">
     <meta property="og:title" content="<%= "Search results for “#{@query}” – #{@photoblog.name}" %>">
     <% if @entries.present? %>
       <meta property="og:image" content="<%= @entries.first.photos.first.url(w: 1200, h: 628) %>">
