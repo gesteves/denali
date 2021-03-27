@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.7.2'
 
-gem 'rails', '6.1.3'
+gem 'rails', '6.1.3.1'
 gem 'pg', '~> 1.2'
 gem 'puma'
 
@@ -66,7 +66,7 @@ end
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
-  gem 'listen', '>= 3.0.5', '< 3.5'
+  gem 'listen', '>= 3.0.5', '< 3.6'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
