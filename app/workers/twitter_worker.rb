@@ -12,8 +12,7 @@ class TwitterWorker < ApplicationWorker
       config.access_token        = ENV['twitter_access_token']
       config.access_token_secret = ENV['twitter_access_token_secret']
     end
-    config = twitter.configuration
-    max_length = 280 - 1 - config.short_url_length_https
+    max_length = 250
 
     caption = entry.tweet_text.present? ? entry.tweet_text : entry.plain_title
     tweet = "#{truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_length, omission: '…')} #{entry.permalink_url}"
