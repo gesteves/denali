@@ -8,7 +8,7 @@
     "yarn": "1.22.5"
   },
   "dependencies": {
-    "@rails/webpacker": "^5.2.1",
+    "@rails/webpacker": "^5.3.0",
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
     "bulma": "^0.9.2",
