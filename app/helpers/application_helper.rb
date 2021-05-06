@@ -2,17 +2,20 @@ module ApplicationHelper
 
   def responsive_image_tag(photo:, srcset: [3360], sizes: '100vw', aspect_ratio: nil, html_options: {})
     return placeholder_image_tag(srcset: srcset, sizes: sizes, aspect_ratio: aspect_ratio, html_options: html_options) unless photo&.processed?
-    src, srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio })
+    jpg_src, jpg_srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio })
+    avif_src, avif_srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio, fm: 'avif' })
     html_options.reverse_merge!({
-      srcset: srcset,
-      src: src,
-      sizes: sizes,
+      src: jpg_src,
       width: photo.width,
       height: aspect_ratio.present? ? photo.height_from_aspect_ratio(aspect_ratio) : photo.height,
       alt: photo.alt_text,
       loading: 'eager'
     })
-    tag :img, html_options
+    tag.picture do
+      concat(tag.source(sizes: sizes, srcset: avif_srcset, type: 'image/avif'))
+      concat(tag.source(sizes: sizes, srcset: jpg_srcset, type: 'image/jpeg'))
+      concat(tag.img(html_options))
+    end
   end
 
   def placeholder_image_tag(srcset: [3360], sizes: '100vw', aspect_ratio: nil, html_options: {})
