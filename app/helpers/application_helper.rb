@@ -13,7 +13,7 @@ module ApplicationHelper
     })
     tag.picture do
       ENV['IMAGE_FORMATS']&.split(',')&.each do |format|
-        format_srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio, fm: format, , q: ENV["IMAGE_QUALITY_#{format.upcase}"] }.compact).last
+        format_srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio, fm: format, q: ENV["IMAGE_QUALITY_#{format.upcase}"] }.compact).last
         concat(tag.source(sizes: sizes, srcset: format_srcset, type: "image/#{format}"))
       end
       concat(tag.source(sizes: sizes, srcset: jpg_srcset, type: 'image/jpeg'))
