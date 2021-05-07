@@ -6,6 +6,7 @@ module Types
     field :alt_text, String, null: true, description: "Text description of the image"
     field :aperture, Float, null: true, method: :f_number, description: "f/number the photo was made at"
     field :black_and_white, Boolean, null: true, method: :black_and_white?, description: "Whether or not the photo is in black & white"
+    field :blurhash, String, null: true, description: "A compact representation of a placeholder for this photo"
     field :camera, Types::CameraType, null: true, description: "The camera used to take the photo"
     field :color_palette, [String], null: true, description: "List of hex values of the 6 most prominent colors in the photo"
     field :color, Boolean, null: true, method: :color?, description: "Whether or not the photo is in color"
