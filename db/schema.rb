@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_09_003702) do
+ActiveRecord::Schema.define(version: 2021_05_07_192801) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -158,6 +158,7 @@ ActiveRecord::Schema.define(version: 2021_01_09_003702) do
     t.bigint "camera_id"
     t.bigint "lens_id"
     t.bigint "film_id"
+    t.string "blurhash"
     t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["film_id"], name: "index_photos_on_film_id"

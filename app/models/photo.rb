@@ -7,7 +7,7 @@ class Photo < ApplicationRecord
 
   acts_as_list scope: :entry
 
-  after_create_commit :extract_metadata, :extract_palette
+  after_create_commit :extract_metadata, :extract_palette, :encode_blurhash
 
   after_commit :touch_entry
   after_commit :geocode, if: :changed_coordinates?
@@ -87,6 +87,11 @@ class Photo < ApplicationRecord
 
   def palette_url(opts = {})
     opts.reverse_merge!(palette: 'json', colors: 6)
+    Ix.path(self.image.key).to_url(opts)
+  end
+
+  def blurhash_url(opts = {})
+    opts.reverse_merge!(fm: 'blurhash', w: 32)
     Ix.path(self.image.key).to_url(opts)
   end
 
@@ -182,6 +187,10 @@ class Photo < ApplicationRecord
 
   def extract_palette
     PhotoPaletteWorker.perform_async(self.id)
+  end
+
+  def encode_blurhash
+    BlurhashWorker.perform_async(self.id)
   end
 
   def color?
