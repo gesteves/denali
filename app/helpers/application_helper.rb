@@ -3,8 +3,6 @@ module ApplicationHelper
   def responsive_image_tag(photo:, srcset: [3360], sizes: '100vw', aspect_ratio: nil, html_options: {})
     return placeholder_image_tag(srcset: srcset, sizes: sizes, aspect_ratio: aspect_ratio, html_options: html_options) unless photo&.processed?
     jpg_src, jpg_srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio })
-    avif_src, avif_srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio, fm: 'avif' })
-    webp_src, webp_srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio, fm: 'webp' })
     html_options.reverse_merge!({
       src: jpg_src,
       width: photo.width,
@@ -13,8 +11,10 @@ module ApplicationHelper
       loading: 'eager'
     })
     tag.picture do
-      concat(tag.source(sizes: sizes, srcset: avif_srcset, type: 'image/avif'))
-      concat(tag.source(sizes: sizes, srcset: webp_srcset, type: 'image/webp'))
+      ENV['IMAGE_FORMATS']&.split(',')&.each do |format|
+        format_srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio, fm: format }).last
+        concat(tag.source(sizes: sizes, srcset: format_srcset, type: "image/#{format}"))
+      end
       concat(tag.source(sizes: sizes, srcset: jpg_srcset, type: 'image/jpeg'))
       concat(tag.img(html_options))
     end
