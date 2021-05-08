@@ -10,8 +10,8 @@ module Blurhashable
   }.freeze
 
   def blurhash_data_uri
-    return unless self.has_valid_blurhash?
-    width = ENV['BLURHASH_WIDTH'].to_i
+    return unless self.has_valid_blurhash? && self.processed?
+    width = ENV.fetch('BLURHASH_WIDTH') { 32 }.to_i
     Rails.cache.fetch("blurhash-data-uri/#{self.blurhash}/w/#{width}") do
       "data:image/jpeg;base64,#{blurhash_to_base64(w: width)}"
     end

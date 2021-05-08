@@ -92,7 +92,7 @@ class Photo < ApplicationRecord
   end
 
   def blurhash_url(opts = {})
-    opts.reverse_merge!(fm: 'blurhash', w: ENV['BLURHASH_WIDTH'].to_i)
+    opts.reverse_merge!(fm: 'blurhash', w: ENV.fetch('BLURHASH_WIDTH') { 32 }.to_i)
     Ix.path(self.image.key).to_url(opts)
   end
 
