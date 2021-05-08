@@ -1,9 +1,8 @@
 .image-container {
-  background: var(--blurhash, $color-gray-very-light);
-  background-repeat: no-repeat;
-  background-size: cover;
-
   img {
+    background: var(--blurhash, $color-gray-very-light);
+    background-repeat: no-repeat;
+    background-size: cover;
     display: block;
   }
 }
