@@ -29,7 +29,7 @@ module Blurhashable
     num_y = (size_flag / 9.0).floor + 1
     num_x = (size_flag % 9) + 1
 
-    return self.blurhash.size == 4 + 2 * num_x * num_y
+    self.blurhash.size == 4 + 2 * num_x * num_y
   end
 
   private
