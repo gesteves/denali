@@ -9,9 +9,7 @@
       class: 'entry-list__image blurhash',
       alt: '',
       'aria-hidden': true,
-      loading: 'lazy',
-      'data-controller': 'blurhash',
-      'data-action': 'load->blurhash#removeBackground'
+      loading: 'lazy'
     }) %>
   <div class="entry-list__photo-caption" id="<%= "entry-list-caption-#{entry.id}" %>">
     <h3 class="entry-list__photo-title"><%= truncate(entry.plain_title, length: 80, separator: ' ', omission: '…') %></h3>
