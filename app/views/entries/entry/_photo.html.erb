@@ -5,7 +5,8 @@
     sizes: @sizes,
     html_options: {
       class: 'entry__photo entry__photo--zoom blurhash',
-      'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu',
+      'data-controller': 'blurhash',
+      'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu load->blurhash#imageLoaded',
       'data-photo-target': 'photo'
     }) %>
 </div>
