@@ -139,11 +139,12 @@ module Blurhashable
   end
 
   def blurhash_to_base64(w:)
-    pixels = decode(blurhash: self.blurhash, width: w, height: self.height_from_width(w), punch: 1)
+    h = self.height_from_width(w)
+    pixels = decode(blurhash: self.blurhash, width: w, height: h, punch: 1)
     depth = 8
-    dimension = [w, self.height_from_width(w)]
+    dimensions = [w, h]
     map = 'rgb'
-    image = MiniMagick::Image.get_image_from_pixels(pixels, dimension, map, depth,'jpg')
+    image = MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
     Base64.strict_encode64(image.to_blob)
   end
 end
