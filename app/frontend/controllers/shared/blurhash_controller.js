@@ -7,7 +7,7 @@ import { Controller } from 'stimulus';
 export default class extends Controller {
 
   connect () {
-    if (this.element.complete && this.element.naturalWidth > 0 && this.element.naturalHeight > 0) {
+    if (this.element.complete) {
       this.removeBackground();
     }
   }
