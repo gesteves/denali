@@ -10,9 +10,10 @@ module Blurhashable
   }.freeze
 
   def blurhash_to_data_uri
+    width = 32
     return unless self.has_valid_blurhash?
-    Rails.cache.fetch("#{cache_key_with_version}/blurhash_to_data_uri/") do
-      "data:image/png;base64,#{blurhash_to_base64}"
+    Rails.cache.fetch("#{cache_key_with_version}/blurhash_to_data_uri/width/#{width}") do
+      "data:image/jpeg;base64,#{blurhash_to_base64(w: width)}"
     end
   end
 
@@ -132,9 +133,12 @@ module Blurhashable
     pixels
   end
 
-  def blurhash_to_base64
-    pixels = decode(blurhash: self.blurhash, width: 32, height: 32, punch: 1)
-    image = MiniMagick::Image.get_image_from_pixels(pixels, [32, 32], 'rgb', 8,'jpg')
+  def blurhash_to_base64(w:)
+    pixels = decode(blurhash: self.blurhash, width: w, height: self.height_from_width(w), punch: 1)
+    depth = 8
+    dimension = [w, self.height_from_width(w)]
+    map = 'rgb'
+    image = MiniMagick::Image.get_image_from_pixels(pixels, dimension, map, depth,'jpg')
     Base64.strict_encode64(image.to_blob)
   end
 end
