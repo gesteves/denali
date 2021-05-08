@@ -1,4 +1,4 @@
-<div class="entry__figure" style="<%= "#{css_gradient_stops(photo)}#{css_dimensions(photo)}" %>">
+<div class="entry__figure" style="<%= "#{blurhash_background(photo)}#{css_dimensions(photo)}" %>">
   <%= responsive_image_tag(
     photo: photo,
     srcset: @srcset,

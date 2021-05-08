@@ -1,4 +1,5 @@
 class Photo < ApplicationRecord
+  include Blurhashable
   belongs_to :entry, touch: true, counter_cache: true, optional: true
   belongs_to :camera, optional: true
   belongs_to :lens, optional: true

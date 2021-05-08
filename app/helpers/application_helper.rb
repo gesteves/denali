@@ -54,6 +54,16 @@ module ApplicationHelper
     end
   end
 
+  def blurhash_background(photo)
+    if photo.blurhash.present?
+      "--blurhash:url('#{photo.blurhash_to_data_uri}');"
+    elsif photo.color_palette.present?
+      "--blurhash:#{photo.color_palette.split(',').sample}"
+    else
+      ''
+    end
+  end
+
   def css_dimensions(photo)
     if photo.processed?
       "--photo-height:#{photo.height};--photo-width:#{photo.width}"

@@ -1,5 +1,5 @@
 <% photo = entry.photos.first %>
-<a class="entry-list__link" style="<%= css_gradient_stops(photo) %>" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
+<a class="entry-list__link" style="<%= blurhash_background(photo) %>" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
   <%= responsive_image_tag(
     photo: photo,
     srcset: @srcset,
