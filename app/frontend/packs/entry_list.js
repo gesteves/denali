@@ -4,9 +4,7 @@ import { definitionsFromContext } from 'stimulus/webpack-helpers';
 
 const application = Application.start();
 const context = require.context('controllers/entry_list', true, /.js$/);
-const sharedContext = require.context('controllers/shared', true, /.js$/);
 application.load(definitionsFromContext(context));
-application.load(definitionsFromContext(sharedContext));
 
 if (navigator.serviceWorker) {
   navigator.serviceWorker.register('/service_worker.js', {
