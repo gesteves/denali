@@ -11,7 +11,7 @@
       'aria-hidden': true,
       loading: 'lazy',
       'data-controller': 'blurhash',
-      'data-action': 'load->blurhash#imageLoaded'
+      'data-action': 'load->blurhash#removeBackground'
     }) %>
   <div class="entry-list__photo-caption" id="<%= "entry-list-caption-#{entry.id}" %>">
     <h3 class="entry-list__photo-title"><%= truncate(entry.plain_title, length: 80, separator: ' ', omission: '…') %></h3>
