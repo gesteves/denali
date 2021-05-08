@@ -2,6 +2,8 @@ import { Controller } from 'stimulus';
 
 /**
  * Removes Blurhash backgrounds after the photos load.
+ * Uses RAF to try to ensure the background only gets removed
+ * after the real image is rendered, to avoid annoying flashes.
  * @extends Controller
  */
 export default class extends Controller {
@@ -16,7 +18,7 @@ export default class extends Controller {
    * Removes the backgrounds when photos load.
    */
   removeBackground () {
-    this.element.classList.remove('blurhash');
+    requestAnimationFrame(() => this.element.classList.remove('blurhash'));
   }
 
   imageLoaded () {
