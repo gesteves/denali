@@ -1,3 +1,8 @@
+# Ruby port of the TypeScript implementation of the Blurhash decoder at
+# https://github.com/woltapp/blurhash/blob/master/TypeScript/src/decode.ts
+#
+# I don't understand the math involved, but it works.
+# TODO: Better error handling.
 module Blurhashable
   require "mini_magick"
   extend ActiveSupport::Concern
