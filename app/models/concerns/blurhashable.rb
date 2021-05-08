@@ -12,7 +12,7 @@ module Blurhashable
   def blurhash_to_data_uri
     width = 32
     return unless self.has_valid_blurhash?
-    Rails.cache.fetch("#{cache_key_with_version}/blurhash_to_data_uri/width/#{width}") do
+    Rails.cache.fetch("#{self.blurhash}/blurhash-data-uri/w/#{width}") do
       "data:image/jpeg;base64,#{blurhash_to_base64(w: width)}"
     end
   end
