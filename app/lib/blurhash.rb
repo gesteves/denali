@@ -3,9 +3,8 @@
 #
 # I don't understand the math involved, but it works.
 # TODO: Better error handling.
-module Blurhashable
-  require "mini_magick"
-  extend ActiveSupport::Concern
+require "mini_magick"
+module Blurhash
 
   BASE_83_CHARACTERS = %w{
     0 1 2 3 4 5 6 7 8 9
@@ -14,27 +13,33 @@ module Blurhashable
     # $ % * + , - . : ; = ? @ [ ] ^ _ { | } ~
   }.freeze
 
-  def blurhash_data_uri
-    return unless self.has_valid_blurhash? && self.processed?
-    width = ENV.fetch('BLURHASH_WIDTH') { 32 }.to_i
-    Rails.cache.fetch("blurhash-data-uri/#{self.blurhash}/w/#{width}") do
-      "data:image/jpeg;base64,#{blurhash_to_base64(w: width)}"
-    end
+  def self.to_data_uri(blurhash:, w:, h:)
+    return unless valid_blurhash?(blurhash)
+    "data:image/jpeg;base64,#{to_base64(blurhash: blurhash, w: w, h: h)}"
   end
 
-  def has_valid_blurhash?
-    return false if self.blurhash.blank? || self.blurhash.size < 6
+  def self.to_base64(blurhash:, w:, h:)
+    pixels = decode(blurhash: blurhash, width: w, height: h, punch: 1)
+    depth = 8
+    dimensions = [w, h]
+    map = 'rgb'
+    image = MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
+    Base64.strict_encode64(image.to_blob)
+  end
 
-    size_flag = decode83(self.blurhash[0])
+  def self.valid_blurhash?(blurhash)
+    return false if blurhash.blank? || blurhash.size < 6
+
+    size_flag = decode83(blurhash[0])
     num_y = (size_flag / 9.0).floor + 1
     num_x = (size_flag % 9) + 1
 
-    self.blurhash.size == 4 + 2 * num_x * num_y
+    blurhash.size == 4 + 2 * num_x * num_y
   end
 
   private
 
-  def decode83(string)
+  def self.decode83(string)
     value = 0
     string.each_char do |char|
       digit = BASE_83_CHARACTERS.find_index(char)
@@ -43,7 +48,7 @@ module Blurhashable
     value
   end
 
-  def srgb_to_linear(value)
+  def self.srgb_to_linear(value)
     v = value / 255.0
     if v <= 0.04045
       v/12.92
@@ -52,7 +57,7 @@ module Blurhashable
     end
   end
 
-  def linear_to_srgb(value)
+  def self.linear_to_srgb(value)
     v = value.clamp(0, 1)
     if (v <= 0.0031308)
       (v * 12.92 * 255 + 0.5).round
@@ -61,22 +66,22 @@ module Blurhashable
     end
   end
 
-  def sign(n)
+  def self.sign(n)
     n < 0 ? -1 : 1
   end
 
-  def sign_pow(val, exp)
+  def self.sign_pow(val, exp)
     sign(val) * (val.abs ** exp)
   end
 
-  def decode_dc(value)
+  def self.decode_dc(value)
     r = value >> 16
     g = (value >> 8) & 255
     b = value & 255
     [srgb_to_linear(r), srgb_to_linear(g), srgb_to_linear(b)]
   end
 
-  def decode_ac(value, maximum)
+  def self.decode_ac(value, maximum)
     quant_r = (value / (19 * 19).to_f).floor
     quant_g = (value / 19.0).floor % 19
     quant_b = value % 19
@@ -88,7 +93,7 @@ module Blurhashable
     ]
   end
 
-  def decode(blurhash:, width:, height:, punch:)
+  def self.decode(blurhash:, width:, height:, punch:)
     size_flag = decode83(blurhash[0])
     num_y = (size_flag / 9.0).floor + 1
     num_x = (size_flag % 9) + 1
@@ -136,15 +141,5 @@ module Blurhashable
       pixels << row
     end
     pixels
-  end
-
-  def blurhash_to_base64(w:)
-    h = self.height_from_width(w)
-    pixels = decode(blurhash: self.blurhash, width: w, height: h, punch: 1)
-    depth = 8
-    dimensions = [w, h]
-    map = 'rgb'
-    image = MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
-    Base64.strict_encode64(image.to_blob)
   end
 end

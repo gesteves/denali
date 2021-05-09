@@ -1,5 +1,4 @@
 class Photo < ApplicationRecord
-  include Blurhashable
   belongs_to :entry, touch: true, counter_cache: true, optional: true
   belongs_to :camera, optional: true
   belongs_to :lens, optional: true
@@ -92,7 +91,7 @@ class Photo < ApplicationRecord
   end
 
   def blurhash_url(opts = {})
-    opts.reverse_merge!(fm: 'blurhash', w: ENV.fetch('BLURHASH_WIDTH') { 32 }.to_i)
+    opts.reverse_merge!(fm: 'blurhash', w: 32)
     Ix.path(self.image.key).to_url(opts)
   end
 
@@ -202,6 +201,14 @@ class Photo < ApplicationRecord
   def black_and_white?
     return if self.color_palette.blank?
     !self.color?
+  end
+
+  def blurhash_data_uri(w: 32)
+    return unless self.processed?
+    h = self.height_from_width(w)
+    Rails.cache.fetch("blurhash-data-uri/#{self.blurhash}/w/#{w}/h/#{h}") do
+      Blurhash.to_data_uri(blurhash: self.blurhash, w: w, h: h)
+    end
   end
 
   def changed_dimensions?

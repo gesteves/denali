@@ -5,8 +5,10 @@ class BlurhashWorker < ApplicationWorker
     raise UnprocessedPhotoError unless photo.processed?
 
     blurhash = blurhash(photo)
-    photo.blurhash = blurhash
-    photo.save if photo.has_valid_blurhash?
+    if Blurhash.valid_blurhash?(blurhash)
+      photo.blurhash = blurhash
+      photo.save
+    end
   end
 
   private
