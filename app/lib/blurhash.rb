@@ -155,11 +155,6 @@ module Blurhash
     quant_r = (value / (19 * 19).to_f).floor
     quant_g = (value / 19.0).floor % 19
     quant_b = value % 19
-
-    [
-      sign_pow((quant_r - 9) / 9.0, 2) * maximum,
-      sign_pow((quant_g - 9) / 9.0, 2) * maximum,
-      sign_pow((quant_b - 9) / 9.0, 2) * maximum,
-    ]
+    [sign_pow((quant_r - 9) / 9.0, 2) * maximum, sign_pow((quant_g - 9) / 9.0, 2) * maximum, sign_pow((quant_b - 9) / 9.0, 2) * maximum]
   end
 end
