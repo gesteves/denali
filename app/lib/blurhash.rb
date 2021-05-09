@@ -12,6 +12,7 @@ module Blurhash
     # $ % * + , - . : ; = ? @ [ ] ^ _ { | } ~
   }.freeze
 
+  # Returns whether or not a given blurhash is valid.
   def self.valid_blurhash?(blurhash)
     return false if blurhash.blank? || blurhash.size < 6
 
@@ -22,12 +23,16 @@ module Blurhash
     blurhash.size == 4 + 2 * num_x * num_y
   end
 
+  # Decodes the given blurhash,
+  # converts it to a jpg of the specified dimensions,
+  # and returns it as a base64-encoded data URI.
   def self.to_data_uri(blurhash:, w:, h:)
     return unless valid_blurhash?(blurhash)
     image = to_jpg(blurhash: blurhash, w: w, h: h)
     "data:image/jpeg;base64,#{Base64.strict_encode64(image.to_blob)}"
   end
 
+  # Decodes the given blurhash and converts it to a jpg of the specified dimensions.
   def self.to_jpg(blurhash:, w:, h:)
     pixels = decode(blurhash: blurhash, width: w, height: h)
     depth = 8
@@ -36,13 +41,22 @@ module Blurhash
     MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
   end
 
-  # TODO: Write native encoder instead of relying on Imgix
+  # Retrieves a blurhash from an imgix URL.
+  # https://docs.imgix.com/apis/rendering/format/fm#blurhash
+  # TODO: Write native encoder instead of relying on imgix
   def self.encode(url)
     blurhash = HTTParty.get(url).body
     return nil unless valid_blurhash?(blurhash)
     blurhash
   end
 
+  # Decodes a blurhash into a matrix of pixels.
+  # Returns an array of arrays of arrays,
+  # for each row of pixels, each column of pixels,
+  # and each pixel with 4 values in the range 0-255,
+  # for the R, G, B, and alpha channels.
+  # This can be passed directly to MiniMagick,
+  # or flattened to be used with canvas.
   def self.decode(blurhash:, width:, height:, punch: 1)
     size_flag = decode83(blurhash[0])
     num_y = (size_flag / 9.0).floor + 1
