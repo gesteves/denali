@@ -13,20 +13,6 @@ module Blurhash
     # $ % * + , - . : ; = ? @ [ ] ^ _ { | } ~
   }.freeze
 
-  def self.to_data_uri(blurhash:, w:, h:)
-    return unless valid_blurhash?(blurhash)
-    "data:image/jpeg;base64,#{to_base64(blurhash: blurhash, w: w, h: h)}"
-  end
-
-  def self.to_base64(blurhash:, w:, h:)
-    pixels = decode(blurhash: blurhash, width: w, height: h, punch: 1)
-    depth = 8
-    dimensions = [w, h]
-    map = 'rgb'
-    image = MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
-    Base64.strict_encode64(image.to_blob)
-  end
-
   def self.valid_blurhash?(blurhash)
     return false if blurhash.blank? || blurhash.size < 6
 
@@ -35,6 +21,70 @@ module Blurhash
     num_x = (size_flag % 9) + 1
 
     blurhash.size == 4 + 2 * num_x * num_y
+  end
+
+  def self.to_data_uri(blurhash:, w:, h:)
+    return unless valid_blurhash?(blurhash)
+    image = to_jpg(blurhash: blurhash, w: w, h: h)
+    "data:image/jpeg;base64,#{Base64.strict_encode64(image.to_blob)}"
+  end
+
+  def self.to_jpg(blurhash:, w:, h:)
+    pixels = to_pixels(blurhash: blurhash, width: w, height: h, punch: 1)
+    depth = 8
+    dimensions = [w, h]
+    map = 'rgb'
+    MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
+  end
+
+  def self.to_pixels(blurhash:, width:, height:, punch:)
+    size_flag = decode83(blurhash[0])
+    num_y = (size_flag / 9.0).floor + 1
+    num_x = (size_flag % 9) + 1
+
+    quantised_maximum_value = decode83(blurhash[1])
+    maximum_value = (quantised_maximum_value + 1) / 166.0
+
+    colors = []
+
+    (num_x * num_y).times do |i|
+      if i == 0
+        value = decode83(blurhash[2..5])
+        colors << decode_dc(value)
+      else
+        value = decode83(blurhash[(4 + i * 2)..(5 + i * 2)])
+        colors << decode_ac(value, maximum_value * punch)
+      end
+    end
+
+    pixels = []
+
+    height.times do |h|
+      row = []
+      width.times do |w|
+        r = 0
+        g = 0
+        b = 0
+        num_y.times do |y|
+          num_x.times do |x|
+            basis = Math.cos((Math::PI * w * x) / width.to_f) * Math.cos((Math::PI * h * y) / height.to_f)
+            color = colors[x + y * num_x]
+            r += color[0] * basis
+            g += color[1] * basis
+            b += color[2] * basis
+          end
+        end
+
+        int_r = linear_to_srgb(r)
+        int_g = linear_to_srgb(g)
+        int_b = linear_to_srgb(b)
+
+        row << [int_r, int_g, int_b]
+
+      end
+      pixels << row
+    end
+    pixels
   end
 
   private
@@ -91,55 +141,5 @@ module Blurhash
       sign_pow((quant_g - 9) / 9.0, 2) * maximum,
       sign_pow((quant_b - 9) / 9.0, 2) * maximum,
     ]
-  end
-
-  def self.decode(blurhash:, width:, height:, punch:)
-    size_flag = decode83(blurhash[0])
-    num_y = (size_flag / 9.0).floor + 1
-    num_x = (size_flag % 9) + 1
-
-    quantised_maximum_value = decode83(blurhash[1])
-    maximum_value = (quantised_maximum_value + 1) / 166.0
-
-    colors = []
-
-    (num_x * num_y).times do |i|
-      if i == 0
-        value = decode83(blurhash[2..5])
-        colors << decode_dc(value)
-      else
-        value = decode83(blurhash[(4 + i * 2)..(5 + i * 2)])
-        colors << decode_ac(value, maximum_value * punch)
-      end
-    end
-
-    pixels = []
-
-    height.times do |h|
-      row = []
-      width.times do |w|
-        r = 0
-        g = 0
-        b = 0
-        num_y.times do |y|
-          num_x.times do |x|
-            basis = Math.cos((Math::PI * w * x) / width.to_f) * Math.cos((Math::PI * h * y) / height.to_f)
-            color = colors[x + y * num_x]
-            r += color[0] * basis
-            g += color[1] * basis
-            b += color[2] * basis
-          end
-        end
-
-        int_r = linear_to_srgb(r)
-        int_g = linear_to_srgb(g)
-        int_b = linear_to_srgb(b)
-
-        row << [int_r, int_g, int_b]
-
-      end
-      pixels << row
-    end
-    pixels
   end
 end
