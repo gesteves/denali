@@ -4,15 +4,9 @@ class BlurhashWorker < ApplicationWorker
     photo = Photo.find(photo_id)
     raise UnprocessedPhotoError unless photo.processed?
 
-    blurhash = blurhash(photo)
-    if Blurhash.valid_blurhash?(blurhash)
+    if blurhash = Blurhash.encode(photo.blurhash_url).presence
       photo.blurhash = blurhash
       photo.save
     end
-  end
-
-  private
-  def blurhash(photo)
-    HTTParty.get(photo.blurhash_url).body
   end
 end

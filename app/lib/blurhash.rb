@@ -2,7 +2,6 @@
 # https://github.com/woltapp/blurhash/blob/master/TypeScript/src/decode.ts
 #
 # I don't understand the math involved, but it works.
-# TODO: Better error handling.
 require "mini_magick"
 module Blurhash
 
@@ -30,14 +29,21 @@ module Blurhash
   end
 
   def self.to_jpg(blurhash:, w:, h:)
-    pixels = to_pixels(blurhash: blurhash, width: w, height: h)
+    pixels = decode(blurhash: blurhash, width: w, height: h)
     depth = 8
     dimensions = [w, h]
     map = 'rgba'
     MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
   end
 
-  def self.to_pixels(blurhash:, width:, height:, punch: 1)
+  # TODO: Write native encoder instead of relying on Imgix
+  def self.encode(url)
+    blurhash = HTTParty.get(url).body
+    return nil unless valid_blurhash?(blurhash)
+    blurhash
+  end
+
+  def self.decode(blurhash:, width:, height:, punch: 1)
     size_flag = decode83(blurhash[0])
     num_y = (size_flag / 9.0).floor + 1
     num_x = (size_flag % 9) + 1
