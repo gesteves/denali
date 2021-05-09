@@ -30,14 +30,14 @@ module Blurhash
   end
 
   def self.to_jpg(blurhash:, w:, h:)
-    pixels = to_pixels(blurhash: blurhash, width: w, height: h, punch: 1)
+    pixels = to_pixels(blurhash: blurhash, width: w, height: h)
     depth = 8
     dimensions = [w, h]
     map = 'rgb'
     MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
   end
 
-  def self.to_pixels(blurhash:, width:, height:, punch:)
+  def self.to_pixels(blurhash:, width:, height:, punch: 1)
     size_flag = decode83(blurhash[0])
     num_y = (size_flag / 9.0).floor + 1
     num_x = (size_flag % 9) + 1
