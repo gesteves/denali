@@ -33,7 +33,7 @@ module Blurhash
     pixels = to_pixels(blurhash: blurhash, width: w, height: h)
     depth = 8
     dimensions = [w, h]
-    map = 'rgb'
+    map = 'rgba'
     MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
   end
 
@@ -79,7 +79,7 @@ module Blurhash
         int_g = linear_to_srgb(g)
         int_b = linear_to_srgb(b)
 
-        row << [int_r, int_g, int_b]
+        row << [int_r, int_g, int_b, 255]
 
       end
       pixels << row
