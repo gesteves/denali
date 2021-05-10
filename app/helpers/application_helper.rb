@@ -73,7 +73,7 @@ module ApplicationHelper
           width="#{photo.width}" height="#{photo.height}"
           viewBox="0 0 #{photo.width} #{photo.height}">
         <filter id="blur" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-          <feGaussianBlur stdDeviation="20 20" edgeMode="duplicate" />
+          <feGaussianBlur stdDeviation="100" edgeMode="duplicate" />
           <feComponentTransfer>
             <feFuncA type="discrete" tableValues="1 1" />
           </feComponentTransfer>
