@@ -56,12 +56,33 @@ module ApplicationHelper
 
   def blurhash_background(photo)
     if photo.blurhash.present?
-      "--blurhash:url('#{photo.blurhash_data_uri}');"
+      "--blurhash:url('#{blurhash_svg(photo)}');"
     elsif photo.color_palette.present?
       "--blurhash:#{photo.color_palette.split(',').sample}"
     else
       ''
     end
+  end
+
+  def blurhash_svg(photo)
+    svg = <<-SVG
+      <svg xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          width="#{photo.width}" height="#{photo.height}"
+          viewBox="0 0 #{photo.width} #{photo.height}">
+        <filter id="blur" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+          <feGaussianBlur stdDeviation="20 20" edgeMode="duplicate" />
+          <feComponentTransfer>
+            <feFuncA type="discrete" tableValues="1 1" />
+          </feComponentTransfer>
+        </filter>
+        <image filter="url(#blur)"
+              xlink:href="#{photo.blurhash_data_uri}"
+              x="0" y="0"
+              height="100%" width="100%"/>
+      </svg>
+    SVG
+    "data:image/svg+xml;charset=utf-8,#{u svg.gsub(/\s+/, ' ')}"
   end
 
   def css_dimensions(photo)
