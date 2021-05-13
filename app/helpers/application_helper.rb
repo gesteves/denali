@@ -58,7 +58,7 @@ module ApplicationHelper
     if photo.blurhash.present?
       "--blurhash:url('#{blurhash_svg(photo)}');"
     elsif photo.color_palette.present?
-      "--blurhash:#{photo.color_palette.split(',').sample}"
+      "--blurhash:#{photo.color_palette.split(',').first}"
     else
       ''
     end
