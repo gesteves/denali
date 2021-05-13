@@ -7,9 +7,7 @@ import { Controller } from 'stimulus';
 export default class extends Controller {
 
   connect () {
-    if (this.element.complete) {
-      this.removeBackground();
-    }
+    this.removeBackground();
   }
 
   /**
@@ -19,7 +17,7 @@ export default class extends Controller {
    */
   removeBackground () {
     const interval = setInterval(() => {
-      if (this.element.naturalWidth > 0 && this.element.naturalHeight > 0) {
+      if (this.element.complete && this.element.naturalWidth > 0 && this.element.naturalHeight > 0) {
         clearInterval(interval);
         requestAnimationFrame(() => this.element.classList.remove('blurhash'));
       }
