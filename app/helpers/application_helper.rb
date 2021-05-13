@@ -70,7 +70,6 @@ module ApplicationHelper
     svg = <<-SVG
       <svg xmlns="http://www.w3.org/2000/svg"
           xmlns:xlink="http://www.w3.org/1999/xlink"
-          width="#{photo.width}" height="#{photo.height}"
           viewBox="0 0 #{photo.width} #{photo.height}">
         <filter id="blur" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
           <feGaussianBlur stdDeviation="100" edgeMode="duplicate" />
