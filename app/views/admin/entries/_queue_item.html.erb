@@ -2,14 +2,18 @@
   <div class="card-image">
     <% if entry.is_photo? %>
     <% photo = entry.photos.first %>
-    <div style="<%= blurhash_background(photo) %>" class="image image-container">
+    <div class="image image-container">
       <%= responsive_image_tag(
         photo: photo,
         srcset: @srcset,
         sizes: @sizes,
         aspect_ratio: '1:1',
         html_options: {
-          loading: 'lazy'
+          class: 'blurhash',
+          loading: 'lazy',
+          style: blurhash_background(photo),
+          'data-controller': 'blurhash',
+          'data-action': 'load->blurhash#removeBackground',
         }) %>
     </div>
     <% else %>

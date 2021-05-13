@@ -1,16 +1,18 @@
 <% cache photo do %>
   <div class="card" data-controller="focal-point" data-focal-point-endpoint-value=<%= crops_admin_entry_photo_url(entry_id: @entry.id, id: photo.id, format: 'js') %> data-focal-point-photo-id="<%= photo.id %>" data-focal-point-focal-x-value="<%= photo.focal_x %>" data-focal-point-focal-y-value="<%= photo.focal_y %>">
     <div class="card-image">
-      <div style="<%= blurhash_background(photo) %>" class="image image-container focal-point__image-container">
+      <div class="image image-container focal-point__image-container">
         <%= responsive_image_tag(
           photo: photo,
           srcset: @srcset,
           sizes: @sizes,
           html_options: {
-            class: 'focal-point__thumbnail',
+            class: 'focal-point__thumbnail blurhash',
             loading: 'lazy',
+            style: blurhash_background(photo),
             'data-focal-point-target': 'thumbnail',
-            'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint'
+            'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint load->blurhash#removeBackground',
+            'data-controller': 'blurhash'
           }) %>
           <div class="is-hidden focal-point__focal-marker" data-focal-point-target="focalMarker"></div>
       </div>

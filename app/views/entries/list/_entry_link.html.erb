@@ -1,15 +1,16 @@
 <% photo = entry.photos.first %>
-<a class="entry-list__link" style="<%= blurhash_background(photo) %>" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
+<a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
   <%= responsive_image_tag(
     photo: photo,
     srcset: @srcset,
     sizes: @sizes,
     aspect_ratio: local_assigns[:aspect_ratio].presence,
     html_options: {
-      class: 'entry-list__image blurhash',
       alt: '',
-      'aria-hidden': true,
+      class: 'entry-list__image blurhash',
       loading: 'lazy',
+      style: blurhash_background(photo),
+      'aria-hidden': true,
       'data-controller': 'blurhash',
       'data-action': 'load->blurhash#removeBackground'
     }) %>

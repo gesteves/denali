@@ -1,14 +1,18 @@
 <% photo = entry.photos.first %>
 <div class="card is-marginless">
   <div class="card-image">
-    <a style="<%= blurhash_background(photo) %>" target="_blank" class="image image-container" href="<%= entry.permalink_url %>">
+    <a target="_blank" class="image image-container" href="<%= entry.permalink_url %>">
       <%= responsive_image_tag(
         photo: photo,
         srcset: @srcset,
         sizes: @sizes,
         aspect_ratio: '1:1',
         html_options: {
-          loading: 'lazy'
+          class: 'blurhash',
+          loading: 'lazy',
+          style: blurhash_background(photo),
+          'data-controller': 'blurhash',
+          'data-action': 'load->blurhash#removeBackground',
         }) %>
     </a>
   </div>

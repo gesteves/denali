@@ -19,16 +19,18 @@
         <%= f.fields_for :photos do |p| %>
           <div class="draggable-source" data-controller="photo-form focal-point" data-photo-form-empty-value="false" data-focal-point-focal-x-value="<%= p.object.focal_x %>" data-focal-point-focal-y-value="<%= p.object.focal_y %>">
             <div class="card" data-photo-form-target="fields">
-              <div class="card-image image focal-point__image-container is-clipped image-container" style="<%= blurhash_background(p.object) %>">
+              <div class="card-image image focal-point__image-container is-clipped image-container">
                 <%= responsive_image_tag(
                   photo: p.object,
                   srcset: @srcset,
                   sizes: @sizes,
                   html_options: {
-                    class: 'focal-point__thumbnail',
-                    'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint',
+                    class: 'focal-point__thumbnail blurhash',
+                    style: blurhash_background(p.object),
+                    'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint load->blurhash#removeBackground',
                     'data-photo-form-target': 'thumbnail',
-                    'data-focal-point-target': 'thumbnail'
+                    'data-focal-point-target': 'thumbnail',
+                    'data-controller': 'blurhash'
                   }) %>
                 <div class="is-hidden focal-point__focal-marker" data-focal-point-target="focalMarker"></div>
               </div>

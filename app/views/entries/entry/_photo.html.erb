@@ -1,10 +1,11 @@
-<div class="entry__figure" style="<%= "#{blurhash_background(photo)}#{css_dimensions(photo)}" %>">
+<div class="entry__figure" style="<%= css_dimensions(photo) %>">
   <%= responsive_image_tag(
     photo: photo,
     srcset: @srcset,
     sizes: @sizes,
     html_options: {
       class: 'entry__photo entry__photo--zoom blurhash',
+      style: blurhash_background(photo),
       'data-controller': 'blurhash',
       'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu load->blurhash#removeBackground',
       'data-photo-target': 'photo'
