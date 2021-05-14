@@ -9,68 +9,58 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries
   def index
-    if stale?(@photoblog)
-      set_srcset
-      @page = params[:page] || 1
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).published.page(@page)
-      @page_title = 'Published'
-      respond_to do |format|
-        format.html
-      end
+    set_srcset
+    @page = params[:page] || 1
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).published.page(@page)
+    @page_title = 'Published'
+    respond_to do |format|
+      format.html
     end
   end
 
   # GET /admin/entries/queued
   def queued
-    if stale?(@photoblog)
-      set_srcset
-      @page = params[:page] || 1
-      @count = ([@photoblog.publish_schedules_count.presence || 0, 1].max) * 7
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).queued.page(@page).per(@count)
-      @page_title = 'Queued'
-      respond_to do |format|
-        format.html
-      end
+    set_srcset
+    @page = params[:page] || 1
+    @count = ([@photoblog.publish_schedules_count.presence || 0, 1].max) * 7
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).queued.page(@page).per(@count)
+    @page_title = 'Queued'
+    respond_to do |format|
+      format.html
     end
   end
 
   # GET /admin/entries/drafts
   def drafts
-    if stale?(@photoblog)
-      set_srcset
-      @page = params[:page] || 1
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).drafted.page(@page)
-      @page_title = 'Drafts'
-      respond_to do |format|
-        format.html
-      end
+    set_srcset
+    @page = params[:page] || 1
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).drafted.page(@page)
+    @page_title = 'Drafts'
+    respond_to do |format|
+      format.html
     end
   end
 
   # GET /admin/entries/tagged/film
   def tagged
-    if stale?(@photoblog)
-      set_srcset
-      @page = params[:page] || 1
-      entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).tagged_with(@tag_list, any: true).order('entries.created_at DESC')
-      @entries = entries.page(@page)
-      @page_title = "Entries tagged \"#{@tag_list.first}\""
-      @tagged_count = entries.size
-      raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
-      respond_to do |format|
-        format.html
-      end
+    set_srcset
+    @page = params[:page] || 1
+    entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).tagged_with(@tag_list, any: true).order('entries.created_at DESC')
+    @entries = entries.page(@page)
+    @page_title = "Entries tagged \"#{@tag_list.first}\""
+    @tagged_count = entries.size
+    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    respond_to do |format|
+      format.html
     end
   end
 
   # GET /admin/entries/:id
   def show
-    if stale?(@entry)
-      set_srcset
-      @page_title = @entry.plain_title
-      respond_to do |format|
-        format.html
-      end
+    set_srcset
+    @page_title = @entry.plain_title
+    respond_to do |format|
+      format.html
     end
   end
 
@@ -90,22 +80,20 @@ class Admin::EntriesController < AdminController
   end
 
   def search
-    if stale?(@photoblog)
-      raise ActionController::RoutingError.new('Not Found') unless @photoblog.has_search?
-      set_srcset
-      @page = (params[:page] || 1).to_i
-      @count = 10
-      @query = params[:q]
-      @page_title = "Search"
-      if @query.present?
-        @page_title = "Search results for \"#{@query}\""
-        results = Entry.full_search(@query, @page, @count)
-        @total_count = results.results.total
-        @entries = Kaminari.paginate_array(results.records.includes(photos: [:image_attachment, :image_blob], taggings: :tag), total_count: @total_count).page(@page).per(@count)
-      end
-      respond_to do |format|
-        format.html
-      end
+    raise ActionController::RoutingError.new('Not Found') unless @photoblog.has_search?
+    set_srcset
+    @page = (params[:page] || 1).to_i
+    @count = 10
+    @query = params[:q]
+    @page_title = "Search"
+    if @query.present?
+      @page_title = "Search results for \"#{@query}\""
+      results = Entry.full_search(@query, @page, @count)
+      @total_count = results.results.total
+      @entries = Kaminari.paginate_array(results.records.includes(photos: [:image_attachment, :image_blob], taggings: :tag), total_count: @total_count).page(@page).per(@count)
+    end
+    respond_to do |format|
+      format.html
     end
   end
 
@@ -191,14 +179,12 @@ class Admin::EntriesController < AdminController
   end
 
   def organize_queue
-    if stale?(@photoblog)
-      @srcset = PHOTOS[:admin_queue][:srcset]
-      @sizes = PHOTOS[:admin_queue][:sizes].join(', ')
-      @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued
-      @page_title = 'Organize queue'
-      respond_to do |format|
-        format.html
-      end
+    @srcset = PHOTOS[:admin_queue][:srcset]
+    @sizes = PHOTOS[:admin_queue][:sizes].join(', ')
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).queued
+    @page_title = 'Organize queue'
+    respond_to do |format|
+      format.html
     end
   end
 
@@ -237,16 +223,14 @@ class Admin::EntriesController < AdminController
 
   def syndicate
     @entry = @photoblog.entries.published.find(params[:id])
-    if stale?(@entry)
-      respond_to do |format|
-        format.html {
-          if params[:modal]
-            render layout: nil
-          else
-            render
-          end
-        }
-      end
+    respond_to do |format|
+      format.html {
+        if params[:modal]
+          render layout: nil
+        else
+          render
+        end
+      }
     end
   end
 
@@ -265,20 +249,18 @@ class Admin::EntriesController < AdminController
   end
 
   def prints
-    if stale?(@entry)
-      @srcset = PHOTOS[:admin_modal][:srcset]
-      @sizes = PHOTOS[:admin_modal][:sizes].join(', ')
-      @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
-      @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
-      respond_to do |format|
-        format.html {
-          if params[:modal]
-            render layout: nil
-          else
-            render
-          end
-        }
-      end
+    @srcset = PHOTOS[:admin_modal][:srcset]
+    @sizes = PHOTOS[:admin_modal][:sizes].join(', ')
+    @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
+    @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
+    respond_to do |format|
+      format.html {
+        if params[:modal]
+          render layout: nil
+        else
+          render
+        end
+      }
     end
   end
 

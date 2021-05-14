@@ -1,14 +1,12 @@
 class Admin::PublishSchedulesController < AdminController
 
   def index
-    if stale?(@photoblog)
-      @schedules = @photoblog.publish_schedules
-      @page_title = 'Queue schedule'
-      @queued_entries = @photoblog.entries.queued.count
-      @new_schedule = PublishSchedule.new
-      respond_to do |format|
-        format.html
-      end
+    @schedules = @photoblog.publish_schedules
+    @page_title = 'Queue schedule'
+    @queued_entries = @photoblog.entries.queued.count
+    @new_schedule = PublishSchedule.new
+    respond_to do |format|
+      format.html
     end
   end
 

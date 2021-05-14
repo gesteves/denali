@@ -1,13 +1,11 @@
 class Admin::WebhooksController < AdminController
 
   def index
-    if stale?(@photoblog)
-      @page = params[:page] || 1
-      @webhooks = @photoblog.webhooks.page(@page).per(100)
-      @page_title = 'Webhooks'
-      respond_to do |format|
-        format.html
-      end
+    @page = params[:page] || 1
+    @webhooks = @photoblog.webhooks.page(@page).per(100)
+    @page_title = 'Webhooks'
+    respond_to do |format|
+      format.html
     end
   end
 

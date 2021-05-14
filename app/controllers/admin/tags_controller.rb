@@ -1,12 +1,10 @@
 class Admin::TagsController < AdminController
   def index
-    if stale?(@photoblog)
-      @page = params[:page] || 1
-      @tags = ActsAsTaggableOn::Tag.order('name asc').page(@page).per(100)
-      @page_title = 'Tags'
-      respond_to do |format|
-        format.html
-      end
+    @page = params[:page] || 1
+    @tags = ActsAsTaggableOn::Tag.order('name asc').page(@page).per(100)
+    @page_title = 'Tags'
+    respond_to do |format|
+      format.html
     end
   end
 
