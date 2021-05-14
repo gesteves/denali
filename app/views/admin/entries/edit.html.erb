@@ -26,7 +26,7 @@
                   sizes: @sizes,
                   html_options: {
                     class: 'focal-point__thumbnail placeholder',
-                    style: placeholder_background(p.object),
+                    style: css_placeholder_background(p.object),
                     'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint load->placeholder#removeBackground',
                     'data-photo-form-target': 'thumbnail',
                     'data-focal-point-target': 'thumbnail',

@@ -1,11 +1,11 @@
-<div class="entry__figure" style="<%= css_dimensions(photo) %>">
+<div class="entry__figure">
   <%= responsive_image_tag(
     photo: photo,
     srcset: @srcset,
     sizes: @sizes,
     html_options: {
       class: 'entry__photo entry__photo--zoom placeholder',
-      style: placeholder_background(photo),
+      style: "#{css_placeholder_background(photo)}#{css_photo_dimensions(photo)}",
       'data-controller': 'placeholder',
       'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu load->placeholder#removeBackground',
       'data-photo-target': 'photo'

@@ -40,12 +40,6 @@ module ApplicationHelper
     render partial: "partials/svg/#{icon.to_s}", locals: { class_name: "#{class_name} #{class_name}--#{icon}".strip, aria_hidden: aria_hidden }
   end
 
-  def css_gradient_stops(photo)
-    return '' if photo.color_palette.blank?
-    palette = photo.color_palette.split(',').sample(2)
-    "--gradient-start:#{palette.first};--gradient-end:#{palette.last};".html_safe
-  end
-
   def css_aspect_ratio(photo)
     if photo.processed?
       "--aspect-ratio:#{(photo.height.to_f/photo.width.to_f).floor(2)};"
@@ -54,11 +48,11 @@ module ApplicationHelper
     end
   end
 
-  def placeholder_background(photo)
+  def css_placeholder_background(photo)
     if photo.blurhash.present?
       "--placeholder:url('#{blurhash_svg(photo)}');"
     elsif photo.color_palette.present?
-      "--placeholder:#{photo.color_palette.split(',').first}"
+      "--placeholder:#{photo.color_palette.split(',').first};"
     else
       ''
     end
@@ -71,7 +65,7 @@ module ApplicationHelper
     "data:image/svg+xml;charset=utf-8,#{u svg.gsub(/\s+/, ' ')}"
   end
 
-  def css_dimensions(photo)
+  def css_photo_dimensions(photo)
     if photo.processed?
       "--photo-height:#{photo.height};--photo-width:#{photo.width}"
     elsif @photoblog.placeholder_processed?
