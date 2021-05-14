@@ -9,11 +9,11 @@
         sizes: @sizes,
         aspect_ratio: '1:1',
         html_options: {
-          class: 'blurhash',
+          class: 'placeholder',
           loading: 'lazy',
-          style: blurhash_background(photo),
-          'data-controller': 'blurhash',
-          'data-action': 'load->blurhash#removeBackground',
+          style: placeholder_background(photo),
+          'data-controller': 'placeholder',
+          'data-action': 'load->placeholder#removeBackground',
         }) %>
     </div>
     <% else %>

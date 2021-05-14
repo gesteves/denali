@@ -54,11 +54,11 @@ module ApplicationHelper
     end
   end
 
-  def blurhash_background(photo)
+  def placeholder_background(photo)
     if photo.blurhash.present?
-      "--blurhash:url('#{blurhash_svg(photo)}');"
+      "--placeholder:url('#{blurhash_svg(photo)}');"
     elsif photo.color_palette.present?
-      "--blurhash:#{photo.color_palette.split(',').first}"
+      "--placeholder:#{photo.color_palette.split(',').first}"
     else
       ''
     end

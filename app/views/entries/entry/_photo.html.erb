@@ -4,10 +4,10 @@
     srcset: @srcset,
     sizes: @sizes,
     html_options: {
-      class: 'entry__photo entry__photo--zoom blurhash',
-      style: blurhash_background(photo),
-      'data-controller': 'blurhash',
-      'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu load->blurhash#removeBackground',
+      class: 'entry__photo entry__photo--zoom placeholder',
+      style: placeholder_background(photo),
+      'data-controller': 'placeholder',
+      'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu load->placeholder#removeBackground',
       'data-photo-target': 'photo'
     }) %>
 </div>

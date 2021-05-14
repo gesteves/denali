@@ -1,7 +1,7 @@
 import { Controller } from 'stimulus';
 
 /**
- * Removes Blurhash backgrounds after the photos load.
+ * Removes placeholder backgrounds after the photos load.
  * @extends Controller
  */
 export default class extends Controller {
@@ -19,7 +19,7 @@ export default class extends Controller {
     const interval = setInterval(() => {
       if (this.element.complete && this.element.naturalWidth > 0 && this.element.naturalHeight > 0) {
         clearInterval(interval);
-        requestAnimationFrame(() => this.element.classList.remove('blurhash'));
+        requestAnimationFrame(() => this.element.classList.remove('placeholder'));
       }
     }, 1000);
   }

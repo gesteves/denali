@@ -25,12 +25,12 @@
                   srcset: @srcset,
                   sizes: @sizes,
                   html_options: {
-                    class: 'focal-point__thumbnail blurhash',
-                    style: blurhash_background(p.object),
-                    'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint load->blurhash#removeBackground',
+                    class: 'focal-point__thumbnail placeholder',
+                    style: placeholder_background(p.object),
+                    'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint load->placeholder#removeBackground',
                     'data-photo-form-target': 'thumbnail',
                     'data-focal-point-target': 'thumbnail',
-                    'data-controller': 'blurhash'
+                    'data-controller': 'placeholder'
                   }) %>
                 <div class="is-hidden focal-point__focal-marker" data-focal-point-target="focalMarker"></div>
               </div>
