@@ -67,22 +67,7 @@ module ApplicationHelper
   # Embed the Blurhash image in an SVG with a blur filter
   # https://css-tricks.com/the-blur-up-technique-for-loading-background-images/#recreating-the-blur-filter-with-svg
   def blurhash_svg(photo)
-    svg = <<-SVG
-      <svg xmlns="http://www.w3.org/2000/svg"
-          xmlns:xlink="http://www.w3.org/1999/xlink"
-          viewBox="0 0 #{photo.width} #{photo.height}">
-        <filter id="blur" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-          <feGaussianBlur stdDeviation="100" edgeMode="duplicate" />
-          <feComponentTransfer>
-            <feFuncA type="discrete" tableValues="1 1" />
-          </feComponentTransfer>
-        </filter>
-        <image filter="url(#blur)"
-              xlink:href="#{photo.blurhash_data_uri}"
-              x="0" y="0"
-              height="100%" width="100%"/>
-      </svg>
-    SVG
+    svg = render partial: "partials/blurhash", locals: { width: photo.width, height: photo.height, blurhash: photo.blurhash_data_uri }
     "data:image/svg+xml;charset=utf-8,#{u svg.gsub(/\s+/, ' ')}"
   end
 
