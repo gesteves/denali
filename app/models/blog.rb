@@ -140,14 +140,11 @@ class Blog < ApplicationRecord
     if attributes.any? { |attr| saved_change_to_attribute? (attr) }
       self.invalidate
     elsif saved_change_to_about?
-      self.invalidate(paths: about_path, clear_cache: false)
+      self.invalidate(paths: about_path)
     end
   end
 
-  def invalidate(paths: '/*', clear_cache: true)
-    if clear_cache
-      HerokuConfigWorker.perform_async({ CACHE_VERSION: Time.now.to_i.to_s })
-    end
+  def invalidate(paths: '/*')
     CloudfrontInvalidationWorker.perform_async(paths)
   end
 end
