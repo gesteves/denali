@@ -44,6 +44,7 @@ class Admin::BlogsController < AdminController
   end
 
   def flush_caches
+    Rails.cache.clear
     @photoblog.invalidate
     @message = 'Caches are being cleared. This may take a few moments.'
     respond_to do |format|
