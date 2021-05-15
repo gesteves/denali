@@ -74,8 +74,8 @@ GEM
       activerecord (>= 4.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
-    autoprefixer-rails (10.2.4.0)
-      execjs
+    autoprefixer-rails (10.2.5.0)
+      execjs (< 2.8.0)
     aws-eventstream (1.1.1)
     aws-partitions (1.452.0)
     aws-sdk-cloudfront (1.50.0)
