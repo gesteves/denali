@@ -31,6 +31,9 @@ Rails.application.configure do
   # Needs to be enabled to allow inline assets.
   config.assets.compile = true
 
+  # Disable asset gzipping so it's handled by deflate & brotli middleware.
+  config.assets.gzip = false
+
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   config.action_controller.asset_host = ENV['domain'] if ENV['domain'].present?
 
