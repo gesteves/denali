@@ -1,2 +1,2 @@
-Rails.application.config.middleware.use Rack::Deflater
-Rails.application.config.middleware.use Rack::Brotli
+Rails.application.config.middleware.insert_before ActionDispatch::Static, Rack::Deflater
+Rails.application.config.middleware.insert_before ActionDispatch::Static, Rack::Brotli
