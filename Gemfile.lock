@@ -322,8 +322,6 @@ GEM
       rack (~> 2.0)
       redis (>= 4.2.0)
     simple_oauth (0.3.1)
-    skylight (5.0.1)
-      activesupport (>= 5.2.0)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -418,7 +416,6 @@ DEPENDENCIES
   sdoc (~> 2.2)
   sentry-raven (~> 3.1)
   sidekiq
-  skylight
   spring
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5.2.1)

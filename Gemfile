@@ -42,7 +42,6 @@ gem 'rack-brotli'
 # Monitoring
 gem 'sentry-raven', '~> 3.1'
 gem 'barnes'
-gem 'skylight'
 
 # Caching
 gem 'dalli'
