@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.7.3'
 
-gem 'rails', '6.1.3.2'
+gem 'rails', '6.1.4'
 gem 'pg', '~> 1.2'
 gem 'puma'
 
@@ -30,7 +30,7 @@ gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr', require: nil
-gem 'acts-as-taggable-on', '~> 8.0'
+gem 'acts-as-taggable-on', '~> 8.1'
 gem 'httparty'
 gem 'kaminari'
 gem 'figaro'
