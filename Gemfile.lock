@@ -112,18 +112,18 @@ GEM
     dalli (2.7.11)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
-    elasticsearch (5.0.5)
-      elasticsearch-api (= 5.0.5)
-      elasticsearch-transport (= 5.0.5)
-    elasticsearch-api (5.0.5)
+    elasticsearch (6.8.2)
+      elasticsearch-api (= 6.8.2)
+      elasticsearch-transport (= 6.8.2)
+    elasticsearch-api (6.8.2)
       multi_json
-    elasticsearch-model (5.1.0)
+    elasticsearch-model (6.1.1)
       activesupport (> 3)
-      elasticsearch (~> 5)
+      elasticsearch (~> 6)
       hashie
     elasticsearch-rails (5.1.0)
-    elasticsearch-transport (5.0.5)
-      faraday
+    elasticsearch-transport (6.8.2)
+      faraday (~> 1)
       multi_json
     equalizer (0.0.11)
     erubi (1.10.0)
@@ -387,7 +387,7 @@ DEPENDENCIES
   brakeman
   byebug
   dalli
-  elasticsearch-model (~> 5.0)
+  elasticsearch-model (~> 6.1)
   elasticsearch-rails (~> 5.0)
   exifr
   figaro
