@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-ruby '2.5.1'
+ruby '2.6.8'
 
 gem 'rails', '5.2.2'
 gem 'pg', '~> 0.21'
@@ -74,6 +74,7 @@ group :development, :test do
   gem 'foreman'
   gem 'byebug'
   gem 'brakeman', require: nil
+  gem 'dotenv-rails'
 end
 
 group :test do
