@@ -70,7 +70,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'scss-lint'
+  gem 'scss_lint'
   gem 'foreman'
   gem 'byebug'
   gem 'brakeman', require: nil
