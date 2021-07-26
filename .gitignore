@@ -37,3 +37,6 @@
 yarn-debug.log*
 yarn-error.log*
 .yarn-integrity
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key

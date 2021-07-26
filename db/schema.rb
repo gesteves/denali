@@ -133,7 +133,6 @@ ActiveRecord::Schema.define(version: 2019_01_22_013908) do
     t.integer "focal_length"
     t.float "focal_x"
     t.float "focal_y"
-    t.string "geocoded_address"
     t.string "country"
     t.string "locality"
     t.string "sublocality"
