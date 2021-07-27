@@ -135,7 +135,6 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
-    imgix (4.0.3)
     jbuilder (2.11.2)
       activesupport (>= 5.0.0)
     jmespath (1.4.0)
@@ -277,6 +276,7 @@ GEM
       redis (>= 3.3)
       resque (>= 1.26)
       rufus-scheduler (~> 3.2)
+    ruby-thumbor (3.0.0)
     ruby2_keywords (0.0.5)
     ruby_dep (1.5.0)
     rufus-scheduler (3.8.0)
@@ -367,7 +367,6 @@ DEPENDENCIES
   flickraw
   foreman
   httparty
-  imgix
   jbuilder (~> 2.5)
   kaminari
   listen (>= 3.0.5, < 3.2)
@@ -384,6 +383,7 @@ DEPENDENCIES
   redcarpet
   resque
   resque-scheduler
+  ruby-thumbor
   sanitize
   sass-rails (~> 5.0)
   scss_lint
