@@ -4,10 +4,10 @@ class ThumborUrl
   @@base = Thumbor::CryptoURL.new ENV['thumbor_security_key']
   def self.generate(opts = {})
     if opts[:w]
-      opts[:width] = opts.delete(:w)
+      opts[:width] = opts.delete(:w).to_i
     end
     if opts[:h]
-      opts[:height] = opts.delete(:h)
+      opts[:height] = opts.delete(:h).to_i
     end
     "https://#{ENV['thumbor_domain']}#{@@base.generate(opts)}"
   end

@@ -33,8 +33,8 @@ class Photo < ApplicationRecord
       opts.delete(:square)
     end
     if opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]) && !opts[:fit].present?
+      opts[:smart] = true
       opts[:fit] = 'crop'
-      opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
     end
     opts[:image] = self.image.key
     ThumborUrl.generate(opts.reject { |k,v| v.blank? })
