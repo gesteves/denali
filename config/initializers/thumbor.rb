@@ -9,6 +9,7 @@ class ThumborUrl
     if opts[:h]
       opts[:height] = opts.delete(:h).to_i
     end
+    Rails.logger.info("thumbor_opts - #{opts.to_json}")
     "https://#{ENV['thumbor_domain']}#{@@base.generate(opts)}"
   end
 end
