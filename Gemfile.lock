@@ -84,18 +84,18 @@ GEM
     dotenv-rails (2.7.6)
       dotenv (= 2.7.6)
       railties (>= 3.2)
-    elasticsearch (5.0.5)
-      elasticsearch-api (= 5.0.5)
-      elasticsearch-transport (= 5.0.5)
-    elasticsearch-api (5.0.5)
+    elasticsearch (7.13.3)
+      elasticsearch-api (= 7.13.3)
+      elasticsearch-transport (= 7.13.3)
+    elasticsearch-api (7.13.3)
       multi_json
-    elasticsearch-model (5.1.0)
+    elasticsearch-model (7.1.1)
       activesupport (> 3)
-      elasticsearch (~> 5)
+      elasticsearch (> 1)
       hashie
-    elasticsearch-rails (5.1.0)
-    elasticsearch-transport (5.0.5)
-      faraday
+    elasticsearch-rails (7.1.1)
+    elasticsearch-transport (7.13.3)
+      faraday (~> 1)
       multi_json
     erubi (1.10.0)
     et-orbi (1.2.4)
@@ -360,8 +360,8 @@ DEPENDENCIES
   byebug
   dalli
   dotenv-rails
-  elasticsearch-model (~> 5.0)
-  elasticsearch-rails (~> 5.0)
+  elasticsearch-model (~> 7.0)
+  elasticsearch-rails (~> 7.0)
   exifr
   figaro
   flickraw

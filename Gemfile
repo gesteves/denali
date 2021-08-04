@@ -52,8 +52,8 @@ gem 'resque-scheduler'
 gem 'flickraw'
 
 # Search
-gem 'elasticsearch-model', '~> 5.0'
-gem 'elasticsearch-rails', '~> 5.0'
+gem 'elasticsearch-model', '~> 7.0'
+gem 'elasticsearch-rails', '~> 7.0'
 
 group :production do
   gem 'passenger'
