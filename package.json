@@ -4,11 +4,11 @@
   "description": "A simple, fast photoblogging CMS built in Ruby on Rails which features responsive, high-resolution images. You can see it live at [All-Encompassing Trip](http://www.allencompassingtrip.com).",
   "main": "Gulpfile.js",
   "dependencies": {
-    "@rails/webpacker": "^5.4.2",
+    "@rails/webpacker": "^5.4.3",
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
     "bulma": "^0.9.3",
-    "caniuse-lite": "^1.0.30001256",
+    "caniuse-lite": "^1.0.30001258",
     "clipboard": "^2.0.8",
     "jquery": "^3.6.0",
     "leaflet-hash": "^0.2.1",
@@ -32,7 +32,7 @@
     "gulp-scss-lint-stylish": "^1.0",
     "gulp-svgmin": "^3.0",
     "gulp-svgstore": "^8.0",
-    "webpack-dev-server": "^4.2.0"
+    "webpack-dev-server": "^4.2.1"
   },
   "repository": {
     "type": "git",
