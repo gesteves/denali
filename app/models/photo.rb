@@ -163,7 +163,7 @@ class Photo < ApplicationRecord
     return '' if self.exposure.blank?
     exp = self.exposure.to_r.rationalize
     formatted = exp >= 1 ? "%g" % ("%.2f" % exp) : exp.to_s
-    "#{formatted} s"
+    "#{formatted}″"
   end
 
   def location
