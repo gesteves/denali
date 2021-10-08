@@ -11,9 +11,9 @@ module EntriesHelper
 
   def json_schema_images(photo)
     [
-      photo.url(w: 1200, h: 675, fm: 'jpg'),
-      photo.url(w: 1200, h: 900, fm: 'jpg'),
-      photo.url(w: 1200, aspect_ratio: '1:1')
+      photo.url(w: 1200, aspect_ratio: '1:1', fm: 'jpg'),
+      photo.url(w: 1200, aspect_ratio: '4:3', fm: 'jpg'),
+      photo.url(w: 1200, aspect_ratio: '16:9', fm: 'jpg')
     ]
   end
 
