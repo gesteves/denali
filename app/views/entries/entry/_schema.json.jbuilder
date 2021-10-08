@@ -11,6 +11,7 @@ end
 json.author do
   json.set! '@type', 'Person'
   json.name entry.user.name
+  json.url about_url
 end
 json.publisher do
   json.set! '@type', 'Organization'
