@@ -316,12 +316,11 @@ class Entry < ApplicationRecord
 
     paths = paths.flatten.reject(&:blank?).uniq.sort
     CloudfrontInvalidationWorker.perform_async(paths)
+    self.photos.each { |p| ImgixPurgeWorker.perform_async(p.id) }
   end
 
   def send_photos_to_flickr
-    self.photos.each do |p|
-      FlickrWorker.perform_async(p.id)
-    end
+    self.photos.each { |p| FlickrWorker.perform_async(p.id) }
   end
 
   def combined_tags
