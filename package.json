@@ -8,7 +8,7 @@
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
     "bulma": "^0.9.3",
-    "caniuse-lite": "^1.0.30001263",
+    "caniuse-lite": "^1.0.30001265",
     "clipboard": "^2.0.8",
     "jquery": "^3.6.0",
     "leaflet-hash": "^0.2.1",
@@ -32,7 +32,7 @@
     "gulp-scss-lint-stylish": "^1.0",
     "gulp-svgmin": "^3.0",
     "gulp-svgstore": "^8.0",
-    "webpack-dev-server": "^4.3.0"
+    "webpack-dev-server": "^4.3.1"
   },
   "repository": {
     "type": "git",
