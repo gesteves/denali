@@ -11,8 +11,8 @@ class GoogleVisionWorker < ApplicationWorker
     raise "No colors found" if response_colors.blank?
 
     photo.dominant_color = dominant_color(response_colors)
-    photo.color = is_color?(response_colors)
     photo.black_and_white = is_black_and_white?(response_colors)
+    photo.color = !is_black_and_white?(response_colors)
     photo.save
   end
 
@@ -55,9 +55,5 @@ class GoogleVisionWorker < ApplicationWorker
 
   def is_black_and_white?(colors)
     colors.all? { |c| c['color']['red'] == c['color']['green'] && c['color']['red'] == c['color']['blue'] && c['color']['green'] == c['color']['blue'] }
-  end
-
-  def is_color?(colors)
-    !is_black_and_white?(colors)
   end
 end
