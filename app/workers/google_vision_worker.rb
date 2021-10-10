@@ -8,6 +8,7 @@ class GoogleVisionWorker < ApplicationWorker
 
     response = request_annotations(photo)
     response_colors = response['responses']&.first&.dig('imagePropertiesAnnotation', 'dominantColors', 'colors')
+    raise "No colors found" if response_colors.blank?
 
     photo.dominant_color = dominant_color(response_colors)
     photo.color = is_color?(response_colors)
@@ -54,7 +55,7 @@ class GoogleVisionWorker < ApplicationWorker
 
   def is_color?(colors)
     return if colors.blank?
-    !colors.reject { |c| (c['color']['red'] - c['color']['green']).abs <= 1 && ((c['color']['red'] - c['color']['blue']).abs <= 1) && ((c['color']['green'] - c['color']['blue']).abs <= 1) }.empty?
+    colors.any? { |c| c['color']['red'] != c['color']['green'] || c['color']['red'] != c['color']['blue'] || c['color']['green'] != c['color']['blue'] }
   end
 
   def is_black_and_white?(colors)
