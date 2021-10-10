@@ -53,13 +53,11 @@ class GoogleVisionWorker < ApplicationWorker
     "##{red}#{green}#{blue}".upcase
   end
 
-  def is_color?(colors)
-    return if colors.blank?
-    colors.any? { |c| c['color']['red'] != c['color']['green'] || c['color']['red'] != c['color']['blue'] || c['color']['green'] != c['color']['blue'] }
+  def is_black_and_white?(colors)
+    colors.all? { |c| c['color']['red'] == c['color']['green'] && c['color']['red'] == c['color']['blue'] && c['color']['green'] == c['color']['blue'] }
   end
 
-  def is_black_and_white?(colors)
-    return if colors.blank?
-    !is_color?(colors)
+  def is_color?(colors)
+    !is_black_and_white?(colors)
   end
 end
