@@ -8,7 +8,7 @@ class GoogleVisionWorker < ApplicationWorker
 
     response = request_annotations(photo)
     response_colors = response['responses']&.first&.dig('imagePropertiesAnnotation', 'dominantColors', 'colors')
-    raise "No colors found" if response_colors.blank?
+    raise NoColorsError if response_colors.blank?
 
     photo.dominant_color = dominant_color(response_colors)
     photo.black_and_white = is_black_and_white?(response_colors)
