@@ -35,8 +35,9 @@ class GoogleVisionWorker < ApplicationWorker
       ]
     }
     response = HTTParty.post("https://vision.googleapis.com/v1/images:annotate?key=#{ENV['google_api_key']}", body: payload.to_json, headers: { 'Content-Type': 'application/json' }, timeout: 120)
-    raise "Failed to annotate images: #{response.body}" if response.code >= 400
-    JSON.parse(response.body)
+    json = JSON.parse(response.body)
+    raise "Failed to annotate images: #{response.body}" if response.code >= 400 || json['responses'].any? { |r| r['error'].present? }
+    json
   end
 
   def dominant_color(colors)
