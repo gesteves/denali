@@ -51,8 +51,8 @@ module ApplicationHelper
   def css_placeholder_background(photo)
     if photo.blurhash.present?
       "--placeholder:url('#{blurhash_svg(photo)}');"
-    elsif photo.color_palette.present?
-      "--placeholder:#{photo.color_palette.split(',').first};"
+    elsif photo.dominant_color.present?
+      "--placeholder:#{photo.dominant_color};"
     else
       ''
     end

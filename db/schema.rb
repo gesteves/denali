@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_07_192801) do
+ActiveRecord::Schema.define(version: 2021_10_10_224428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,12 +153,14 @@ ActiveRecord::Schema.define(version: 2021_05_07_192801) do
     t.string "sublocality"
     t.string "neighborhood"
     t.string "administrative_area"
-    t.string "color_palette"
     t.string "postal_code"
     t.bigint "camera_id"
     t.bigint "lens_id"
     t.bigint "film_id"
     t.string "blurhash"
+    t.boolean "color"
+    t.boolean "black_and_white"
+    t.string "dominant_color"
     t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["film_id"], name: "index_photos_on_film_id"

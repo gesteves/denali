@@ -348,7 +348,7 @@ class Admin::EntriesController < AdminController
     @entry.update_tags
     @entry.photos.each do |photo|
       photo.extract_metadata
-      photo.extract_palette
+      photo.annotate
       photo.encode_blurhash
     end
     @message = 'Your entry’s metadata is being updated. This may take a few moments.'

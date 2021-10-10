@@ -7,7 +7,7 @@ class Photo < ApplicationRecord
 
   acts_as_list scope: :entry
 
-  after_create_commit :extract_metadata, :extract_palette, :encode_blurhash
+  after_create_commit :extract_metadata, :annotate, :encode_blurhash
 
   after_commit :touch_entry
   after_commit :geocode, if: :changed_coordinates?
@@ -83,11 +83,6 @@ class Photo < ApplicationRecord
 
   def twitter_banner_url
     self.url(w: 1500, h: 500)
-  end
-
-  def palette_url(opts = {})
-    opts.reverse_merge!(palette: 'json', colors: 6)
-    Ix.path(self.image.key).to_url(opts)
   end
 
   def blurhash_url(opts = {})
@@ -178,22 +173,12 @@ class Photo < ApplicationRecord
     PhotoGeocodeWorker.perform_async(self.id)
   end
 
-  def extract_palette
-    PhotoPaletteWorker.perform_async(self.id)
+  def annotate
+    GoogleVisionWorker.perform_async(self.id)
   end
 
   def encode_blurhash
     BlurhashWorker.perform_async(self.id)
-  end
-
-  def color?
-    return if self.color_palette.blank?
-    !self.color_palette.split(',').map { |c| c.gsub('#', '') }.reject { |c| c.scan(/../).uniq.size == 1 }.empty?
-  end
-
-  def black_and_white?
-    return if self.color_palette.blank?
-    !self.color?
   end
 
   def blurhash_data_uri(w: 32)
@@ -221,6 +206,6 @@ class Photo < ApplicationRecord
   end
 
   def changed_style?
-    saved_change_to_color_palette? || saved_change_to_camera_id? || saved_change_to_film_id?
+    saved_change_to_color? || saved_change_to_black_and_white? || saved_change_to_camera_id? || saved_change_to_film_id?
   end
 end

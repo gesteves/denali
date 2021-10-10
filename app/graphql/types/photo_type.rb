@@ -9,8 +9,8 @@ module Types
     field :blurhash, String, null: true, description: "A compact representation of the placeholder for this photo"
     field :blurhash_data_uri, String, null: true, description: "A base64 data URI of the placeholder for this photo"
     field :camera, Types::CameraType, null: true, description: "The camera used to take the photo"
-    field :color_palette, [String], null: true, description: "List of hex values of the 6 most prominent colors in the photo"
     field :color, Boolean, null: true, method: :color?, description: "Whether or not the photo is in color"
+    field :dominant_color, String, null: true, description: "The most prominent color in the photo"
     field :exposure, String, null: true, description: "Exposure time of the photo"
     field :filename, String, null: false, description: "The file name of the original uploaded image"
     field :film, Types::FilmType, null: true, description: "The film used to take the photo"
@@ -52,10 +52,6 @@ module Types
 
     def crop_url(width:, height:)
       object.url(w: width, h: height)
-    end
-
-    def color_palette
-      object.color_palette.split(',')
     end
 
     def latitude
