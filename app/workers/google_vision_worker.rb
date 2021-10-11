@@ -38,7 +38,7 @@ class GoogleVisionWorker < ApplicationWorker
     raise "Failed to annotate images: #{response.code}" if response.code >= 400
 
     json = JSON.parse(response.body)
-    raise GoogleVisionAccessError if json['responses'].any? { |r| r.dig('error', 'code') == 4 }
+    raise GoogleVisionAccessError if json['responses'].any? { |r| r.dig('error', 'code').to_i == 4 }
     raise json['responses'].find { |r| r['error'].present? }.dig('error', 'message') if json['responses'].any? { |r| r['error'].present? }
     json
   end
