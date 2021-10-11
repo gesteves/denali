@@ -38,7 +38,7 @@ class GoogleVisionWorker < ApplicationWorker
 
     json = JSON.parse(response.body)
     raise GoogleVisionAccessError if json['responses'].any? { |r| r.dig('error', 'code').to_i == 4 }
-    raise NoColorsError if response['responses'].none? { |r| r['imagePropertiesAnnotation'].present? }
+    raise GoogleVisionNoColorsError if response['responses'].none? { |r| r['imagePropertiesAnnotation'].present? }
     raise "#{json['responses'].find { |r| r['error'].present? }.dig('error', 'message')} (Error code: #{json['responses'].find { |r| r['error'].present? }.dig('error', 'code')})" if json['responses'].any? { |r| r['error'].present? }
     json
   end

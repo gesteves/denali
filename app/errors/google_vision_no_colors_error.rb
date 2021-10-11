@@ -1,0 +1,1 @@
+class GoogleVisionNoColorsError < StandardError; end

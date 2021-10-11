@@ -1,1 +1,0 @@
-class NoColorsError < StandardError; end
