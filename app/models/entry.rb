@@ -419,7 +419,7 @@ class Entry < ApplicationRecord
   def update_equipment_tags
     equipment_tags = []
     self.photos.each do |p|
-      equipment_tags << [p.camera&.make, p.camera&.display_name, p.film&.display_name]
+      equipment_tags << [p.camera&.make, p.camera&.display_name, p.lens&.display_name, p.film&.display_name]
     end
     equipment_tags = equipment_tags.flatten.uniq.reject(&:blank?)
     self.equipment_list = equipment_tags
