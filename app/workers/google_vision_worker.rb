@@ -35,8 +35,11 @@ class GoogleVisionWorker < ApplicationWorker
       ]
     }
     response = HTTParty.post("https://vision.googleapis.com/v1/images:annotate?key=#{ENV['google_api_key']}", body: payload.to_json, headers: { 'Content-Type': 'application/json' }, timeout: 120)
+    raise "Failed to annotate images: #{response.code}" if response.code >= 400
+
     json = JSON.parse(response.body)
-    raise "Failed to annotate images: #{response.body}" if response.code >= 400 || json['responses'].any? { |r| r['error'].present? }
+    raise GoogleVisionAccessError if json['responses'].any? { |r| r.dig('error', 'code') == 4 }
+    raise json['responses'].find { |r| r['error'].present? }.dig('error', 'message') if json['responses'].any? { |r| r['error'].present? }
     json
   end
 
