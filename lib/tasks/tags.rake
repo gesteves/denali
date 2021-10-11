@@ -6,6 +6,6 @@ namespace :tags do
       entry.update_tags
     end
     Rails.cache.clear
-    Blog.each { |b| b.invalidate }
+    Blog.all.each { |b| b.invalidate }
   end
 end
