@@ -37,8 +37,8 @@ class GoogleVisionWorker < ApplicationWorker
     raise GoogleVisionError.new(response.code) if response.code >= 400
 
     json = JSON.parse(response.body)
-    raise GoogleVisionError.new('No colors present') if json['responses'].none? { |r| r.dig('imagePropertiesAnnotation', 'dominantColors', 'colors').present? }
     raise GoogleVisionError.new(json['responses'].select { |r| r['error'].present? }.map { |r| r.dig('error', 'message') }.join("\n")) if json['responses'].any? { |r| r['error'].present? }
+    raise GoogleVisionError.new('No colors present') if json['responses'].none? { |r| r.dig('imagePropertiesAnnotation', 'dominantColors', 'colors').present? }
     json
   end
 
