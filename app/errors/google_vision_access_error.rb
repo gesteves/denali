@@ -1,1 +1,0 @@
-class GoogleVisionAccessError < StandardError; end

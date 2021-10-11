@@ -1,0 +1,1 @@
+class GoogleVisionError < StandardError; end

@@ -34,12 +34,11 @@ class GoogleVisionWorker < ApplicationWorker
       ]
     }
     response = HTTParty.post("https://vision.googleapis.com/v1/images:annotate?key=#{ENV['google_api_key']}", body: payload.to_json, headers: { 'Content-Type': 'application/json' }, timeout: 120)
-    raise "Failed to annotate images: #{response.code}" if response.code >= 400
+    raise GoogleVisionError.new(response.code) if response.code >= 400
 
     json = JSON.parse(response.body)
-    raise GoogleVisionAccessError if json['responses'].any? { |r| r.dig('error', 'code').to_i == 4 }
-    raise GoogleVisionNoColorsError if response['responses'].none? { |r| r['imagePropertiesAnnotation'].present? }
-    raise "#{json['responses'].find { |r| r['error'].present? }.dig('error', 'message')} (Error code: #{json['responses'].find { |r| r['error'].present? }.dig('error', 'code')})" if json['responses'].any? { |r| r['error'].present? }
+    raise GoogleVisionError.new('No colors present') if json['responses'].none? { |r| r.dig('imagePropertiesAnnotation', 'dominantColors', 'colors').present? }
+    raise GoogleVisionError.new(json['responses'].select { |r| r['error'].present? }.map { |r| r.dig('error', 'message') }.join("\n")) if json['responses'].any? { |r| r['error'].present? }
     json
   end
 
