@@ -46,7 +46,7 @@ class Entry < ApplicationRecord
                         :id],
                  methods: [:plain_body,
                            :plain_title,
-                           :formatted_territories,
+                           :es_territories,
                            :es_tags,
                            :es_tag_slugs,
                            :es_alt_text])
@@ -363,6 +363,11 @@ class Entry < ApplicationRecord
 
   def es_alt_text
     self.photos.map { |p| p.alt_text }.reject(&:blank?).join(' ')
+  end
+
+  def es_territories
+    return '' unless self.show_territories?
+    self.photos.where.not(territories: nil).map { |p| JSON.parse(p.territories) }.flatten.uniq.join(' ')
   end
 
   def instagram_hashtags(count = 30)
