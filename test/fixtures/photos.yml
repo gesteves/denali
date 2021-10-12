@@ -28,6 +28,7 @@ potomac:
   color: true
   black_and_white: false
   camera: xz1
+  territories: "[\"Shoshone-Bannock\",\"Eastern Shoshone\",\"Cheyenne\"]"
 
 panda:
   position: 1
@@ -42,6 +43,7 @@ panda:
   color: false
   black_and_white: true
   camera: xz1
+  territories: "[\"Shoshone-Bannock\",\"Eastern Shoshone\"]"
 
 franklin:
   position: 1
@@ -57,3 +59,4 @@ franklin:
   color: false
   black_and_white: true
   camera: xz1
+  territories: "[\"Shoshone-Bannock\"]"

@@ -423,4 +423,19 @@ class EntryTest < ActiveSupport::TestCase
       Entry.find_by_url(url: 'foo')
     end
   end
+
+  test 'territories are rendered correctly' do
+    entry = entries(:peppers)
+    assert entry.territories.blank?
+    assert entry.formatted_territories.blank?
+
+    entry = entries(:potomac)
+    assert_equal "Shoshone-Bannock, Eastern Shoshone, and Cheyenne lands", entry.formatted_territories
+
+    entry = entries(:panda)
+    assert_equal "Shoshone-Bannock and Eastern Shoshone lands", entry.formatted_territories
+
+    entry = entries(:franklin)
+    assert_equal "Shoshone-Bannock land", entry.formatted_territories
+  end
 end

@@ -8,7 +8,7 @@ class InstagramWorker < BufferWorker
 
     photos = entry.photos.to_a[0..4]
     opts = {
-      text: entry.instagram_caption,
+      text: [entry.instagram_caption, entry.formatted_territories(include_pin: true)].reject(&:blank?).join("\n\n"),
       media: media_hash(photos.shift),
       now: now
     }

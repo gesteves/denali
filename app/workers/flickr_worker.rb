@@ -15,11 +15,7 @@ class FlickrWorker < ApplicationWorker
 
     title = entry.title
 
-    if entry.body.present?
-      body = "#{entry.formatted_body}\n\nOriginally published at #{entry.permalink_url}"
-    else
-      body = "Originally published at #{entry.permalink_url}"
-    end
+    body = [entry.formatted_body, entry.formatted_territories(include_pin: true),"Originally published at #{entry.permalink_url}"].reject(&:blank?).join("\n\n")
 
     all_tags = entry.combined_tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')
     photo_path = URI.open(photo.image.url).path

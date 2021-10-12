@@ -233,6 +233,27 @@ class Entry < ApplicationRecord
     markdown_to_plaintext(self.title)
   end
 
+  def territories
+    return unless self.show_territories?
+    self.photos.where.not(territories: nil).map { |p| JSON.parse(p.territories) }.flatten.uniq
+  end
+
+  def formatted_territories(include_pin: false)
+    return unless self.show_territories? && self.territories.present?
+    land = territories.size > 1 ? "lands" : "land"
+    territory_list = case self.territories.size
+      when 1
+        self.territories.first
+      when 2
+        self.territories.join(' and ')
+      else
+        temporary_list = self.territories
+        last = temporary_list.pop
+        "#{temporary_list.join(', ')}, and #{last}"
+      end
+      include_pin ? "📍 #{territory_list} #{land}" : "#{territory_list} #{land}"
+  end
+
   def meta_description
     self&.photos&.first&.alt_text.presence || self.plain_body
   end

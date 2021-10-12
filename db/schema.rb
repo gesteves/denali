@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_10_224428) do
+ActiveRecord::Schema.define(version: 2021_10_12_172229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -102,6 +102,7 @@ ActiveRecord::Schema.define(version: 2021_10_10_224428) do
     t.text "instagram_text"
     t.boolean "post_to_flickr_groups", default: true
     t.string "tumblr_id"
+    t.boolean "show_territories", default: true
     t.index ["blog_id"], name: "index_entries_on_blog_id"
     t.index ["photos_count"], name: "index_entries_on_photos_count"
     t.index ["preview_hash"], name: "index_entries_on_preview_hash"
@@ -161,6 +162,7 @@ ActiveRecord::Schema.define(version: 2021_10_10_224428) do
     t.boolean "color"
     t.boolean "black_and_white"
     t.string "dominant_color"
+    t.text "territories"
     t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["film_id"], name: "index_photos_on_film_id"

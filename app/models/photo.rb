@@ -11,6 +11,7 @@ class Photo < ApplicationRecord
 
   after_commit :touch_entry
   after_commit :geocode, if: :changed_coordinates?
+  after_commit :update_native_lands, if: :changed_coordinates?
   after_commit :update_entry_equipment_tags, if: :changed_equipment?
   after_commit :update_entry_location_tags, if: :changed_location?
   after_commit :update_entry_style_tags, if: :changed_style?
@@ -171,6 +172,10 @@ class Photo < ApplicationRecord
 
   def geocode
     PhotoGeocodeWorker.perform_async(self.id)
+  end
+
+  def update_native_lands
+    NativeLandsWorker.perform_async(self.id)
   end
 
   def annotate
