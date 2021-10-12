@@ -1,6 +1,6 @@
 <% photo = entry.photos.first %>
-<% if photo.location.present? && entry.territories.present? %>
-  <h3 class="sr-only" id="location">Location data</h3>
+<% if photo.location.present? || entry.territories.present? %>
+  <h3 class="sr-only" id="location">Location</h3>
   <ul class="exif" aria-labelledby="location">
     <% if photo.location.present? %>
       <li class="exif__field"><%= [photo.sublocality, photo.locality, photo.administrative_area, photo.country].reject(&:blank?).uniq.join(', ') %></li>
