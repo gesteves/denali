@@ -1,0 +1,15 @@
+.location {
+  color: var(--color-text-alt);
+}
+
+.location__field {
+  display: inline;
+
+  &::after {
+    content: ' · ';
+  }
+
+  &:last-of-type::after {
+    content: none;
+  }
+}
