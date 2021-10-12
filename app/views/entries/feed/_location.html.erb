@@ -2,7 +2,7 @@
 <% if photo.location.present? || entry.territories.present? %>
   <p>
     <% if photo.location.present? %>
-      <%= [photo.sublocality, photo.locality, photo.administrative_area, photo.country].reject(&:blank?).uniq.join(', ') %>
+      <%= [photo.locality, photo.administrative_area, photo.country].reject(&:blank?).uniq.join(', ') %>
     <% end %>
     <% if photo.location.present? && entry.territories.present? %> – <% end %>
     <% if entry.territories.present? %>
