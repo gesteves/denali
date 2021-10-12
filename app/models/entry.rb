@@ -46,6 +46,7 @@ class Entry < ApplicationRecord
                         :id],
                  methods: [:plain_body,
                            :plain_title,
+                           :formatted_territories,
                            :es_tags,
                            :es_tag_slugs,
                            :es_alt_text])
