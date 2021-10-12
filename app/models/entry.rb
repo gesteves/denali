@@ -239,7 +239,7 @@ class Entry < ApplicationRecord
     self.photos.where.not(territories: nil).map { |p| JSON.parse(p.territories) }.flatten.uniq
   end
 
-  def formatted_territories(include_pin: false)
+  def formatted_territories
     return unless self.show_territories? && self.territories.present?
     land = territories.size > 1 ? "lands" : "land"
     territory_list = case self.territories.size
@@ -252,7 +252,7 @@ class Entry < ApplicationRecord
         last = temporary_list.pop
         "#{temporary_list.join(', ')}, and #{last}"
       end
-      include_pin ? "📍 #{territory_list} #{land}" : "#{territory_list} #{land}"
+      "#{territory_list} #{land}"
   end
 
   def meta_description
@@ -409,6 +409,15 @@ class Entry < ApplicationRecord
       text << self.plain_title
       text << self.plain_body
     end
+    text << "📍 #{self.formatted_territories}" if self.territories.present?
+    text.reject(&:blank?).join("\n\n")
+  end
+
+  def flickr_caption
+    text = []
+    text << self.formatted_body
+    text << "📍 #{self.formatted_territories}" if self.territories.present?
+    text << "Originally published at #{self.permalink_url}"
     text.reject(&:blank?).join("\n\n")
   end
 

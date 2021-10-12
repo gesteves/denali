@@ -15,7 +15,7 @@ class FlickrWorker < ApplicationWorker
 
     title = entry.title
 
-    body = [entry.formatted_body, entry.formatted_territories(include_pin: true),"Originally published at #{entry.permalink_url}"].reject(&:blank?).join("\n\n")
+    body = entry.flickr_caption
 
     all_tags = entry.combined_tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')
     photo_path = URI.open(photo.image.url).path
