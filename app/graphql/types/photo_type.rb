@@ -27,6 +27,7 @@ module Types
     field :iso, Integer, null: true, description: "ISO the photo was made at"
     field :latitude, Float, null: true, description: "Latitude the photo was made at"
     field :longitude, Float, null: true, description: "Longitude the photo was made at"
+    field :territories, [String], null: true, description: "The native lands this photo was made in"
     field :lens, Types::LensType, null: true, description: "The lens used to make the photo"
     field :square, Boolean, null: false, method: :is_square?, description: "Whether or not the photo is square"
     field :vertical, Boolean, null: false, method: :is_vertical?, description: "Whether or not the photo is in portrait orientation"
@@ -64,6 +65,11 @@ module Types
 
     def filename
       object.image.filename.to_s
+    end
+
+    def territories
+      return [] if object.territories.nil?
+      JSON.parse(object.territories)
     end
   end
 end
