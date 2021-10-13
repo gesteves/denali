@@ -65,7 +65,7 @@ class Entry < ApplicationRecord
   end
 
   def self.mapped
-    joins(:photos).where(entries: { show_in_map: true }).where.not(photos: { latitude: nil }).where.not(photos: { longitude: nil })
+    joins(:photos).where(entries: { show_location: true }).where.not(photos: { latitude: nil }).where.not(photos: { longitude: nil })
   end
 
   def self.text_entries
@@ -235,12 +235,12 @@ class Entry < ApplicationRecord
   end
 
   def territories
-    return unless self.show_territories?
+    return unless self.show_location?
     self.photos.where.not(territories: nil).map { |p| JSON.parse(p.territories) }.flatten.uniq
   end
 
   def formatted_territories
-    return unless self.show_territories? && self.territories.present?
+    return unless self.show_location? && self.territories.present?
     land = territories.size > 1 ? "lands" : "land"
     territory_list = case self.territories.size
       when 1
@@ -366,7 +366,7 @@ class Entry < ApplicationRecord
   end
 
   def es_territories
-    return '' unless self.show_territories?
+    return '' unless self.show_location?
     self.photos.where.not(territories: nil).map { |p| JSON.parse(p.territories) }.flatten.uniq.join(' ')
   end
 
@@ -409,14 +409,14 @@ class Entry < ApplicationRecord
       text << self.plain_title
       text << self.plain_body
     end
-    text << "📍 #{self.formatted_territories}" if self.show_territories? && self.territories.present?
+    text << "📍 #{self.formatted_territories}" if self.show_location? && self.territories.present?
     text.reject(&:blank?).join("\n\n")
   end
 
   def flickr_caption
     text = []
     text << self.formatted_body
-    text << "📍 #{self.formatted_territories}" if self.show_territories? && self.territories.present?
+    text << "📍 #{self.formatted_territories}" if self.show_location? && self.territories.present?
     text << "Originally published at #{self.permalink_url}"
     text.reject(&:blank?).join("\n\n")
   end
@@ -474,7 +474,7 @@ class Entry < ApplicationRecord
       tags << 'National Wildlife Refuges' if self.tag_list.any? { |l| l.match? /national (wildlife|elk) refuge/i }
       tags << 'State Parks' if self.tag_list.any? { |l| l.match? /state park/i }
     end
-    if self.show_in_map?
+    if self.show_location?
       self.photos.each do |p|
         location_tags += if tags.any? { |l| l.match? /^(national|state) (park|monument|forest)s$/i }
           [p.country, p.administrative_area]

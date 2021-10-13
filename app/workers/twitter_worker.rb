@@ -24,7 +24,7 @@ class TwitterWorker < ApplicationWorker
   def set_coordinates(entry)
     opts = {}
     photo = entry.photos.first
-    if entry.show_in_map? && photo.latitude.present? && photo.longitude.present?
+    if entry.show_location? && photo.latitude.present? && photo.longitude.present?
       opts[:lat] = photo.latitude
       opts[:long] = photo.longitude
       opts[:display_coordinates] = false

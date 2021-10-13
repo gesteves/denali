@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <% if entry.show_in_map? && entry.photos.any? { |p| !p.has_location? } %>
+  <% if entry.show_location? && entry.photos.any? { |p| !p.has_location? } %>
     <div class="control">
       <div class="tags has-addons">
         <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>

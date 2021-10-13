@@ -56,11 +56,11 @@ module Types
     end
 
     def latitude
-      object.latitude if object.entry.show_in_map?
+      object.latitude if object.entry.show_location?
     end
 
     def longitude
-      object.longitude if object.entry.show_in_map?
+      object.longitude if object.entry.show_location?
     end
 
     def filename

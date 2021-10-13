@@ -3,6 +3,6 @@
 <% end %>
 <%= entry.formatted_body unless entry.body.blank? %>
 <%= render partial: 'entries/feed/exif', formats: :html, object: entry.photos.first, as: :photo if entry.is_single_photo? %>
-<%= render partial: 'entries/feed/location', formats: :html, object: entry, as: :entry if entry.is_single_photo? && entry.show_in_map? %>
+<%= render partial: 'entries/feed/location', formats: :html, object: entry, as: :entry if entry.is_single_photo? && entry.show_location? %>
 <%= render partial: 'entries/feed/disclaimer', formats: :html, object: entry, as: :entry %>
 

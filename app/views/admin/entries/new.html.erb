@@ -65,7 +65,7 @@
   <hr class="hr">
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :show_in_map, 'Show in map', class: 'label' %>
+      <%= f.label :show_location, 'Show in map', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
@@ -83,37 +83,10 @@
                 </a>
               </li>
             </ul>
-            <%= f.hidden_field :show_in_map, value: 'true', 'data-radio-tab-target': 'field' %>
+            <%= f.hidden_field :show_location, value: 'true', 'data-radio-tab-target': 'field' %>
           </div>
         </div>
         <p class="help">Turning this off also prevents the entry from being automatically tagged with location names.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label">
-      <%= f.label :show_territories, 'Show native territories', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control">
-          <div class="tabs is-toggle is-small" data-controller="radio-tab">
-            <ul>
-              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
-                <a>
-                  Yes
-                </a>
-              </li>
-              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
-                <a>
-                  No
-                </a>
-              </li>
-            </ul>
-            <%= f.hidden_field :show_territories, value: 'true', 'data-radio-tab-target': 'field' %>
-          </div>
-        </div>
       </div>
     </div>
   </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_12_172229) do
+ActiveRecord::Schema.define(version: 2021_10_13_141133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,19 +95,18 @@ ActiveRecord::Schema.define(version: 2021_10_12_172229) do
     t.string "tweet_text"
     t.boolean "post_to_facebook", default: true
     t.boolean "post_to_flickr", default: true
-    t.boolean "show_in_map", default: true
+    t.boolean "show_location", default: true
     t.boolean "post_to_instagram", default: true
     t.string "preview_hash"
     t.datetime "modified_at"
     t.text "instagram_text"
     t.boolean "post_to_flickr_groups", default: true
     t.string "tumblr_id"
-    t.boolean "show_territories", default: true
     t.index ["blog_id"], name: "index_entries_on_blog_id"
     t.index ["photos_count"], name: "index_entries_on_photos_count"
     t.index ["preview_hash"], name: "index_entries_on_preview_hash"
     t.index ["published_at"], name: "index_entries_on_published_at"
-    t.index ["show_in_map"], name: "index_entries_on_show_in_map"
+    t.index ["show_location"], name: "index_entries_on_show_location"
     t.index ["status"], name: "index_entries_on_status"
     t.index ["tumblr_id"], name: "index_entries_on_tumblr_id"
     t.index ["user_id"], name: "index_entries_on_user_id"
