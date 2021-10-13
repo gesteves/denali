@@ -409,14 +409,14 @@ class Entry < ApplicationRecord
       text << self.plain_title
       text << self.plain_body
     end
-    text << "📍 #{self.formatted_territories}" if self.territories.present?
+    text << "📍 #{self.formatted_territories}" if self.show_territories? && self.territories.present?
     text.reject(&:blank?).join("\n\n")
   end
 
   def flickr_caption
     text = []
     text << self.formatted_body
-    text << "📍 #{self.formatted_territories}" if self.territories.present?
+    text << "📍 #{self.formatted_territories}" if self.show_territories? && self.territories.present?
     text << "Originally published at #{self.permalink_url}"
     text.reject(&:blank?).join("\n\n")
   end
