@@ -89,7 +89,8 @@ Rails.application.routes.draw do
 
   # Sitemaps
   get '/sitemap.:format'               => 'entries#sitemap_index', defaults: { format: 'xml' }, :as => :sitemap_index
-  get '/sitemap/:page.:format'         => 'entries#sitemap', defaults: { format: 'xml' }, :as => :sitemap
+  get '/sitemap/:page.:format'         => 'entries#sitemap', constraints: { page: /\d+/ }, defaults: { format: 'xml' }, :as => :sitemap
+  get '/sitemap/tags.:format'          => 'entries#tags_sitemap', defaults: { format: 'xml' }, :as => :tags_sitemap
 
   # Legacy routes & redirects
   get '/archive(/:year)(/:month)'      => 'legacy#home'

@@ -175,6 +175,11 @@ class EntriesController < ApplicationController
     render format: 'xml'
   end
 
+  def tags_sitemap
+    @tags = ActsAsTaggableOn::Tag.all
+    render format: 'xml'
+  end
+
   def tumblr
     @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').limit(1).first
     raise ActiveRecord::RecordNotFound if @entry.blank?
