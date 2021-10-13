@@ -64,7 +64,7 @@ class GraphqlTest < ActionDispatch::IntegrationTest
     result = DenaliSchema.execute(query_string, variables: { count: 10 })
     assert_equal 'All-Encompassing Trip', result['data']['blog']['name']
     assert result['data']['blog']['entries'].present?
-    assert_equal 2, result['data']['blog']['entries'].size
+    assert_equal 3, result['data']['blog']['entries'].size
     assert result['data']['blog']['entries'].all? { |e| e['status'] == 'published' }
     assert result['data']['blog']['entries'][0]['photos'][0]['thumbnailUrls'].present?
   end

@@ -9,7 +9,7 @@ class EntriesControllerTest < ActionController::TestCase
     assert_template layout: 'layouts/application'
     assert_template :index
     assert_select '.entry-list' do
-      assert_select '.entry-list__item', 2
+      assert_select '.entry-list__item', 3
     end
   end
 
