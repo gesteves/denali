@@ -176,7 +176,7 @@ class EntriesController < ApplicationController
   end
 
   def tags_sitemap
-    @tags = ActsAsTaggableOn::Tag.all
+    @tags = ActsAsTaggableOn::Tag.all.order('name asc')
     render format: 'xml'
   end
 
