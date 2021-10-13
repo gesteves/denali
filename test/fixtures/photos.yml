@@ -28,6 +28,20 @@ potomac:
   color: true
   black_and_white: false
   camera: xz1
+
+eastern:
+  position: 1
+  entry: eastern
+  taken_at: 2011-07-03 14:23:57.000000
+  exposure: 1/15
+  f_number: 2.000000
+  latitude: 38.880833
+  longitude: -76.985333
+  iso: 200
+  focal_length: 6
+  color: true
+  black_and_white: false
+  camera: xz1
   territories: "[\"Shoshone-Bannock\",\"Eastern Shoshone\",\"Cheyenne\"]"
 
 panda:

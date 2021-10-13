@@ -24,6 +24,17 @@ potomac:
   user: guille
   published_at: 2012-02-11 23:00:00.000000
   modified_at: 2012-02-11 21:00:00.000000
+  show_location: false
+  photos_count: 1
+
+eastern:
+  title: Eastern Market Metro station, Washington, DC. July 3rd, 2011.
+  slug: eastern-market
+  status: published
+  blog: allencompassingtrip
+  user: guille
+  published_at: 2012-02-11 23:00:00.000000
+  modified_at: 2012-02-11 21:00:00.000000
   show_location: true
   photos_count: 1
 
