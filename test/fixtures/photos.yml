@@ -28,6 +28,7 @@ potomac:
   color: true
   black_and_white: false
   camera: xz1
+  territories: "[\"Shoshone-Bannock\",\"Eastern Shoshone\",\"Cheyenne\"]"
 
 eastern:
   position: 1

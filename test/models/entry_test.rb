@@ -429,6 +429,10 @@ class EntryTest < ActiveSupport::TestCase
     assert entry.territories.blank?
     assert entry.formatted_territories.blank?
 
+    entry = entries(:potomac)
+    assert entry.territories.blank?
+    assert entry.formatted_territories.blank?
+
     entry = entries(:eastern)
     assert_equal "Shoshone-Bannock, Eastern Shoshone, and Cheyenne lands", entry.formatted_territories
 
