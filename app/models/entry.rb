@@ -472,11 +472,14 @@ class Entry < ApplicationRecord
       tags << 'National Forests' if self.tag_list.any? { |l| l.match? /national forest/i }
       tags << 'National Monuments' if self.tag_list.any? { |l| l.match? /national monument/i }
       tags << 'National Wildlife Refuges' if self.tag_list.any? { |l| l.match? /national (wildlife|elk) refuge/i }
+      tags << 'National Battlefields' if self.tag_list.any? { |l| l.match? /national battlefield/i }
       tags << 'State Parks' if self.tag_list.any? { |l| l.match? /state park/i }
     end
     if self.show_location?
       self.photos.each do |p|
-        location_tags += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area, p.park, p.point_of_interest].uniq.compact
+        location_tags += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area].uniq.compact
+        p.park = self.park_tags.first if self.is_park_entry?
+        p.save!
       end
     end
     location_tags = location_tags.uniq.reject(&:blank?)
@@ -526,6 +529,14 @@ class Entry < ApplicationRecord
 
   def photos_processed?
     photos.all? { |p| p.processed? }
+  end
+
+  def park_tags
+    self.tag_list.select { |tag| tag.match? /(national|state) (park|battlefield|forest|monument|wildlife refuge|elk refuge|lakeshore|seashore)$/i }
+  end
+
+  def is_park_entry?
+    self.park_tags.present?
   end
 
   private

@@ -5,7 +5,6 @@ namespace :tags do
       puts "Updating tags for entry #{entry.permalink_url}"
       entry.update_tags
     end
-    Rails.cache.clear
-    Blog.all.each { |b| b.invalidate }
+    Blog.first.invalidate
   end
 end

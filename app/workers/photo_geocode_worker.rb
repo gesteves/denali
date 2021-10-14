@@ -19,16 +19,6 @@ class PhotoGeocodeWorker < ApplicationWorker
       photo.administrative_area = components.find { |c| c['types'].include? 'administrative_area_level_1' }&.dig('long_name')
       photo.postal_code         = components.find { |c| c['types'].include? 'postal_code' }&.dig('long_name')
 
-      result = response['results'].find { |r| r['types'].include? 'park' }
-      if result.present?
-        photo.park = result['address_components'].find { |c| c['types'].include? 'park' }&.dig('long_name')
-      end
-
-      result = response['results'].find { |r| r['types'].include? 'point_of_interest' }
-      if result.present?
-        photo.point_of_interest = result['address_components'].find { |c| c['types'].include? 'point_of_interest' }&.dig('long_name')
-      end
-
       photo.save!
     end
   end

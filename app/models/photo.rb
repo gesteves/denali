@@ -163,7 +163,11 @@ class Photo < ApplicationRecord
   end
 
   def location
-    [self.locality, self.administrative_area, self.country].reject(&:blank?).join(', ')
+    if self.park.present?
+      [self.park, self.administrative_area, self.country].reject(&:blank?).join(', ')
+    else
+      [self.locality, self.administrative_area, self.country].reject(&:blank?).join(', ')
+    end
   end
 
   def extract_metadata
@@ -212,9 +216,7 @@ class Photo < ApplicationRecord
     saved_change_to_sublocality? ||
     saved_change_to_neighborhood? ||
     saved_change_to_administrative_area? ||
-    saved_change_to_postal_code? ||
-    saved_change_to_park? ||
-    saved_change_to_point_of_interest
+    saved_change_to_postal_code?
   end
 
   def changed_style?

@@ -145,6 +145,7 @@ class Blog < ApplicationRecord
   end
 
   def invalidate(paths: '/*')
+    Rails.cache.clear
     CloudfrontInvalidationWorker.perform_async(paths)
   end
 end
