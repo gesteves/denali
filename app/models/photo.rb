@@ -163,11 +163,7 @@ class Photo < ApplicationRecord
   end
 
   def location
-    if self.park.present?
-      [self.park, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
-    else
-      [self.locality, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
-    end
+    [self.neighborhood, self.locality, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
   end
 
   def extract_metadata
