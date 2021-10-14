@@ -164,9 +164,9 @@ class Photo < ApplicationRecord
 
   def location
     if self.park.present?
-      [self.park, self.administrative_area, self.country].reject(&:blank?).join(', ')
+      [self.park, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
     else
-      [self.locality, self.administrative_area, self.country].reject(&:blank?).join(', ')
+      [self.locality, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
     end
   end
 
