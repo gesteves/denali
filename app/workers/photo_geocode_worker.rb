@@ -13,7 +13,7 @@ class PhotoGeocodeWorker < ApplicationWorker
       components = result['address_components']
 
       photo.country             = components.find { |c| c['types'].include? 'country' }&.dig('long_name')
-      photo.locality            = components.find { |c| c['types'].include?('locality') || c['types'].include?('postal_town]') }&.dig('long_name')
+      photo.locality            = components.find { |c| c['types'].include?('locality') || c['types'].include?('postal_town') }&.dig('long_name')
       photo.sublocality         = components.find { |c| c['types'].include? 'sublocality' }&.dig('long_name')
       photo.neighborhood        = components.find { |c| c['types'].include? 'neighborhood' }&.dig('long_name')
       photo.administrative_area = components.find { |c| c['types'].include? 'administrative_area_level_1' }&.dig('long_name')
