@@ -476,11 +476,7 @@ class Entry < ApplicationRecord
     end
     if self.show_location?
       self.photos.each do |p|
-        location_tags += if tags.any? { |l| l.match? /^(national|state) (park|monument|forest)s$/i }
-          [p.country, p.administrative_area, p.park].uniq.compact
-        else
-          [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area, p.park].uniq.compact
-        end
+        location_tags += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area, p.park, p.point_of_interest].uniq.compact
       end
     end
     location_tags = location_tags.uniq.reject(&:blank?)

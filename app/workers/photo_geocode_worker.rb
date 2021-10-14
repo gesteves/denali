@@ -24,6 +24,11 @@ class PhotoGeocodeWorker < ApplicationWorker
         photo.park = result['address_components'].find { |c| c['types'].include? 'park' }&.dig('long_name')
       end
 
+      result = response['results'].find { |r| r['types'].include? 'point_of_interest' }
+      if result.present?
+        photo.point_of_interest = result['address_components'].find { |c| c['types'].include? 'point_of_interest' }&.dig('long_name')
+      end
+
       photo.save!
     end
   end

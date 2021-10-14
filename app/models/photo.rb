@@ -163,7 +163,7 @@ class Photo < ApplicationRecord
   end
 
   def location
-    [self.neighborhood, self.locality, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
+    [self.locality, self.administrative_area, self.country].reject(&:blank?).join(', ')
   end
 
   def extract_metadata
@@ -207,7 +207,14 @@ class Photo < ApplicationRecord
   end
 
   def changed_location?
-    saved_change_to_country? || saved_change_to_locality? || saved_change_to_sublocality? || saved_change_to_park?
+    saved_change_to_country? ||
+    saved_change_to_locality? ||
+    saved_change_to_sublocality? ||
+    saved_change_to_neighborhood? ||
+    saved_change_to_administrative_area? ||
+    saved_change_to_postal_code? ||
+    saved_change_to_park? ||
+    saved_change_to_point_of_interest
   end
 
   def changed_style?
