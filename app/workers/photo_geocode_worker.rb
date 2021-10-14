@@ -12,12 +12,18 @@ class PhotoGeocodeWorker < ApplicationWorker
       result = response['results'][0]
       components = result['address_components']
 
-      photo.country             = components.select { |c| c['types'].include? 'country' }.map {|c| c['long_name']}.join(', ')
-      photo.locality            = components.select { |c| c['types'].include? 'locality' }.map {|c| c['long_name']}.join(', ')
-      photo.sublocality         = components.select { |c| c['types'].include? 'sublocality' }.map {|c| c['long_name']}.join(', ')
-      photo.neighborhood        = components.select { |c| c['types'].include? 'neighborhood' }.map {|c| c['long_name']}.join(', ')
-      photo.administrative_area = components.select { |c| c['types'].include? 'administrative_area_level_1' }.map {|c| c['long_name']}.join(', ')
-      photo.postal_code         = components.select { |c| c['types'].include? 'postal_code' }.map {|c| c['long_name']}.join(', ')
+      photo.country             = components.find { |c| c['types'].include? 'country' }&.dig('long_name')
+      photo.locality            = components.find { |c| c['types'].include? 'locality' }&.dig('long_name')
+      photo.sublocality         = components.find { |c| c['types'].include? 'sublocality' }&.dig('long_name')
+      photo.neighborhood        = components.find { |c| c['types'].include? 'neighborhood' }&.dig('long_name')
+      photo.administrative_area = components.find { |c| c['types'].include? 'administrative_area_level_1' }&.dig('long_name')
+      photo.postal_code         = components.find { |c| c['types'].include? 'postal_code' }&.dig('long_name')
+
+      result = response['results'].find { |r| r['types'].include? 'park' }
+      if result.present?
+        photo.park = result['address_components'].find { |c| c['types'].include? 'park' }&.dig('long_name')
+      end
+
       photo.save!
     end
   end

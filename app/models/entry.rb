@@ -477,9 +477,9 @@ class Entry < ApplicationRecord
     if self.show_location?
       self.photos.each do |p|
         location_tags += if tags.any? { |l| l.match? /^(national|state) (park|monument|forest)s$/i }
-          [p.country, p.administrative_area]
+          [p.country, p.administrative_area, p.park]
         else
-          [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area]
+          [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area, p.park]
         end
       end
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_13_141133) do
+ActiveRecord::Schema.define(version: 2021_10_14_152228) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -162,6 +162,7 @@ ActiveRecord::Schema.define(version: 2021_10_13_141133) do
     t.boolean "black_and_white"
     t.string "dominant_color"
     t.text "territories"
+    t.string "park"
     t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["film_id"], name: "index_photos_on_film_id"
