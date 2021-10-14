@@ -478,9 +478,13 @@ class Entry < ApplicationRecord
     end
     if self.show_location?
       self.photos.each do |p|
-        location_tags += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area].uniq.compact
-        p.park = self.park_tags.first if self.is_park_entry?
-        p.save!
+        if self.is_park_entry?
+          location_tags += [p.country, p.administrative_area].uniq.compact
+          p.park = self.park_tags.first if self.is_park_entry?
+          p.save!
+        else
+          location_tags += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area].uniq.compact
+        end
       end
     end
     location_tags = location_tags.uniq.reject(&:blank?)
