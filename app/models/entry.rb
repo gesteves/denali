@@ -537,7 +537,7 @@ class Entry < ApplicationRecord
   end
 
   def park_tags
-    nps_units = self.tag_list.select { |t| $redis.exists?("parks:#{t.parameterize}") }
+    nps_units = self.tag_list.select { |t| $redis.sismember("parks", t.parameterize) }
     other_parks = self.tag_list.select { |tag| tag.match? /(state park|refuge)$/i }
     (nps_units + other_parks).uniq
   end

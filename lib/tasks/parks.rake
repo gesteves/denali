@@ -10,7 +10,7 @@ namespace :parks do
     $redis.del('parks')
     parks = JSON.parse(response.body)['data'].map { |p| p['fullName'] }
     parks.each do |p|
-      puts "Adding #{p} to redis"
+      puts "Adding #{p} (#{p.parameterize})"
       $redis.sadd('parks', p.parameterize)
     end
   end
