@@ -543,7 +543,7 @@ class Entry < ApplicationRecord
   end
 
   def is_park_entry?
-    self.photos.any? { |p| p.park.present? }
+    self.photos&.any? { |p| p.park.present? }
   end
 
   private
