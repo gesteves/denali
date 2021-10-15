@@ -525,14 +525,6 @@ class Entry < ApplicationRecord
     end
   end
 
-  def affiliate_cameras
-    Camera.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
-  end
-
-  def affiliate_lenses
-    Lens.joins(photos: :entry).where(entries: { id: self.id }).where.not(amazon_url: nil).distinct
-  end
-
   def photos_processed?
     photos.all? { |p| p.processed? }
   end
