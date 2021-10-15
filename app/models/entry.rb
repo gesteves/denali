@@ -478,9 +478,9 @@ class Entry < ApplicationRecord
     end
     if self.show_location?
       self.photos.each do |p|
-        if self.is_park_entry?
+        if self.park_tags.present?
           location_tags += [p.country, p.administrative_area].uniq.compact
-          p.park = self.park_tags.first if self.is_park_entry?
+          p.park = self.park_tags.first
           p.save!
         else
           location_tags += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area].uniq.compact
@@ -543,7 +543,7 @@ class Entry < ApplicationRecord
   end
 
   def is_park_entry?
-    self.park_tags.present?
+    self.photos.any? { |p| p.park.present? }
   end
 
   private
