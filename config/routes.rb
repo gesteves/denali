@@ -88,9 +88,9 @@ Rails.application.routes.draw do
   get '/amp/:year/:month/:day/:id(/:slug)'  => 'entries#amp',         constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_amp
 
   # Sitemaps
-  get '/sitemap.:format'                => 'sitemaps#index', defaults: { format: 'xml' }, :as => :sitemap
-  get '/sitemaps/entries/:page.:format' => 'sitemaps#entries', constraints: { page: /\d+/ }, defaults: { format: 'xml' }, :as => :entries_sitemap
-  get '/sitemaps/tags/:page.:format'    => 'sitemaps#tags', constraints: { page: /\d+/ }, defaults: { format: 'xml' }, :as => :tags_sitemap
+  get '/sitemap.:format'               => 'sitemaps#index', defaults: { format: 'xml' }, :as => :sitemap
+  get '/sitemap/entries/:page.:format' => 'sitemaps#entries', constraints: { page: /\d+/ }, defaults: { format: 'xml' }, :as => :entries_sitemap
+  get '/sitemap/tags/:page.:format'    => 'sitemaps#tags', constraints: { page: /\d+/ }, defaults: { format: 'xml' }, :as => :tags_sitemap
 
   # Legacy routes & redirects
   get '/archive(/:year)(/:month)'      => 'legacy#home'
