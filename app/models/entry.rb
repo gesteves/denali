@@ -455,7 +455,8 @@ class Entry < ApplicationRecord
   def update_equipment_tags
     equipment_tags = []
     self.photos.each do |p|
-      equipment_tags << [p.camera&.make, p.camera&.display_name, p.lens&.display_name, p.film&.display_name]
+      equipment_tags << [p.camera&.make, p.camera&.display_name, p.film&.display_name]
+      equipment_tags << p.lens&.display_name unless p.camera&.is_phone?
     end
     equipment_tags = equipment_tags.flatten.uniq.reject(&:blank?)
     self.equipment_list = equipment_tags
@@ -477,9 +478,13 @@ class Entry < ApplicationRecord
     end
     if self.show_location?
       self.photos.each do |p|
-        location_tags += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area].uniq.compact
-        p.park = self.park_tags.first if self.is_park_entry?
-        p.save!
+        if self.is_park_entry?
+          location_tags += [p.country, p.administrative_area].uniq.compact
+          p.park = self.park_tags.first if self.is_park_entry?
+          p.save!
+        else
+          location_tags += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area].uniq.compact
+        end
       end
     end
     location_tags = location_tags.uniq.reject(&:blank?)
