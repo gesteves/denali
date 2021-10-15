@@ -532,7 +532,9 @@ class Entry < ApplicationRecord
   end
 
   def park_tags
-    self.tag_list.select { |tag| tag.match? /(national|state) (park|battlefield|forest|monument|wildlife refuge|elk refuge|lakeshore|seashore)$/i }
+    nps_units = self.tag_list & $redis.smembers('parks')
+    other_parks = self.tag_list.select { |tag| tag.match? /(state park|refuge)$/i }
+    (nps_units + other_parks).uniq
   end
 
   def is_park_entry?
