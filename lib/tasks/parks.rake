@@ -11,7 +11,7 @@ namespace :parks do
     parks = JSON.parse(response.body)['data'].map { |p| p['fullName'] }
     parks.each do |p|
       puts "Adding #{p} to redis"
-      $redis.sadd('parks', p)
+      $redis.sadd('parks', p.parameterize)
     end
   end
 end
