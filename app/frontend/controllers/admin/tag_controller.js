@@ -55,7 +55,7 @@ export default class extends Controller {
    */
   edit (event) {
     event.preventDefault();
-    const prompt = window.prompt(`What do you want to rename the “${this.nameValue}” tag to?`, tagName);
+    const prompt = window.prompt(`What do you want to rename the “${this.nameValue}” tag to?`, this.nameValue);
     if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
       return;
     }
@@ -77,7 +77,7 @@ export default class extends Controller {
       .then(fetchText)
       .then(html => {
         $(this.element).replaceWith(html);
-        sendNotification(`The “${tagName}” tag has been renamed to “${prompt}”.`);
+        sendNotification(`The “${this.nameValue}” tag has been renamed to “${prompt}”.`);
       });
   }
 
