@@ -18,18 +18,6 @@ class EntriesControllerTest < ActionController::TestCase
     assert_redirected_to entries_url
   end
 
-  test "should generate sitemap" do
-    get :sitemap, params: { format: 'xml', page: 1 }
-    assert_template :sitemap
-    assert_response :success
-  end
-
-  test "should generate sitemap index" do
-    get :sitemap_index, params: { format: 'xml' }
-    assert_template :sitemap_index
-    assert_response :success
-  end
-
   test "should generate atom feed" do
     set_up_all_images
     get :feed, params: { format: 'atom' }

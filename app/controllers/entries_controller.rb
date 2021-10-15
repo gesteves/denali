@@ -5,7 +5,6 @@ class EntriesController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, except: [:amp]
-  before_action :set_sitemap_entry_count, only: [:sitemap_index, :sitemap]
   before_action :set_entry, only: [:show, :amp]
 
   def index
@@ -161,25 +160,6 @@ class EntriesController < ApplicationController
     end
   end
 
-  def sitemap_index
-    total_pages = (@photoblog.entries.published.count / @entries_per_sitemap.to_f).ceil
-    @lastmods = @photoblog.entries.published('published_at ASC').pluck(:modified_at).each_slice(@entries_per_sitemap).map { |page| page.max.strftime('%Y-%m-%dT%H:%M:%S%:z') }
-    @pages = [*1..total_pages]
-    render format: 'xml'
-  end
-
-  def sitemap
-    @page = params[:page]
-    @entries = @photoblog.entries.published('published_at ASC').page(@page).per(@entries_per_sitemap)
-    raise ActiveRecord::RecordNotFound if @entries.empty?
-    render format: 'xml'
-  end
-
-  def tags_sitemap
-    @tags = ActsAsTaggableOn::Tag.all.order('name asc')
-    render format: 'xml'
-  end
-
   def tumblr
     @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').limit(1).first
     raise ActiveRecord::RecordNotFound if @entry.blank?
@@ -189,10 +169,6 @@ class EntriesController < ApplicationController
   end
 
   private
-
-  def set_sitemap_entry_count
-    @entries_per_sitemap = 1000
-  end
 
   def set_entry
     @entry = Entry.find_by_url(url: request.path)

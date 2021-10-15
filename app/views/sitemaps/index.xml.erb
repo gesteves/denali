@@ -1,0 +1,17 @@
+<% cache @photoblog do %>
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <% @entry_pages.each do |page| %>
+    <sitemap>
+      <loc><%= entries_sitemap_url(page: page) %></loc>
+      <lastmod><%= @entry_lastmods[page - 1] %></lastmod>
+    </sitemap>
+  <% end %>
+
+  <% @tag_pages.each do |page| %>
+    <sitemap>
+      <loc><%= tags_sitemap_url(page: page) %></loc>
+    </sitemap>
+  <% end %>
+</sitemapindex>
+<% end %>
