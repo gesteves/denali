@@ -3,10 +3,10 @@
   <h3 class="sr-only" id="location">Location</h3>
   <ul class="location" aria-labelledby="location">
     <% if photo.location.present? %>
-      <li class="location__field"><%= photo.location %></li>
+      <li class="location__field"><%= remove_widows photo.location %></li>
     <% end %>
     <% if entry.territories.present? %>
-      <li class="location__field"><%= entry.formatted_territories %></li>
+      <li class="location__field"><%= remove_widows entry.formatted_territories %></li>
     <% end %>
   </ul>
 <% end %>
