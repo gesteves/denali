@@ -16,7 +16,7 @@
     "masonry-layout": "^4.2.2",
     "moment-timezone": "^0.5.33",
     "@rails/ujs": "^6.1.4",
-    "stimulus": "^2.0.0",
+    "stimulus": "^3.0.1",
     "turbolinks": "^5.2.0"
   },
   "devDependencies": {
