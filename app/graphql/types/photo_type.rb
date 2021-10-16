@@ -11,6 +11,7 @@ module Types
     field :camera, Types::CameraType, null: true, description: "The camera used to take the photo"
     field :color, Boolean, null: true, method: :color?, description: "Whether or not the photo is in color"
     field :dominant_color, String, null: true, description: "The most prominent color in the photo"
+    field :download_url, String, null: true, description: "The URL to download the full size version of the image"
     field :exposure, String, null: true, description: "Exposure time of the photo"
     field :filename, String, null: false, description: "The file name of the original uploaded image"
     field :film, Types::FilmType, null: true, description: "The film used to take the photo"
@@ -27,6 +28,7 @@ module Types
     field :iso, Integer, null: true, description: "ISO the photo was made at"
     field :latitude, Float, null: true, description: "Latitude the photo was made at"
     field :longitude, Float, null: true, description: "Longitude the photo was made at"
+    field :location, String, null: true, description: "The location this photo was made in"
     field :territories, [String], null: true, description: "The native lands this photo was made in"
     field :lens, Types::LensType, null: true, description: "The lens used to make the photo"
     field :square, Boolean, null: false, method: :is_square?, description: "Whether or not the photo is square"
@@ -56,11 +58,11 @@ module Types
     end
 
     def latitude
-      object.latitude if object.entry.show_location?
+      object.latitude if object.entry.show_location? && context[:is_admin]
     end
 
     def longitude
-      object.longitude if object.entry.show_location?
+      object.longitude if object.entry.show_location? && context[:is_admin]
     end
 
     def filename
@@ -70,6 +72,11 @@ module Types
     def territories
       return [] if object.territories.nil?
       JSON.parse(object.territories)
+    end
+
+    def download_url
+      return unless context[:is_admin]
+      object.image.url(disposition: :attachment)
     end
   end
 end
