@@ -3,7 +3,7 @@
   <h3 class="sr-only" id="location">Location</h3>
   <ul class="location" aria-labelledby="location">
     <% if photo.location.present? %>
-      <li class="location__field"><%= photo.location %></li>
+      <li class="location__field"><%= entry.territories.present? ? photo.location : remove_widows(photo.location).html_safe %></li>
     <% end %>
     <% if entry.territories.present? %>
       <li class="location__field"><%= remove_widows(entry.formatted_territories).html_safe %></li>
