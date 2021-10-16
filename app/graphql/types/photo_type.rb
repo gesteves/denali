@@ -75,8 +75,7 @@ module Types
     end
 
     def download_url
-      return unless context[:is_admin]
-      object.image.url(disposition: :attachment)
+      object.image.url(disposition: :attachment) if context[:is_admin]
     end
   end
 end
