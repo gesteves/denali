@@ -1,10 +1,10 @@
 <% photo = entry.photos.first %>
-<% if photo.location.present? || entry.territories.present? %>
+<% if photo.formatted_location.present? || entry.territories.present? %>
   <p>
-    <% if photo.location.present? %>
-      <%= photo.location %>
+    <% if photo.formatted_location.present? %>
+      <%= photo.formatted_location %>
     <% end %>
-    <% if photo.location.present? && entry.territories.present? %> – <% end %>
+    <% if photo.formatted_location.present? && entry.territories.present? %> – <% end %>
     <% if entry.territories.present? %>
       <%= entry.formatted_territories %>
     <% end %>

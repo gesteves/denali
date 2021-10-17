@@ -59,8 +59,22 @@
                   </div>
                 </div>
               </div>
+              <hr class="hr">
+              <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                  <%= p.label :location, 'Location', class: 'label' %>
+                </div>
+                <div class="field-body">
+                  <div class="field">
+                    <div class="control is-expanded">
+                      <%= p.text_field :location, placeholder: 'The place where this photo was made…', class: 'input' %>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
+
           <div class="media">
             <div class="media-content"></div>
             <div class="media-right photo-form__controls">

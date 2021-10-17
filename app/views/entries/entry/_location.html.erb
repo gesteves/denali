@@ -1,9 +1,9 @@
 <% photo = entry.photos.first %>
-<% if photo.location.present? || entry.territories.present? %>
+<% if photo.formatted_location.present? || entry.territories.present? %>
   <h3 class="sr-only" id="location">Location</h3>
   <ul class="location" aria-labelledby="location">
-    <% if photo.location.present? %>
-      <li class="location__field"><%= entry.territories.present? ? photo.location : remove_widows(photo.location).html_safe %></li>
+    <% if photo.formatted_location.present? %>
+      <li class="location__field"><%= entry.territories.present? ? photo.formatted_location : remove_widows(photo.formatted_location).html_safe %></li>
     <% end %>
     <% if entry.territories.present? %>
       <li class="location__field"><%= remove_widows(entry.formatted_territories).html_safe %></li>

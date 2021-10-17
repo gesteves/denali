@@ -10,7 +10,7 @@ class PhotoIptcWorker < ApplicationWorker
     keywords = iptc&.values['iptc/Keywords']&.value
     park_code = keywords&.find { |k| k.downcase.start_with? 'nps:' }
     if park_code.present?
-      photo.park_code = park_code.downcase.gsub('nps:', '')
+      photo.location = park_code.downcase.gsub('nps:', '')
       photo.save!
     end
   end

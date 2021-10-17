@@ -468,6 +468,7 @@ class Entry < ApplicationRecord
     location_tags = []
     tags = []
     self.tag_list.remove(Park.designations.map(&:pluralize))
+    self.tag_list.remove(Park.names)
     if self.show_location?
       self.photos.each do |p|
         if p.park.present?

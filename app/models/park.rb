@@ -4,7 +4,7 @@ class Park < ApplicationRecord
   validates :code, presence: true, uniqueness: true
   validates :full_name, presence: true
 
-  after_save :update_entry_tags, if: :saved_change_to_full_name?
+  after_save :update_entry_tags, if: :changes_to_fields?
 
   def update_entry_tags
     self.photos.map { |p| p.entry.update_tags }
@@ -12,5 +12,15 @@ class Park < ApplicationRecord
 
   def self.designations
     Park.all.map(&:designation).reject(&:blank?).uniq
+  end
+
+  def self.names
+    Park.all.map(&:full_name).reject(&:blank?).uniq
+  end
+
+  private
+
+  def changes_to_fields?
+    saved_change_to_full_name? || saved_change_to_designation?
   end
 end

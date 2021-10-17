@@ -5,7 +5,7 @@ namespace :parks do
     puts "Updating all entries tagged “#{ENV['TAG']}” with park code #{ENV['PARK_CODE']}"
     Entry.tagged_with(ENV['TAG']).each do |e|
       e.photos.each do |p|
-        p.park_code = ENV['PARK_CODE'].downcase
+        p.location = ENV['PARK_CODE'].downcase
         p.save!
       end
     end
@@ -18,7 +18,7 @@ namespace :parks do
     entry = Entry.find(ENV['ENTRY_ID'])
     if entry.present?
       entry.photos.each do |p|
-        p.park_code = ENV['PARK_CODE'].downcase
+        p.location = ENV['PARK_CODE'].downcase
         p.save!
       end
     end
@@ -35,7 +35,14 @@ namespace :parks do
     parks.each do |park|
       p = Park.find_by_code(park['parkCode'])
       if p.present?
-        puts "#{p.full_name} already exists, skipping."
+        p.update(
+          full_name: park['fullName'],
+          short_name: park['name'],
+          designation: park['designation'],
+          url: park['url'],
+          slug: park['fullName'].parameterize
+        )
+        puts "Updated #{park['fullName']} (#{park['parkCode']})"
       else
         new_park = Park.new(
           full_name: park['fullName'],
@@ -45,7 +52,7 @@ namespace :parks do
           url: park['url'],
           slug: park['fullName'].parameterize
         )
-        puts "Saved #{park['fullName']}" if new_park.save
+        puts "Saved #{park['fullName']} (#{park['parkCode']})" if new_park.save
       end
     end
   end

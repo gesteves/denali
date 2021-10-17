@@ -16,7 +16,7 @@ class Photo < ApplicationRecord
   after_commit :update_entry_equipment_tags, if: :changed_equipment?
   after_commit :update_entry_location_tags, if: :changed_location?
   after_commit :update_entry_style_tags, if: :changed_style?
-  after_commit :update_park, if: :changed_park_code?
+  after_commit :update_park, if: :changed_location?
 
   def touch_entry
     self.entry&.touch
@@ -164,9 +164,11 @@ class Photo < ApplicationRecord
     "#{formatted}″"
   end
 
-  def location
+  def formatted_location
     if self.park.present?
       [self.park.full_name, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
+    elsif self.location.present?
+      [self.location, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
     else
       [self.locality, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
     end
@@ -224,14 +226,11 @@ class Photo < ApplicationRecord
     saved_change_to_neighborhood? ||
     saved_change_to_administrative_area? ||
     saved_change_to_postal_code? ||
+    saved_change_to_location? ||
     saved_change_to_park_id?
   end
 
   def changed_style?
     saved_change_to_color? || saved_change_to_black_and_white? || saved_change_to_camera_id? || saved_change_to_film_id?
-  end
-
-  def changed_park_code?
-    saved_change_to_park_code?
   end
 end
