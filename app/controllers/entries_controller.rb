@@ -17,6 +17,7 @@ class EntriesController < ApplicationController
     @srcset = PHOTOS[:entry_list][:srcset]
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
     @page_url = @page == 1 ? entries_url(page: nil) : entries_url(page: @page)
+    @canonical_url = entries_url(page: nil)
     @show_schema = true if @page == 1
     respond_to do |format|
       format.html {
@@ -54,6 +55,7 @@ class EntriesController < ApplicationController
     @srcset = PHOTOS[:entry_list][:srcset]
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
     @page_url = @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page)
+    @canonical_url = tag_url(tag: @tag_slug, page: nil)
     respond_to do |format|
       format.html {
         @page_description = "Browse all #{number_with_delimiter @tags.first.taggings_count} photos tagged “#{@tags.first.name}” on #{@photoblog.name}."
