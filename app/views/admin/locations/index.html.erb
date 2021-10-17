@@ -1,0 +1,9 @@
+<% if @parks.blank? %>
+  <article class="message is-info">
+      <div class="message-body">
+        You don’t have any locations.
+      </div>
+    </article>
+<% else %>
+  <%= render partial: 'parks', object: @parks %>
+<% end %>

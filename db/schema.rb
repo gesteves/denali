@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_14_174842) do
+ActiveRecord::Schema.define(version: 2021_10_17_174652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,6 +132,19 @@ ActiveRecord::Schema.define(version: 2021_10_14_174842) do
     t.string "amazon_url"
   end
 
+  create_table "parks", force: :cascade do |t|
+    t.string "full_name"
+    t.string "short_name"
+    t.string "code"
+    t.string "designation"
+    t.string "url"
+    t.string "slug"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["code"], name: "index_parks_on_code"
+    t.index ["slug"], name: "index_parks_on_slug"
+  end
+
   create_table "photos", id: :serial, force: :cascade do |t|
     t.text "alt_text"
     t.integer "position"
@@ -162,13 +175,15 @@ ActiveRecord::Schema.define(version: 2021_10_14_174842) do
     t.boolean "black_and_white"
     t.string "dominant_color"
     t.text "territories"
-    t.string "park"
+    t.string "park_code"
+    t.bigint "park_id"
     t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["film_id"], name: "index_photos_on_film_id"
     t.index ["latitude"], name: "index_photos_on_latitude"
     t.index ["lens_id"], name: "index_photos_on_lens_id"
     t.index ["longitude"], name: "index_photos_on_longitude"
+    t.index ["park_id"], name: "index_photos_on_park_id"
   end
 
   create_table "publish_schedules", force: :cascade do |t|

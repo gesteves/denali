@@ -3,6 +3,7 @@ class Photo < ApplicationRecord
   belongs_to :camera, optional: true
   belongs_to :lens, optional: true
   belongs_to :film, optional: true
+  belongs_to :park, optional: true
   has_one_attached :image
 
   acts_as_list scope: :entry
@@ -15,6 +16,7 @@ class Photo < ApplicationRecord
   after_commit :update_entry_equipment_tags, if: :changed_equipment?
   after_commit :update_entry_location_tags, if: :changed_location?
   after_commit :update_entry_style_tags, if: :changed_style?
+  after_commit :update_park, if: :changed_park_code?
 
   def touch_entry
     self.entry&.touch
@@ -164,14 +166,15 @@ class Photo < ApplicationRecord
 
   def location
     if self.park.present?
-      [self.park, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
+      [self.park.full_name, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
     else
       [self.locality, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
     end
   end
 
   def extract_metadata
-    PhotoMetadataWorker.perform_async(self.id)
+    PhotoExifWorker.perform_async(self.id)
+    PhotoIptcWorker.perform_async(self.id)
   end
 
   def geocode
@@ -188,6 +191,10 @@ class Photo < ApplicationRecord
 
   def encode_blurhash
     BlurhashWorker.perform_async(self.id)
+  end
+
+  def update_park
+    NationalParkWorker.perform_async(self.id)
   end
 
   def blurhash_data_uri(w: 32)
@@ -216,10 +223,15 @@ class Photo < ApplicationRecord
     saved_change_to_sublocality? ||
     saved_change_to_neighborhood? ||
     saved_change_to_administrative_area? ||
-    saved_change_to_postal_code?
+    saved_change_to_postal_code? ||
+    saved_change_to_park_id?
   end
 
   def changed_style?
     saved_change_to_color? || saved_change_to_black_and_white? || saved_change_to_camera_id? || saved_change_to_film_id?
+  end
+
+  def changed_park_code?
+    saved_change_to_park_code?
   end
 end

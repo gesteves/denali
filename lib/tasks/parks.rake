@@ -1,17 +1,26 @@
 namespace :parks do
-  desc 'Populates a list of National Park Units in redis'
-  task :populate => :environment do
-    next unless ENV['nps_api_key'].present?
+  desc 'Populates tagged entries with a park'
+  task :tag => :environment do
+    next unless ENV['TAG'].present? && ENV['PARK_CODE'].present?
+    puts "Updating all entries tagged “#{ENV['TAG']}” with park code #{ENV['PARK_CODE']}"
+    Entry.tagged_with(ENV['TAG']).each do |e|
+      e.photos.each do |p|
+        p.park_code = ENV['PARK_CODE'].downcase
+        p.save!
+      end
+    end
+  end
 
-    url = "https://developer.nps.gov/api/v1/parks?limit=1000&api_key=#{ENV['nps_api_key']}"
-    response = HTTParty.get(url)
-    next if response.code >= 400
-
-    $redis.del('parks')
-    parks = JSON.parse(response.body)['data'].map { |p| p['fullName'] }
-    parks.each do |p|
-      puts "Adding #{p} (#{p.parameterize})"
-      $redis.sadd('parks', p.parameterize)
+  desc 'Populates an entry with a park'
+  task :entry => :environment do
+    next unless ENV['PARK_CODE'].present? && ENV['ENTRY_ID'].present?
+    puts "Updating entry tagged “#{ENV['ENTRY_ID']}” with park code #{ENV['PARK_CODE']}"
+    entry = Entry.find(ENV['ENTRY_ID'])
+    if entry.present?
+      entry.photos.each do |p|
+        p.park_code = ENV['PARK_CODE'].downcase
+        p.save!
+      end
     end
   end
 end

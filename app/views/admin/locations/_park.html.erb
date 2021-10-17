@@ -1,0 +1,10 @@
+<tr>
+  <td><%= park.short_name %></td>
+  <td><%= park.designation %></td>
+  <td><%= park.photos.count %></td>
+  <td>
+    <div class="buttons is-pulled-right">
+      <%= link_to 'Edit', edit_admin_park_path(park), class: 'button is-small' %>
+    </div>
+  </td>
+</tr>

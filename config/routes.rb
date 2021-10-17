@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     post '/entries/queued/update'     => 'entries#update_queue'
     get '/entries/queued/schedule'    => 'publish_schedules#index'
     get '/equipment'                  => 'equipment#index'
+    get '/locations'                  => 'locations#index'
     get '/map'                        => 'maps#index', :as => :map
     get '/map/photos.:format'         => 'maps#photos', :as => :map_markers
     get '/map/photo/:id.:format'      => 'maps#photo', :as => :map_photo
@@ -65,6 +66,7 @@ Rails.application.routes.draw do
     resources :cameras, only: [:edit, :update]
     resources :lenses, only: [:edit, :update]
     resources :films, only: [:edit, :update]
+    resources :parks, only: [:edit, :update]
     resources :publish_schedules, only: [:create, :destroy]
     resources :tag_customizations, only: [:index, :new, :create, :edit, :update, :destroy]
     resources :webhooks, except: [:show]

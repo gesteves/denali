@@ -467,22 +467,12 @@ class Entry < ApplicationRecord
   def update_location_tags
     location_tags = []
     tags = []
-    self.tag_list.remove(['National Parks', 'National Monuments', 'National Wildlife Refuges', 'State Parks', 'National Forests'])
-    if self.tag_list.present?
-      tags << 'National Parks' if self.tag_list.any? { |l| l.match? /national park/i }
-      tags << 'National Forests' if self.tag_list.any? { |l| l.match? /national forest/i }
-      tags << 'National Monuments' if self.tag_list.any? { |l| l.match? /national monument/i }
-      tags << 'National Wildlife Refuges' if self.tag_list.any? { |l| l.match? /national (wildlife|elk) refuge/i }
-      tags << 'National Battlefields' if self.tag_list.any? { |l| l.match? /national battlefield/i }
-      tags << 'State Parks' if self.tag_list.any? { |l| l.match? /state park/i }
-    end
+    self.tag_list.remove(Park.designations.map(&:pluralize))
     if self.show_location?
-      park_tags = self.park_tags
       self.photos.each do |p|
-        if park_tags.present?
-          location_tags += [p.country, p.administrative_area].uniq.compact
-          p.park = park_tags.first
-          p.save!
+        if p.park.present?
+          location_tags += [p.park.full_name, p.country, p.administrative_area].uniq.compact
+          tags << p.park.designation.pluralize if p.park.designation.present?
         else
           location_tags += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area].uniq.compact
         end
