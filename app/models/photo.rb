@@ -166,7 +166,7 @@ class Photo < ApplicationRecord
 
   def formatted_location
     if self.park.present?
-      [self.park.full_name, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
+      [self.park.display_name, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
     elsif self.location.present?
       [self.location, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
     else

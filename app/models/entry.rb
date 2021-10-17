@@ -471,7 +471,7 @@ class Entry < ApplicationRecord
     if self.show_location?
       self.photos.each do |p|
         if p.park.present?
-          location_tags += [p.park.full_name, p.country, p.administrative_area].uniq.reject(&:blank?)
+          location_tags += [p.park.display_name, p.country, p.administrative_area].uniq.reject(&:blank?)
           tags << p.park.designation.pluralize if p.park.designation.present?
         else
           location_tags += [p.location, p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area].uniq.reject(&:blank?)

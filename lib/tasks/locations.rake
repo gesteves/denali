@@ -48,6 +48,7 @@ namespace :locations do
           new_park = Park.new(
             full_name: park['fullName'],
             short_name: park['name'],
+            display_name: park['fullName'],
             code: park['parkCode'].downcase,
             designation: park['designation'],
             url: park['url'],
@@ -55,6 +56,15 @@ namespace :locations do
           )
           puts "Saved #{park['fullName']} (#{park['parkCode']})" if new_park.save
         end
+      end
+    end
+
+    task :park_display_names => :environment do
+      parks = Park.where(display_name: nil)
+      parks.find_each do |park|
+        park.display_name = park.full_name
+        park.save!
+        puts "Saved #{park.display_name}"
       end
     end
   end

@@ -15,12 +15,12 @@ class Park < ApplicationRecord
   end
 
   def self.names
-    Park.all.map(&:full_name).reject(&:blank?).uniq
+    Park.all.map(&:display_name).reject(&:blank?).uniq
   end
 
   private
 
   def changes_to_fields?
-    saved_change_to_full_name? || saved_change_to_designation?
+    saved_change_to_display_name? || saved_change_to_designation?
   end
 end
