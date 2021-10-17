@@ -23,4 +23,30 @@ namespace :parks do
       end
     end
   end
+
+  task :populate => :environment do
+    next unless ENV['nps_api_key'].present?
+
+    url = "https://developer.nps.gov/api/v1/parks?limit=1000&api_key=#{ENV['nps_api_key']}"
+    response = HTTParty.get(url)
+    next if response.code >= 400
+
+    parks = JSON.parse(response.body)['data']
+    parks.each do |park|
+      p = Park.find_by_code(park['parkCode'])
+      if p.present?
+        puts "#{p.full_name} already exists, skipping."
+      else
+        new_park = Park.new(
+          full_name: park['fullName'],
+          short_name: park['name'],
+          code: park['parkCode'].downcase,
+          designation: park['designation'],
+          url: park['url'],
+          slug: park['fullName'].parameterize
+        )
+        puts "Saved #{park['fullName']}" if new_park.save
+      end
+    end
+  end
 end
