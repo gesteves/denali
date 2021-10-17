@@ -480,8 +480,7 @@ class Entry < ApplicationRecord
     end
     location_tags = location_tags.uniq.reject(&:blank?)
     self.location_list = location_tags
-    self.tag_list.remove(location_tags)
-    self.tag_list.add(tags)
+    self.tag_list.add(tags.uniq)
     self.save!
   end
 
@@ -518,16 +517,6 @@ class Entry < ApplicationRecord
 
   def photos_processed?
     photos.all? { |p| p.processed? }
-  end
-
-  def park_tags
-    nps_units = self.tag_list.select { |t| $redis.sismember("parks", t.parameterize) }
-    other_parks = self.tag_list.select { |tag| tag.match? /(state park|refuge)$/i }
-    (nps_units + other_parks).uniq
-  end
-
-  def is_park_entry?
-    self.photos&.any? { |p| p.park.present? }
   end
 
   private
