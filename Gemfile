@@ -38,7 +38,6 @@ gem 'oauth'
 gem 'rack-attack'
 gem "image_processing", "~> 1.0"
 gem 'rack-brotli'
-gem 'iptc'
 
 # Monitoring
 gem 'sentry-raven', '~> 3.1'

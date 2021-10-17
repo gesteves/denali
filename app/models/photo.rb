@@ -176,7 +176,6 @@ class Photo < ApplicationRecord
 
   def extract_metadata
     PhotoExifWorker.perform_async(self.id)
-    PhotoIptcWorker.perform_async(self.id)
   end
 
   def geocode
