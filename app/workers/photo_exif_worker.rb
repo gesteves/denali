@@ -37,7 +37,7 @@ class PhotoExifWorker < ApplicationWorker
         photo.film = Film.create_with(display_name: film_name, make: film_make, model: film_type).find_or_create_by(slug: film_name.parameterize) if film_make.present? && film_type.present?
 
         location = comment_array.find { |c| c =~ /^location/i }&.gsub(/^location:/i, '')&.strip
-        park = comment_array.find { |c| c =~ /^park/i }&.gsub(/^park:/i, '')&.strip
+        park = comment_array.find { |c| c =~ /^park/i }&.gsub(/^park:/i, '')&.strip&.downcase
         photo.location = park || location
       end
       if exif.image_description.present? && photo.alt_text.blank?
