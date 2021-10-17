@@ -467,20 +467,20 @@ class Entry < ApplicationRecord
   def update_location_tags
     location_tags = []
     tags = []
-    self.tag_list.remove(Park.designations.map(&:pluralize))
-    self.tag_list.remove(Park.names)
+    self.tag_list.remove(Park.designations.map(&:pluralize) + Park.names + self.location_list)
     if self.show_location?
       self.photos.each do |p|
         if p.park.present?
-          location_tags += [p.park.full_name, p.country, p.administrative_area].uniq.compact
+          location_tags += [p.park.full_name, p.country, p.administrative_area].uniq.reject(&:blank?)
           tags << p.park.designation.pluralize if p.park.designation.present?
         else
-          location_tags += [p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area].uniq.compact
+          location_tags += [p.location, p.country, p.locality, p.sublocality, p.neighborhood, p.administrative_area].uniq.reject(&:blank?)
         end
       end
     end
     location_tags = location_tags.uniq.reject(&:blank?)
     self.location_list = location_tags
+    self.tag_list.remove(location_tags)
     self.tag_list.add(tags)
     self.save!
   end

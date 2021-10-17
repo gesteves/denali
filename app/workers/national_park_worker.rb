@@ -8,13 +8,13 @@ class NationalParkWorker < ApplicationWorker
 
     return if ENV['nps_api_key'].blank?
 
-    park = Park.find_by_code(photo.location)
+    park = Park.find_by_code(photo.location&.downcase)
 
     if park.present?
       photo.park = park
       photo.save!
     else
-      url = "https://developer.nps.gov/api/v1/parks?parkCode=#{photo.location}&api_key=#{ENV['nps_api_key']}"
+      url = "https://developer.nps.gov/api/v1/parks?parkCode=#{photo.location&.downcase}&api_key=#{ENV['nps_api_key']}"
       response = HTTParty.get(url)
       raise if response.code >= 400
 
