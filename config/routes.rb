@@ -70,16 +70,13 @@ Rails.application.routes.draw do
     resources :webhooks, except: [:show]
   end
 
-
+  # Entries
+  root 'entries#index'
   get '/(page/:page)'                  => 'entries#index',   constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :entries
   get '/tagged/:tag(/page/:page)'      => 'entries#tagged',  constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :tag
   get '/search'                        => 'entries#search', :as => :search
-  get '/about'                         => 'blogs#about', :as => :about
-  get '/oembed.:format'                => 'oembed#show', :as => :oembed
-  match '/graphql'                     => 'graphql#options', via: :options
-  post '/graphql'                      => 'graphql#execute'
 
-  # Entries
+  # Entry
   get '/e/:id'                              => 'entries#show',        constraints: { id: /\d+/ }, :as => :entry
   get '/preview/:preview_hash'              => 'entries#show',        defaults: { format: 'html' }, :as => :preview_entry
   get '/:year/:month/:day/:id(/:slug)'      => 'entries#show',        constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_long
@@ -87,23 +84,21 @@ Rails.application.routes.draw do
   get '/related/:preview_hash.:format'      => 'entries#related',     defaults: { format: 'js' }, :as => :related_preview
   get '/amp/:year/:month/:day/:id(/:slug)'  => 'entries#amp',         constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_amp
 
+  # Feeds
+  get '/feed(.:format)'             => 'entries#feed', defaults: { format: 'atom' }, :as => :feed
+  get '/tagged/:tag/feed(.:format)' => 'entries#tag_feed', defaults: { format: 'atom' }, :as => :tag_feed
+
   # Sitemaps
   get '/sitemap.:format'               => 'sitemaps#index', defaults: { format: 'xml' }, :as => :sitemap
   get '/sitemap/entries/:page.:format' => 'sitemaps#entries', constraints: { page: /\d+/ }, defaults: { format: 'xml' }, :as => :entries_sitemap
   get '/sitemap/tags/:page.:format'    => 'sitemaps#tags', constraints: { page: /\d+/ }, defaults: { format: 'xml' }, :as => :tags_sitemap
 
-  # Legacy routes & redirects
-  get '/archive(/:year)(/:month)'      => 'legacy#home'
-  get '/index.html'                    => 'legacy#home'
-  get '/rss'                           => 'legacy#feed'
-  get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
+  # GraphQL
+  match '/graphql'                     => 'graphql#options', via: :options
+  post '/graphql'                      => 'graphql#execute'
 
   #PWA
   get '/service_worker.js'             => 'service_worker#index', defaults: { format: 'js' }, :as => :service_worker
-
-  # Feeds
-  get '/feed(.:format)'             => 'entries#feed', defaults: { format: 'atom' }, :as => :feed
-  get '/tagged/:tag/feed(.:format)' => 'entries#tag_feed', defaults: { format: 'atom' }, :as => :tag_feed
 
   # Admin
   get '/admin'                         => 'admin#index',      :as => :admin
@@ -112,9 +107,20 @@ Rails.application.routes.draw do
   get '/signin'                        => 'sessions#new',     :as => :signin
   get '/signout'                       => 'sessions#destroy', :as => :signout
 
-  # The rest
+  # Legacy routes & redirects
+  get '/archive(/:year)(/:month)'      => 'legacy#home'
+  get '/index.html'                    => 'legacy#home'
+  get '/rss'                           => 'legacy#feed'
+  get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
+
+  # Oembed
+  get '/oembed.:format'                => 'oembed#show', :as => :oembed
+
+  # Pages
+  get '/about'                         => 'blogs#about', :as => :about
+
+  # Miscellaneous
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }
-  root 'entries#index'
   match '/404', to: 'errors#file_not_found', via: :all
   match '/422', to: 'errors#unprocessable', via: :all
   match '/500', to: 'errors#internal_server_error', via: :all
