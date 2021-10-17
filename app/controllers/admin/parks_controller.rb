@@ -1,7 +1,7 @@
 class Admin::ParksController < AdminController
   def edit
     @park = Park.find(params[:id])
-    @page_title = 'Editing park'
+    @page_title = 'Editing national park'
   end
 
   def update
