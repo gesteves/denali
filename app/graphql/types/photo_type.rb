@@ -65,6 +65,10 @@ module Types
       object.longitude if object.entry.show_location? && context[:is_admin]
     end
 
+    def location
+      object.formatted_location
+    end
+
     def filename
       object.image.filename.to_s
     end
