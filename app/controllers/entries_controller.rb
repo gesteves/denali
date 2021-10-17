@@ -104,7 +104,7 @@ class EntriesController < ApplicationController
   end
 
   def show
-    @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film)
+    @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film, :park)
     @srcset = PHOTOS[:entry][:srcset]
     @sizes = PHOTOS[:entry][:sizes].join(', ')
     preconnect_imgix
