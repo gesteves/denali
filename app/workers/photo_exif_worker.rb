@@ -30,14 +30,14 @@ class PhotoExifWorker < ApplicationWorker
       end
       if exif.user_comment.present?
         comment_array = exif.user_comment.encode('UTF-8')&.split(/(\n)+/)
-        film_make = comment_array.find { |c| c =~ /^film make/i }&.gsub(/^film make:/i, '')&.strip
-        film_type = comment_array.find { |c| c =~ /^film type/i }&.gsub(/^film type:/i, '')&.strip
+        film_make = comment_array.find { |c| c =~ /^film make:/i }&.gsub(/^film make:/i, '')&.strip
+        film_type = comment_array.find { |c| c =~ /^film type:/i }&.gsub(/^film type:/i, '')&.strip
         film_type = "#{film_type&.gsub(%r{#{exif.iso_speed_ratings}}i, '')&.strip} #{exif.iso_speed_ratings}" if exif.iso_speed_ratings.present?
         film_name = "#{film_make} #{film_type}"
         photo.film = Film.create_with(display_name: film_name, make: film_make, model: film_type).find_or_create_by(slug: film_name.parameterize) if film_make.present? && film_type.present?
 
-        location = comment_array.find { |c| c =~ /^location/i }&.gsub(/^location:/i, '')&.strip
-        park = comment_array.find { |c| c =~ /^park/i }&.gsub(/^park:/i, '')&.strip&.downcase
+        location = comment_array.find { |c| c =~ /^location:/i }&.gsub(/^location:/i, '')&.strip
+        park = comment_array.find { |c| c =~ /^park:/i }&.gsub(/^park:/i, '')&.strip&.downcase
         photo.location = park || location
       end
       if exif.image_description.present? && photo.alt_text.blank?
