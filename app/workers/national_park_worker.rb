@@ -18,7 +18,6 @@ class NationalParkWorker < ApplicationWorker
     return if data.blank?
 
     park = Park.find_by_code(code)
-
     if park.present?
       park.update(
         full_name: data['fullName'],
