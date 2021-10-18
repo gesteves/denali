@@ -346,7 +346,7 @@ class Entry < ApplicationRecord
   end
 
   def combined_tags
-    self.taggings.includes(:tag).map(&:tag).uniq
+    self.taggings.includes(:tag).map(&:tag).uniq.compact
   end
 
   def combined_tag_list
