@@ -12,6 +12,8 @@ class NationalParkWorker < ApplicationWorker
     end
 
     code = photo.location.downcase
+    return unless code.match? /^[a-z]{4,10}$/
+
     data = fetch_park(code)
     return if data.blank?
 
