@@ -1,5 +1,5 @@
 <tr>
-  <td><%= park.display_name %> <span class="tag"><%= park.code %></span></td>
+  <td><%= link_to_if park.url.present?, park.display_name, park.url %> <span class="tag"><%= park.code %></span></td>
   <td>
     <div class="buttons is-pulled-right">
       <%= link_to 'Edit', edit_admin_park_path(park), class: 'button is-small' %>
