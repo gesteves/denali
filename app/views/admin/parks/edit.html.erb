@@ -28,11 +28,55 @@
   </div>
 
   <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :code, 'Park code', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :code, class: 'input', readonly: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
     <div class="field-label is-normal"><%= f.label :full_name, 'Full name', class: 'label' %></div>
     <div class="field-body">
       <div class="field">
         <div class="control is-expanded">
-          <%= f.text_field :full_name, class: 'input', required: true, autocomplete: 'off' %>
+          <%= f.text_field :full_name, class: 'input', readonly: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :short_name, 'Short name', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :short_name, class: 'input', readonly: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :designation, 'Designation', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :designation, class: 'input', readonly: true %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :url, 'URL', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :url, class: 'input', readonly: true %>
         </div>
       </div>
     </div>

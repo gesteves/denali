@@ -23,6 +23,6 @@ class Admin::ParksController < AdminController
 
   private
   def park_params
-    params.require(:park).permit(:display_name, :full_name)
+    params.require(:park).permit(:display_name)
   end
 end
