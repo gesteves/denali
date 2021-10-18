@@ -23,6 +23,7 @@
         <div class="control is-expanded">
           <%= f.text_field :display_name, class: 'input', required: true, autocomplete: 'off' %>
         </div>
+        <p class="help">The name of the park, as it’s shown on the website, and used for tagging.</p>
       </div>
     </div>
   </div>
@@ -32,8 +33,9 @@
     <div class="field-body">
       <div class="field">
         <div class="control is-expanded">
-          <%= f.text_field :code, class: 'input', readonly: true %>
+          <%= f.text_field :code, class: 'input is-static', readonly: true %>
         </div>
+        <p class="help">The internal code of the park, as it’s used by the National Park Service.</p>
       </div>
     </div>
   </div>
@@ -43,8 +45,9 @@
     <div class="field-body">
       <div class="field">
         <div class="control is-expanded">
-          <%= f.text_field :full_name, class: 'input', readonly: true %>
+          <%= f.text_field :full_name, class: 'input is-static', readonly: true %>
         </div>
+        <p class="help">The official name of the park, as it’s used by the National Park Service.</p>
       </div>
     </div>
   </div>
@@ -54,8 +57,9 @@
     <div class="field-body">
       <div class="field">
         <div class="control is-expanded">
-          <%= f.text_field :short_name, class: 'input', readonly: true %>
+          <%= f.text_field :short_name, class: 'input is-static', readonly: true %>
         </div>
+        <p class="help">The official name of the park, without its designation.</p>
       </div>
     </div>
   </div>
@@ -65,8 +69,9 @@
     <div class="field-body">
       <div class="field">
         <div class="control is-expanded">
-          <%= f.text_field :designation, class: 'input', readonly: true %>
+          <%= f.text_field :designation, class: 'input is-static', readonly: true %>
         </div>
+        <p class="help">The designation for the park. This is added as a tag to entries about this park.</p>
       </div>
     </div>
   </div>
@@ -76,8 +81,9 @@
     <div class="field-body">
       <div class="field">
         <div class="control is-expanded">
-          <%= f.text_field :url, class: 'input', readonly: true %>
+          <%= f.text_field :url, class: 'input is-static', readonly: true %>
         </div>
+        <p class="help">The URL for the park’s official website.</p>
       </div>
     </div>
   </div>
