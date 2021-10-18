@@ -10,15 +10,17 @@ class NationalParkWorker < ApplicationWorker
 
     code = photo.location&.downcase
 
-    data = fetch_park(code)
-
-    if data.blank?
+    if code.blank?
       photo.park = nil
       photo.save!
       return
     end
 
+    data = fetch_park(code)
+    return if data.blank?
+
     park = Park.find_by_code(code)
+
     if park.present?
       park.update(
         full_name: data['fullName'],
