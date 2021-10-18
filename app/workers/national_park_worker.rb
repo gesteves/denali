@@ -2,20 +2,18 @@ class NationalParkWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
+    raise UnprocessedPhotoError unless photo.processed?
     return if photo.location.blank?
     return if ENV['nps_api_key'].blank?
-    raise UnprocessedPhotoError unless photo.processed?
-
     return if ENV['nps_api_key'].blank?
 
-    code = photo.location&.downcase
-
-    if code.blank?
+    if photo.location.blank?
       photo.park = nil
       photo.save!
       return
     end
 
+    code = photo.location.downcase
     data = fetch_park(code)
     return if data.blank?
 
