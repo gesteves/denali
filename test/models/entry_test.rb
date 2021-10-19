@@ -389,19 +389,19 @@ class EntryTest < ActiveSupport::TestCase
   test 'territories are rendered correctly' do
     entry = entries(:peppers)
     assert entry.territories.blank?
-    assert entry.formatted_territories.blank?
+    assert entry.territory_list.blank?
 
     entry = entries(:potomac)
     assert entry.territories.blank?
-    assert entry.formatted_territories.blank?
+    assert entry.territory_list.blank?
 
     entry = entries(:eastern)
-    assert_equal "Shoshone-Bannock, Eastern Shoshone, and Cheyenne lands", entry.formatted_territories
+    assert_equal "Shoshone-Bannock, Eastern Shoshone, and Cheyenne", entry.territory_list
 
     entry = entries(:panda)
-    assert_equal "Shoshone-Bannock and Eastern Shoshone lands", entry.formatted_territories
+    assert_equal "Shoshone-Bannock and Eastern Shoshone", entry.territory_list
 
     entry = entries(:franklin)
-    assert_equal "Shoshone-Bannock land", entry.formatted_territories
+    assert_equal "Shoshone-Bannock", entry.territory_list
   end
 end

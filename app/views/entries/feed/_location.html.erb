@@ -6,7 +6,7 @@
     <% end %>
     <% if photo.formatted_location.present? && entry.territories.present? %> – <% end %>
     <% if entry.territories.present? %>
-      <%= entry.formatted_territories %>
+      <%= entry.territory_list %>
     <% end %>
   </p>
 <% end %>
