@@ -6,7 +6,7 @@
       <li class="location__field"><%= entry.territories.present? ? photo.formatted_location : remove_widows(photo.formatted_location).html_safe %></li>
     <% end %>
     <% if entry.territories.present? %>
-      <li class="location__field"><%= territory_list %>&nbsp;land</li>
+      <li class="location__field"><%= entry.territory_list %>&nbsp;land</li>
     <% end %>
   </ul>
 <% end %>
