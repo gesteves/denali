@@ -8,7 +8,7 @@ class GraphqlController < ApplicationController
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      is_admin: ENV['graphql_auth_token'].present? && request.headers['Authorization'] == "Bearer #{ENV['graphql_auth_token']}",
+      is_authorized: ENV['graphql_auth_token'].present? && request.headers['Authorization'] == "Bearer #{ENV['graphql_auth_token']}",
     }
     result = DenaliSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result

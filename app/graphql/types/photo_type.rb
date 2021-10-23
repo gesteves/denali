@@ -58,11 +58,11 @@ module Types
     end
 
     def latitude
-      object.latitude if object.entry.show_location? && context[:is_admin]
+      object.latitude if object.entry.show_location? && context[:is_authorized]
     end
 
     def longitude
-      object.longitude if object.entry.show_location? && context[:is_admin]
+      object.longitude if object.entry.show_location? && context[:is_authorized]
     end
 
     def location
@@ -79,7 +79,7 @@ module Types
     end
 
     def download_url
-      object.image.url(disposition: :attachment) if context[:is_admin]
+      object.image.url(disposition: :attachment) if context[:is_authorized]
     end
   end
 end
