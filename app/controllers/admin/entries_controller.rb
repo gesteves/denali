@@ -279,7 +279,7 @@ class Admin::EntriesController < AdminController
 
   def twitter
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    TwitterWorker.perform_async(@entry.id)
+    TwitterWorker.perform_async(@entry.id, false)
     @message = 'Your entry was sent to Twitter.'
     respond_to do |format|
       format.html {

@@ -1,34 +1,25 @@
-class TwitterWorker < ApplicationWorker
+class TwitterWorker < BufferWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id)
+  def perform(entry_id, now = false)
     return if !Rails.env.production?
     entry = Entry.published.find(entry_id)
     raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_processed?
-
-    twitter = Twitter::REST::Client.new do |config|
-      config.consumer_key        = ENV['twitter_consumer_key']
-      config.consumer_secret     = ENV['twitter_consumer_secret']
-      config.access_token        = ENV['twitter_access_token']
-      config.access_token_secret = ENV['twitter_access_token_secret']
-    end
-    max_length = 250
+    max_length = 230 # 280 characters - 25 for the image url - 25 for the permalink url
 
     caption = entry.tweet_text.present? ? entry.tweet_text : entry.plain_title
-    tweet = "#{truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_length, omission: '…')} #{entry.permalink_url}"
+    text = "#{truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_length, omission: '…')} #{entry.permalink_url}"
 
-    opts = set_coordinates(entry)
-    twitter.update(tweet, opts)
-  end
-
-  def set_coordinates(entry)
-    opts = {}
-    photo = entry.photos.first
-    if entry.show_location? && photo.latitude.present? && photo.longitude.present?
-      opts[:lat] = photo.latitude
-      opts[:long] = photo.longitude
-      opts[:display_coordinates] = false
+    if entry.is_photo?
+      photos = entry.photos.to_a[0..4]
+      opts = {
+        text: text,
+        media: media_hash(photos.shift, alt_text: true)
+      }
+      opts[:extra_media] = photos.map { |p| media_hash(p, alt_text: true) } if photos.present?
+      post_to_buffer('twitter', opts)
+    else
+      post_to_buffer('twitter', text: text)
     end
-    opts
   end
 end
