@@ -20,10 +20,6 @@ class PhotoTest < ActiveSupport::TestCase
     assert photo.territories.blank?
     assert photo.territory_list.blank?
 
-    photo = photos(:potomac)
-    assert photo.territories.blank?
-    assert photo.territory_list.blank?
-
     photo = photos(:eastern)
     assert_equal "Shoshone-Bannock, Eastern Shoshone, and Cheyenne", photo.territory_list
 
