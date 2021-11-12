@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :instagram, :facebook, :twitter, :twitter_banner, :flickr, :flush_caches, :refresh_metadata]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :instagram, :facebook, :twitter, :flickr, :flush_caches, :refresh_metadata]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
@@ -281,19 +281,6 @@ class Admin::EntriesController < AdminController
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     TwitterWorker.perform_async(@entry.id, false)
     @message = 'Your entry was sent to Twitter.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
-    end
-  end
-
-  def twitter_banner
-    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    TwitterBannerWorker.perform_async(@entry.id)
-    @message = 'Your entry was sent to your Twitter banner.'
     respond_to do |format|
       format.html {
         flash[:success] = @message

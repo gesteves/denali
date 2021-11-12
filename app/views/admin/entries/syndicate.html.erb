@@ -15,10 +15,6 @@
             <%= link_to icon('Instagram', 'fab fa-instagram'), instagram_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Instagram queue in Buffer. Do you want to continue?' }, class: 'button' %>
             <%= link_to icon('Twitter', 'fab fa-twitter'), twitter_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Twitter queue in Buffer. Do you want to continue?' }, class: 'button' %>
           </div>
-          <h2 class="is-size-5 has-text-weight-normal">Other</h2>
-          <div class="buttons">
-            <%= link_to icon('Twitter Banner', 'fab fa-twitter'), twitter_banner_admin_entry_path(@entry.id), remote: true, method: :post, data: { confirm: 'This photo will be made your Twitter banner immediately. Do you want to continue?' }, class: 'button' %>
-          </div>
         <% end %>
       </div>
     </section>
