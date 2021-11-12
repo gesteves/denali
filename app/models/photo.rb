@@ -62,7 +62,7 @@ class Photo < ApplicationRecord
     return src, srcset
   end
 
-  # Returns the url of the image, formatted & sized fit to into instagram's
+  # Returns the url of the image, formatted & sized to fit into instagram's
   # 5:4 ratio
   def instagram_url
     opts = { w: 1080, fit: 'fill', bg: 'fff', pad: 50, q: 90, fm: 'jpg' }
@@ -70,10 +70,21 @@ class Photo < ApplicationRecord
     self.url(opts)
   end
 
-  # Returns the url of the image, formatted & sized fit to into instagram stories'
+  # Returns the url of the image, formatted & sized to fit into instagram stories'
   # 16:9 ratio
   def instagram_story_url
     self.url(w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90, fm: 'jpg')
+  end
+
+  # Returns the url of the image, formatted & sized for twitter
+  def twitter_url
+    opts = { fm: 'jpg' }
+    opts[:w] = if self.is_vertical?
+      [self.width, self.width_from_height(3360)].min
+    else
+      [self.width, 3360].min
+    end
+    self.url(opts)
   end
 
   def facebook_card_url
