@@ -172,6 +172,14 @@ class Photo < ApplicationRecord
     "#{formatted}″"
   end
 
+  def formatted_camera
+    return if self.camera.blank? && self.lens.blank?
+    camera = []
+    camera << self.camera.display_name if self.camera.present?
+    camera << self.lens.display_name if self.lens.present? && !self.camera&.is_phone?
+    camera.join(' + ')
+  end
+
   def formatted_location
     if self.park.present?
       [self.park.display_name, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
@@ -199,6 +207,7 @@ class Photo < ApplicationRecord
 
   def flickr_caption
     meta = []
+    meta << "📷 #{self.formatted_camera}" if self.formatted_camera.present?
     meta << "📍 #{self.territory_list} land" if self.entry.show_location? && self.territory_list.present?
     meta << "🔗 #{self.entry.permalink_url}"
 

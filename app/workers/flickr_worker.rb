@@ -14,7 +14,6 @@ class FlickrWorker < ApplicationWorker
     flickr.access_secret = ENV['flickr_access_token_secret']
 
     title = entry.title
-
     caption = photo.flickr_caption
 
     all_tags = entry.combined_tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')

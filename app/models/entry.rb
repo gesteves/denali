@@ -398,6 +398,10 @@ class Entry < ApplicationRecord
   end
 
   def instagram_caption
+    meta = []
+    meta << "📷 #{self.photos.first.formatted_camera}" if self.is_single_photo? && self.photos.first.formatted_camera.present?
+    meta << "📍 #{self.territory_list} land" if self.show_location? && self.territories.present?
+
     text = []
     if self.instagram_text.present?
       text << self.instagram_text
@@ -405,7 +409,8 @@ class Entry < ApplicationRecord
       text << self.plain_title
       text << self.plain_body
     end
-    text << "📍 #{self.territory_list} land" if self.show_location? && self.territories.present?
+
+    text << meta.join("\n")
     text.reject(&:blank?).join("\n\n")
   end
 
