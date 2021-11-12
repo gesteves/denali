@@ -78,11 +78,12 @@ class Photo < ApplicationRecord
 
   # Returns the url of the image, formatted & sized for twitter
   def twitter_url
+    max_width = PHOTOS[:entry][:srcset].max
     opts = { fm: 'jpg' }
     opts[:w] = if self.is_vertical?
-      [self.width, self.width_from_height(3360)].min
+      [self.width, self.width_from_height(max_width)].min
     else
-      [self.width, 3360].min
+      [self.width, max_width].min
     end
     self.url(opts)
   end
