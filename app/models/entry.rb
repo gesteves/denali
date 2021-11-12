@@ -399,8 +399,12 @@ class Entry < ApplicationRecord
 
   def instagram_caption
     meta = []
-    meta << "📷 #{self.photos.first.formatted_camera}" if self.is_single_photo? && self.photos.first.formatted_camera.present?
-    meta << "📍 #{self.territory_list} land" if self.show_location? && self.territories.present?
+
+    if self.is_single_photo?
+      photo = self.photos.first
+      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      meta << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
+    end
 
     text = []
     if self.instagram_text.present?
@@ -415,12 +419,29 @@ class Entry < ApplicationRecord
   end
 
   def twitter_caption
-    max_length = 230 # 280 characters - 25 for the image url - 25 for the permalink url
+    meta = []
+
+    if self.is_single_photo?
+      photo = self.photos.first
+      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      meta << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
+    end
+
+    meta << "🔗 #{self.permalink_url}"
+    meta = meta.join("\n")
+
+    # 250 characters in a tweet
+    # - 25 characters for the media URL
+    # - 25 characters for the permalink URL
+    # - 2 characters for the \n\n
+    # - the length of the meta string
+    max_caption_length = 228 - meta.gsub(self.permalink_url, '').size
     caption = self.tweet_text.present? ? self.tweet_text : self.plain_title
 
     text = []
-    text << truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_length, omission: '…')
-    text << self.permalink_url
+    text << truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_caption_length, omission: '…')
+    text << meta
+
     text.reject(&:blank?).join("\n\n")
   end
 
