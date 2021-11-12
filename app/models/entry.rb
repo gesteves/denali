@@ -413,7 +413,7 @@ class Entry < ApplicationRecord
     text = []
     text << self.formatted_body
     text << "📍 #{self.territory_list} land" if self.show_location? && self.territories.present?
-    text << "Originally published at #{self.permalink_url}"
+    text << "🔗 #{self.permalink_url}"
     text.reject(&:blank?).join("\n\n")
   end
 
