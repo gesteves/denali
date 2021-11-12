@@ -14,4 +14,23 @@ class PhotoTest < ActiveSupport::TestCase
     new_updated_at = entry.updated_at
     assert_not_equal original_updated_at, new_updated_at
   end
+
+  test 'territories are rendered correctly' do
+    photo = photos(:peppers)
+    assert entry.territories.blank?
+    assert entry.territory_list.blank?
+
+    photo = photos(:potomac)
+    assert entry.territories.blank?
+    assert entry.territory_list.blank?
+
+    photo = photos(:eastern)
+    assert_equal "Shoshone-Bannock, Eastern Shoshone, and Cheyenne", photo.territory_list
+
+    photo = photos(:panda)
+    assert_equal "Shoshone-Bannock and Eastern Shoshone", photo.territory_list
+
+    photo = photos(:franklin)
+    assert_equal "Shoshone-Bannock", photo.territory_list
+  end
 end

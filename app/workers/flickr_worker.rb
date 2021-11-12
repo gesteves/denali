@@ -15,11 +15,11 @@ class FlickrWorker < ApplicationWorker
 
     title = entry.title
 
-    body = entry.flickr_caption
+    caption = photo.flickr_caption
 
     all_tags = entry.combined_tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')
     photo_path = URI.open(photo.image.url).path
-    photo_id = flickr.upload_photo photo_path, title: title, description: body, tags: all_tags
+    photo_id = flickr.upload_photo photo_path, title: title, description: caption, tags: all_tags
 
     if photo_id&.match?(/\d+/)
       entry.flickr_groups.each do |group_url|

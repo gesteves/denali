@@ -409,21 +409,10 @@ class Entry < ApplicationRecord
     text.reject(&:blank?).join("\n\n")
   end
 
-  def flickr_caption
-    meta = []
-    meta << "📍 #{self.territory_list} land" if self.show_location? && self.territories.present?
-    meta << "🔗 #{self.permalink_url}"
-
-    text = []
-    text << self.formatted_body
-    text << meta.join("\n")
-    text.reject(&:blank?).join("\n\n")
-  end
-
   def twitter_caption
     max_length = 230 # 280 characters - 25 for the image url - 25 for the permalink url
     caption = self.tweet_text.present? ? self.tweet_text : self.plain_title
-    
+
     text = []
     text << truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_length, omission: '…')
     text << self.permalink_url

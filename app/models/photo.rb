@@ -182,6 +182,32 @@ class Photo < ApplicationRecord
     end
   end
 
+  def territory_list
+    return unless self.territories.present?
+    parsed_list = JSON.parse(self.territories)
+
+    territory_list = if parsed_list.size > 2
+      temporary_list = parsed_list
+      last = temporary_list.pop
+      "#{temporary_list.join(', ')}, and #{last}"
+    else
+      parsed_list.join(' and ')
+    end
+
+    territory_list
+  end
+
+  def flickr_caption
+    meta = []
+    meta << "📍 #{self.territory_list} land" if self.entry.show_location? && self.territory_list.present?
+    meta << "🔗 #{self.entry.permalink_url}"
+
+    text = []
+    text << self.entry.formatted_body
+    text << meta.join("\n")
+    text.reject(&:blank?).join("\n\n")
+  end
+
   def extract_metadata
     PhotoExifWorker.perform_async(self.id)
   end

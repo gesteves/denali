@@ -15,6 +15,7 @@ module Types
     field :exposure, String, null: true, description: "Exposure time of the photo"
     field :filename, String, null: false, description: "The file name of the original uploaded image"
     field :film, Types::FilmType, null: true, description: "The film used to take the photo"
+    field :flickr_caption, String, null: true, description: "A full Flickr-friendly caption for this photo"
     field :focal_length, Integer, null: true, description: "Focal length the photo was made at"
     field :focal_length_with_unit, String, null: true, description: "Focal length the photo was made at, formatted"
     field :focal_x, Float, null: true, description: "X coordinate of the focal point of the photo, as float between 0 and 1"
