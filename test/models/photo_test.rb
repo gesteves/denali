@@ -17,12 +17,12 @@ class PhotoTest < ActiveSupport::TestCase
 
   test 'territories are rendered correctly' do
     photo = photos(:peppers)
-    assert entry.territories.blank?
-    assert entry.territory_list.blank?
+    assert photo.territories.blank?
+    assert photo.territory_list.blank?
 
     photo = photos(:potomac)
-    assert entry.territories.blank?
-    assert entry.territory_list.blank?
+    assert photo.territories.blank?
+    assert photo.territory_list.blank?
 
     photo = photos(:eastern)
     assert_equal "Shoshone-Bannock, Eastern Shoshone, and Cheyenne", photo.territory_list
