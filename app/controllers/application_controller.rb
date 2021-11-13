@@ -56,7 +56,9 @@ class ApplicationController < ActionController::Base
     # Prevent people from bypassing CloudFront and hitting Heroku directly.
     if (Rails.env.production? || Rails.env.staging?) && ENV['aws_cloudfront_distribution_id'].present? && !is_cloudfront?
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
-      redirect_to "#{protocol}://#{Rails.application.routes.default_url_options[:host]}#{request.fullpath}", status: 301
+      http_cache_forever(public: true) do
+        redirect_to "#{protocol}://#{Rails.application.routes.default_url_options[:host]}#{request.fullpath}", status: 301
+      end
     end
   end
 
