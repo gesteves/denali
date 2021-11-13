@@ -23,7 +23,7 @@ class TwitterWorker < BufferWorker
   private
   def media_hash(photo)
     media = {
-      photo: photo.twitter_url,
+      photo: photo.twitter_url
     }
     media[:alt_text] = photo.alt_text if photo.alt_text.present?
     media
