@@ -441,6 +441,18 @@ class Entry < ApplicationRecord
     text.join("\n")
   end
 
+  def glass_caption
+    meta = []
+    meta << "📍 #{self.territory_list} land" if self.show_location? && self.territories.present?
+    meta << "🔗 #{self.short_permalink_url}"
+
+    text = []
+    text << self.plain_title
+    text << self.plain_body
+    text << meta.join("\n")
+    text.reject(&:blank?).join("\n\n")
+  end
+
   def flickr_groups(count = 60)
     entry_tags = self.combined_tags
     entry_groups = []
