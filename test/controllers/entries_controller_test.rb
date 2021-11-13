@@ -53,7 +53,7 @@ class EntriesControllerTest < ActionController::TestCase
 
   test 'photo amp page should redirect to canonical page' do
     entry = entries(:peppers)
-    get :amp, params: { id: entry.id, slug: entry.slug }
+    get :amp, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug }
     assert_redirected_to entry.permalink_url
   end
 
