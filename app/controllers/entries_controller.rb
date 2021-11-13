@@ -4,7 +4,7 @@ class EntriesController < ApplicationController
 
   skip_before_action :verify_authenticity_token
   before_action :load_tags, only: [:tagged, :tag_feed]
-  before_action :set_max_age, except: [:amp]
+  before_action :set_max_age, except: [:amp, :short]
   before_action :set_entry, only: [:show, :amp]
 
   def index
@@ -121,7 +121,9 @@ class EntriesController < ApplicationController
   def short
     entry_id = params[:id].to_i(36)
     entry = Entry.find(entry_id)
-    redirect_to entry.permalink_url, status: 301
+    http_cache_forever(public: true) do
+      redirect_to entry.permalink_url, status: 301
+    end
   end
 
   def amp
