@@ -435,22 +435,26 @@ class Entry < ApplicationRecord
   end
 
   def twitter_caption
-    meta = []
-    meta << "🔗 #{self.short_permalink_url}"
-    meta = meta.join("\n")
-
-    # 280 characters in a tweet
-    # - 25 characters for the media URL
-    # - 25 characters for the permalink URL
-    # - the length of the meta string
-    max_caption_length = 230 - meta.gsub(self.short_permalink_url, '').size
     caption = self.tweet_text.present? ? self.tweet_text : self.plain_title
+    # Can't seem to figure out how to make Buffer not encode ampersands as HTML entities,
+    # so fuck it, replace them with "and", ugh.
+    caption.gsub!(/\s+&\s+/, ' and ')
+    permalink = "🔗 #{self.short_permalink_url}"
 
-    text = []
-    text << truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_caption_length, omission: '…')
-    text << meta
+    tweet = []
+    tweet << caption
+    tweet << permalink
+    tweet = tweet.join("\n\n")
 
-    text.join("\n\n")
+    tweet_length = 280
+    media_url_length = 25
+    permalink_url_length = 25 + permalink.gsub(self.short_permalink_url, '').size
+    # See: https://developer.twitter.com/en/docs/tco
+    max_length = tweet_length - media_url_length - permalink_url_length
+
+    # Ensure the permalink doesn't get truncated, by removing it first, then adding it back.
+    truncated_tweet = truncate(tweet.gsub(permalink, '').strip, length: max_length, omission: '…')
+    "#{truncated_tweet}\n\n#{permalink}"
   end
 
   def reddit_caption
