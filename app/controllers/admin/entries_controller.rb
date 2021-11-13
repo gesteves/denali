@@ -280,7 +280,7 @@ class Admin::EntriesController < AdminController
   def twitter
     raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
     TwitterWorker.perform_async(@entry.id, false)
-    @message = 'Your entry was sent to Twitter.'
+    @message = 'Your entry was sent to your Twitter queue in Buffer.'
     respond_to do |format|
       format.html {
         flash[:success] = @message
