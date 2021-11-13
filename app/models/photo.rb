@@ -172,6 +172,15 @@ class Photo < ApplicationRecord
     "#{formatted}″"
   end
 
+  def formatted_exif
+    text = []
+    text << self.focal_length_with_unit if self.focal_length.present?
+    text << self.formatted_exposure if self.exposure.present?
+    text << self.formatted_aperture if self.f_number.present?
+    text << "ISO #{self.iso}" if self.iso.present?
+    text.join(' • ')
+  end
+
   def formatted_camera
     return if self.camera.blank? && self.lens.blank?
     camera = []
@@ -208,6 +217,7 @@ class Photo < ApplicationRecord
   def flickr_caption
     meta = []
     meta << "📷 #{self.formatted_camera}" if self.formatted_camera.present?
+    meta << "ℹ️ #{photo.formatted_exif}" if photo.formatted_exif.present?
     meta << "📍 #{self.territory_list} land" if self.entry.show_location? && self.territory_list.present?
     meta << "🔗 #{self.entry.permalink_url}"
 

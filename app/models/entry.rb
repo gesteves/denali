@@ -392,6 +392,7 @@ class Entry < ApplicationRecord
     if self.is_single_photo?
       photo = self.photos.first
       meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      meta << "ℹ️ #{photo.formatted_exif}" if photo.formatted_exif.present?
       meta << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
     end
 
@@ -404,7 +405,7 @@ class Entry < ApplicationRecord
     end
 
     text << meta.join("\n")
-    text.reject(&:blank?).join("\n\n")
+    text.join("\n\n")
   end
 
   def twitter_caption
@@ -423,7 +424,21 @@ class Entry < ApplicationRecord
     text << truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_caption_length, omission: '…')
     text << meta
 
-    text.reject(&:blank?).join("\n\n")
+    text.join("\n\n")
+  end
+
+  def reddit_caption
+    text = []
+
+    if self.is_single_photo?
+      photo = self.photos.first
+      text << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      text << "ℹ️ #{photo.formatted_exif}" if photo.formatted_exif.present?
+      text << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
+    end
+
+    text << "🔗 #{self.permalink_url}"
+    text.join("\n")
   end
 
   def flickr_groups(count = 60)
