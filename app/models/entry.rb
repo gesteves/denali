@@ -389,12 +389,13 @@ class Entry < ApplicationRecord
   def instagram_caption
     meta = []
 
-    if self.is_single_photo?
-      photo = self.photos.first
+    self.photos.to_a[0..4].each_with_index do |photo, i|
+      meta << "Photo #{i + 1}" unless self.is_single_photo?
       meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
       meta << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
+      meta << "\n" unless self.is_single_photo?
     end
 
     text = []
