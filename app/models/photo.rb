@@ -215,10 +215,13 @@ class Photo < ApplicationRecord
   end
 
   def flickr_caption
+    camera = []
+    camera << self.formatted_camera if self.formatted_camera.present?
+    camera << self.film.display_name if self.film.present?
+
     meta = []
-    meta << "📷 #{self.formatted_camera}" if self.formatted_camera.present?
-    meta << "🎞 #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
-    meta << "🎞 #{self.film.display_name}" if self.film.present?
+    meta << "📷 #{camera.join(' + ')}" if camera.present?
+    meta << "ℹ️ #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
     meta << "📍 #{self.territory_list} land" if self.entry.show_location? && self.territory_list.present?
     meta << "🔗 #{self.entry.permalink_url}"
 
