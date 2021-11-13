@@ -419,15 +419,29 @@ class Entry < ApplicationRecord
   end
 
   def twitter_caption
-    # 280 characters in a tweet - 25 characters for the media URL - 25 characters for the permalink URL
-    max_caption_length = 230
+    meta = []
+
+    if self.is_single_photo?
+      photo = self.photos.first
+      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      meta << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
+    end
+
+    meta << "🔗 #{self.permalink_url}"
+    meta = meta.join("\n")
+
+    # 280 characters in a tweet
+    # - 25 characters for the media URL
+    # - 25 characters for the permalink URL
+    # - the length of the meta string
+    max_caption_length = 230 - meta.gsub(self.permalink_url, '').size
     caption = self.tweet_text.present? ? self.tweet_text : self.plain_title
 
     text = []
     text << truncate(caption.gsub(/\s+&\s+/, ' and '), length: max_caption_length, omission: '…')
-    text << self.permalink_url
+    text << meta
 
-    text.join("\n\n")
+    text.reject(&:blank?).join("\n\n")
   end
 
   def flickr_groups(count = 60)
