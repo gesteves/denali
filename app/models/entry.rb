@@ -390,7 +390,7 @@ class Entry < ApplicationRecord
     meta = []
 
     self.photos.to_a[0..4].each_with_index do |photo, i|
-      meta << "Photo #{i + 1}" unless self.is_single_photo?
+      meta << "#{(i + 1).ordinalize} photo:"
       meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
@@ -406,7 +406,7 @@ class Entry < ApplicationRecord
       text << self.plain_body
     end
 
-    text << meta.join("\n")
+    text << meta.join("\n").gsub("\n\n\n", "\n\n").strip
     text.reject(&:blank?).join("\n\n")
   end
 
