@@ -118,6 +118,12 @@ class EntriesController < ApplicationController
     end
   end
 
+  def short
+    entry_id = params[:id].to_i(36)
+    entry = Entry.find(entry_id)
+    redirect_to entry.permalink_url, status: 301
+  end
+
   def amp
     http_cache_forever(public: true) do
       redirect_to(@entry.permalink_url, status: 301)
