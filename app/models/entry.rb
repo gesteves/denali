@@ -405,7 +405,7 @@ class Entry < ApplicationRecord
     end
 
     text << meta.join("\n")
-    text.join("\n\n")
+    text.reject(&:blank?).join("\n\n")
   end
 
   def twitter_caption
