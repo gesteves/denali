@@ -427,7 +427,7 @@ class Entry < ApplicationRecord
       meta << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
     end
 
-    meta << "🔗 #{self.permalink_url}"
+    meta << "🔗 #{self.short_permalink_url}"
     meta = meta.join("\n")
 
     # 280 characters in a tweet
