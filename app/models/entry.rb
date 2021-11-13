@@ -420,7 +420,7 @@ class Entry < ApplicationRecord
 
   def twitter_caption
     meta = []
-    meta << "🔗 #{self.short_permalink_url}"
+    meta << "🔗 #{self.permalink_url}"
     meta = meta.join("\n")
 
     # 280 characters in a tweet
