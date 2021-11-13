@@ -446,11 +446,10 @@ class Entry < ApplicationRecord
     tweet << permalink
     tweet = tweet.join("\n\n")
 
-    tweet_length = 280
-    media_url_length = 25
-    permalink_url_length = 25 + permalink.gsub(self.short_permalink_url, '').size
-    # See: https://developer.twitter.com/en/docs/tco
-    max_length = tweet_length - media_url_length - permalink_url_length
+    # 280 characters in a tweet,
+    # minus 30 characters for the permalink and 30 for the photos (just to be safe),
+    # equals 220 left for the caption.
+    max_length = 220
 
     # Ensure the permalink doesn't get truncated, by removing it first, then adding it back.
     truncated_tweet = truncate(tweet.gsub(permalink, '').strip, length: max_length, omission: '…')
