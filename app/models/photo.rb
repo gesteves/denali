@@ -226,7 +226,7 @@ class Photo < ApplicationRecord
     meta << "🔗 #{self.entry.permalink_url}"
 
     text = []
-    text << self.entry.formatted_body
+    text << self.entry.plain_body
     text << meta.join("\n")
     text.reject(&:blank?).join("\n\n")
   end
