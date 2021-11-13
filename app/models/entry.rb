@@ -420,13 +420,6 @@ class Entry < ApplicationRecord
 
   def twitter_caption
     meta = []
-
-    if self.is_single_photo?
-      photo = self.photos.first
-      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      meta << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
-    end
-
     meta << "🔗 #{self.short_permalink_url}"
     meta = meta.join("\n")
 
