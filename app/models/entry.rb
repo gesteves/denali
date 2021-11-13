@@ -255,20 +255,10 @@ class Entry < ApplicationRecord
     self&.photos&.first&.alt_text.presence || self.plain_body
   end
 
-  def slug_params
-    entry_date = self.published_at || self.updated_at
-    year = entry_date.strftime('%Y')
-    month = entry_date.strftime('%-m')
-    day = entry_date.strftime('%-d')
-    id = self.id
-    slug = self.slug
-    return year, month, day, id, slug
-  end
 
   def permalink_path
     if self.is_published?
-      year, month, day, id, slug = self.slug_params
-      entry_long_path(year, month, day, id, slug)
+      entry_long_path(self.id, self.slug)
     else
       preview_entry_path(self.preview_hash)
     end
@@ -276,8 +266,7 @@ class Entry < ApplicationRecord
 
   def permalink_url
     if self.is_published?
-      year, month, day, id, slug = self.slug_params
-      entry_long_url(year, month, day, id, slug, only_path: !Rails.env.production? && !Rails.env.staging?)
+      entry_long_url(self.id, self.slug, only_path: !Rails.env.production? && !Rails.env.staging?)
     else
       preview_entry_url(self.preview_hash, only_path: !Rails.env.production? && !Rails.env.staging?)
     end

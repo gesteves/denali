@@ -80,10 +80,9 @@ Rails.application.routes.draw do
   # Entry
   get '/e/:id'                              => 'entries#short',        constraints: { id: /\w+/ }, :as => :entry
   get '/preview/:preview_hash'              => 'entries#show',        defaults: { format: 'html' }, :as => :preview_entry
-  get '/:year/:month/:day/:id(/:slug)'      => 'entries#show',        constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_long
+  get '/:id(/:slug)'                        => 'entries#show',        constraints: { id: /\d+/ }, defaults: { format: 'html' }, :as => :entry_long
   get '/related/:id.:format'                => 'entries#related',     defaults: { format: 'js' }, constraints: { id: /\d+/ }, :as => :related
   get '/related/:preview_hash.:format'      => 'entries#related',     defaults: { format: 'js' }, :as => :related_preview
-  get '/amp/:year/:month/:day/:id(/:slug)'  => 'entries#amp',         constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_amp
 
   # Feeds
   get '/feed(.:format)'             => 'entries#feed', defaults: { format: 'atom' }, :as => :feed
@@ -109,10 +108,12 @@ Rails.application.routes.draw do
   get '/signout'                       => 'sessions#destroy', :as => :signout
 
   # Legacy routes & redirects
-  get '/archive(/:year)(/:month)'      => 'legacy#home'
-  get '/index.html'                    => 'legacy#home'
-  get '/rss'                           => 'legacy#feed'
-  get '/post/:tumblr_id(/:slug)'       => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
+  get '/archive(/:year)(/:month)'           => 'legacy#home'
+  get '/index.html'                         => 'legacy#home'
+  get '/rss'                                => 'legacy#feed'
+  get '/post/:tumblr_id(/:slug)'            => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
+  get '/:year/:month/:day/:id(/:slug)'      => 'entries#show',   constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }
+  get '/amp/:year/:month/:day/:id(/:slug)'  => 'entries#amp',    constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_amp
 
   # Oembed
   get '/oembed.:format'                => 'oembed#show', :as => :oembed
