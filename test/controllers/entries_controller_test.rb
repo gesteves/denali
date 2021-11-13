@@ -40,7 +40,7 @@ class EntriesControllerTest < ActionController::TestCase
   test 'photo page should render correctly' do
     entry = entries(:peppers)
     set_up_images(entry)
-    get :show, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug }
+    get :show, params: { id: entry.id, slug: entry.slug }
     assert_response :success
     assert_not_nil assigns(:entry)
     assert_template layout: 'layouts/application'
@@ -53,7 +53,13 @@ class EntriesControllerTest < ActionController::TestCase
 
   test 'photo amp page should redirect to canonical page' do
     entry = entries(:peppers)
-    get :amp, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug }
+    get :amp, params: { id: entry.id, slug: entry.slug }
+    assert_redirected_to entry.permalink_url
+  end
+
+  test 'photo legacy URLs page should redirect to canonical page' do
+    entry = entries(:peppers)
+    get :show, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug }
     assert_redirected_to entry.permalink_url
   end
 
@@ -94,7 +100,7 @@ class EntriesControllerTest < ActionController::TestCase
 
   test 'should redirect from unknown format' do
     entry = entries(:peppers)
-    get :show, params: { year: entry.published_at.strftime('%Y'), month: entry.published_at.strftime('%-m'), day: entry.published_at.strftime('%-d'), id: entry.id, slug: entry.slug, format: 'foo' }
+    get :show, params: { id: entry.id, slug: entry.slug, format: 'foo' }
     assert_redirected_to entry.permalink_url
   end
 
