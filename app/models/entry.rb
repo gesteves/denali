@@ -435,14 +435,14 @@ class Entry < ApplicationRecord
 
   def twitter_caption
     meta = []
-    meta << "🔗 #{self.permalink_url}"
+    meta << "🔗 #{self.short_permalink_url}"
     meta = meta.join("\n")
 
     # 280 characters in a tweet
     # - 25 characters for the media URL
     # - 25 characters for the permalink URL
     # - the length of the meta string
-    max_caption_length = 230 - meta.gsub(self.permalink_url, '').size
+    max_caption_length = 230 - meta.gsub(self.short_permalink_url, '').size
     caption = self.tweet_text.present? ? self.tweet_text : self.plain_title
 
     text = []
