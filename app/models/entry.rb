@@ -392,7 +392,8 @@ class Entry < ApplicationRecord
     if self.is_single_photo?
       photo = self.photos.first
       meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      meta << "ℹ️ #{photo.formatted_exif}" if photo.formatted_exif.present?
+      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
       meta << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
     end
 
@@ -433,7 +434,8 @@ class Entry < ApplicationRecord
     if self.is_single_photo?
       photo = self.photos.first
       text << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      text << "ℹ️ #{photo.formatted_exif}" if photo.formatted_exif.present?
+      text << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+      text << "🎞 #{photo.film.display_name}" if photo.film.present?
       text << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
     end
 
