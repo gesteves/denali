@@ -14,7 +14,7 @@
       <media:content url="<%= photo.url(w: 1280, fm: 'jpg') %>" />
     <% end %>
     <% entry.combined_tags.sort_by { |t| t.name }.each do |tag| %>
-      <category term="<%= tag.name %>" />
+      <category term="<%= tag.slug %>" label="<%= tag.name %>" />
     <% end %>
   </item>
 <% end %>
