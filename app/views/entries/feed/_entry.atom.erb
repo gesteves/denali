@@ -17,6 +17,11 @@
     <author>
       <name><%= entry.user.name %></name>
     </author>
+    <% if entry.is_photo? %>
+      <category term="photography" label="Photography" />
+    <% else %>
+      <category term="text" label="Text" />
+    <% end %>
     <% entry.combined_tags.sort_by { |t| t.name }.each do |tag| %>
       <category term="<%= tag.slug %>" label="<%= tag.name %>" />
     <% end %>
