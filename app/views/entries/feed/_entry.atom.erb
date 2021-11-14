@@ -17,5 +17,8 @@
     <author>
       <name><%= entry.user.name %></name>
     </author>
+    <% entry.combined_tags.sort_by { |t| t.name }.each do |tag| %>
+      <category term="<%= tag.name %>" />
+    <% end %>
   </entry>
 <% end %>
