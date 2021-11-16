@@ -12,3 +12,4 @@
 
 <%= render partial: 'entries/entry/body', object: @entry, as: :entry %>
 <%= render partial: 'entries/entry/related', object: @entry, as: :entry if @photoblog.show_related_entries? %>
+<%= render partial: 'partials/elsewhere' %>
