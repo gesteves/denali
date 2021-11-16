@@ -284,11 +284,14 @@ class Entry < ApplicationRecord
     TwitterWorker.perform_async(self.id, true) if self.post_to_twitter
     Webhook.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
-    self.invalidate(include_adjacents: true, include_self: false)
+    self.invalidate
   end
 
-  def invalidate(include_adjacents: false, include_self: true)
-    paths = []
+  def invalidate
+    self.touch
+    self.older&.touch
+    self.newer&.touch
+    paths = [self.permalink_path, self.newer&.permalink_path, self.older&.permalink_path]
     wildcard_paths = %w{
       /
       /page*
@@ -300,30 +303,13 @@ class Entry < ApplicationRecord
       /preview*
     }
 
-    if include_self
-      self.touch
-      paths.push(self.permalink_path)
-    end
-
     if self.is_published?
       paths.concat(wildcard_paths)
       paths.concat(self.combined_tags.map { |tag| "/tagged/#{tag.slug}*"})
     end
 
-    if include_self && self.is_published?
-      paths.push(entry_path(self.id))
-    end
-
-    if include_adjacents
-      self.older&.touch
-      self.newer&.touch
-      paths.push(self.newer&.permalink_path)
-      paths.push(self.older&.permalink_path)
-    end
-
-    paths = paths.flatten.reject(&:blank?).uniq.sort
+    paths = paths.flatten.reject(&:blank?).uniq
     CloudfrontInvalidationWorker.perform_async(paths)
-    self.photos.each { |p| ImgixPurgeWorker.perform_async(p.id) }
   end
 
   def send_photos_to_flickr
