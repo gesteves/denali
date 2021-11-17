@@ -425,7 +425,7 @@ class Entry < ApplicationRecord
     # Can't seem to figure out how to make Buffer not encode ampersands as HTML entities,
     # so fuck it, replace them with "and", ugh.
     caption.gsub!(/\s+&\s+/, ' and ')
-    permalink = "🔗 #{self.short_permalink_url}"
+    permalink = "🔗 #{self.permalink_url}"
 
     tweet = []
     tweet << caption
