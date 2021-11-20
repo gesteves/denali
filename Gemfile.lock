@@ -133,7 +133,7 @@ GEM
       thor (>= 0.14.0, < 2)
     globalid (0.5.2)
       activesupport (>= 5.0)
-    graphql (1.12.19)
+    graphql (1.12.20)
     hashie (4.1.0)
     httparty (0.20.0)
       mime-types (~> 3.0)
