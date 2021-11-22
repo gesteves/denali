@@ -223,7 +223,7 @@ class Photo < ApplicationRecord
     meta << "📷 #{camera_film.join(' + ')}" if camera_film.present?
     meta << "ℹ️ #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
     meta << "📍 #{self.territory_list} land" if self.entry.show_location? && self.territory_list.present?
-    meta << "🔗 #{self.entry.permalink_url}?ref=Flickr"
+    meta << "🔗 #{self.entry.permalink_url}"
 
     text = []
     text << self.entry.plain_body
