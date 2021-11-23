@@ -53,7 +53,6 @@ class Twitter
   private
 
   def upload_photo(photo)
-    media = URI.open(photo[:url])
     response = upload_media(URI.open(photo[:url]))
     media_id = response["media_id_string"]
     set_alt_text(media_id, photo[:alt_text])
