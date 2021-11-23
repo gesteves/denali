@@ -33,23 +33,6 @@ class Twitter
     response = request(body: body, url: url)
   end
 
-  def tweet_v1(payload)
-    url = "https://api.twitter.com/1.1/statuses/update.json"
-
-    media_ids = if payload[:photos].present?
-      payload[:photos].map { |p| upload_photo(p) }
-    else
-      []
-    end
-
-    params = {
-      status: payload[:text]
-    }
-
-    params[:media_ids] = media_ids.join(',') if media_ids.present?
-    response = request(params: params, url: url)
-  end
-
   private
 
   def upload_photo(photo)
