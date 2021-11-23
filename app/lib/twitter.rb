@@ -17,7 +17,7 @@ class Twitter
     @oauth_params = { consumer: consumer, token: token }
   end
 
-  def tweet_v2(payload)
+  def tweet(payload)
     url = "https://api.twitter.com/2/tweets"
 
     media_ids = if payload[:photos].present?
@@ -33,7 +33,7 @@ class Twitter
     response = request(body: body, url: url)
   end
 
-  def tweet(payload)
+  def tweet_v1(payload)
     url = "https://api.twitter.com/1.1/statuses/update.json"
 
     media_ids = if payload[:photos].present?
