@@ -10,9 +10,9 @@ class WebhookWorker < ApplicationWorker
     payload = webhook.payload(entry)
 
     response = if payload.present?
-      HTTParty.post(webhook.url, body: payload, headers: { 'Content-Type': 'application/json' })
+      Typhoeus.post(webhook.url, body: payload.to_json, headers: { 'Content-Type': 'application/json' })
     else
-      HTTParty.post(webhook.url)
+      Typhoeus.post(webhook.url)
     end
 
     if response.code >= 400

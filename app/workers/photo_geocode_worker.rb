@@ -5,7 +5,7 @@ class PhotoGeocodeWorker < ApplicationWorker
     return if ENV['google_api_key'].blank? || !photo.has_location?
     raise UnprocessedPhotoError unless photo.processed?
     url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=#{photo.latitude},#{photo.longitude}&key=#{ENV['google_api_key']}"
-    response = JSON.parse(HTTParty.get(url).body)
+    response = JSON.parse(Typhoeus.get(url).body)
     if response['status'] != 'OK'
       raise "Geocode request failed: #{response.to_s}"
     else

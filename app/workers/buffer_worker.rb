@@ -5,7 +5,7 @@ class BufferWorker < ApplicationWorker
 
   def get_profile_ids(service)
     return if ENV['buffer_access_token'].blank?
-    response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}")
+    response = Typhoeus.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}")
     if response.code == 200
       profiles = JSON.parse(response.body)
       profiles.select { |profile| profile['service'].downcase.match(service) }.map { |profile| profile['id'] }
@@ -18,7 +18,7 @@ class BufferWorker < ApplicationWorker
     profile_ids = get_profile_ids(service)
     return if profile_ids.blank? || ENV['buffer_access_token'].blank?
     opts.reverse_merge!(profile_ids: profile_ids, shorten: false, now: false, access_token: ENV['buffer_access_token'])
-    response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
+    response = Typhoeus.post('https://api.bufferapp.com/1/updates/create.json', body: opts.to_json)
     response = JSON.parse(response.body)
     if response['success']
       response['updates'].map { |u| u['id'] }

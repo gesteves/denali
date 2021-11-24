@@ -152,7 +152,7 @@ def graphql_query(operation_name:, variables: nil)
     operationName: operation_name
   }.compact
   begin
-    response = HTTParty.post(ENV['IMPORT_ENDPOINT'], body: body.to_json, headers: { 'Content-Type': 'application/json' })
+    response = Typhoeus.post(ENV['IMPORT_ENDPOINT'], body: body.to_json, headers: { 'Content-Type': 'application/json' })
     JSON.parse(response.body).with_indifferent_access
   rescue StandardError
     nil

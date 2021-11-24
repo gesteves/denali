@@ -33,7 +33,7 @@ class GoogleVisionWorker < ApplicationWorker
         }
       ]
     }
-    response = HTTParty.post("https://vision.googleapis.com/v1/images:annotate?key=#{ENV['google_api_key']}", body: payload.to_json, headers: { 'Content-Type': 'application/json' }, timeout: 120)
+    response = Typhoeus.post("https://vision.googleapis.com/v1/images:annotate?key=#{ENV['google_api_key']}", body: payload.to_json, headers: { 'Content-Type': 'application/json' }, timeout: 120)
     raise GoogleVisionError.new(response.code) if response.code >= 400
 
     json = JSON.parse(response.body)
