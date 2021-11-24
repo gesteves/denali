@@ -63,14 +63,6 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_template :edit
   end
 
-  test 'should render syndication page' do
-    get :syndicate, params: { id: @entry.id }
-    assert_not_nil assigns(:entry)
-    assert_response :success
-    assert_template layout: 'layouts/admin'
-    assert_template :syndicate
-  end
-
   test 'should render crops page' do
     set_up_images(@entry)
     get :crops, params: { id: @entry.id }

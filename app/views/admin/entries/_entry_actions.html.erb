@@ -12,7 +12,10 @@
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
       <%= link_to icon('Share', 'fas fa-share-square'), entry.permalink_url, 'data-controller': 'share', 'data-action': 'click->share#open', class: 'dropdown-item' %>
       <% if entry.is_photo? && entry.is_published? && entry.photos_processed? %>
-        <%= link_to icon('Syndication', 'fas fa-paper-plane'), syndicate_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
+        <%= link_to icon('Share on Twitter', 'fab fa-twitter'), twitter_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
+      <% end %>
+      <% if entry.is_photo? && entry.is_published? && entry.photos_processed? %>
+        <%= link_to icon('Share on Instagram', 'fab fa-instagram'), instagram_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: 'The entry will be sent to your Instagram queue in Buffer. Do you want to continue?' }, class: 'dropdown-item' %>
       <% end %>
       <% if entry.is_photo? && entry.photos_processed? %>
         <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>

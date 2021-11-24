@@ -24,16 +24,14 @@ Rails.application.routes.draw do
 
     resources :entries, concerns: :paginatable do
       member do
-        get 'syndicate'
         get 'crops'
         get 'prints'
+        get 'twitter'
         patch 'publish'
         patch 'queue'
         patch 'draft'
         post 'instagram'
         post 'twitter'
-        post 'facebook'
-        post 'flickr'
         post 'flush_caches'
         post 'refresh_metadata'
       end

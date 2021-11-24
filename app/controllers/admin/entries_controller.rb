@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :instagram, :facebook, :twitter, :flickr, :flush_caches, :refresh_metadata]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :flush_caches, :refresh_metadata]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
@@ -221,19 +221,6 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def syndicate
-    @entry = @photoblog.entries.published.find(params[:id])
-    respond_to do |format|
-      format.html {
-        if params[:modal]
-          render layout: nil
-        else
-          render
-        end
-      }
-    end
-  end
-
   def crops
     @srcset = PHOTOS[:admin_modal][:srcset]
     @sizes = PHOTOS[:admin_modal][:sizes].join(', ')
@@ -265,6 +252,7 @@ class Admin::EntriesController < AdminController
   end
 
   def instagram
+    @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     InstagramWorker.perform_async(@entry.id, false)
     @message = 'Your entry was sent to your Instagram queue in Buffer.'
@@ -278,43 +266,30 @@ class Admin::EntriesController < AdminController
   end
 
   def twitter
-    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    TwitterWorker.perform_async(@entry.id)
-    @message = 'Your entry was sent to Twitter.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
-    end
-  end
-
-  def facebook
-    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    FacebookWorker.perform_async(@entry.id, false)
-    @message = 'Your entry was sent to your Facebook queue in Buffer.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
-    end
-  end
-
-  def flickr
-    raise ActiveRecord::RecordNotFound unless @entry.is_published? && @entry.is_photo?
-    @entry.photos.each do |p|
-      FlickrWorker.perform_async(p.id)
-    end
-    @message = 'Your entry was sent to Flickr.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
+    @entry = @photoblog.entries.published.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
+    if request.get?
+      @text = @entry.twitter_caption(caption_only: true)
+      respond_to do |format|
+        format.html {
+          if params[:modal]
+            render layout: nil
+          else
+            render
+          end
+        }
+      end
+    elsif request.post?
+      TwitterWorker.perform_async(@entry.id, params[:text])
+      logger.info params[:text]
+      @message = 'Your entry was sent to Twitter.'
+      respond_to do |format|
+        format.html {
+          flash[:success] = @message
+          redirect_to session[:redirect_url] || admin_entry_path(@entry)
+        }
+        format.js { render 'admin/shared/notify' }
+      end
     end
   end
 

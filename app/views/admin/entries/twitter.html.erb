@@ -1,0 +1,28 @@
+<div class="modal is-active"  data-controller="modal">
+  <div class="modal-background" data-action="click->modal#close"></div>
+  <div class="modal-card">
+    <%= form_with url: twitter_admin_entry_path(@entry.id), method: :post, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
+    <header class="modal-card-head">
+      <h1 class="modal-card-title">Send to Twitter</h1>
+      <button class="delete" data-action="click->modal#close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="content">
+        <div class="field is-horizontal">
+          <div class="field-body">
+            <div class="field">
+              <div class="control is-expanded">
+                <%= form.text_area :text, value: @text.html_safe, placeholder: 'A short, clever tweet for this photo…', maxlength: 230, required: true, class: 'textarea', rows: 5 %>
+              </div>
+              <p class="help">Maximum 230 characters. The tweet will automatically include a link to the entry.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <%= form.submit "Tweet it", class: 'button is-link' %>
+    </footer>
+    <% end %>
+  </div>
+</div>
