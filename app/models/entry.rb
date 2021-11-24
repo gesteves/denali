@@ -421,12 +421,17 @@ class Entry < ApplicationRecord
   end
 
   def twitter_caption(text: nil, caption_only: false)
+    # 280 characters in a tweet,
+    # minus 27 characters for the permalink and 23 for the photos.
+    # See: https://developer.twitter.com/en/docs/counting-characters
+    max_length = 280 - 27 - 23
+
     caption = if text.present?
       text
     elsif self.tweet_text.present?
       self.tweet_text
     else
-      self.plain_title
+      truncate(self.plain_title.strip, length: max_length, omission: '…')
     end
     permalink = "🔗 #{self.permalink_url}"
 
@@ -435,15 +440,7 @@ class Entry < ApplicationRecord
     tweet << permalink
     tweet = tweet.join("\n\n")
 
-    # 280 characters in a tweet,
-    # minus 27 characters for the permalink and 23 for the photos.
-    # See: https://developer.twitter.com/en/docs/counting-characters
-    # TODO: Count characters more accurately with https://github.com/twitter/twitter-text/tree/master/rb
-    max_length = 280 - 27 - 23
-
-    # Ensure the permalink doesn't get truncated, by removing it first, then adding it back.
-    truncated_tweet = truncate(tweet.gsub(permalink, '').strip, length: max_length, omission: '…')
-    caption_only ? truncated_tweet : "#{truncated_tweet}\n\n#{permalink}"
+    caption_only ? tweet : "#{tweet}\n\n#{permalink}"
   end
 
   def reddit_caption
