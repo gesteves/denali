@@ -254,14 +254,27 @@ class Admin::EntriesController < AdminController
   def instagram
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    InstagramWorker.perform_async(@entry.id, false)
-    @message = 'Your entry was sent to your Instagram queue in Buffer.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
+    if request.get?
+      @text = @entry.instagram_caption
+      respond_to do |format|
+        format.html {
+          if params[:modal]
+            render layout: nil
+          else
+            render
+          end
+        }
+      end
+    elsif request.post?
+      InstagramWorker.perform_async(@entry.id, params[:text])
+      @message = 'Your entry was shared on Instagram.'
+      respond_to do |format|
+        format.html {
+          flash[:success] = @message
+          redirect_to session[:redirect_url] || admin_entry_path(@entry)
+        }
+        format.js { render 'admin/shared/notify' }
+      end
     end
   end
 
@@ -281,8 +294,7 @@ class Admin::EntriesController < AdminController
       end
     elsif request.post?
       TwitterWorker.perform_async(@entry.id, @entry.twitter_caption(text: params[:text]))
-      logger.info params[:text]
-      @message = 'Your entry was sent to Twitter.'
+      @message = 'Your entry was shared on Twitter.'
       respond_to do |format|
         format.html {
           flash[:success] = @message

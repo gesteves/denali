@@ -1,25 +1,24 @@
 <div class="modal is-active"  data-controller="modal">
   <div class="modal-background" data-action="click->modal#close"></div>
   <div class="modal-card">
-    <%= form_with url: twitter_admin_entry_path(@entry.id), method: :post, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
+    <%= form_with url: instagram_admin_entry_path(@entry.id), method: :post, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
     <header class="modal-card-head">
-      <h1 class="modal-card-title">Share on Twitter</h1>
+      <h1 class="modal-card-title">Share on Instagram</h1>
       <button class="delete" data-action="click->modal#close"></button>
     </header>
     <section class="modal-card-body">
       <div class="content">
-        <div class="field" data-controller="tweet">
+        <div class="field">
           <div class="control is-expanded">
-            <%= form.text_area :text, value: @text.html_safe, placeholder: 'A short, clever tweet for this photo…', maxlength: 230, required: true, class: 'textarea', rows: 5, 'data-tweet-target': 'input', 'data-action': 'input->tweet#updateCharacterCount' %>
+            <%= form.text_area :text, value: @text.html_safe, placeholder: 'A thoughtful caption for this photo…', required: true, class: 'textarea', rows: 8 %>
           </div>
-          <p class="help"><span data-tweet-target="characterCount">0</span>/230</p>
         </div>
       </div>
     </section>
     <footer class="modal-card-foot">
       <div class="field is-grouped">
         <p class="control">
-          <%= form.submit "Tweet", class: 'button is-success' %>
+          <%= form.submit "Share", class: 'button is-success' %>
         </p>
         <p class="control">
           <button class="button is-light" data-action="click->modal#close">Cancel</button>

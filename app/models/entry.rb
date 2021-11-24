@@ -279,8 +279,8 @@ class Entry < ApplicationRecord
 
   def enqueue_publish_jobs
     OpenGraphWorker.perform_async(self.id)
-    InstagramWorker.perform_async(self.id, true) if self.post_to_instagram
     FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
+    InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
     TwitterWorker.perform_async(self.id, self.twitter_caption) if self.post_to_twitter
     Webhook.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
@@ -384,16 +384,16 @@ class Entry < ApplicationRecord
       meta << "\n" unless self.is_single_photo?
     end
 
-    text = []
+    caption = []
     if self.instagram_text.present?
-      text << self.instagram_text
+      caption << self.instagram_text
     else
-      text << self.plain_title
-      text << self.plain_body
+      caption << self.plain_title
+      caption << self.plain_body
     end
 
-    text << meta.join("\n").gsub("\n\n\n", "\n\n").strip
-    text.reject(&:blank?).join("\n\n")
+    caption << meta.join("\n").gsub("\n\n\n", "\n\n").strip
+    caption.reject(&:blank?).join("\n\n")
   end
 
   def facebook_caption

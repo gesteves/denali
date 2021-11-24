@@ -27,6 +27,7 @@ Rails.application.routes.draw do
         get 'crops'
         get 'prints'
         get 'twitter'
+        get 'instagram'
         patch 'publish'
         patch 'queue'
         patch 'draft'
