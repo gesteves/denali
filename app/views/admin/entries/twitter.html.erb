@@ -3,7 +3,7 @@
   <div class="modal-card">
     <%= form_with url: twitter_admin_entry_path(@entry.id), method: :post, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
     <header class="modal-card-head">
-      <h1 class="modal-card-title">Send to Twitter</h1>
+      <h1 class="modal-card-title">Share on Twitter</h1>
       <button class="delete" data-action="click->modal#close"></button>
     </header>
     <section class="modal-card-body">
