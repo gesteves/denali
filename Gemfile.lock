@@ -137,6 +137,7 @@ GEM
       activesupport (>= 5.0)
     graphql (1.12.20)
     hashie (4.1.0)
+    htmlentities (4.3.4)
     httparty (0.20.0)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
@@ -354,6 +355,7 @@ DEPENDENCIES
   figaro
   flickraw!
   graphql
+  htmlentities
   httparty
   image_processing (~> 1.0)
   imgix
