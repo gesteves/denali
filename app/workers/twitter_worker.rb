@@ -14,6 +14,11 @@ class TwitterWorker < ApplicationWorker
       photos: photos.map { |p| media_hash(p) }
     }
 
+    if entry.show_location? && photos.first.has_location?
+      opts[:latitude] = photos.first.latitude
+      opts[:longitude] = photos.first.longitude
+    end
+
     Twitter.new.tweet(opts)
   end
 

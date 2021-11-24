@@ -20,17 +20,36 @@ class Twitter
   def tweet(payload)
     url = "https://api.twitter.com/2/tweets"
 
+    body = {
+      text: payload[:text]
+    }
+
     media_ids = if payload[:photos].present?
       payload[:photos].map { |p| upload_photo(p) }
     else
       []
     end
-    body = {
-      text: payload[:text],
-    }
 
     body[:media] = { media_ids: media_ids } if media_ids.present?
+
+    place_id = reverse_geocode(payload[:latitude], payload[:longitude])
+    body[:geo] = { place_id: place_id } if place_id.present?
+
     response = request(body: body, url: url)
+  end
+
+  def reverse_geocode(lat, long)
+    return if lat.blank? || long.blank?
+    url = "https://api.twitter.com/1.1/geo/reverse_geocode.json"
+
+    params = {
+      lat: lat,
+      long: long,
+      max_results: 1
+    }
+
+    response = request(params: params, url: url, method: :get)
+    response.dig('result', 'places', 0, 'id')
   end
 
   private
