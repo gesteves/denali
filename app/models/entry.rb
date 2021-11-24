@@ -422,9 +422,6 @@ class Entry < ApplicationRecord
 
   def twitter_caption
     caption = self.tweet_text.present? ? self.tweet_text : self.plain_title
-    # Can't seem to figure out how to make Buffer not encode ampersands as HTML entities,
-    # so fuck it, replace them with "and", ugh.
-    caption.gsub!(/\s+&\s+/, ' and ')
     permalink = "🔗 #{self.permalink_url}"
 
     tweet = []
@@ -433,9 +430,10 @@ class Entry < ApplicationRecord
     tweet = tweet.join("\n\n")
 
     # 280 characters in a tweet,
-    # minus 30 characters for the permalink and 30 for the photos (just to be safe),
-    # equals 220 left for the caption.
-    max_length = 220
+    # minus 27 characters for the permalink and 23 for the photos.
+    # See: https://developer.twitter.com/en/docs/counting-characters
+    # TODO: Count characters more accurately with https://github.com/twitter/twitter-text/tree/master/rb
+    max_length = 280 - 27 - 23
 
     # Ensure the permalink doesn't get truncated, by removing it first, then adding it back.
     truncated_tweet = truncate(tweet.gsub(permalink, '').strip, length: max_length, omission: '…')
