@@ -75,7 +75,7 @@ class Twitter
     options = {
       method: method,
       headers: headers,
-      body: body.to_json,
+      body: JSON.dump(body),
       params: params
     }.compact
 
