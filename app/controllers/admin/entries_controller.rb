@@ -280,7 +280,7 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      TwitterWorker.perform_async(@entry.id, params[:text])
+      TwitterWorker.perform_async(@entry.id, @entry.twitter_caption(text: params[:text]))
       logger.info params[:text]
       @message = 'Your entry was sent to Twitter.'
       respond_to do |format|
