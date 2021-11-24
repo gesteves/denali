@@ -45,7 +45,7 @@ module Blurhash
   # https://docs.imgix.com/apis/rendering/format/fm#blurhash
   # TODO: Write native encoder instead of relying on imgix
   def self.encode(url)
-    blurhash = Typhoeus.get(url).body
+    blurhash = HTTParty.get(url).body
     return nil unless valid_blurhash?(blurhash)
     blurhash
   end

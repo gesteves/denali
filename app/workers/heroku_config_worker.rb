@@ -5,7 +5,7 @@ class HerokuConfigWorker < ApplicationWorker
     config.reject! { |k,v| v == ENV[k.to_s] }
     return if config.blank? || !Rails.env.production? || ENV['HEROKU_API_TOKEN'].blank? || ENV['HEROKU_APP_NAME'].blank?
 
-    response = Typhoeus.patch("https://api.heroku.com/apps/#{ENV['HEROKU_APP_NAME']}/config-vars",
+    response = HTTParty.patch("https://api.heroku.com/apps/#{ENV['HEROKU_APP_NAME']}/config-vars",
                               body: config.to_json,
                               headers: { 'Authorization': "Bearer #{ENV['HEROKU_API_TOKEN']}", 'Accept': 'application/vnd.heroku+json; version=3', 'Content-Type': 'application/json' })
 

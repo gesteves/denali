@@ -47,7 +47,7 @@ class NationalParkWorker < ApplicationWorker
   def fetch_park(code)
     return if code.blank?
     url = "https://developer.nps.gov/api/v1/parks?parkCode=#{code}&api_key=#{ENV['nps_api_key']}"
-    response = Typhoeus.get(url)
+    response = HTTParty.get(url)
     raise if response.code >= 400
     data = JSON.parse(response.body)['data']
     data&.find { |p| p['parkCode'].downcase == code.downcase }
