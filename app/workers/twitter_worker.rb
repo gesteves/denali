@@ -1,7 +1,7 @@
 class TwitterWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id)
+  def perform(entry_id, text)
     return if !Rails.env.production?
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
@@ -10,7 +10,7 @@ class TwitterWorker < ApplicationWorker
     photos = entry.photos.to_a[0..4]
 
     opts = {
-      text: entry.twitter_caption,
+      text: text,
       photos: photos.map { |p| media_hash(p) }
     }
 

@@ -281,7 +281,7 @@ class Entry < ApplicationRecord
     OpenGraphWorker.perform_async(self.id)
     InstagramWorker.perform_async(self.id, true) if self.post_to_instagram
     FacebookWorker.perform_async(self.id, true) if self.post_to_facebook
-    TwitterWorker.perform_async(self.id) if self.post_to_twitter
+    TwitterWorker.perform_async(self.id, self.twitter_caption) if self.post_to_twitter
     Webhook.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
     self.invalidate
@@ -420,8 +420,14 @@ class Entry < ApplicationRecord
     text.reject(&:blank?).join("\n\n")
   end
 
-  def twitter_caption
-    caption = self.tweet_text.present? ? self.tweet_text : self.plain_title
+  def twitter_caption(text: nil, caption_only: false)
+    caption = if text.present?
+      text
+    elsif self.tweet_text.present?
+      self.tweet_text
+    else
+      self.plain_title
+    end
     permalink = "🔗 #{self.permalink_url}"
 
     tweet = []
@@ -437,7 +443,7 @@ class Entry < ApplicationRecord
 
     # Ensure the permalink doesn't get truncated, by removing it first, then adding it back.
     truncated_tweet = truncate(tweet.gsub(permalink, '').strip, length: max_length, omission: '…')
-    "#{truncated_tweet}\n\n#{permalink}"
+    caption_only ? truncated_tweet : "#{truncated_tweet}\n\n#{permalink}"
   end
 
   def reddit_caption
