@@ -425,7 +425,7 @@ class Entry < ApplicationRecord
     permalink = "🔗 #{self.permalink_url}"
 
     tweet = []
-    tweet << HTMLEntities.new.decode(caption)
+    tweet << caption
     tweet << permalink
     tweet = tweet.join("\n\n")
 

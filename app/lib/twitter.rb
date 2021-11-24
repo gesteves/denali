@@ -5,6 +5,7 @@ require 'oauth/request_proxy/typhoeus_request'
 require 'open-uri'
 
 class Twitter
+  include ActionView::Helpers::TextHelper
 
   def initialize
     consumer_key = ENV['twitter_consumer_key']
@@ -21,7 +22,7 @@ class Twitter
     url = "https://api.twitter.com/2/tweets"
 
     body = {
-      text: payload[:text]
+      text: HTMLEntities.new.decode(payload[:text])
     }
 
     media_ids = if payload[:photos].present?
@@ -62,6 +63,7 @@ class Twitter
   end
 
   def set_alt_text(media_id, alt_text)
+    alt_text = HTMLEntities.new.decode(truncate(alt_text.strip, length: 1000, omission: '…'))
     body = {
       media_id: media_id,
       alt_text: {
