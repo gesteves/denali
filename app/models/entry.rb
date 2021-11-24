@@ -440,7 +440,7 @@ class Entry < ApplicationRecord
     tweet << permalink
     tweet = tweet.join("\n\n")
 
-    caption_only ? tweet : "#{tweet}\n\n#{permalink}"
+    caption_only ? caption : tweet
   end
 
   def reddit_caption
