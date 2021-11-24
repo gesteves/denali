@@ -1,7 +1,7 @@
 import { Controller } from 'stimulus';
 
 /**
- * Controls copy-to-clipboard functionality.
+ * Updates character counts for Twitter fields.
  * @extends Controller
  */
 export default class extends Controller {
