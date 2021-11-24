@@ -231,10 +231,11 @@
     <div class="field-label">
     </div>
     <div class="field-body">
-      <div class="field">
+      <div class="field" data-controller="tweet">
         <div class="control is-expanded">
-          <%= f.text_area :tweet_text, placeholder: 'Your tweet…', maxlength: 230, class: 'textarea' %>
+          <%= f.text_area :tweet_text, placeholder: 'Your tweet…', maxlength: 230, class: 'textarea', 'data-tweet-target': 'input', 'data-action': 'input->tweet#updateCharacterCount' %>
         </div>
+        <p class="help"><span data-tweet-target="characterCount">0</span>/230</p>
       </div>
     </div>
   </div>
