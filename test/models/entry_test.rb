@@ -12,7 +12,23 @@ class EntryTest < ActiveSupport::TestCase
   test 'should set slug before saving' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
+
+    title = 'This should be in my title'
+    entry = Entry.new(title: title, body: 'Whatever.', blog: blog, user: user)
+    entry.save
+    assert_equal 'this-should-be-in-my-title', entry.slug
+
     title = 'This should be in my title. This should not.'
+    entry = Entry.new(title: title, body: 'Whatever.', blog: blog, user: user)
+    entry.save
+    assert_equal 'this-should-be-in-my-title', entry.slug
+
+    title = 'This should be in my title, but this should not.'
+    entry = Entry.new(title: title, body: 'Whatever.', blog: blog, user: user)
+    entry.save
+    assert_equal 'this-should-be-in-my-title', entry.slug
+
+    title = 'This should be in my title, but this should not. Neither should this.'
     entry = Entry.new(title: title, body: 'Whatever.', blog: blog, user: user)
     entry.save
     assert_equal 'this-should-be-in-my-title', entry.slug
