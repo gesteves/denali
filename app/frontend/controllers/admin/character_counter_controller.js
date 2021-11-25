@@ -7,6 +7,10 @@ import twttr from 'twitter-text';
  */
 export default class extends Controller {
   static targets = ['characterCount', 'input'];
+  static values = {
+    maxCharacters: Number,
+    isTweet: Boolean
+  }
 
   connect () {
     this.updateCharacterCount();
@@ -16,10 +20,16 @@ export default class extends Controller {
    * Count characters in the input and updates the character count.
    */
   updateCharacterCount () {
-    const parsedTweet = twttr.parseTweet(this.inputTarget.value);
-    let count = parsedTweet.weightedLength;
+    let count;
+    if (this.isTweetValue) {
+      const parsedTweet = twttr.parseTweet(this.inputTarget.value);
+      count = parsedTweet.weightedLength;
+    } else {
+      count = this.inputTarget.value.length;
+    }
+
     this.characterCountTarget.innerHTML = count;
-    if (count > 220) {
+    if (count > (this.maxCharactersValue - 10)) {
       this.characterCountTarget.classList.add('has-text-danger');
     } else {
       this.characterCountTarget.classList.remove('has-text-danger');

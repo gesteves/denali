@@ -8,11 +8,11 @@
     </header>
     <section class="modal-card-body">
       <div class="content">
-        <div class="field" data-controller="tweet">
+        <div class="field" data-controller="character-counter" data-character-counter-max-characters-value="230" data-character-counter-is-tweet-value="true">
           <div class="control is-expanded">
-            <%= form.text_area :text, value: @text.html_safe, placeholder: 'A short, clever tweet for this photo…', maxlength: 230, required: true, class: 'textarea', rows: 5, 'data-tweet-target': 'input', 'data-action': 'input->tweet#updateCharacterCount' %>
+            <%= form.text_area :text, value: @text.html_safe, placeholder: 'A short, clever tweet for this photo…', maxlength: 230, required: true, class: 'textarea', rows: 5, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
           </div>
-          <p class="help"><span data-tweet-target="characterCount">0</span>/230</p>
+          <p class="help"><span data-character-counter-target="characterCount">0</span>/230</p>
         </div>
       </div>
     </section>
