@@ -266,9 +266,9 @@ class Entry < ApplicationRecord
 
   def permalink_url
     if self.is_published?
-      entry_long_url(self.id, self.slug, only_path: !Rails.env.production? && !Rails.env.staging?)
+      entry_long_url(self.id, self.slug)
     else
-      preview_entry_url(self.preview_hash, only_path: !Rails.env.production? && !Rails.env.staging?)
+      preview_entry_url(self.preview_hash)
     end
   end
 
