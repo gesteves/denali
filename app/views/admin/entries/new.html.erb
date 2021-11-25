@@ -243,10 +243,11 @@
     <div class="field-label">
     </div>
     <div class="field-body">
-      <div class="field">
+      <div class="field" data-controller="character-counter" data-character-counter-max-characters-value="2200">
         <div class="control is-expanded">
-          <%= f.text_area :instagram_text, placeholder: 'Your Instagram caption…', class: 'textarea' %>
+          <%= f.text_area :instagram_text, placeholder: 'Your Instagram caption…', class: 'textarea', maxlength: 2200, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
         </div>
+        <p class="help"><span data-character-counter-target="characterCount">0</span>/2200</p>
       </div>
     </div>
   </div>
