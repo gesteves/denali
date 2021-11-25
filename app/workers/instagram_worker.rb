@@ -9,8 +9,7 @@ class InstagramWorker < BufferWorker
     photos = entry.photos.to_a[0..4]
     opts = {
       text: text,
-      media: media_hash(photos.shift),
-      now: true
+      media: media_hash(photos.shift)
     }
 
     if photos.present?
