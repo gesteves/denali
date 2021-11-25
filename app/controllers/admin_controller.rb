@@ -11,7 +11,7 @@ class AdminController < ApplicationController
   def default_url_options
     if Rails.env.production? || Rails.env.staging?
       { host: ENV['admin_domain'] }
-    else Rails.env.development?
+    else
       Rails.application.routes.default_url_options
     end
   end

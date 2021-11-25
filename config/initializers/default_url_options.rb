@@ -9,7 +9,7 @@ if Rails.env.production? || Rails.env.staging?
     host: host,
     protocol: protocol,
   )
-else Rails.env.development?
+else
   Rails.application.routes.default_url_options.merge!(
     host: 'localhost:3000',
     protocol: 'http',
