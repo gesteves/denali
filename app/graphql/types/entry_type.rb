@@ -3,7 +3,6 @@ module Types
     field :id, ID, null: false
     field :blog, Types::BlogType, null: false, description: "The blog this entry belongs to"
     field :body, String, null: true, description: "The body of the entry, as entered by the author, in Markdown"
-    field :facebook_caption, String, null: true, description: "A Facebook-friendly caption for this entry"
     field :formatted_body, String, null: true, description: "The body of the entry, formatted in HTML"
     field :glass_caption, String, null: true, description: "A Glass-friendly caption for this entry"
     field :instagram_caption, String, null: true, description: "A Instagram-friendly caption for this entry"
@@ -14,7 +13,6 @@ module Types
     field :plain_title, String, null: false, description: "The title of the entry, in plain text"
     field :preview_hash, String, null: false, description: "A unique identifier for unpublished entries"
     field :published_at, String, null: true, description: "Date & time the entry was published at"
-    field :reddit_caption, String, null: true, description: "A reddit-friendly caption for this entry"
     field :short_url, String, null: true, method: :short_permalink_url, description: "Shorter version of the permalink URL for the entry"
     field :slug, String, null: false, description: "The slug at the end of the entry's URL"
     field :status, String, null: false, description: "The publish status of the entry"

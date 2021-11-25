@@ -443,21 +443,6 @@ class Entry < ApplicationRecord
     caption_only ? caption : tweet
   end
 
-  def reddit_caption
-    text = []
-
-    if self.is_single_photo?
-      photo = self.photos.first
-      text << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      text << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      text << "🎞 #{photo.film.display_name}" if photo.film.present?
-      text << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
-    end
-
-    text << "🔗 #{self.permalink_url}"
-    text.join("\n")
-  end
-
   def glass_caption
     meta = []
     meta << "📍 #{self.territory_list} land" if self.show_location? && self.territories.present?
