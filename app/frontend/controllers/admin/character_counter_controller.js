@@ -8,11 +8,11 @@ import twttr from 'twitter-text';
 export default class extends Controller {
   static targets = ['characterCount', 'input'];
   static values = {
-    maxCharacters: Number,
     isTweet: Boolean
   }
 
   connect () {
+    this.maxCharacters = parseInt(this.inputTarget.maxLength);
     this.updateCharacterCount();
   }
 
@@ -29,7 +29,7 @@ export default class extends Controller {
     }
 
     this.characterCountTarget.innerHTML = count;
-    if (count > (this.maxCharactersValue - 10)) {
+    if (count > (this.maxCharacters - 10)) {
       this.characterCountTarget.classList.add('has-text-danger');
     } else {
       this.characterCountTarget.classList.remove('has-text-danger');

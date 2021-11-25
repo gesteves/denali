@@ -8,7 +8,7 @@
     </header>
     <section class="modal-card-body">
       <div class="content">
-        <div class="field" data-controller="character-counter" data-character-counter-max-characters-value="2200">
+        <div class="field" data-controller="character-counter">
           <div class="control is-expanded">
             <%= form.text_area :text, value: @text.html_safe, placeholder: 'Your Instagram caption…', maxlength: 2200, required: true, class: 'textarea', rows: 8, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
           </div>

@@ -420,27 +420,27 @@ class Entry < ApplicationRecord
     text.reject(&:blank?).join("\n\n")
   end
 
-  def twitter_caption(text: nil, caption_only: false)
-    # 280 characters in a tweet,
-    # minus 27 characters for the permalink and 23 for the photos.
-    # See: https://developer.twitter.com/en/docs/counting-characters
-    max_length = 280 - 27 - 23
+  def twitter_caption
+    permalink = "🔗 #{self.permalink_url}"
 
-    caption = if text.present?
-      text
-    elsif self.tweet_text.present?
+    # 280 characters in a tweet,
+    # minus the length of the permalink,
+    # minus 24 characters for the photo URL.
+    # See: https://developer.twitter.com/en/docs/counting-characters
+    max_length = 280 - permalink.size - 24
+
+    caption = if self.tweet_text.present?
       self.tweet_text
     else
       truncate(self.plain_title.strip, length: max_length, omission: '…')
     end
+
     permalink = "🔗 #{self.permalink_url}"
 
     tweet = []
     tweet << caption
     tweet << permalink
-    tweet = tweet.join("\n\n")
-
-    caption_only ? caption : tweet
+    tweet.join("\n\n")
   end
 
   def glass_caption

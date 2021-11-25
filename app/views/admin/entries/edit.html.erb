@@ -231,7 +231,7 @@
     <div class="field-label">
     </div>
     <div class="field-body">
-      <div class="field" data-controller="character-counter" data-character-counter-max-characters-value="230" data-character-counter-is-tweet-value="true">
+      <div class="field" data-controller="character-counter" data-character-counter-is-tweet-value="true">
         <div class="control is-expanded">
           <%= f.text_area :tweet_text, placeholder: 'Your tweet…', maxlength: 230, class: 'textarea', 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
         </div>
@@ -271,7 +271,7 @@
     <div class="field-label">
     </div>
     <div class="field-body">
-      <div class="field" data-controller="character-counter" data-character-counter-max-characters-value="2200">
+      <div class="field" data-controller="character-counter">
         <div class="control is-expanded">
           <%= f.text_area :instagram_text, placeholder: 'Your Instagram caption…', class: 'textarea', maxlength: 2200, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
         </div>

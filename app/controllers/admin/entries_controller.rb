@@ -282,7 +282,7 @@ class Admin::EntriesController < AdminController
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     if request.get?
-      @text = @entry.twitter_caption(caption_only: true)
+      @text = @entry.twitter_caption
       respond_to do |format|
         format.html {
           if params[:modal]
@@ -293,7 +293,7 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      TwitterWorker.perform_async(@entry.id, @entry.twitter_caption(text: params[:text]))
+      TwitterWorker.perform_async(@entry.id, params[:text])
       @message = 'Your entry was shared on Twitter.'
       respond_to do |format|
         format.html {
