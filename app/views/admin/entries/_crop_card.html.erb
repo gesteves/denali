@@ -12,10 +12,9 @@
             <%= image_tag photo.url(w: 1200),
               width: 1200,
               height: photo.height_from_width(1200),
-              class: 'focal-point__thumbnail placeholder',
+              class: 'focal-point__thumbnail',
               'data-focal-point-target': 'thumbnail',
-              'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint load->placeholder#removeBackground',
-              'data-controller': 'placeholder' %>
+              'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint' %>
               <div class="is-hidden focal-point__focal-marker focal-point__focal-marker--always-visible" data-focal-point-target="focalMarker"></div>
           </div>
         </div>

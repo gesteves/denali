@@ -8,6 +8,7 @@
     <%= image_tag photo.url(w: 1200),
       width: 1200,
       height: photo.height_from_width(1200),
-      'data-cropper-target': 'photo' %>
+      'data-cropper-target': 'photo',
+      'data-action': 'load->cropper#initializeCropper' %>
   </div>
 </div>

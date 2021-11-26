@@ -18,13 +18,19 @@ export default class extends Controller {
   connect () {
     this.initializedCropper = false;
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
+  }
+
+  /**
+   * Initializes the Croppr library when the image loads.
+   */
+  initializeCropper () {
     this.cropper = new Croppr(this.photoTarget, {
       aspectRatio: this.aspectRatioValue,
       returnMode: 'ratio',
       onCropEnd: (value) => this.updateCrop(value),
       onInitialize: (cropper) => {
         this.fixCropperOverlay();
-        this.setInitialCropper(cropper);
+        this.setInitialCropperPosition(cropper);
       }
     });
   }
@@ -71,7 +77,7 @@ export default class extends Controller {
    * Sets the initial position of the cropped tool, if there's crop data for this instance.
    * @param {Croppr} cropper an instance of the Croppr library
    */
-  setInitialCropper (cropper) {
+  setInitialCropperPosition (cropper) {
     if (('x' in this.cropValue) && ('y' in this.cropValue) && ('width' in this.cropValue) && ('height' in this.cropValue)) {
       const width = this.element.offsetWidth * this.cropValue.width;
       const height = this.element.offsetHeight * this.cropValue.height;
