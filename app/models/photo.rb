@@ -40,7 +40,7 @@ class Photo < ApplicationRecord
 
   def url(opts = {})
     opts.reverse_merge!(w: 1200)
-    if opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
+    if opts[:rect].blank? && opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
       opts.reverse_merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
     end
@@ -53,7 +53,11 @@ class Photo < ApplicationRecord
     widths = processed? ? srcset.reject { |width| width > self.width } : srcset
     widths = widths.uniq.sort
     src_width = widths.first
-    if opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
+    if (opts[:ar] == '1:1' || opts[:ar] == 'square' || (opts[:w].present? && opts[:h].present? && opts[:w] = opts[:h])) && self.crop(self.square_crop).present?
+      opts.delete(:ar)
+      opts.delete(:h)
+      opts[:rect] = crop(self.square_crop)
+    elsif opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
       opts.reverse_merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
     end
@@ -89,11 +93,34 @@ class Photo < ApplicationRecord
   end
 
   def facebook_card_url
-    self.url(w: 1200, h: 630)
+    if self.crop(self.facebook_crop).present?
+      self.url(w: 1200, rect: crop(self.facebook_crop))
+    else
+      self.url(w: 1200, h: 600)
+    end
   end
 
   def twitter_card_url
-    self.url(w: 1200, h: 600)
+    if self.crop(self.twitter_crop).present?
+      self.url(w: 1200, rect: crop(self.twitter_crop))
+    else
+      self.url(w: 1200, h: 600)
+    end
+  end
+
+  def crop(data)
+    begin
+      crop = JSON.parse(data)
+      rect = [
+        crop['x'] * self.width,
+        crop['y'] * self.height,
+        crop['width'] * self.width,
+        crop['height'] * self.height
+      ].map(&:round).join(',')
+      rect
+    rescue
+      nil
+    end
   end
 
   def blurhash_url(opts = {})

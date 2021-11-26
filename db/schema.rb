@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_17_233040) do
+ActiveRecord::Schema.define(version: 2021_11_26_211203) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -178,6 +178,9 @@ ActiveRecord::Schema.define(version: 2021_10_17_233040) do
     t.text "territories"
     t.string "location"
     t.bigint "park_id"
+    t.text "square_crop"
+    t.text "facebook_crop"
+    t.text "twitter_crop"
     t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["film_id"], name: "index_photos_on_film_id"

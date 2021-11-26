@@ -1,24 +1,29 @@
 <% cache photo do %>
-  <div class="card" data-controller="focal-point" data-focal-point-endpoint-value=<%= crops_admin_entry_photo_url(entry_id: @entry.id, id: photo.id, format: 'js') %> data-focal-point-photo-id="<%= photo.id %>" data-focal-point-focal-x-value="<%= photo.focal_x %>" data-focal-point-focal-y-value="<%= photo.focal_y %>">
-    <div class="card-image">
-      <div class="image image-container focal-point__image-container">
-        <%= responsive_image_tag(
-          photo: photo,
-          srcset: @srcset,
-          sizes: @sizes,
-          html_options: {
-            class: 'focal-point__thumbnail placeholder',
-            loading: 'lazy',
-            style: css_placeholder_background(photo),
-            'data-focal-point-target': 'thumbnail',
-            'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint load->placeholder#removeBackground',
-            'data-controller': 'placeholder'
-          }) %>
-          <div class="is-hidden focal-point__focal-marker" data-focal-point-target="focalMarker"></div>
+  <div class="card">
+    <div class="card-content">
+      <div class="media">
+        <div class="media-left crop__label">
+          <div class="tags has-addons">
+            <span class="tag">Focal Point</span>
+          </div>
+        </div>
+        <div class="media-content">
+          <div class="focal-point__image-container" data-controller="focal-point" data-focal-point-endpoint-value=<%= crops_admin_entry_photo_url(entry_id: @entry.id, id: photo.id, format: 'json') %> data-focal-point-photo-id="<%= photo.id %>" data-focal-point-focal-x-value="<%= photo.focal_x %>" data-focal-point-focal-y-value="<%= photo.focal_y %>">
+            <%= image_tag photo.url(w: 1200),
+              width: 1200,
+              height: photo.height_from_width(1200),
+              class: 'focal-point__thumbnail placeholder',
+              'data-focal-point-target': 'thumbnail',
+              'data-action': 'click->focal-point#setFocalPoint load->focal-point#showFocalPoint load->placeholder#removeBackground',
+              'data-controller': 'placeholder' %>
+              <div class="is-hidden focal-point__focal-marker focal-point__focal-marker--always-visible" data-focal-point-target="focalMarker"></div>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="card-content" data-focal-point-target="responseContainer">
-      <%= render partial: 'crop_crops', object: photo, as: :photo %>
+
+      <%= render partial: 'crop', locals: { photo: photo, label: 'Square', aspect_ratio: 1, field: 'square_crop' }%>
+      <%= render partial: 'crop', locals: { photo: photo, label: 'Twitter', aspect_ratio: 600.0/1200.0, field: 'twitter_crop' }%>
+      <%= render partial: 'crop', locals: { photo: photo, label: 'Facebook', aspect_ratio: 630.0/1200.0, field: 'facebook_crop' }%>
     </div>
   </div>
 <% end %>

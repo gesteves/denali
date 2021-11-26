@@ -13,10 +13,11 @@
 }
 
 .focal-point__image-container {
+  position: relative;
   overflow: hidden;
 
   @media (hover: hover) {
-    .focal-point__focal-marker {
+    .focal-point__focal-marker:not(.focal-point__focal-marker--always-visible) {
       display: none;
     }
 

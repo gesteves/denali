@@ -1,13 +1,12 @@
 import { Controller } from 'stimulus';
-import { fetchStatus, fetchText } from '../../lib/utils';
-import $ from 'jquery';
+import { fetchStatus, fetchJson, sendNotification } from '../../lib/utils';
 
 /**
  * Controls setting the focal point on photos.
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['focalMarker', 'focalX', 'focalY', 'thumbnail', 'responseContainer'];
+  static targets = ['focalMarker', 'focalX', 'focalY', 'thumbnail'];
   static values = {
     focalX: Number,
     focalY: Number,
@@ -62,11 +61,9 @@ export default class extends Controller {
   }
 
   /**
-   * Updates the focal point and inserts the result into the container
-   * TODO: Remove the jQuery dependency.
+   * Updates the focal point in the backend.
    */
   updateFocalPoint () {
-    event.preventDefault();
     let formData = new FormData();
 
     formData.append('photo[focal_x]', this.focalXValue);
@@ -83,7 +80,7 @@ export default class extends Controller {
 
     fetch(this.endpointValue, fetchOpts)
       .then(fetchStatus)
-      .then(fetchText)
-      .then(html => $(this.responseContainerTarget).html(html));
+      .then(fetchJson)
+      .then(json => sendNotification(json.message, json.status));
   }
 }
