@@ -40,9 +40,15 @@ class Photo < ApplicationRecord
 
   def url(opts = {})
     opts.reverse_merge!(w: 1200)
-    if opts[:rect].blank? && opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
-      opts.reverse_merge!(fit: 'crop')
-      opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
+    if opts[:rect].blank?
+      if (opts[:ar] == '1:1' || opts[:ar] == 'square' || (opts[:w].present? && opts[:h].present? && opts[:w] = opts[:h])) && self.crop(self.square_crop).present?
+        opts.delete(:ar)
+        opts.delete(:h)
+        opts[:rect] = crop(self.square_crop)
+      elsif opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
+        opts.reverse_merge!(fit: 'crop')
+        opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
+      end
     end
     Ix.path(self.image.key).to_url(opts.compact)
   end
