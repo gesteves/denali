@@ -215,7 +215,7 @@ class Entry < ApplicationRecord
 
   def related(count: 12)
     begin
-      Entry.search(related_query(count)).records.includes(photos: [:image_attachment, :image_blob])
+      Entry.search(related_query(count)).records.includes(photos: [:image_attachment, :image_blob, :crops])
     rescue => e
       logger.error "Fetching related entries failed with the following error: #{e}"
       nil
