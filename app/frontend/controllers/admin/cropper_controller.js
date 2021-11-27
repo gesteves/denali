@@ -21,26 +21,29 @@ export default class extends Controller {
   connect () {
     this.initializedCropper = false;
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
-    this.initializeCropper();
+
+    // If the image is loaded, initialize the cropper.
+    this.interval = setInterval(() => {
+      if (this.photoTarget.complete && this.photoTarget.naturalWidth > 0 && this.photoTarget.naturalHeight > 0) {
+        clearInterval(this.interval);
+        this.initializeCropper();
+      }
+    }, 100);
   }
 
   /**
    * Initializes the Croppr library when the image loads.
    */
   initializeCropper () {
-    if (typeof this.cropper === 'undefined') {
-      this.cropper = new Croppr(this.photoTarget, {
-        aspectRatio: this.aspectRatioValue,
-        returnMode: 'ratio',
-        onCropEnd: (value) => this.updateCrop(value),
-        onInitialize: (cropper) => {
-          this.fixCropperOverlay();
-          this.setInitialCropperPosition(cropper);
-        }
-      });
-    } else {
-      this.setInitialCropperPosition(this.cropper);
-    }
+    this.cropper = new Croppr(this.photoTarget, {
+      aspectRatio: this.aspectRatioValue,
+      returnMode: 'ratio',
+      onCropEnd: (value) => this.updateCrop(value),
+      onInitialize: (cropper) => {
+        this.fixCropperOverlay();
+        this.setInitialCropperPosition(cropper);
+      }
+    });
   }
 
   /**
@@ -100,8 +103,6 @@ export default class extends Controller {
       const y = this.element.offsetHeight * this.cropYValue;
       cropper.resizeTo(width, height);
       cropper.moveTo(x, y);
-    } else {
-      cropper.reset();
     }
     this.initializedCropper = true;
   }
