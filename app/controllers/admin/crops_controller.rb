@@ -5,7 +5,7 @@ class Admin::CropsController < AdminController
     @photo = @entry.photos.find(params[:photo_id])
     crop = @photo.crops.find_or_create_by(name: crop_params[:name])
     crop.update(crop_params)
-    message = 'The crop has been updated.'
+    message = "The #{crop_params[:name].titleize} crop has been updated."
     respond_to do |format|
       format.json {
         response = {
