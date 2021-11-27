@@ -119,7 +119,6 @@ def graphql_query(operation_name:, variables: nil)
         about
         copyright
         email
-        facebook
         flickr
         instagram
         twitter
@@ -170,7 +169,6 @@ def import_blog(data)
   blog.about = data[:about]
   blog.copyright = data[:copyright]
   blog.email = data[:email]
-  blog.facebook = data[:facebook]
   blog.flickr = data[:flickr]
   blog.header_logo_svg = data[:headerLogoSvg]
   blog.instagram = data[:instagram]
@@ -206,7 +204,6 @@ def import_entry(data)
     entry.status = data[:status]
     entry.post_to_instagram = false
     entry.post_to_twitter = false
-    entry.post_to_facebook = false
     entry.post_to_flickr = false
     entry.post_to_flickr_groups = false
     entry.published_at = Time.parse(data[:publishedAt]) if data[:publishedAt].present?

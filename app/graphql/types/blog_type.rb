@@ -7,7 +7,6 @@ module Types
     field :analytics_head, String, null: true, description: "Analytics script inserted at the end of the head element"
     field :copyright, String, null: true, description: "Copyright info for the blog"
     field :email, String, null: true, description: "Contact email for the blog"
-    field :facebook, String, null: true, description: "Facebook account for the blog"
     field :flickr, String, null: true, description: "Flickr account for the blog"
     field :formatted_about, String, null: true, description: "A full description of the blog, formatted in HTML"
     field :formatted_tag_line, String, null: true, description: "A short description of the blog, formatted in HTML"

@@ -123,7 +123,6 @@ class Blog < ApplicationRecord
       analytics_head
       copyright
       email
-      facebook
       flickr
       header_logo_svg
       instagram
