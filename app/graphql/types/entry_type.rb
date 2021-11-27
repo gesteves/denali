@@ -1,7 +1,6 @@
 module Types
   class EntryType < Types::BaseObject
     field :id, ID, null: false
-    field :blog, Types::BlogType, null: false, description: "The blog this entry belongs to"
     field :body, String, null: true, description: "The body of the entry, as entered by the author, in Markdown"
     field :formatted_body, String, null: true, description: "The body of the entry, formatted in HTML"
     field :glass_caption, String, null: true, description: "A Glass-friendly caption for this entry"
