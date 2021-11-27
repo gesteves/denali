@@ -38,3 +38,7 @@
 .is-transparent {
   opacity: 0;
 }
+
+.croppr-overlay {
+  backdrop-filter: blur(10px);
+}
