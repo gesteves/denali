@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_27_011834) do
+ActiveRecord::Schema.define(version: 2021_11_27_141613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,7 +105,6 @@ ActiveRecord::Schema.define(version: 2021_11_27_011834) do
     t.integer "position"
     t.boolean "post_to_twitter", default: true
     t.string "tweet_text"
-    t.boolean "post_to_facebook", default: true
     t.boolean "post_to_flickr", default: true
     t.boolean "show_location", default: true
     t.boolean "post_to_instagram", default: true
