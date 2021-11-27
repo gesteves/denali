@@ -1,10 +1,11 @@
 <div class="media">
   <div class="media-left crop__label">
     <div class="tags has-addons">
-      <span class="tag"><%= label %></span>
+      <span class="tag"><%= name %></span>
     </div>
   </div>
-  <div class="media-content" data-controller="cropper" data-cropper-endpoint-value=<%= crops_admin_entry_photo_url(entry_id: @entry.id, id: photo.id, format: 'json') %> data-cropper-aspect-ratio-value="<%= aspect_ratio %>" data-cropper-field-value="<%= field %>" data-cropper-crop-value="<%= photo[field] || "{}" %>">
+  <% crop = photo.crop(name.parameterize) %>
+  <div class="media-content" data-controller="cropper" data-cropper-endpoint-value=<%= create_or_update_admin_entry_photo_crops_url(entry_id: @entry.id, photo_id: photo.id, format: 'json') %> data-cropper-aspect-ratio-value="<%= aspect_ratio %>" data-cropper-crop-name-value="<%= name.parameterize %>" data-cropper-crop-x-value="<%= crop&.x %>" data-cropper-crop-y-value="<%= crop&.y %>" data-cropper-crop-width-value="<%= crop&.width %>" data-cropper-crop-height-value="<%= crop&.height %>">
     <%= image_tag photo.url(w: 1200),
       width: 1200,
       height: photo.height_from_width(1200),

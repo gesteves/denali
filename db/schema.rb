@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_26_211203) do
+ActiveRecord::Schema.define(version: 2021_11_27_011834) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,18 @@ ActiveRecord::Schema.define(version: 2021_11_26_211203) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "amazon_url"
+  end
+
+  create_table "crops", force: :cascade do |t|
+    t.float "x"
+    t.float "y"
+    t.float "width"
+    t.float "height"
+    t.string "name"
+    t.bigint "photo_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["photo_id"], name: "index_crops_on_photo_id"
   end
 
   create_table "entries", id: :serial, force: :cascade do |t|
@@ -178,9 +190,6 @@ ActiveRecord::Schema.define(version: 2021_11_26_211203) do
     t.text "territories"
     t.string "location"
     t.bigint "park_id"
-    t.text "square_crop"
-    t.text "facebook_crop"
-    t.text "twitter_crop"
     t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["film_id"], name: "index_photos_on_film_id"
@@ -259,6 +268,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_211203) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "crops", "photos"
   add_foreign_key "entries", "blogs"
   add_foreign_key "entries", "users"
   add_foreign_key "photos", "cameras"

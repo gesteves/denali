@@ -11,28 +11,36 @@ export default class extends Controller {
   static values = {
     endpoint: String,
     aspectRatio: Number,
-    field: String,
-    crop: Object
+    cropName: String,
+    cropX: Number,
+    cropY: Number,
+    cropWidth: Number,
+    cropHeight: Number,
   }
 
   connect () {
     this.initializedCropper = false;
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
+    this.initializeCropper();
   }
 
   /**
    * Initializes the Croppr library when the image loads.
    */
   initializeCropper () {
-    this.cropper = new Croppr(this.photoTarget, {
-      aspectRatio: this.aspectRatioValue,
-      returnMode: 'ratio',
-      onCropEnd: (value) => this.updateCrop(value),
-      onInitialize: (cropper) => {
-        this.fixCropperOverlay();
-        this.setInitialCropperPosition(cropper);
-      }
-    });
+    if (typeof this.cropper === 'undefined') {
+      this.cropper = new Croppr(this.photoTarget, {
+        aspectRatio: this.aspectRatioValue,
+        returnMode: 'ratio',
+        onCropEnd: (value) => this.updateCrop(value),
+        onInitialize: (cropper) => {
+          this.fixCropperOverlay();
+          this.setInitialCropperPosition(cropper);
+        }
+      });
+    } else {
+      this.setInitialCropperPosition(this.cropper);
+    }
   }
 
   /**
@@ -45,8 +53,15 @@ export default class extends Controller {
     }
 
     let formData = new FormData();
-    this.cropValue = value;
-    formData.append(`photo[${this.fieldValue}]`, JSON.stringify(value));
+    this.cropXValue = value.x;
+    this.cropYValue = value.y;
+    this.cropWidthValue = value.width;
+    this.cropHeightValue = value.height;
+    formData.append('crop[x]', value.x);
+    formData.append('crop[y]', value.y);
+    formData.append('crop[width]', value.width);
+    formData.append('crop[height]', value.height);
+    formData.append('crop[name]', this.cropNameValue);
 
     const fetchOpts = {
       method: 'POST',
@@ -78,13 +93,15 @@ export default class extends Controller {
    * @param {Croppr} cropper an instance of the Croppr library
    */
   setInitialCropperPosition (cropper) {
-    if (('x' in this.cropValue) && ('y' in this.cropValue) && ('width' in this.cropValue) && ('height' in this.cropValue)) {
-      const width = this.element.offsetWidth * this.cropValue.width;
-      const height = this.element.offsetHeight * this.cropValue.height;
-      const x = this.element.offsetWidth * this.cropValue.x;
-      const y = this.element.offsetHeight * this.cropValue.y;
+    if ((this.cropWidthValue > 0) && (this.cropHeightValue > 0)) {
+      const width = this.element.offsetWidth * this.cropWidthValue;
+      const height = this.element.offsetHeight * this.cropHeightValue;
+      const x = this.element.offsetWidth * this.cropXValue;
+      const y = this.element.offsetHeight * this.cropYValue;
       cropper.resizeTo(width, height);
       cropper.moveTo(x, y);
+    } else {
+      cropper.reset();
     }
     this.initializedCropper = true;
   }

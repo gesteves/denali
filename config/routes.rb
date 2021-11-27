@@ -44,7 +44,12 @@ Rails.application.routes.draw do
       resources :photos, only: [] do
         member do
           get 'download'
-          post 'crops'
+          post 'focal_point'
+        end
+        resources :crops, only: [] do
+          collection do
+            post 'create_or_update'
+          end
         end
       end
     end

@@ -35,7 +35,7 @@
     </div>
   <% end %>
 
-  <% if entry.photos.any? { |p| p.focal_x.blank? || p.focal_y.blank? || p.square_crop.blank? || p.facebook_crop.blank? || p.twitter_crop.blank?  } %>
+  <% if entry.photos.any? { |p| p.focal_x.blank? || p.focal_y.blank? || p.crops.blank? } %>
     <div class="control">
       <div class="tags has-addons">
         <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>

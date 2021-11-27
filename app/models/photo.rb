@@ -5,6 +5,7 @@ class Photo < ApplicationRecord
   belongs_to :film, optional: true
   belongs_to :park, optional: true
   has_one_attached :image
+  has_many :crops, dependent: :destroy
 
   acts_as_list scope: :entry
 
@@ -41,10 +42,10 @@ class Photo < ApplicationRecord
   def url(opts = {})
     opts.reverse_merge!(w: 1200)
     if opts[:rect].blank?
-      if (opts[:ar] == '1:1' || opts[:ar] == 'square' || (opts[:w].present? && opts[:h].present? && opts[:w] = opts[:h])) && self.crop(self.square_crop).present?
+      if (opts[:ar] == '1:1' || opts[:ar] == 'square' || (opts[:w].present? && opts[:h].present? && opts[:w] = opts[:h])) && self.crop('square').present?
         opts.delete(:ar)
         opts.delete(:h)
-        opts[:rect] = crop(self.square_crop)
+        opts[:rect] = crop_rect('square')
       elsif opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
         opts.reverse_merge!(fit: 'crop')
         opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
@@ -59,10 +60,10 @@ class Photo < ApplicationRecord
     widths = processed? ? srcset.reject { |width| width > self.width } : srcset
     widths = widths.uniq.sort
     src_width = widths.first
-    if (opts[:ar] == '1:1' || opts[:ar] == 'square' || (opts[:w].present? && opts[:h].present? && opts[:w] = opts[:h])) && self.crop(self.square_crop).present?
+    if (opts[:ar] == '1:1' || opts[:ar] == 'square' || (opts[:w].present? && opts[:h].present? && opts[:w] = opts[:h])) && self.crop('square').present?
       opts.delete(:ar)
       opts.delete(:h)
-      opts[:rect] = crop(self.square_crop)
+      opts[:rect] = crop_rect('square')
     elsif opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
       opts.reverse_merge!(fit: 'crop')
       opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
@@ -99,34 +100,35 @@ class Photo < ApplicationRecord
   end
 
   def facebook_card_url
-    if self.crop(self.facebook_crop).present?
-      self.url(w: 1200, rect: crop(self.facebook_crop))
+    if self.crop('facebook').present?
+      self.url(w: 1200, rect: crop_rect('facebook'))
     else
       self.url(w: 1200, h: 600)
     end
   end
 
   def twitter_card_url
-    if self.crop(self.twitter_crop).present?
-      self.url(w: 1200, rect: crop(self.twitter_crop))
+    if self.crop('twitter').present?
+      self.url(w: 1200, rect: crop_rect('twitter'))
     else
       self.url(w: 1200, h: 600)
     end
   end
 
-  def crop(data)
-    begin
-      crop = JSON.parse(data)
-      rect = [
-        crop['x'] * self.width,
-        crop['y'] * self.height,
-        crop['width'] * self.width,
-        crop['height'] * self.height
-      ].map(&:round).join(',')
-      rect
-    rescue
-      nil
-    end
+  def crop(name)
+    self.crops.find_by(name: name)
+  end
+
+  def crop_rect(name)
+    crop = self.crop(name)
+    return if crop.blank?
+
+    rect = [
+      crop.x * self.width,
+      crop.y * self.height,
+      crop.width * self.width,
+      crop.height * self.height
+    ].map(&:round).join(',')
   end
 
   def blurhash_url(opts = {})
