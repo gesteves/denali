@@ -4501,10 +4501,10 @@ gulp-svgmin@^4.1:
     plugin-error "^1.0.1"
     svgo "^2.7.0"
 
-gulp-svgstore@^8.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/gulp-svgstore/-/gulp-svgstore-8.0.0.tgz#64ad5e2b9445c1f9c052ca74ba8437cd820055ae"
-  integrity sha512-LU5TAhE7Fp4kJRijNTuu77Jje51gsPu58SV9bSE2OaY+s0rJcMgk6xLjSStKj8nhwHPcZykJSbdckKFJsuIk3w==
+gulp-svgstore@^9.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/gulp-svgstore/-/gulp-svgstore-9.0.0.tgz#e59af41630410509e5ea044247a42c099a6db2c1"
+  integrity sha512-+Dz+2Pycw9ayb7JY7U0yz7tX0iRMPJ0ORg3yIIHYLHu5tYku34mPjR4DCt1IGpVOe2Nk3ZMoOJwX1xrqpwqBEQ==
   dependencies:
     cheerio "^1.0.0-rc.10"
     fancy-log "^1.3.3"
