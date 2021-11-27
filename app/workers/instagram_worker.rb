@@ -2,7 +2,7 @@ class InstagramWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
   def perform(entry_id, text)
-    return if !Rails.env.production?
+    return if !Rails.env.production? || ENV['buffer_access_token'].blank?
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
     raise UnprocessedPhotoError unless entry.photos_processed?
