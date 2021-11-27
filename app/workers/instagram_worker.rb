@@ -1,4 +1,5 @@
-class InstagramWorker < BufferWorker
+class InstagramWorker < ApplicationWorker
+  sidekiq_options queue: 'high'
 
   def perform(entry_id, text)
     return if !Rails.env.production?
@@ -22,14 +23,40 @@ class InstagramWorker < BufferWorker
       end
     end
 
-    updates = post_to_buffer('instagram', opts)
-    updates.map { |u| InstagramCommentWorker.perform_in(1.minute, u) }
+    post_to_buffer(opts)
   end
 
   private
+
   def media_hash(photo)
     {
       photo: photo.instagram_url
     }
+  end
+
+  def get_profile_ids
+    return if ENV['buffer_access_token'].blank?
+    response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}")
+    if response.code == 200
+      profiles = JSON.parse(response.body)
+      profiles.select { |profile| profile['service'].downcase.match('instagram') }.map { |profile| profile['id'] }
+    else
+      raise "#{response.code} #{response.body}"
+    end
+  end
+
+  def post_to_buffer(opts = {})
+    profile_ids = get_profile_ids
+    return if profile_ids.blank?
+    opts.reverse_merge!(profile_ids: profile_ids, shorten: false, now: true, access_token: ENV['buffer_access_token'])
+    response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
+    response = JSON.parse(response.body)
+    if response['success']
+      response['updates'].map { |u| u['id'] }
+    else
+      code = response['code']
+      message = response['message']
+      raise "#{code} #{message}"
+    end
   end
 end
