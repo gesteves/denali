@@ -103,7 +103,7 @@ class Photo < ApplicationRecord
     if self.crop('facebook').present?
       self.url(w: 1200, rect: crop_rect('facebook'))
     else
-      self.url(w: 1200, h: 600)
+      self.url(w: 1200, h: 630)
     end
   end
 
