@@ -396,30 +396,6 @@ class Entry < ApplicationRecord
     caption.reject(&:blank?).join("\n\n")
   end
 
-  def facebook_caption
-    meta = []
-
-    if self.is_single_photo?
-      photo = self.photos.first
-      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
-      meta << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
-    end
-
-    text = []
-    if self.instagram_text.present?
-      text << self.instagram_text
-    else
-      text << self.plain_title
-      text << self.plain_body
-    end
-
-    text << meta.join("\n")
-    text << self.permalink_url
-    text.reject(&:blank?).join("\n\n")
-  end
-
   def twitter_caption
     permalink = "🔗 #{self.permalink_url}"
 
