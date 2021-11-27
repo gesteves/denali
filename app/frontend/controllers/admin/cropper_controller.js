@@ -23,12 +23,9 @@ export default class extends Controller {
     this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
 
     // If the image is loaded, initialize the cropper.
-    this.interval = setInterval(() => {
-      if (this.photoTarget.complete && this.photoTarget.naturalWidth > 0 && this.photoTarget.naturalHeight > 0) {
-        clearInterval(this.interval);
-        this.initializeCropper();
-      }
-    }, 100);
+    if (this.photoTarget.complete && this.photoTarget.naturalWidth > 0 && this.photoTarget.naturalHeight > 0) {
+      this.initializeCropper();
+    }
   }
 
   /**
