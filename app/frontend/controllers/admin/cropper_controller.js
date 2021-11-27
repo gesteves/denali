@@ -16,6 +16,8 @@ export default class extends Controller {
     cropY: Number,
     cropWidth: Number,
     cropHeight: Number,
+    focalX: Number,
+    focalY: Number,
   }
 
   connect () {
@@ -99,6 +101,16 @@ export default class extends Controller {
       const x = this.element.offsetWidth * this.cropXValue;
       const y = this.element.offsetHeight * this.cropYValue;
       cropper.resizeTo(width, height);
+      cropper.moveTo(x, y);
+    } else if ((this.focalXValue > 0) && (this.focalYValue > 0)) {
+      const elementWidth = this.element.offsetWidth;
+      const elementHeight = this.element.offsetHeight;
+      const cropperWidth = elementWidth * cropper.getValue().width;
+      const cropperHeight = elementHeight * cropper.getValue().height;
+      const focalX = this.focalXValue * elementWidth;
+      const focalY = this.focalYValue * elementHeight;
+      const x = Math.min(Math.max(0, focalX - (cropperWidth/2)), elementWidth - cropperWidth);
+      const y = Math.min(Math.max(0, focalY - (cropperHeight/2)), elementHeight - cropperHeight);
       cropper.moveTo(x, y);
     }
     this.initializedCropper = true;
