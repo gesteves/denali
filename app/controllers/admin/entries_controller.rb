@@ -221,15 +221,10 @@ class Admin::EntriesController < AdminController
   end
 
   def crops
-    @srcset = PHOTOS[:admin_modal][:srcset]
-    @sizes = PHOTOS[:admin_modal][:sizes].join(', ')
+    @page_title = "Crops for “#{@entry.title}”"
     respond_to do |format|
       format.html {
-        if params[:modal]
-          render layout: nil
-        else
-          render
-        end
+        render
       }
     end
   end
