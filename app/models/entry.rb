@@ -255,7 +255,6 @@ class Entry < ApplicationRecord
     self&.photos&.first&.alt_text.presence || self.plain_body
   end
 
-
   def permalink_path
     if self.is_published?
       entry_long_path(self.id, self.slug)
@@ -290,7 +289,13 @@ class Entry < ApplicationRecord
     self.touch
     self.older&.touch
     self.newer&.touch
-    paths = [self.permalink_path, self.newer&.permalink_path, self.older&.permalink_path]
+
+    paths = if self.is_published?
+      ["#{entry_long_path(self.id)}/*", self.newer&.permalink_path, self.older&.permalink_path]
+    else
+      [self.permalink_path]
+    end
+
     wildcard_paths = %w{
       /
       /page*
@@ -299,7 +304,6 @@ class Entry < ApplicationRecord
       /oembed*
       /search*
       /related*
-      /preview*
     }
 
     if self.is_published?
