@@ -282,10 +282,10 @@ class Entry < ApplicationRecord
     TwitterWorker.perform_async(self.id, self.twitter_caption) if self.post_to_twitter
     Webhook.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
-    self.invalidate
+    self.purge_from_cdn
   end
 
-  def invalidate
+  def purge_from_cdn
     self.touch
     self.older&.touch
     self.newer&.touch

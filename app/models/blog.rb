@@ -137,13 +137,13 @@ class Blog < ApplicationRecord
     }
 
     if attributes.any? { |attr| saved_change_to_attribute? (attr) }
-      self.invalidate
+      self.purge_from_cdn
     elsif saved_change_to_about?
-      self.invalidate(paths: about_path)
+      self.purge_from_cdn(paths: about_path)
     end
   end
 
-  def invalidate(paths: '/*')
+  def purge_from_cdn(paths: '/*')
     Rails.cache.clear
     CloudfrontInvalidationWorker.perform_async(paths)
   end

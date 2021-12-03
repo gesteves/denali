@@ -5,7 +5,7 @@ module Mutations
 
     def resolve
       blog = Blog.first
-      blog.invalidate
+      blog.purge_from_cdn
       {
         blog: blog,
         errors: []

@@ -45,7 +45,7 @@ class Admin::BlogsController < AdminController
   end
 
   def flush_caches
-    @photoblog.invalidate
+    @photoblog.purge_from_cdn
     @message = 'Caches are being cleared. This may take a few moments.'
     respond_to do |format|
       format.html {

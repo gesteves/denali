@@ -156,7 +156,7 @@ class Admin::EntriesController < AdminController
       @entry.modified_at = Time.current if @entry.is_published?
       if @entry.update(entry_params)
         @entry.update_tags
-        @entry.invalidate
+        @entry.purge_from_cdn
         OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
@@ -169,7 +169,7 @@ class Admin::EntriesController < AdminController
 
   # DELETE /admin/entries/1
   def destroy
-    @entry.invalidate
+    @entry.purge_from_cdn
     @entry.destroy
     respond_to do |format|
       flash[:danger] = 'Your entry was deleted forever.'
@@ -305,7 +305,7 @@ class Admin::EntriesController < AdminController
   end
 
   def flush_caches
-    @entry.invalidate
+    @entry.purge_from_cdn
     OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
     @message = 'Your entry is being cleared from cache. This may take a few moments.'
     respond_to do |format|
