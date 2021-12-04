@@ -17,21 +17,6 @@ class EntryTest < ActiveSupport::TestCase
     entry = Entry.new(title: title, body: 'Whatever.', blog: blog, user: user)
     entry.save
     assert_equal 'this-should-be-in-my-title', entry.slug
-
-    title = 'This should be in my title. This should not.'
-    entry = Entry.new(title: title, body: 'Whatever.', blog: blog, user: user)
-    entry.save
-    assert_equal 'this-should-be-in-my-title', entry.slug
-
-    title = 'This should be in my title, but this should not.'
-    entry = Entry.new(title: title, body: 'Whatever.', blog: blog, user: user)
-    entry.save
-    assert_equal 'this-should-be-in-my-title', entry.slug
-
-    title = 'This should be in my title, but this should not. Neither should this.'
-    entry = Entry.new(title: title, body: 'Whatever.', blog: blog, user: user)
-    entry.save
-    assert_equal 'this-should-be-in-my-title', entry.slug
   end
 
   test 'should set preview hash before saving' do
