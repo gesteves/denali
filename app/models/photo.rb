@@ -42,7 +42,7 @@ class Photo < ApplicationRecord
   def url(opts = {})
     opts.reverse_merge!(w: 1200)
     if opts[:rect].blank?
-      if opts[:ar].present? && (rect = self.crop_rect(opts[:ar]).presence)
+      if opts[:ar].present? && (rect = self.crop(opts[:ar])&.to_rect)
         opts[:rect] = rect
         opts.delete(:ar)
         opts.delete(:h)
@@ -61,7 +61,7 @@ class Photo < ApplicationRecord
     widths = widths.uniq.sort
     src_width = widths.first
     if opts[:rect].blank?
-      if opts[:ar].present? && (rect = self.crop_rect(opts[:ar]).presence)
+      if opts[:ar].present? && (rect = self.crop(opts[:ar])&.to_rect)
         opts[:rect] = rect
         opts.delete(:ar)
         opts.delete(:h)
@@ -111,18 +111,6 @@ class Photo < ApplicationRecord
 
   def crop(aspect_ratio)
     self.crops.find_by(aspect_ratio: aspect_ratio)
-  end
-
-  def crop_rect(aspect_ratio)
-    crop = self.crop(aspect_ratio)
-    return if crop.blank?
-
-    rect = [
-      crop.x * self.width,
-      crop.y * self.height,
-      crop.width * self.width,
-      crop.height * self.height
-    ].map(&:round).join(',')
   end
 
   def blurhash_url(opts = {})
