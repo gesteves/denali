@@ -142,7 +142,7 @@ class Admin::EntriesController < AdminController
     respond_to do |format|
       if @entry.save
         @entry.update_tags
-        flash[:success] = "Your new entry was saved! <a href=\"#{admin_entry_path(@entry)}\">Check it out.</a>"
+        flash[:success] = "Your entry was saved!"
         format.html {
           if @entry.is_photo? && @entry.photos.any? { |p| p.focal_x.blank? || p.focal_y.blank? || p.crops.blank? }
             redirect_to crops_admin_entry_path(@entry, continue: true)
