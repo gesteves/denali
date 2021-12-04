@@ -1,11 +1,9 @@
-<% cache @entry do %>
-  <h1 class="title is-size-5-mobile">Crops</h1>
-  <h2 class="subtitle is-size-6-mobile"><%= @entry.plain_title %></h2>
-  <hr class="hr">
-  <%= render partial: 'crop_card', collection: @entry.photos, as: :photo %>
-  <% if @continue %>
-    <div class="buttons is-right">
-      <%= link_to 'Continue to new entry', new_admin_entry_path(continue: true), class: 'button is-success' %>
-    </div>
-  <% end %>
+<h1 class="title is-size-5-mobile">Crops</h1>
+<h2 class="subtitle is-size-6-mobile"><%= @entry.plain_title %></h2>
+<hr class="hr">
+<%= render partial: 'crop_card', collection: @entry.photos, as: :photo %>
+<% if @continue %>
+  <div class="buttons is-right">
+    <%= link_to 'Continue to new entry', new_admin_entry_path(continue: true), class: 'button is-success' %>
+  </div>
 <% end %>
