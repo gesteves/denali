@@ -553,7 +553,7 @@ class Entry < ApplicationRecord
 
   def set_entry_slug
     if self.slug.blank?
-      self.slug = self.title.split(/[,.]/).first.parameterize
+      self.slug = self.title.parameterize
     else
       self.slug = self.slug.parameterize
     end

@@ -12,6 +12,7 @@
   </article>
   <hr class="hr">
 <% end %>
+
 <div class="field is-horizontal">
   <div class="field-label is-normal">
     <%= f.label :slug, 'Permalink', class: 'label' %>
@@ -24,7 +25,7 @@
         </a>
       </div>
       <div class="control is-expanded">
-        <%= f.text_field :slug, autocomplete: 'on', placeholder: 'optional-url-slug', class: 'input' %>
+        <%= f.text_field :slug, autocomplete: 'on', placeholder: 'optional-url-slug', class: 'input', 'data-sluggifier-target': 'slug', 'data-action': 'input->sluggifier#handleSlugChange' %>
       </div>
     </div>
   </div>
@@ -37,7 +38,7 @@
   <div class="field-body">
     <div class="field">
       <div class="control is-expanded">
-        <%= f.text_field :title, required: true, autocomplete: 'on', placeholder: 'The title of the entry…', class: 'input' %>
+        <%= f.text_field :title, required: true, autocomplete: 'on', placeholder: 'The title of the entry…', class: 'input', 'data-sluggifier-target': 'title', 'data-action': 'input->sluggifier#handleTitleChange' %>
       </div>
     </div>
   </div>
