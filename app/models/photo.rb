@@ -42,7 +42,7 @@ class Photo < ApplicationRecord
   def url(opts = {})
     opts.reverse_merge!(w: 1200)
     if opts[:rect].blank?
-      if opts[:ar].present? && (rect = self.crop(opts[:ar]).presence)
+      if opts[:ar].present? && (rect = self.crop_rect(opts[:ar]).presence)
         opts[:rect] = rect
         opts.delete(:ar)
         opts.delete(:h)
@@ -61,7 +61,7 @@ class Photo < ApplicationRecord
     widths = widths.uniq.sort
     src_width = widths.first
     if opts[:rect].blank?
-      if opts[:ar].present? && (rect = self.crop(opts[:ar]).presence)
+      if opts[:ar].present? && (rect = self.crop_rect(opts[:ar]).presence)
         opts[:rect] = rect
         opts.delete(:ar)
         opts.delete(:h)
