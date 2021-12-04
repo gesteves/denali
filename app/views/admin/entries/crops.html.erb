@@ -6,5 +6,8 @@
 
   <div class="buttons is-centered">
     <%= link_to 'Back', :back, class: 'button' %>
+    <% if @new_entry %>
+      <%= link_to 'Continue to new entry', new_admin_entry_path, class: 'button is-success' %>
+    <% end %>
   </div>
 <% end %>
