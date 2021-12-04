@@ -1,5 +1,5 @@
 <% cache [@photoblog, entry] do %>
-  <% unless entry.is_published? %>
+  <% if !entry.is_published? || entry.hide_from_search_engines %>
     <meta name="robots" content="noindex">
   <% end %>
 
