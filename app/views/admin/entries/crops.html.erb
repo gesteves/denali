@@ -3,11 +3,9 @@
   <h2 class="subtitle is-size-6-mobile"><%= @entry.plain_title %></h2>
   <hr class="hr">
   <%= render partial: 'crop_card', collection: @entry.photos, as: :photo %>
-
-  <div class="buttons is-centered">
-    <%= link_to 'Back', :back, class: 'button' %>
-    <% if @new_entry %>
+  <% if @new_entry %>
+    <div class="buttons is-right">
       <%= link_to 'Continue to new entry', new_admin_entry_path, class: 'button is-success' %>
-    <% end %>
-  </div>
+    </div>
+  <% end %>
 <% end %>
