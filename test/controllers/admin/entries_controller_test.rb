@@ -142,7 +142,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_equal assigns(:entry).photos.count, 1
     assert assigns(:entry).photos.first.image.attached?
     assert_not_nil assigns(:entry).position
-    assert_redirected_to crops_admin_entry_path(assigns(:entry))
+    assert_redirected_to crops_admin_entry_path(assigns(:entry), continue: true)
   end
 
   test 'should update entries' do
