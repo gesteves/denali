@@ -246,17 +246,13 @@ class Admin::EntriesController < AdminController
   end
 
   def prints
-    @srcset = PHOTOS[:admin_modal][:srcset]
-    @sizes = PHOTOS[:admin_modal][:sizes].join(', ')
+    set_srcset
+    @page_title = "Print options for “#{@entry.title}”"
     @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
     @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
     respond_to do |format|
       format.html {
-        if params[:modal]
-          render layout: nil
-        else
-          render
-        end
+        render
       }
     end
   end

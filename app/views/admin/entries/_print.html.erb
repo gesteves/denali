@@ -33,7 +33,7 @@
     <div class="level">
       <div class="level-left">
         <div class="level-item">
-          <%= link_to 'Download image', photo.image.url, class: 'button', target: '_blank' %>
+          <%= link_to 'Download image', download_admin_entry_photo_path(entry_id: @entry.id, id: photo.id), class: 'button', target: '_blank' %>
         </div>
       </div>
       <div class="level-right">
