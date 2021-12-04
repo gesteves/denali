@@ -1,43 +1,45 @@
-<div class="card">
-  <div class="card-image">
-    <div class="image image-container">
-      <%= responsive_image_tag(
-        photo: photo,
-        srcset: @srcset,
-        sizes: @sizes,
-        html_options: {
-          class: 'placeholder',
-          loading: 'lazy',
-          style: css_placeholder_background(photo),
-          'data-controller': 'placeholder',
-          'data-action': 'load->placeholder#removeBackground',
-        }) %>
+<% cache photo do %>
+  <div class="card">
+    <div class="card-image">
+      <div class="image image-container">
+        <%= responsive_image_tag(
+          photo: photo,
+          srcset: @srcset,
+          sizes: @sizes,
+          html_options: {
+            class: 'placeholder',
+            loading: 'lazy',
+            style: css_placeholder_background(photo),
+            'data-controller': 'placeholder',
+            'data-action': 'load->placeholder#removeBackground',
+          }) %>
+      </div>
     </div>
-  </div>
-  <div class="card-content">
-    <table class="table is-fullwidth">
-      <thead>
-        <tr>
-          <th>Size</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% sizes = photo.color? ? @color_print_sizes : @bw_print_sizes %>
-        <% best_size = sizes.reject { |size| print_needs_cropping?(photo, size) || print_dpi(photo, size) < 300 }.sort { |size| size.split('×').map(&:to_i).inject(:*) }.first %>
-        <%= render partial: 'print_size', collection: sizes, as: :size, locals: { photo: photo, best_size: best_size } %>
-      </tbody>
-    </table>
-    <hr class="hr">
-    <div class="level">
-      <div class="level-left">
-        <div class="level-item">
-          <%= link_to 'Download image', download_admin_entry_photo_path(entry_id: @entry.id, id: photo.id), class: 'button', target: '_blank' %>
+    <div class="card-content">
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>Size</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% sizes = photo.color? ? @color_print_sizes : @bw_print_sizes %>
+          <% best_size = sizes.reject { |size| print_needs_cropping?(photo, size) || print_dpi(photo, size) < 300 }.sort { |size| size.split('×').map(&:to_i).inject(:*) }.first %>
+          <%= render partial: 'print_size', collection: sizes, as: :size, locals: { photo: photo, best_size: best_size } %>
+        </tbody>
+      </table>
+      <hr class="hr">
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item">
+            <%= link_to 'Download image', download_admin_entry_photo_path(entry_id: @entry.id, id: photo.id), class: 'button', target: '_blank' %>
+          </div>
+        </div>
+        <div class="level-right">
         </div>
       </div>
-      <div class="level-right">
-      </div>
     </div>
   </div>
-</div>
+<% end %>

@@ -1,6 +1,6 @@
 <% cache @entry do %>
-<h1 class="title is-size-5-mobile">Prints</h1>
-<h2 class="subtitle is-size-6-mobile"><%= @entry.plain_title %></h2>
-<hr class="hr">
-<%= render partial: 'print', collection: @entry.photos, as: :photo %>
+  <h1 class="title is-size-5-mobile">Prints</h1>
+  <h2 class="subtitle is-size-6-mobile"><%= @entry.plain_title %></h2>
+  <hr class="hr">
+  <%= render partial: 'print', collection: @entry.photos, as: :photo %>
 <% end %>
