@@ -74,6 +74,7 @@ class Admin::EntriesController < AdminController
     previous_entry = @photoblog.entries.order('created_at DESC').first
     if previous_entry.present? && previous_entry.created_at >= 1.minutes.ago
       @entry.title = previous_entry.title
+      @entry.slug = previous_entry.slug
       @entry.tag_list = previous_entry.tag_list
     end
   end
