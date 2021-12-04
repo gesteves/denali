@@ -42,10 +42,10 @@ class Photo < ApplicationRecord
   def url(opts = {})
     opts.reverse_merge!(w: 1200)
     if opts[:rect].blank?
-      if (opts[:ar] == '1:1' || opts[:ar] == 'square') && self.crop('square').present?
+      if opts[:ar].present? && (rect = self.crop(opts[:ar]).presence)
+        opts[:rect] = rect
         opts.delete(:ar)
         opts.delete(:h)
-        opts[:rect] = crop_rect('square')
       elsif opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
         opts.reverse_merge!(fit: 'crop')
         opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
@@ -60,13 +60,15 @@ class Photo < ApplicationRecord
     widths = processed? ? srcset.reject { |width| width > self.width } : srcset
     widths = widths.uniq.sort
     src_width = widths.first
-    if (opts[:ar] == '1:1' || opts[:ar] == 'square') && self.crop('square').present?
-      opts.delete(:ar)
-      opts.delete(:h)
-      opts[:rect] = crop_rect('square')
-    elsif opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
-      opts.reverse_merge!(fit: 'crop')
-      opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
+    if opts[:rect].blank?
+      if opts[:ar].present? && (rect = self.crop(opts[:ar]).presence)
+        opts[:rect] = rect
+        opts.delete(:ar)
+        opts.delete(:h)
+      elsif opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
+        opts.reverse_merge!(fit: 'crop')
+        opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
+      end
     end
     src = imgix_path.to_url(opts.merge(w: src_width).compact)
       srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w).compact)} #{w}w" }.join(', ')
@@ -100,27 +102,19 @@ class Photo < ApplicationRecord
   end
 
   def facebook_card_url
-    if self.crop('facebook').present?
-      self.url(w: 1200, rect: crop_rect('facebook'))
-    else
-      self.url(w: 1200, h: 630)
-    end
+    self.url(w: 1200, ar: '1200:630')
   end
 
   def twitter_card_url
-    if self.crop('twitter').present?
-      self.url(w: 1200, rect: crop_rect('twitter'))
-    else
-      self.url(w: 1200, h: 600)
-    end
+    self.url(w: 1200, ar: '2:1')
   end
 
-  def crop(name)
-    self.crops.find_by(name: name)
+  def crop(aspect_ratio)
+    self.crops.find_by(aspect_ratio: aspect_ratio)
   end
 
-  def crop_rect(name)
-    crop = self.crop(name)
+  def crop_rect(aspect_ratio)
+    crop = self.crop(aspect_ratio)
     return if crop.blank?
 
     rect = [

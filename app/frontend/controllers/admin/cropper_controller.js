@@ -10,8 +10,7 @@ export default class extends Controller {
   static targets = ['photo'];
   static values = {
     endpoint: String,
-    aspectRatio: Number,
-    cropName: String,
+    aspectRatio: String,
     cropX: Number,
     cropY: Number,
     cropWidth: Number,
@@ -35,7 +34,7 @@ export default class extends Controller {
    */
   initializeCropper () {
     this.cropper = new Croppr(this.photoTarget, {
-      aspectRatio: this.aspectRatioValue,
+      aspectRatio: this.calculateAspectRatio(this.aspectRatioValue),
       returnMode: 'ratio',
       onCropEnd: (value) => this.updateCrop(value),
       onInitialize: (cropper) => {
@@ -63,7 +62,7 @@ export default class extends Controller {
     formData.append('crop[y]', value.y);
     formData.append('crop[width]', value.width);
     formData.append('crop[height]', value.height);
-    formData.append('crop[name]', this.cropNameValue);
+    formData.append('crop[aspect_ratio]', this.aspectRatioValue);
 
     const fetchOpts = {
       method: 'POST',
@@ -114,6 +113,23 @@ export default class extends Controller {
       cropper.moveTo(x, y);
     }
     this.initializedCropper = true;
+  }
+
+  /**
+   * Attempts to convert an aspect ratio from a string to a number,
+   * if it's represented as a ratio (e.g. 16:9).
+   * @param {String} aspectRatio
+   * @returns Float
+   */
+  calculateAspectRatio(aspectRatio) {
+    let aspectRatioArray = aspectRatio.split(':');
+    if (aspectRatioArray.length === 2) {
+      let width = aspectRatioArray[0];
+      let height = aspectRatioArray[1];
+      return parseFloat(height)/parseFloat(width);
+    } else {
+      return parseFloat(aspectRatio);
+    }
   }
 }
 
