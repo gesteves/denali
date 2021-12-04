@@ -38,6 +38,7 @@ module Types
     field :square, Boolean, null: false, method: :is_square?, description: "Whether or not the photo is square"
     field :vertical, Boolean, null: false, method: :is_vertical?, description: "Whether or not the photo is in portrait orientation"
     field :width, Integer, null: false, description: "Width of the original image"
+    field :crops, [Types::CropType], null: true, description: "The crops available for this photo"
     field :urls, [String], null: false, description: "List of URLs for the photo in different widths" do
       argument :widths, [Integer], required: false, default_value: [1280], prepare: -> (widths, ctx) { widths.reject { |w| w > MAX_WIDTH } }
     end
