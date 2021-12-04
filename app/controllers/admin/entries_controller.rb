@@ -72,7 +72,7 @@ class Admin::EntriesController < AdminController
     @page_title = 'New entry'
 
     previous_entry = @photoblog.entries.order('created_at DESC').first
-    if previous_entry.present? && previous_entry.created_at >= 5.minutes.ago
+    if previous_entry.present? && previous_entry.created_at >= 1.minutes.ago
       @entry.title = previous_entry.title
       @entry.tag_list = previous_entry.tag_list
     end
@@ -144,7 +144,7 @@ class Admin::EntriesController < AdminController
         flash[:success] = "Your new entry was saved! <a href=\"#{admin_entry_path(@entry)}\">Check it out.</a>"
         format.html {
           if @entry.is_photo? && @entry.photos.any? { |p| p.focal_x.blank? || p.focal_y.blank? || p.crops.blank? }
-            redirect_to crops_admin_entry_path(@entry, new_entry: true)
+            redirect_to crops_admin_entry_path(@entry)
           else
             redirect_to new_admin_entry_path
           end
@@ -235,6 +235,8 @@ class Admin::EntriesController < AdminController
   def crops
     @page_title = "Crops for “#{@entry.title}”"
     @new_entry = params[:new_entry].presence
+    previous_entry = @photoblog.entries.order('created_at DESC').first
+    @show_new_entry = previous_entry.present? && previous_entry.created_at >= 1.minutes.ago
     respond_to do |format|
       format.html {
         render
