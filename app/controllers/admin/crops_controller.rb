@@ -7,9 +7,11 @@ class Admin::CropsController < AdminController
     if crop.update(crop_params)
       message = "The crop has been updated."
       status = 'success'
+      code = 200
     else
       message = "The crop couldn't be updated."
       status = 'danger'
+      code = 500
     end
     respond_to do |format|
       format.json {
@@ -17,7 +19,7 @@ class Admin::CropsController < AdminController
           status: status,
           message: message
         }
-        render json: response
+        render json: response, code: code
       }
     end
   end
