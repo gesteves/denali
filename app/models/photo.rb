@@ -248,6 +248,16 @@ class Photo < ApplicationRecord
     text.reject(&:blank?).join("\n\n")
   end
 
+  def plain_metadata
+    meta = []
+    meta << "📷 #{self.formatted_camera}" if self.formatted_camera.present?
+    meta << "🎞 #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
+    meta << "🎞 #{self.film.display_name}" if self.film.present?
+    meta << "📍 #{self.formatted_location}" if self.formatted_location.present?
+    meta << "🔗 #{self.entry.permalink_url}"
+    meta.join("\n")
+  end
+
   def extract_metadata
     PhotoExifWorker.perform_async(self.id)
   end

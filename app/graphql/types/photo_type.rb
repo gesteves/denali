@@ -27,6 +27,7 @@ module Types
     field :horizontal, Boolean, null: false, method: :is_horizontal?, description: "Whether or not the photo is in landscape orientation"
     field :instagram_story_url, String, null: false, description: "URL of a version of the photo optimized for Instagram Stories"
     field :instagram_url, String, null: false, description: "URL of a version of the photo optimized for the Instagram feed"
+    field :plain_metadata, String, null: true, description: "Metadata for the photo, in plain text"
     field :twitter_card_url, String, null: false, description: "URL of a version of the photo optimized for Twitter Cards"
     field :twitter_url, String, null: false, description: "URL of a version of the photo optimized for Twitter"
     field :iso, Integer, null: true, description: "ISO the photo was made at"
