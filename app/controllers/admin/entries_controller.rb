@@ -143,13 +143,7 @@ class Admin::EntriesController < AdminController
       if @entry.save
         @entry.update_tags
         flash[:success] = "Your entry was saved!"
-        format.html {
-          if @entry.is_photo? && @entry.photos.any? { |p| p.focal_x.blank? || p.focal_y.blank? || p.crops.blank? }
-            redirect_to crops_admin_entry_path(@entry, continue: true)
-          else
-            redirect_to new_admin_entry_path
-          end
-        }
+        format.html { redirect_to new_admin_entry_path(continue: true) }
       else
         flash[:warning] = 'Your entry couldn’t be saved…'
         format.html { render :new }
@@ -166,13 +160,7 @@ class Admin::EntriesController < AdminController
         @entry.purge_from_cdn
         OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
         flash[:success] = 'Your entry has been updated!'
-        format.html {
-          if @entry.is_photo? && @entry.photos.any? { |p| p.focal_x.blank? || p.focal_y.blank? || p.crops.blank? }
-            redirect_to crops_admin_entry_path(@entry)
-          else
-            redirect_to session[:redirect_url] || admin_entry_path(@entry)
-          end
-        }
+        format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
       else
         flash[:warning] = 'Your entry couldn’t be updated…'
         format.html { render :edit }
@@ -235,7 +223,6 @@ class Admin::EntriesController < AdminController
 
   def crops
     @page_title = "Crops for “#{@entry.title}”"
-    @continue = ActiveModel::Type::Boolean.new.cast(params[:continue].presence)
     respond_to do |format|
       format.html {
         render

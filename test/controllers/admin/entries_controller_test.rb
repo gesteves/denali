@@ -112,7 +112,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_equal assigns(:entry).photos.count, 1
     assert assigns(:entry).photos.first.image.attached?
     assert_nil assigns(:entry).position
-    assert_redirected_to new_admin_entry_path
+    assert_redirected_to new_admin_entry_path(continue: true)
   end
 
   test 'should create draft entries' do
@@ -127,7 +127,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_equal assigns(:entry).photos.count, 1
     assert assigns(:entry).photos.first.image.attached?
     assert_nil assigns(:entry).position
-    assert_redirected_to new_admin_entry_path
+    assert_redirected_to new_admin_entry_path(continue: true)
   end
 
   test 'should create queued entries' do
@@ -142,13 +142,13 @@ class Admin::EntriesControllerTest < ActionController::TestCase
     assert_equal assigns(:entry).photos.count, 1
     assert assigns(:entry).photos.first.image.attached?
     assert_not_nil assigns(:entry).position
-    assert_redirected_to crops_admin_entry_path(assigns(:entry), continue: true)
+    assert_redirected_to new_admin_entry_path(continue: true)
   end
 
   test 'should update entries' do
     entry = entries(:peppers)
     patch :update, params: { id: entry.id, entry: { id: entry.id } }
-    assert_redirected_to crops_admin_entry_path(entry)
+    assert_redirected_to admin_entry_path(entry)
   end
 
   test 'update should change modified_at' do
