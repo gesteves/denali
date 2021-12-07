@@ -22,8 +22,12 @@ namespace :flickr do
         url = Nokogiri::HTML.fragment(description)&.css('a')&.first&.attr('href')
         next if url.blank?
 
-        entry = Entry.find_by_url(url: url)
-        next unless entry.is_single_photo?
+        entry = begin
+          Entry.find_by_url(url: url)
+        rescue
+          nil
+        end
+        next unless entry&.is_single_photo?
 
         title = entry.plain_title
         caption = entry.photos.first.flickr_caption
