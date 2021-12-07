@@ -240,7 +240,7 @@ class Photo < ApplicationRecord
     meta << "📷 #{camera_film.join(' + ')}" if camera_film.present?
     meta << "ℹ️ #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
     meta << "📍 #{self.territory_list} land" if self.entry.show_location? && self.territory_list.present?
-    meta << "🔗 <a href=\"#{self.entry.permalink_url}?utm_campaign=Flickr\">#{self.entry.permalink_url.gsub('https://', '')}</a>"
+    meta << "🔗 <a href=\"#{self.entry.permalink_url}?utm_campaign=Flickr\">#{self.entry.permalink_url.gsub(/https?:\/\//, '')}</a>"
 
     text = []
     text << self.entry.plain_body
@@ -252,7 +252,7 @@ class Photo < ApplicationRecord
     location = []
     location << self.formatted_location if self.formatted_location.present?
     location << "#{self.territory_list} land" if self.territory_list.present?
-  
+
     meta = []
     meta << "📷 #{self.formatted_camera}" if self.formatted_camera.present?
     meta << "🎞 #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
