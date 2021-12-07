@@ -12,7 +12,7 @@ namespace :flickr do
     pages = (user.photos.count/500.00).ceil
     page = 1
 
-    while page < pages
+    while page <= pages
       puts "Fetching page #{page} of Flickr photos, out of #{pages}"
       photos = flickr.people.getPublicPhotos(user_id: user_id, extras: 'description', per_page: 500, page: page)
       photos.select { |p| p.description.match? ENV['domain'] }.each do |p|
