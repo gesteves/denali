@@ -236,10 +236,14 @@ class Photo < ApplicationRecord
     camera_film << self.formatted_camera if self.formatted_camera.present?
     camera_film << self.film.display_name if self.film.present?
 
+    location = []
+    location << self.formatted_location if self.formatted_location.present?
+    location << "#{self.territory_list} land" if self.territory_list.present?
+
     meta = []
     meta << "📷 #{camera_film.join(' + ')}" if camera_film.present?
     meta << "ℹ️ #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
-    meta << "📍 #{self.territory_list} land" if self.entry.show_location? && self.territory_list.present?
+    meta << "📍 #{location.join(' • ')}" if location.present? && self.entry.show_location?
     meta << "🔗 <a href=\"#{self.entry.permalink_url}?utm_campaign=Flickr\">#{self.entry.permalink_url.gsub(/https?:\/\//, '')}</a>"
 
     text = []
