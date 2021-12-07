@@ -249,11 +249,15 @@ class Photo < ApplicationRecord
   end
 
   def plain_metadata
+    location = []
+    location << self.formatted_location if self.formatted_location.present?
+    location << "#{self.territory_list} land" if self.territory_list.present?
+  
     meta = []
     meta << "📷 #{self.formatted_camera}" if self.formatted_camera.present?
     meta << "🎞 #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
     meta << "🎞 #{self.film.display_name}" if self.film.present?
-    meta << "📍 #{self.formatted_location}" if self.formatted_location.present?
+    meta << "📍 #{location.join(' • ')}" if location.present? && self.entry.show_location?
     meta << "🔗 #{self.entry.permalink_url}"
     meta.join("\n")
   end
