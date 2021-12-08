@@ -29,11 +29,8 @@ namespace :flickr do
         end
         next unless entry&.is_single_photo?
 
-        title = entry.plain_title
-        caption = entry.photos.first.flickr_caption
-
-        puts "Updating photo #{flickr_id} from entry #{entry.permalink_url}"
-        flickr.photos.setMeta(photo_id: flickr_id, title: title, description: caption) if Rails.env.production?
+        photo_id = entry.photos.first.id
+        FlickrSetMetaWorker.perform_async(photo_id, flickr_id)
         sleep 0.1
       end
       sleep 0.1
