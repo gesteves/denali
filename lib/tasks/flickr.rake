@@ -27,13 +27,12 @@ namespace :flickr do
         rescue
           nil
         end
+
         next unless entry&.is_single_photo?
 
         photo_id = entry.photos.first.id
         FlickrSetMetaWorker.perform_async(photo_id, flickr_id)
-        sleep 0.1
       end
-      sleep 0.1
       page += 1
     end
   end
