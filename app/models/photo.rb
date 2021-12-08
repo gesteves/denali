@@ -252,6 +252,10 @@ class Photo < ApplicationRecord
     text.reject(&:blank?).join("\n\n")
   end
 
+  def flickr_tags
+    self.entry.combined_tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')
+  end
+
   def plain_metadata
     location = []
     location << self.formatted_location if self.formatted_location.present?

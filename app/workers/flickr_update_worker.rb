@@ -1,4 +1,4 @@
-class FlickrSetMetaWorker < ApplicationWorker
+class FlickrUpdateWorker < ApplicationWorker
   sidekiq_options queue: 'low'
 
   def perform(photo_id, flickr_id)
@@ -13,7 +13,9 @@ class FlickrSetMetaWorker < ApplicationWorker
     entry = photo.entry
     title = entry.plain_title
     description = photo.flickr_caption
+    tags = photo.flickr_tags
 
     flickr.photos.setMeta(photo_id: flickr_id, title: title, description: description)
+    flickr.photos.setTags(photo_id: flickr_id, tags: tags)
   end
 end
