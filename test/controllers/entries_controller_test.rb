@@ -66,7 +66,7 @@ class EntriesControllerTest < ActionController::TestCase
   test 'should preview page' do
     panda = entries(:panda)
     set_up_images(panda)
-    get :show, params: { preview_hash: panda.preview_hash, id: panda.id }
+    get :show, params: { preview_hash: panda.preview_hash, slug: panda.slug }
     assert_response :success
     assert_template :show
   end
