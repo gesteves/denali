@@ -259,7 +259,7 @@ class Entry < ApplicationRecord
     if self.is_published?
       entry_long_path(self.id, self.slug)
     else
-      preview_entry_path(self.preview_hash)
+      preview_entry_path(self.preview_hash, self.slug)
     end
   end
 
@@ -267,7 +267,7 @@ class Entry < ApplicationRecord
     if self.is_published?
       entry_long_url(self.id, self.slug)
     else
-      preview_entry_url(self.preview_hash)
+      preview_entry_url(self.preview_hash, self.slug)
     end
   end
 
@@ -561,8 +561,8 @@ class Entry < ApplicationRecord
 
   def set_preview_hash
     if self.preview_hash.blank?
-      sha256 = Digest::SHA256.new
-      self.preview_hash = sha256.hexdigest(Time.current.to_i.to_s)
+      md5 = Digest::MD5.new
+      self.preview_hash = md5.hexdigest(Time.current.to_i.to_s)
     end
   end
 
