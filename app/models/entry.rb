@@ -263,11 +263,11 @@ class Entry < ApplicationRecord
     end
   end
 
-  def permalink_url
+  def permalink_url(params = {})
     if self.is_published?
-      entry_long_url(self.id, self.slug)
+      entry_long_url(self.id, self.slug, params)
     else
-      preview_entry_url(self.preview_hash, self.slug)
+      preview_entry_url(self.preview_hash, self.slug, params)
     end
   end
 
