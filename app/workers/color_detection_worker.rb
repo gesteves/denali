@@ -1,13 +1,9 @@
 class ColorDetectionWorker < ApplicationWorker
   # TODO: Replace imgix with something else, e.g. minimagick
   def perform(photo_id)
-    return if ENV['google_api_key'].blank?
-
     photo = Photo.find(photo_id)
     raise UnprocessedPhotoError unless photo.processed?
-
     colors = palette(photo)
-
     photo.dominant_color = dominant_color(colors)
     photo.black_and_white = is_black_and_white?(colors)
     photo.color = !is_black_and_white?(colors)
