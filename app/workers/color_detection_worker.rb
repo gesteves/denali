@@ -1,5 +1,5 @@
 class ColorDetectionWorker < ApplicationWorker
-
+  # TODO: Replace imgix with something else, e.g. minimagick
   def perform(photo_id)
     return if ENV['google_api_key'].blank?
 
