@@ -9,7 +9,7 @@ class Photo < ApplicationRecord
 
   acts_as_list scope: :entry
 
-  after_create_commit :extract_metadata, :annotate, :encode_blurhash
+  after_create_commit :extract_metadata, :detect_colors, :encode_blurhash
 
   after_commit :touch_entry
   after_commit :geocode, if: :changed_coordinates?
@@ -107,6 +107,11 @@ class Photo < ApplicationRecord
 
   def twitter_card_url
     self.url(w: 1200, ar: '2:1')
+  end
+
+  def palette_url(opts = {})
+    opts.reverse_merge!(palette: 'json', colors: 6)
+    Ix.path(self.image.key).to_url(opts)
   end
 
   def crop(aspect_ratio)
@@ -282,8 +287,8 @@ class Photo < ApplicationRecord
     NativeLandsWorker.perform_async(self.id)
   end
 
-  def annotate
-    GoogleVisionWorker.perform_async(self.id)
+  def detect_colors
+    ColorDetectionWorker.perform_async(self.id)
   end
 
   def encode_blurhash
