@@ -125,9 +125,9 @@ Rails.application.routes.draw do
 
   # Miscellaneous
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }
-  match '/404', to: 'errors#file_not_found', via: :all
-  match '/422', to: 'errors#unprocessable', via: :all
-  match '/500', to: 'errors#internal_server_error', via: :all
+  match '/error/404', to: 'errors#file_not_found', via: :all
+  match '/error/422', to: 'errors#unprocessable', via: :all
+  match '/error/500', to: 'errors#internal_server_error', via: :all
   get '*unmatched_route', to: 'errors#file_not_found'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
