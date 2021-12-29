@@ -2,6 +2,10 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web => '/admin/sidekiq', constraints: lambda { |request| request.session[:user_id].present? && User.find(request.session[:user_id]).present? }
 
+  match '/404', to: 'errors#file_not_found', via: :all
+  match '/422', to: 'errors#unprocessable', via: :all
+  match '/500', to: 'errors#internal_server_error', via: :all
+
   concern :paginatable do
     get '(page/:page)', :action => :index, :on => :collection
     get 'queued(/page/:page)', :action => :queued, :on => :collection
@@ -125,9 +129,6 @@ Rails.application.routes.draw do
 
   # Miscellaneous
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }
-  match '/error/404', to: 'errors#file_not_found', via: :all
-  match '/error/422', to: 'errors#unprocessable', via: :all
-  match '/error/500', to: 'errors#internal_server_error', via: :all
   get '*unmatched_route', to: 'errors#file_not_found'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end
