@@ -76,6 +76,10 @@ class Entry < ApplicationRecord
     where('photos_count > 0')
   end
 
+  def self.indexable_in_search_engines
+    where(status: 'published', hide_from_search_engines: false).order('published_at ASC')
+  end
+
   def self.full_search(query, page = 1, per_page = 10)
     search = {
       query: {

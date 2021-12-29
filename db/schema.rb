@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_04_214138) do
+ActiveRecord::Schema.define(version: 2021_12_29_193050) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,6 +116,7 @@ ActiveRecord::Schema.define(version: 2021_12_04_214138) do
     t.string "tumblr_id"
     t.boolean "hide_from_search_engines", default: false
     t.index ["blog_id"], name: "index_entries_on_blog_id"
+    t.index ["hide_from_search_engines"], name: "index_entries_on_hide_from_search_engines"
     t.index ["photos_count"], name: "index_entries_on_photos_count"
     t.index ["preview_hash"], name: "index_entries_on_preview_hash"
     t.index ["published_at"], name: "index_entries_on_published_at"

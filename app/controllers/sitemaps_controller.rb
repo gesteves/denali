@@ -4,8 +4,8 @@ class SitemapsController < ApplicationController
   before_action :set_sitemap_item_count
 
   def index
-    total_entry_pages = (@photoblog.entries.published.count / @items_per_sitemap.to_f).ceil
-    @entry_lastmods = @photoblog.entries.published('published_at ASC').pluck(:modified_at).each_slice(@items_per_sitemap).map { |page| page.max.strftime('%Y-%m-%dT%H:%M:%S%:z') }
+    total_entry_pages = (@photoblog.entries.indexable_in_search_engines.count / @items_per_sitemap.to_f).ceil
+    @entry_lastmods = @photoblog.entries.indexable_in_search_engines.pluck(:modified_at).each_slice(@items_per_sitemap).map { |page| page.max.strftime('%Y-%m-%dT%H:%M:%S%:z') }
     @entry_pages = [*1..total_entry_pages]
 
     total_tag_pages = (ActsAsTaggableOn::Tag.all.count / @items_per_sitemap.to_f).ceil
@@ -16,7 +16,7 @@ class SitemapsController < ApplicationController
 
   def entries
     @page = params[:page]
-    @entries = @photoblog.entries.published('published_at ASC').page(@page).per(@items_per_sitemap)
+    @entries = @photoblog.entries.indexable_in_search_engines.page(@page).per(@items_per_sitemap)
     raise ActiveRecord::RecordNotFound if @entries.empty?
     render format: 'xml'
   end
