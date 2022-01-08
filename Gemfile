@@ -30,7 +30,7 @@ gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr', require: nil
-gem 'acts-as-taggable-on', '~> 8.1'
+gem 'acts-as-taggable-on', '~> 9.0'
 gem 'httparty'
 gem 'kaminari'
 gem 'figaro'
