@@ -264,7 +264,7 @@ GEM
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rdoc (6.3.1)
+    rdoc (6.3.3)
     redcarpet (3.5.1)
     redis (4.5.1)
     request_store (1.5.0)
@@ -289,8 +289,8 @@ GEM
     scss-lint (0.38.0)
       rainbow (~> 2.0)
       sass (~> 3.4.1)
-    sdoc (2.2.0)
-      rdoc (>= 5.0)
+    sdoc (2.3.0)
+      rdoc (>= 5.0, < 6.4.0)
     semantic_range (3.0.0)
     sentry-raven (3.1.2)
       faraday (>= 1.0)
@@ -377,7 +377,7 @@ DEPENDENCIES
   sanitize
   sass-rails (~> 6.0)
   scss-lint
-  sdoc (~> 2.2)
+  sdoc (~> 2.3)
   sentry-raven (~> 3.1)
   sidekiq
   spring
