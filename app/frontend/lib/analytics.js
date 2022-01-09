@@ -1,4 +1,5 @@
 /* global clicky */
+/* global plausible */
 
 /**
  * Product-agnostic function to make a page view tracking call.
@@ -8,5 +9,8 @@
 export function trackPageView (path) {
   if (typeof clicky !== 'undefined') {
     clicky.log(path, document.title, 'pageview');
+  }
+  if (typeof plausible !== 'undefined') {
+    plausible('pageview');
   }
 }
