@@ -257,6 +257,27 @@ class Photo < ApplicationRecord
     text.reject(&:blank?).join("\n\n")
   end
 
+  def reddit_caption
+    camera_film = []
+    camera_film << self.formatted_camera if self.formatted_camera.present?
+    camera_film << self.film.display_name if self.film.present?
+
+    location = []
+    location << self.formatted_location if self.formatted_location.present?
+    location << "#{self.territory_list} land" if self.territory_list.present?
+
+    meta = []
+    meta << "📷 #{camera_film.join(' + ')}" if camera_film.present?
+    meta << "🎞 #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
+    meta << "📍 #{location.join(' • ')}" if location.present? && self.entry.show_location?
+    meta << "🔗 [#{self.entry.permalink_url.gsub(/https?:\/\//, '')}](#{self.entry.permalink_url(ref: 'Reddit')})"
+
+    text = []
+    text << self.alt_text
+    text << meta.join("  ")
+    text.reject(&:blank?).join("    ")
+  end
+
   def flickr_tags
     self.entry.combined_tag_list.map { |t| "\"#{t.gsub(/["']/, '')}\"" }.join(' ')
   end
