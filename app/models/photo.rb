@@ -274,8 +274,8 @@ class Photo < ApplicationRecord
 
     text = []
     text << self.alt_text
-    text << meta.join("  ")
-    text.reject(&:blank?).join("    ")
+    text << meta.join("  \n")
+    text.reject(&:blank?).join("\n\n")
   end
 
   def flickr_tags
