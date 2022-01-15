@@ -270,7 +270,7 @@ class Photo < ApplicationRecord
     meta << "📷 #{camera_film.join(' + ')}" if camera_film.present?
     meta << "🎞 #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
     meta << "📍 #{location.join(' • ')}" if location.present? && self.entry.show_location?
-    meta << "🔗 [#{self.entry.permalink_url.gsub(/https?:\/\//, '')}](#{self.entry.permalink_url(ref: 'Reddit')})"
+    meta << "🔗 [#{self.entry.permalink_url.gsub(/https?:\/\/(www\.)?/, '')}](#{self.entry.permalink_url(ref: 'Reddit')})"
 
     text = []
     text << self.alt_text
