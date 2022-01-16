@@ -1,3 +1,5 @@
+import { trackPageView } from '../lib/analytics';
+
 let _observer;
 
 /**
@@ -46,4 +48,7 @@ function handleIntersection (entries) {
   const entry = intersecting[0];
   const previous_path = window.location.pathname;
   window.history.replaceState(null, null, entry.target.getAttribute('data-pagination-page-url'));
+  if (previous_path !== window.location.pathname) {
+    trackPageView();
+  }
 }
