@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 ruby '2.7.3'
 
 gem 'rails', '6.1.4.4'
-gem 'pg', '~> 1.2'
+gem 'pg', '~> 1.3'
 gem 'puma'
 
 # Reduces boot times through caching; required in config/boot.rb
