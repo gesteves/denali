@@ -99,7 +99,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.10.2)
       msgpack (~> 1.2)
-    brakeman (5.2.0)
+    brakeman (5.2.1)
     brotli (0.4.0)
     builder (3.2.4)
     byebug (11.1.3)
