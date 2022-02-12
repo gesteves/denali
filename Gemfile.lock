@@ -135,7 +135,7 @@ GEM
       thor (>= 0.14.0, < 2)
     globalid (1.0.0)
       activesupport (>= 5.0)
-    graphql (1.13.8)
+    graphql (2.0.0)
     hashie (4.1.0)
     htmlentities (4.3.4)
     httparty (0.20.0)
