@@ -36,7 +36,7 @@ gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
 gem 'rack-attack'
-gem "image_processing", "~> 1.0"
+gem "image_processing", "~> 1.12"
 gem 'rack-brotli'
 gem 'typhoeus'
 gem 'htmlentities'
