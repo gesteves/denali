@@ -6,7 +6,7 @@
     html_options: {
       class: 'entry__photo entry__photo--zoom placeholder',
       style: "#{css_placeholder_background(photo)}#{css_photo_dimensions(photo)}",
-      importance: 'high',
+      fetchpriority: 'high',
       'data-controller': 'placeholder',
       'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu load->placeholder#removeBackground',
       'data-photo-target': 'photo'
