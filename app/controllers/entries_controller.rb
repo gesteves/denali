@@ -4,7 +4,7 @@ class EntriesController < ApplicationController
 
   skip_before_action :verify_authenticity_token
   before_action :load_tags, only: [:tagged, :tag_feed]
-  before_action :set_max_age, except: [:amp, :short]
+  before_action :set_max_age, except: [:amp, :short, :random]
   before_action :set_entry, only: [:show, :amp]
 
   def index
@@ -124,6 +124,12 @@ class EntriesController < ApplicationController
     http_cache_forever(public: true) do
       redirect_to entry.permalink_url, status: 301
     end
+  end
+
+  def random
+    entry = Entry.find(Entry.published.pluck(:id).sample)
+    response.headers['Cache-Control'] = "s-maxage=1, max-age=0, public"
+    redirect_to entry.permalink_url, status: 301
   end
 
   def amp
