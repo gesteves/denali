@@ -97,7 +97,7 @@ GEM
       multi_json (~> 1)
       statsd-ruby (~> 1.1)
     bindex (0.8.1)
-    bootsnap (1.10.3)
+    bootsnap (1.11.1)
       msgpack (~> 1.2)
     brakeman (5.2.1)
     brotli (0.4.0)
@@ -188,7 +188,7 @@ GEM
     minitest (5.15.0)
     mock_redis (0.30.0)
       ruby2_keywords
-    msgpack (1.4.4)
+    msgpack (1.4.5)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.1.1)
