@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_29_193050) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_05_14_210342) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,7 +19,7 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.string "record_type", null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
-    t.datetime "created_at", null: false
+    t.datetime "created_at", precision: nil, null: false
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -31,8 +30,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.string "content_type"
     t.text "metadata"
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
-    t.datetime "created_at", null: false
+    t.string "checksum"
+    t.datetime "created_at", precision: nil, null: false
     t.string "service_name", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
@@ -45,8 +44,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
 
   create_table "blogs", id: :serial, force: :cascade do |t|
     t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.text "tag_line"
     t.integer "posts_per_page", default: 10
     t.text "about"
@@ -74,8 +73,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.string "slug"
     t.string "display_name"
     t.boolean "is_phone", default: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "amazon_url"
   end
 
@@ -85,8 +84,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.float "width"
     t.float "height"
     t.bigint "photo_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "aspect_ratio"
     t.index ["aspect_ratio"], name: "index_crops_on_aspect_ratio"
     t.index ["photo_id"], name: "index_crops_on_photo_id"
@@ -99,9 +98,9 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.string "status"
     t.integer "blog_id"
     t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.datetime "published_at"
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
+    t.datetime "published_at", precision: nil
     t.integer "photos_count"
     t.integer "position"
     t.boolean "post_to_twitter", default: true
@@ -110,7 +109,7 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.boolean "show_location", default: true
     t.boolean "post_to_instagram", default: true
     t.string "preview_hash"
-    t.datetime "modified_at"
+    t.datetime "modified_at", precision: nil
     t.text "instagram_text"
     t.boolean "post_to_flickr_groups", default: true
     t.string "tumblr_id"
@@ -131,8 +130,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.string "model"
     t.string "slug"
     t.string "display_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "amazon_url"
   end
 
@@ -141,8 +140,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.string "model"
     t.string "slug"
     t.string "display_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "amazon_url"
   end
 
@@ -153,8 +152,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.string "designation"
     t.string "url"
     t.string "slug"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "display_name"
     t.index ["code"], name: "index_parks_on_code"
     t.index ["slug"], name: "index_parks_on_slug"
@@ -164,10 +163,10 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.text "alt_text"
     t.integer "position"
     t.integer "entry_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "source_url"
-    t.datetime "taken_at"
+    t.datetime "taken_at", precision: nil
     t.string "exposure"
     t.float "f_number"
     t.float "latitude"
@@ -204,8 +203,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
   create_table "publish_schedules", force: :cascade do |t|
     t.integer "hour"
     t.bigint "blog_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["blog_id"], name: "index_publish_schedules_on_blog_id"
   end
 
@@ -213,8 +212,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.text "instagram_hashtags"
     t.text "flickr_groups"
     t.bigint "blog_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.text "flickr_albums"
     t.index ["blog_id"], name: "index_tag_customizations_on_blog_id"
   end
@@ -226,7 +225,7 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.string "tagger_type"
     t.integer "tagger_id"
     t.string "context", limit: 128
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
@@ -252,9 +251,9 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
     t.string "name"
     t.string "email"
     t.string "oauth_token"
-    t.datetime "oauth_expires_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "oauth_expires_at", precision: nil
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "first_name"
     t.string "last_name"
     t.string "avatar_url"
@@ -263,8 +262,8 @@ ActiveRecord::Schema.define(version: 2021_12_29_193050) do
   create_table "webhooks", force: :cascade do |t|
     t.string "url"
     t.bigint "blog_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["blog_id"], name: "index_webhooks_on_blog_id"
   end
 
