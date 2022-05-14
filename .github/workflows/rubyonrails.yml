@@ -45,6 +45,11 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
+      - name: Install Node and packages
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: 'npm'
       # Add or replace database setup steps here
       - name: Set up database schema
         run: bin/rails db:schema:load
