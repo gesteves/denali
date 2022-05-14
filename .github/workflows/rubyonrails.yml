@@ -10,18 +10,6 @@ on:
     branches: [ release ]
   pull_request:
     branches: [ release ]
-env:
-  IMGIX_DOMAIN: ${{ secrets.IMGIX_DOMAIN }}
-  IMGIX_API_KEY: ${{ secrets.IMGIX_API_KEY }}
-  IMGIX_TOKEN: ${{ secrets.IMGIX_TOKEN }}
-  S3_REGION: ${{ secrets.S3_REGION }}
-  S3_BUCKET: ${{ secrets.S3_BUCKET }}
-  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  DENALI_SECRET: ${{ secrets.DENALI_SECRET }}
-  GOOGLE_APPS_DOMAIN: ${{ secrets.GOOGLE_APPS_DOMAIN }}
-  GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-  GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -57,4 +45,16 @@ jobs:
         run: bin/rails db:schema:load
       # Add or replace test runners here
       - name: Run tests
+        env:
+          IMGIX_DOMAIN: ${{ secrets.IMGIX_DOMAIN }}
+          IMGIX_API_KEY: ${{ secrets.IMGIX_API_KEY }}
+          IMGIX_TOKEN: ${{ secrets.IMGIX_TOKEN }}
+          S3_REGION: ${{ secrets.S3_REGION }}
+          S3_BUCKET: ${{ secrets.S3_BUCKET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          DENALI_SECRET: ${{ secrets.DENALI_SECRET }}
+          GOOGLE_APPS_DOMAIN: ${{ secrets.GOOGLE_APPS_DOMAIN }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
         run: bin/rails test
