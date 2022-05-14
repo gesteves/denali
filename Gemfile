@@ -22,6 +22,7 @@ gem 'imgix'
 gem 'uglifier', '>= 1.3.0'
 gem 'webpacker'
 gem 'turbolinks', '~> 5.2.1'
+gem "sprockets-rails"
 
 # Misc
 gem 'jbuilder', '~> 2.11'
