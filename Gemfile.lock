@@ -412,7 +412,7 @@ DEPENDENCIES
   webpacker
 
 RUBY VERSION
-   ruby 2.7.3p183
+   ruby 3.1.2p20
 
 BUNDLED WITH
-   2.1.4
+   2.3.13
