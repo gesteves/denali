@@ -17,7 +17,7 @@ module ApplicationHelper
         concat(tag.source(sizes: sizes, srcset: format_srcset, type: "image/#{format}"))
       end
       concat(tag.source(sizes: sizes, srcset: jpg_srcset, type: 'image/jpeg'))
-      concat(tag.img(html_options))
+      concat(content_tag :img, nil, html_options)
     end
   end
 
@@ -33,7 +33,7 @@ module ApplicationHelper
       alt: '',
       loading: 'eager'
     }.compact)
-    tag :img, html_options
+    content_tag :img, nil, html_options
   end
 
   def inline_svg(icon, class_name: '', aria_hidden: true)
