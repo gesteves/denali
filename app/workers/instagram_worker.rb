@@ -2,7 +2,7 @@ class InstagramWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
   def perform(entry_id, text)
-    return if !Rails.env.production? || ENV['buffer_access_token'].blank?
+    return if !Rails.env.production? || ENV['BUFFER_ACCESS_TOKEN'].blank?
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
     raise UnprocessedPhotoError unless entry.photos_processed?
@@ -35,8 +35,8 @@ class InstagramWorker < ApplicationWorker
   end
 
   def get_profile_ids
-    return if ENV['buffer_access_token'].blank?
-    response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['buffer_access_token']}")
+    return if ENV['BUFFER_ACCESS_TOKEN'].blank?
+    response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['BUFFER_ACCESS_TOKEN']}")
     if response.code == 200
       profiles = JSON.parse(response.body)
       profiles.select { |profile| profile['service'].downcase.match('instagram') }.map { |profile| profile['id'] }
@@ -48,7 +48,7 @@ class InstagramWorker < ApplicationWorker
   def post_to_buffer(opts = {})
     profile_ids = get_profile_ids
     return if profile_ids.blank?
-    opts.reverse_merge!(profile_ids: profile_ids, shorten: false, now: true, access_token: ENV['buffer_access_token'])
+    opts.reverse_merge!(profile_ids: profile_ids, shorten: false, now: true, access_token: ENV['BUFFER_ACCESS_TOKEN'])
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
     response = JSON.parse(response.body)
     if response['success']

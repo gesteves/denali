@@ -4,9 +4,9 @@ class FlickrAlbumWorker < ApplicationWorker
   def perform(photo_id, album_url)
     return if !Rails.env.production?
     begin
-      flickr = FlickRaw::Flickr.new ENV['flickr_consumer_key'], ENV['flickr_consumer_secret']
-      flickr.access_token = ENV['flickr_access_token']
-      flickr.access_secret = ENV['flickr_access_token_secret']
+      flickr = FlickRaw::Flickr.new ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET']
+      flickr.access_token = ENV['FLICKR_ACCESS_TOKEN']
+      flickr.access_secret = ENV['FLICKR_ACCESS_TOKEN_SECRET']
       album_id = album_url.split('/').last
 
       flickr.photosets.addPhoto(photo_id: photo_id, photoset_id: album_id)

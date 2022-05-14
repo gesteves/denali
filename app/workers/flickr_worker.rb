@@ -7,11 +7,11 @@ class FlickrWorker < ApplicationWorker
 
     entry = photo.entry
     return if !Rails.env.production?
-    return if ENV['flickr_consumer_key'].blank? || ENV['flickr_consumer_secret'].blank? || ENV['flickr_access_token'].blank? || ENV['flickr_access_token_secret'].blank?
+    return if ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank? || ENV['FLICKR_ACCESS_TOKEN'].blank? || ENV['FLICKR_ACCESS_TOKEN_SECRET'].blank?
 
-    flickr = FlickRaw::Flickr.new ENV['flickr_consumer_key'], ENV['flickr_consumer_secret']
-    flickr.access_token = ENV['flickr_access_token']
-    flickr.access_secret = ENV['flickr_access_token_secret']
+    flickr = FlickRaw::Flickr.new ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET']
+    flickr.access_token = ENV['FLICKR_ACCESS_TOKEN']
+    flickr.access_secret = ENV['FLICKR_ACCESS_TOKEN_SECRET']
 
     title = entry.plain_title
     caption = photo.flickr_caption

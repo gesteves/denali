@@ -38,7 +38,7 @@ Rails.application.configure do
   config.assets.version = '1'
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = ENV['domain'] if ENV['domain'].present?
+  config.action_controller.asset_host = ENV['DOMAIN'] if ENV['DOMAIN'].present?
 
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache

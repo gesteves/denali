@@ -276,7 +276,7 @@ class Entry < ApplicationRecord
   end
 
   def short_permalink_url(opts = {})
-    host = ENV['domain_short'] || Rails.application.routes.default_url_options[:host]
+    host = ENV['DOMAIN_SHORT'] || Rails.application.routes.default_url_options[:host]
     entry_url(self.id.to_s(36), url_opts(host: host))
   end
 

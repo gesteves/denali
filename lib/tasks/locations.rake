@@ -26,9 +26,9 @@ namespace :locations do
     end
 
     task :national_parks => :environment do
-      next unless ENV['nps_api_key'].present?
+      next unless ENV['NPS_API_KEY'].present?
 
-      url = "https://developer.nps.gov/api/v1/parks?limit=1000&api_key=#{ENV['nps_api_key']}"
+      url = "https://developer.nps.gov/api/v1/parks?limit=1000&api_key=#{ENV['NPS_API_KEY']}"
       response = HTTParty.get(url)
       next if response.code >= 400
 

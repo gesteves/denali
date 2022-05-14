@@ -4,9 +4,9 @@ class FlickrGroupWorker < ApplicationWorker
   def perform(photo_id, group_url)
     return if !Rails.env.production?
     begin
-      flickr = FlickRaw::Flickr.new ENV['flickr_consumer_key'], ENV['flickr_consumer_secret']
-      flickr.access_token = ENV['flickr_access_token']
-      flickr.access_secret = ENV['flickr_access_token_secret']
+      flickr = FlickRaw::Flickr.new ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET']
+      flickr.access_token = ENV['FLICKR_ACCESS_TOKEN']
+      flickr.access_secret = ENV['FLICKR_ACCESS_TOKEN_SECRET']
       slug = group_url.split('/').last
       group = if /\d+@N\d+/.match? slug
         flickr.groups.getInfo(group_id: slug)

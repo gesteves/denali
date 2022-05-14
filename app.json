@@ -19,103 +19,98 @@
     }
   ],
   "env": {
-    "aws_access_key_id": {
+    "AWS_ACCESS_KEY_ID": {
       "description": "AWS access key for S3, CloudFront.",
       "required": true
     },
-    "aws_secret_access_key": {
+    "AWS_SECRET_ACCESS_KEY": {
       "description": "AWS access secret for S3, CloudFront.",
       "required": true
     },
-    "aws_cloudfront_distribution_id": {
+    "AWS_CLOUDFRONT_DISTRIBUTION_ID": {
       "description": "The ID of your CloudFront distribution.",
       "required": false
     },
-    "buffer_access_token": {
+    "BUFFER_ACCESS_TOKEN": {
       "description": "Your access token for the Buffer API, for sharing on social media.",
       "required": false
     },
-    "denali_secret": {
+    "DENALI_SECRET": {
       "description": "A secret token, used for various purposes.",
       "required": true,
       "generator": "secret"
     },
-    "domain": {
+    "DOMAIN": {
       "description": "Domain for this app.",
       "required": false
     },
-    "domain_short": {
+    "DOMAIN_SHORT": {
       "description": "Optional short domain for this app.",
       "required": false
     },
-    "flickr_access_token_secret": {
+    "FLICKR_ACCESS_TOKEN_SECRET": {
       "description": "Used for sharing on Flickr.",
       "required": false
     },
-    "flickr_access_token": {
+    "FLICKR_ACCESS_TOKEN": {
       "description": "Used for sharing on Flickr.",
       "required": false
     },
-    "flickr_consumer_key": {
+    "FLICKR_CONSUMER_KEY": {
       "description": "Used for sharing on Flickr.",
       "required": false
     },
-    "flickr_consumer_secret": {
+    "FLICKR_CONSUMER_SECRET": {
       "description": "Used for sharing on Flickr.",
       "required": false
     },
-    "google_apps_domain": {
+    "GOOGLE_APPS_DOMAIN": {
       "description": "Domain of your G Suite account, used for authentication.",
       "required": true
     },
-    "google_client_id": {
+    "GOOGLE_CLIENT_ID": {
       "description": "Required for authentication.",
       "required": true
     },
-    "google_client_secret": {
+    "GOOGLE_CLIENT_SECRET": {
       "description": "Required for authentication.",
       "required": true
     },
-    "google_api_key": {
+    "GOOGLE_API_KEY": {
       "description": "Google API Key for the Google Maps API, used to auto-tag entries by location.",
       "required": false
     },
-    "imgix_domain": {
+    "IMGIX_DOMAIN": {
       "description": "Domain used for Imgix.",
       "required": true
     },
-    "imgix_secure": {
-      "description": "Required for Imgix.",
-      "required": true,
-      "value": "true"
-    },
-    "imgix_token": {
+    "IMGIX_TOKEN": {
       "description": "Required for Imgix.",
       "required": true
     },
-    "imgix_api_key": {
+    "IMGIX_API_KEY": {
       "description": "Required for Imgix.",
       "required": true
     },
-    "mapbox_api_token": {
+    "MAPBOX_API_TOKEN": {
       "description": "Used to display the map view.",
       "required": false
     },
-    "s3_bucket": {
+    "S3_BUCKET": {
       "description": "S3 bucket to store images.",
       "required": true
     },
-    "s3_region": {
+    "S3_REGION": {
       "description": "Region of the S3 bucket.",
       "required": true,
       "value": "us-east-1"
     },
-    "secret_key_base": {
+    "SECRET_KEY_BASE": {
       "description": "A secret token, used for various purposes.",
       "required": true,
       "generator": "secret"
     },
-    "sentry_dsn": {
+    "SENTRY_DSN": {
       "description": "Used for exception reporting in Sentry.",
       "required": false
     },

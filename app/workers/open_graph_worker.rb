@@ -3,14 +3,14 @@ class OpenGraphWorker < ApplicationWorker
 
   def perform(entry_id)
     return if !Rails.env.production?
-    return if ENV['facebook_app_id'].blank? || ENV['facebook_app_secret'].blank?
+    return if ENV['FACEBOOK_APP_ID'].blank? || ENV['FACEBOOK_APP_SECRET'].blank?
     entry = Entry.published.find(entry_id)
     raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_processed?
 
     params = {
       id: entry.permalink_url,
       scrape: true,
-      access_token: "#{ENV['facebook_app_id']}|#{ENV['facebook_app_secret']}"
+      access_token: "#{ENV['FACEBOOK_APP_ID']}|#{ENV['FACEBOOK_APP_SECRET']}"
     }
 
     response = HTTParty.post('https://graph.facebook.com', query: params)

@@ -8,10 +8,10 @@ class Twitter
   include ActionView::Helpers::TextHelper
 
   def initialize
-    consumer_key = ENV['twitter_consumer_key']
-    consumer_secret = ENV['twitter_consumer_secret']
-    access_token = ENV['twitter_access_token']
-    access_token_secret = ENV['twitter_access_token_secret']
+    consumer_key = ENV['TWITTER_CONSUMER_KEY']
+    consumer_secret = ENV['TWITTER_CONSUMER_SECRET']
+    access_token = ENV['TWITTER_ACCESS_TOKEN']
+    access_token_secret = ENV['TWITTER_ACCESS_TOKEN_SECRET']
 
     consumer = OAuth::Consumer.new(consumer_key, consumer_secret, site: 'https://api.twitter.com', authorize_path: '/oauth/authenticate', debug_output: false)
     token = OAuth::ConsumerToken.new(consumer, access_token, access_token_secret)

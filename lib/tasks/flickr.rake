@@ -1,11 +1,11 @@
 namespace :flickr do
   desc 'Update titles & descriptions of Flickr photos'
   task :update_meta => :environment do
-    next if ENV['flickr_consumer_key'].blank? || ENV['flickr_consumer_secret'].blank? || ENV['flickr_access_token'].blank? || ENV['flickr_access_token_secret'].blank?
+    next if ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank? || ENV['FLICKR_ACCESS_TOKEN'].blank? || ENV['FLICKR_ACCESS_TOKEN_SECRET'].blank?
 
-    flickr = FlickRaw::Flickr.new(ENV['flickr_consumer_key'], ENV['flickr_consumer_secret'])
-    flickr.access_token = ENV['flickr_access_token']
-    flickr.access_secret = ENV['flickr_access_token_secret']
+    flickr = FlickRaw::Flickr.new(ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET'])
+    flickr.access_token = ENV['FLICKR_ACCESS_TOKEN']
+    flickr.access_secret = ENV['FLICKR_ACCESS_TOKEN_SECRET']
 
     user_id = flickr.auth.oauth.checkToken.user.nsid
     user = flickr.people.getInfo(user_id: user_id)
@@ -15,7 +15,7 @@ namespace :flickr do
     while page <= pages
       puts "Fetching page #{page} of Flickr photos, out of #{pages}"
       photos = flickr.people.getPublicPhotos(user_id: user_id, extras: 'description', per_page: 500, page: page)
-      photos.select { |p| p.description.match? ENV['domain'] }.each do |p|
+      photos.select { |p| p.description.match? ENV['DOMAIN'] }.each do |p|
         flickr_id = p.id
         description = p.description
 

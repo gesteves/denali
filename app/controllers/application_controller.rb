@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_cloudfront?
-    request.headers['X-Denali-Secret'] == ENV['denali_secret']
+    request.headers['X-Denali-Secret'] == ENV['DENALI_SECRET']
   end
 
   def current_user
@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
 
   def domain_redirect
     # Prevent people from bypassing CloudFront and hitting Heroku directly.
-    if (Rails.env.production? || Rails.env.staging?) && ENV['aws_cloudfront_distribution_id'].present? && !is_cloudfront?
+    if (Rails.env.production? || Rails.env.staging?) && ENV['AWS_CLOUDFRONT_DISTRIBUTION_ID'].present? && !is_cloudfront?
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
       http_cache_forever(public: true) do
         redirect_to "#{protocol}://#{Rails.application.routes.default_url_options[:host]}#{request.fullpath}", status: 301
@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
   end
 
   def redirect_heroku
-    redirect_to root_url(host: ENV['domain']) if request.host.match? /herokuapp\.com/
+    redirect_to root_url(host: ENV['DOMAIN']) if request.host.match? /herokuapp\.com/
   end
 
   def add_preload_link_header(url, opts = {})
@@ -108,7 +108,7 @@ class ApplicationController < ActionController::Base
 
   def preconnect_imgix
     if request.format.html?
-      add_preconnect_link_header("https://#{ENV['imgix_domain']}")
+      add_preconnect_link_header("https://#{ENV['IMGIX_DOMAIN']}")
     end
   end
 
