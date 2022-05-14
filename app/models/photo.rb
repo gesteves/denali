@@ -57,7 +57,7 @@ class Photo < ApplicationRecord
   def srcset(srcset:, opts: {})
     opts.reverse_merge!(q: 75)
     imgix_path = Ix.path(self.image.key)
-    widths = processed? ? srcset.reject { |width| width > self.width } : srcset
+    widths = has_dimensions? ? srcset.reject { |width| width > self.width } : srcset
     widths = widths.uniq.sort
     src_width = widths.first
     if opts[:rect].blank?
@@ -133,6 +133,10 @@ class Photo < ApplicationRecord
     image&.attached? && image&.analyzed? && image&.identified?
   end
 
+  def has_dimensions?
+    self.width.present? && self.height.present?
+  end
+
   def width
     image.metadata[:width]
   end
@@ -142,17 +146,17 @@ class Photo < ApplicationRecord
   end
 
   def is_square?
-    return false unless processed?
+    return false unless has_dimensions?
     width == height
   end
 
   def is_horizontal?
-    return false unless processed?
+    return false unless has_dimensions?
     width > height
   end
 
   def is_vertical?
-    return false unless processed?
+    return false unless has_dimensions?
     width < height
   end
 

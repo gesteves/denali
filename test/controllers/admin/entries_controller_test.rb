@@ -101,7 +101,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should create published entries' do
-    file = fixture_file_upload(Rails.root.join('test/fixtures/images/rusty.jpg'), 'image/jpg')
+    file = fixture_file_upload(Rails.root.join('test/fixtures/images/rusty.jpg'), 'image/jpeg')
 
     post :create, params: { entry: { title: 'Published', status: 'published', photos_attributes: [image: file],  post_to_twitter: true, post_to_flickr: false, post_to_instagram: false } }
     assert_equal 1, TwitterWorker.jobs.size
@@ -116,7 +116,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should create draft entries' do
-    file = fixture_file_upload(Rails.root.join('test/fixtures/images/rusty.jpg'), 'image/jpg')
+    file = fixture_file_upload(Rails.root.join('test/fixtures/images/rusty.jpg'), 'image/jpeg')
 
     post :create, params: { entry: { title: 'Draft', status: 'draft', photos_attributes: [image: file],  post_to_twitter: true } }
     assert_equal 0, TwitterWorker.jobs.size
@@ -131,7 +131,7 @@ class Admin::EntriesControllerTest < ActionController::TestCase
   end
 
   test 'should create queued entries' do
-    file = fixture_file_upload(Rails.root.join('test/fixtures/images/rusty.jpg'), 'image/jpg')
+    file = fixture_file_upload(Rails.root.join('test/fixtures/images/rusty.jpg'), 'image/jpeg')
 
     post :create, params: { entry: { title: 'Queued', status: 'queued', photos_attributes: [image: file],  post_to_twitter: true } }
     assert_equal 0, TwitterWorker.jobs.size

@@ -100,4 +100,5 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
   config.time_zone = 'Eastern Time (US & Canada)'
   config.active_storage.service = :amazon
+  config.action_controller.raise_on_open_redirects = false
 end
