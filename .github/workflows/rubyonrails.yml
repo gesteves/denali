@@ -45,11 +45,13 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           bundler-cache: true
-      - name: Install Node and packages
+      - name: Install Node
         uses: actions/setup-node@v3
         with:
           node-version: 16
-          cache: 'npm'
+          cache: 'yarn'
+      - name: Install packages
+        run: yarn install --frozen-lockfile
       # Add or replace database setup steps here
       - name: Set up database schema
         run: bin/rails db:schema:load
