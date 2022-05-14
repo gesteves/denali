@@ -42,7 +42,7 @@ gem 'typhoeus'
 gem 'htmlentities'
 
 # Monitoring
-gem 'sentry-raven', '~> 3.1'
+gem 'bugsnag'
 gem 'barnes'
 
 # Caching

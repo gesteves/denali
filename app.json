@@ -110,10 +110,6 @@
       "required": true,
       "generator": "secret"
     },
-    "SENTRY_DSN": {
-      "description": "Used for exception reporting in Sentry.",
-      "required": false
-    },
     "HEROKU_APP_NAME": {
       "description": "Leave this blank, but turn on runtime-dyno-metadata on your Heroku app after deploying.",
       "required": false
