@@ -101,4 +101,5 @@ Rails.application.configure do
   config.time_zone = 'Eastern Time (US & Canada)'
   config.active_storage.service = :amazon
   config.action_controller.raise_on_open_redirects = false
+  config.active_storage.variant_processor = :mini_magick
 end
