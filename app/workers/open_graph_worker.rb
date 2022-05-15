@@ -5,7 +5,7 @@ class OpenGraphWorker < ApplicationWorker
     return if !Rails.env.production?
     return if ENV['FACEBOOK_APP_ID'].blank? || ENV['FACEBOOK_APP_SECRET'].blank?
     entry = Entry.published.find(entry_id)
-    raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_processed?
+    raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
 
     params = {
       id: entry.permalink_url,

@@ -129,10 +129,6 @@ class Photo < ApplicationRecord
     Ix.purge(uri.path)
   end
 
-  def processed?
-    image&.attached? && image&.analyzed? && image&.identified?
-  end
-
   def has_dimensions?
     self.width.present? && self.height.present?
   end
@@ -165,17 +161,17 @@ class Photo < ApplicationRecord
   end
 
   def height_from_width(width)
-    return nil if self.width.blank?
+    return unless has_dimensions?
     ((self.height.to_f * width.to_f)/self.width.to_f).round
   end
 
   def width_from_height(height)
-    return nil if self.height.blank?
+    return unless has_dimensions?
     ((self.width.to_f * height.to_f)/self.height.to_f).round
   end
 
   def height_from_aspect_ratio(aspect_ratio)
-    return nil if self.width.blank?
+    return unless has_dimensions?
     ar = aspect_ratio.split(':').map(&:to_f)
     ((self.width.to_f * ar.last)/ar.first).round
   end

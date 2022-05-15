@@ -1,7 +1,7 @@
 module ApplicationHelper
 
   def responsive_image_tag(photo:, srcset: [3360], sizes: '100vw', aspect_ratio: nil, html_options: {})
-    return placeholder_image_tag(srcset: srcset, sizes: sizes, aspect_ratio: aspect_ratio, html_options: html_options) unless photo&.processed?
+    return placeholder_image_tag(srcset: srcset, sizes: sizes, aspect_ratio: aspect_ratio, html_options: html_options) unless photo&.has_dimensions?
     jpg_src, jpg_srcset = photo.srcset(srcset: srcset, opts: { ar: aspect_ratio, q: ENV['IMAGE_QUALITY_JPG'] }.compact)
     html_options.reverse_merge!({
       src: jpg_src,
@@ -41,7 +41,7 @@ module ApplicationHelper
   end
 
   def css_aspect_ratio(photo)
-    if photo.processed?
+    if photo.has_dimensions?
       "--aspect-ratio:#{(photo.height.to_f/photo.width.to_f).floor(2)};"
     elsif @photoblog.placeholder_processed?
       "--aspect-ratio:#{@photoblog.placeholder_aspect_ratio};"
@@ -66,7 +66,7 @@ module ApplicationHelper
   end
 
   def css_photo_dimensions(photo)
-    if photo.processed?
+    if photo.has_dimensions?
       "--photo-height:#{photo.height};--photo-width:#{photo.width}"
     elsif @photoblog.placeholder_processed?
       "--photo-height:#{@photoblog.placeholder.metadata[:height]};--photo-width:#{@photoblog.placeholder.metadata[:width]}"

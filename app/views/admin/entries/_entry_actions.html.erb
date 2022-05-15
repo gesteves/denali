@@ -11,19 +11,19 @@
     <div class="dropdown-content">
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
       <%= link_to icon('Share', 'fas fa-share-square'), entry.permalink_url, 'data-controller': 'share', 'data-action': 'click->share#open', class: 'dropdown-item' %>
-      <% if entry.is_photo? && entry.is_published? && entry.photos_processed? %>
+      <% if entry.is_photo? && entry.is_published? && entry.photos_have_dimensions? %>
         <%= link_to icon('Share on Twitter', 'fab fa-twitter'), twitter_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
-      <% if entry.is_photo? && entry.is_published? && entry.photos_processed? %>
+      <% if entry.is_photo? && entry.is_published? && entry.photos_have_dimensions? %>
         <%= link_to icon('Share on Instagram', 'fab fa-instagram'), instagram_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
-      <% if entry.is_photo? && entry.photos_processed? %>
+      <% if entry.is_photo? && entry.photos_have_dimensions? %>
         <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item' %>
       <% end %>
       <% if entry.is_photo? && !entry.is_photoset? %>
         <%= link_to icon('Download', 'fas fa-download'), download_admin_entry_photo_path(entry_id: entry.id, id: entry.photos.first.id), class: 'dropdown-item' %>
       <% end %>
-      <% if entry.is_photo? && entry.photos_processed? %>
+      <% if entry.is_photo? && entry.photos_have_dimensions? %>
         <%= link_to icon('Prints', 'fas fa-print'), prints_admin_entry_path(entry), class: 'dropdown-item' %>
       <% end %>
       <hr class="dropdown-divider">

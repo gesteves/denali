@@ -2,7 +2,7 @@ class NationalParkWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
-    raise UnprocessedPhotoError unless photo.processed?
+    raise UnprocessedPhotoError unless photo.has_dimensions?
     return if ENV['NPS_API_KEY'].blank?
 
     if photo.location.blank?

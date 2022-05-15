@@ -5,7 +5,7 @@ class TwitterWorker < ApplicationWorker
     return if !Rails.env.production?
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
-    raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_processed?
+    raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
 
     photos = entry.photos.to_a[0..4]
 

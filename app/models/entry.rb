@@ -533,7 +533,7 @@ class Entry < ApplicationRecord
   end
 
   def photos_processed?
-    photos.all? { |p| p.processed? }
+    photos.all? { |p| p.has_dimensions? }
   end
 
   private

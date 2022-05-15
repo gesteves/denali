@@ -3,7 +3,7 @@ class FlickrWorker < ApplicationWorker
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
-    raise UnprocessedPhotoError unless photo.processed?
+    raise UnprocessedPhotoError unless photo.has_dimensions?
 
     entry = photo.entry
     return if !Rails.env.production?

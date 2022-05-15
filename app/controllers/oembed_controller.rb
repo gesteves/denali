@@ -4,7 +4,7 @@ class OembedController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def show
-    raise ActiveRecord::RecordNotFound unless @entry.photos_processed?
+    raise ActiveRecord::RecordNotFound unless @entry.photos_have_dimensions?
     logger.tagged('oEmbed') { logger.info { "oEmbed requested for url: #{params[:url]}, maxwidth: #{params[:maxwidth] || 'none'}, maxheight: #{params[:maxheight] || 'none'}, format: #{request.format}" } }
     @url, @width, @height = get_photo(@entry, 1200, params[:maxwidth], params[:maxheight])
     @thumb_url, @thumb_width, @thumb_height = get_photo(@entry, 300, params[:maxwidth], params[:maxheight])

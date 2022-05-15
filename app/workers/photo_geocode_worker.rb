@@ -3,7 +3,7 @@ class PhotoGeocodeWorker < ApplicationWorker
   def perform(photo_id)
     photo = Photo.find(photo_id)
     return if ENV['GOOGLE_API_KEY'].blank? || !photo.has_location?
-    raise UnprocessedPhotoError unless photo.processed?
+    raise UnprocessedPhotoError unless photo.has_dimensions?
     url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=#{photo.latitude},#{photo.longitude}&key=#{ENV['GOOGLE_API_KEY']}"
     response = JSON.parse(HTTParty.get(url).body)
     if response['status'] != 'OK'

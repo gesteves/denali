@@ -5,7 +5,7 @@ class InstagramWorker < ApplicationWorker
     return if !Rails.env.production? || ENV['BUFFER_ACCESS_TOKEN'].blank?
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
-    raise UnprocessedPhotoError unless entry.photos_processed?
+    raise UnprocessedPhotoError unless entry.photos_have_dimensions?
 
     photos = entry.photos.to_a[0..4]
     opts = {

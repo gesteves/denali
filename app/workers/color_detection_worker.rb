@@ -2,7 +2,7 @@ class ColorDetectionWorker < ApplicationWorker
   # TODO: Replace imgix with something else, e.g. minimagick
   def perform(photo_id)
     photo = Photo.find(photo_id)
-    raise UnprocessedPhotoError unless photo.processed?
+    raise UnprocessedPhotoError unless photo.has_dimensions?
     colors = palette(photo)
     photo.dominant_color = dominant_color(colors)
     photo.black_and_white = is_black_and_white?(colors)
