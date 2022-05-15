@@ -325,7 +325,7 @@ class Photo < ApplicationRecord
   end
 
   def blurhash_data_uri(w: 32)
-    return unless self.processed?
+    return unless self.has_dimensions?
     h = self.height_from_width(w)
     Rails.cache.fetch("blurhash-data-uri/#{self.blurhash}/w/#{w}/h/#{h}") do
       Blurhash.to_data_uri(blurhash: self.blurhash, w: w, h: h)
