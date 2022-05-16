@@ -47,14 +47,14 @@ class ApplicationController < ActionController::Base
   end
 
   def block_cloudfront
-    if (Rails.env.production? || Rails.env.staging?) && is_cloudfront?
+    if Rails.env.production? && is_cloudfront?
       raise ActionController::RoutingError.new('Not Found')
     end
   end
 
   def domain_redirect
     # Prevent people from bypassing CloudFront and hitting Heroku directly.
-    if (Rails.env.production? || Rails.env.staging?) && ENV['AWS_CLOUDFRONT_DISTRIBUTION_ID'].present? && !is_cloudfront?
+    if Rails.env.production? && ENV['AWS_CLOUDFRONT_DISTRIBUTION_ID'].present? && !is_cloudfront?
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
       http_cache_forever(public: true) do
         redirect_to "#{protocol}://#{Rails.application.routes.default_url_options[:host]}#{request.fullpath}", status: 301

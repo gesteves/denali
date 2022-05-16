@@ -539,7 +539,7 @@ class Entry < ApplicationRecord
   private
 
   def url_opts(opts)
-    if Rails.env.production? || Rails.env.staging?
+    if Rails.env.production?
       opts.reverse_merge!(protocol: Rails.configuration.force_ssl ? 'https' : 'http')
     else
       opts.reverse_merge!(only_path: true)
