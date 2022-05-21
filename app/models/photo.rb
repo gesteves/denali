@@ -134,11 +134,11 @@ class Photo < ApplicationRecord
   end
 
   def width
-    image.metadata[:width]
+    image&.metadata&.dig(:width)
   end
 
   def height
-    image.metadata[:height]
+    image&.metadata&.dig(:height)
   end
 
   def is_square?
