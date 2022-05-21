@@ -26,7 +26,7 @@ gem "sprockets-rails"
 
 # Misc
 gem 'jbuilder', '~> 2.11'
-gem 'sdoc', '~> 2.3', group: :doc
+gem 'sdoc', '~> 2.4', group: :doc
 gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
