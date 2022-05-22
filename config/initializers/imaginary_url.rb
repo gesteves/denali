@@ -12,7 +12,10 @@ class ImaginaryUrl
     if opts[:h]
       opts[:height] = opts.delete(:h).to_i
     end
-    Rails.logger.info("imaginary_opts - #{opts.to_json}")
+
+    # TODO: currently don't support smart crops, which are used by social metatags
+    # Example: {"smart":true,"url":signed_img_urk,"width":944,"height":944}
+    # Rails.logger.info("imaginary_opts - #{opts.to_json}")
 
     url_path = "/resize"
     url_query = opts.stringify_keys.sort.map do |param_name, param_value|
@@ -23,7 +26,7 @@ class ImaginaryUrl
     ).sub(/=$/, '')
     url_query += "&sign=#{sign}"
 
-    uri = URI.parse('https://denali-imaginary.fly.dev/')
+    uri = URI.parse('https://imaginary.hikerilluminati.com/')
     uri.path = url_path
     uri.query = url_query
     uri.to_s
