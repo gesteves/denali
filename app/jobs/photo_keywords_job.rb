@@ -9,7 +9,7 @@ class PhotoKeywordsJob < ApplicationJob
 
   private
   def detect_labels(photo)
-    credentials = Aws::Credentials.new(ENV['aws_access_key_id'], ENV['aws_secret_access_key'])
+    credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID'], ENV['AWS_SECRET_ACCESS_KEY'])
     client = Aws::Rekognition::Client.new(credentials: credentials, region: 'us-east-1')
     opts = {
       image: {

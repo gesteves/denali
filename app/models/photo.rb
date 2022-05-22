@@ -37,7 +37,7 @@ class Photo < ApplicationRecord
       opts[:fit] = 'crop'
     end
     opts[:image] = self.image.key
-    ThumborUrl.generate(opts.reject { |k,v| v.blank? })
+    ImaginaryUrl.generate(opts.reject { |k,v| v.blank? })
   end
 
   def srcset(key, opts = {})
@@ -51,11 +51,11 @@ class Photo < ApplicationRecord
     opts[:image] = s3_key
     if square
       opts[:smart] = true
-      src = ThumborUrl.generate(opts.merge(w: src_width, h: src_width))
-      srcset = widths.map { |w| "#{ThumborUrl.generate(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
+      src = ImaginaryUrl.generate(opts.merge(w: src_width, h: src_width))
+      srcset = widths.map { |w| "#{ImaginaryUrl.generate(opts.merge(w: w, h: w))} #{w}w" }.join(', ')
     else
-      src = ThumborUrl.generate(opts.merge(w: src_width))
-      srcset = widths.map { |w| "#{ThumborUrl.generate(opts.merge(w: w))} #{w}w" }.join(', ')
+      src = ImaginaryUrl.generate(opts.merge(w: src_width))
+      srcset = widths.map { |w| "#{ImaginaryUrl.generate(opts.merge(w: w))} #{w}w" }.join(', ')
     end
     return src, srcset
   end

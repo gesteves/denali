@@ -27,17 +27,17 @@ class Blog < ApplicationRecord
 
   def favicon_url(opts = {})
     opts.reverse_merge!(w: 16, image: self.favicon.key)
-    ThumborUrl.generate(opts)
+    ImaginaryUrl.generate(opts)
   end
 
   def touch_icon_url(opts = {})
     opts.reverse_merge!(w: 32, image: self.touch_icon.key)
-    ThumborUrl.generate(opts)
+    ImaginaryUrl.generate(opts)
   end
 
   def logo_url(opts = {})
     opts.reverse_merge!(h: 60, image: self.logo.key)
-    ThumborUrl.generate(opts)
+    ImaginaryUrl.generate(opts)
   end
 
   def has_search?
