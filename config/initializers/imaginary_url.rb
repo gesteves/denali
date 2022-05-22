@@ -1,9 +1,9 @@
 class ImaginaryUrl
   @@presigner = Aws::S3::Presigner.new
   def self.generate(opts = {})
-    opts[:url] = @@presigner.presigned_url(:get_object, bucket: ENV['s3_bucket'], key: opts['image'])
+    opts[:url] = @@presigner.presigned_url(:get_object, bucket: ENV['s3_bucket'], key: opts[:image])
     opts[:url] = ERB::Util.url_encode(opts[:url])
-    opts.delete('image')
+    opts.delete(:image)
 
     sign_key = ENV['IMAGINARY_SIGNATURE_KEY']
     if opts[:w]
