@@ -426,7 +426,7 @@ class Entry < ApplicationRecord
     tweet.join("\n\n")
   end
 
-  def glass_caption
+  def plain_caption
     text = []
     text << self.plain_title
     text << self.plain_body
