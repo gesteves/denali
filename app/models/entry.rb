@@ -427,14 +427,10 @@ class Entry < ApplicationRecord
   end
 
   def glass_caption
-    meta = []
-    meta << "📍 #{self.territory_list} land" if self.show_location? && self.territories.present?
-    meta << "🔗 #{self.permalink_url(ref: 'Glass')}"
-
     text = []
     text << self.plain_title
     text << self.plain_body
-    text << meta.join("\n")
+    text << self.permalink_url
     text.reject(&:blank?).join("\n\n")
   end
 
