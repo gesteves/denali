@@ -318,7 +318,7 @@ GEM
     sdoc (2.4.0)
       rdoc (>= 5.0)
     semantic_range (3.0.0)
-    sidekiq (6.5.0)
+    sidekiq (6.5.1)
       connection_pool (>= 2.2.2)
       rack (~> 2.0)
       redis (>= 4.2.0)
