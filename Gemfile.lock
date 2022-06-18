@@ -114,7 +114,7 @@ GEM
     concurrent-ruby (1.1.10)
     connection_pool (2.2.5)
     crass (1.0.6)
-    dalli (3.2.1)
+    dalli (3.2.2)
     digest (3.1.0)
     elasticsearch (5.0.5)
       elasticsearch-api (= 5.0.5)
@@ -195,7 +195,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
     minitest (5.15.0)
-    mock_redis (0.31.0)
+    mock_redis (0.32.0)
       ruby2_keywords
     msgpack (1.5.2)
     multi_json (1.15.0)
