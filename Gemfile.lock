@@ -237,7 +237,7 @@ GEM
     omniauth-oauth2 (1.7.0)
       oauth2 (~> 1.4)
       omniauth (~> 1.9)
-    pg (1.4.2)
+    pg (1.4.3)
     psych (4.0.4)
       stringio
     puma (5.6.4)
