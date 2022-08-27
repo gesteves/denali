@@ -195,7 +195,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.8.0)
     minitest (5.16.2)
-    mock_redis (0.32.0)
+    mock_redis (0.33.0)
       ruby2_keywords
     msgpack (1.5.4)
     multi_json (1.15.0)
