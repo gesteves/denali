@@ -81,6 +81,23 @@ services:
     plan: starter
     maxmemoryPolicy: allkeys-lfu
     ipAllowList: []
+  - type: pserv
+    name: denali-elasticsearch
+    env: docker
+    dockerfilePath: Dockerfile.elasticsearch
+    plan: starter
+    disk:
+      name: esdata
+      mountPath: /usr/share/elasticsearch/data
+      sizeGB: 10
+    autoDeploy: false
+    envVars:
+    - key: ES_JAVA_OPTS
+      value: "-Xms512m -Xmx512m"
+    - key: discovery.type
+      value: single-node
+    - key: cluster.name
+      value: elastic
 
 databases:
   - name: denali-postgres
