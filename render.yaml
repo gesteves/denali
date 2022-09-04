@@ -50,6 +50,29 @@ services:
           type: redis
           property: connectionString
       - fromGroup: denali
+  - type: cron
+    name: denali-publish
+    env: docker
+    dockerfilePath: Dockerfile.production
+    dockerCommand: bundle exec rake queue:publish
+    branch: render
+    schedule: "0 * * * *"
+    envVars:
+      - key: DATABASE_URL # Render PostgreSQL database
+        fromDatabase:
+          name: denali-postgres
+          property: connectionString
+      - key: REDIS_URL # Render Redis service (noeviction)
+        fromService:
+          name: redis
+          type: redis
+          property: connectionString
+      - key: REDIS_CACHE_URL # Render Redis service (with eviction)
+        fromService:
+          name: redis-cache
+          type: redis
+          property: connectionString
+      - fromGroup: denali
   - type: redis
     name: redis
     plan: starter
