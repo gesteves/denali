@@ -9,11 +9,7 @@ services:
     dockerCommand: bundle exec puma -C config/puma.rb
     plan: starter
     branch: render
-    scaling:
-      minInstances: 1
-      maxInstances: 3
-      targetMemoryPercent: 80
-      targetCPUPercent: 80
+    numInstances: 1
     envVars:
       - key: DATABASE_URL # Render PostgreSQL database
         fromDatabase:
