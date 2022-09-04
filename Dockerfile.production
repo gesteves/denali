@@ -13,4 +13,4 @@ RUN bundle install
 RUN yarn install
 RUN bundle exec rake assets:precompile
 RUN bundle exec rake assets:clean
-RUN mkdir tmp/pids/
+RUN mkdir tmp/pids
