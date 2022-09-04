@@ -10,6 +10,7 @@ services:
     plan: starter
     branch: render
     numInstances: 1
+    healthCheckPath: /healthz
     envVars:
       - key: DATABASE_URL # Render PostgreSQL database
         fromDatabase:
