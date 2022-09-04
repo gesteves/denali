@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends nodejs yarn
 RUN yarn global add gulp-cli
 
 RUN mkdir /app
+RUN mkdir /app/tmp/pids/
 WORKDIR /app
 COPY . /app
 RUN bundle install
