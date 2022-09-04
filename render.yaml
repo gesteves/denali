@@ -30,6 +30,30 @@ services:
           type: redis
           property: connectionString
       - fromGroup: denali
+  - type: worker
+    name: denali-worker
+    env: docker
+    dockerfilePath: Dockerfile.production
+    dockerCommand: bundle exec sidekiq -t 25
+    plan: starter
+    branch: render
+    numInstances: 1
+    envVars:
+      - key: DATABASE_URL # Render PostgreSQL database
+        fromDatabase:
+          name: denali-postgres
+          property: connectionString
+      - key: REDIS_URL # Render Redis service (noeviction)
+        fromService:
+          name: redis
+          type: redis
+          property: connectionString
+      - key: REDIS_CACHE_URL # Render Redis service (with eviction)
+        fromService:
+          name: redis-cache
+          type: redis
+          property: connectionString
+      - fromGroup: denali
   - type: redis
     name: redis
     plan: starter
