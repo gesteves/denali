@@ -5,7 +5,8 @@ services:
   - type: web
     name: denali
     env: docker
-    dockerfilePath: Dockerfile.render
+    dockerfilePath: Dockerfile
+    dockerCommand: bundle exec puma -C config/puma.rb
     plan: starter
     branch: render
     scaling:
