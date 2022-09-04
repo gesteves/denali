@@ -6,7 +6,11 @@ services:
     dockerCommand: bundle exec puma -C config/puma.rb
     plan: starter
     branch: render
-    numInstances: 1
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryPercent: 95
+      targetCPUPercent: 95
     healthCheckPath: /healthz
     envVars:
       - key: DATABASE_URL # Render PostgreSQL database
