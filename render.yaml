@@ -5,11 +5,9 @@ services:
   - type: web
     name: denali
     env: docker
-    dockerfilePath: Dockerfile
+    dockerfilePath: Dockerfile.render
     plan: starter
     branch: render
-    buildCommand: bundle exec rake assets:precompile; bundle exec rails db:migrate
-    startCommand: bundle exec puma -C config/puma.rb
     scaling:
       minInstances: 1
       maxInstances: 3
