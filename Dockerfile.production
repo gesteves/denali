@@ -8,13 +8,8 @@ RUN yarn global add gulp-cli
 
 RUN mkdir /app
 WORKDIR /app
-COPY Gemfile /app/Gemfile
-COPY Gemfile.lock /app/Gemfile.lock
-COPY package.json /app/package.json
-COPY yarn.lock /app/yarn.lock
+COPY . /app
 RUN bundle install
 RUN yarn install
 RUN bundle exec rake assets:precompile
 RUN bundle exec rake assets:clean
-
-COPY . /app
