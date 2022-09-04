@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  const version = '<%= ENV['HEROKU_RELEASE_VERSION'] %>';
+  const version = '<%= ENV['RENDER_GIT_COMMIT'] %>';
 
   self.addEventListener('install', event => {
     self.skipWaiting();

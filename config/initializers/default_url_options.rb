@@ -1,6 +1,6 @@
 if Rails.env.production?
-  host = if ENV['HEROKU_PARENT_APP_NAME'].present?
-    "#{ENV['HEROKU_APP_NAME']}.herokuapp.com"
+  host = if ENV['IS_PULL_REQUEST'] == 'true'
+    ENV['RENDER_EXTERNAL_HOSTNAME']
   else
     ENV['DOMAIN']
   end

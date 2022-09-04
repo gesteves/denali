@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
   end
 
   def domain_redirect
-    # Prevent people from bypassing CloudFront and hitting Heroku directly.
+    # Prevent people from bypassing CloudFront and hitting the app server directly.
     if Rails.env.production? && ENV['AWS_CLOUDFRONT_DISTRIBUTION_ID'].present? && !is_cloudfront?
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
       http_cache_forever(public: true) do
@@ -79,11 +79,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_repeat_visit?
-    request.headers['X-Denali-Version'] == ENV['HEROKU_RELEASE_VERSION']
-  end
-
-  def redirect_heroku
-    redirect_to root_url(host: ENV['DOMAIN']) if request.host.match? /herokuapp\.com/
+    request.headers['X-Denali-Version'] == ENV['RENDER_GIT_COMMIT']
   end
 
   def add_preload_link_header(url, opts = {})
