@@ -28,7 +28,7 @@ services:
           name: redis-cache
           type: redis
           property: connectionString
-     - fromGroup: denali
+      - fromGroup: denali
   - type: redis
     name: redis
     plan: starter
