@@ -62,8 +62,9 @@ Rails.application.configure do
   # config.log_tags = [ :request_id ]
 
   # Use a different cache store in production.
-  if ENV["MEMCACHEDCLOUD_SERVERS"]
-    config.cache_store = :mem_cache_store, ENV["MEMCACHEDCLOUD_SERVERS"].split(','), { :username => ENV["MEMCACHEDCLOUD_USERNAME"], :password => ENV["MEMCACHEDCLOUD_PASSWORD"] }
+
+  if ENV['REDIS_CACHE_URL'].present?
+    config.cache_store = :redis_cache_store, { url: ENV['REDIS_CACHE_URL'] }
   end
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
