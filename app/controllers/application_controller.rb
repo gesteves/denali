@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_release_version
-    @release_version = ENV['RENDER_GIT_COMMIT'] || ENV['FLY_ALLOC_ID'] || ENV['HEROKU_RELEASE_VERSION']
+    @release_version = ENV['HEROKU_SLUG_COMMIT'] || ENV['RENDER_GIT_COMMIT'] || ENV['FLY_ALLOC_ID']
   end
 
   def get_photoblog
