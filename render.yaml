@@ -9,8 +9,8 @@ services:
     scaling:
       minInstances: 1
       maxInstances: 3
-      targetMemoryPercent: 95
-      targetCPUPercent: 95
+      targetMemoryPercent: 90
+      targetCPUPercent: 90
     healthCheckPath: /healthz
     envVars:
       - key: DATABASE_URL # Render PostgreSQL database
