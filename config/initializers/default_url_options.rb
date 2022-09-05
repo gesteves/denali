@@ -1,5 +1,5 @@
 if Rails.env.production?
-  host = if ENV['IS_PULL_REQUEST'] == 'true'
+  host = if ENV['RENDER'] && ENV['IS_PULL_REQUEST'] == 'true'
     ENV['RENDER_EXTERNAL_HOSTNAME']
   else
     ENV['DOMAIN']

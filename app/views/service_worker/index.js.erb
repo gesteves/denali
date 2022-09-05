@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  const version = '<%= ENV['RENDER_GIT_COMMIT'] %>';
+  const version = '<%= @git_commit %>';
 
   self.addEventListener('install', event => {
     self.skipWaiting();
