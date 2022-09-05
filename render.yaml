@@ -11,7 +11,7 @@ services:
       targetMemoryPercent: 90
       targetCPUPercent: 90
     healthCheckPath: /healthz
-    envVars:
+    envVars: &default
       - key: DATABASE_URL # Render PostgreSQL database
         fromDatabase:
           name: denali-postgres
@@ -34,44 +34,14 @@ services:
     dockerCommand: bundle exec sidekiq -t 25
     plan: starter
     numInstances: 1
-    envVars:
-      - key: DATABASE_URL # Render PostgreSQL database
-        fromDatabase:
-          name: denali-postgres
-          property: connectionString
-      - key: REDIS_URL # Render Redis service (noeviction)
-        fromService:
-          name: denali-redis
-          type: redis
-          property: connectionString
-      - key: REDIS_CACHE_URL # Render Redis service (with eviction)
-        fromService:
-          name: denali-redis-cache
-          type: redis
-          property: connectionString
-      - fromGroup: denali
+    envVars: *default
   - type: cron
     name: denali-publish
     env: docker
     dockerfilePath: Dockerfile.production
     dockerCommand: bundle exec rake queue:publish
     schedule: "0 * * * *"
-    envVars:
-      - key: DATABASE_URL # Render PostgreSQL database
-        fromDatabase:
-          name: denali-postgres
-          property: connectionString
-      - key: REDIS_URL # Render Redis service (noeviction)
-        fromService:
-          name: denali-redis
-          type: redis
-          property: connectionString
-      - key: REDIS_CACHE_URL # Render Redis service (with eviction)
-        fromService:
-          name: denali-redis-cache
-          type: redis
-          property: connectionString
-      - fromGroup: denali
+    envVars: *default
   - type: redis
     name: denali-redis
     plan: starter
