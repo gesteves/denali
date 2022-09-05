@@ -57,7 +57,7 @@ gem 'flickraw', git: 'https://github.com/gesteves/flickraw.git', branch: 'update
 
 # Search
 gem 'elasticsearch-model', '~> 5.0'
-gem 'elasticsearch-rails', '~> 5.0'
+gem 'elasticsearch-rails', '~> 6.1'
 
 gem 'graphql'
 
