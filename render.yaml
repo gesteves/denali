@@ -5,7 +5,6 @@ services:
     dockerfilePath: Dockerfile.production
     dockerCommand: bundle exec puma -C config/puma.rb
     plan: starter
-    branch: render
     scaling:
       minInstances: 1
       maxInstances: 3
@@ -34,7 +33,6 @@ services:
     dockerfilePath: Dockerfile.production
     dockerCommand: bundle exec sidekiq -t 25
     plan: starter
-    branch: render
     numInstances: 1
     envVars:
       - key: DATABASE_URL # Render PostgreSQL database
@@ -57,7 +55,6 @@ services:
     env: docker
     dockerfilePath: Dockerfile.production
     dockerCommand: bundle exec rake queue:publish
-    branch: render
     schedule: "0 * * * *"
     envVars:
       - key: DATABASE_URL # Render PostgreSQL database
