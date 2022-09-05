@@ -22,7 +22,7 @@ Rails.application.configure do
 
   # Disable serving static files from the `/public` folder by default since
   # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present? || ENV['RENDER']
   config.public_file_server.headers = { 'Cache-Control' => 'public, max-age=31536000, immutable' }
 
   # Compress CSS using a preprocessor.
@@ -62,8 +62,9 @@ Rails.application.configure do
   # config.log_tags = [ :request_id ]
 
   # Use a different cache store in production.
-  if ENV["MEMCACHEDCLOUD_SERVERS"]
-    config.cache_store = :mem_cache_store, ENV["MEMCACHEDCLOUD_SERVERS"].split(','), { :username => ENV["MEMCACHEDCLOUD_USERNAME"], :password => ENV["MEMCACHEDCLOUD_PASSWORD"] }
+
+  if ENV['REDIS_CACHE_URL'].present?
+    config.cache_store = :redis_cache_store, { url: ENV['REDIS_CACHE_URL'] }
   end
 
   # Use a real queuing backend for Active Job (and separate queues per environment).

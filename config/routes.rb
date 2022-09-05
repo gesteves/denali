@@ -129,6 +129,7 @@ Rails.application.routes.draw do
   get '/about'                         => 'blogs#about', :as => :about
 
   # Miscellaneous
+  get '/healthz'                       => 'health#show', :as => :health_check
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }
   get '*unmatched_route', to: 'errors#file_not_found'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html

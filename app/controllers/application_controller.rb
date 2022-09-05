@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  before_action :set_git_commit
   before_action :get_photoblog
   before_action :domain_redirect
   before_action :set_referrer_policy
@@ -42,6 +43,10 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
 
+  def set_git_commit
+    @git_commit = ENV['RENDER_GIT_COMMIT'] || ENV['HEROKU_SLUG_COMMIT']
+  end
+
   def get_photoblog
     @photoblog = Blog.first
   end
@@ -53,7 +58,7 @@ class ApplicationController < ActionController::Base
   end
 
   def domain_redirect
-    # Prevent people from bypassing CloudFront and hitting Heroku directly.
+    # Prevent people from bypassing CloudFront and hitting the app server directly.
     if Rails.env.production? && ENV['AWS_CLOUDFRONT_DISTRIBUTION_ID'].present? && !is_cloudfront?
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
       http_cache_forever(public: true) do
@@ -79,11 +84,7 @@ class ApplicationController < ActionController::Base
   end
 
   def is_repeat_visit?
-    request.headers['X-Denali-Version'] == ENV['HEROKU_RELEASE_VERSION']
-  end
-
-  def redirect_heroku
-    redirect_to root_url(host: ENV['DOMAIN']) if request.host.match? /herokuapp\.com/
+    request.headers['X-Denali-Version'] == @git_commit
   end
 
   def add_preload_link_header(url, opts = {})

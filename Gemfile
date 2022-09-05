@@ -44,10 +44,10 @@ gem 'htmlentities'
 
 # Monitoring
 gem 'bugsnag'
-gem 'barnes'
 
 # Caching
-gem 'dalli'
+gem 'redis'
+gem 'hiredis'
 
 # Background Jobs
 gem 'sidekiq'

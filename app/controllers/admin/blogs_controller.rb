@@ -30,7 +30,6 @@ class Admin::BlogsController < AdminController
   def update
     respond_to do |format|
       if @photoblog.update(blog_params)
-        HerokuConfigWorker.perform_async({ CACHE_TTL: blog_params[:cache_ttl] }.compact)
         format.html {
           flash[:success] = 'Your changes were saved!'
           redirect_to edit_admin_blog_path(@photoblog)
@@ -64,6 +63,6 @@ class Admin::BlogsController < AdminController
                                  :instagram, :twitter, :email, :flickr,
                                  :header_logo_svg, :additional_meta_tags,
                                  :favicon, :touch_icon, :logo, :placeholder, :time_zone, :meta_description, :map_style,
-                                 :cache_ttl, :show_search)
+                                 :show_search)
   end
 end

@@ -1,4 +1,4 @@
-elasticsearch_url = ENV['ELASTICSEARCH_URL'] || ENV['SEARCHBOX_URL']
+elasticsearch_url = ENV['ELASTICSEARCH_URL']
 if elasticsearch_url.present?
   Elasticsearch::Model.client = Elasticsearch::Client.new({
     host: elasticsearch_url,

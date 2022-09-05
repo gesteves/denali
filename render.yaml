@@ -1,0 +1,106 @@
+services:
+  - type: web
+    name: denali
+    env: docker
+    dockerfilePath: Dockerfile.production
+    dockerCommand: bundle exec puma -C config/puma.rb
+    plan: starter
+    scaling:
+      minInstances: 1
+      maxInstances: 3
+      targetMemoryPercent: 90
+      targetCPUPercent: 90
+    healthCheckPath: /healthz
+    envVars:
+      - key: DATABASE_URL # Render PostgreSQL database
+        fromDatabase:
+          name: denali-postgres
+          property: connectionString
+      - key: REDIS_URL # Render Redis service (noeviction)
+        fromService:
+          name: denali-redis
+          type: redis
+          property: connectionString
+      - key: REDIS_CACHE_URL # Render Redis service (with eviction)
+        fromService:
+          name: denali-redis-cache
+          type: redis
+          property: connectionString
+      - fromGroup: denali
+  - type: worker
+    name: denali-worker
+    env: docker
+    dockerfilePath: Dockerfile.production
+    dockerCommand: bundle exec sidekiq -t 25
+    plan: starter
+    numInstances: 1
+    envVars:
+      - key: DATABASE_URL # Render PostgreSQL database
+        fromDatabase:
+          name: denali-postgres
+          property: connectionString
+      - key: REDIS_URL # Render Redis service (noeviction)
+        fromService:
+          name: denali-redis
+          type: redis
+          property: connectionString
+      - key: REDIS_CACHE_URL # Render Redis service (with eviction)
+        fromService:
+          name: denali-redis-cache
+          type: redis
+          property: connectionString
+      - fromGroup: denali
+  - type: cron
+    name: denali-publish
+    env: docker
+    dockerfilePath: Dockerfile.production
+    dockerCommand: bundle exec rake queue:publish
+    schedule: "0 * * * *"
+    envVars:
+      - key: DATABASE_URL # Render PostgreSQL database
+        fromDatabase:
+          name: denali-postgres
+          property: connectionString
+      - key: REDIS_URL # Render Redis service (noeviction)
+        fromService:
+          name: denali-redis
+          type: redis
+          property: connectionString
+      - key: REDIS_CACHE_URL # Render Redis service (with eviction)
+        fromService:
+          name: denali-redis-cache
+          type: redis
+          property: connectionString
+      - fromGroup: denali
+  - type: redis
+    name: denali-redis
+    plan: starter
+    maxmemoryPolicy: noeviction
+    ipAllowList: []
+  - type: redis
+    name: denali-redis-cache
+    plan: starter
+    maxmemoryPolicy: allkeys-lfu
+    ipAllowList: []
+  - type: pserv
+    name: denali-elasticsearch
+    env: docker
+    dockerfilePath: Dockerfile.elasticsearch
+    plan: starter plus
+    disk:
+      name: esdata
+      mountPath: /usr/share/elasticsearch/data
+      sizeGB: 10
+    autoDeploy: false
+    envVars:
+    - key: ES_JAVA_OPTS
+      value: "-Xms512m -Xmx512m"
+    - key: discovery.type
+      value: single-node
+    - key: cluster.name
+      value: elastic
+
+databases:
+  - name: denali-postgres
+    plan: starter
+    ipAllowList: [] # only allow internal connections
