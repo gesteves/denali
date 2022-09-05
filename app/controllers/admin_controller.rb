@@ -9,7 +9,7 @@ class AdminController < ApplicationController
 
   def default_url_options
     if Rails.env.production?
-      { host: ENV['ADMIN_DOMAIN'] }
+      { host: ENV['DOMAIN_ADMIN'] }
     else
       Rails.application.routes.default_url_options
     end
