@@ -44,13 +44,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_release_version
-    @release_version = if ENV['RENDER'].present?
-      "render-#{ENV['RENDER_GIT_COMMIT']}"
-    elsif ENV['FLY_ALLOC_ID'].present?
-      "fly-#{ENV['FLY_ALLOC_ID']}"
-    elsif ENV['HEROKU_RELEASE_VERSION'].present?
-      "heroku-#{ENV['HEROKU_RELEASE_VERSION']}"
-    end
+    @release_version = ENV['RENDER_GIT_COMMIT'] || ENV['FLY_ALLOC_ID'] || ENV['HEROKU_RELEASE_VERSION']
   end
 
   def get_photoblog
