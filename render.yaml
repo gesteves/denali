@@ -89,7 +89,7 @@ services:
     name: denali-elasticsearch
     env: docker
     dockerfilePath: Dockerfile.elasticsearch
-    plan: starter
+    plan: starter plus
     disk:
       name: esdata
       mountPath: /usr/share/elasticsearch/data
