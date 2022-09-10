@@ -60,7 +60,7 @@ services:
     disk:
       name: esdata
       mountPath: /usr/share/elasticsearch/data
-      sizeGB: 10
+      sizeGB: 5
     autoDeploy: false
     envVars:
     - key: ES_JAVA_OPTS
