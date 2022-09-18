@@ -10,7 +10,7 @@ class NativeLandsWorker < ApplicationWorker
       raise "Native Lands API request failed: #{response.body}"
     else
       response = JSON.parse(response.body)
-      territories = response.select { |t| t['type'] == 'Feature' }.map { |t| t.dig('properties', 'Name') }.compact
+      territories = response.select { |t| t['type'] == 'Feature' }.map { |t| t.dig('properties', 'Name') }.compact.map { |t| HTMLEntities.new.decode(t) }
       if territories.present?
         photo.territories = territories.to_json
         photo.save!
