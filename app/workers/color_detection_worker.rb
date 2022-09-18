@@ -22,6 +22,6 @@ class ColorDetectionWorker < ApplicationWorker
   end
 
   def is_black_and_white?(colors)
-    colors['colors'].map { |c| c['hex'].gsub('#', '') }.reject { |c| c.scan(/../).uniq.size == 1 }.empty?
+    colors['dominant_colors'].values.map { |c| c['hex'].gsub('#', '') }.reject { |c| c.scan(/../).uniq.size == 1 }.empty?
   end
 end
