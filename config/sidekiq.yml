@@ -3,3 +3,10 @@
   - high
   - default
   - low
+:schedule:
+  publish_queued_entries:
+    cron: '0 0 * * * *'   # Runs every hour
+    class: PublishWorker
+    queue: high
+    description: "Attempts to publish a queued entry every hour."
+    enabled: <%= ENV['PUBLISH_QUEUED_ENTRIES'].present? %>
