@@ -51,6 +51,7 @@ gem 'hiredis'
 
 # Background Jobs
 gem 'sidekiq'
+gem 'sidekiq-scheduler'
 
 # Social Networks
 gem 'flickraw', git: 'https://github.com/gesteves/flickraw.git', branch: 'update-upload-url'

@@ -126,6 +126,8 @@ GEM
       faraday
       multi_json
     erubi (1.11.0)
+    et-orbi (1.2.7)
+      tzinfo
     ethon (0.15.0)
       ffi (>= 1.15.0)
     execjs (2.8.1)
@@ -138,6 +140,9 @@ GEM
     ffi (1.15.5)
     figaro (1.2.0)
       thor (>= 0.14.0, < 2)
+    fugit (1.7.1)
+      et-orbi (~> 1, >= 1.2.7)
+      raabro (~> 1.4)
     globalid (1.0.0)
       activesupport (>= 5.0)
     graphql (2.0.14)
@@ -244,6 +249,7 @@ GEM
       stringio
     puma (5.6.5)
       nio4r (~> 2.0)
+    raabro (1.4.0)
     racc (1.6.0)
     rack (2.2.4)
     rack-attack (6.6.1)
@@ -300,6 +306,8 @@ GEM
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
+    rufus-scheduler (3.8.2)
+      fugit (~> 1.1, >= 1.1.6)
     sanitize (6.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -324,6 +332,11 @@ GEM
       connection_pool (>= 2.2.5)
       rack (~> 2.0)
       redis (>= 4.5.0, < 5)
+    sidekiq-scheduler (4.0.2)
+      redis (>= 4.2.0)
+      rufus-scheduler (~> 3.2)
+      sidekiq (>= 4)
+      tilt (>= 1.4.0)
     snaky_hash (2.0.0)
       hashie
       version_gem (~> 1.1)
@@ -412,6 +425,7 @@ DEPENDENCIES
   scss-lint
   sdoc (~> 2.4)
   sidekiq
+  sidekiq-scheduler
   spring
   spring-watcher-listen (~> 2.1.0)
   sprockets-rails
