@@ -9,4 +9,4 @@
     class: PublishWorker
     queue: high
     description: "Attempts to publish a queued entry every hour."
-    enabled: <%= ENV['PUBLISH_QUEUED_ENTRIES'].present? %>
+    enabled: <%= ENV['PUBLISH_QUEUED_ENTRIES'] == "true" %>
