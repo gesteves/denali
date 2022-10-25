@@ -387,7 +387,12 @@ class Entry < ApplicationRecord
       meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
-      meta << "📍 #{photo.territory_list} land" if self.show_location? && photo.territories.present?
+
+      location = []
+      location << photo.formatted_location if photo.formatted_location.present?
+      location << "#{photo.territory_list} land" if photo.territories.present?
+
+      meta << "📍 #{location.join(' • ')}" if location.present? && self.show_location?
       meta << "\n" unless self.is_single_photo?
     end
 
