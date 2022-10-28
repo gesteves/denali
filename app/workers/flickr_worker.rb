@@ -2,7 +2,7 @@ class FlickrWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
   def perform(photo_id)
-    return if ENV['POST_TO_FLICKR'].blank? || ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank? || ENV['FLICKR_ACCESS_TOKEN'].blank? || ENV['FLICKR_ACCESS_TOKEN_SECRET'].blank?
+    return if ENV['ENABLE_FLICKR'].blank? || ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank? || ENV['FLICKR_ACCESS_TOKEN'].blank? || ENV['FLICKR_ACCESS_TOKEN_SECRET'].blank?
 
     photo = Photo.find(photo_id)
     raise UnprocessedPhotoError unless photo.has_dimensions?
