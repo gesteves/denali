@@ -283,7 +283,6 @@ class Entry < ApplicationRecord
   def enqueue_publish_jobs
     OpenGraphWorker.perform_async(self.id)
     InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
-    TwitterWorker.perform_async(self.id, self.twitter_caption) if self.post_to_twitter
     Webhook.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
     self.purge_from_cdn
