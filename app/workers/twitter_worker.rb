@@ -2,7 +2,7 @@ class TwitterWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
   def perform(entry_id, text)
-    return if !Rails.env.production?
+    return if ENV['POST_TO_TWITTER'].blank?
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
     raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
