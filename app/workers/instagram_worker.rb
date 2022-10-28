@@ -35,7 +35,6 @@ class InstagramWorker < ApplicationWorker
   end
 
   def get_profile_ids
-    return if ENV['BUFFER_ACCESS_TOKEN'].blank?
     response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['BUFFER_ACCESS_TOKEN']}")
     if response.code == 200
       profiles = JSON.parse(response.body)
