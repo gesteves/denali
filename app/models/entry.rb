@@ -486,7 +486,7 @@ class Entry < ApplicationRecord
     caption << "[#{self.plain_title}](#{self.permalink_url})"
     caption << self.body
 
-    caption << meta.join("\n").gsub("\n\n\n", "\n\n").strip
+    caption << meta.join("  \n").gsub("\n\n\n", "\n\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
 
