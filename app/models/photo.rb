@@ -194,13 +194,13 @@ class Photo < ApplicationRecord
     "#{formatted}″"
   end
 
-  def formatted_exif
+  def formatted_exif(separator: ' • ')
     text = []
     text << self.focal_length_with_unit if self.focal_length.present?
     text << self.formatted_exposure if self.exposure.present?
     text << self.formatted_aperture if self.f_number.present?
     text << "ISO #{self.iso}" if self.iso.present?
-    text.join(' • ')
+    text.join(separator)
   end
 
   def formatted_camera
