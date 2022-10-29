@@ -194,13 +194,13 @@ class Photo < ApplicationRecord
     "#{formatted}″"
   end
 
-  def formatted_exif(separator: ' • ')
+  def formatted_exif
     text = []
     text << self.focal_length_with_unit if self.focal_length.present?
     text << self.formatted_exposure if self.exposure.present?
     text << self.formatted_aperture if self.f_number.present?
     text << "ISO #{self.iso}" if self.iso.present?
-    text.join(separator)
+    text.join(' – ')
   end
 
   def formatted_camera
@@ -248,7 +248,7 @@ class Photo < ApplicationRecord
     meta = []
     meta << "📷 #{camera_film.join(' + ')}" if camera_film.present?
     meta << "ℹ️ #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
-    meta << "📍 #{location.join(' • ')}" if location.present? && self.entry.show_location?
+    meta << "📍 #{location.join(' – ')}" if location.present? && self.entry.show_location?
     meta << "🔗 <a href=\"#{self.entry.permalink_url(ref: 'Flickr')}\">#{self.entry.permalink_url.gsub(/https?:\/\//, '')}</a>"
 
     text = []
@@ -269,7 +269,7 @@ class Photo < ApplicationRecord
     meta = []
     meta << "📷 #{camera_film.join(' + ')}" if camera_film.present?
     meta << "🎞 #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
-    meta << "📍 #{location.join(' • ')}" if location.present? && self.entry.show_location?
+    meta << "📍 #{location.join(' – ')}" if location.present? && self.entry.show_location?
     meta << "🔗 [#{self.entry.permalink_url.gsub(/https?:\/\/(www\.)?/, '')}](#{self.entry.permalink_url(ref: 'Reddit')})"
 
     text = []
@@ -291,7 +291,7 @@ class Photo < ApplicationRecord
     meta << "📷 #{self.formatted_camera}" if self.formatted_camera.present?
     meta << "🎞 #{self.formatted_exif}" if self.formatted_exif.present? && self.film.blank?
     meta << "🎞 #{self.film.display_name}" if self.film.present?
-    meta << "📍 #{location.join(' • ')}" if location.present? && self.entry.show_location?
+    meta << "📍 #{location.join(' – ')}" if location.present? && self.entry.show_location?
     meta << "🔗 #{self.entry.permalink_url}"
     meta.join("\n")
   end
