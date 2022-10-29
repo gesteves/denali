@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_05_14_210342) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_29_191639) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -65,6 +65,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_210342) do
     t.text "analytics_head"
     t.text "analytics_body"
     t.boolean "show_search", default: false
+    t.string "tumblr"
   end
 
   create_table "cameras", force: :cascade do |t|
@@ -114,6 +115,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_05_14_210342) do
     t.boolean "post_to_flickr_groups", default: true
     t.string "tumblr_id"
     t.boolean "hide_from_search_engines", default: false
+    t.boolean "post_to_tumblr", default: true
     t.index ["blog_id"], name: "index_entries_on_blog_id"
     t.index ["hide_from_search_engines"], name: "index_entries_on_hide_from_search_engines"
     t.index ["photos_count"], name: "index_entries_on_photos_count"
