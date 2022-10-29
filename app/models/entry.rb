@@ -283,6 +283,7 @@ class Entry < ApplicationRecord
   def enqueue_publish_jobs
     OpenGraphWorker.perform_async(self.id)
     InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
+    TumblrWorker.perform_async(self.id, true) if self.post_to_tumblr
     TwitterWorker.perform_async(self.id, self.twitter_caption) if self.post_to_twitter
     Webhook.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
@@ -462,6 +463,37 @@ class Entry < ApplicationRecord
       end
     end
     entry_albums.flatten.compact.uniq
+  end
+
+  def tumblr_caption
+    meta = []
+
+    self.photos.to_a[0..10].each_with_index do |photo, i|
+      meta << "#{(i + 1).ordinalize} photo:" unless self.is_single_photo?
+      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
+
+      location = []
+      location << photo.formatted_location if photo.formatted_location.present?
+      location << "#{photo.territory_list} land" if photo.territories.present?
+
+      meta << "📍 #{location.join(' • ')}" if location.present? && self.show_location?
+      meta << "\n" unless self.is_single_photo?
+    end
+
+    caption = []
+    caption << "[#{self.plain_title}](#{self.permalink_url})"
+    caption << self.body
+
+    caption << meta.join("\n").gsub("\n\n\n", "\n\n").strip
+    caption.reject(&:blank?).join("\n\n")
+  end
+
+  def tumblr_tags
+    tags = self.combined_tag_list
+    tags += ["Photographers on Tumblr"] if self.is_photo?
+    tags.flatten.compact.uniq.sort.map(&:downcase).join(', ')
   end
 
   def update_tags
