@@ -5,5 +5,6 @@
   <%= render partial: 'partials/follow_icon', locals: { url: feed_url(format: 'atom', page: nil), icon: 'feed',      label: 'Subscribe to Feed' } %>
   <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.flickr,                   icon: 'flickr',    label: 'Follow on Flickr' }          if @photoblog.flickr.present? %>
   <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.instagram,                icon: 'instagram', label: 'Follow on Instagram' }       if @photoblog.instagram.present? %>
+  <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.tumblr,                   icon: 'tumblr',    label: 'Follow on Tumblr' }          if @photoblog.tumblr.present? %>
   <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.twitter,                  icon: 'twitter',   label: 'Follow on Twitter' }         if @photoblog.twitter.present? %>
 </ul>
