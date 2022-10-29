@@ -1,7 +1,7 @@
 class TumblrWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id, now = false)
+  def perform(entry_id)
     return if ENV['ENABLE_TUMBLR'].blank?
     entry = Entry.published.find(entry_id)
     raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
@@ -19,7 +19,7 @@ class TumblrWorker < ApplicationWorker
       caption: entry.tumblr_caption,
       link: entry.permalink_url,
       source_url: entry.permalink_url,
-      state: now ? 'published' : 'queue',
+      state: 'queue',
       format: 'markdown'
     }
 
