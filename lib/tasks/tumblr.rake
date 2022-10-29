@@ -27,13 +27,13 @@ namespace :tumblr do
       end
 
       posts.each do |post|
-        url = post['source_url'].gsub('https://href.li/?', '')
+        url = post['source_url'] || post['link_url']
         tumblr_id = post['id']
 
         next if url.blank?
 
         entry = begin
-          Entry.find_by_url(url: url)
+          Entry.find_by_url(url: url.gsub('https://href.li/?', ''))
         rescue
           nil
         end
