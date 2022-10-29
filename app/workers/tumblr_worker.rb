@@ -4,7 +4,7 @@ class TumblrWorker < ApplicationWorker
   def perform(entry_id, now = false)
     return if ENV['ENABLE_TUMBLR'].blank?
     entry = Entry.published.find(entry_id)
-    raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_processed?
+    raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
 
     tumblr = Tumblr::Client.new({
       consumer_key: ENV['TUMBLR_CONSUMER_KEY'],
