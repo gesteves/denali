@@ -10,13 +10,21 @@ namespace :tumblr do
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    total_posts = tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
+    total_posts = if ENV['QUEUED'].present?
+      tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['queue']
+    else
+      tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
+    end
     offset = 0
     limit = 20
 
     while offset <= total_posts
       puts "Fetching posts #{offset + 1}-#{offset + limit}, out of #{total_posts}"
-      posts = tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
+      posts = if ENV['QUEUED'].present?
+        tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
+      else
+        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
+      end
 
       posts.each do |post|
         url = post['source_url'].gsub('https://href.li/?', '')
