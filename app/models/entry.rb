@@ -493,10 +493,35 @@ class Entry < ApplicationRecord
   end
 
   def tumblr_tags
-    tags = []
-    tags << "Photographers on Tumblr" if self.is_photo?
-    tags << self.combined_tag_list
-    tags.flatten.compact.uniq.sort.map(&:downcase).join(', ')
+    entry_tags = self.tags
+    entry_locations = self.locations
+    entry_equipment = self.equipment
+    entry_styles = self.styles
+    combined_tags = self.combined_tags
+    tags = self.tag_list
+    location_tags = self.location_list
+    equipment_tags = self.equipment_list
+    style_tags = self.style_list
+    more_tags = self.combined_tag_list
+    more_tags += ["Photographers on Tumblr", "Original Photographers"] if self.is_photo?
+
+    self.blog.tag_customizations.where.not(tumblr_tags: [nil, '']).each do |tag_customization|
+      hashtags = tag_customization.tumblr_tags_to_a
+      if tag_customization.matches_tags? entry_tags
+        tags << hashtags
+      elsif tag_customization.matches_tags? entry_locations
+        location_tags << hashtags
+      elsif tag_customization.matches_tags? entry_equipment
+        equipment_tags << hashtags
+      elsif tag_customization.matches_tags? entry_styles
+        style_tags << hashtags
+      elsif tag_customization.matches_tags? combined_tags
+        more_tags << hashtags
+      end
+    end
+
+    tumblr_tags = tags + location_tags + more_tags + equipment_tags + style_tags
+    tumblr_tags.flatten.compact.uniq.shuffle.map(&:downcase).join(', ')
   end
 
   def update_tags
