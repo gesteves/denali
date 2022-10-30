@@ -14,13 +14,13 @@ class TumblrUpdateWorker < ApplicationWorker
 
     post = tumblr.posts(ENV['TUMBLR_DOMAIN'], id: tumblr_id)
     post_format = post['posts'][0]['format']
-    html? = post_format == 'html'
+    use_html = post_format == 'html'
 
     opts = {
       id: tumblr_id,
       tags: entry.tumblr_tags,
       slug: entry.slug,
-      caption: entry.tumblr_caption(html: html?),
+      caption: entry.tumblr_caption(html: use_html),
       link: entry.permalink_url,
       source_url: entry.permalink_url,
       format: post_format
