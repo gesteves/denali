@@ -13,11 +13,13 @@ class TumblrUpdateWorker < ApplicationWorker
     })
 
     post = tumblr.posts(ENV['TUMBLR_DOMAIN'], id: tumblr_id)
+    post_type = post['posts'][0]['type']
     post_format = post['posts'][0]['format']
     use_html = post_format == 'html'
 
     opts = {
       id: tumblr_id,
+      type: post_type,
       tags: entry.tumblr_tags,
       slug: entry.slug,
       caption: entry.tumblr_caption(html: use_html),
