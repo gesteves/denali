@@ -495,11 +495,8 @@ class Entry < ApplicationRecord
   def tumblr_tags
     tags = []
     tags << "Photographers on Tumblr" if self.is_photo?
-    tags << self.tag_list
-    tags << self.location_list
-    tags << self.style_list
-    tags << self.equipment_list
-    tags.flatten.compact.uniq.map(&:downcase).join(', ')
+    tags << self.combined_tag_list
+    tags.flatten.compact.uniq.sort.map(&:downcase).join(', ')
   end
 
   def update_tags
