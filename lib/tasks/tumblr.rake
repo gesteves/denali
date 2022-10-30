@@ -17,7 +17,7 @@ namespace :tumblr do
     end
     offset = 0
     limit = 20
-    seconds = 0
+    counter = 0
 
     while offset <= total_posts
       puts "Fetching posts #{offset + 1}-#{offset + limit}, out of #{total_posts}"
@@ -41,8 +41,8 @@ namespace :tumblr do
 
         next if entry.blank?
 
-        TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id, ENV['QUEUED'].blank?)
-        seconds += 10
+        TumblrUpdateWorker.perform_in(counter.minutes, entry.id, tumblr_id, ENV['QUEUED'].blank?)
+        counter += 1
       end
 
       offset += limit
