@@ -19,7 +19,6 @@ class TumblrUpdateWorker < ApplicationWorker
 
     opts = {
       id: tumblr_id,
-      type: post_type,
       tags: entry.tumblr_tags,
       slug: entry.slug,
       caption: entry.tumblr_caption(html: use_html),
@@ -28,8 +27,6 @@ class TumblrUpdateWorker < ApplicationWorker
       format: post_format,
       date: entry.published_at.to_s
     }
-
-    opts[:data] = entry.photos.map { |p| URI.open(p.url(w: 2048)).path } if entry.is_photo?
 
     response = tumblr.edit(ENV['TUMBLR_DOMAIN'], opts)
 
