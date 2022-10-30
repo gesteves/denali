@@ -12,14 +12,18 @@ class TumblrUpdateWorker < ApplicationWorker
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
+    post = tumblr.posts(ENV['TUMBLR_DOMAIN'], id: tumblr_id)
+    post_format = post['posts'][0]['format']
+    html? = post_format == 'html'
+
     opts = {
       id: tumblr_id,
       tags: entry.tumblr_tags,
       slug: entry.slug,
-      caption: entry.tumblr_caption,
+      caption: entry.tumblr_caption(html: html?),
       link: entry.permalink_url,
       source_url: entry.permalink_url,
-      format: 'markdown'
+      format: post_format
     }
 
     opts[:date] = entry.published_at.to_s if update_timestamp

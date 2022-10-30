@@ -465,7 +465,7 @@ class Entry < ApplicationRecord
     entry_albums.flatten.compact.uniq
   end
 
-  def tumblr_caption
+  def tumblr_caption(html: false)
     meta = []
 
     self.photos.to_a[0..10].each_with_index do |photo, i|
@@ -487,7 +487,9 @@ class Entry < ApplicationRecord
     caption << self.body
 
     caption << meta.join("  \n").gsub("\n\n\n", "\n\n").strip
-    caption.reject(&:blank?).join("\n\n")
+    markdown = caption.reject(&:blank?).join("\n\n")
+
+    html ? markdown_to_html(markdown) : markdown
   end
 
   def tumblr_tags
