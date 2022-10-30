@@ -24,7 +24,7 @@ class TumblrWorker < ApplicationWorker
     }
 
     response = if entry.is_photo?
-      opts[:data] = entry.photos.map { |p| URI.open(p.url(w: 1280)).path }
+      opts[:data] = entry.photos.map { |p| URI.open(p.url(w: 2048)).path }
       tumblr.photo(ENV['TUMBLR_DOMAIN'], opts)
     else
       tumblr.text(ENV['TUMBLR_DOMAIN'], opts)

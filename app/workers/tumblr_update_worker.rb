@@ -27,6 +27,8 @@ class TumblrUpdateWorker < ApplicationWorker
       date: entry.published_at.to_s
     }
 
+    opts[:data] = entry.photos.map { |p| URI.open(p.url(w: 2048)).path } if entry.is_photo?
+
     response = tumblr.edit(ENV['TUMBLR_DOMAIN'], opts)
 
     if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
