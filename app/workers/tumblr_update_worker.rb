@@ -13,7 +13,7 @@ class TumblrUpdateWorker < ApplicationWorker
     })
 
     response = tumblr.posts(ENV['TUMBLR_DOMAIN'], id: tumblr_id)
-    raise response.to_s response['errors'].present? || (response['status'].present? && response['status'] >= 400)
+    raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
 
     post_format = response['posts'][0]['format']
     use_html = post_format == 'html'
