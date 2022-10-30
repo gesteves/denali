@@ -36,8 +36,8 @@ namespace :tumblr do
         TumblrUpdateWorker.perform_in(counter.minutes, entry.id, tumblr_id)
         counter += 1
       end
-
       offset += limit
+      sleep 1
     end
   end
 
