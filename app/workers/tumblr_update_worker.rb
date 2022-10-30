@@ -1,7 +1,7 @@
 class TumblrUpdateWorker < ApplicationWorker
   sidekiq_options queue: 'low'
 
-  def perform(entry_id, tumblr_id)
+  def perform(entry_id, tumblr_id, update_timestamp = false)
     return if ENV['ENABLE_TUMBLR'].blank?
     entry = Entry.published.find(entry_id)
 
@@ -21,6 +21,8 @@ class TumblrUpdateWorker < ApplicationWorker
       source_url: entry.permalink_url,
       format: 'markdown'
     }
+
+    opts[:date] = entry.published_at.to_s if update_timestamp
 
     response = tumblr.edit(ENV['TUMBLR_DOMAIN'], opts)
 
