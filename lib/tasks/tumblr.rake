@@ -10,22 +10,14 @@ namespace :tumblr do
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    total_posts = if ENV['QUEUED'].present?
-      tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['queue']
-    else
-      tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
-    end
+    total_posts = tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
     offset = 0
     limit = 20
     counter = 0
 
     while offset <= total_posts
       puts "Fetching posts #{offset + 1}-#{offset + limit}, out of #{total_posts}"
-      posts = if ENV['QUEUED'].present?
-        tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
-      else
-        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
-      end
+      posts = tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
 
       posts.each do |post|
         url = post['source_url'] || post['link_url']
@@ -41,7 +33,7 @@ namespace :tumblr do
 
         next if entry.blank?
 
-        TumblrUpdateWorker.perform_in(counter.minutes, entry.id, tumblr_id, ENV['QUEUED'].blank?)
+        TumblrUpdateWorker.perform_in(counter.minutes, entry.id, tumblr_id)
         counter += 1
       end
 
