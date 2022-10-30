@@ -42,7 +42,7 @@ namespace :tumblr do
         next if entry.blank?
 
         TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id, ENV['QUEUED'].blank?)
-        seconds += 4
+        seconds += 10
       end
 
       offset += limit
