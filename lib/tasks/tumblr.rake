@@ -43,7 +43,7 @@ namespace :tumblr do
 
         next if entry.blank?
 
-        seconds = 15 * updated
+        seconds = 10 * updated
         TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id)
         updated += 1
       end
