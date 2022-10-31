@@ -1,6 +1,6 @@
 namespace :tumblr do
   desc 'Update descriptions of Tumblr photos'
-  task :update_all => :environment do
+  task :update_posts => :environment do
 
 
     tumblr = Tumblr::Client.new({
