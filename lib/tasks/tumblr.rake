@@ -13,7 +13,7 @@ namespace :tumblr do
     total_posts = ENV['TOTAL_POSTS'].present? ? ENV['TOTAL_POSTS'].to_i : tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
     offset = 0
     limit = 20
-    counter = 0
+    updated = 0
 
     while offset <= total_posts
       puts "Fetching posts #{offset + 1}-#{offset + limit}, out of #{total_posts}"
@@ -33,8 +33,9 @@ namespace :tumblr do
 
         next if entry.blank?
 
-        TumblrUpdateWorker.perform_in(counter.minutes, entry.id, tumblr_id)
-        counter += 1
+        seconds = 15 * updated
+        TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id)
+        updated += 1
       end
       offset += limit
       sleep 1
