@@ -26,8 +26,7 @@ class TumblrUpdateWorker < ApplicationWorker
       slug: entry.slug,
       caption: entry.tumblr_caption(html: use_html),
       source_url: entry.permalink_url,
-      format: post_format,
-      date: entry.published_at.to_s
+      format: post_format
     }
 
     opts[:date] = entry.published_at.to_s if is_published
