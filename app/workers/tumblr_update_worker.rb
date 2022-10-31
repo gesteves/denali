@@ -23,7 +23,6 @@ class TumblrUpdateWorker < ApplicationWorker
       tags: entry.tumblr_tags,
       slug: entry.slug,
       caption: entry.tumblr_caption(html: use_html),
-      link: entry.permalink_url,
       source_url: entry.permalink_url,
       format: post_format,
       date: entry.published_at.to_s

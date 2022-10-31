@@ -17,7 +17,6 @@ class TumblrWorker < ApplicationWorker
       tags: entry.tumblr_tags,
       slug: entry.slug,
       caption: entry.tumblr_caption,
-      link: entry.permalink_url,
       source_url: entry.permalink_url,
       state: 'queue',
       format: 'markdown'
