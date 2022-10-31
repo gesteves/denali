@@ -16,6 +16,8 @@ class TumblrUpdateWorker < ApplicationWorker
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
 
     post_format = response['posts'][0]['format']
+    link_url = response['posts'][0]['link_url']
+    is_published = response['posts'][0]['state'] == 'published'
     use_html = post_format == 'html'
 
     opts = {
@@ -28,7 +30,8 @@ class TumblrUpdateWorker < ApplicationWorker
       date: entry.published_at.to_s
     }
 
-    opts[:link] = '' if response['posts'][0]['link_url'].present?
+    opts[:date] = entry.published_at.to_s if is_published
+    opts[:link] = '' if link_url.present?
 
     response = tumblr.edit(ENV['TUMBLR_DOMAIN'], opts)
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
