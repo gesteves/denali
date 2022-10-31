@@ -1,6 +1,6 @@
 namespace :flickr do
   desc 'Update titles & descriptions of Flickr photos'
-  task :update_meta => :environment do
+  task :update_all => :environment do
     next if ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank? || ENV['FLICKR_ACCESS_TOKEN'].blank? || ENV['FLICKR_ACCESS_TOKEN_SECRET'].blank?
 
     flickr = FlickRaw::Flickr.new(ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET'])

@@ -2,7 +2,6 @@ namespace :tumblr do
   desc 'Update descriptions of Tumblr photos'
   task :update_posts => :environment do
 
-
     tumblr = Tumblr::Client.new({
       consumer_key: ENV['TUMBLR_CONSUMER_KEY'],
       consumer_secret: ENV['TUMBLR_CONSUMER_SECRET'],
