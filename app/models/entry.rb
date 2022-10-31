@@ -521,7 +521,7 @@ class Entry < ApplicationRecord
     end
 
     tumblr_tags = tags + location_tags + more_tags + equipment_tags + style_tags
-    tumblr_tags.flatten.compact.uniq.sort.map(&:downcase).join(', ')
+    tumblr_tags.flatten.compact.uniq.map(&:downcase).sort.join(', ')
   end
 
   def update_tags
