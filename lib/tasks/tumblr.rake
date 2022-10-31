@@ -31,7 +31,7 @@ namespace :tumblr do
 
       posts.each do |post|
         url = post['source_url'] || post['link_url']
-        tumblr_id = post['id_string']
+        tumblr_id = post['id']
 
         next if url.blank?
 
