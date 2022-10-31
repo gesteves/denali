@@ -10,7 +10,7 @@ namespace :tumblr do
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    total_posts = tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
+    total_posts = ENV['TOTAL_POSTS'].present? ? ENV['TOTAL_POSTS'].to_i : tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
     offset = 0
     limit = 20
     counter = 0
