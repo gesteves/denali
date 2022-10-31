@@ -16,7 +16,7 @@ class TumblrUpdateWorker < ApplicationWorker
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
 
     tumblr_post_format = response['posts'][0]['format']
-    tumblr_post_type = response['posts']['0']['type']
+    tumblr_post_type = response['posts'][0]['type']
     is_published_on_tumblr = response['posts'][0]['state'] == 'published'
     use_html = post_format == 'html'
 
