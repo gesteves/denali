@@ -1,6 +1,6 @@
 namespace :tumblr do
   desc 'Update descriptions of Tumblr photos'
-  task :update_posts => :environment do
+  task :update => :environment do
 
     tumblr = Tumblr::Client.new({
       consumer_key: ENV['TUMBLR_CONSUMER_KEY'],
@@ -9,8 +9,8 @@ namespace :tumblr do
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    total_posts = if ENV['TOTAL_POSTS'].present?
-      ENV['TOTAL_POSTS'].to_i
+    total_posts = if ENV['POST_LIMIT'].present?
+      ENV['POST_LIMIT'].to_i
     elsif ENV['UPDATE_QUEUE'].present?
       tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['queue']
     else
