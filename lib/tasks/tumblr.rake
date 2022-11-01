@@ -17,16 +17,15 @@ namespace :tumblr do
       tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
     end
 
-    offset = 0
     limit = [20, total_posts].min
     updated = 0
 
-    while offset <= total_posts
-      puts "Fetching posts #{offset + 1}-#{offset + limit}, out of #{total_posts}"
+    while updated < total_posts
+      puts "Fetching posts #{updated + 1}-#{updated + limit}, out of #{total_posts}"
       posts = if ENV['UPDATE_QUEUE'].present?
-        tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
+        tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: updated, limit: [total_posts - updated, limit].min)['posts']
       else
-        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit, type: 'photo')['posts']
+        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: updated, limit: [total_posts - updated, limit].min, type: 'photo')['posts']
       end
 
       posts.each do |post|
@@ -52,7 +51,6 @@ namespace :tumblr do
         TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id)
         updated += 1
       end
-      offset += limit
       sleep 1
     end
   end
