@@ -22,12 +22,12 @@ namespace :tumblr do
 
     puts "Updating #{total_posts} Tumblr#{ENV['UPDATE_QUEUE'].present? ? ' queued ' : ' '}posts in #{ENV['TUMBLR_DOMAIN']}."
     
-    while updated < total_posts
-      puts "  Fetching posts #{updated + 1}-#{updated + limit}…"
+    while offset < total_posts
+      puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
       posts = if ENV['UPDATE_QUEUE'].present?
-        tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: updated, limit: [total_posts - updated, limit].min)['posts']
+        tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
       else
-        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: updated, limit: [total_posts - updated, limit].min, type: 'photo')['posts']
+        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit, type: 'photo')['posts']
       end
 
       posts.each do |post|
@@ -58,6 +58,7 @@ namespace :tumblr do
         end
         updated += 1
       end
+      offset += limit
       sleep 1
     end
     puts "Queued #{updated} Tumblr posts to be updated."
