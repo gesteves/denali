@@ -60,7 +60,6 @@ namespace :tumblr do
         end
       end
       offset += limit
-      sleep 1
     end
     puts "Queued #{updated} Tumblr posts to be updated."
   end
