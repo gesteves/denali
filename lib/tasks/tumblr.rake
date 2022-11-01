@@ -46,9 +46,14 @@ namespace :tumblr do
           nil
         end
 
-        seconds = 10 * updated
+        if entry.present?
+          seconds = 10 * updated
+          TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id)
+          puts "    Enqueued update for post #{post_url}."
+        else
+          puts "    Can't update post #{post_url}, skipping…"
+        end
         updated += 1
-        TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id) unless entry.blank?
       end
       sleep 1
     end
