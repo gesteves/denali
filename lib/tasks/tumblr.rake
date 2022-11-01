@@ -30,8 +30,13 @@ namespace :tumblr do
       end
 
       posts.each do |post|
-        url = post['source_url'] || post['link_url']
         tumblr_id = post['id']
+        source_url = post['source_url']
+        caption = post['caption']
+        next if caption.blank?
+        
+        caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.select { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.first&.attr('href')
+        url = caption_url || source_url
 
         next if url.blank?
 
