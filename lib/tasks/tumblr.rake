@@ -31,18 +31,16 @@ namespace :tumblr do
 
       posts.each do |post|
         tumblr_id = post['id']
+        post_url = post['post_url']
         source_url = post['source_url']
         caption = post['caption']
-        next if caption.blank?
-        
         caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.select { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.first&.attr('href')
         url = caption_url || source_url
 
-        next if url.blank?
-
         entry = begin
-          Entry.find_by_url(url: url.gsub('https://href.li/?', ''))
+          Entry.find_by_url(url: url&.gsub('https://href.li/?', ''))
         rescue
+          puts "  Can't update post #{post_url}, skipping."
           nil
         end
 
