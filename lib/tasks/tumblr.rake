@@ -20,8 +20,10 @@ namespace :tumblr do
     limit = [20, total_posts].min
     updated = 0
 
+    puts "Updating #{total_posts} Tumblr#{ENV['UPDATE_QUEUE'].present? ? ' queued ' : ' '}posts in #{ENV['TUMBLR_DOMAIN']}."
+    
     while updated < total_posts
-      puts "Fetching posts #{updated + 1}-#{updated + limit}, out of #{total_posts}"
+      puts "  Fetching posts #{updated + 1}-#{updated + limit}…"
       posts = if ENV['UPDATE_QUEUE'].present?
         tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: updated, limit: [total_posts - updated, limit].min)['posts']
       else
@@ -38,10 +40,11 @@ namespace :tumblr do
         caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.select { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.first&.attr('href')
         url = caption_url || source_url
 
+
         entry = begin
           Entry.find_by_url(url: url&.gsub('https://href.li/?', ''))
         rescue
-          puts "  Can't update post #{post_url}, skipping."
+          puts "    [ERROR] Can't update post #{post_url}, skipping…"
           nil
         end
 
@@ -53,6 +56,7 @@ namespace :tumblr do
       end
       sleep 1
     end
+    puts "Queued #{updated} Tumblr posts to be updated."
   end
 
 end
