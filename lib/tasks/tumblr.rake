@@ -54,10 +54,10 @@ namespace :tumblr do
           seconds = 10 * updated
           TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id)
           puts "    Enqueued update for post #{post_url}"
+          updated += 1
         else
           puts "    Can't update post #{post_url}, skipping…"
         end
-        updated += 1
       end
       offset += limit
       sleep 1
