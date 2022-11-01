@@ -22,7 +22,7 @@ namespace :tumblr do
     updated = 0
 
     while offset <= total_posts
-      puts "Fetching posts #{offset + 1}-#{offset + limit}, out of #{total_posts}"
+      puts "Fetching posts #{offset + 1}-#{[total_posts, offset + limit].min}, out of #{total_posts}"
       posts = if ENV['UPDATE_QUEUE'].present?
         tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
       else
