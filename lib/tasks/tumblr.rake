@@ -26,10 +26,12 @@ namespace :tumblr do
       posts = if ENV['UPDATE_QUEUE'].present?
         tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
       else
-        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
+        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit, type: 'photo')['posts']
       end
 
       posts.each do |post|
+        next if post['type'] != 'photo'
+        
         tumblr_id = post['id']
         post_url = post['post_url']
         source_url = post['source_url']
