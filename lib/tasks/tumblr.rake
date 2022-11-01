@@ -40,19 +40,15 @@ namespace :tumblr do
         caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.select { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.first&.attr('href')
         url = caption_url || source_url
 
-
         entry = begin
           Entry.find_by_url(url: url&.gsub('https://href.li/?', ''))
         rescue
-          puts "    [ERROR] Can't update post #{post_url}, skipping…"
           nil
         end
 
-        next if entry.blank?
-
         seconds = 10 * updated
-        TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id)
         updated += 1
+        TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id) unless entry.blank?
       end
       sleep 1
     end
