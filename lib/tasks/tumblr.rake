@@ -37,6 +37,9 @@ namespace :tumblr do
         post_url = post['post_url']
         source_url = post['source_url']
         caption = post['caption']
+
+        next if ENV['LOW_RES_ONLY'].present? && post['photos']['alt_sizes'].none? { |s| s['width'] == 2048 }
+
         caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.select { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.first&.attr('href')
         url = caption_url || source_url
 
