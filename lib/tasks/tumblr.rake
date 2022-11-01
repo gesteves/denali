@@ -19,6 +19,7 @@ namespace :tumblr do
 
     limit = [20, total_posts].min
     updated = 0
+    offset = 0
 
     puts "Updating #{total_posts} Tumblr#{ENV['UPDATE_QUEUE'].present? ? ' queued ' : ' '}posts in #{ENV['TUMBLR_DOMAIN']}."
     
