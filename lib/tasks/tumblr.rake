@@ -21,17 +21,24 @@ namespace :tumblr do
     updated = 0
     skipped = 0
 
-    puts "Updating Tumblr#{ENV['QUEUE'].present? ? ' queued ' : ' '}posts in #{ENV['TUMBLR_DOMAIN']}."
+    puts "Updating Tumblr #{ENV['QUEUE'].present? ? ' queued posts' : 'posts'} in #{ENV['TUMBLR_DOMAIN']}"
     
     while offset < total_posts
       break if updated >= total_limit
       
       puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
-      posts = if ENV['QUEUE'].present?
-        tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
+      response = if ENV['QUEUE'].present?
+        tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)
       else
-        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit, type: 'photo')['posts']
+        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit, type: 'photo')
       end
+
+      if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
+        puts response.to_s
+        break
+      end
+
+      posts = response['posts']
 
       posts.each do |post|
         break if updated >= total_limit
@@ -44,7 +51,7 @@ namespace :tumblr do
 
         next if ENV['LOW_RES'].present? && post['photos'].all? { |photo| photo['alt_sizes'].any? { |size| size['width'] == 2048 } }
 
-        caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.select { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.first&.attr('href')
+        caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.find { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.attr('href')
         url = caption_url || source_url
 
         entry = begin
