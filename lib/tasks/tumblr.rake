@@ -9,9 +9,9 @@ namespace :tumblr do
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    total_posts = if ENV['POST_LIMIT'].present?
-      ENV['POST_LIMIT'].to_i
-    elsif ENV['UPDATE_QUEUE'].present?
+    total_posts = if ENV['LIMIT'].present?
+      ENV['LIMIT'].to_i
+    elsif ENV['QUEUE'].present?
       tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['queue']
     else
       tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
@@ -20,12 +20,13 @@ namespace :tumblr do
     limit = [20, total_posts].min
     updated = 0
     offset = 0
+    skipped = 0
 
-    puts "Updating #{total_posts} Tumblr#{ENV['UPDATE_QUEUE'].present? ? ' queued ' : ' '}posts in #{ENV['TUMBLR_DOMAIN']}."
+    puts "Updating #{total_posts} Tumblr#{ENV['QUEUE'].present? ? ' queued ' : ' '}posts in #{ENV['TUMBLR_DOMAIN']}."
     
     while offset < total_posts
       puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
-      posts = if ENV['UPDATE_QUEUE'].present?
+      posts = if ENV['QUEUE'].present?
         tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
       else
         tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit, type: 'photo')['posts']
@@ -39,7 +40,7 @@ namespace :tumblr do
         source_url = post['source_url']
         caption = post['caption']
 
-        next if ENV['LOW_RES_ONLY'].present? && post['photos'].all? { |photo| photo['alt_sizes'].any? { |size| size['width'] == 2048 } }
+        next if ENV['LOW_RES'].present? && post['photos'].all? { |photo| photo['alt_sizes'].any? { |size| size['width'] == 2048 } }
 
         caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.select { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.first&.attr('href')
         url = caption_url || source_url
@@ -57,11 +58,12 @@ namespace :tumblr do
           updated += 1
         else
           puts "    Can't update post #{post_url}, skipping…"
+          skipped += 1
         end
       end
       offset += limit
     end
-    puts "Queued #{updated} Tumblr posts to be updated."
+    puts "Enqueued #{updated} Tumblr posts out of #{total_posts} for updates (skipped #{skipped} posts.)"
   end
 
 end
