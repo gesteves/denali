@@ -9,23 +9,23 @@ namespace :tumblr do
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    total_posts = if ENV['LIMIT'].present?
-      ENV['LIMIT'].to_i
-    elsif ENV['QUEUE'].present?
+    total_posts = if ENV['QUEUE'].present?
       tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['queue']
     else
       tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
     end
 
-    limit = [20, total_posts].min
-    updated = 0
+    total_limit = ENV['LIMIT'].present? ? ENV['LIMIT'].to_i : total_posts
+    limit = 20
     offset = 0
+    updated = 0
     skipped = 0
 
-    puts "Updating #{total_posts} Tumblr#{ENV['QUEUE'].present? ? ' queued ' : ' '}posts in #{ENV['TUMBLR_DOMAIN']}."
+    puts "Updating Tumblr#{ENV['QUEUE'].present? ? ' queued ' : ' '}posts in #{ENV['TUMBLR_DOMAIN']}."
     
     while offset < total_posts
-      break if updated >= total_posts
+      break if updated >= total_limit
+      
       puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
       posts = if ENV['QUEUE'].present?
         tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
@@ -34,7 +34,7 @@ namespace :tumblr do
       end
 
       posts.each do |post|
-        break if updated >= total_posts
+        break if updated >= total_limit
         next if post['type'] != 'photo'
         
         tumblr_id = post['id']
