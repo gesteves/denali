@@ -18,7 +18,7 @@ class TumblrWorker < ApplicationWorker
       slug: entry.slug,
       caption: entry.tumblr_caption,
       source_url: entry.permalink_url,
-      state: 'queue',
+      state: ENV['TUMBLR_QUEUE'].present? ? 'queue' : 'published',
       format: 'markdown'
     }
 
