@@ -1,7 +1,7 @@
 class TumblrWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id)
+  def perform(entry_id, tumblr_id = nil)
     return if ENV['ENABLE_TUMBLR'].blank?
     entry = Entry.published.find(entry_id)
     raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
@@ -16,21 +16,36 @@ class TumblrWorker < ApplicationWorker
     opts = {
       tags: entry.tumblr_tags,
       slug: entry.slug,
-      caption: entry.tumblr_caption,
       source_url: entry.permalink_url,
-      state: ENV['TUMBLR_QUEUE'].present? ? 'queue' : 'published',
-      format: 'markdown'
-    }
+      data: entry&.photos&.map { |p| URI.open(p.url(w: 2048)).path }
+    }.compact
 
-    response = if entry.is_photo?
-      opts[:data] = entry.photos.map { |p| URI.open(p.url(w: 2048)).path }
-      tumblr.photo(ENV['TUMBLR_DOMAIN'], opts)
+    response = if tumblr_id.present?
+      response = tumblr.posts(ENV['TUMBLR_DOMAIN'], id: tumblr_id)
+      raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
+
+      tumblr_post_format = response['posts'][0]['format']
+      tumblr_post_type = response['posts'][0]['type']
+      is_published_on_tumblr = response['posts'][0]['state'] == 'published'
+      use_html = tumblr_post_format == 'html'
+
+      opts[:id] = tumblr_id
+      opts[:type] = tumblr_post_type
+      opts[:date] = entry.published_at.to_s if is_published_on_tumblr
+      opts[:caption] = entry.tumblr_caption(html: use_html)
+      opts[:format] = tumblr_post_format
+      tumblr.edit(ENV['TUMBLR_DOMAIN'], opts)
     else
-      tumblr.text(ENV['TUMBLR_DOMAIN'], opts)
+      opts[:caption] = entry.tumblr_caption
+      opts[:state] = ENV['TUMBLR_QUEUE'].present? ? 'queue' : 'published'
+      opts[:format] = 'markdown'
+      if entry.is_photo?
+        tumblr.photo(ENV['TUMBLR_DOMAIN'], opts)
+      else
+        tumblr.text(ENV['TUMBLR_DOMAIN'], opts)
+      end
     end
 
-    if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
-      raise response.to_s
-    end
+    raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
   end
 end
