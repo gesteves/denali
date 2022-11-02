@@ -25,6 +25,7 @@ namespace :tumblr do
     puts "Updating #{total_posts} Tumblr#{ENV['QUEUE'].present? ? ' queued ' : ' '}posts in #{ENV['TUMBLR_DOMAIN']}."
     
     while offset < total_posts
+      break if updated >= total_posts
       puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
       posts = if ENV['QUEUE'].present?
         tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)['posts']
@@ -33,6 +34,7 @@ namespace :tumblr do
       end
 
       posts.each do |post|
+        break if updated >= total_posts
         next if post['type'] != 'photo'
         
         tumblr_id = post['id']
