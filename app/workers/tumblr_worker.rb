@@ -30,7 +30,7 @@ class TumblrWorker < ApplicationWorker
       use_html = tumblr_post_format == 'html'
 
       opts[:id] = tumblr_id
-      opts[:type] = tumblr_post_type
+      opts[:type] = tumblr_post_type.to_sym
       opts[:date] = entry.published_at.to_s if is_published_on_tumblr
       opts[:caption] = entry.tumblr_caption(html: use_html)
       opts[:format] = tumblr_post_format
