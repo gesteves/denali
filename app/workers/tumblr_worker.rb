@@ -47,11 +47,9 @@ class TumblrWorker < ApplicationWorker
     else
       blog_info = tumblr.blog_info(tumblr_username)
       raise blog_info.to_s if blog_info['errors'].present? || (blog_info['status'].present? && blog_info['status'] >= 400)
-
-      queued_posts = blog_info['blog']['queue']
       
       opts[:caption] = entry.tumblr_caption
-      opts[:state] = queued_posts > 0 ? 'queue' : 'published'
+      opts[:state] = blog_info['blog']['queue'] > 0 ? 'queue' : 'published'
       opts[:format] = 'markdown'
       tumblr.photo(tumblr_username, opts)
     end
