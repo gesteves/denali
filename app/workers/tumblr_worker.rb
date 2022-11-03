@@ -22,12 +22,13 @@ class TumblrWorker < ApplicationWorker
     }.compact
 
     response = if tumblr_id.present?
-      response = tumblr.posts(ENV['TUMBLR_DOMAIN'], id: tumblr_id)
-      raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
+      posts = tumblr.posts(ENV['TUMBLR_DOMAIN'], id: tumblr_id)
+      raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400)
 
-      tumblr_post_format = response['posts'][0]['format']
-      tumblr_post_type = response['posts'][0]['type']
-      is_published_on_tumblr = response['posts'][0]['state'] == 'published'
+      post = posts['posts'][0]
+      tumblr_post_format = post['format']
+      tumblr_post_type = post['type']
+      is_published_on_tumblr = post['state'] == 'published'
       use_html = tumblr_post_format == 'html'
 
       opts[:id] = tumblr_id
