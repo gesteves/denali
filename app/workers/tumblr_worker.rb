@@ -33,16 +33,16 @@ class TumblrWorker < ApplicationWorker
       raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400)
 
       post = posts['posts'][0]
-      tumblr_post_format = post['format']
-      tumblr_post_type = post['type']
+      post_format = post['format']
+      post_type = post['type']
       is_published_on_tumblr = post['state'] == 'published'
-      use_html = tumblr_post_format == 'html'
+      use_html = post_format == 'html'
 
       opts[:id] = tumblr_id
-      opts[:type] = tumblr_post_type.to_sym
+      opts[:type] = post_type.to_sym
       opts[:date] = entry.published_at.to_s if is_published_on_tumblr
       opts[:caption] = entry.tumblr_caption(html: use_html)
-      opts[:format] = tumblr_post_format
+      opts[:format] = post_format
       tumblr.edit(tumblr_username, opts)
     else
       blog_info = tumblr.blog_info(tumblr_username)
