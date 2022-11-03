@@ -2,10 +2,14 @@ class InstagramWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
   def perform(entry_id, text)
-    return if ENV['ENABLE_INSTAGRAM'].blank? || ENV['BUFFER_ACCESS_TOKEN'].blank?
+    return if !Rails.env.production?
+    return if ENV['BUFFER_ACCESS_TOKEN'].blank?
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
     raise UnprocessedPhotoError unless entry.photos_have_dimensions?
+
+    blog = entry.blog
+    return if blog.instagram.blank?
 
     photos = entry.photos.to_a[0..4]
     opts = {
