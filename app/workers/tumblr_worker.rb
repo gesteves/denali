@@ -44,6 +44,7 @@ class TumblrWorker < ApplicationWorker
       tumblr.photo(ENV['TUMBLR_DOMAIN'], opts)
     end
 
+    logger.info "[TUMBLR] #{response.to_s}"
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
   end
 end
