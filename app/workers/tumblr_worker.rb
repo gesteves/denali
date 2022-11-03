@@ -3,6 +3,7 @@ class TumblrWorker < ApplicationWorker
 
   def perform(entry_id, tumblr_id = nil)
     return if ENV['ENABLE_TUMBLR'].blank?
+    return if !entry.is_photo?
     entry = Entry.published.find(entry_id)
     raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
 
@@ -39,11 +40,7 @@ class TumblrWorker < ApplicationWorker
       opts[:caption] = entry.tumblr_caption
       opts[:state] = ENV['TUMBLR_QUEUE'].present? ? 'queue' : 'published'
       opts[:format] = 'markdown'
-      if entry.is_photo?
-        tumblr.photo(ENV['TUMBLR_DOMAIN'], opts)
-      else
-        tumblr.text(ENV['TUMBLR_DOMAIN'], opts)
-      end
+      tumblr.photo(ENV['TUMBLR_DOMAIN'], opts)
     end
 
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
