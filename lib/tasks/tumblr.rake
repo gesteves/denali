@@ -9,10 +9,15 @@ namespace :tumblr do
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
+    blog = Blog.first
+    next if blog.tumblr.blank?
+
+    tumblr_username = blog.tumblr.gsub('https://www.tumblr.com/', '')
+
     total_posts = if ENV['QUEUE'].present?
-      tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['queue']
+      tumblr.blog_info(tumblr_username)['blog']['queue']
     else
-      tumblr.blog_info(ENV['TUMBLR_DOMAIN'])['blog']['posts']
+      tumblr.blog_info(tumblr_username)['blog']['posts']
     end
 
     total_limit = ENV['LIMIT'].present? ? ENV['LIMIT'].to_i : total_posts
@@ -21,16 +26,16 @@ namespace :tumblr do
     updated = 0
     skipped = 0
 
-    puts "Updating Tumblr #{ENV['QUEUE'].present? ? ' queued posts' : 'posts'} in #{ENV['TUMBLR_DOMAIN']}"
+    puts "Updating Tumblr #{ENV['QUEUE'].present? ? ' queued posts' : 'posts'} in #{blog.tumblr}"
     
     while offset < total_posts
       break if updated >= total_limit
       
       puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
       response = if ENV['QUEUE'].present?
-        tumblr.queue(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit)
+        tumblr.queue(tumblr_username, offset: offset, limit: limit)
       else
-        tumblr.posts(ENV['TUMBLR_DOMAIN'], offset: offset, limit: limit, type: 'photo')
+        tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo')
       end
 
       if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
