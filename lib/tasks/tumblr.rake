@@ -12,7 +12,7 @@ namespace :tumblr do
     blog = Blog.first
     next if blog.tumblr.blank?
 
-    tumblr_username = blog.tumblr.gsub('https://www.tumblr.com/', '')
+    tumblr_username = blog.tumblr_username
 
     total_posts = if ENV['QUEUE'].present?
       tumblr.blog_info(tumblr_username)['blog']['queue']

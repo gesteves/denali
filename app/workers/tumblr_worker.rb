@@ -12,7 +12,7 @@ class TumblrWorker < ApplicationWorker
     blog = entry.blog
     return if blog.tumblr.blank?
 
-    tumblr_username = blog.tumblr.gsub('https://www.tumblr.com/', '')
+    tumblr_username = blog.tumblr_username
 
     tumblr = Tumblr::Client.new({
       consumer_key: ENV['TUMBLR_CONSUMER_KEY'],

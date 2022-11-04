@@ -79,7 +79,11 @@ class Blog < ApplicationRecord
   end
 
   def twitter_handle
-    self.twitter&.gsub(/^https:\/\/(www\.)?twitter.com\//, '@')
+    self.twitter&.gsub(/^https:\/\/(www\.)?twitter\.com\//, '@')
+  end
+
+  def tumblr_username
+    self.tumblr&.gsub(/^https:\/\/(www\.)?tumblr\.com\/|\/$/, '')
   end
 
   def has_search?
