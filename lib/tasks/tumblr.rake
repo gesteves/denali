@@ -67,7 +67,7 @@ namespace :tumblr do
 
         if entry.present?
           seconds = 10 * updated
-          TumblrWorker.perform_in(seconds.seconds, entry.id, tumblr_id) unless ENV['DRY_RUN'].present?
+          TumblrUpdateWorker.perform_in(seconds.seconds, entry.id, tumblr_id) unless ENV['DRY_RUN'].present?
           puts "    Enqueued update for post #{post_url}"
           updated += 1
         else
