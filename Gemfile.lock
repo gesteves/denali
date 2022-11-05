@@ -281,6 +281,7 @@ GEM
     pg (1.4.4)
     psych (4.0.4)
       stringio
+    public_suffix (5.0.0)
     puma (6.0.0)
       nio4r (~> 2.0)
     raabro (1.4.0)
@@ -451,6 +452,7 @@ DEPENDENCIES
   oauth
   omniauth-google-oauth2
   pg (~> 1.4)
+  public_suffix
   puma
   rack-attack
   rack-brotli

@@ -41,6 +41,7 @@ gem "image_processing", "~> 1.12"
 gem 'rack-brotli'
 gem 'typhoeus'
 gem 'htmlentities'
+gem 'public_suffix'
 
 # Monitoring
 gem 'bugsnag'
