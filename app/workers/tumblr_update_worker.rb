@@ -47,6 +47,7 @@ class TumblrUpdateWorker < ApplicationWorker
     }
 
     opts[:date] = entry.published_at.to_s if is_published_on_tumblr
+    
     response = tumblr.edit(tumblr_username, opts)
 
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
