@@ -9,10 +9,8 @@ class TumblrUpdateWorker < ApplicationWorker
     return if !entry.is_photo?
     raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
 
-    blog = entry.blog
-    return if blog.tumblr.blank?
-
-    tumblr_username = blog.tumblr_username
+    tumblr_username = entry.blog.tumblr_username
+    return if tumblr_username.blank?
 
     tumblr = Tumblr::Client.new({
       consumer_key: ENV['TUMBLR_CONSUMER_KEY'],

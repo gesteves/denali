@@ -9,10 +9,8 @@ namespace :tumblr do
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    blog = Blog.first
-    next if blog.tumblr.blank?
-
-    tumblr_username = blog.tumblr_username
+    tumblr_username = Blog.first.tumblr_username
+    return if tumblr_username.blank?
 
     total_posts = if ENV['QUEUE'].present?
       tumblr.blog_info(tumblr_username)['blog']['queue']
