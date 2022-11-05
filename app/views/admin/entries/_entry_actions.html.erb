@@ -11,10 +11,10 @@
     <div class="dropdown-content">
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
       <%= link_to icon('Share', 'fas fa-share-square'), entry.permalink_url, 'data-controller': 'share', 'data-action': 'click->share#open', class: 'dropdown-item' %>
-      <% if entry.is_photo? && entry.is_published? && entry.photos_have_dimensions? %>
+      <% if entry.is_photo? && entry.is_published? && entry.photos_have_dimensions? && @photoblog.twitter.present? %>
         <%= link_to icon('Share on Twitter', 'fab fa-twitter'), twitter_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
-      <% if entry.is_photo? && entry.is_published? && entry.photos_have_dimensions? %>
+      <% if entry.is_photo? && entry.is_published? && entry.photos_have_dimensions? && @photoblog.instagram.present? %>
         <%= link_to icon('Share on Instagram', 'fab fa-instagram'), instagram_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <% if entry.is_photo? && entry.photos_have_dimensions? %>
