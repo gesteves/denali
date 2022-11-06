@@ -24,7 +24,7 @@ namespace :tumblr do
     updated = 0
     skipped = 0
 
-    puts "Updating Tumblr #{ENV['QUEUE'].present? ? ' queued posts' : 'posts'} in #{blog.tumblr}"
+    puts "Updating Tumblr #{ENV['QUEUE'].present? ? ' queued posts' : 'posts'}"
     
     while offset < total_posts
       break if updated >= total_limit
