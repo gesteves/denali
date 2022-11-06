@@ -19,7 +19,7 @@ class TumblrWorker < ApplicationWorker
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    tumblog = tumblr.tumblog(tumblr_username)
+    tumblog = tumblr.blog_info(tumblr_username)
     raise tumblog.to_s if tumblog['errors'].present? || (tumblog['status'].present? && tumblog['status'] >= 400)
     
     opts = {
