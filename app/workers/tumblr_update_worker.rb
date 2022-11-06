@@ -37,7 +37,7 @@ class TumblrUpdateWorker < ApplicationWorker
 
     opts = {
       id: tumblr_id,
-      type: post_type,
+      type: post_type.to_sym,
       caption: entry.tumblr_caption(html: use_html),
       format: post_format,
       tags: entry.tumblr_tags,
