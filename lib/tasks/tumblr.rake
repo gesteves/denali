@@ -78,7 +78,7 @@ namespace :tumblr do
     puts "Enqueued #{updated} Tumblr posts out of #{total_posts} for updates (skipped #{skipped} posts.)"
   end
 
-  desc 'Sorts queue chromnologically'
+  desc 'Sorts queue chronologically'
   task :sort_queue => :environment do
 
     tumblr = Tumblr::Client.new({
@@ -128,14 +128,14 @@ namespace :tumblr do
           nil
         end
 
-        queue << { tumblr_id: tumblr_id, published_at: entry.published_at } if entry.present?
+        queue << { tumblr_id: tumblr_id, post_url: post_url, published_at: entry.published_at } if entry.present?
       end
       offset += limit
     end
 
     queue.sort { |a,b| b[:published_at] <=> a[:published_at] }.each do |p|
       tumblr.reorder_queue(tumblr_username, post_id: p[:tumblr_id], insert_after: 0)
-      puts p.to_s
+      puts "Moved post #{p[:post_url]} (#{p[:published_at].strftime('%c')}) to the top of the queue"
       sleep 1
     end
   end
