@@ -5,10 +5,6 @@ class TumblrSortQueueWorker < ApplicationWorker
     return if !Rails.env.production?
     return if ENV['TUMBLR_CONSUMER_KEY'].blank? || ENV['TUMBLR_CONSUMER_SECRET'].blank? || ENV['TUMBLR_ACCESS_TOKEN'].blank? || ENV['TUMBLR_ACCESS_TOKEN_SECRET'].blank?
 
-    entry = Entry.published.find(entry_id)
-    return if !entry.is_photo?
-    raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
-
     tumblr_username = entry.blog.tumblr_username
     return if tumblr_username.blank?
 
