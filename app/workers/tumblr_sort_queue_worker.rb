@@ -1,11 +1,12 @@
 class TumblrSortQueueWorker < ApplicationWorker
   sidekiq_options queue: 'low'
 
-  def perform(tumblr_id, insert_after = 0)
+  def perform(entry_id, tumblr_id, insert_after = 0)
     return if !Rails.env.production?
     return if ENV['TUMBLR_CONSUMER_KEY'].blank? || ENV['TUMBLR_CONSUMER_SECRET'].blank? || ENV['TUMBLR_ACCESS_TOKEN'].blank? || ENV['TUMBLR_ACCESS_TOKEN_SECRET'].blank?
 
-    tumblr_username = Blog.first.tumblr_username
+    entry = Entry.published.find(entry_id)
+    tumblr_username = entry.blog.tumblr_username
     return if tumblr_username.blank?
 
     tumblr = Tumblr::Client.new({

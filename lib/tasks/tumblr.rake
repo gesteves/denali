@@ -128,7 +128,7 @@ namespace :tumblr do
           nil
         end
 
-        queue << { tumblr_id: tumblr_id, post_url: post_url, published_at: entry.published_at } if entry.present?
+        queue << { entry_id: entry.id, tumblr_id: tumblr_id, post_url: post_url, published_at: entry.published_at } if entry.present?
       end
       offset += limit
     end
@@ -136,7 +136,7 @@ namespace :tumblr do
     queue.sort { |a,b| a[:published_at] <=> b[:published_at] }.each_with_index do |p, i|
       seconds = i * 5
       insert_after = i == 0 ? 0 : queue[i - 1][:tumblr_id]
-      TumblrSortQueueWorker.perform_in(seconds.seconds, p[:tumblr_id], insert_after)
+      TumblrSortQueueWorker.perform_in(seconds.seconds, p[:entry_id], p[:tumblr_id], insert_after)
       puts "Enqueued queue update for post #{p[:post_url]} (#{p[:published_at].strftime('%c')})"
     end
   end
