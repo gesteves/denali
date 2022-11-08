@@ -133,10 +133,11 @@ namespace :tumblr do
       offset += limit
     end
 
-    queue.sort { |a,b| b[:published_at] <=> a[:published_at] }.each do |p|
-      tumblr.reorder_queue(tumblr_username, post_id: p[:tumblr_id], insert_after: 0)
-      puts "Moved post #{p[:post_url]} (#{p[:published_at].strftime('%c')}) to the top of the queue"
-      sleep 1
+    queue.sort { |a,b| a[:published_at] <=> b[:published_at] }.each_with_index do |p, i|
+      seconds = i * 5
+      insert_after = i == 0 ? 0 : queue[i - 1][:tumblr_id]
+      TumblrSortQueueWorker.perform_in(seconds.seconds, p[:tumblr_id], insert_after)
+      puts "Enqueued queue update for post #{p[:post_url]} (#{p[:published_at].strftime('%c')})"
     end
   end
 
