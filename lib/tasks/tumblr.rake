@@ -26,9 +26,7 @@ namespace :tumblr do
 
     puts "Updating Tumblr #{ENV['QUEUE'].present? ? ' queued posts' : 'posts'}"
     
-    while offset < total_posts
-      break if updated >= total_limit
-      
+    while offset < total_posts && updated < total_limit
       puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
       response = if ENV['QUEUE'].present?
         tumblr.queue(tumblr_username, offset: offset, limit: limit)
@@ -99,7 +97,7 @@ namespace :tumblr do
 
     puts "Updating Tumblr posts published today"
     
-    while offset < total_posts || continue
+    while offset < total_posts && continue
       
       puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
       response = tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo')
