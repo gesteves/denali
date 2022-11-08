@@ -135,6 +135,7 @@ namespace :tumblr do
 
     queue.sort { |a,b| b[:published_at] <=> a[:published_at] }.each do |p|
       tumblr.reorder_queue(tumblr_username, post_id: p[:tumblr_id], insert_after: 0)
+      puts p.to_s
       sleep 1
     end
   end
