@@ -19,13 +19,6 @@ class TumblrUpdateWorker < ApplicationWorker
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    opts = {
-      tags: entry.tumblr_tags,
-      slug: entry.slug,
-      source_url: entry.permalink_url,
-      data: entry&.photos&.map { |p| URI.open(p.url(w: 2048)).path }
-    }
-
     posts = tumblr.posts(tumblr_username, id: tumblr_id)
     raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400)
 
