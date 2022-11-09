@@ -145,4 +145,73 @@ namespace :tumblr do
     end
     puts "Enqueued #{updated} Tumblr posts out of #{total_posts} for updates (skipped #{skipped} posts.)"
   end
+
+  desc 'Update a specific Tumblr post'
+  task :update_entry => :environment do
+
+    next if ENV['ENTRY_ID'].blank?
+
+    tumblr = Tumblr::Client.new({
+      consumer_key: ENV['TUMBLR_CONSUMER_KEY'],
+      consumer_secret: ENV['TUMBLR_CONSUMER_SECRET'],
+      oauth_token: ENV['TUMBLR_ACCESS_TOKEN'],
+      oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
+    })
+
+    tumblr_username = Blog.first.tumblr_username
+    return if tumblr_username.blank?
+
+    total_posts = if ENV['QUEUE'].present?
+      tumblr.blog_info(tumblr_username)['blog']['queue']
+    else
+      tumblr.blog_info(tumblr_username)['blog']['posts']
+    end
+
+    limit = 20
+    offset = 0
+    continue = true
+
+    
+    while offset < total_posts && continue
+      puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
+      response = if ENV['QUEUE'].present?
+        tumblr.queue(tumblr_username, offset: offset, limit: limit)
+      else
+        tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo')
+      end
+
+      if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
+        puts response.to_s
+        break
+      end
+
+      posts = response['posts']
+
+      posts.each do |post|
+        next if post['type'] != 'photo'
+        
+        tumblr_id = post['id']
+        post_url = post['post_url']
+        source_url = post['source_url']
+        caption = post['caption']
+
+        caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.find { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.attr('href')
+        url = caption_url || source_url
+
+        entry = begin
+          Entry.find_by_url(url: url&.gsub('https://href.li/?', ''))
+        rescue
+          nil
+        end
+
+        if entry.present? && entry.id == ENV['ENTRY_ID'].to_i
+          TumblrUpdateWorker.perform_async(entry.id, tumblr_id)
+          puts "    Enqueued update for post #{post_url}"
+          continue = false
+          break
+        end
+      end
+      offset += limit
+    end
+  end
 end
