@@ -25,7 +25,6 @@ class TumblrUpdateWorker < ApplicationWorker
     post = posts['posts'][0]
     post_format = post['format']
     post_type = post['type']
-    is_published_on_tumblr = post['state'] == 'published'
     use_html = post_format == 'html'
 
     opts = {
