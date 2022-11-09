@@ -18,9 +18,6 @@ class TumblrWorker < ApplicationWorker
       oauth_token: ENV['TUMBLR_ACCESS_TOKEN'],
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
-
-    tumblog = tumblr.blog_info(tumblr_username)
-    raise tumblog.to_s if tumblog['errors'].present? || (tumblog['status'].present? && tumblog['status'] >= 400)
     
     opts = {
       tags: entry.tumblr_tags,
@@ -28,10 +25,9 @@ class TumblrWorker < ApplicationWorker
       caption: entry.tumblr_caption,
       source_url: entry.permalink_url,
       format: 'markdown',
+      state: 'queue',
       data: entry&.photos&.map { |p| URI.open(p.url(w: 2048)).path }
     }.compact
-
-    opts[:state] = tumblog['blog']['queue'] > 0 ? 'queue' : 'published'
     
     response = tumblr.photo(tumblr_username, opts)
 
