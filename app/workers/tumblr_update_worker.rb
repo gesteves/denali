@@ -36,10 +36,9 @@ class TumblrUpdateWorker < ApplicationWorker
       tags: entry.tumblr_tags,
       slug: entry.slug,
       source_url: entry.permalink_url,
+      date: entry.published_at.to_s,
       data: entry&.photos&.map { |p| URI.open(p.url(w: 2048)).path }
     }
-
-    opts[:date] = entry.published_at.to_s if is_published_on_tumblr
     
     response = tumblr.edit(tumblr_username, opts)
 
