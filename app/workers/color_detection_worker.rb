@@ -22,6 +22,7 @@ class ColorDetectionWorker < ApplicationWorker
   end
 
   def is_black_and_white?(colors)
-    colors['colors'].map { |c| c['hex'].gsub('#', '') }.none? { |c| c.scan(/../).uniq.size == 1 }
+    # B&W photos don't seem to have "vibrant" dominant colors
+    colors['dominant_colors'].keys.none? { |c| c.match? /^vibrant/ }
   end
 end
