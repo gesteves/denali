@@ -17,6 +17,9 @@
       <% if entry.is_photo? && entry.is_published? && entry.photos_have_dimensions? && @photoblog.instagram.present? %>
         <%= link_to icon('Share on Instagram', 'fab fa-instagram'), instagram_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
+      <% if entry.posted_on_tumblr? && @photoblog.tumblr.present? %>
+        <%= link_to icon('Reblog on Tumblr', 'fab fa-tumblr'), entry.tumblr_reblog_url, class: 'dropdown-item', target: '_blank' %>
+      <% end %>
       <% if entry.is_photo? && entry.photos_have_dimensions? %>
         <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item' %>
       <% end %>
