@@ -2,8 +2,7 @@ namespace :tumblr do
   namespace :update do
     desc 'Update published Tumblr posts'
     task :posts => :environment do
-      entries = Entry.published.where.not(tumblr_id: nil)
-      entries.each_with_index |entry, i|
+      Entry.posted_on_tumblr.each_with_index |entry, i|
         seconds = i * 8
         TumblrUpdateWorker.perform_in(seconds.seconds, entry.id) unless ENV['DRY_RUN'].present?
       end

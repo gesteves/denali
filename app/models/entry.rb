@@ -76,6 +76,10 @@ class Entry < ApplicationRecord
     where('photos_count > 0')
   end
 
+  def self.posted_on_tumblr(order = 'entries.published_at DESC')
+    where(status: 'published').where.not(tumblr_id: nil).order(order)
+  end
+
   def self.indexable_in_search_engines
     where(status: 'published', hide_from_search_engines: false).order('published_at ASC')
   end
