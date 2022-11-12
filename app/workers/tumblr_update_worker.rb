@@ -1,12 +1,13 @@
 class TumblrUpdateWorker < ApplicationWorker
   sidekiq_options queue: 'low'
 
-  def perform(entry_id, tumblr_id)
+  def perform(entry_id)
     return if !Rails.env.production?
     return if ENV['TUMBLR_CONSUMER_KEY'].blank? || ENV['TUMBLR_CONSUMER_SECRET'].blank? || ENV['TUMBLR_ACCESS_TOKEN'].blank? || ENV['TUMBLR_ACCESS_TOKEN_SECRET'].blank?
 
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
+    return if entry.tumblr_id.blank?
     raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
 
     tumblr_username = entry.blog.tumblr_username
@@ -19,7 +20,7 @@ class TumblrUpdateWorker < ApplicationWorker
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    posts = tumblr.posts(tumblr_username, id: tumblr_id)
+    posts = tumblr.posts(tumblr_username, id: entry.tumblr_id)
     raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400)
 
     post = posts['posts'][0]
@@ -28,7 +29,7 @@ class TumblrUpdateWorker < ApplicationWorker
     use_html = post_format == 'html'
 
     opts = {
-      id: tumblr_id,
+      id: entry.tumblr_id,
       type: post_type.to_sym,
       caption: entry.tumblr_caption(html: use_html),
       format: post_format,
@@ -38,9 +39,8 @@ class TumblrUpdateWorker < ApplicationWorker
       date: entry.published_at.to_s,
       data: entry&.photos&.map { |p| URI.open(p.url(w: 2048)).path }
     }
-    
-    response = tumblr.edit(tumblr_username, opts)
 
+    response = tumblr.edit(tumblr_username, opts)
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
   end
 end
