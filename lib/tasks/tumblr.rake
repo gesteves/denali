@@ -127,7 +127,7 @@ namespace :tumblr do
             entry.tumblr_reblog_key = reblog_key
             entry.save!
             updated += 1
-            puts "  Set Tumblr ID #{tumblr_id} and reblog key #{reblog_key} for entry #{entry.id}"
+            puts "    Set Tumblr ID #{tumblr_id} and reblog key #{reblog_key} for entry #{entry.id}"
           end
         end
         offset += limit
