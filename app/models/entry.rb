@@ -597,6 +597,14 @@ class Entry < ApplicationRecord
     photos.all? { |p| p.has_dimensions? }
   end
 
+  def posted_on_tumblr?
+    tumblr_id.present? && tumblr_reblog_key.present?
+  end
+
+  def tumblr_reblog_url
+    "https://www.tumblr.com/reblog/#{blog.tumblr_username}/#{tumblr_id}/#{tumblr_reblog_key}"
+  end
+
   private
 
   def url_opts(opts)
