@@ -601,8 +601,12 @@ class Entry < ApplicationRecord
     photos.all? { |p| p.has_dimensions? }
   end
 
-  def posted_on_tumblr?
+  def published_on_tumblr?
     tumblr_id.present? && tumblr_reblog_key.present?
+  end
+
+  def not_on_tumblr?
+    tumblr_id.blank? && tumblr_reblog_key.blank?
   end
 
   def tumblr_reblog_url
