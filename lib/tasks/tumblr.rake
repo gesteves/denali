@@ -3,7 +3,7 @@ namespace :tumblr do
     desc 'Update published Tumblr posts'
     task :entries => :environment do
       Entry.posted_on_tumblr.each_with_index do |entry, i|
-        seconds = i * 8
+        seconds = i * 10
         TumblrUpdateWorker.perform_in(seconds.seconds, entry.id) unless ENV['DRY_RUN'].present?
       end
     end
@@ -182,7 +182,8 @@ namespace :tumblr do
           if entry.present?
             entry.tumblr_id = tumblr_id
             entry.save
-            TumblrReblogKeyWorker.perform_async(entry.id)
+            seconds = updated * 10
+            TumblrReblogKeyWorker.perform_in(seconds.seconds, entry.id)
             updated += 1
             puts "    Enqueued reblog key job for entry #{entry.id}"
           end
