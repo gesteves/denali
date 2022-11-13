@@ -1,6 +1,13 @@
 class TumblrUpdateQueuedWorker < ApplicationWorker
   sidekiq_options queue: 'low'
 
+  sidekiq_retry_in do |count, exception|
+    case exception
+    when TumblrPostNotPublished
+      60
+    end
+  end
+
   def perform(entry_id)
     return if !Rails.env.production?
     return if ENV['TUMBLR_CONSUMER_KEY'].blank? || ENV['TUMBLR_CONSUMER_SECRET'].blank? || ENV['TUMBLR_ACCESS_TOKEN'].blank? || ENV['TUMBLR_ACCESS_TOKEN_SECRET'].blank?
@@ -20,45 +27,27 @@ class TumblrUpdateQueuedWorker < ApplicationWorker
 
     # Search for the post on Tumblr.
     posts = tumblr.posts(tumblr_username, id: entry.tumblr_id)
+    raise TumblrPostNotPublished unless posts['status'].present? && posts['status'] == 404
+    # If searching for the post DOESN'T return a 404, it means the post is still in the queue,
+    # so raise an exception to trigger a retry.
 
-    if posts['status'].present? && posts['status'] == 404
-      # If searching for the post returns a 404, it means the post either doesn't exist,
-      # or it was published, which changed the ID, so loop through all the published posts to find it.
-      # (If a queued post is published, its previous ID becomes the `genesis_post_id`.)
-      total_posts = tumblr.blog_info(tumblr_username)['blog']['posts']
-      limit = 20
-      offset = 0
-      while offset < total_posts
-        response = tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo')
-        raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
-        # Find the published Tumblr post with the `genesis_post_id` of the queued post.
-        post = response['posts'].find { |post| post['genesis_post_id'] == entry.tumblr_id }
-        if post.present?
-          # Found it! Save the new ID and the reblog key, and we're done.
-          entry.tumblr_id = post['id_string']
-          entry.tumblr_reblog_key = post['reblog_key']
-          entry.save
-          TumblrUpdateWorker.perform_in(1.day, entry.id)
-          return
-        end
-        offset += limit
-      end
-    else
-      raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400)
-      post = posts['posts'][0]
-      if post['state'] == 'published'
-        # If the post is published, save the ID and reblog key.
+    total_posts = tumblr.blog_info(tumblr_username)['blog']['posts']
+    limit = 20
+    offset = 0
+    while offset < total_posts
+      response = tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo')
+      raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
+      # Find the published Tumblr post with the `genesis_post_id` of the queued post.
+      post = response['posts'].find { |post| post['genesis_post_id'] == entry.tumblr_id }
+      if post.present?
+        # Found it! Save the new ID and the reblog key, and we're done.
         entry.tumblr_id = post['id_string']
         entry.tumblr_reblog_key = post['reblog_key']
         entry.save
         TumblrUpdateWorker.perform_in(1.day, entry.id)
-      elsif post['state'] == 'queued'
-        # If the post is still queued, check back after it's published
-        # (plus 10 minutes, because Tumblr never publishes exactly when it says it will.)
-        publish_time = Time.at(post['scheduled_publish_time']) + 10.minutes
-        publish_time = 1.hour.from_now if publish_time <= Time.now
-        TumblrUpdateQueuedWorker.perform_at(publish_time, entry.id)
+        return
       end
+      offset += limit
     end
   end
 end
