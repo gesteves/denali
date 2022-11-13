@@ -3,7 +3,7 @@ class TumblrUpdateQueuedWorker < ApplicationWorker
 
   sidekiq_retry_in do |count, exception|
     case exception
-    when TumblrPostNotPublished
+    when TumblrPostNotPublishedError
       60
     end
   end
@@ -27,7 +27,7 @@ class TumblrUpdateQueuedWorker < ApplicationWorker
 
     # Search for the post on Tumblr.
     posts = tumblr.posts(tumblr_username, id: entry.tumblr_id)
-    raise TumblrPostNotPublished unless posts['status'].present? && posts['status'] == 404
+    raise TumblrPostNotPublishedError unless posts['status'].present? && posts['status'] == 404
     # If searching for the post DOESN'T return a 404, it means the post is still in the queue,
     # so raise an exception to trigger a retry.
 
