@@ -30,7 +30,7 @@ namespace :tumblr do
 
       while offset < total_posts && continue
         puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
-        response = tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo')
+        response = tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo', reblog_info: true)
 
         if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
           puts response.to_s
@@ -44,6 +44,8 @@ namespace :tumblr do
             continue = false
             break
           end
+
+          next if post['reblogged_from_id'].present?
 
           tumblr_id = post['id_string']
           reblog_key = post['reblog_key']
@@ -95,7 +97,7 @@ namespace :tumblr do
 
       while offset < total_posts
         puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
-        response = tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo')
+        response = tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo', reblog_info: true)
 
         if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
           puts response.to_s
@@ -105,6 +107,7 @@ namespace :tumblr do
         posts = response['posts']
 
         posts.each do |post|
+          next if post['reblogged_from_id'].present?
           tumblr_id = post['id_string']
           reblog_key = post['reblog_key']
           source_url = post['source_url']
