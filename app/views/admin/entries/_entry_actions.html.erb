@@ -19,7 +19,7 @@
       <% end %>
       <% if @photoblog.tumblr.present? %>
         <% if entry.posted_on_tumblr? %>
-          <%= link_to icon('Reblog on Tumblr', 'fab fa-tumblr'), entry.tumblr_reblog_url, class: 'dropdown-item', target: '_blank' %>
+          <%= link_to icon('Reblog on Tumblr', 'fab fa-tumblr'), reblog_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
         <% else %>
           <%= link_to icon('Share on Tumblr', 'fab fa-tumblr'), tumblr_admin_entry_path(entry), class: 'dropdown-item', remote: true, method: :post, data: { confirm: 'This will immediately share this entry on Tumblr. Do you want to proceed?' } %>
         <% end %>

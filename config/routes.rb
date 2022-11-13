@@ -33,12 +33,14 @@ Rails.application.routes.draw do
         get 'prints'
         get 'twitter'
         get 'instagram'
+        get 'reblog'
         patch 'publish'
         patch 'queue'
         patch 'draft'
         post 'instagram'
         post 'twitter'
         post 'tumblr'
+        post 'reblog'
         post 'refresh_metadata'
       end
       collection do
