@@ -59,7 +59,7 @@ namespace :tumblr do
             nil
           end
 
-          if entry.present? && !entry.posted_on_tumblr?
+          if entry.present?
             entry.tumblr_id = tumblr_id
             entry.tumblr_reblog_key = reblog_key
             entry.save!
