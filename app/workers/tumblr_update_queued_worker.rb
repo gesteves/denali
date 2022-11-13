@@ -44,11 +44,19 @@ class TumblrUpdateQueuedWorker < ApplicationWorker
       end
     else
       raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400)
-      # If we found the post, then it's still in the queue. Check back later.
       post = posts['posts'][0]
-      publish_time = Time.at(post['scheduled_publish_time']) + 10.minutes
-      publish_time = 1.hour.from_now if publish_time <= Time.now
-      TumblrUpdateQueuedWorker.perform_at(publish_time, entry.id)
+      if post['state'] == 'published'
+        # If the post is published, save the ID and reblog key.
+        entry.tumblr_id = post['id_string']
+        entry.tumblr_reblog_key = post['reblog_key']
+        entry.save!
+      elsif post['state'] == 'queued'
+        # If the post is still queued, check back after it's published
+        # (plus 10 minutes, because Tumblr never publishes exactly when it says it will.)
+        publish_time = Time.at(post['scheduled_publish_time']) + 10.minutes
+        publish_time = 1.hour.from_now if publish_time <= Time.now
+        TumblrUpdateQueuedWorker.perform_at(publish_time, entry.id)
+      end
     end
   end
 end
