@@ -38,6 +38,7 @@ Rails.application.routes.draw do
         patch 'draft'
         post 'instagram'
         post 'twitter'
+        post 'tumblr'
         post 'refresh_metadata'
       end
       collection do

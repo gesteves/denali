@@ -296,6 +296,20 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def tumblr
+    @entry = @photoblog.entries.published.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
+    TumblrWorker.perform_async(@entry.id)
+    @message = 'Your entry was shared on Tumblr.'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render 'admin/shared/notify' }
+    end
+  end
+
   def refresh_metadata
     @entry.update_tags
     @entry.photos.each do |photo|
