@@ -180,7 +180,7 @@ namespace :tumblr do
           end
 
           if entry.present?
-            entry.tumblr_id = response['id_string']
+            entry.tumblr_id = tumblr_id
             entry.save
             TumblrReblogKeyWorker.perform_async(entry.id)
             updated += 1
