@@ -21,6 +21,7 @@ class TumblrWorker < ApplicationWorker
 
     blog_info = tumblr.blog_info(tumblr_username)
     raise blog_info.to_s if blog_info['errors'].present? || (blog_info['status'].present? && blog_info['status'] >= 400)
+    # If the queue is empty, publish directly; if not, send it to the back of the queue.
     state = blog_info['blog']['queue'] > 0 ? 'queue' : 'published'
 
     opts = {
@@ -37,10 +38,8 @@ class TumblrWorker < ApplicationWorker
     response = tumblr.photo(tumblr_username, opts)
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
 
-    if response['state'] == 'published' && response['id_string'].present?
-      entry.tumblr_id = response['id_string']
-      entry.save
-      TumblrReblogKeyWorker.perform_async(entry.id)
-    end
+    entry.tumblr_id = response['id_string']
+    entry.save
+    TumblrReblogKeyWorker.perform_async(entry.id)
   end
 end

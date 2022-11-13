@@ -18,12 +18,21 @@ class TumblrReblogKeyWorker < ApplicationWorker
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
+    # Find the post.
     posts = tumblr.posts(tumblr_username, id: entry.tumblr_id)
     raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400)
 
     post = posts['posts'][0]
-    reblog_key = post['reblog_key']
-    entry.reblog_key = reblog_key
-    entry.save!
+    if post['state'] == 'published'
+      # If the post is published, save the ID and reblog key.
+      entry.tumblr_id = post['id_string']
+      entry.tumblr_reblog_key = post['reblog_key']
+      entry.save!
+    elsif post['state'] == 'queued'
+      # If the post is queued, the Tumblr ID will change when it's published,
+      # so check back after it's published (plus one hour, because Tumblr never publishes exactly when it says it will.)
+      publish_time = Time.at(post['scheduled_publish_time']) + 1.hour
+      TumblrUpdateQueuedWorker.perform_at(publish_time, entry.id)
+    end
   end
 end
