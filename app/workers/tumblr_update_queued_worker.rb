@@ -38,6 +38,7 @@ class TumblrUpdateQueuedWorker < ApplicationWorker
           entry.tumblr_id = post['id_string']
           entry.tumblr_reblog_key = post['reblog_key']
           entry.save
+          TumblrUpdateWorker.perform_in(1.day, entry.id)
           return
         end
         offset += limit
@@ -49,7 +50,8 @@ class TumblrUpdateQueuedWorker < ApplicationWorker
         # If the post is published, save the ID and reblog key.
         entry.tumblr_id = post['id_string']
         entry.tumblr_reblog_key = post['reblog_key']
-        entry.save!
+        entry.save
+        TumblrUpdateWorker.perform_in(1.day, entry.id)
       elsif post['state'] == 'queued'
         # If the post is still queued, check back after it's published
         # (plus 10 minutes, because Tumblr never publishes exactly when it says it will.)
