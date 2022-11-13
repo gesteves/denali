@@ -37,7 +37,7 @@ class TumblrWorker < ApplicationWorker
     response = tumblr.photo(tumblr_username, opts)
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
 
-    if state == 'published' && response['id_string'].present?
+    if response['state'] == 'published' && response['id_string'].present?
       entry.tumblr_id = response['id_string']
       entry.save
       TumblrReblogKeyWorker.perform_async(entry.id)
