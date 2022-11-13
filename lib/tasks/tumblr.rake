@@ -114,8 +114,7 @@ namespace :tumblr do
           if entry.present?
             entry.tumblr_id = tumblr_id
             entry.save
-            seconds = updated * 10
-            TumblrReblogKeyWorker.perform_in(seconds.seconds, entry.id)
+            TumblrMetadataWorker.perform_async(entry.id)
             updated += 1
             puts "    Enqueued reblog key job for entry #{entry.id}"
           end

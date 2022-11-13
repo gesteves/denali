@@ -40,6 +40,6 @@ class TumblrWorker < ApplicationWorker
 
     entry.tumblr_id = response['id_string']
     entry.save
-    TumblrReblogKeyWorker.perform_async(entry.id)
+    TumblrMetadataWorker.perform_async(entry.id)
   end
 end

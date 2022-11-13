@@ -1,1 +1,0 @@
-class TumblrPostNotPublishedError < StandardError; end
