@@ -40,8 +40,6 @@ namespace :tumblr do
         posts = response['posts']
 
         posts.each do |post|
-          next if post['type'] != 'photo'
-
           tumblr_id = post['id_string']
           reblog_key = post['reblog_key']
           post_url = post['post_url']
