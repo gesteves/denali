@@ -47,6 +47,7 @@ class TumblrUpdateQueuedWorker < ApplicationWorker
       # If we found the post, then it's still in the queue. Check back later.
       post = posts['posts'][0]
       publish_time = Time.at(post['scheduled_publish_time']) + 10.minutes
+      publish_time = 1.hour.from_now if publish_time <= Time.now
       TumblrUpdateQueuedWorker.perform_at(publish_time, entry.id)
     end
   end
