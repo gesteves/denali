@@ -31,7 +31,7 @@ class TumblrReblogKeyWorker < ApplicationWorker
     elsif post['state'] == 'queued'
       # If the post is queued, the Tumblr ID will change when it's published,
       # so check back after it's published (plus one hour, because Tumblr never publishes exactly when it says it will.)
-      publish_time = Time.at(post['scheduled_publish_time']) + 1.hour
+      publish_time = Time.at(post['scheduled_publish_time']) + 10.minutes
       TumblrUpdateQueuedWorker.perform_at(publish_time, entry.id)
     end
   end

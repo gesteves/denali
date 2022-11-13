@@ -46,7 +46,7 @@ class TumblrUpdateQueuedWorker < ApplicationWorker
       raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400)
       # If we found the post, then it's still in the queue. Check back later.
       post = posts['posts'][0]
-      publish_time = Time.at(post['scheduled_publish_time']) + 1.hour
+      publish_time = Time.at(post['scheduled_publish_time']) + 10.minutes
       TumblrUpdateQueuedWorker.perform_at(publish_time, entry.id)
     end
   end
