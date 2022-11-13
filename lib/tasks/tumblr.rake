@@ -135,7 +135,7 @@ namespace :tumblr do
     end
 
     desc 'Update Tumblr IDs and reblog keys of queued posts'
-    task :ids => :environment do
+    task :queued_ids => :environment do
       tumblr = Tumblr::Client.new({
         consumer_key: ENV['TUMBLR_CONSUMER_KEY'],
         consumer_secret: ENV['TUMBLR_CONSUMER_SECRET'],
