@@ -1,7 +1,7 @@
 namespace :tumblr do
   namespace :update do
     desc 'Update published Tumblr posts'
-    task :posts => :environment do
+    task :entries => :environment do
       Entry.posted_on_tumblr.each_with_index do |entry, i|
         seconds = i * 8
         TumblrUpdateWorker.perform_in(seconds.seconds, entry.id) unless ENV['DRY_RUN'].present?
