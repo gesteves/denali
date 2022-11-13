@@ -26,7 +26,7 @@ namespace :tumblr do
       updated = 0
       continue = true
 
-      puts "Updating Tumblr posts published today"
+      puts "Updating Tumblr posts published in the past 24 hours"
 
       while offset < total_posts && continue
         puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
@@ -40,17 +40,16 @@ namespace :tumblr do
         posts = response['posts']
 
         posts.each do |post|
-          tumblr_id = post['id_string']
-          reblog_key = post['reblog_key']
-          post_url = post['post_url']
-          source_url = post['source_url']
-          caption = post['caption']
-
           if DateTime.parse(post['date']) < 24.hours.ago
             continue = false
             break
           end
 
+          tumblr_id = post['id_string']
+          reblog_key = post['reblog_key']
+          post_url = post['post_url']
+          source_url = post['source_url']
+          caption = post['caption']
           caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.find { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.attr('href')
           url = caption_url || source_url
 
@@ -60,7 +59,7 @@ namespace :tumblr do
             nil
           end
 
-          if entry.present?
+          if entry.present? && !entry.posted_on_tumblr?
             entry.tumblr_id = tumblr_id
             entry.tumblr_reblog_key = reblog_key
             entry.save!
@@ -110,7 +109,6 @@ namespace :tumblr do
           reblog_key = post['reblog_key']
           source_url = post['source_url']
           caption = post['caption']
-
           caption_url = Nokogiri::HTML.fragment(caption)&.css('a')&.find { |a| a.attr('href')&.match? ENV['DOMAIN'] }&.attr('href')
           url = caption_url || source_url
 
