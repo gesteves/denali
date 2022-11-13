@@ -37,8 +37,10 @@ class TumblrMetadataWorker < ApplicationWorker
         raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
         # Find the published Tumblr post with the `genesis_post_id` of the queued post.
         post = response['posts'].find { |post| post['genesis_post_id'] == entry.tumblr_id }
-        published_from_queue = true
-        break if post.present?
+        if post.present?
+          published_from_queue = true
+          break
+        end
         offset += limit
       end
     end
