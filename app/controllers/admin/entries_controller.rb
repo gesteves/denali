@@ -158,6 +158,7 @@ class Admin::EntriesController < AdminController
       if @entry.update(entry_params)
         @entry.update_tags
         @entry.purge_from_cdn
+        TumblrUpdateWorker.perform_in(1.minute, @entry.id) unless @entry.not_on_tumblr?
         OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
