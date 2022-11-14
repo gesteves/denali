@@ -21,6 +21,7 @@ class TumblrWorker < ApplicationWorker
 
     blog_info = tumblr.blog_info(tumblr_username)
     raise blog_info.to_s if blog_info['errors'].present? || (blog_info['status'].present? && blog_info['status'] >= 400)
+
     # If the queue is empty, publish directly; if not, send it to the back of the queue.
     state = blog_info['blog']['queue'] > 0 ? 'queue' : 'published'
 
@@ -38,8 +39,13 @@ class TumblrWorker < ApplicationWorker
     response = tumblr.photo(tumblr_username, opts)
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
 
+    # Save the Tumblr ID, which will be ephemeral if the post was queued in Tumblr.
+    # (it'll change when the post gets published.)
     entry.tumblr_id = response['id_string']
     entry.save
+
+    # Enqueue a job to fetch and store the Tumblr post's metadata
+    # (the new Tumblr ID if and when it changes, and the reblog key.)
     TumblrMetadataWorker.perform_async(entry.id)
   end
 end
