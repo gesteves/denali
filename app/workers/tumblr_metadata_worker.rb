@@ -3,7 +3,7 @@ class TumblrMetadataWorker < ApplicationWorker
   sidekiq_retry_in do |count, exception|
     case exception
     when TumblrPostDelayedPublishError
-      60
+      60 * (count + 1)
     end
   end
 
