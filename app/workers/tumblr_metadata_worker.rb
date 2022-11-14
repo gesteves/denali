@@ -1,5 +1,11 @@
 class TumblrMetadataWorker < ApplicationWorker
   sidekiq_options queue: 'low'
+  sidekiq_retry_in do |count, exception|
+    case exception
+    when TumblrPostDelayedPublishError
+      60
+    end
+  end
 
   # This worker does a couple things to fetch and store
   # metadata about the Tumblr post associated with an entry,
