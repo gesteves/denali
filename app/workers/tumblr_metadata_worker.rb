@@ -36,13 +36,13 @@ class TumblrMetadataWorker < ApplicationWorker
     # Raise exception if we get any error status EXCEPT a 404!
     raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400 && posts['status'] != 404)
     post = posts.dig('posts', 0)
+    post_changed_state = false
 
     # If we got a 404, it means the post was not found either because it doesn't exist anymore,
     # or because it changed state from queued to published, which made it change its ID.
     # If it's the latter, loop through all published posts to find the one with a matching `genesis_post_id`,
     # which is the ID it had when it was queued.
     if post.blank?
-      post_changed_state = true
       total_posts = tumblr.blog_info(tumblr_username)['blog']['posts']
       limit = 20
       offset = 0
@@ -51,7 +51,10 @@ class TumblrMetadataWorker < ApplicationWorker
         raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
         # Find the published Tumblr post with the `genesis_post_id` of the queued post.
         post = response['posts'].find { |post| post['genesis_post_id'] == entry.tumblr_id }
-        break if post.present?
+        if post.present?
+          post_changed_state = true
+          break
+        end
         offset += limit
       end
     end
