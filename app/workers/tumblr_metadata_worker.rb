@@ -81,10 +81,10 @@ class TumblrMetadataWorker < ApplicationWorker
     elsif post['state'] == 'queued'
       # If the post is queued, the Tumblr ID will change when it's published,
       # so enqueue a retry shortly after its scheduled publish time.
-      publish_time = Time.at(post['scheduled_publish_time'])
+      publish_time = Time.at(post['scheduled_publish_time']) + 1.minute
       # If publish time is in the past, then the post is late
-      # (Tumblr doesn't really publish exactly at the scheduled time);
-      # raise an exception so we can retry.
+      # (Tumblr rarely publishes exactly at the scheduled time.)
+      # Raise an exception so we can retry.
       raise TumblrPostDelayedPublishError if publish_time <= Time.now
       TumblrMetadataWorker.perform_at(publish_time, entry.id)
     end
