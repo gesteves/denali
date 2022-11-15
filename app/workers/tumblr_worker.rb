@@ -1,7 +1,7 @@
 class TumblrWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id)
+  def perform(entry_id, queue = true)
     return if !Rails.env.production?
     return if ENV['TUMBLR_CONSUMER_KEY'].blank? || ENV['TUMBLR_CONSUMER_SECRET'].blank? || ENV['TUMBLR_ACCESS_TOKEN'].blank? || ENV['TUMBLR_ACCESS_TOKEN_SECRET'].blank?
 
@@ -19,13 +19,15 @@ class TumblrWorker < ApplicationWorker
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
+    state = queue ? 'queue' : 'published'
+
     opts = {
       tags: entry.tumblr_tags,
       slug: entry.slug,
       caption: entry.tumblr_caption,
       source_url: entry.permalink_url,
       format: 'markdown',
-      state: 'queue',
+      state: state,
       date: entry.published_at.to_s,
       data: entry&.photos&.map { |p| URI.open(p.url(w: 2048)).path }
     }.compact
