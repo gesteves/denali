@@ -1,7 +1,7 @@
 class TumblrWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id, queue = true)
+  def perform(entry_id, state = 'auto')
     return if !Rails.env.production?
     return if ENV['TUMBLR_CONSUMER_KEY'].blank? || ENV['TUMBLR_CONSUMER_SECRET'].blank? || ENV['TUMBLR_ACCESS_TOKEN'].blank? || ENV['TUMBLR_ACCESS_TOKEN_SECRET'].blank?
 
@@ -19,7 +19,12 @@ class TumblrWorker < ApplicationWorker
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    state = queue ? 'queue' : 'published'
+    if state == 'auto'
+      blog_info = tumblr.blog_info(tumblr_username)
+      raise blog_info.to_s if blog_info['errors'].present? || (blog_info['status'].present? && blog_info['status'] >= 400)
+      # If the queue is empty, publish directly; if not, send it to the back of the queue.
+      state = blog_info['blog']['queue'] > 0 ? 'queue' : 'published'
+    end
 
     opts = {
       tags: entry.tumblr_tags,

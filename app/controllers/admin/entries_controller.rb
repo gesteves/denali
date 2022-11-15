@@ -300,7 +300,7 @@ class Admin::EntriesController < AdminController
   def tumblr
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    TumblrWorker.perform_async(@entry.id)
+    TumblrWorker.perform_async(@entry.id, 'queue')
     @message = 'Your entry was shared on Tumblr.'
     respond_to do |format|
       format.html {
