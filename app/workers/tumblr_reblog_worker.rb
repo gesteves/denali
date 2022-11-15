@@ -18,10 +18,6 @@ class TumblrReblogWorker < ApplicationWorker
       oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
     })
 
-    blog_info = tumblr.blog_info(tumblr_username)
-    raise blog_info.to_s if blog_info['errors'].present? || (blog_info['status'].present? && blog_info['status'] >= 400)
-    state = blog_info['blog']['queue'] > 0 ? 'queue' : 'published'
-
     opts = {
       id: entry.tumblr_id,
       reblog_key: entry.tumblr_reblog_key,
@@ -29,7 +25,7 @@ class TumblrReblogWorker < ApplicationWorker
       tags: entry.tumblr_tags,
       slug: entry.slug,
       format: 'markdown',
-      state: state
+      state: 'queue'
     }.compact
 
     response = tumblr.reblog(tumblr_username, opts)
