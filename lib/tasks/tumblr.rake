@@ -22,7 +22,7 @@ namespace :tumblr do
 
       total_posts = tumblr.blog_info(tumblr_username)['blog']['posts']
 
-      limit = 20
+      limit = 50
       offset = 0
       updated = 0
 
@@ -62,7 +62,7 @@ namespace :tumblr do
             puts "    Set Tumblr ID #{tumblr_id} and reblog key #{reblog_key} for entry #{entry.id}"
           end
         end
-        offset += limit
+        offset += posts.size
       end
       puts "Updated Tumblr IDs and reblog keys on #{updated} entries, out of #{total_posts} Tumblr posts."
     end
@@ -81,7 +81,7 @@ namespace :tumblr do
 
       total_posts = tumblr.blog_info(tumblr_username)['blog']['queue']
 
-      limit = 20
+      limit = 50
       offset = 0
       updated = 0
 
@@ -119,7 +119,7 @@ namespace :tumblr do
             puts "    Enqueued reblog key job for entry #{entry.id}"
           end
         end
-        offset += limit
+        offset += posts.size
       end
       puts "Updated Tumblr IDs and reblog keys on #{updated} entries, out of #{total_posts} queued Tumblr posts."
     end

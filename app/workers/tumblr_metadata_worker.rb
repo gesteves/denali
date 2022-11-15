@@ -50,7 +50,7 @@ class TumblrMetadataWorker < ApplicationWorker
     # which is the ID it had when it was queued.
     if post.blank?
       total_posts = tumblr.blog_info(tumblr_username)['blog']['posts']
-      limit = 20
+      limit = 50
       offset = 0
       while offset < total_posts
         response = tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo')
@@ -61,7 +61,7 @@ class TumblrMetadataWorker < ApplicationWorker
           post_changed_state = true
           break
         end
-        offset += limit
+        offset += response['posts'].size
       end
     end
 
