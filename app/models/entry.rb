@@ -614,6 +614,11 @@ class Entry < ApplicationRecord
     "https://www.tumblr.com/reblog/#{blog.tumblr_username}/#{tumblr_id}/#{tumblr_reblog_key}"
   end
 
+  def tumblr_url
+    return unless posted_on_tumblr?
+    "https://www.tumblr.com/#{blog.tumblr_username}/#{tumblr_id}/"
+  end
+
   private
 
   def url_opts(opts)
