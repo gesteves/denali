@@ -65,16 +65,12 @@ class TumblrMetadataWorker < ApplicationWorker
       end
     end
 
-    # If we still couldn't find it, then it doesn't exist anymore,
-    # so there's nothing else to do but clear the stored data.
+    # If we still couldn't find it, then it doesn't exist anymore.
     if post.blank?
       entry.tumblr_id = nil
       entry.tumblr_reblog_key = nil
       entry.save!
-      return
-    end
-
-    if post['state'] == 'published'
+    elsif post['state'] == 'published'
       # If the post is published, save the Tumblr ID and reblog key...
       entry.tumblr_id = post['id_string']
       entry.tumblr_reblog_key = post['reblog_key']
