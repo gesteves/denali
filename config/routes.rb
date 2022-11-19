@@ -40,7 +40,8 @@ Rails.application.routes.draw do
         post 'instagram'
         post 'twitter'
         post 'tumblr'
-        post 'reblog'
+        post 'tumblr_reblog'
+        post 'tumblr_update'
         post 'refresh_metadata'
       end
       collection do

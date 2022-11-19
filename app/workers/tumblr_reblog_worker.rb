@@ -6,7 +6,7 @@ class TumblrReblogWorker < ApplicationWorker
     return if ENV['TUMBLR_CONSUMER_KEY'].blank? || ENV['TUMBLR_CONSUMER_SECRET'].blank? || ENV['TUMBLR_ACCESS_TOKEN'].blank? || ENV['TUMBLR_ACCESS_TOKEN_SECRET'].blank?
 
     entry = Entry.published.find(entry_id)
-    return unless entry.posted_on_tumblr?
+    return unless entry.is_published_on_tumblr?
 
     tumblr_username = entry.blog.tumblr_username
     return if tumblr_username.blank?

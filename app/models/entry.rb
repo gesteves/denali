@@ -601,21 +601,21 @@ class Entry < ApplicationRecord
     photos.all? { |p| p.has_dimensions? }
   end
 
-  def published_on_tumblr?
+  def is_published_on_tumblr?
     tumblr_id.present? && tumblr_reblog_key.present?
   end
 
-  def not_on_tumblr?
-    tumblr_id.blank? && tumblr_reblog_key.blank?
+  def is_on_tumblr?
+    tumblr_id.present?
   end
 
   def tumblr_reblog_url
-    return unless published_on_tumblr?
+    return unless is_published_on_tumblr?
     "https://www.tumblr.com/reblog/#{blog.tumblr_username}/#{tumblr_id}/#{tumblr_reblog_key}"
   end
 
   def tumblr_url
-    return unless published_on_tumblr?
+    return unless is_published_on_tumblr?
     "https://www.tumblr.com/#{blog.tumblr_username}/#{tumblr_id}/"
   end
 

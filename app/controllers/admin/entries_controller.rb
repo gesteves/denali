@@ -158,7 +158,7 @@ class Admin::EntriesController < AdminController
       if @entry.update(entry_params)
         @entry.update_tags
         @entry.purge_from_cdn
-        TumblrUpdateWorker.perform_in(1.minute, @entry.id) unless @entry.not_on_tumblr?
+        TumblrUpdateWorker.perform_in(1.minute, @entry.id) if @entry.is_on_tumblr?
         OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
@@ -311,7 +311,21 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def reblog
+  def tumblr_update
+    @entry = @photoblog.entries.published.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
+    TumblrUpdateWorker.perform_async(@entry.id) if @entry.is_on_tumblr?
+    @message = 'Your entry was updated on Tumblr.'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render 'admin/shared/notify' }
+    end
+  end
+
+  def tumblr_reblog
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     if request.get?
