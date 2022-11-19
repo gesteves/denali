@@ -21,16 +21,24 @@ class TumblrUpdateWorker < ApplicationWorker
     })
 
     posts = tumblr.posts(tumblr_username, id: entry.tumblr_id)
-    raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400)
+    raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400 && posts['status'] != 404)
 
-    post = posts['posts'][0]
+    post = posts.dig('posts', 0)
+
+    if post.blank?
+      entry.tumblr_id = nil
+      entry.tumblr_reblog_key = nil
+      entry.save!
+      return
+    end
+
     post_format = post['format']
-    post_type = post['type']
+    post_type = post['type'].to_sym
     use_html = post_format == 'html'
 
     opts = {
       id: entry.tumblr_id,
-      type: post_type.to_sym,
+      type: post_type,
       caption: entry.tumblr_caption(html: use_html),
       format: post_format,
       tags: entry.tumblr_tags,
