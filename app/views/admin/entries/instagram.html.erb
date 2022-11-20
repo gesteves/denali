@@ -14,6 +14,18 @@
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/2200</p>
         </div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <%= form.label :share_on, 'Share on', class: 'label' %>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control is-expanded">
+                <%= f.datetime_field :share_on, include_seconds: false, value: Time.now, min: Time.now, class: 'input' %>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
     <footer class="modal-card-foot">

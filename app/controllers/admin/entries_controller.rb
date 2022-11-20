@@ -258,7 +258,8 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      InstagramWorker.perform_async(@entry.id, params[:text])
+      share_on = DateTime.parse(params[:share_on])
+      InstagramWorker.perform_at(share_on, @entry.id, params[:text])
       @message = 'Your entry was shared on Instagram.'
       respond_to do |format|
         format.html {
