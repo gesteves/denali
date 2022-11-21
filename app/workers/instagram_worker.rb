@@ -60,7 +60,7 @@ class InstagramWorker < ApplicationWorker
 
   def post_now?(id, state)
     return queue_size(id) == 0 if state == 'auto'
-    return state == 'publish' || state == 'published'
+    state == 'publish' || state == 'published'
   end
 
   def post_to_buffer(id, opts = {}, state = 'auto')
