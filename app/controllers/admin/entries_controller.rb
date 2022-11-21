@@ -258,7 +258,7 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      send_to_queue = params[:send_to_queue].presence
+      send_to_queue = params[:send_to_queue] == "1"
       InstagramWorker.perform_async(@entry.id, params[:text], send_to_queue)
       @message = 'Your entry was shared on Instagram.'
       respond_to do |format|
