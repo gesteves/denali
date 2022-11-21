@@ -1,7 +1,7 @@
 class InstagramWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id, text, send_to_queue = false)
+  def perform(entry_id, text, now = true)
     return if !Rails.env.production?
     return if ENV['BUFFER_ACCESS_TOKEN'].blank?
     entry = Entry.published.find(entry_id)
@@ -15,7 +15,7 @@ class InstagramWorker < ApplicationWorker
     opts = {
       text: text,
       media: media_hash(photos.shift),
-      now: !send_to_queue
+      now: now
     }
 
     if photos.present?
