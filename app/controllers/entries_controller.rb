@@ -184,6 +184,17 @@ class EntriesController < ApplicationController
     end
   end
 
+  def tumblr_csv
+    entries = Entry.where(tumblr_reblog_key: nil).where.not(tumblr_id: nil).order('published_at ASC')
+    output = CSV.generate(headers: true) do |csv|
+      csv << [id, tumblr_id, url]
+      entries.each do |e|
+        csv << [e.id, e.tumblr_id, e.permalink_path]
+      end
+    end
+    render plain: output
+  end
+
   private
 
   def set_entry
