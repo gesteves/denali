@@ -1,7 +1,7 @@
 class InstagramWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id, text, now = true)
+  def perform(entry_id, text, state = 'auto')
     return if !Rails.env.production?
     return if ENV['BUFFER_ACCESS_TOKEN'].blank?
     entry = Entry.published.find(entry_id)
@@ -28,7 +28,7 @@ class InstagramWorker < ApplicationWorker
       end
     end
 
-    post_to_buffer(opts)
+    profile_ids.each { |id| post_to_buffer(id, opts, state) }
   end
 
   private
@@ -39,7 +39,7 @@ class InstagramWorker < ApplicationWorker
     }
   end
 
-  def get_profile_ids
+  def profile_ids
     response = HTTParty.get("https://api.bufferapp.com/1/profiles.json?access_token=#{ENV['BUFFER_ACCESS_TOKEN']}")
     if response.code == 200
       profiles = JSON.parse(response.body)
@@ -49,10 +49,21 @@ class InstagramWorker < ApplicationWorker
     end
   end
 
-  def post_to_buffer(opts = {})
-    profile_ids = get_profile_ids
-    return if profile_ids.blank?
-    opts.reverse_merge!(profile_ids: profile_ids, shorten: false, now: true, access_token: ENV['BUFFER_ACCESS_TOKEN'])
+  def queue_size(id)
+    response = HTTParty.get("https://api.bufferapp.com/1/profiles/#{id}/updates/pending.json?access_token=#{ENV['BUFFER_ACCESS_TOKEN']}")
+    response = JSON.parse(response.body)
+    response['total']
+  end
+
+  def post_now?(id, state)
+    return true if state == 'publish' || state == 'published'
+    return false if state == 'queue' || state == 'queued'
+    return queue_size(id) == 0 if state == 'auto'
+    false
+  end
+
+  def post_to_buffer(id, opts = {}, state = 'auto')
+    opts.reverse_merge!(profile_ids: [id], shorten: false, now: post_now?(id, state), access_token: ENV['BUFFER_ACCESS_TOKEN'])
     response = HTTParty.post('https://api.bufferapp.com/1/updates/create.json', body: opts)
     response = JSON.parse(response.body)
     if response['success']
