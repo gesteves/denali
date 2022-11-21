@@ -14,33 +14,10 @@
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/2200</p>
         </div>
-        <div class="field">
-          <div class="field-label">
-            <%= form.label :send_to_queue, 'Queue', class: 'label' %>
-          </div>
-          <div class="field-body">
-            <div class="field">
-              <div class="control">
-                <div class="tabs is-toggle is-small" data-controller="radio-tab">
-                  <ul>
-                    <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
-                      <a>
-                        Yes
-                      </a>
-                    </li>
-                    <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
-                      <a>
-                        No
-                      </a>
-                    </li>
-                  </ul>
-                  <%= form.hidden_field :send_to_queue, 'data-radio-tab-target': 'field', value: 'true' %>
-                </div>
-              </div>
-              <p class="help">The queue can be managed at <a href="https://publish.buffer.com" target="_blank">Buffer</a>.</p>
-            </div>
-          </div>
-        </div>
+        <label class="checkbox">
+          <%= form.check_box :send_to_queue %>
+          Send to the queue in <a href="https://publish.buffer.com" target="_blank">Buffer</a>.</a>
+        </label>
       </div>
     </section>
     <footer class="modal-card-foot">
