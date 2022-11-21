@@ -50,8 +50,12 @@ class InstagramWorker < ApplicationWorker
 
   def queue_size(id)
     response = HTTParty.get("https://api.bufferapp.com/1/profiles/#{id}/updates/pending.json?access_token=#{ENV['BUFFER_ACCESS_TOKEN']}")
-    response = JSON.parse(response.body)
-    response['total']
+    if response.code == 200
+      updates = JSON.parse(response.body)
+      updates['total']
+    else
+      raise "#{response.code} #{response.body}"
+    end
   end
 
   def post_now?(id, state)
