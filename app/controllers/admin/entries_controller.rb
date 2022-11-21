@@ -157,6 +157,11 @@ class Admin::EntriesController < AdminController
       @entry.modified_at = Time.current if @entry.is_published?
       if @entry.update(entry_params)
         @entry.update_tags
+        @entry.photos.each do |photo|
+          photo.extract_metadata
+          photo.detect_colors
+          photo.encode_blurhash
+        end
         @entry.purge_from_cdn
         TumblrUpdateWorker.perform_in(1.minute, @entry.id) if @entry.is_on_tumblr?
         OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
