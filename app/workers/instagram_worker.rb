@@ -59,10 +59,8 @@ class InstagramWorker < ApplicationWorker
   end
 
   def post_now?(id, state)
-    return true if state == 'publish' || state == 'published'
-    return false if state == 'queue' || state == 'queued'
     return queue_size(id) == 0 if state == 'auto'
-    false
+    return state == 'publish' || state == 'published'
   end
 
   def post_to_buffer(id, opts = {}, state = 'auto')
