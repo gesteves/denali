@@ -124,8 +124,6 @@ Rails.application.routes.draw do
   get '/archive(/:year)(/:month)'           => 'legacy#home'
   get '/index.html'                         => 'legacy#home'
   get '/rss'                                => 'legacy#feed'
-  get '/tumblr.csv'                         => 'entries#tumblr_csv'
-  get '/post/:tumblr_id(/:slug)'            => 'entries#tumblr', constraints: { tumblr_id: /\d+/ }
   get '/:year/:month/:day/:id(/:slug)'      => 'entries#show',   constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }
   get '/amp/:year/:month/:day/:id(/:slug)'  => 'entries#amp',    constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, :as => :entry_amp
 

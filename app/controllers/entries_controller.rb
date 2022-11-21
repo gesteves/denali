@@ -176,25 +176,6 @@ class EntriesController < ApplicationController
     end
   end
 
-  def tumblr
-    @entry = @photoblog.entries.published.where(tumblr_id: params[:tumblr_id]).order('published_at ASC').limit(1).first
-    raise ActiveRecord::RecordNotFound if @entry.blank?
-    respond_to do |format|
-      format.all { redirect_to(@entry.permalink_url, status: 301) }
-    end
-  end
-
-  def tumblr_csv
-    entries = Entry.where(tumblr_reblog_key: nil).where.not(tumblr_id: nil).order('published_at ASC')
-    output = CSV.generate(headers: true) do |csv|
-      csv << ['id', 'tumblr_id', 'path']
-      entries.each do |e|
-        csv << [e.id, e.tumblr_id, e.permalink_path]
-      end
-    end
-    render plain: output
-  end
-
   private
 
   def set_entry
