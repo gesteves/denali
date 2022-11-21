@@ -502,17 +502,17 @@ class Entry < ApplicationRecord
     entry_equipment = self.equipment
     entry_styles = self.styles
     combined_tags = self.combined_tags
-    tags = self.tag_list
-    location_tags = self.location_list
-    equipment_tags = self.equipment_list
-    style_tags = self.style_list
-    more_tags = self.combined_tag_list
+    basic_tags = self.tag_list.clone
+    location_tags = self.location_list.clone
+    equipment_tags = self.equipment_list.clone
+    style_tags = self.style_list.clone
+    more_tags = self.combined_tag_list.clone
     more_tags += ["Photographers on Tumblr", "Original Photographers"] if self.is_photo?
 
     self.blog.tag_customizations.where.not(tumblr_tags: [nil, '']).each do |tag_customization|
       hashtags = tag_customization.tumblr_tags_to_a
       if tag_customization.matches_tags? entry_tags
-        tags << hashtags
+        basic_tags << hashtags
       elsif tag_customization.matches_tags? entry_locations
         location_tags << hashtags
       elsif tag_customization.matches_tags? entry_equipment
@@ -524,7 +524,7 @@ class Entry < ApplicationRecord
       end
     end
 
-    tumblr_tags = tags + location_tags + more_tags + equipment_tags + style_tags
+    tumblr_tags = basic_tags + location_tags + more_tags + equipment_tags + style_tags
     tumblr_tags.flatten.compact.uniq.map(&:downcase).sort.join(', ')
   end
 
