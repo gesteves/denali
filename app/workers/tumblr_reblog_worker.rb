@@ -1,7 +1,7 @@
 class TumblrReblogWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id, text)
+  def perform(entry_id, text, state = 'published')
     return if !Rails.env.production?
     return if ENV['TUMBLR_CONSUMER_KEY'].blank? || ENV['TUMBLR_CONSUMER_SECRET'].blank? || ENV['TUMBLR_ACCESS_TOKEN'].blank? || ENV['TUMBLR_ACCESS_TOKEN_SECRET'].blank?
 
@@ -25,7 +25,7 @@ class TumblrReblogWorker < ApplicationWorker
       tags: entry.tumblr_tags,
       slug: entry.slug,
       format: 'markdown',
-      state: 'queue'
+      state: state
     }.compact
 
     response = tumblr.reblog(tumblr_username, opts)

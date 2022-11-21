@@ -340,7 +340,8 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      TumblrReblogWorker.perform_async(@entry.id, params[:text])
+      state = params[:send_to_queue] == "0" ? 'published' : 'queue'
+      TumblrReblogWorker.perform_async(@entry.id, params[:text], state)
       @message = 'Your entry was reblogged on Tumblr.'
       respond_to do |format|
         format.html {
