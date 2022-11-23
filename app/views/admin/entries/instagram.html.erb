@@ -14,10 +14,16 @@
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/2200</p>
         </div>
-        <label class="checkbox">
-          <%= form.check_box :send_to_queue %>
-          Send to the queue in <a href="https://publish.buffer.com" target="_blank">Buffer</a>.</a>
-        </label>
+        <div class="control">
+          <label class="radio">
+            <%= form.radio_button :state, :published, checked: true %>
+            Publish now
+          </label>
+          <label class="radio">
+            <%= form.radio_button :state, :queue %>
+            Send to queue
+          </label>
+        </div>
       </div>
     </section>
     <footer class="modal-card-foot">

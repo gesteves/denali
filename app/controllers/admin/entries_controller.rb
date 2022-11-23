@@ -263,8 +263,7 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      state = params[:send_to_queue] == "0" ? 'published' : 'queue'
-      InstagramWorker.perform_async(@entry.id, params[:text], state)
+      InstagramWorker.perform_async(@entry.id, params[:text], params[:state])
       @message = 'Your entry was shared on Instagram.'
       respond_to do |format|
         format.html {
@@ -345,8 +344,7 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      state = params[:send_to_queue] == "0" ? 'published' : 'queue'
-      TumblrReblogWorker.perform_async(@entry.id, params[:text], state)
+      TumblrReblogWorker.perform_async(@entry.id, params[:text], params[:state])
       @message = 'Your entry was reblogged on Tumblr.'
       respond_to do |format|
         format.html {
