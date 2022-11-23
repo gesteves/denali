@@ -1,7 +1,7 @@
 <div class="modal is-active"  data-controller="modal">
   <div class="modal-background" data-action="click->modal#close"></div>
   <div class="modal-card">
-    <%= form_with url: reblog_admin_entry_path(@entry.id), method: :post, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
+    <%= form_with url: reblog_admin_entry_path(@entry.id), method: :post, local: false, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
     <header class="modal-card-head">
       <h1 class="modal-card-title">Reblog on Tumblr</h1>
       <button class="delete" data-action="click->modal#close"></button>
