@@ -21,7 +21,7 @@
           </label>
           <label class="radio">
             <%= form.radio_button :state, :queue %>
-            Send to queue
+            Send to queue in <%= link_to 'Tumblr', "https://www.tumblr.com/blog/#{@photoblog.tumblr_username}/queue", target: '_blank' %>
           </label>
         </div>
       </div>
