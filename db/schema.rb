@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_12_161122) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_24_215344) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -52,7 +52,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_12_161122) do
     t.string "copyright"
     t.boolean "show_related_entries", default: true
     t.string "instagram"
-    t.string "twitter"
     t.string "email"
     t.text "header_logo_svg"
     t.text "additional_meta_tags"
@@ -104,8 +103,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_12_161122) do
     t.datetime "published_at", precision: nil
     t.integer "photos_count"
     t.integer "position"
-    t.boolean "post_to_twitter", default: true
-    t.string "tweet_text"
     t.boolean "post_to_flickr", default: true
     t.boolean "show_location", default: true
     t.boolean "post_to_instagram", default: true
