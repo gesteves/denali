@@ -15,15 +15,6 @@
     <meta property="og:type" content="Website">
     <meta property="og:site_name" content="<%= @photoblog.name %>">
     <meta property="og:locale" content="en_US">
-
-    <% if @photoblog.twitter.present? %>
-      <meta name="twitter:site" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
-      <meta name="twitter:creator" content="@<%= @photoblog.twitter.gsub(/^@/, '') %>">
-    <% end %>
-    <meta name="twitter:title" content="<%= "Search results for “#{@query}” – #{@photoblog.name}" %>">
-    <meta name="twitter:url" content="<%= @page == 1 ? search_url(page: nil) : search_url(query: @query, page: @page) %>">
-    <meta name="twitter:description" content="<%= @photoblog.plain_tag_line %>">
-    <meta name="twitter:card" content="summary">
   <% end %>
 <% end %>
 

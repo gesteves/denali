@@ -23,27 +23,6 @@
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
   <% end %>
-
-  <%# Twitter meta tags %>
-  <% if @photoblog.twitter.present? %>
-    <meta name="twitter:site" content="<%= @photoblog.twitter_handle %>">
-    <meta name="twitter:creator" content="<%= @photoblog.twitter_handle %>">
-  <% end %>
-  <meta name="twitter:title" content="<%= entry.plain_title %>">
-  <meta name="twitter:description" content="<%= entry.meta_description %>">
-  <meta name="twitter:url" content="<%= entry.permalink_url %>">
-  <% if photo.present? %>
-    <meta name="twitter:image" content="<%= photo.twitter_card_url %>">
-    <% if photo.alt_text.present? %>
-      <meta name="twitter:image:alt" content="<%= photo.alt_text %>">
-    <% end %>
-    <meta name="twitter:card" content="summary_large_image">
-  <% else %>
-    <% if @photoblog.touch_icon.attached? %>
-      <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
-    <% end %>
-    <meta name="twitter:card" content="summary">
-  <% end %>
   <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
   <link rel="alternate" type="application/json+oembed" href="<%= oembed_url(url: entry.permalink_url, format: 'json') %>">
   <link rel="alternate" type="text/xml+oembed" href="<%= oembed_url(url: entry.permalink_url, format: 'xml') %>">

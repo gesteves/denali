@@ -13,17 +13,6 @@
   <meta property="og:type" content="Website">
   <meta property="og:site_name" content="<%= @photoblog.name %>">
   <meta property="og:locale" content="en_US">
-  <% if @photoblog.twitter.present? %>
-    <meta name="twitter:site" content="<%= @photoblog.twitter_handle %>">
-    <meta name="twitter:creator" content="<%= @photoblog.twitter_handle %>">
-  <% end %>
-  <meta name="twitter:title" content="<%= @og_title %>">
-  <meta name="twitter:url" content="<%= @canonical_url %>">
-  <meta name="twitter:description" content="<%= @og_description %>">
-  <% if @photoblog.touch_icon.attached? %>
-    <meta name="twitter:image" content="<%= @photoblog.touch_icon_url(w: 192) %>">
-  <% end %>
-  <meta name="twitter:card" content="summary">
   <%= auto_discovery_link_tag :atom, @feed_url, title: @page_title %>
   <% if @show_schema %>
     <script type="application/ld+json">

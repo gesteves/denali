@@ -1,15 +1,11 @@
 import { Controller } from 'stimulus';
-import twttr from 'twitter-text';
 
 /**
- * Updates character counts for Twitter fields.
+ * Updates character counts for text fields.
  * @extends Controller
  */
 export default class extends Controller {
   static targets = ['characterCount', 'input'];
-  static values = {
-    isTweet: Boolean
-  }
 
   connect () {
     this.maxCharacters = parseInt(this.inputTarget.maxLength);
@@ -21,12 +17,7 @@ export default class extends Controller {
    */
   updateCharacterCount () {
     let count;
-    if (this.isTweetValue) {
-      const parsedTweet = twttr.parseTweet(this.inputTarget.value);
-      count = parsedTweet.weightedLength;
-    } else {
-      count = this.inputTarget.value.length;
-    }
+    count = this.inputTarget.value.length;
 
     this.characterCountTarget.innerHTML = count;
     if (count > (this.maxCharacters - 10)) {

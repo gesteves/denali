@@ -275,33 +275,6 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def twitter
-    @entry = @photoblog.entries.published.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    if request.get?
-      @text = @entry.twitter_caption
-      respond_to do |format|
-        format.html {
-          if params[:modal]
-            render layout: nil
-          else
-            render
-          end
-        }
-      end
-    elsif request.post?
-      TwitterWorker.perform_async(@entry.id, params[:text])
-      @message = 'Your entry was shared on Twitter.'
-      respond_to do |format|
-        format.html {
-          flash[:success] = @message
-          redirect_to session[:redirect_url] || admin_entry_path(@entry)
-        }
-        format.js { render 'admin/shared/notify' }
-      end
-    end
-  end
-
   def tumblr
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
@@ -384,7 +357,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_twitter, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_tumblr, :tweet_text, :instagram_text, :show_location, :hide_from_search_engines, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_tumblr, :instagram_text, :show_location, :hide_from_search_engines, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location])
     end
 
     def set_redirect_url

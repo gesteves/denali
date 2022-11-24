@@ -78,10 +78,6 @@ class Blog < ApplicationRecord
     ((placeholder.metadata[:width].to_f * ar.last)/ar.first).round
   end
 
-  def twitter_handle
-    self.twitter&.gsub(/^https:\/\/(www\.)?twitter\.com\//, '@')
-  end
-
   def tumblr_username
     return if self.tumblr.blank?
     uri = URI.parse(self.tumblr)
@@ -146,7 +142,6 @@ class Blog < ApplicationRecord
       tag_line
       time_zone
       tumblr
-      twitter
     }
 
     if attributes.any? { |attr| saved_change_to_attribute? (attr) }

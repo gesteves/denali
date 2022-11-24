@@ -6,10 +6,3 @@ square:
   width: 1
   height: 1
   aspect_ratio: '1:1'
-
-twitter:
-  x: 0
-  'y': 0.25
-  width: 1
-  height: 0.5
-  aspect_ratio: '2:1'

@@ -29,8 +29,6 @@ module Types
     field :instagram_url, String, null: false, description: "URL of a version of the photo optimized for the Instagram feed"
     field :plain_metadata, String, null: true, description: "Metadata for the photo, in plain text"
     field :reddit_caption, String, null: true, description: "A reddit-friendly caption for this photo"
-    field :twitter_card_url, String, null: false, description: "URL of a version of the photo optimized for Twitter Cards"
-    field :twitter_url, String, null: false, description: "URL of a version of the photo optimized for Twitter"
     field :iso, Integer, null: true, description: "ISO the photo was made at"
     field :latitude, Float, null: true, description: "Latitude the photo was made at"
     field :longitude, Float, null: true, description: "Longitude the photo was made at"

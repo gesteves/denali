@@ -31,10 +31,9 @@ class EntryTest < ActiveSupport::TestCase
   test 'should be draft' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog, user: user, post_to_twitter: true)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog, user: user)
     entry.save
     assert entry.is_draft?
-    assert_equal 0, TwitterWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
@@ -43,10 +42,9 @@ class EntryTest < ActiveSupport::TestCase
   test 'should be queued' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user, post_to_twitter: true)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user)
     entry.save
     assert entry.is_queued?
-    assert_equal 0, TwitterWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
@@ -55,10 +53,9 @@ class EntryTest < ActiveSupport::TestCase
   test 'should be published' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog, user: user, post_to_twitter: true, post_to_flickr: false, post_to_instagram: false)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog, user: user, post_to_flickr: false, post_to_instagram: false)
     entry.save
     assert entry.is_published?
-    assert_equal 1, TwitterWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
     assert_equal 2, WebhookWorker.jobs.size
@@ -85,7 +82,7 @@ class EntryTest < ActiveSupport::TestCase
   test 'should change drafts to queued' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog, user: user, post_to_twitter: true)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog, user: user)
     entry.save
     entry.queue
     assert entry.is_queued?
@@ -94,7 +91,7 @@ class EntryTest < ActiveSupport::TestCase
   test 'should change queued to draft' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user, post_to_twitter: true)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user)
     entry.save
     entry.draft
     assert entry.is_draft?
@@ -133,14 +130,12 @@ class EntryTest < ActiveSupport::TestCase
   test 'publish should enqueue jobs' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user, post_to_twitter: true, post_to_flickr: false, post_to_instagram: false)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user, post_to_flickr: false, post_to_instagram: false)
     entry.save
-    assert_equal 0, TwitterWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
     entry.publish
-    assert_equal 1, TwitterWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
     assert_equal 2, WebhookWorker.jobs.size
@@ -149,10 +144,9 @@ class EntryTest < ActiveSupport::TestCase
   test 'changing drafts to queued should not enqueue jobs' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog, user: user, post_to_twitter: true)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'draft', blog: blog, user: user)
     entry.save
     entry.queue
-    assert_equal 0, TwitterWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
@@ -161,10 +155,9 @@ class EntryTest < ActiveSupport::TestCase
   test 'changing queued to draft should not enqueue jobs' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user, post_to_twitter: true)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user)
     entry.save
     entry.draft
-    assert_equal 0, TwitterWorker.jobs.size
     assert_equal 0, FlickrWorker.jobs.size
     assert_equal 0, InstagramWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size

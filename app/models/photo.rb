@@ -89,24 +89,8 @@ class Photo < ApplicationRecord
     self.url(w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90, fm: 'jpg')
   end
 
-  # Returns the url of the image, formatted & sized for twitter
-  def twitter_url
-    max_width = PHOTOS[:entry][:srcset].max
-    opts = { fm: 'jpg' }
-    opts[:w] = if self.is_vertical?
-      [self.width, self.width_from_height(max_width)].min
-    else
-      [self.width, max_width].min
-    end
-    self.url(opts)
-  end
-
   def facebook_card_url
     self.url(w: 1200, ar: '1200:630')
-  end
-
-  def twitter_card_url
-    self.url(w: 1200, ar: '2:1')
   end
 
   def palette_url(opts = {})

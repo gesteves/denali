@@ -22,7 +22,8 @@ module Types
     field :show_search, Boolean, null: true, description: "Enable search on the site"
     field :tag_line, String, null: true, description: "A short description of the blog, as entered by the author in Markdown"
     field :time_zone, String, null: true, description: "Time zone the blog publishes in"
-    field :twitter, String, null: true, description: "Twitter account for the blog"
+    field :tumblr, String, null: true, description: "Tumblr account for the blog"
+    field :tumblr_username, String, null: true, description: "Tumblr username for the blog"
     field :entries, [Types::EntryType], null: true, description: "The list of published entries in this blog" do
       argument :page, Integer, default_value: 1, required: false
       argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }

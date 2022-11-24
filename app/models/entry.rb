@@ -288,7 +288,6 @@ class Entry < ApplicationRecord
     OpenGraphWorker.perform_async(self.id)
     InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
     TumblrWorker.perform_async(self.id) if self.post_to_tumblr
-    TwitterWorker.perform_async(self.id, self.twitter_caption) if self.post_to_twitter
     Webhook.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
     self.purge_from_cdn
@@ -411,29 +410,6 @@ class Entry < ApplicationRecord
 
     caption << meta.join("\n").gsub("\n\n\n", "\n\n").strip
     caption.reject(&:blank?).join("\n\n")
-  end
-
-  def twitter_caption
-    permalink = "🔗 #{self.permalink_url}"
-
-    # 280 characters in a tweet,
-    # minus the length of the permalink,
-    # minus 24 characters for the photo URL.
-    # See: https://developer.twitter.com/en/docs/counting-characters
-    max_length = 280 - permalink.size - 24
-
-    caption = if self.tweet_text.present?
-      self.tweet_text
-    else
-      truncate(self.plain_title.strip, length: max_length, omission: '…')
-    end
-
-    permalink = "🔗 #{self.permalink_url}"
-
-    tweet = []
-    tweet << caption
-    tweet << permalink
-    tweet.join("\n\n")
   end
 
   def plain_caption

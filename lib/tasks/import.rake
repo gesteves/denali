@@ -121,7 +121,7 @@ def graphql_query(operation_name:, variables: nil)
         email
         flickr
         instagram
-        twitter
+        tumblr
         postsPerPage
         timeZone
         metaDescription
@@ -180,7 +180,7 @@ def import_blog(data)
   blog.show_search = data[:showSearch]
   blog.tag_line = data[:tagLine]
   blog.time_zone = data[:timeZone]
-  blog.twitter = data[:twitter]
+  blog.tumblr = data[:tumblr]
   blog.save!
   puts "Saved changes to blog “#{blog.name}”"
 end
@@ -203,7 +203,7 @@ def import_entry(data)
     entry.body = data[:body]
     entry.status = data[:status]
     entry.post_to_instagram = false
-    entry.post_to_twitter = false
+    entry.post_to_tumblr = false
     entry.post_to_flickr = false
     entry.post_to_flickr_groups = false
     entry.published_at = Time.parse(data[:publishedAt]) if data[:publishedAt].present?
