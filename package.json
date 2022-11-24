@@ -21,8 +21,7 @@
     "masonry-layout": "^4.2.2",
     "moment-timezone": "^0.5.39",
     "stimulus": "^3.1.1",
-    "turbolinks": "^5.2.0",
-    "twitter-text": "^3.1.0"
+    "turbolinks": "^5.2.0"
   },
   "devDependencies": {
     "@webpack-cli/serve": "^1.7.0",
