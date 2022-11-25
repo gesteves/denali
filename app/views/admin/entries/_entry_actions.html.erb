@@ -22,7 +22,7 @@
         <% end %>
         <% if entry.is_on_tumblr? %>
           <%= link_to icon('Update on Tumblr', 'fab fa-tumblr'), tumblr_update_admin_entry_path(entry), class: 'dropdown-item', remote: true, method: :post, data: { confirm: 'This will immediately update this entry on Tumblr. Do you want to proceed?' } %>
-        <% else %>
+        <% elsif entry.is_published? %>
           <%= link_to icon('Share on Tumblr', 'fab fa-tumblr'), tumblr_admin_entry_path(entry), class: 'dropdown-item', remote: true, method: :post, data: { confirm: 'This will immediately share this entry on Tumblr. Do you want to proceed?' } %>
         <% end %>
       <% end %>
