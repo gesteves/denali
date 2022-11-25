@@ -6,10 +6,8 @@ class InstagramWorker < ApplicationWorker
     return if ENV['BUFFER_ACCESS_TOKEN'].blank?
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
+    return if entry.blog.instagram.blank?
     raise UnprocessedPhotoError unless entry.photos_have_dimensions?
-
-    blog = entry.blog
-    return if blog.instagram.blank?
 
     photos = entry.photos.to_a[0..4]
     opts = {
