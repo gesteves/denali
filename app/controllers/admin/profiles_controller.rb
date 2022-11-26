@@ -26,6 +26,6 @@ class Admin::ProfilesController < AdminController
   private
 
   def profile_params
-    params.require(:profile).permit(:username, :name, :instagram, :tumblr, :flickr, :email, :summary, :bio, :meta_description)
+    params.require(:profile).permit(:username, :name, :instagram, :tumblr, :flickr, :email, :summary, :bio, :meta_description, :avatar)
   end
 end
