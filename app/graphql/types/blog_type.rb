@@ -6,12 +6,9 @@ module Types
     field :analytics_body, String, null: true, description: "Analytics script inserted at the end of the body element"
     field :analytics_head, String, null: true, description: "Analytics script inserted at the end of the head element"
     field :copyright, String, null: true, description: "Copyright info for the blog"
-    field :email, String, null: true, description: "Contact email for the blog"
-    field :flickr, String, null: true, description: "Flickr account for the blog"
     field :formatted_about, String, null: true, description: "A full description of the blog, formatted in HTML"
     field :formatted_tag_line, String, null: true, description: "A short description of the blog, formatted in HTML"
     field :header_logo_svg, String, null: true, description: "SVG for the main header logo"
-    field :instagram, String, null: true, description: "Instagram account for the blog"
     field :map_style, String, null: true, description: "Style of the maps in the map view"
     field :meta_description, String, null: true, description: "Content of the description meta tag"
     field :name, String, null: true, description: "The title of the blog"
@@ -22,8 +19,6 @@ module Types
     field :show_search, Boolean, null: true, description: "Enable search on the site"
     field :tag_line, String, null: true, description: "A short description of the blog, as entered by the author in Markdown"
     field :time_zone, String, null: true, description: "Time zone the blog publishes in"
-    field :tumblr, String, null: true, description: "Tumblr account for the blog"
-    field :tumblr_username, String, null: true, description: "Tumblr username for the blog"
     field :entries, [Types::EntryType], null: true, description: "The list of published entries in this blog" do
       argument :page, Integer, default_value: 1, required: false
       argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }
