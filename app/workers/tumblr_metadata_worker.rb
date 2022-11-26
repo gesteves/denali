@@ -27,7 +27,7 @@ class TumblrMetadataWorker < ApplicationWorker
     entry = Entry.published.find(entry_id)
     return if entry.tumblr_id.blank?
 
-    tumblr_username = entry.blog.tumblr_username
+    tumblr_username = entry.user.profile.tumblr_username
     return if tumblr_username.blank?
 
     tumblr = Tumblr::Client.new({

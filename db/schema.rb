@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_24_215344) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_26_172908) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,11 +51,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_24_215344) do
     t.text "about"
     t.string "copyright"
     t.boolean "show_related_entries", default: true
-    t.string "instagram"
-    t.string "email"
     t.text "header_logo_svg"
     t.text "additional_meta_tags"
-    t.string "flickr"
     t.string "facebook"
     t.integer "publish_schedules_count"
     t.string "time_zone", default: "UTC"
@@ -64,7 +61,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_24_215344) do
     t.text "analytics_head"
     t.text "analytics_body"
     t.boolean "show_search", default: false
-    t.string "tumblr"
   end
 
   create_table "cameras", force: :cascade do |t|
@@ -200,6 +196,25 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_24_215344) do
     t.index ["park_id"], name: "index_photos_on_park_id"
   end
 
+  create_table "profiles", force: :cascade do |t|
+    t.string "username"
+    t.string "name"
+    t.string "instagram"
+    t.string "tumblr"
+    t.string "flickr"
+    t.string "email"
+    t.string "summary"
+    t.text "bio"
+    t.string "meta_description"
+    t.bigint "photo_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["photo_id"], name: "index_profiles_on_photo_id"
+    t.index ["user_id"], name: "index_profiles_on_user_id"
+    t.index ["username"], name: "index_profiles_on_username"
+  end
+
   create_table "publish_schedules", force: :cascade do |t|
     t.integer "hour"
     t.bigint "blog_id"
@@ -277,5 +292,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_24_215344) do
   add_foreign_key "photos", "entries"
   add_foreign_key "photos", "films"
   add_foreign_key "photos", "lenses"
+  add_foreign_key "profiles", "photos"
+  add_foreign_key "profiles", "users"
   add_foreign_key "webhooks", "blogs"
 end

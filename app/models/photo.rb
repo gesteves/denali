@@ -5,6 +5,7 @@ class Photo < ApplicationRecord
   belongs_to :film, optional: true
   belongs_to :park, optional: true
   has_one_attached :image
+  has_one :profile
   has_many :crops, dependent: :destroy
 
   acts_as_list scope: :entry
@@ -91,6 +92,10 @@ class Photo < ApplicationRecord
 
   def facebook_card_url
     self.url(w: 1200, ar: '1200:630')
+  end
+
+  def banner_url
+    self.url(w: 1500, ar: '3:1')
   end
 
   def palette_url(opts = {})

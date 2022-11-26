@@ -8,7 +8,7 @@ class TumblrReblogWorker < ApplicationWorker
     entry = Entry.published.find(entry_id)
     return unless entry.is_published_on_tumblr?
 
-    tumblr_username = entry.blog.tumblr_username
+    tumblr_username = entry.user.profile.tumblr_username
     return if tumblr_username.blank?
 
     tumblr = Tumblr::Client.new({

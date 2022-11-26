@@ -12,10 +12,10 @@
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
       <hr class="dropdown-divider">
       <%= link_to icon('Share', 'fas fa-share-square'), entry.permalink_url, 'data-controller': 'share', 'data-action': 'click->share#open', class: 'dropdown-item' %>
-      <% if entry.is_photo? && entry.is_published? && @photoblog.instagram.present? %>
+      <% if entry.is_photo? && entry.is_published? && entry.user.profile.instagram.present? %>
         <%= link_to icon('Share on Instagram', 'fab fa-instagram'), instagram_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
-      <% if @photoblog.tumblr.present? %>
+      <% if entry.user.profile.tumblr.present? %>
         <% if entry.is_published_on_tumblr? %>
           <%= link_to icon('View on Tumblr', 'fab fa-tumblr'), entry.tumblr_url, class: 'dropdown-item', target: '_blank' %>
           <%= link_to icon('Reblog on Tumblr', 'fab fa-tumblr'), tumblr_reblog_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
@@ -35,6 +35,9 @@
       <% end %>
       <% if entry.is_photo? %>
         <%= link_to icon('Prints', 'fas fa-print'), prints_admin_entry_path(entry), class: 'dropdown-item' %>
+      <% end %>
+      <% if entry.is_photo? && !entry.is_photoset? %>
+        <%= link_to icon('Set as banner', 'fas fa-image'), banner_admin_entry_photo_path(entry_id: entry.id, id: entry.photos.first.id), remote: true, method: :post, data: { confirm: 'This will set this photo as the banner image for your profile. Do you want to proceed?' }, class: 'dropdown-item' %>
       <% end %>
       <%= link_to icon('Refresh metadata', 'fas fa-sync'), refresh_metadata_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: 'This will refresh the entry’s metadata and update its tags. Do you want to proceed?' }, class: 'dropdown-item' %>
       <hr class="dropdown-divider">

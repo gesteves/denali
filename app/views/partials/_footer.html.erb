@@ -1,4 +1,4 @@
-<% cache @photoblog do %>
+<% cache @photoblog, @profile do %>
   <footer class="footer">
     <p>&copy; <%= Time.current.strftime('%Y') %> <%= @photoblog.copyright %></p>
     <ul class="footer__links">
@@ -8,8 +8,8 @@
         <li><%= link_to 'Search', search_url %></li>
       <% end %>
       <li><%= link_to 'Feed', feed_url(format: 'atom', page: nil) %></li>
-      <% if @photoblog.email.present? %>
-        <li><a href="mailto:<%= @photoblog.email %>">Contact</a></li>
+      <% if @profile.email.present? %>
+        <li><a href="mailto:<%= @profile.email %>">Contact</a></li>
       <% end %>
       <li><a href="#top">Back to top</a></li>
     </ul>

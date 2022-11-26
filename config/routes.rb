@@ -51,6 +51,7 @@ Rails.application.routes.draw do
         member do
           get 'download'
           post 'focal_point'
+          post 'banner'
         end
         resources :crops, only: [] do
           collection do
@@ -76,6 +77,7 @@ Rails.application.routes.draw do
     resources :lenses, only: [:edit, :update]
     resources :films, only: [:edit, :update]
     resources :parks, only: [:edit, :update]
+    resources :profiles, only: [:edit, :update]
     resources :publish_schedules, only: [:create, :destroy]
     resources :tag_customizations, only: [:index, :new, :create, :edit, :update, :destroy]
     resources :webhooks, except: [:show]

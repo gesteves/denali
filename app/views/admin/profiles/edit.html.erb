@@ -1,0 +1,167 @@
+  <h1 class="title is-size-5-mobile">Editing profile</h1>
+  <h2 class="subtitle is-size-6-mobile"><%= @profile.name %></h2>
+  <hr class="hr">
+
+<%= form_for([:admin, @profile]) do |f| %>
+  <% if @profile.errors.any? %>
+    <article class="message is-danger">
+      <div class="message-header">
+        <p>Welp, the changes couldn't be saved.</p>
+        <button class="delete"></button>
+      </div>
+      <div class="message-body">
+        <% @profile.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </div>
+    </article>
+  <% end %>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :username, 'Username', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :username, class: 'input', required: true, autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :name, 'Name', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :name, placeholder: 'Your name…', class: 'input', required: true, autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :bio, 'Bio', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_area :bio, placeholder: 'The bio for this user…', class: 'textarea', rows: 20 %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :summary, 'Summary', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :summary, placeholder: 'A shorter, plain text version of the bio…', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :avatar, 'Picture', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="file">
+          <label class="file-label">
+            <%= f.file_field :avatar, accept: '.jpg', class: 'file-input' %>
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-image"></i>
+              </span>
+              <span class="file-label">
+                Choose an image…
+              </span>
+            </span>
+          </label>
+        </div>
+      </div>
+      <% if @profile.avatar.attached? %>
+        <div><%= image_tag @profile.avatar_url %></div>
+      <% end %>
+    </div>
+  </div>
+
+  <hr class="hr">
+  <h2 class="subtitle is-size-5-mobile">Social & links</h2>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :email, 'Email', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.email_field :email, placeholder: 'Your contact email address…', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :flickr, 'Flickr', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :flickr, placeholder: 'Your Flickr profile, e.g. https://www.flickr.com/photos/gesteves/', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :instagram, 'Instagram', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :instagram, placeholder: 'Your Instagram profile, e.g. https://www.instagram.com/gesteves/', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :tumblr, 'Tumblr', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :tumblr, placeholder: 'Your Tumblr profile, e.g. https://www.tumblr.com/gesteves', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
+  <h2 class="subtitle is-size-5-mobile">Search engines</h2>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal"><%= f.label :meta_description, 'Meta description', class: 'label' %></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :meta_description, placeholder: 'A shorter, plain text version of the bio, for search engines…', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
+
+  <div class="buttons is-right">
+    <%= f.submit 'Save changes', class: 'button is-success' %>
+  </div>
+
+<% end %>
