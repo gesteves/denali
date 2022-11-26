@@ -1,4 +1,4 @@
-<% cache @photoblog, @profile do %>
+<% cache [@photoblog, @profile] do %>
   <footer class="footer">
     <p>&copy; <%= Time.current.strftime('%Y') %> <%= @photoblog.copyright %></p>
     <ul class="footer__links">
