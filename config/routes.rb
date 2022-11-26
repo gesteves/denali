@@ -133,6 +133,10 @@ Rails.application.routes.draw do
   # Pages
   get '/about'                         => 'blogs#about', :as => :about
 
+  # ActivityPub
+  get '/.well-known/webfinger'  => 'webfinger#show'
+  get '/@(:username)' => 'profiles#show', :as => :profile
+
   # Miscellaneous
   get '/healthz'                       => 'health#show', :as => :health_check
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }
