@@ -1,6 +1,6 @@
 require "test_helper"
 
-class Admin::ProfilesControllerTest < ActionDispatch::IntegrationTest
+class Admin::ProfilesControllerTest < ActionController::TestCase
   test 'should redirect to sign in page if not signed in' do
     get :edit, params: { id: profiles(:guille).id }
     assert_redirected_to signin_path
