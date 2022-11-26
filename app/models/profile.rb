@@ -1,12 +1,11 @@
 class Profile < ApplicationRecord
   belongs_to :user
-  belongs_to :entry
+  belongs_to :entry, optional: true
   has_one_attached :avatar
 
   after_commit :check_for_invalidation, if: :saved_changes?
 
-  validates :name, :username, :bio, presence: true
-  validates :username, uniqueness: true
+  validates :username, presence: true, uniqueness: true
 
   def formatted_bio
     markdown_to_html(self.bio)
