@@ -20,6 +20,11 @@ class Profile < ApplicationRecord
     Ix.path(self.avatar.key).to_url(opts.compact)
   end
 
+  def banner_url
+    return if photo.blank?
+    photo.banner_url
+  end
+
   def tumblr_username
     return if self.tumblr.blank?
     uri = URI.parse(self.tumblr)

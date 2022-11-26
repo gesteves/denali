@@ -51,6 +51,7 @@ Rails.application.routes.draw do
         member do
           get 'download'
           post 'focal_point'
+          post 'banner'
         end
         resources :crops, only: [] do
           collection do

@@ -36,6 +36,9 @@
       <% if entry.is_photo? %>
         <%= link_to icon('Prints', 'fas fa-print'), prints_admin_entry_path(entry), class: 'dropdown-item' %>
       <% end %>
+      <% if entry.is_photo? && !entry.is_photoset? %>
+        <%= link_to icon('Set as banner', 'fas fa-image'), banner_admin_entry_photo_path(entry_id: entry.id, id: entry.photos.first.id), remote: true, method: :post, data: { confirm: 'This will set this photo as the banner image for your profile. Do you want to proceed?' }, class: 'dropdown-item' %>
+      <% end %>
       <%= link_to icon('Refresh metadata', 'fas fa-sync'), refresh_metadata_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: 'This will refresh the entry’s metadata and update its tags. Do you want to proceed?' }, class: 'dropdown-item' %>
       <hr class="dropdown-divider">
       <% if entry.is_queued? %>
