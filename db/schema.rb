@@ -210,11 +210,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_26_025955) do
     t.string "summary"
     t.text "bio"
     t.string "meta_description"
-    t.bigint "entry_id"
+    t.bigint "photo_id"
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["entry_id"], name: "index_profiles_on_entry_id"
+    t.index ["photo_id"], name: "index_profiles_on_photo_id"
     t.index ["user_id"], name: "index_profiles_on_user_id"
     t.index ["username"], name: "index_profiles_on_username"
   end
@@ -296,7 +296,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_26_025955) do
   add_foreign_key "photos", "entries"
   add_foreign_key "photos", "films"
   add_foreign_key "photos", "lenses"
-  add_foreign_key "profiles", "entries"
+  add_foreign_key "profiles", "photos"
   add_foreign_key "profiles", "users"
   add_foreign_key "webhooks", "blogs"
 end

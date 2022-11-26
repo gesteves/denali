@@ -5,6 +5,7 @@ class Photo < ApplicationRecord
   belongs_to :film, optional: true
   belongs_to :park, optional: true
   has_one_attached :image
+  has_one :profile
   has_many :crops, dependent: :destroy
 
   acts_as_list scope: :entry

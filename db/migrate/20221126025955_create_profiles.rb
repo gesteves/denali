@@ -11,7 +11,7 @@ class CreateProfiles < ActiveRecord::Migration[7.0]
       t.text :bio
       t.string :meta_description
 
-      t.references :entry, foreign_key: true
+      t.references :photo, foreign_key: true
       t.references :user, foreign_key: true
       t.timestamps
     end

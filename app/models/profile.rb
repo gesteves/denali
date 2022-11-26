@@ -1,6 +1,6 @@
 class Profile < ApplicationRecord
   belongs_to :user
-  belongs_to :entry, optional: true
+  belongs_to :photo, optional: true
   has_one_attached :avatar
 
   after_commit :check_for_invalidation, if: :saved_changes?
