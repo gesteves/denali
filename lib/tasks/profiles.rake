@@ -8,11 +8,6 @@ namespace :profiles do
       profile.name = user.name
       profile.username = user.name.parameterize
       profile.email = user.email
-      profile.bio = blog.about
-      profile.meta_description = blog.meta_description
-      profile.flickr = blog.flickr
-      profile.instagram = blog.instagram
-      profile.tumblr = blog.tumblr
       profile.user = user
       profile.save!
     end

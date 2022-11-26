@@ -587,12 +587,12 @@ class Entry < ApplicationRecord
 
   def tumblr_reblog_url
     return unless is_published_on_tumblr?
-    "https://www.tumblr.com/reblog/#{blog.tumblr_username}/#{tumblr_id}/#{tumblr_reblog_key}"
+    "https://www.tumblr.com/reblog/#{user.profile.tumblr_username}/#{tumblr_id}/#{tumblr_reblog_key}"
   end
 
   def tumblr_url
     return unless is_published_on_tumblr?
-    "https://www.tumblr.com/#{blog.tumblr_username}/#{tumblr_id}/"
+    "https://www.tumblr.com/#{user.profile.tumblr_username}/#{tumblr_id}/"
   end
 
   private

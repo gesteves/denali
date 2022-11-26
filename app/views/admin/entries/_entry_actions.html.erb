@@ -12,10 +12,10 @@
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
       <hr class="dropdown-divider">
       <%= link_to icon('Share', 'fas fa-share-square'), entry.permalink_url, 'data-controller': 'share', 'data-action': 'click->share#open', class: 'dropdown-item' %>
-      <% if entry.is_photo? && entry.is_published? && @photoblog.instagram.present? %>
+      <% if entry.is_photo? && entry.is_published? && entry.user.profile.instagram.present? %>
         <%= link_to icon('Share on Instagram', 'fab fa-instagram'), instagram_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
-      <% if @photoblog.tumblr.present? %>
+      <% if entry.user.profile.tumblr.present? %>
         <% if entry.is_published_on_tumblr? %>
           <%= link_to icon('View on Tumblr', 'fab fa-tumblr'), entry.tumblr_url, class: 'dropdown-item', target: '_blank' %>
           <%= link_to icon('Reblog on Tumblr', 'fab fa-tumblr'), tumblr_reblog_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>

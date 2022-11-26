@@ -118,10 +118,6 @@ def graphql_query(operation_name:, variables: nil)
         tagLine
         about
         copyright
-        email
-        flickr
-        instagram
-        tumblr
         postsPerPage
         timeZone
         metaDescription
@@ -168,10 +164,7 @@ def import_blog(data)
 
   blog.about = data[:about]
   blog.copyright = data[:copyright]
-  blog.email = data[:email]
-  blog.flickr = data[:flickr]
   blog.header_logo_svg = data[:headerLogoSvg]
-  blog.instagram = data[:instagram]
   blog.map_style = data[:mapStyle]
   blog.meta_description = data[:metaDescription]
   blog.name = data[:name]
@@ -180,7 +173,6 @@ def import_blog(data)
   blog.show_search = data[:showSearch]
   blog.tag_line = data[:tagLine]
   blog.time_zone = data[:timeZone]
-  blog.tumblr = data[:tumblr]
   blog.save!
   puts "Saved changes to blog “#{blog.name}”"
 end

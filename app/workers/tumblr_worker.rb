@@ -9,7 +9,7 @@ class TumblrWorker < ApplicationWorker
     return if !entry.is_photo?
     raise UnprocessedPhotoError if entry.is_photo? && !entry.photos_have_dimensions?
 
-    tumblr_username = entry.blog.tumblr_username
+    tumblr_username = entry.user.profile.tumblr_username
     return if tumblr_username.blank?
 
     tumblr = Tumblr::Client.new({

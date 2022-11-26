@@ -8,15 +8,11 @@ class FlickrWorker < ApplicationWorker
     photo = Photo.find(photo_id)
     raise UnprocessedPhotoError unless photo.has_dimensions?
 
-    entry = photo.entry
-    blog = entry.blog
-
-    return if blog.flickr.blank?
-
     flickr = FlickRaw::Flickr.new ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET']
     flickr.access_token = ENV['FLICKR_ACCESS_TOKEN']
     flickr.access_secret = ENV['FLICKR_ACCESS_TOKEN_SECRET']
 
+    entry = photo.entry
     title = entry.plain_title
     caption = photo.flickr_caption
 

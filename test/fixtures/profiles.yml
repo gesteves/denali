@@ -1,23 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  username: MyString
-  name: MyString
-  instagram: MyString
-  tumblr: MyString
-  flickr: MyString
-  email: MyString
-  summary: MyString
-  bio: MyText
-  meta_description: MyString
-
-two:
-  username: MyString
-  name: MyString
-  instagram: MyString
-  tumblr: MyString
-  flickr: MyString
-  email: MyString
-  summary: MyString
-  bio: MyText
-  meta_description: MyString
+  user: guille
+  username: gesteves
+  name: Guillermo Esteves
+  instagram: https://www.instagram.com/gesteves
+  tumblr: https://www.tumblr.com/gesteves
+  flickr: https://www.flickr.com/gesteves
+  email: g@example.com
+  summary: Some bio
+  bio: Some longer bio
+  meta_description: Some bio for google

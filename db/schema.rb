@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_26_025955) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_26_172908) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -51,11 +51,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_26_025955) do
     t.text "about"
     t.string "copyright"
     t.boolean "show_related_entries", default: true
-    t.string "instagram"
-    t.string "email"
     t.text "header_logo_svg"
     t.text "additional_meta_tags"
-    t.string "flickr"
     t.string "facebook"
     t.integer "publish_schedules_count"
     t.string "time_zone", default: "UTC"
@@ -64,7 +61,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_26_025955) do
     t.text "analytics_head"
     t.text "analytics_body"
     t.boolean "show_search", default: false
-    t.string "tumblr"
   end
 
   create_table "cameras", force: :cascade do |t|
