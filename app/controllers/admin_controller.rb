@@ -3,6 +3,7 @@ class AdminController < ApplicationController
   before_action :block_cloudfront
   before_action :no_cache
   before_action :require_login
+  before_action :get_logged_in_profile
   skip_before_action :domain_redirect
   skip_before_action :is_repeat_visit?
   helper_method :is_admin?
@@ -25,5 +26,9 @@ class AdminController < ApplicationController
 
   def set_referrer_policy
     response.headers['Referrer-Policy'] = 'same-origin'
+  end
+
+  def get_logged_in_profile
+    @profile = @current_user.profile
   end
 end
