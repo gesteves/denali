@@ -2,7 +2,7 @@ require "test_helper"
 
 class ProfileTest < ActiveSupport::TestCase
   test 'correctly identify tumblr username' do
-    profile = profiles(:allencompassingtrip)
+    profile = profiles(:guille)
 
     profile.tumblr = 'https://www.tumblr.com/gesteves'
     profile.save!
