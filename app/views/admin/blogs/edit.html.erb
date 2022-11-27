@@ -67,7 +67,7 @@
     </div>
   </div>
 
-    <hr class="hr">
+  <hr class="hr">
   <h2 class="subtitle is-size-5-mobile">Social & links</h2>
 
   <div class="field is-horizontal">
@@ -122,34 +122,8 @@
     </div>
   </div>
 
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-      <%= f.label :additional_meta_tags, 'Additional meta tags', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control is-expanded">
-          <%= f.text_area :additional_meta_tags, placeholder: 'For example, Google Webmaster Tools verification tags…', class: 'textarea' %>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-      <%= f.label :meta_description, 'Meta description', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control is-expanded">
-          <%= f.text_area :meta_description, placeholder: 'Short description for search engines…', class: 'textarea' %>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <hr class="hr">
-  <h2 class="subtitle is-size-5-mobile">Analytics</h2>
+  <h2 class="subtitle is-size-5-mobile">Analytics & SEO</h2>
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
@@ -175,6 +149,32 @@
           <%= f.text_area :analytics_body, class: 'textarea' %>
         </div>
         <p class="help">Use this for analytics tracking pixels; these will appear at the end of the &lt;body&gt; element.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :meta_description, 'Meta description', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_area :meta_description, placeholder: 'Short description for search engines…', class: 'textarea' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :additional_meta_tags, 'Additional meta tags', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_area :additional_meta_tags, placeholder: 'For example, Google Webmaster Tools verification tags…', class: 'textarea' %>
+        </div>
       </div>
     </div>
   </div>
