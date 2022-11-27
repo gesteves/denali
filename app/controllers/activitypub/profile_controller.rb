@@ -1,12 +1,11 @@
 class Activitypub::ProfileController < ActivitypubController
   def show
     @profile = Profile.find_by_username(params[:username])
-    if @profile.present? && is_activitypub_request?
+    raise ActiveRecord::RecordNotFound if @profile.blank?
+    if is_activitypub_request?
       render
-    elsif @profile.present?
-      redirect_to profile_url(username: @profile.username)
     else
-      render json: {}, status: 404
+      redirect_to profile_url(username: @profile.username)
     end
   end
 end

@@ -11,25 +11,22 @@ class Activitypub::WebfingerController < ActivitypubController
       false
     end
     @profile = Profile.find_by_username(username)
+    raise ActiveRecord::RecordNotFound if @profile.blank? || !valid_domain
     respond_to do |format|
       format.json {
-        if @profile.blank? || !valid_domain
-          render json: {}, status: 404
-        else
-          @links = [
-            {
-              rel: 'http://webfinger.net/rel/profile-page',
-              type: 'text/html',
-              href: profile_url(username: @profile.username)
-            },
-            {
-              rel: 'self',
-              type: 'application/activity+json',
-              href: activitypub_profile_url(username: @profile.username)
-            }
-          ]
-          render
-        end
+        @links = [
+          {
+            rel: 'http://webfinger.net/rel/profile-page',
+            type: 'text/html',
+            href: profile_url(username: @profile.username)
+          },
+          {
+            rel: 'self',
+            type: 'application/activity+json',
+            href: activitypub_profile_url(username: @profile.username)
+          }
+        ]
+        render
       }
     end
   end
