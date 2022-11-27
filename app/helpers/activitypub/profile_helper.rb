@@ -8,7 +8,11 @@ module Activitypub::ProfileHelper
       discoverable: "toot:discoverable",
       schema: "http://schema.org#",
 			PropertyValue: "schema:PropertyValue",
-			value: "schema:value"
+			value: "schema:value",
+      focalPoint: {
+        '@container': "@list",
+        '@id': "toot:focalPoint"
+      }
      }
     ]
   end

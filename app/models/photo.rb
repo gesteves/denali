@@ -112,6 +112,11 @@ class Photo < ApplicationRecord
     Ix.path(self.image.key).to_url(opts)
   end
 
+  def activitypub_focal_point
+    return [] if focal_x.blank? || focal_y.blank?
+    [focal_x, focal_y].map { |f| (f * 2) - 1 }
+  end
+
   def purge
     url = Ix.path(self.image.key).to_url
     uri = URI.parse(url)

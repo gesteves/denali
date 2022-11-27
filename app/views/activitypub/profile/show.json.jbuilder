@@ -29,6 +29,9 @@ if @profile.banner_url.present?
     json.set! 'type', 'Image'
     json.set! 'mediaType', 'image/jpeg'
     json.set! 'url', @profile.banner_url
+    if @profile.photo.activitypub_focal_point.present?
+      json.set! 'focalPoint', @profile.photo.activitypub_focal_point
+    end
   end
 end
 if attachments.present?
