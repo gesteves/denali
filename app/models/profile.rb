@@ -28,9 +28,10 @@ class Profile < ApplicationRecord
     Ix.path(self.avatar.key).to_url(opts.compact)
   end
 
-  def banner_url
+  def banner_url(opts = {})
     return if photo.blank?
-    photo.url(w: 1500, fm: 'jpg')
+    opts.reverse_merge!(w: 1500, ar: '3:1', fm: 'jpg')
+    photo.url(opts)
   end
 
   def tumblr_username
