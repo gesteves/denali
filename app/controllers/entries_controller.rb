@@ -82,6 +82,7 @@ class EntriesController < ApplicationController
 
   def profile
     @profile = Profile.find_by_username(params[:username])
+    raise ActiveRecord::RecordNotFound if @profile.blank?
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.where(user: @profile.user).photo_entries.page(@page).per(@count)
@@ -215,6 +216,7 @@ class EntriesController < ApplicationController
 
   def profile_feed
     @profile = Profile.find_by_username(params[:username])
+    raise ActiveRecord::RecordNotFound if @profile.blank?
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.where(user: @profile.user).photo_entries.page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
