@@ -18,12 +18,12 @@ if @profile.public_key.present?
   end
 end
 json.set! 'icon' do
-  json.set! 'type', 'image'
+  json.set! 'type', 'Image'
   json.set! 'mediaType', 'image/jpeg'
   json.set! 'url', @profile.avatar_url
 end
 json.set! 'image' do
-  json.set! 'type', 'image'
+  json.set! 'type', 'Image'
   json.set! 'mediaType', 'image/jpeg'
   json.set! 'url', @profile.banner_url
 end
