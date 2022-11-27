@@ -6,7 +6,7 @@ json.set! 'name', @profile.name
 json.set! 'preferredUsername', @profile.username
 json.set! 'published', @profile.created_at
 json.set! 'summary', @profile.summary
-json.set! 'url', activitypub_profile_url(username: @profile.username)
+json.set! 'url', profile_url(username: @profile.username)
 json.set! 'inbox', activitypub_inbox_url(username: @profile.username)
 json.set! 'outbox', activitypub_outbox_url(username: @profile.username)
 if @profile.public_key.present?
