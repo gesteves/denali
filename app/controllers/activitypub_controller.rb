@@ -5,6 +5,7 @@ class ActivitypubController < ApplicationController
 
   def is_activitystream_request?
     header = request.headers['Accept']
+    logger.info "Accept header: #{header}"
     header == 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"' ||
     header == 'application/ld+json;profile="https://www.w3.org/ns/activitystreams"' ||
     header == 'application/activity+json'
