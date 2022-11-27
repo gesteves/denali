@@ -1,4 +1,5 @@
 class Activitypub::InboxController < ActivitypubController
-  def show
+  def index
+    logger.info params
   end
 end
