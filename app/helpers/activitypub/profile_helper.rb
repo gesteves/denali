@@ -47,6 +47,6 @@ module Activitypub::ProfileHelper
   end
 
   def attachment_link(url)
-    link_to url.gsub(/https?:\/\/(www\.)?/, ''), url
+    link_to url.gsub(/(^https?:\/\/(www\.)?)|\/$/, ''), url
   end
 end
