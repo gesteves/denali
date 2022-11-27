@@ -70,7 +70,7 @@
           </a>
           <div class="navbar-dropdown">
             <%= link_to 'Blog', edit_admin_blog_path(@photoblog), class: 'navbar-item' %>
-            <%= link_to 'Profile', edit_admin_profile_path(@profile), class: 'navbar-item' %>
+            <%= link_to 'Profile', edit_admin_profile_path(@current_user.profile), class: 'navbar-item' %>
             <%= link_to 'Equipment', admin_equipment_path, class: 'navbar-item' %>
             <%= link_to 'Locations', admin_locations_path, class: 'navbar-item' %>
             <%= link_to 'Webhooks', admin_webhooks_path, class: 'navbar-item' %>

@@ -107,6 +107,19 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
+      <%= f.label :website, 'Website', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.email_field :website, placeholder: 'Your website…', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
       <%= f.label :flickr, 'Flickr', class: 'label' %>
     </div>
     <div class="field-body">

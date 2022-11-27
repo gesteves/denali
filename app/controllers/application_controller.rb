@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
 
   before_action :set_release_version
   before_action :get_photoblog
-  before_action :get_profile
   before_action :domain_redirect
   before_action :set_referrer_policy
   before_action :is_repeat_visit?
@@ -50,10 +49,6 @@ class ApplicationController < ActionController::Base
 
   def get_photoblog
     @photoblog = Blog.first
-  end
-
-  def get_profile
-    @profile = User.first.profile
   end
 
   def block_cloudfront

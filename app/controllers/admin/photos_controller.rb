@@ -25,8 +25,9 @@ class Admin::PhotosController < AdminController
   def banner
     @entry = Entry.find(params[:entry_id])
     @photo = @entry.photos.find(params[:id])
-    @profile.photo = @photo
-    if @profile.save
+    profile = @current_user.profile
+    profile.photo = @photo
+    if profile.save
       @message = 'The banner image has been updated.'
       respond_to do |format|
         format.html {

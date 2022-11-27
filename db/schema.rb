@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_11_26_172908) do
+ActiveRecord::Schema[7.0].define(version: 2022_11_27_135358) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,6 +61,10 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_26_172908) do
     t.text "analytics_head"
     t.text "analytics_body"
     t.boolean "show_search", default: false
+    t.string "email"
+    t.string "flickr"
+    t.string "instagram"
+    t.string "tumblr"
   end
 
   create_table "cameras", force: :cascade do |t|
@@ -210,6 +214,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_26_172908) do
     t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "website"
     t.index ["photo_id"], name: "index_profiles_on_photo_id"
     t.index ["user_id"], name: "index_profiles_on_user_id"
     t.index ["username"], name: "index_profiles_on_username"
