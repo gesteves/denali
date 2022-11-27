@@ -5,7 +5,10 @@ module Activitypub::ProfileHelper
      {
       manuallyApprovesFollowers: "as:manuallyApprovesFollowers",
 			toot: "http://joinmastodon.org/ns#",
-      discoverable: "toot:discoverable"
+      discoverable: "toot:discoverable",
+      schema: "http://schema.org#",
+			PropertyValue: "schema:PropertyValue",
+			value: "schema:value"
      }
     ]
   end
