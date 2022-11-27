@@ -32,6 +32,9 @@ if @profile.banner_url.present?
     if @profile.photo.activitypub_focal_point.present?
       json.set! 'focalPoint', @profile.photo.activitypub_focal_point
     end
+    if @profile.photo.blurhash.present?
+      json.set! 'blurhash', @profile.photo.blurhash
+    end
   end
 end
 if attachments.present?
