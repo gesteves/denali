@@ -30,7 +30,7 @@ class Profile < ApplicationRecord
 
   def banner_url
     return if photo.blank?
-    photo.banner_url
+    photo.url(w: 1500, fm: 'jpg')
   end
 
   def tumblr_username

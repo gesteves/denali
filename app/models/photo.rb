@@ -94,10 +94,6 @@ class Photo < ApplicationRecord
     self.url(w: 1200, ar: '1200:630')
   end
 
-  def banner_url
-    self.url(w: 1500, fm: 'jpg')
-  end
-
   def palette_url(opts = {})
     opts.reverse_merge!(palette: 'json', colors: 6)
     Ix.path(self.image.key).to_url(opts)
