@@ -13,7 +13,7 @@ if @profile.public_key.present?
   json.set! 'publicKey' do
     json.set! 'id', "#{activitypub_profile_url(username: @profile.username)}#main-key"
     json.set! 'owner', activitypub_profile_url(username: @profile.username)
-    json.set! 'publicKeyPem', @profile.public_key
+    json.set! 'publicKeyPem', @profile.public_key.gsub(/\R+/, "\n")
   end
 end
 json.set! 'icon' do
