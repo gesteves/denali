@@ -1,7 +1,7 @@
 class Activitypub::ProfileController < ActivitypubController
   def show
     @profile = Profile.find_by_username(params[:username])
-    if @profile.present? && is_activitystream_request?
+    if @profile.present? && is_activitypub_request?
       render
     elsif @profile.present?
       redirect_to profile_url(username: @profile.username)
