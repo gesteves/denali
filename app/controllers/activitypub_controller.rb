@@ -4,11 +4,9 @@ class ActivitypubController < ApplicationController
   helper_method :is_activitystream_request?
 
   def is_activitystream_request?
-    header = request.headers['Accept']
-    logger.info "Accept header: #{header}"
-    header == 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"' ||
-    header == 'application/ld+json;profile="https://www.w3.org/ns/activitystreams"' ||
-    header == 'application/activity+json'
+    header = request.headers['Accept']&.split(/[;,]/)&.map { |h| h.strip }
+    accepted = ['application/ld+json', 'application/activity+json', 'profile="https://www.w3.org/ns/activitystreams"']
+    (header & accepted).present?
   end
 
   def set_json_format
