@@ -80,6 +80,43 @@ class EntriesController < ApplicationController
     end
   end
 
+  def profile
+    @profile = Profile.find_by_username(params[:username])
+    @page = (params[:page] || 1).to_i
+    @count = @photoblog.posts_per_page
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.where(user: @profile.user).photo_entries.page(@page).per(@count)
+    raise ActiveRecord::RecordNotFound if @entries.empty?
+    preconnect_imgix
+    preload_fonts
+    @srcset = PHOTOS[:entry_list][:srcset]
+    @sizes = PHOTOS[:entry_list][:sizes].join(', ')
+    @page_url = @page == 1 ? profile_url(username: @profile.username, page: nil) : profile_url(username: @profile.username, page: @page)
+    @canonical_url = profile_url(username: @profile.username, page: nil)
+    @show_schema = true if @page == 1
+    respond_to do |format|
+      format.html {
+        @page_description = "Browse all photos by #{@profile.name} on #{@photoblog.name}."
+        @og_description = @page_description
+        @og_title = "Photos by #{@profile.name} on #{@photoblog.name}"
+        @feed_url = profile_feed_url(format: 'atom', username: @profile.username)
+        @base_url = profile_url(username: @profile.username, page: nil)
+        @heading_title = "Photos by “#{@profile.name}”"
+        @page_title = "Photos by #{@profile.name} – #{@photoblog.name}"
+        @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
+        render :index
+      }
+      format.js { render :index, status: @entries.empty? ? 404 : 200 }
+      format.atom { redirect_to profile_feed_url(username: @profile.username, format: 'atom'), status: 301 }
+      format.all {
+        if @page == 1
+          redirect_to profile_url(username: @profile.username), status: 301
+        else
+          redirect_to profile_url(username: @profile.username, page: @page), status: 301
+        end
+      }
+    end
+  end
+
   def search
     raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_search? && @photoblog.has_search?
     @page = (params[:page] || 1).to_i
@@ -173,6 +210,18 @@ class EntriesController < ApplicationController
       format.atom
       format.rss
       format.all { redirect_to tag_feed_url(format: 'atom', tag: @tag_slug) }
+    end
+  end
+
+  def profile_feed
+    @profile = Profile.find_by_username(params[:username])
+    @count = @photoblog.posts_per_page
+    @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.where(user: @profile.user).photo_entries.page(1).per(@count)
+    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    respond_to do |format|
+      format.atom
+      format.rss
+      format.all { redirect_to profile_feed_url(format: 'atom', username: @profile.username) }
     end
   end
 

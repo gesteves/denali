@@ -89,6 +89,7 @@ Rails.application.routes.draw do
   get '/tagged/:tag(/page/:page)'      => 'entries#tagged',  constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :tag
   get '/search'                        => 'entries#search', :as => :search
   get '/random'                        => 'entries#random', :as => :random
+  get '/author/:username(/page/:page)' => 'entries#profile',   constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :profile
 
   # Entry
   get '/p/:id'                              => 'entries#short',       constraints: { id: /\w+/ }, :as => :entry
@@ -98,8 +99,9 @@ Rails.application.routes.draw do
   get '/related/:preview_hash.:format'      => 'entries#related',     defaults: { format: 'js' }, :as => :related_preview
 
   # Feeds
-  get '/feed(.:format)'             => 'entries#feed', defaults: { format: 'atom' }, :as => :feed
-  get '/tagged/:tag/feed(.:format)' => 'entries#tag_feed', defaults: { format: 'atom' }, :as => :tag_feed
+  get '/feed(.:format)'                  => 'entries#feed', defaults: { format: 'atom' }, :as => :feed
+  get '/tagged/:tag/feed(.:format)'      => 'entries#tag_feed', defaults: { format: 'atom' }, :as => :tag_feed
+  get '/author/:username/feed(.:format)' => 'entries#profile_feed', defaults: { format: 'atom' }, :as => :profile_feed
 
   # Sitemaps
   get '/sitemap.:format'               => 'sitemaps#index', defaults: { format: 'xml' }, :as => :sitemap
@@ -135,7 +137,6 @@ Rails.application.routes.draw do
 
   # ActivityPub
   get '/.well-known/webfinger'  => 'webfinger#show'
-  get '/@(:username)' => 'profiles#show', :as => :profile
 
   # Miscellaneous
   get '/healthz'                       => 'health#show', :as => :health_check
