@@ -136,7 +136,7 @@ Rails.application.routes.draw do
   get '/about'                         => 'blogs#about', :as => :about
 
   # ActivityPub
-  get '/.well-known/webfinger'  => 'webfinger#show', defaults: { format: 'json' }
+  get '/.well-known/webfinger'  => 'webfinger#show'
 
   # Miscellaneous
   get '/healthz'                       => 'health#show', :as => :health_check

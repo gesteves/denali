@@ -1,5 +1,6 @@
 class WebfingerController < ApplicationController
   def show
+    request.format = 'json'
     @subject = params[:resource]
     username = @subject&.gsub(/^acct:@?/, '')&.split('@')&.first
     domain = @subject&.gsub(/^acct:@?/, '')&.split('@')&.last
