@@ -6,7 +6,7 @@ class Activitypub::ProfileController < ActivitypubController
     elsif @profile.present?
       redirect_to profile_url(username: @profile.username)
     else
-      render json: {}, status: 401
+      render json: {}, status: 404
     end
   end
 end
