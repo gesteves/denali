@@ -3,8 +3,6 @@ class Profile < ApplicationRecord
   belongs_to :photo, optional: true
   has_one_attached :avatar
 
-  after_commit :check_for_invalidation, if: :saved_changes?
-
   validates :username, presence: true, uniqueness: true
 
   def formatted_bio
@@ -37,28 +35,5 @@ class Profile < ApplicationRecord
       domain.subdomain || domain.domain
     end
     username.presence
-  end
-
-  def check_for_invalidation
-    attributes = %w{
-      bio
-      email
-      flickr
-      instagram
-      meta_description
-      name
-      username
-      summary
-      tumblr
-    }
-
-    if attributes.any? { |attr| saved_change_to_attribute? (attr) }
-      self.purge_from_cdn
-    end
-  end
-
-  def purge_from_cdn(paths: '/*')
-    Rails.cache.clear
-    CloudfrontInvalidationWorker.perform_async(paths)
   end
 end
