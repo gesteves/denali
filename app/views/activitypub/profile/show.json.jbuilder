@@ -1,4 +1,4 @@
-json.set! '@context', ["https://www.w3.org/ns/activitystreams", "https://w3id.org/security/v1"]
+json.set! '@context', json_context
 json.set! 'id', activitypub_profile_url(username: @profile.username)
 json.set! 'type', 'person'
 json.set! 'discoverable', true
