@@ -13,6 +13,14 @@ class Profile < ApplicationRecord
     markdown_to_plaintext(self.bio)
   end
 
+  def formatted_summary
+    markdown_to_html(self.summary)
+  end
+
+  def plain_summary
+    markdown_to_plaintext(self.summary)
+  end
+
   def avatar_url(opts = {})
     opts.reverse_merge!(w: 512, fm: 'jpg')
     Ix.path(self.avatar.key).to_url(opts.compact)
