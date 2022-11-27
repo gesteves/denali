@@ -19,30 +19,34 @@ module Activitypub::ProfileHelper
       attachments << {
         type: "PropertyValue",
         name: "Website",
-        value: @profile.website
+        value: attachment_link(@profile.website)
       }
     end
     if @profile.flickr.present?
       attachments << {
         type: "PropertyValue",
         name: "Flickr",
-        value: @profile.flickr
+        value: attachment_link(@profile.flickr)
       }
     end
     if @profile.instagram.present?
       attachments << {
         type: "PropertyValue",
         name: "Instagram",
-        value: @profile.instagram
+        value: attachment_link(@profile.instagram)
       }
     end
     if @profile.tumblr.present?
       attachments << {
         type: "PropertyValue",
         name: "Tumblr",
-        value: @profile.tumblr
+        value: attachment_link(@profile.tumblr)
       }
     end
     attachments.sort { |a, b| a[:name] <=> b[:name] }
+  end
+
+  def attachment_link(url)
+    link_to url.gsub(/https?:\/\/(www\.)?/, ''), url
   end
 end
