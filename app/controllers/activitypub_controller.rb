@@ -4,9 +4,10 @@ class ActivitypubController < ApplicationController
   helper_method :is_activitystream_request?
 
   def is_activitystream_request?
-    header = request.headers['Accept']&.split(/[;,]/)&.map { |h| h.strip }
-    accepted = ['application/ld+json', 'application/activity+json', 'profile="https://www.w3.org/ns/activitystreams"']
-    (header & accepted).present?
+    valid = ['application/ld+json', 'application/activity+json', 'profile="https://www.w3.org/ns/activitystreams"']
+    values = request.headers['Accept']&.split(/[;,]/)&.map { |h| h.strip }
+    return false if values.blank?
+    (values & valid).present?
   end
 
   def set_json_format
