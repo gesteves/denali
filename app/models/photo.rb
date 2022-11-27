@@ -95,7 +95,7 @@ class Photo < ApplicationRecord
   end
 
   def banner_url
-    self.url(w: 1500, fm: 'jpg', ar: '3:1')
+    self.url(w: 1500, fm: 'jpg')
   end
 
   def palette_url(opts = {})
