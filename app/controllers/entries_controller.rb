@@ -217,7 +217,7 @@ class EntriesController < ApplicationController
     @profile = Profile.find_by_username(params[:username])
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.where(user: @profile.user).photo_entries.page(1).per(@count)
-    raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    raise ActiveRecord::RecordNotFound if @entries.empty?
     respond_to do |format|
       format.atom
       format.rss
