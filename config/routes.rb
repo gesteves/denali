@@ -136,7 +136,10 @@ Rails.application.routes.draw do
   get '/about'                         => 'blogs#about', :as => :about
 
   # ActivityPub
-  get '/.well-known/webfinger'  => 'webfinger#show'
+  get '/.well-known/webfinger' => 'activitypub/webfinger#show'
+  namespace :activitypub do
+    get '/user/:username' => 'profile#show', :as => :profile
+  end
 
   # Miscellaneous
   get '/healthz'                       => 'health#show', :as => :health_check

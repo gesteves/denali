@@ -1,0 +1,2 @@
+module Activitypub::ProfileHelper
+end

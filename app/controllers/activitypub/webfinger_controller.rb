@@ -1,6 +1,5 @@
-class WebfingerController < ApplicationController
+class Activitypub::WebfingerController < ActivitypubController
   def show
-    request.format = 'json'
     @subject = params[:resource]
     username = @subject&.gsub(/^acct:/, '')&.split('@')&.first
     domain = @subject&.gsub(/^acct:/, '')&.split('@')&.last
@@ -26,10 +25,10 @@ class WebfingerController < ApplicationController
             {
               rel: 'self',
               type: 'application/activity+json',
-              href: profile_url(username: @profile.username)
+              href: activitypub_profile_url(username: @profile.username)
             }
           ]
-          render template: 'activitypub/webfinger'
+          render
         end
       }
     end
