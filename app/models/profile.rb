@@ -5,6 +5,8 @@ class Profile < ApplicationRecord
 
   validates :username, presence: true, uniqueness: true
 
+  before_save :parameterize_username
+
   def formatted_bio
     markdown_to_html(self.bio)
   end
@@ -43,5 +45,11 @@ class Profile < ApplicationRecord
       domain.subdomain || domain.domain
     end
     username.presence
+  end
+
+  private
+
+  def parameterize_username
+    self.username = self.username.parameterize
   end
 end
