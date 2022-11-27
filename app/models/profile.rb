@@ -30,6 +30,13 @@ class Profile < ApplicationRecord
 
   def banner_url(opts = {})
     return if photo.blank?
+    opts.reverse_merge!(w: 1500, ar: '3:1', fm: 'jpg')
+    photo.url(opts)
+  end
+
+  # Workaround for Mastodon's inability to read escaped characters in the `ar` query param
+  def mastodon_banner_url(opts = {})
+    return if photo.blank?
     opts.reverse_merge!(w: 1500, h: 500, fm: 'jpg')
     photo.url(opts)
   end
