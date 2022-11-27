@@ -2,8 +2,8 @@ class WebfingerController < ApplicationController
   def show
     request.format = 'json'
     @subject = params[:resource]
-    username = @subject&.gsub(/^acct:@?/, '')&.split('@')&.first
-    domain = @subject&.gsub(/^acct:@?/, '')&.split('@')&.last
+    username = @subject&.gsub(/^acct:/, '')&.split('@')&.first
+    domain = @subject&.gsub(/^acct:/, '')&.split('@')&.last
     valid_domain = begin
       domain = PublicSuffix.parse(domain).domain
       site_domain = PublicSuffix.parse(ENV['DOMAIN']).domain
