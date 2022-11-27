@@ -82,6 +82,13 @@ class EntriesController < ApplicationController
 
   def profile
     @profile = Profile.find_by_username(params[:username])
+    if is_activitystream_request?
+      request.format = 'json'
+      respond_to do |format|
+        format.json { render template: 'activitypub/profile' }
+      end
+      return
+    end
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.where(user: @profile.user).photo_entries.page(@page).per(@count)
@@ -229,5 +236,12 @@ class EntriesController < ApplicationController
 
   def set_entry
     @entry = Entry.find_by_url(url: request.path)
+  end
+
+  def is_activitystream_request?
+    header = request.headers['Accept']
+    header == 'application/ld+json; profile="https://www.w3.org/ns/activitystreams"' ||
+    header == 'application/ld+json;profile="https://www.w3.org/ns/activitystreams"' ||
+    header == 'application/activity+json'
   end
 end
