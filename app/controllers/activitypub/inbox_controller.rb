@@ -1,4 +1,4 @@
 class Activitypub::InboxController < ActivitypubController
-  def index
+  def show
   end
 end

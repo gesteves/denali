@@ -1,4 +1,4 @@
 class Activitypub::OutboxController < ActivitypubController
-  def index
+  def show
   end
 end
