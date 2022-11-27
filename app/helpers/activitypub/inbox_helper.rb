@@ -1,0 +1,2 @@
+module Activitypub::InboxHelper
+end

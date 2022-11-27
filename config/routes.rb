@@ -138,7 +138,9 @@ Rails.application.routes.draw do
   # ActivityPub
   get '/.well-known/webfinger' => 'activitypub/webfinger#show'
   namespace :activitypub do
-    get '/user/:username' => 'profile#show', :as => :profile
+    get '/user/:username/outbox' => 'outbox#index', :as => :outbox
+    get '/user/:username/inbox'  => 'inbox#index',  :as => :inbox
+    get '/user/:username'        => 'profile#show', :as => :profile
   end
 
   # Miscellaneous
