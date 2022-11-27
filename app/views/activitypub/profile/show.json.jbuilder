@@ -9,6 +9,13 @@ json.set! 'summary', @profile.summary
 json.set! 'url', activitypub_profile_url(username: @profile.username)
 json.set! 'inbox', activitypub_inbox_url(username: @profile.username)
 json.set! 'outbox', activitypub_outbox_url(username: @profile.username)
+if @profile.public_key.present?
+  json.set! 'publicKey' do
+    json.set! 'id', "#{activitypub_profile_url(username: @profile.username)}#main-key"
+    json.set! 'owner', activitypub_profile_url(username: @profile.username)
+    json.set! 'publicKeyPem', @profile.public_key
+  end
+end
 json.set! 'icon' do
   json.set! 'type', 'image'
   json.set! 'mediaType', 'image/jpeg'
