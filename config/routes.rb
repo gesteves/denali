@@ -140,7 +140,7 @@ Rails.application.routes.draw do
   namespace :activitypub do
     get '/user/:username/outbox'            => 'outbox#index', :as => :outbox
     get '/user/:username/outbox/page/:page' => 'outbox#list', constraints: { page: /\d+/ }, :as => :outbox_list
-    post '/user/:username/inbox' => 'inbox#index'
+    post '/user/:username/inbox' => 'inbox#index',  :as => :inbox
     get '/user/:username'        => 'profile#show', :as => :profile
   end
 
