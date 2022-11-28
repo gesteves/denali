@@ -5,7 +5,7 @@ class Activitypub::OutboxController < ActivitypubController
 
   end
 
-  def entries
+  def activities
     @page = params[:page].to_i
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.by_user(@profile.user).photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
