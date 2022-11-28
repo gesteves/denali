@@ -68,6 +68,10 @@ class Entry < ApplicationRecord
     joins(:photos).where(entries: { show_location: true }).where.not(photos: { latitude: nil }).where.not(photos: { longitude: nil })
   end
 
+  def self.by_user(user)
+    where(user_id: user.id)
+  end
+
   def self.text_entries
     where('photos_count = 0')
   end
