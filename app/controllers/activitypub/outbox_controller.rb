@@ -21,8 +21,8 @@ class Activitypub::OutboxController < ActivitypubController
   def set_pages
     @count = @photoblog.posts_per_page
     @total_entries = @photoblog.entries.published.by_user(@profile.user).photo_entries.count
-    pages = (@total_entries.to_f/@count).ceil
+    @total_pages = (@total_entries.to_f/@count).ceil
     @first_page = @total_entries > 1 ? activitypub_outbox_list_url(username: @profile.username, page: 1) : nil
-    @last_page = @total_entries > 1 ? activitypub_outbox_list_url(username: @profile.username, page: pages) : nil
+    @last_page = @total_entries > 1 ? activitypub_outbox_list_url(username: @profile.username, page: total_pages) : nil
   end
 end
