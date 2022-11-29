@@ -10,11 +10,11 @@ json.set! 'summary', @profile.summary if @profile.summary.present?
 json.set! 'url', profile_url(username: @profile.username)
 json.set! 'inbox', activitypub_inbox_url(username: @profile.username)
 json.set! 'outbox', activitypub_outbox_url(username: @profile.username)
-if @profile.public_key.present?
+if @photoblog.public_key.present?
   json.set! 'publicKey' do
     json.set! 'id', "#{activitypub_profile_url(username: @profile.username)}#main-key"
     json.set! 'owner', activitypub_profile_url(username: @profile.username)
-    json.set! 'publicKeyPem', @profile.public_key.gsub(/\R+/, "\n")
+    json.set! 'publicKeyPem', @photoblog.public_key.gsub(/\R+/, "\n")
   end
 end
 if @profile.avatar.attached?
