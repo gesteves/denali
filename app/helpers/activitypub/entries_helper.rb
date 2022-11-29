@@ -1,0 +1,2 @@
+module Activitypub::EntriesHelper
+end

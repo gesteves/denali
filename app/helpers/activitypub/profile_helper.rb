@@ -1,5 +1,5 @@
 module Activitypub::ProfileHelper
-  def json_context
+  def activitypub_profile_context
     ["https://www.w3.org/ns/activitystreams",
      "https://w3id.org/security/v1",
      {

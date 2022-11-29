@@ -1,5 +1,6 @@
 class Activitypub::OutboxController < ActivitypubController
-  before_action :find_profile, :set_pages
+  before_action :find_profile
+  before_action :set_pages, except: :index
 
   def index
 
@@ -9,6 +10,7 @@ class Activitypub::OutboxController < ActivitypubController
     @page = params[:page].to_i
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.by_user(@profile.user).photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
+    @current_page = activitypub_outbox_activities_url(username: @profile.username, page: @page)
   end
 
   private
@@ -22,7 +24,6 @@ class Activitypub::OutboxController < ActivitypubController
     @count = @photoblog.posts_per_page
     @total_entries = @photoblog.entries.published.by_user(@profile.user).photo_entries.count
     @total_pages = (@total_entries.to_f/@count).ceil
-    @first_page = @total_entries > 1 ? activitypub_outbox_list_url(username: @profile.username, page: 1) : nil
-    @last_page = @total_entries > 1 ? activitypub_outbox_list_url(username: @profile.username, page: total_pages) : nil
+    raise ActiveRecord::RecordNotFound if @total_entries == 0
   end
 end

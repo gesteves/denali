@@ -1,11 +1,7 @@
-json.set! '@context', "https://www.w3.org/ns/activitystreams"
+json.set! '@context', activitypub_activitystream_context
 json.set! 'id', activitypub_outbox_url(username: @profile.username)
 json.set! 'type', 'OrderedCollection'
 json.set! 'totalItems', @total_entries
-if @first_page.present?
-  json.set! 'first', @first_page
-end
-if @last_page.present?
-  json.set! 'last', @last_page
-end
+json.set! 'first', activitypub_outbox_activities_url(username: @profile.username, page: 1)
+json.set! 'last', activitypub_outbox_activities_url(username: @profile.username, page: @total_pages)
 

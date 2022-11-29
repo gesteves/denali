@@ -1,4 +1,4 @@
-json.set! '@context', json_context
+json.set! '@context', activitypub_profile_context
 json.set! 'id', activitypub_profile_url(username: @profile.username)
 json.set! 'type', 'Person'
 json.set! 'discoverable', true

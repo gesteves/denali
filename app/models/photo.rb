@@ -94,6 +94,13 @@ class Photo < ApplicationRecord
     self.url(w: 1200, ar: '1200:630')
   end
 
+  def activitypub_url
+    max_width = PHOTOS[:entry][:srcset].max
+    opts = { fm: 'jpg' }
+    opts[:w] = [self.width, max_width].min
+    self.url(opts)
+  end
+
   def palette_url(opts = {})
     opts.reverse_merge!(palette: 'json', colors: 6)
     Ix.path(self.image.key).to_url(opts)

@@ -138,6 +138,8 @@ Rails.application.routes.draw do
   # ActivityPub
   get '/.well-known/webfinger' => 'activitypub/webfinger#show', :as => :webfinger
   namespace :activitypub do
+    get  '/user/:username/entry/:id'         => 'entries#show',                                    :as => :entry
+    get  '/user/:username/activity/:id'      => 'activities#show',                                 :as => :activity
     get  '/user/:username/outbox'            => 'outbox#index',                                    :as => :outbox
     get  '/user/:username/outbox/page/:page' => 'outbox#activities', constraints: { page: /\d+/ }, :as => :outbox_activities
     post '/user/:username/inbox'             => 'inbox#index',                                     :as => :inbox
