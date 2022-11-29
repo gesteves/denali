@@ -14,6 +14,9 @@ json.attachment entry.photos do |photo|
   json.set! 'type', 'Image'
   json.set! 'mediaType', 'image/jpeg'
   json.set! 'url', photo.activitypub_url
+  if photo.alt_text.present?
+    json.set! 'summary', photo.alt_text
+  end
   if photo.activitypub_focal_point.present?
     json.set! 'focalPoint', photo.activitypub_focal_point
   end
