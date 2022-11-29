@@ -427,9 +427,9 @@ class Entry < ApplicationRecord
 
   def activitypub_caption
     title = self.plain_title
-    permalink = "🔗 #{self.permalink_url}"
+    permalink = "🔗 [#{self.permalink_url.gsub(/^https?:\/\/(www\.)?/, '')}](#{self.permalink_url})"
     body = truncate(self.plain_body, length: (490 - title.size - permalink.size))
-    [title, body, permalink].reject(&:blank?).join("\n\n")
+    markdown_to_html([title, body, permalink].reject(&:blank?).join("\n\n"))
   end
 
   def flickr_groups(count = 60)
