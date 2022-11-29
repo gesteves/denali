@@ -6,7 +6,7 @@ json.set! 'manuallyApprovesFollowers', false
 json.set! 'name', @profile.name if @profile.name.present?
 json.set! 'preferredUsername', @profile.username
 json.set! 'published', @profile.user.entries.published.last.published_at
-json.set! 'summary', @profile.summary if @profile.summary.present?
+json.set! 'summary', @profile.formatted_summary if @profile.summary.present?
 json.set! 'url', profile_url(username: @profile.username)
 json.set! 'inbox', activitypub_inbox_url(username: @profile.username)
 json.set! 'outbox', activitypub_outbox_url(username: @profile.username)
