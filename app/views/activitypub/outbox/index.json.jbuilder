@@ -1,4 +1,4 @@
-json.set! '@context', activitypub_activitystream_context
+json.set! '@context', "https://www.w3.org/ns/activitystreams"
 json.set! 'id', activitypub_outbox_url(username: @profile.username)
 json.set! 'type', 'OrderedCollection'
 json.set! 'totalItems', @total_entries
