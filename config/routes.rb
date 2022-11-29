@@ -143,7 +143,7 @@ Rails.application.routes.draw do
     get  '/activity/:username/:id'      => 'activities#show',                                 :as => :activity
     get  '/outbox/:username'            => 'outbox#index',                                    :as => :outbox
     get  '/outbox/:username/:page'      => 'outbox#activities', constraints: { page: /\d+/ }, :as => :outbox_activities
-    get  '/profile/:username'           => 'profile#show',                                    :as => :profile
+    get  '/user/:username'              => 'profile#show',                                    :as => :profile
   end
 
   # Miscellaneous
