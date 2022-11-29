@@ -22,3 +22,8 @@ json.attachment entry.photos do |photo|
   end
   json.set! 'blurhash', photo.blurhash
 end
+json.tag entry.combined_tags do |tag|
+  json.set! 'type', 'Hashtag'
+  json.set! 'name', "##{tag.name.split(/\W+/).map(&:titleize).join}"
+  json.set! 'href', tag_url(tag.slug)
+end
