@@ -1,6 +1,5 @@
 class Activitypub::OutboxController < ActivitypubController
-  before_action :find_profile
-  before_action :set_pages, except: :index
+  before_action :find_profile, :set_pages
 
   def index
 
