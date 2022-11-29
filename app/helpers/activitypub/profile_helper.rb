@@ -23,7 +23,7 @@ module Activitypub::ProfileHelper
     if @profile.website.present?
       attachments << {
         type: "PropertyValue",
-        name: "Website",
+        name: "Web",
         value: attachment_link(@profile.website)
       }
     end
