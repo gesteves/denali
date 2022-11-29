@@ -9,7 +9,7 @@ json.set! 'to', ["https://www.w3.org/ns/activitystreams#Public"]
 json.set! 'sensitive', false
 json.set! 'atomUri', activitypub_entry_url(username: profile.username, id: entry.id)
 json.set! 'inReplyToAtomUri', nil
-json.set! 'content', entry.plain_title
+json.set! 'content', entry.activitypub_caption
 json.attachment entry.photos do |photo|
   json.set! 'type', 'Image'
   json.set! 'mediaType', 'image/jpeg'
