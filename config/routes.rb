@@ -85,11 +85,11 @@ Rails.application.routes.draw do
 
   # Entries
   root 'entries#index'
-  get '/(page/:page)'                  => 'entries#index',   constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :entries
-  get '/tagged/:tag(/page/:page)'      => 'entries#tagged',  constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :tag
-  get '/search'                        => 'entries#search', :as => :search
-  get '/random'                        => 'entries#random', :as => :random
-  get '/author/:username(/page/:page)' => 'entries#profile',   constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :profile
+  get '/(page/:page)'                   => 'entries#index',   constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :entries
+  get '/tagged/:tag(/page/:page)'       => 'entries#tagged',  constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :tag
+  get '/search'                         => 'entries#search', :as => :search
+  get '/random'                         => 'entries#random', :as => :random
+  get '/profile/:username(/page/:page)' => 'entries#profile', constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :profile
 
   # Entry
   get '/p/:id'                              => 'entries#short',       constraints: { id: /\w+/ }, :as => :entry
