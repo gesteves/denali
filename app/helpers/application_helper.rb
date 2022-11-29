@@ -101,7 +101,8 @@ module ApplicationHelper
       focalPoint: {
         '@container': "@list",
         '@id': "toot:focalPoint"
-      }
+      },
+      Hashtag: "as:Hashtag"
      }
     ]
   end
