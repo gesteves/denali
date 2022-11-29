@@ -426,7 +426,10 @@ class Entry < ApplicationRecord
   end
 
   def activitypub_caption
-    markdown_to_html("[#{self.plain_title}](#{self.permalink_url})")
+    title = self.plain_title
+    permalink = "🔗 #{self.permalink_url}"
+    body = truncate(self.plain_body, length: (490 - title.size - permalink.size))
+    [title, body, permalink].reject(&:blank?).join("\n\n")
   end
 
   def flickr_groups(count = 60)
