@@ -115,9 +115,11 @@ class Photo < ApplicationRecord
     Ix.path(self.image.key).to_url(opts)
   end
 
+  # Focal points are stored as a [0,1] range,
+  # but Mastodon expects a [-1,1] range.
   def activitypub_focal_point
     return [] if focal_x.blank? || focal_y.blank?
-    [focal_x, focal_y].map { |f| (f * 2) - 1 }
+    [focal_x, focal_y].map { |f| ((f * 2) - 1).round(2) }
   end
 
   def purge
