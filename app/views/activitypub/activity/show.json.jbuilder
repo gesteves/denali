@@ -1,20 +1,20 @@
-json.set! '@context', activitypub_profile_context
+json.set! '@context', json_context
 json.set! 'id', activitypub_profile_url(user_id: @user.id)
 json.set! 'type', 'Person'
 json.set! 'discoverable', true
 json.set! 'manuallyApprovesFollowers', false
 json.set! 'name', @user.profile.name if @user.profile.name.present?
 json.set! 'preferredUsername', @user.profile.username
-json.set! 'published', @user.entries.published.last.published_at
-json.set! 'summary', @user.profile.formatted_summary if @user.profile.summary.present?
+json.set! 'published', @user.profile.user.entries.published.last.published_at
+json.set! 'summary', @user.profile.summary if @user.profile.summary.present?
 json.set! 'url', profile_url(username: @user.profile.username)
 json.set! 'inbox', activitypub_inbox_url(user_id: @user.id)
 json.set! 'outbox', activitypub_outbox_url(user_id: @user.id)
-if @photoblog.public_key.present?
+if @user.profile.public_key.present?
   json.set! 'publicKey' do
     json.set! 'id', "#{activitypub_profile_url(user_id: @user.id)}#main-key"
     json.set! 'owner', activitypub_profile_url(user_id: @user.id)
-    json.set! 'publicKeyPem', @photoblog.public_key.gsub(/\R+/, "\n")
+    json.set! 'publicKeyPem', @user.profile.public_key.gsub(/\R+/, "\n")
   end
 end
 if @user.profile.avatar.attached?

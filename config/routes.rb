@@ -138,12 +138,12 @@ Rails.application.routes.draw do
   # ActivityPub
   get '/.well-known/webfinger' => 'activitypub/webfinger#show', :as => :webfinger
   namespace :activitypub do
-    post '/inbox/:username'             => 'inbox#index',                                     :as => :inbox
-    get  '/entry/:username/:id'         => 'entries#show',                                    :as => :entry
-    get  '/activity/:username/:id'      => 'activities#show',                                 :as => :activity
-    get  '/outbox/:username'            => 'outbox#index',                                    :as => :outbox
-    get  '/outbox/:username/:page'      => 'outbox#activities', constraints: { page: /\d+/ }, :as => :outbox_activities
-    get  '/user/:username'              => 'profile#show',                                    :as => :profile
+    post '/inbox/:user_id'                 => 'inbox#index',       constraints: { user_id: /\d+/ }                      :as => :inbox
+    get  '/entry/:user_id/:entry_id'       => 'entries#show',      constraints: { user_id: /\d+/, entry_id: /\d+/ }     :as => :entry
+    get  '/activity/:user_id/:activity_id' => 'activities#show',   constraints: { user_id: /\d+/, activity_id: /\d+/ }  :as => :activity
+    get  '/outbox/:user_id'                => 'outbox#index',      constraints: { user_id: /\d+/ }                      :as => :outbox
+    get  '/outbox/:user_id/:page'          => 'outbox#activities', constraints: { user_id: /\d+/, page: /\d+/ },        :as => :outbox_activities
+    get  '/user/:user_id'                  => 'profile#show',      constraints: { user_id: /\d+/ }                      :as => :profile
   end
 
   # Miscellaneous

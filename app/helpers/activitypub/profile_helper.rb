@@ -20,32 +20,32 @@ module Activitypub::ProfileHelper
 
   def attachments
     attachments = []
-    if @profile.website.present?
+    if @user.profile.website.present?
       attachments << {
         type: "PropertyValue",
         name: "Web",
-        value: attachment_link(@profile.website)
+        value: attachment_link(@user.profile.website)
       }
     end
-    if @profile.flickr.present?
+    if @user.profile.flickr.present?
       attachments << {
         type: "PropertyValue",
         name: "Flickr",
-        value: attachment_link(@profile.flickr)
+        value: attachment_link(@user.profile.flickr)
       }
     end
-    if @profile.instagram.present?
+    if @user.profile.instagram.present?
       attachments << {
         type: "PropertyValue",
         name: "Instagram",
-        value: attachment_link(@profile.instagram)
+        value: attachment_link(@user.profile.instagram)
       }
     end
-    if @profile.tumblr.present?
+    if @user.profile.tumblr.present?
       attachments << {
         type: "PropertyValue",
         name: "Tumblr",
-        value: attachment_link(@profile.tumblr)
+        value: attachment_link(@user.profile.tumblr)
       }
     end
     attachments.sort { |a, b| a[:name] <=> b[:name] }

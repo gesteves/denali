@@ -23,7 +23,7 @@ class Activitypub::WebfingerController < ActivitypubController
           {
             rel: 'self',
             type: 'application/activity+json',
-            href: activitypub_profile_url(username: @profile.username)
+            href: activitypub_profile_url(user_id: @profile.user.id)
           }
         ]
         render

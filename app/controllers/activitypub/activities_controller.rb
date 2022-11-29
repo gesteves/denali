@@ -1,8 +1,7 @@
 class Activitypub::ActivitiesController < ApplicationController
   def show
-    @profile = Profile.find_by_username(params[:username])
-    raise ActiveRecord::RecordNotFound if @profile.blank?
-    @entry = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.by_user(@profile.user).find(params[:id])
+    @user = User.find(params[:user_id])
+    @entry = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.by_user(@user).find(params[:activity_id])
     raise ActiveRecord::RecordNotFound if @entry.blank?
   end
 end
