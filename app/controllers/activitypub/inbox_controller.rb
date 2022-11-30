@@ -2,16 +2,16 @@ class Activitypub::InboxController < ActivitypubController
   skip_before_action :verify_authenticity_token
   skip_before_action :set_json_format
 
-  helper_method :is_valid_signature?, :is_valid_date?, :is_valid_digest?
+  helper_method :is_valid_request?
 
   def index
     @user = User.find(params[:user_id])
     logger.tagged("Inbox") do
       logger.info request.raw_post
     end
-    body = JSON.parse(request.raw_post)
 
-    if is_valid_date? && is_valid_signature?
+    if is_valid_request?
+      body = JSON.parse(request.raw_post)
       render plain: 'OK'
     else
       render plain: 'Unauthorized', status: 401
@@ -19,14 +19,10 @@ class Activitypub::InboxController < ActivitypubController
   end
 
   private
+  def is_valid_request?
+    date = Time.httpdate(request.headers['Date'])
+    return false if date < 30.seconds.ago || date > 30.seconds.from_now
 
-  def is_valid_date?
-    Time.httpdate(request.headers['Date']) >= 30.seconds.ago
-  rescue
-    false
-  end
-
-  def is_valid_signature?
     body = JSON.parse(request.raw_post)
     actor_id = body['actor']
 
