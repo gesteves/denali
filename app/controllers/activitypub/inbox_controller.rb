@@ -6,7 +6,7 @@ class Activitypub::InboxController < ActivitypubController
 
   def index
     @user = User.find(params[:user_id])
-    logger.tagged("Inbox")
+    logger.tagged("Inbox") do
       logger.info request.raw_post
     end
     body = JSON.parse(request.raw_post)
