@@ -14,18 +14,12 @@ class Activitypub::InboxController < ActivitypubController
         end
       end&.to_h
 
-      if signature_header.blank?
-        render plain: 'Bad request', status: 400
-        return
-      end
-
       key_id    = signature_header['keyId']
       headers   = signature_header['headers']
       signature = Base64.decode64(signature_header['signature'])
 
       actor = JSON.parse(HTTParty.get(key_id, headers: { 'Accept': 'application/activity+json' }).body)
       key   = OpenSSL::PKey::RSA.new(actor['publicKey']['publicKeyPem'])
-
 
       comparison_string = headers.split(' ').map do |signed_header_name|
         if signed_header_name == '(request-target)'
