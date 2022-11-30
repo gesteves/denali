@@ -4,6 +4,7 @@ class Activitypub::InboxController < ActivitypubController
 
   def index
     @user = User.find(params[:user_id])
+    logger.info params
 
     signature_header = request.headers['signature']&.split(',')&.map do |pair|
       pair.split('=',2).map do |value|
@@ -39,7 +40,6 @@ class Activitypub::InboxController < ActivitypubController
     end.join("\n")
 
     if key.verify(OpenSSL::Digest::SHA256.new, signature, comparison_string)
-      logger.info params
       render plain: 'OK'
     else
       render plain: 'Unauthorized', status: 401
