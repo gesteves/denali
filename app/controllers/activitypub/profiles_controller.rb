@@ -4,7 +4,7 @@ class Activitypub::ProfilesController < ActivitypubController
     if is_activitypub_request?
       render
     else
-      redirect_to profile_url(username: @user.profile.username)
+      redirect_to root_url
     end
   end
 end
