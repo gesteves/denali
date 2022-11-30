@@ -6,7 +6,9 @@ class Activitypub::InboxController < ActivitypubController
 
   def index
     @user = User.find(params[:user_id])
-    logger.info request.raw_post
+    logger.tagged("Inbox")
+      logger.info request.raw_post
+    end
     body = JSON.parse(request.raw_post)
 
     if is_valid_date? && is_valid_signature?
