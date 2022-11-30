@@ -43,6 +43,8 @@ class Activitypub::InboxController < ActivitypubController
         "(request-target): post #{request.path}"
       elsif signed_header_name == 'host'
         "host: #{ENV['DOMAIN']}"
+      elsif signed_header_name == 'digest'
+        "digest: SHA-256=#{Digest::SHA256.base64digest(request.raw_post)}"
       else
         "#{signed_header_name}: #{request.headers[signed_header_name.capitalize]}"
       end
