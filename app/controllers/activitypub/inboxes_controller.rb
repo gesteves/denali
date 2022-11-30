@@ -1,4 +1,4 @@
-class Activitypub::InboxController < ActivitypubController
+class Activitypub::InboxesController < ActivitypubController
   skip_before_action :verify_authenticity_token
   skip_before_action :set_json_format
 
