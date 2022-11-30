@@ -4,6 +4,7 @@ class Activitypub::InboxController < ActivitypubController
 
   def index
     @user = User.find(params[:user_id])
+    logger.info params
     logger.info request.raw_post
 
     signature_header = request.headers['signature']&.split(',')&.map do |pair|
