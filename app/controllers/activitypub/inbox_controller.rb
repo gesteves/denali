@@ -25,6 +25,9 @@ class Activitypub::InboxController < ActivitypubController
   end
 
   def is_valid_signature?
+    body = JSON.parse(request.raw_post)
+    actor_id = body['actor']
+
     signature_header = request.headers['signature']&.split(',')&.map do |pair|
       pair.split('=',2).map do |value|
         value.gsub(/(^"|"$)/, '') # "foo" -> foo
@@ -36,7 +39,7 @@ class Activitypub::InboxController < ActivitypubController
     signature = Base64.decode64(signature_header['signature'])
 
     actor = JSON.parse(HTTParty.get(key_id, headers: { 'Accept': 'application/activity+json' }).body)
-    key   = OpenSSL::PKey::RSA.new(actor['publicKey']['publicKeyPem'])
+    return false if actor['id'] != actor_id
 
     comparison_string = headers.split(' ').map do |signed_header_name|
       if signed_header_name == '(request-target)'
@@ -50,6 +53,7 @@ class Activitypub::InboxController < ActivitypubController
       end
     end.join("\n")
 
+    key = OpenSSL::PKey::RSA.new(actor['publicKey']['publicKeyPem'])
     key.verify(OpenSSL::Digest::SHA256.new, signature, comparison_string)
   rescue
     false
