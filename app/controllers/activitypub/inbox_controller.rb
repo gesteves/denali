@@ -5,18 +5,28 @@ class Activitypub::InboxController < ActivitypubController
   def index
     @user = User.find(params[:user_id])
 
-    signature_header = request.headers['signature'].split(',').map do |pair|
+    signature_header = request.headers['signature']&.split(',')&.map do |pair|
       pair.split('=',2).map do |value|
         value.gsub(/(^"|"$)/, '') # "foo" -> foo
       end
-    end.to_h
+    end&.to_h
+
+    if signature_header.blank?
+      render plain: 'Bad request', status: 400
+      return
+    end
 
     key_id    = signature_header['keyId']
     headers   = signature_header['headers']
     signature = Base64.decode64(signature_header['signature'])
 
-    actor = JSON.parse(HTTParty.get(key_id, headers: { 'Accept': 'application/activity+json' }).body)
-    key   = OpenSSL::PKey::RSA.new(actor['publicKey']['publicKeyPem'])
+    begin
+      actor = JSON.parse(HTTParty.get(key_id, headers: { 'Accept': 'application/activity+json' }).body)
+      key   = OpenSSL::PKey::RSA.new(actor['publicKey']['publicKeyPem'])
+    rescue
+      render plain: 'Bad request', status: 400
+      return
+    end
 
     comparison_string = headers.split(' ').map do |signed_header_name|
       if signed_header_name == '(request-target)'
