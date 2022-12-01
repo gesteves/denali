@@ -7,7 +7,7 @@ json.set! 'name', @user.profile.name if @user.profile.name.present?
 json.set! 'preferredUsername', @user.profile.username
 json.set! 'published', @user.entries.published.last.published_at
 json.set! 'summary', @user.profile.formatted_summary if @user.profile.summary.present?
-json.set! 'url', profile_url(username: @user.profile.username)
+json.set! 'url', root_url
 json.set! 'inbox', activitypub_inbox_url(user_id: @user.id)
 json.set! 'outbox', activitypub_outbox_url(user_id: @user.id)
 if @photoblog.public_key.present?
