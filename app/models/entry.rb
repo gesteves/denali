@@ -419,7 +419,7 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_caption
-    permalink = "🔗 #{self.short_permalink_url}"
+    permalink = "🔗 #{self.permalink_url}"
     text = []
     text << self.plain_title
     text << truncate(self.plain_body, length: (490 - self.plain_title.size - permalink.size)) if self.plain_body.present?
