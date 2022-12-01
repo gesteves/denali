@@ -9,7 +9,7 @@ class MastodonWorker < ApplicationWorker
     raise UnprocessedPhotoError unless entry.photos_have_dimensions?
 
     mastodon = Mastodon.new(base_url: ENV['MASTODON_BASE_URL'], bearer_token: ENV['MASTODON_ACCESS_TOKEN'])
-    media_ids = entry.photos.map { |p| mastodon.upload_media(url: p.mastodon_url, alt_text: p.alt_text, focal_point: p.mastodon_focal_point)['id'] }
+    media_ids = entry.photos.to_a[0..4].map { |p| mastodon.upload_media(url: p.mastodon_url, alt_text: p.alt_text, focal_point: p.mastodon_focal_point)['id'] }
     mastodon.create_status(text: text, media_ids: media_ids)
   end
 
