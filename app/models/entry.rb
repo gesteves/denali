@@ -291,6 +291,7 @@ class Entry < ApplicationRecord
   def enqueue_publish_jobs
     OpenGraphWorker.perform_async(self.id)
     InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
+    MastodonWorker.perform_async(self.id, self.mastodon_caption)
     TumblrWorker.perform_async(self.id) if self.post_to_tumblr
     Webhook.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
@@ -415,6 +416,15 @@ class Entry < ApplicationRecord
 
     caption << meta.join("\n").gsub("\n\n\n", "\n\n").strip
     caption.reject(&:blank?).join("\n\n")
+  end
+
+  def mastodon_caption
+    permalink = "🔗 #{self.short_permalink_url}"
+    text = []
+    text << self.plain_title
+    text << truncate(self.plain_body, length: (490 - self.plain_title.size - permalink.size)) if self.plain_body.present?
+    text << permalink
+    text.join("\n\n")
   end
 
   def plain_caption

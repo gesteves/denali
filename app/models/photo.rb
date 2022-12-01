@@ -94,7 +94,7 @@ class Photo < ApplicationRecord
     self.url(w: 1200, ar: '1200:630')
   end
 
-  def activitypub_url
+  def mastodon_url
     max_width = PHOTOS[:entry][:srcset].max
     opts = { fm: 'jpg' }
     opts[:w] = [self.width, max_width].min
@@ -117,7 +117,7 @@ class Photo < ApplicationRecord
 
   # Focal points are stored as a [0,1] range,
   # but Mastodon expects a [-1,1] range.
-  def activitypub_focal_point
+  def mastodon_focal_point
     return [] if focal_x.blank? || focal_y.blank?
     [focal_x, focal_y].map { |f| ((f * 2) - 1).round(2) }
   end

@@ -13,12 +13,12 @@ json.set! 'content', entry.activitypub_caption
 json.attachment entry.photos do |photo|
   json.set! 'type', 'Image'
   json.set! 'mediaType', 'image/jpeg'
-  json.set! 'url', photo.activitypub_url
+  json.set! 'url', photo.mastodon_url
   if photo.alt_text.present?
     json.set! 'summary', photo.alt_text
   end
-  if photo.activitypub_focal_point.present?
-    json.set! 'focalPoint', photo.activitypub_focal_point
+  if photo.mastodon_focal_point.present?
+    json.set! 'focalPoint', photo.mastodon_focal_point
   end
   json.set! 'blurhash', photo.blurhash
 end
