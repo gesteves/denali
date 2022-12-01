@@ -290,11 +290,11 @@ class Entry < ApplicationRecord
 
   def enqueue_publish_jobs
     OpenGraphWorker.perform_async(self.id)
-    InstagramWorker.perform_async(self.id, self.instagram_caption)
+    InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
     MastodonWorker.perform_async(self.id, self.mastodon_caption)
-    TumblrWorker.perform_async(self.id)
+    TumblrWorker.perform_async(self.id) if self.post_to_tumblr
     Webhook.deliver_all(self)
-    self.send_photos_to_flickr
+    self.send_photos_to_flickr if self.post_to_flickr
     self.purge_from_cdn
   end
 
