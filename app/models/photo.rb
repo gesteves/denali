@@ -99,6 +99,11 @@ class Photo < ApplicationRecord
     self.url(opts)
   end
 
+  def tumblr_url
+    opts = { w: 2048, fm: 'jpg' }
+    self.url(opts)
+  end
+
   def palette_url(opts = {})
     opts.reverse_merge!(palette: 'json', colors: 6)
     Ix.path(self.image.key).to_url(opts)

@@ -34,7 +34,7 @@ class TumblrWorker < ApplicationWorker
       format: 'markdown',
       state: state,
       date: entry.published_at.to_s,
-      data: entry&.photos&.map { |p| URI.open(p.url(w: 2048)).path }
+      data: entry&.photos&.map { |p| URI.open(p.tumblr_url).path }
     }.compact
 
     response = tumblr.photo(tumblr_username, opts)
