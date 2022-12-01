@@ -56,6 +56,7 @@ gem 'sidekiq-scheduler'
 # Social Networks
 gem 'flickraw', git: 'https://github.com/gesteves/flickraw.git', branch: 'update-upload-url'
 gem 'tumblr_client', git: 'https://github.com/gesteves/tumblr_client', branch: 'master'
+gem 'mastodon-api', require: 'mastodon'
 
 # Search
 gem 'elasticsearch-model', '~> 5.0'
