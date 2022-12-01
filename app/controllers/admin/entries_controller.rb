@@ -275,6 +275,33 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def mastodon
+    @entry = @photoblog.entries.published.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
+    if request.get?
+      @text = @entry.mastodon_caption
+      respond_to do |format|
+        format.html {
+          if params[:modal]
+            render layout: nil
+          else
+            render
+          end
+        }
+      end
+    elsif request.post?
+      MastodonWorker.perform_async(@entry.id, params[:text])
+      @message = 'Your entry was shared on Mastodon.'
+      respond_to do |format|
+        format.html {
+          flash[:success] = @message
+          redirect_to session[:redirect_url] || admin_entry_path(@entry)
+        }
+        format.js { render 'admin/shared/notify' }
+      end
+    end
+  end
+
   def tumblr
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?

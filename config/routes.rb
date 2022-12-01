@@ -32,7 +32,8 @@ Rails.application.routes.draw do
         get 'crops'
         get 'prints'
         get 'instagram'
-        get 'reblog'
+        get 'tumblr_reblog'
+        get 'mastodon'
         patch 'publish'
         patch 'queue'
         patch 'draft'
@@ -40,6 +41,7 @@ Rails.application.routes.draw do
         post 'tumblr'
         post 'tumblr_reblog'
         post 'tumblr_update'
+        post 'mastodon'
         post 'refresh_metadata'
       end
       collection do
