@@ -18,7 +18,7 @@ class Activitypub::WebfingerController < ActivitypubController
           {
             rel: 'http://webfinger.net/rel/profile-page',
             type: 'text/html',
-            href: profile_url(username: @profile.username)
+            href: root_url
           },
           {
             rel: 'self',

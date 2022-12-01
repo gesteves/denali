@@ -1,4 +1,4 @@
-class Activitypub::OutboxController < ActivitypubController
+class Activitypub::OutboxesController < ActivitypubController
   before_action :find_user, :set_pages
 
   def index

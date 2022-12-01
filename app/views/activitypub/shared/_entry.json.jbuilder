@@ -5,7 +5,7 @@ json.set! 'inReplyTo', nil
 json.set! 'published', entry.published_at
 json.set! 'url', entry.permalink_url
 json.set! 'attributedTo', activitypub_profile_url(user_id: user.id)
-json.set! 'to', ["as:Public"]
+json.set! 'to', ["https://www.w3.org/ns/activitystreams#Public"]
 json.set! 'sensitive', false
 json.set! 'atomUri', activitypub_entry_url(user_id: user.id, entry_id: entry.id)
 json.set! 'inReplyToAtomUri', nil

@@ -89,7 +89,6 @@ Rails.application.routes.draw do
   get '/tagged/:tag(/page/:page)'       => 'entries#tagged',  constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :tag
   get '/search'                         => 'entries#search', :as => :search
   get '/random'                         => 'entries#random', :as => :random
-  get '/profile/:username(/page/:page)' => 'entries#profile', constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :profile
 
   # Entry
   get '/p/:id'                              => 'entries#short',       constraints: { id: /\w+/ }, :as => :entry
@@ -101,7 +100,6 @@ Rails.application.routes.draw do
   # Feeds
   get '/feed(.:format)'                  => 'entries#feed', defaults: { format: 'atom' }, :as => :feed
   get '/tagged/:tag/feed(.:format)'      => 'entries#tag_feed', defaults: { format: 'atom' }, :as => :tag_feed
-  get '/author/:username/feed(.:format)' => 'entries#profile_feed', defaults: { format: 'atom' }, :as => :profile_feed
 
   # Sitemaps
   get '/sitemap.:format'               => 'sitemaps#index', defaults: { format: 'xml' }, :as => :sitemap
@@ -138,12 +136,12 @@ Rails.application.routes.draw do
   # ActivityPub
   get '/.well-known/webfinger' => 'activitypub/webfinger#show', :as => :webfinger
   namespace :activitypub do
-    post '/inbox/:user_id'                 => 'inbox#index',       constraints: { user_id: /\d+/ },                     :as => :inbox
-    get  '/entry/:user_id/:entry_id'       => 'entries#show',      constraints: { user_id: /\d+/, entry_id: /\d+/ },    :as => :entry
-    get  '/activity/:user_id/:activity_id' => 'activities#show',   constraints: { user_id: /\d+/, activity_id: /\d+/ }, :as => :activity
-    get  '/outbox/:user_id'                => 'outbox#index',      constraints: { user_id: /\d+/ },                     :as => :outbox
-    get  '/outbox/:user_id/:page'          => 'outbox#activities', constraints: { user_id: /\d+/, page: /\d+/ },        :as => :outbox_activities
-    get  '/user/:user_id'                  => 'profile#show',      constraints: { user_id: /\d+/ },                     :as => :profile
+    post '/inbox/:user_id'                 => 'inboxes#index',       constraints: { user_id: /\d+/ },                     :as => :inbox
+    get  '/entry/:user_id/:entry_id'       => 'entries#show',        constraints: { user_id: /\d+/, entry_id: /\d+/ },    :as => :entry
+    get  '/activity/:user_id/:activity_id' => 'activities#show',     constraints: { user_id: /\d+/, activity_id: /\d+/ }, :as => :activity
+    get  '/outbox/:user_id'                => 'outboxes#index',      constraints: { user_id: /\d+/ },                     :as => :outbox
+    get  '/outbox/:user_id/:page'          => 'outboxes#activities', constraints: { user_id: /\d+/, page: /\d+/ },        :as => :outbox_activities
+    get  '/user/:user_id'                  => 'profiles#show',       constraints: { user_id: /\d+/ },                     :as => :profile
   end
 
   # Miscellaneous
