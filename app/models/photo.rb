@@ -95,9 +95,7 @@ class Photo < ApplicationRecord
   end
 
   def mastodon_url
-    max_width = PHOTOS[:entry][:srcset].max
-    opts = { fm: 'jpg' }
-    opts[:w] = [self.width, max_width].min
+    opts = { w: 2560, fm: 'jpg' }
     self.url(opts)
   end
 
