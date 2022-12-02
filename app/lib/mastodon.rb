@@ -33,7 +33,7 @@ class Mastodon
     end
   end
 
-  def upload_media(url:, alt_text: nil, focal_point: nil)
+  def upload_media(url:, alt_text:, focal_point: nil)
   endpoint = "#{@base_url}/api/v2/media"
 
     body = {
