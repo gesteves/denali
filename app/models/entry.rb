@@ -430,7 +430,7 @@ class Entry < ApplicationRecord
     permalink = "🔗 #{self.permalink_url}"
     text = []
     text << self.plain_title
-    text << truncate(self.plain_body, length: (490 - self.plain_title.size - permalink.size)) if self.plain_body.present?
+    text << truncate(self.plain_body, length: (490 - self.plain_title.size - permalink.size), separator: /\s+/, omission: '…') if self.plain_body.present?
     text << permalink
     text.join("\n\n")
   end
