@@ -33,7 +33,7 @@ class Mastodon
     body = {
       file: URI.open(url),
       description: HTMLEntities.new.decode(alt_text),
-      focus: focal_point
+      focus: focal_point&.join(',')
     }.compact
 
     headers = {
