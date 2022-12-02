@@ -34,8 +34,8 @@ class Mastodon
   end
 
   def upload_media(url:, alt_text:, focal_point: nil, thumbnail_url: nil)
-  endpoint = "#{@base_url}/api/v2/media"
-
+    endpoint = "#{@base_url}/api/v2/media"
+    
     body = {
       file: URI.open(url),
       description: HTMLEntities.new.decode(alt_text),
