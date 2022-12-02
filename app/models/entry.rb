@@ -416,6 +416,7 @@ class Entry < ApplicationRecord
 
     caption = []
     if self.instagram_text.present?
+      caption << self.plain_title
       caption << self.instagram_text
     else
       caption << self.plain_title
@@ -428,11 +429,16 @@ class Entry < ApplicationRecord
 
   def mastodon_caption
     permalink = "🔗 #{self.permalink_url}"
-    text = []
-    text << self.plain_title
-    text << truncate(self.plain_body, length: (490 - self.plain_title.size - permalink.size), separator: /\s+/, omission: '…') if self.plain_body.present?
-    text << permalink
-    text.join("\n\n")
+    caption = []
+    if self.mastodon_text.present?
+      caption << self.plain_title
+      caption << self.mastodon_text
+      caption << permalink
+    else
+      caption << self.plain_title
+      caption << permalink
+    end
+    caption.reject(&:blank?).join("\n\n")
   end
 
   def plain_caption
