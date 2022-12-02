@@ -177,6 +177,10 @@ class Entry < ApplicationRecord
     self.status == 'published'
   end
 
+  def is_nsfw?
+    self.photos.any? { |p| p.content_warning.present? }
+  end
+
   def publish
     self.status = 'published'
     self.save
