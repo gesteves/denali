@@ -6,18 +6,22 @@ class Mastodon
     @base_url = base_url
   end
 
-  def create_status(text:, media_ids: nil, sensitive: false, spoiler_text: nil)
+  def create_status(text:, media_ids: [], sensitive: false, spoiler_text: nil, visibility: 'public', language: 'en', scheduled_at: nil)
     endpoint = "#{@base_url}/api/v1/statuses"
 
     body = {
       status: HTMLEntities.new.decode(text),
-      media_ids: media_ids,
+      media_ids: media_ids.presence,
+      spoiler_text: spoiler_text.presence,
       sensitive: sensitive,
-      spoiler_text: spoiler_text
+      visibility: visibility,
+      language: language,
+      scheduled_at: scheduled_at
     }.compact
 
     headers = {
-      'Authorization': "Bearer #{@bearer_token}"
+      'Authorization': "Bearer #{@bearer_token}",
+      'Idempotency-Key': Digest::SHA256.base64digest(body.to_s)
     }
 
     response = HTTParty.post(endpoint, body: body, headers: headers)
