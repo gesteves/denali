@@ -33,7 +33,7 @@ class Mastodon
     end
   end
 
-  def upload_media(url:, alt_text:, focal_point: nil)
+  def upload_media(url:, alt_text:, focal_point: nil, thumbnail_url: nil)
   endpoint = "#{@base_url}/api/v2/media"
 
     body = {
@@ -41,6 +41,8 @@ class Mastodon
       description: HTMLEntities.new.decode(alt_text),
       focus: focal_point&.join(',')
     }.compact
+
+    body[:thumbnail] = URI.open(thumbnail_url) if thumbnail_url.present?
 
     headers = {
       'Authorization': "Bearer #{@bearer_token}"
