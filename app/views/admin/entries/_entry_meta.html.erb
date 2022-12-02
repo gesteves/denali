@@ -17,6 +17,15 @@
     </div>
   </div>
 
+  <% if entry.is_nsfw? %>
+    <div class="control">
+      <div class="tags has-addons">
+        <span class="tag is-danger"><i class="fas fa-exclamation-triangle"></i></span>
+        <span class="tag">NSFW</span>
+      </div>
+    </div>
+  <% end %>
+
   <% if entry.show_location? && entry.photos.any? { |p| !p.has_location? } %>
     <div class="control">
       <div class="tags has-addons">
