@@ -157,33 +157,6 @@
 
   <div class="field is-horizontal">
     <div class="field-label">
-      <%= f.label :post_to_tumblr, 'Share on Tumblr', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control">
-          <div class="tabs is-toggle is-small" data-controller="radio-tab">
-            <ul>
-              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
-                <a>
-                  Yes
-                </a>
-              </li>
-              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
-                <a>
-                  No
-                </a>
-              </li>
-            </ul>
-            <%= f.hidden_field :post_to_tumblr, 'data-radio-tab-target': 'field' %>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label">
       <%= f.label :post_to_instagram, 'Share on Instagram', class: 'label' %>
     </div>
     <div class="field-body">
@@ -218,6 +191,75 @@
           <%= f.text_area :instagram_text, placeholder: 'Your Instagram caption…', class: 'textarea', maxlength: 2200, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
         </div>
         <p class="help"><span data-character-counter-target="characterCount">0</span>/2200</p>
+        <p class="help">The title will be included automatically.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :post_to_mastodon, 'Share on Mastodon', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>
+                  Yes
+                </a>
+              </li>
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>
+                  No
+                </a>
+              </li>
+            </ul>
+            <%= f.hidden_field :post_to_mastodon, 'data-radio-tab-target': 'field' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+    </div>
+    <div class="field-body">
+      <div class="field" data-controller="character-counter">
+        <div class="control is-expanded">
+          <%= f.text_area :mastodon_text, placeholder: 'Your Mastodon caption…', class: 'textarea', maxlength: 400, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
+        </div>
+        <p class="help"><span data-character-counter-target="characterCount">0</span>/400</p>
+        <p class="help">The title and permalink will be included automatically.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :post_to_tumblr, 'Share on Tumblr', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>
+                  Yes
+                </a>
+              </li>
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>
+                  No
+                </a>
+              </li>
+            </ul>
+            <%= f.hidden_field :post_to_tumblr, 'data-radio-tab-target': 'field' %>
+          </div>
+        </div>
       </div>
     </div>
   </div>
