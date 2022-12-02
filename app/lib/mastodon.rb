@@ -6,12 +6,14 @@ class Mastodon
     @base_url = base_url
   end
 
-  def create_status(text:, media_ids: nil)
+  def create_status(text:, media_ids: nil, sensitive: false, spoiler_text: nil)
     endpoint = "#{@base_url}/api/v1/statuses"
 
     body = {
       status: HTMLEntities.new.decode(text),
-      media_ids: media_ids
+      media_ids: media_ids,
+      sensitive: sensitive,
+      spoiler_text: spoiler_text
     }.compact
 
     headers = {

@@ -178,7 +178,7 @@ class Entry < ApplicationRecord
   end
 
   def is_nsfw?
-    self.photos.any? { |p| p.content_warning.present? }
+    content_warnings.present?
   end
 
   def publish
@@ -265,6 +265,10 @@ class Entry < ApplicationRecord
       self.territories.join(' and ')
     end
     territory_list
+  end
+
+  def content_warnings
+    self.photos.map(&:content_warning).reject(&:blank?).uniq
   end
 
   def meta_description
