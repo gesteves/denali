@@ -166,7 +166,7 @@ class Admin::EntriesController < AdminController
         TumblrUpdateWorker.perform_in(1.minute, @entry.id) if @entry.is_on_tumblr?
         OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
         flash[:success] = 'Your entry has been updated!'
-        format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
+        format.html { redirect_to admin_entry_path(@entry) }
       else
         flash[:warning] = 'Your entry couldn’t be updated…'
         format.html { render :edit }
