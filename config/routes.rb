@@ -136,7 +136,7 @@ Rails.application.routes.draw do
   get '/about'                         => 'blogs#about', :as => :about
 
   # ActivityPub
-  get '/.well-known/webfinger' => 'activitypub/webfinger#show', :as => :webfinger
+  get '/.well-known/webfinger'             => 'activitypub/well_known#webfinger', :as => :webfinger
   namespace :activitypub do
     post '/inbox/:user_id'                 => 'inboxes#index',       constraints: { user_id: /\d+/ },                     :as => :inbox
     get  '/entry/:user_id/:entry_id'       => 'entries#show',        constraints: { user_id: /\d+/, entry_id: /\d+/ },    :as => :entry

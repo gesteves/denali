@@ -1,5 +1,5 @@
-class Activitypub::WebfingerController < ActivitypubController
-  def show
+class Activitypub::WellKnownController < ActivitypubController
+  def webfinger
     @subject = params[:resource]
     username = @subject&.gsub(/^acct:/, '')&.split('@')&.first
     domain = @subject&.gsub(/^acct:/, '')&.split('@')&.last
