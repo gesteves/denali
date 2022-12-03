@@ -325,11 +325,12 @@ class Entry < ApplicationRecord
       /oembed*
       /search*
       /related*
+      /activitypub*
+      /nodeinfo*
     }
 
     if self.is_published?
       paths.concat(wildcard_paths)
-      paths.concat(["/author/#{user.profile.username}/*", "/activitypub/user/#{user.profile.username}/*"])
       paths.concat(self.combined_tags.map { |tag| "/tagged/#{tag.slug}*"})
     end
 
