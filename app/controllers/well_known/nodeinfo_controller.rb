@@ -1,4 +1,6 @@
 class WellKnown::NodeinfoController < ApplicationController
+  before_action :set_json_format
+
   def index
     render json: {
       links: [
@@ -13,5 +15,10 @@ class WellKnown::NodeinfoController < ApplicationController
   def show
     @users = User.all.count
     @entries = Entry.published.count
+  end
+
+  private
+  def set_json_format
+    request.format = 'json'
   end
 end
