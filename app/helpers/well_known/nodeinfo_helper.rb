@@ -1,0 +1,2 @@
+module WellKnown::NodeinfoHelper
+end

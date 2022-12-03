@@ -1,5 +1,5 @@
-class Activitypub::WellKnownController < ActivitypubController
-  def webfinger
+class WellKnown::WebfingerController < ApplicationController
+  def show
     @subject = params[:resource]
     username = @subject&.gsub(/^acct:/, '')&.split('@')&.first
     domain = @subject&.gsub(/^acct:/, '')&.split('@')&.last
@@ -29,9 +29,5 @@ class Activitypub::WellKnownController < ActivitypubController
         render
       }
     end
-  end
-
-  def host_meta
-    render content_type: 'application/xrd+xml', formats: [:xml]
   end
 end

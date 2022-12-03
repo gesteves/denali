@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  namespace :well_known do
+    get 'nodeinfo/index'
+    get 'nodeinfo/show'
+    get 'host_meta/show'
+    get 'webfinger/show'
+  end
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'
   mount Sidekiq::Web => '/admin/sidekiq', constraints: lambda { |request| request.session[:user_id].present? && User.find(request.session[:user_id]).present? }
@@ -136,8 +142,10 @@ Rails.application.routes.draw do
   get '/about'                         => 'blogs#about', :as => :about
 
   # ActivityPub
-  get '/.well-known/webfinger'             => 'activitypub/well_known#webfinger', :as => :webfinger
-  get '/.well-known/host-meta'             => 'activitypub/well_known#host_meta'
+  get '/.well-known/webfinger'             => 'well_known/webfinger#show', :as => :webfinger
+  get '/.well-known/host-meta'             => 'well_known/host_meta#show'
+  get '/.well-known/nodeinfo'              => 'well_known/nodeinfo#index'
+  get '/nodeinfo/2.0'                      => 'well_known/nodeinfo#show', :as => :nodeinfo
   namespace :activitypub do
     post '/inbox/:user_id'                 => 'inboxes#index',       constraints: { user_id: /\d+/ },                     :as => :inbox
     get  '/entry/:user_id/:entry_id'       => 'entries#show',        constraints: { user_id: /\d+/, entry_id: /\d+/ },    :as => :entry
