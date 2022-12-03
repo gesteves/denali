@@ -416,6 +416,7 @@ class Entry < ApplicationRecord
 
     caption = []
     if self.instagram_text.present?
+      caption << self.plain_title
       caption << self.instagram_text
     else
       caption << self.plain_title
@@ -427,10 +428,17 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_caption
-    text = []
-    text << self.plain_title
-    text << "🔗 #{self.permalink_url}"
-    text.join("\n\n")
+    permalink = "🔗 #{self.permalink_url}"
+    caption = []
+    if self.mastodon_text.present?
+      caption << self.plain_title
+      caption << self.mastodon_text
+      caption << permalink
+    else
+      caption << self.plain_title
+      caption << permalink
+    end
+    caption.reject(&:blank?).join("\n\n")
   end
 
   def plain_caption

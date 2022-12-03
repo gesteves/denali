@@ -166,7 +166,7 @@ class Admin::EntriesController < AdminController
         TumblrUpdateWorker.perform_in(1.minute, @entry.id) if @entry.is_on_tumblr?
         OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
         flash[:success] = 'Your entry has been updated!'
-        format.html { redirect_to session[:redirect_url] || admin_entry_path(@entry) }
+        format.html { redirect_to admin_entry_path(@entry) }
       else
         flash[:warning] = 'Your entry couldn’t be updated…'
         format.html { render :edit }
@@ -384,7 +384,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_tumblr, :instagram_text, :show_location, :hide_from_search_engines, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location, :content_warning])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_tumblr, :post_to_mastodon, :mastodon_text, :instagram_text, :show_location, :hide_from_search_engines, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location, :content_warning])
     end
 
     def set_redirect_url
