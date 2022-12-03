@@ -30,4 +30,8 @@ class Activitypub::WellKnownController < ActivitypubController
       }
     end
   end
+
+  def host_meta
+    render content_type: 'application/xrd+xml', formats: [:xml]
+  end
 end
