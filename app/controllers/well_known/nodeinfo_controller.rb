@@ -1,5 +1,6 @@
 class WellKnown::NodeinfoController < ApplicationController
   before_action :set_json_format
+  before_action :set_max_age
 
   def index
     render json: {

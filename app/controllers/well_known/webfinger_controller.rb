@@ -1,4 +1,6 @@
 class WellKnown::WebfingerController < ApplicationController
+  before_action :set_max_age
+
   def show
     request.format = 'json'
     @subject = params[:resource]
