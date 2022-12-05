@@ -415,9 +415,7 @@ class Entry < ApplicationRecord
       meta << exif.join("  \n")
     end
 
-    meta.uniq!
-
-    if meta.size > 1
+    unless meta.uniq.size == 1
       meta.each_with_index do |photo, i|
         meta[i] = "#{(i + 1).ordinalize} photo:  \n#{meta[i]}"
       end
@@ -432,7 +430,7 @@ class Entry < ApplicationRecord
       caption << self.plain_body
     end
 
-    caption << meta.join("\n\n").strip
+    caption << meta.uniq.join("\n\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
 
@@ -504,9 +502,7 @@ class Entry < ApplicationRecord
       meta << exif.join("  \n")
     end
 
-    meta.uniq!
-
-    if meta.size > 1
+    unless meta.uniq.size == 1
       meta.each_with_index do |photo, i|
         meta[i] = "#{(i + 1).ordinalize} photo:  \n#{meta[i]}"
       end
@@ -516,7 +512,7 @@ class Entry < ApplicationRecord
     caption << "[#{self.plain_title}](#{self.permalink_url})"
     caption << self.body
 
-    caption << meta.join("\n\n").gsub("\n\n\n", "\n\n").strip
+    caption << meta.uniq.join("\n\n").strip
     markdown = caption.reject(&:blank?).join("\n\n")
 
     html ? markdown_to_html(markdown) : markdown
