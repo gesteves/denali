@@ -402,17 +402,25 @@ class Entry < ApplicationRecord
     meta = []
 
     self.photos.to_a[0..4].each_with_index do |photo, i|
-      meta << "#{(i + 1).ordinalize} photo:" unless self.is_single_photo?
-      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
+      exif = []
+      exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+      exif << "🎞 #{photo.film.display_name}" if photo.film.present?
 
       location = []
       location << photo.formatted_location if photo.formatted_location.present?
       location << "#{photo.territory_list} land" if photo.territories.present?
 
-      meta << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-      meta << "\n" unless self.is_single_photo?
+      exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
+      meta << exif.join("  \n")
+    end
+
+    meta.uniq!
+
+    if meta.size > 1
+      meta.each_with_index do |photo, i|
+        meta[i] = "#{(i + 1).ordinalize} photo:  \n#{meta[i]}"
+      end
     end
 
     caption = []
@@ -424,7 +432,7 @@ class Entry < ApplicationRecord
       caption << self.plain_body
     end
 
-    caption << meta.join("\n").gsub("\n\n\n", "\n\n").strip
+    caption << meta.join("\n\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
 
@@ -483,24 +491,32 @@ class Entry < ApplicationRecord
     meta = []
 
     self.photos.to_a[0..10].each_with_index do |photo, i|
-      meta << "#{(i + 1).ordinalize} photo:" unless self.is_single_photo?
-      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
+      exif = []
+      exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+      exif << "🎞 #{photo.film.display_name}" if photo.film.present?
 
       location = []
       location << photo.formatted_location if photo.formatted_location.present?
       location << "#{photo.territory_list} land" if photo.territories.present?
 
-      meta << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-      meta << "\n" unless self.is_single_photo?
+      exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
+      meta << exif.join("  \n")
+    end
+
+    meta.uniq!
+
+    if meta.size > 1
+      meta.each_with_index do |photo, i|
+        meta[i] = "#{(i + 1).ordinalize} photo:  \n#{meta[i]}"
+      end
     end
 
     caption = []
     caption << "[#{self.plain_title}](#{self.permalink_url})"
     caption << self.body
 
-    caption << meta.join("  \n").gsub("\n\n\n", "\n\n").strip
+    caption << meta.join("\n\n").gsub("\n\n\n", "\n\n").strip
     markdown = caption.reject(&:blank?).join("\n\n")
 
     html ? markdown_to_html(markdown) : markdown
