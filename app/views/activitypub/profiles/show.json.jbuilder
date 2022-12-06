@@ -10,11 +10,11 @@ json.set! 'summary', @user.profile.formatted_summary if @user.profile.summary.pr
 json.set! 'url', root_url
 json.set! 'inbox', activitypub_inbox_url(user_id: @user.id)
 json.set! 'outbox', activitypub_outbox_url(user_id: @user.id)
-if ENV['PUBLIC_KEY_PEM'].present?
+if ENV['ACTIVITYPUB_PUBLIC_KEY'].present?
   json.set! 'publicKey' do
     json.set! 'id', "#{activitypub_profile_url(user_id: @user.id)}#main-key"
     json.set! 'owner', activitypub_profile_url(user_id: @user.id)
-    json.set! 'publicKeyPem', ENV['PUBLIC_KEY_PEM'].gsub(/\R+/, "\n")
+    json.set! 'publicKeyPem', ENV['ACTIVITYPUB_PUBLIC_KEY'].gsub(/\R+/, "\n")
   end
 end
 if @user.profile.avatar.attached?
