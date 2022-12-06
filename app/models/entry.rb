@@ -508,6 +508,12 @@ class Entry < ApplicationRecord
     caption << "[#{self.plain_title}](#{self.permalink_url})"
     caption << self.body
 
+    if self.tumblr_text.present?
+      caption << self.tumblr_text
+    else
+      caption << self.body
+    end
+
     caption << meta.uniq.join("\n\n").strip
     markdown = caption.reject(&:blank?).join("\n\n")
 

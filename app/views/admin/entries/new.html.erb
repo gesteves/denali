@@ -194,7 +194,7 @@
         <div class="control is-expanded">
           <%= f.text_area :mastodon_text, placeholder: 'Mastodon caption…', class: 'textarea', maxlength: 400, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
         </div>
-        <p class="help"><span data-character-counter-target="characterCount">0</span>/400 | This will be used in the Mastodon text, along with the title and permalink (if empty, only the title and permalink will be used.)</p>
+        <p class="help"><span data-character-counter-target="characterCount">0</span>/400 | This will be used in the Mastodon text, along with the title and permalink (if empty, the body will be omitted.)</p>
       </div>
     </div>
   </div>
@@ -222,6 +222,19 @@
             <%= f.hidden_field :post_to_tumblr, 'data-radio-tab-target': 'field' %>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_area :tumblr_text, placeholder: 'Tumblr caption…', class: 'textarea' %>
+        </div>
+        <p class="help">This will be used in the Tumblr text, along with the title and image metadata (if empty, the existing body will be used.)</p>
       </div>
     </div>
   </div>
