@@ -63,19 +63,6 @@
                         </div>
                       </div>
                     </div>
-                    <hr class="hr">
-                    <div class="field is-horizontal">
-                      <div class="field-label is-normal">
-                        <%= p.label :content_warning, 'Content warning', class: 'label' %>
-                      </div>
-                      <div class="field-body">
-                        <div class="field">
-                          <div class="control is-expanded">
-                            <%= p.text_field :content_warning, placeholder: 'Use this to indicate the photo contains violence, nudity, etc.', class: 'input' %>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
                 <div class="media">
@@ -264,6 +251,20 @@
 
   <hr class="hr">
   <h2 class="subtitle is-size-5-mobile">Other options</h2>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :content_warning, 'Title', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :content_warning, placeholder: 'Content warning for this entry…', class: 'input' %>
+        </div>
+        <p class="help">Writing a content warning will mark this entry as sensitive in various places.</p>
+      </div>
+    </div>
+  </div>
 
   <div class="field is-horizontal">
     <div class="field-label">

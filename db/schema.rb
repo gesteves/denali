@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_02_165319) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_06_152846) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -117,6 +117,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_02_165319) do
     t.string "tumblr_reblog_key"
     t.text "mastodon_text"
     t.boolean "post_to_mastodon", default: true
+    t.string "content_warning"
     t.index ["blog_id"], name: "index_entries_on_blog_id"
     t.index ["hide_from_search_engines"], name: "index_entries_on_hide_from_search_engines"
     t.index ["photos_count"], name: "index_entries_on_photos_count"
@@ -194,7 +195,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_02_165319) do
     t.text "territories"
     t.string "location"
     t.bigint "park_id"
-    t.string "content_warning"
     t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["film_id"], name: "index_photos_on_film_id"
