@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_06_152846) do
+ActiveRecord::Schema[7.0].define(version: 2022_12_06_154033) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -65,7 +65,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_06_152846) do
     t.string "flickr"
     t.string "instagram"
     t.string "tumblr"
-    t.text "public_key"
   end
 
   create_table "cameras", force: :cascade do |t|
