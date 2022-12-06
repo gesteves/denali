@@ -134,6 +134,7 @@ class Blog < ApplicationRecord
       flickr
       header_logo_svg
       instagram
+      mastodon
       meta_description
       name
       posts_per_page
