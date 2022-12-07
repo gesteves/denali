@@ -1,7 +1,7 @@
 <li>
   <% opts = { class: 'follow__link', title: label, 'aria-labelledby': "follow-icon-#{icon}" } %>
   <% opts[:rel] = rel if local_assigns[:rel].present? %>
-  <% opts[:target] = rel if local_assigns[:target].present? %>
+  <% opts[:target] = target if local_assigns[:target].present? %>
   <%= link_to url, opts do %>
     <%= inline_svg icon, class_name: 'follow__icon' %>
     <span class="sr-only" id="follow-icon-<%= icon %>"><%= label %></span>
