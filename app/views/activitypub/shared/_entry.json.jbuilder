@@ -1,12 +1,12 @@
 json.set! 'id', activitypub_entry_url(user_id: user.id, entry_id: entry.id)
 json.set! 'type', 'Note'
-json.set! 'summary', nil
+json.set! 'summary', entry.content_warning.presence
 json.set! 'inReplyTo', nil
 json.set! 'published', entry.published_at
 json.set! 'url', entry.permalink_url
 json.set! 'attributedTo', activitypub_profile_url(user_id: user.id)
 json.set! 'to', ["https://www.w3.org/ns/activitystreams#Public"]
-json.set! 'sensitive', false
+json.set! 'sensitive', entry.is_sensitive?
 json.set! 'atomUri', activitypub_entry_url(user_id: user.id, entry_id: entry.id)
 json.set! 'inReplyToAtomUri', nil
 json.set! 'content', entry.activitypub_caption

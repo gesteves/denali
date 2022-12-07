@@ -15,6 +15,7 @@ class Entry < ApplicationRecord
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
   before_save :set_preview_hash
+  before_save :set_sensitive
 
   after_commit :handle_status_change, if: :saved_change_to_status?
 
@@ -175,10 +176,6 @@ class Entry < ApplicationRecord
 
   def is_published?
     self.status == 'published'
-  end
-
-  def is_nsfw?
-    content_warning.present?
   end
 
   def publish
@@ -549,7 +546,7 @@ class Entry < ApplicationRecord
     end
 
     tumblr_tags = basic_tags + location_tags + more_tags + equipment_tags + style_tags
-    tumblr_tags += ['nsfw'] if self.is_nsfw?
+    tumblr_tags += ['nsfw'] if self.is_sensitive?
     tumblr_tags.flatten.compact.uniq.map(&:downcase).sort.join(', ')
   end
 
@@ -668,6 +665,12 @@ class Entry < ApplicationRecord
       self.slug = self.title.parameterize
     else
       self.slug = self.slug.parameterize
+    end
+  end
+
+  def set_sensitive
+    if self.content_warning.present?
+      self.is_sensitive = true
     end
   end
 

@@ -19,6 +19,8 @@ module Types
     field :tumblr_caption, String, null: true, description: "A Tumblr-friendly caption for this entry"
     field :tumblr_tags, String, null: true, description: "List of Tumblr tags this entry can be tagged with"
     field :url, String, null: false, method: :permalink_url, description: "Permalink URL for the entry"
+    field :content_warning, String, null: true, method: :content_warning, description: "Content warning for this entry"
+    field :is_sensitive, Boolean, null: false, method: :is_sensitive, description: "Whether or not the entry contains sensitive content"
     field :user, Types::UserType, null: false, description: "The author of this entry"
     field :tags, [Types::TagType], null: true, description: "The list of tags this entry is tagged with"
     field :photos, [Types::PhotoType], null: true, description: "The list of photos in this entry"
