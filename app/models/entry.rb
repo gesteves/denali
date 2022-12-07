@@ -546,7 +546,7 @@ class Entry < ApplicationRecord
     end
 
     tumblr_tags = basic_tags + location_tags + more_tags + equipment_tags + style_tags
-    tumblr_tags += ['nsfw'] if self.is_sensitive?
+    tumblr_tags += ['mature'] if self.is_sensitive?
     tumblr_tags.flatten.compact.uniq.map(&:downcase).sort.join(', ')
   end
 
