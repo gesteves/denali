@@ -34,7 +34,7 @@ class Activitypub::InboxesController < ActivitypubController
     raise Activitypub::Inbox::InvalidDateError if date < 30.seconds.ago || date > 30.seconds.from_now
 
     signature_header = request.headers['signature']&.split(',')&.map do |pair|
-      pair.split('=',2).map do |value|
+      pair.split('=', 2).map do |value|
         value.gsub(/(^"|"$)/, '') # "foo" -> foo
       end
     end&.to_h
@@ -63,7 +63,7 @@ class Activitypub::InboxesController < ActivitypubController
     raise Activitypub::Inbox::InvalidSignatureError if !valid_signature
     valid_signature
   rescue => e
-    logger.tagged("Inbox") { logger.error e}
+    logger.tagged("Inbox") { logger.error e }
     false
   end
 end
