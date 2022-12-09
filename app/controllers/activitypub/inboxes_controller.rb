@@ -12,13 +12,9 @@ class Activitypub::InboxesController < ActivitypubController
       nil
     end
 
-    if @body.blank?
-      render plain: 'Bad request', status: 400 and return
-    elsif !supported_activity_type?
-      render plain: 'Unprocessable Entity', status: 422 and return
-    elsif !authorized?
-      render plain: 'Unauthorized', status: 401 and return
-    end
+    return head(:bad_request)          unless @body.present?
+    return head(:unprocessable_entity) unless supported_activity_type?
+    return head(:unauthorized)         unless authorized?
 
     render plain: 'OK'
   end
