@@ -51,7 +51,10 @@ class Activitypub::InboxesController < ActivitypubController
 
     key = OpenSSL::PKey::RSA.new(actor['publicKey']['publicKeyPem'])
     key.verify(OpenSSL::Digest::SHA256.new, signature, comparison_string)
-  rescue
+  rescue => e
+    logger.tagged("Inbox") do
+      logger.error e
+    end
     false
   end
 end
