@@ -16,10 +16,10 @@ class Activitypub::InboxesController < ActivitypubController
 
     if @body.blank?
       render plain: 'Bad request', status: 400 and return
+    elsif !supported_activity_type?
+      render plain: 'Unprocessable Entity', status: 422 and return
     elsif !authorized?
       render plain: 'Unauthorized', status: 401 and return
-    elsif !supported_activity_type?
-      render plain: 'Accepted', status: 202 and return
     end
 
     render plain: 'OK'
