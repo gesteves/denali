@@ -14,17 +14,19 @@ class Activitypub::InboxesController < ActivitypubController
       nil
     end
 
-    if is_valid_request? && accepted_action?
-      render plain: 'OK'
-    elsif is_valid_request? && !accepted_action?
-      render plain: 'Accepted', status: 202
-    else
-      render plain: 'Bad request', status: 400
+    if @body.blank? || !is_valid_request?
+      render plain: 'Bad request', status: 400 and return
     end
+
+    if !supported_action?
+      render plain: 'Accepted', status: 202 and return
+    end
+
+    render plain: 'OK'
   end
 
   private
-  def accepted_action?
+  def supported_action?
     ['Follow', 'Undo'].include? @body['type']
   end
   
