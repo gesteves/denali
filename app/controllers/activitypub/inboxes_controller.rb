@@ -14,12 +14,10 @@ class Activitypub::InboxesController < ActivitypubController
       nil
     end
 
-    if is_valid_request?
-      if accepted_action?
-        render plain: 'OK'
-      else
-        render plain: 'Accepted', status: 202
-      end
+    if is_valid_request? && accepted_action?
+      render plain: 'OK'
+    elsif is_valid_request? && !accepted_action?
+      render plain: 'Accepted', status: 202
     else
       render plain: 'Bad request', status: 400
     end
