@@ -18,7 +18,7 @@ class Activitypub::InboxesController < ActivitypubController
       render plain: 'Bad request', status: 400 and return
     elsif !authorized?
       render plain: 'Unauthorized', status: 401 and return
-    elsif !supported_action?
+    elsif !supported_activity_type?
       render plain: 'Accepted', status: 202 and return
     end
 
@@ -27,7 +27,7 @@ class Activitypub::InboxesController < ActivitypubController
 
   private
 
-  def supported_action?
+  def supported_activity_type?
     ['Follow', 'Undo'].include? @body['type']
   end
   
