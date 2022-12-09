@@ -6,9 +6,7 @@ class Activitypub::InboxesController < ActivitypubController
     @user = User.find(params[:user_id])
 
     @body = begin
-      logger.tagged("Inbox") do
-        logger.info request.raw_post
-      end
+      logger.tagged("Inbox") { logger.info request.raw_post }
       JSON.parse(request.raw_post)
     rescue
       nil
@@ -65,9 +63,7 @@ class Activitypub::InboxesController < ActivitypubController
     raise Activitypub::Inbox::InvalidSignatureError if !valid_signature
     valid_signature
   rescue => e
-    logger.tagged("Inbox") do
-      logger.error e
-    end
+    logger.tagged("Inbox") { logger.error e}
     false
   end
 end
