@@ -4,21 +4,33 @@ class Activitypub::InboxesController < ActivitypubController
 
   def index
     @user = User.find(params[:user_id])
-    logger.tagged("Inbox") do
-      logger.info request.raw_post
+
+    @body = begin
+      logger.tagged("Inbox") do
+        logger.info request.raw_post
+      end
+      JSON.parse(request.raw_post)
+    rescue
+      nil
     end
 
     if is_valid_request?
-      render plain: 'OK'
+      if accepted_action?
+        render plain: 'OK'
+      else
+        render plain: 'Accepted', status: 202
+      end
     else
       render plain: 'Bad request', status: 400
     end
   end
 
   private
+  def accepted_action?
+    ['Follow', 'Undo'].include? @body['type']
+  end
+  
   def is_valid_request?
-    body = JSON.parse(request.raw_post)
-
     date = Time.httpdate(request.headers['Date'])
     raise Activitypub::Inbox::InvalidDateError if date < 30.seconds.ago || date > 30.seconds.from_now
 
@@ -33,7 +45,7 @@ class Activitypub::InboxesController < ActivitypubController
     signature = Base64.decode64(signature_header['signature'])
 
     actor = JSON.parse(HTTParty.get(key_id, headers: { 'Accept': 'application/activity+json' }).body)
-    raise Activitypub::Inbox::InvalidActorError if actor['id'] != body['actor']
+    raise Activitypub::Inbox::InvalidActorError if actor['id'] != @body['actor']
 
     comparison_string = headers.split(' ').map do |signed_header_name|
       if signed_header_name == '(request-target)'
