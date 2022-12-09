@@ -10,12 +10,6 @@ class Activitypub::InboxesController < ActivitypubController
       logger.info request.raw_post
     end
 
-    body = begin
-      JSON.parse(request.raw_post)
-    rescue
-      nil
-    end
-
     if is_valid_request?
       render plain: 'OK'
     else
@@ -25,7 +19,7 @@ class Activitypub::InboxesController < ActivitypubController
 
   private
   def is_valid_request?
-    return false if body.blank?
+    body = JSON.parse(request.raw_post)
 
     date = Time.httpdate(request.headers['Date'])
     return false if date < 30.seconds.ago || date > 30.seconds.from_now
