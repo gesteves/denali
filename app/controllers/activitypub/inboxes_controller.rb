@@ -2,8 +2,6 @@ class Activitypub::InboxesController < ActivitypubController
   skip_before_action :verify_authenticity_token
   skip_before_action :set_json_format
 
-  helper_method :is_valid_request?
-
   def index
     @user = User.find(params[:user_id])
     logger.tagged("Inbox") do
