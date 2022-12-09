@@ -14,11 +14,11 @@ class Activitypub::InboxesController < ActivitypubController
       nil
     end
 
-    if @body.blank? || !is_valid_request?
+    if @body.blank?
       render plain: 'Bad request', status: 400 and return
-    end
-
-    if !supported_action?
+    elsif !authorized?
+      render plain: 'Unauthorized', status: 401 and return
+    elsif !supported_action?
       render plain: 'Accepted', status: 202 and return
     end
 
@@ -26,11 +26,12 @@ class Activitypub::InboxesController < ActivitypubController
   end
 
   private
+
   def supported_action?
     ['Follow', 'Undo'].include? @body['type']
   end
   
-  def is_valid_request?
+  def authorized?
     date = Time.httpdate(request.headers['Date'])
     raise Activitypub::Inbox::InvalidDateError if date < 30.seconds.ago || date > 30.seconds.from_now
 
