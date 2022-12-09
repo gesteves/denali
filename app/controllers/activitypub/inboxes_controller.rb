@@ -10,21 +10,25 @@ class Activitypub::InboxesController < ActivitypubController
       logger.info request.raw_post
     end
 
+    body = begin
+      JSON.parse(request.raw_post)
+    rescue
+      nil
+    end
+
     if is_valid_request?
-      body = JSON.parse(request.raw_post)
       render plain: 'OK'
     else
-      render plain: 'Unauthorized', status: 401
+      render plain: 'Bad request', status: 400
     end
   end
 
   private
   def is_valid_request?
+    return false if body.blank?
+
     date = Time.httpdate(request.headers['Date'])
     return false if date < 30.seconds.ago || date > 30.seconds.from_now
-
-    body = JSON.parse(request.raw_post)
-    actor_id = body['actor']
 
     signature_header = request.headers['signature']&.split(',')&.map do |pair|
       pair.split('=',2).map do |value|
@@ -37,7 +41,7 @@ class Activitypub::InboxesController < ActivitypubController
     signature = Base64.decode64(signature_header['signature'])
 
     actor = JSON.parse(HTTParty.get(key_id, headers: { 'Accept': 'application/activity+json' }).body)
-    return false if actor['id'] != actor_id
+    return false if actor['id'] != body['actor']
 
     comparison_string = headers.split(' ').map do |signed_header_name|
       if signed_header_name == '(request-target)'
