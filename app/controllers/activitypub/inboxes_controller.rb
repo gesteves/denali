@@ -22,7 +22,7 @@ class Activitypub::InboxesController < ActivitypubController
     body = JSON.parse(request.raw_post)
 
     date = Time.httpdate(request.headers['Date'])
-    raise Activitypub::InvalidDateError if date < 30.seconds.ago || date > 30.seconds.from_now
+    raise Activitypub::Inbox::InvalidDateError if date < 30.seconds.ago || date > 30.seconds.from_now
 
     signature_header = request.headers['signature']&.split(',')&.map do |pair|
       pair.split('=',2).map do |value|
@@ -35,7 +35,7 @@ class Activitypub::InboxesController < ActivitypubController
     signature = Base64.decode64(signature_header['signature'])
 
     actor = JSON.parse(HTTParty.get(key_id, headers: { 'Accept': 'application/activity+json' }).body)
-    raise Activitypub::InvalidActorError if actor['id'] != body['actor']
+    raise Activitypub::Inbox::InvalidActorError if actor['id'] != body['actor']
 
     comparison_string = headers.split(' ').map do |signed_header_name|
       if signed_header_name == '(request-target)'
@@ -51,7 +51,7 @@ class Activitypub::InboxesController < ActivitypubController
 
     key = OpenSSL::PKey::RSA.new(actor['publicKey']['publicKeyPem'])
     valid_signature = key.verify(OpenSSL::Digest::SHA256.new, signature, comparison_string)
-    raise Activitypub::InvalidSignatureError if !valid_signature
+    raise Activitypub::Inbox::InvalidSignatureError if !valid_signature
     valid_signature
   rescue => e
     logger.tagged("Inbox") do
