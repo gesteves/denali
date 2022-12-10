@@ -1,4 +1,6 @@
 <h1><%= link_to entry.plain_title, entry.permalink_url %></h1>
 <%= entry.formatted_body unless entry.body.blank? %>
+<p>
 <%= render partial: 'activitypub/shared/entry/exif', formats: :html, object: entry.photos.first, as: :photo if entry.is_single_photo? && entry.photos.first.camera.present? %>
 <%= render partial: 'activitypub/shared/entry/location', formats: :html, object: entry.photos.first, as: :photo if entry.is_single_photo? && entry.show_location? %>
+</p>

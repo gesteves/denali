@@ -1,12 +1,11 @@
-<p>
-  <%= photo.camera.display_name %>
-  <% if photo.lens.present? && !photo.camera.is_phone? %>
-    + <%= photo.lens.display_name %>
-  <% end %>
-  <% if photo.film.present? %>
-    <%= photo.film.display_name %>
-  <% end %>
-<% if photo.film.blank? %>
-    – <%= exif_for_feeds(photo) %>
+📷 <%= photo.camera.display_name %>
+<% if photo.lens.present? && !photo.camera.is_phone? %>
+  + <%= photo.lens.display_name %>
 <% end %>
-</p>
+<br>
+<% if photo.film.present? %>
+  🎞 <%= photo.film.display_name %> <br>
+<% end %>
+<% if photo.film.blank? %>
+🎞 <%= exif_for_feeds(photo) %> <br>
+<% end %>
