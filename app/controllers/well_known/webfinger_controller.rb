@@ -4,6 +4,7 @@ class WellKnown::WebfingerController < ApplicationController
   def show
     request.format = 'json'
     @subject = params[:resource]
+    logger.tagged("Webfinger") { logger.info "Webfinger request for #{@subject}" }
     username = @subject&.gsub(/^acct:/, '')&.split('@')&.first
     domain = @subject&.gsub(/^acct:/, '')&.split('@')&.last
     valid_domain = begin
