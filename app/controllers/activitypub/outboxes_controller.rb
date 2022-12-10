@@ -19,7 +19,7 @@ class Activitypub::OutboxesController < ActivitypubController
   end
 
   def set_pages
-    @count = @photoblog.posts_per_page
+    @count = 100
     @total_entries = @photoblog.entries.published.by_user(@user).photo_entries.count
     @total_pages = (@total_entries.to_f/@count).ceil
     raise ActiveRecord::RecordNotFound if @total_entries == 0
