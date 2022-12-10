@@ -449,10 +449,6 @@ class Entry < ApplicationRecord
     text.reject(&:blank?).join("\n\n")
   end
 
-  def activitypub_caption
-    markdown_to_html("[#{self.title}](#{self.permalink_url})") + markdown_to_html(body)
-  end
-
   def flickr_groups(count = 60)
     entry_tags = self.combined_tags
     entry_groups = []
