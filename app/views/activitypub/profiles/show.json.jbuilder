@@ -1,6 +1,6 @@
 json.set! '@context', activitypub_profile_context
 json.set! 'id', activitypub_profile_url(user_id: @user.id)
-json.set! 'type', 'Person'
+json.set! 'type', 'Application'
 json.set! 'discoverable', true
 json.set! 'manuallyApprovesFollowers', false
 json.set! 'name', @user.profile.name if @user.profile.name.present?
