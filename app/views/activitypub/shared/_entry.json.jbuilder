@@ -9,7 +9,7 @@ json.set! 'to', ["https://www.w3.org/ns/activitystreams#Public"]
 json.set! 'sensitive', entry.is_sensitive?
 json.set! 'atomUri', activitypub_entry_url(user_id: user.id, entry_id: entry.id)
 json.set! 'inReplyToAtomUri', nil
-json.set! 'content', render(partial: 'activitypub/shared/entry/body', formats: :html, object: entry, as: :entry).to_str.gsub(/\s+/, ' ').strip
+json.set! 'content', render(partial: 'activitypub/shared/entry/body', formats: :html, object: entry, as: :entry).to_str.gsub(/\R+/, '').gsub(/\s+/, ' ').strip
 json.attachment entry.photos do |photo|
   json.set! 'type', 'Image'
   json.set! 'mediaType', 'image/jpeg'
