@@ -29,4 +29,23 @@ class PhotoTest < ActiveSupport::TestCase
     photo = photos(:franklin)
     assert_equal "Shoshone-Bannock", photo.territory_list
   end
+
+  test 'mastodon focal points are correct' do
+    photo = photos(:peppers)
+
+    photo.focal_x = 0
+    photo.focal_y = 0
+    photo.save!
+    assert_equal [-1.0, 1.0], photo.mastodon_focal_point
+
+    photo.focal_x = 0.5
+    photo.focal_y = 0.5
+    photo.save!
+    assert_equal [0, 0], photo.mastodon_focal_point
+
+    photo.focal_x = 1.0
+    photo.focal_y = 1.0
+    photo.save!
+    assert_equal [1.0, -1.0], photo.mastodon_focal_point
+  end
 end
