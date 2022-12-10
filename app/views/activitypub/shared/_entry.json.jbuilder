@@ -1,14 +1,14 @@
 json.set! 'id', activitypub_entry_url(user_id: user.id, entry_id: entry.id)
-json.set! 'type', 'Note'
-json.set! 'summary', entry.content_warning.presence
-json.set! 'inReplyTo', nil
-json.set! 'published', entry.published_at
 json.set! 'url', entry.permalink_url
+json.set! 'type', 'Note'
+json.set! 'published', entry.published_at
 json.set! 'attributedTo', activitypub_profile_url(user_id: user.id)
 json.set! 'to', ["https://www.w3.org/ns/activitystreams#Public"]
-json.set! 'sensitive', entry.is_sensitive?
 json.set! 'atomUri', activitypub_entry_url(user_id: user.id, entry_id: entry.id)
 json.set! 'inReplyToAtomUri', nil
+json.set! 'inReplyTo', nil
+json.set! 'sensitive', entry.is_sensitive?
+json.set! 'summary', entry.content_warning.presence
 json.set! 'content', render(partial: 'activitypub/shared/entry/body', formats: :html, object: entry, as: :entry).to_str.gsub(/\R+/, '').gsub(/\s+/, ' ').strip
 json.attachment entry.photos do |photo|
   json.set! 'type', 'Image'
@@ -20,7 +20,9 @@ json.attachment entry.photos do |photo|
   if photo.mastodon_focal_point.present?
     json.set! 'focalPoint', photo.mastodon_focal_point
   end
-  json.set! 'blurhash', photo.blurhash
+  if photo.blurhash.present?
+    json.set! 'blurhash', photo.blurhash
+  end
 end
 json.tag entry.combined_tags do |tag|
   json.set! 'type', 'Hashtag'
