@@ -27,5 +27,5 @@ end
 json.tag entry.combined_tags do |tag|
   json.set! 'type', 'Hashtag'
   json.set! 'name', "##{tag.name.parameterize.split('-').map(&:titleize).join}"
-  json.set! 'href', tag_url(tag.slug)
+  json.set! 'href', tag_url(tag.slug, page: nil)
 end
