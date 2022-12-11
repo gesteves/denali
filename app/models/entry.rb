@@ -427,18 +427,24 @@ class Entry < ApplicationRecord
     caption.reject(&:blank?).join("\n\n")
   end
 
-  def mastodon_caption
-    permalink = "🔗 #{self.permalink_url}"
-    caption = []
-    if self.mastodon_text.present?
-      caption << self.plain_title
-      caption << self.mastodon_text
-      caption << permalink
-    else
-      caption << self.plain_title
-      caption << permalink
+  def mastodon_tags
+    mastodon_tags = %w{ #Photography }
+    if combined_tag_list.include? 'Wildlife'
+      mastodon_tags << '#WildlifePhotography'
     end
-    caption.reject(&:blank?).join("\n\n")
+    if combined_tag_list.include? 'Landscapes'
+      mastodon_tags << '#LandscapePhotography'
+    end
+    mastodon_tags
+  end
+
+  def mastodon_caption
+    caption = [self.plain_title]
+    caption << self.mastodon_text if self.mastodon_text.present?
+    meta = ["🔗 #{self.permalink_url}"]
+    meta << "🏷️ #{mastodon_tags.join(' ')}" if mastodon_tags.present?
+    caption << meta.join("\n")
+    caption.join("\n\n")
   end
 
   def plain_caption
