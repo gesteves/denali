@@ -428,21 +428,18 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_tags
-    mastodon_tags = %w{ #Photography }
-    if combined_tag_list.include? 'Wildlife'
-      mastodon_tags << '#WildlifePhotography'
-    end
-    if combined_tag_list.include? 'Landscapes'
-      mastodon_tags << '#LandscapePhotography'
-    end
-    mastodon_tags
+    valid_tags = %w{ Landscapes Wildlife }
+    mastodon_tags = []
+    mastodon_tags << 'Photography' if is_photo?
+    mastodon_tags += combined_tag_list & valid_tags
+    mastodon_tags.map { |t| "##{t}" }.join(' ')
   end
 
   def mastodon_caption
     caption = [self.plain_title]
     caption << self.mastodon_text if self.mastodon_text.present?
     meta = ["🔗 #{self.permalink_url}"]
-    meta << "🏷️ #{mastodon_tags.join(' ')}" if mastodon_tags.present?
+    meta << "🏷️ #{mastodon_tags}" if mastodon_tags.present?
     caption << meta.join("\n")
     caption.join("\n\n")
   end
