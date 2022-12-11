@@ -437,7 +437,11 @@ class Entry < ApplicationRecord
 
   def mastodon_caption
     caption = [self.plain_title]
-    caption << self.mastodon_text if self.mastodon_text.present?
+    if self.mastodon_text.present?
+      caption << self.mastodon_text
+    else
+      caption << self.plain_body
+    end
     meta = ["🔗 #{self.permalink_url}"]
     meta << "🏷️ #{mastodon_tags}" if mastodon_tags.present?
     caption << meta.join("\n")
