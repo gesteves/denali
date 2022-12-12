@@ -394,20 +394,18 @@ class Entry < ApplicationRecord
   def instagram_caption
     meta = []
 
-    if is_single_photo?
-      photo = photos.first
-      exif = []
-      exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      exif << "🎞 #{photo.film.display_name}" if photo.film.present?
+    photo = photos.first
+    exif = []
+    exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+    exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+    exif << "🎞 #{photo.film.display_name}" if photo.film.present?
 
-      location = []
-      location << photo.formatted_location if photo.formatted_location.present?
-      location << "#{photo.territory_list} land" if photo.territories.present?
+    location = []
+    location << photo.formatted_location if photo.formatted_location.present?
+    location << "#{photo.territory_list} land" if photo.territories.present?
 
-      exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-      meta << exif
-    end
+    exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
+    meta << exif
 
     caption = [self.plain_title]
     if self.instagram_text.present?
@@ -431,20 +429,18 @@ class Entry < ApplicationRecord
   def mastodon_caption
     meta = ["🔗 #{self.permalink_url}"]
 
-    if is_single_photo?
-      photo = photos.first
-      exif = []
-      exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      exif << "🎞 #{photo.film.display_name}" if photo.film.present?
+    photo = photos.first
+    exif = []
+    exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+    exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+    exif << "🎞 #{photo.film.display_name}" if photo.film.present?
 
-      location = []
-      location << photo.formatted_location if photo.formatted_location.present?
-      location << "#{photo.territory_list} land" if photo.territories.present?
+    location = []
+    location << photo.formatted_location if photo.formatted_location.present?
+    location << "#{photo.territory_list} land" if photo.territories.present?
 
-      exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-      meta << exif
-    end
+    exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
+    meta << exif
 
     meta << "🏷️ #{mastodon_tags}" if mastodon_tags.present?
 
@@ -495,20 +491,18 @@ class Entry < ApplicationRecord
   def tumblr_caption(html: false)
     meta = []
 
-    if is_single_photo?
-      photo = photos.first
-      exif = []
-      exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      exif << "🎞 #{photo.film.display_name}" if photo.film.present?
+    photo = photos.first
+    exif = []
+    exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+    exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+    exif << "🎞 #{photo.film.display_name}" if photo.film.present?
 
-      location = []
-      location << photo.formatted_location if photo.formatted_location.present?
-      location << "#{photo.territory_list} land" if photo.territories.present?
+    location = []
+    location << photo.formatted_location if photo.formatted_location.present?
+    location << "#{photo.territory_list} land" if photo.territories.present?
 
-      exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-      meta << exif
-    end
+    exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
+    meta << exif
 
     caption = []
     caption << "[#{self.plain_title}](#{self.permalink_url})"
