@@ -215,9 +215,9 @@
     <div class="field-body">
       <div class="field" data-controller="character-counter">
         <div class="control is-expanded">
-          <%= f.text_area :mastodon_text, placeholder: 'Mastodon caption…', class: 'textarea', maxlength: 2000, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
+          <%= f.text_area :mastodon_text, placeholder: 'Mastodon caption…', class: 'textarea', maxlength: 5000, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
         </div>
-        <p class="help"><span data-character-counter-target="characterCount">0</span>/2000 | This will be used in the Mastodon text, along with the title and permalink (if empty, the existing body will be used.)</p>
+        <p class="help"><span data-character-counter-target="characterCount">0</span>/5000 | This will be used in the Mastodon text, along with the title and permalink (if empty, the existing body will be used.)</p>
       </div>
     </div>
   </div>

@@ -10,9 +10,9 @@
       <div class="content">
         <div class="field" data-controller="character-counter">
           <div class="control is-expanded">
-            <%= form.text_area :text, value: @text.html_safe, placeholder: 'Your Mastodon caption…', maxlength: 2000, required: true, class: 'textarea', rows: 8, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
+            <%= form.text_area :text, value: @text.html_safe, placeholder: 'Your Mastodon caption…', maxlength: 5000, required: true, class: 'textarea', rows: 8, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
           </div>
-          <p class="help"><span data-character-counter-target="characterCount">0</span>/2000</p>
+          <p class="help"><span data-character-counter-target="characterCount">0</span>/5000</p>
         </div>
       </div>
     </section>
