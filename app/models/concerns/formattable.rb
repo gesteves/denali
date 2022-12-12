@@ -9,7 +9,7 @@ module Formattable
   end
 
   def markdown_to_plaintext(text)
-    Nokogiri::HTML.fragment(Sanitize.fragment(markdown_to_html(text)).strip)&.children&.first&.text&.strip
+    Nokogiri::HTML.fragment(Sanitize.fragment(markdown_to_html(text)).strip)&.children&.first&.text&.strip&.gsub(/\R{2,}/, "\n\n")
   end
 
   def smartypants(text)
