@@ -414,7 +414,7 @@ class Entry < ApplicationRecord
       caption << self.plain_body
     end
 
-    caption << meta.join("  \n").strip
+    caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
 
@@ -451,7 +451,7 @@ class Entry < ApplicationRecord
       caption << self.plain_body
     end
 
-    caption << meta.join("  \n").strip
+    caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
 
