@@ -394,7 +394,8 @@ class Entry < ApplicationRecord
   def instagram_caption
     meta = []
 
-    self.photos.to_a[0..4].each_with_index do |photo, i|
+    if is_single_photo?
+      photo = photos.first
       exif = []
       exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
@@ -405,13 +406,7 @@ class Entry < ApplicationRecord
       location << "#{photo.territory_list} land" if photo.territories.present?
 
       exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-      meta << exif.join("  \n")
-    end
-
-    unless meta.uniq.size == 1
-      meta.each_with_index do |photo, i|
-        meta[i] = "#{(i + 1).ordinalize} photo:  \n#{meta[i]}"
-      end
+      meta << exif
     end
 
     caption = []
@@ -423,7 +418,7 @@ class Entry < ApplicationRecord
       caption << self.plain_body
     end
 
-    caption << meta.uniq.join("\n\n").strip
+    caption << meta.join("  \n").strip
     caption.reject(&:blank?).join("\n\n")
   end
 
@@ -438,7 +433,8 @@ class Entry < ApplicationRecord
   def mastodon_caption
     meta = ["🔗 #{self.permalink_url}"]
 
-    self.photos.to_a[0..4].each_with_index do |photo, i|
+    if is_single_photo?
+      photo = photos.first
       exif = []
       exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
@@ -449,13 +445,7 @@ class Entry < ApplicationRecord
       location << "#{photo.territory_list} land" if photo.territories.present?
 
       exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-      meta << exif.join("  \n")
-    end
-
-    unless meta.uniq.size == 1
-      meta.each_with_index do |photo, i|
-        meta[i] = "#{(i + 1).ordinalize} photo:  \n#{meta[i]}"
-      end
+      meta << exif
     end
 
     meta << "🏷️ #{mastodon_tags}" if mastodon_tags.present?
@@ -467,7 +457,7 @@ class Entry < ApplicationRecord
       caption << self.plain_body
     end
 
-    caption << meta.uniq.join("\n\n").strip
+    caption << meta.join("  \n").strip
     caption.reject(&:blank?).join("\n\n")
   end
 
@@ -507,7 +497,8 @@ class Entry < ApplicationRecord
   def tumblr_caption(html: false)
     meta = []
 
-    self.photos.to_a[0..10].each_with_index do |photo, i|
+    if is_single_photo?
+      photo = photos.first
       exif = []
       exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
@@ -518,13 +509,7 @@ class Entry < ApplicationRecord
       location << "#{photo.territory_list} land" if photo.territories.present?
 
       exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-      meta << exif.join("  \n")
-    end
-
-    unless meta.uniq.size == 1
-      meta.each_with_index do |photo, i|
-        meta[i] = "#{(i + 1).ordinalize} photo:  \n#{meta[i]}"
-      end
+      meta << exif
     end
 
     caption = []
@@ -537,7 +522,7 @@ class Entry < ApplicationRecord
       caption << self.body
     end
 
-    caption << meta.uniq.join("\n\n").strip
+    caption << meta.join("  \n").strip
     markdown = caption.reject(&:blank?).join("\n\n")
 
     html ? markdown_to_html(markdown) : markdown
