@@ -436,16 +436,39 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_caption
+    meta = ["🔗 #{self.permalink_url}"]
+
+    self.photos.to_a[0..4].each_with_index do |photo, i|
+      exif = []
+      exif << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      exif << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+      exif << "🎞 #{photo.film.display_name}" if photo.film.present?
+
+      location = []
+      location << photo.formatted_location if photo.formatted_location.present?
+      location << "#{photo.territory_list} land" if photo.territories.present?
+
+      exif << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
+      meta << exif.join("  \n")
+    end
+
+    unless meta.uniq.size == 1
+      meta.each_with_index do |photo, i|
+        meta[i] = "#{(i + 1).ordinalize} photo:  \n#{meta[i]}"
+      end
+    end
+
+    meta << "🏷️ #{mastodon_tags}" if mastodon_tags.present?
+
     caption = [self.plain_title]
     if self.mastodon_text.present?
       caption << self.mastodon_text
     else
       caption << self.plain_body
     end
-    meta = ["🔗 #{self.permalink_url}"]
-    meta << "🏷️ #{mastodon_tags}" if mastodon_tags.present?
-    caption << meta.join("\n")
-    caption.join("\n\n")
+
+    caption << meta.uniq.join("\n\n").strip
+    caption.reject(&:blank?).join("\n\n")
   end
 
   def plain_caption
