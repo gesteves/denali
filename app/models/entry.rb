@@ -409,12 +409,10 @@ class Entry < ApplicationRecord
       meta << exif
     end
 
-    caption = []
+    caption = [self.plain_title]
     if self.instagram_text.present?
-      caption << self.plain_title
       caption << self.instagram_text
     else
-      caption << self.plain_title
       caption << self.plain_body
     end
 
@@ -514,7 +512,6 @@ class Entry < ApplicationRecord
 
     caption = []
     caption << "[#{self.plain_title}](#{self.permalink_url})"
-    caption << self.body
 
     if self.tumblr_text.present?
       caption << self.tumblr_text
