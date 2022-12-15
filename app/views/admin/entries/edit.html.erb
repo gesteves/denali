@@ -177,7 +177,7 @@
         <div class="control is-expanded">
           <%= f.text_area :instagram_text, placeholder: 'Instagram caption…', class: 'textarea', maxlength: 2000, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
         </div>
-        <p class="help"><span data-character-counter-target="characterCount">0</span>/2000 | This will be used in the Instagram caption, along with the title and image metadata (if empty, the existing body will be used.)</p>
+        <p class="help"><span data-character-counter-target="characterCount">0</span>/2000</p>
       </div>
     </div>
   </div>
@@ -217,7 +217,6 @@
         <div class="control is-expanded">
           <%= f.text_area :mastodon_text, placeholder: 'Mastodon caption…', class: 'textarea' %>
         </div>
-        <p class="help">This will be used in the Mastodon text, along with the title and permalink (if empty, the existing body will be used.)</p>
       </div>
     </div>
   </div>
@@ -257,7 +256,6 @@
         <div class="control is-expanded">
           <%= f.text_area :tumblr_text, placeholder: 'Tumblr caption…', class: 'textarea' %>
         </div>
-        <p class="help">This will be used in the Tumblr text, along with the title and image metadata (if empty, the existing body will be used.)</p>
       </div>
     </div>
   </div>
