@@ -1,0 +1,86 @@
+<hr class="hr">
+<h2 class="subtitle is-size-5-mobile">Other options</h2>
+
+<div class="field is-horizontal">
+  <div class="field-label">
+    <%= f.label :is_sensitive, 'Sensitive content', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control">
+        <div class="tabs is-toggle is-small" data-controller="radio-tab">
+          <ul>
+            <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <a>
+                Yes
+              </a>
+            </li>
+            <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <a>
+                No
+              </a>
+            </li>
+          </ul>
+          <%= f.hidden_field :is_sensitive, 'data-radio-tab-target': 'field' %>
+        </div>
+      </div>
+      <p class="help">Turning this on will hide this content in various places.</p>
+    </div>
+  </div>
+</div>
+
+<div class="field is-horizontal">
+  <div class="field-label">
+    <%= f.label :show_location, 'Show location', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control">
+        <div class="tabs is-toggle is-small" data-controller="radio-tab">
+          <ul>
+            <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <a>
+                Yes
+              </a>
+            </li>
+            <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <a>
+                No
+              </a>
+            </li>
+          </ul>
+          <%= f.hidden_field :show_location, value: 'true', 'data-radio-tab-target': 'field' %>
+        </div>
+      </div>
+      <p class="help">Turning this off also prevents the entry from being automatically tagged with location names.</p>
+    </div>
+  </div>
+</div>
+
+<div class="field is-horizontal">
+  <div class="field-label">
+    <%= f.label :hide_from_search_engines, 'Hide from search engines', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control">
+        <div class="tabs is-toggle is-small" data-controller="radio-tab">
+          <ul>
+            <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+              <a>
+                Yes
+              </a>
+            </li>
+            <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+              <a>
+                No
+              </a>
+            </li>
+          </ul>
+          <%= f.hidden_field :hide_from_search_engines, value: 'false', 'data-radio-tab-target': 'field' %>
+        </div>
+      </div>
+      <p class="help">Prevents Google, Bing, and other search engines from indexing this entry.</p>
+    </div>
+  </div>
+</div>
