@@ -279,7 +279,7 @@ GEM
     pg (1.4.4)
     psych (4.0.4)
       stringio
-    public_suffix (5.0.0)
+    public_suffix (5.0.1)
     puma (6.0.0)
       nio4r (~> 2.0)
     raabro (1.4.0)
