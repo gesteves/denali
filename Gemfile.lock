@@ -227,7 +227,7 @@ GEM
     mime-types-data (3.2022.0105)
     mini_magick (4.11.0)
     mini_mime (1.1.2)
-    mini_portile2 (2.8.0)
+    mini_portile2 (2.8.1)
     minitest (5.17.0)
     mock_redis (0.36.0)
       ruby2_keywords
@@ -250,7 +250,7 @@ GEM
       net-protocol
       timeout
     nio4r (2.5.8)
-    nokogiri (1.13.10)
+    nokogiri (1.14.0)
       mini_portile2 (~> 2.8.0)
       racc (~> 1.4)
     oauth (1.1.0)
@@ -283,7 +283,7 @@ GEM
     puma (6.0.0)
       nio4r (~> 2.0)
     raabro (1.4.0)
-    racc (1.6.1)
+    racc (1.6.2)
     rack (2.2.6.2)
     rack-attack (6.6.1)
       rack (>= 1.0, < 3)
@@ -344,7 +344,7 @@ GEM
     ruby2_keywords (0.0.5)
     rufus-scheduler (3.8.2)
       fugit (~> 1.1, >= 1.1.6)
-    sanitize (6.0.0)
+    sanitize (6.0.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     sass (3.4.25)
