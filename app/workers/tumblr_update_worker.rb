@@ -24,13 +24,8 @@ class TumblrUpdateWorker < ApplicationWorker
     raise posts.to_s if posts['errors'].present? || (posts['status'].present? && posts['status'] >= 400 && posts['status'] != 404)
 
     post = posts.dig('posts', 0)
-
-    if post.blank?
-      entry.tumblr_id = nil
-      entry.tumblr_reblog_key = nil
-      entry.save!
-      return
-    end
+    
+    return if post.blank?
 
     post_format = post['format']
     post_type = post['type'].to_sym
