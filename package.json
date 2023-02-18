@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@rails/ujs": "^7.0.4",
-    "@rails/webpacker": "^5.4.3",
+    "@rails/webpacker": "^5.4.4",
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
     "bulma": "^0.9.4",
