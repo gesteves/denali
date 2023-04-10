@@ -1,6 +1,7 @@
 class Blog < ApplicationRecord
   include Rails.application.routes.url_helpers
   include Formattable
+  include Thumborizable
 
   has_many :entries, dependent: :destroy
   has_many :webhooks, dependent: :destroy

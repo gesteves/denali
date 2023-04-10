@@ -1,5 +1,7 @@
 class Profile < ApplicationRecord
   include Formattable
+  include Thumborizable
+
   belongs_to :user
   belongs_to :photo, optional: true
   has_one_attached :avatar

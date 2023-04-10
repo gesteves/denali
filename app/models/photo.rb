@@ -1,4 +1,6 @@
 class Photo < ApplicationRecord
+  include Thumborizable
+
   belongs_to :entry, touch: true, counter_cache: true, optional: true
   belongs_to :camera, optional: true
   belongs_to :lens, optional: true
