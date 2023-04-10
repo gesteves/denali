@@ -13,7 +13,8 @@ module Thumborizable
     params = {
       image: "#{ENV['S3_BUCKET']}/#{key}",
       width: opts[:width],
-      crop: opts[:crop]
+      crop: opts[:crop],
+      fit_in: opts[:fit_in]
     }.compact
 
     params[:height] = opts[:height] unless opts[:crop].present?

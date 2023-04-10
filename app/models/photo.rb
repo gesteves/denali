@@ -44,7 +44,7 @@ class Photo < ApplicationRecord
 
   def url(opts = {})
     opts.reverse_merge!(width: 1200)
-    opts[:crop] = calculate_crop(opts)
+    opts[:crop] = calculate_crop(opts) unless opts[:fit_in]
     thumbor_url(self.image.key, opts.compact)
   end
 
@@ -53,7 +53,7 @@ class Photo < ApplicationRecord
     widths = widths.uniq.sort
     src_width = widths.first
 
-    opts[:crop] = calculate_crop(opts)
+    opts[:crop] = calculate_crop(opts) unless opts[:fit_in]
     src = thumbor_url(self.image.key, opts.merge(width: src_width).compact)
     srcset = widths.map { |w| "#{thumbor_url(self.image.key, opts.merge(width: w).compact)} #{w}w" }.join(', ')
     return src, srcset
@@ -101,28 +101,29 @@ class Photo < ApplicationRecord
   # Returns the url of the image, formatted & sized to fit into instagram's
   # 5:4 ratio
   def instagram_url
-    opts = { width: 1080, fit: 'fill', bg: 'fff', pad: 50, q: 90, format: 'jpeg' }
+    opts = { w: 1080, fit: 'fill', bg: 'fff', pad: 50, q: 90, fm: 'jpg' }
     opts[:h] = self.is_vertical? ? 1350 : 1080
-    self.url(opts)
+    Ix.path(self.image.key).to_url(opts.compact)
   end
 
   # Returns the url of the image, formatted & sized to fit into instagram stories'
   # 16:9 ratio
   def instagram_story_url
-    self.url(w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90, format: 'jpeg')
+    opts = { w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90, fm: 'jpg' }
+    Ix.path(self.image.key).to_url(opts.compact)
   end
 
   def facebook_card_url
-    self.url(w: 1200, aspect_ratio: '1200:630')
+    self.url(width: 1200, format: 'jpeg', aspect_ratio: '1200:630')
   end
 
   def mastodon_url
-    opts = { width: 2560, aspect_ratio: 'jpg' }
+    opts = { width: 2560, format: 'jpeg' }
     self.url(opts)
   end
 
   def tumblr_url
-    opts = { width: 2048, aspect_ratio: 'jpg' }
+    opts = { width: 2048, format: 'jpeg' }
     self.url(opts)
   end
 
