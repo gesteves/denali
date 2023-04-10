@@ -52,12 +52,9 @@ class Blog < ApplicationRecord
   end
 
   def placeholder_srcset(srcset:, opts: {})
-    opts.reverse_merge!(fm: 'jpg', q: 75, bg: 'fff')
+    opts.reverse_merge!(format: 'jpeg')
     widths = srcset.reject { |width| width > self.placeholder.metadata[:width] }
     src_width = widths.first
-    if opts[:ar].present?
-      opts.merge!(fit: 'crop')
-    end
     src = thumbor_url(self.placeholder.key, opts.merge(width: src_width).compact)
     srcset = widths.map { |w| "#{thumbor_url(self.placeholder.key, opts.merge(width: w).compact)} #{w}w" }.join(', ')
     return src, srcset

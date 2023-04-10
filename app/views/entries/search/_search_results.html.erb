@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex">
     <meta property="og:title" content="<%= "Search results for “#{@query}” – #{@photoblog.name}" %>">
     <% if @entries.present? %>
-      <meta property="og:image" content="<%= @entries.first.photos.first.url(w: 1200, h: 628) %>">
+      <meta property="og:image" content="<%= @entries.first.photos.first.url(width: 1200, height: 628) %>">
       <meta property="og:image:width" content="1200">
       <meta property="og:image:height" content="628">
     <% end %>

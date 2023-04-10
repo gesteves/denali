@@ -7,7 +7,7 @@ module Thumborizable
     return if key.blank?
 
     filters = []
-    filters << "fill(#{opts[:fill]})" if opts[:fill].present?
+    filters << "fill(#{opts[:fill]},true)" if opts[:fill].present?
     filters << "format(#{opts[:format]})" if opts[:format].present? && VALID_FORMATS.include?(opts[:format])
 
     params = {

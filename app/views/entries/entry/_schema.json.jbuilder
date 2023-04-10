@@ -21,7 +21,7 @@ json.publisher do
       json.set! '@type', 'ImageObject'
       json.width 145
       json.height 60
-      json.url @photoblog.logo_url(w: 145, h: 60, fm: 'png', pad: 6, fit: 'fill', bg: '0fff')
+      json.url @photoblog.logo_url(width: 145, height: 60, format: 'png', fit_in: true, fill: 'fff')
     end
   end
 end

@@ -34,7 +34,7 @@ class Webhook < ApplicationRecord
       value1: entry.plain_title,
       value2: entry.permalink_url
     }
-    obj[:value3] = entry.photos.first.url(w: 1200) if entry.is_photo?
+    obj[:value3] = entry.photos.first.url(width: 1200) if entry.is_photo?
     obj.to_json
   end
 
