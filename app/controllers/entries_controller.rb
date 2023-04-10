@@ -12,7 +12,6 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
-    preconnect_imgix
     preload_fonts
     @srcset = PHOTOS[:entry_list][:srcset]
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
@@ -50,7 +49,6 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
-    preconnect_imgix
     preload_fonts
     @srcset = PHOTOS[:entry_list][:srcset]
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
@@ -107,7 +105,6 @@ class EntriesController < ApplicationController
     @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film, :park)
     @srcset = PHOTOS[:entry][:srcset]
     @sizes = PHOTOS[:entry][:sizes].join(', ')
-    preconnect_imgix
     preload_fonts
     respond_to do |format|
       format.html {

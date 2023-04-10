@@ -339,6 +339,7 @@ GEM
       connection_pool
     request_store (1.5.1)
       rack (>= 1.4)
+    ruby-thumbor (4.0.2)
     ruby-vips (2.1.4)
       ffi (~> 1.12)
     ruby2_keywords (0.0.5)
@@ -456,6 +457,7 @@ DEPENDENCIES
   rails-controller-testing
   redcarpet
   redis
+  ruby-thumbor
   sanitize
   sass-rails (~> 6.0)
   scss-lint

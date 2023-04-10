@@ -1,5 +1,7 @@
 class Profile < ApplicationRecord
   include Formattable
+  include Thumborizable
+
   belongs_to :user
   belongs_to :photo, optional: true
   has_one_attached :avatar
@@ -25,20 +27,13 @@ class Profile < ApplicationRecord
   end
 
   def avatar_url(opts = {})
-    opts.reverse_merge!(w: 512, fm: 'jpg')
-    Ix.path(self.avatar.key).to_url(opts.compact)
+    opts.reverse_merge!(width: 512, format: 'jpeg')
+    thumbor_url(self.avatar.key, opts)
   end
 
   def banner_url(opts = {})
     return if photo.blank?
-    opts.reverse_merge!(w: 1500, ar: '3:1', fm: 'jpg')
-    photo.url(opts)
-  end
-
-  # Workaround for Mastodon's inability to read escaped characters in the `ar` query param
-  def mastodon_banner_url(opts = {})
-    return if photo.blank?
-    opts.reverse_merge!(w: 1500, h: 500, fm: 'jpg')
+    opts.reverse_merge!(width: 1500, aspect_ratio: '3:1', format: 'jpeg')
     photo.url(opts)
   end
 

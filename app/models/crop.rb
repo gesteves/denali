@@ -22,7 +22,23 @@ class Crop < ApplicationRecord
     (self.y * photo.height).round
   end
 
+  def left
+    self.computed_x
+  end
+
+  def right
+    self.left + self.computed_width
+  end
+
+  def top
+    self.computed_y
+  end
+
+  def bottom
+    self.computed_y + self.computed_height
+  end
+
   def to_rect
-    [self.computed_x, self.computed_y, self.computed_width, self.computed_height].join(',')
+    [self.left, self.top, self.right, self.bottom]
   end
 end

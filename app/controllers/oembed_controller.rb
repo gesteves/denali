@@ -38,7 +38,7 @@ class OembedController < ApplicationController
         width = entry.photos.first.width_from_height(height)
       end
 
-      url = entry.photos.first.url(w: width, h: height)
+      url = entry.photos.first.url(width: width, height: height)
     end
     return url, width, height
   end

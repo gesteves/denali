@@ -7,7 +7,7 @@
         </div>
         <div class="media-content">
           <div class="focal-point__image-container" data-controller="focal-point" data-focal-point-endpoint-value=<%= focal_point_admin_entry_photo_url(entry_id: @entry.id, id: photo.id, format: 'json') %> data-focal-point-photo-id="<%= photo.id %>" data-focal-point-focal-x-value="<%= photo.focal_x %>" data-focal-point-focal-y-value="<%= photo.focal_y %>">
-            <%= image_tag photo.url(w: 2000),
+            <%= image_tag photo.url(width: 2000),
               width: 2000,
               height: photo.height_from_width(2000),
               class: 'focal-point__thumbnail',
