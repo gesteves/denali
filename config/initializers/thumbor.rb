@@ -1,1 +1,1 @@
-::Thumbor = Thumbor::CryptoURL.new(ENV['THUMBOR_SECURITY_KEY'])
+::Thumb = Thumbor::CryptoURL.new(ENV['THUMBOR_SECURITY_KEY'])

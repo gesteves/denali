@@ -20,7 +20,7 @@ module Thumborizable
     params[:height] = opts[:height] unless opts[:crop].present?
     params[:filters] = filters if filters.present?
 
-    path = Thumbor.generate(params)
+    path = Thumb.generate(params)
     "https://#{ENV['THUMBOR_DOMAIN']}/thumbor#{path}"
   end
 end
