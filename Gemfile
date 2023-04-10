@@ -18,11 +18,14 @@ gem 'aws-sdk-s3', '~> 1'
 # Front-end things
 gem 'sass-rails', '~> 6.0'
 gem 'autoprefixer-rails'
-gem 'imgix'
 gem 'uglifier', '>= 1.3.0'
 gem 'webpacker'
 gem 'turbolinks', '~> 5.2.1'
 gem "sprockets-rails"
+
+# Images
+gem 'ruby-thumbor'
+gem 'imgix'
 
 # Misc
 gem 'jbuilder', '~> 2.11'
