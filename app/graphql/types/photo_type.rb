@@ -51,15 +51,15 @@ module Types
     end
 
     def urls(widths:)
-      widths.map { |w| object.url(w: w) }
+      widths.map { |w| object.url(width: w) }
     end
 
     def thumbnail_urls(widths:)
-      widths.map { |w| object.url(w: w, ar: '1:1') }
+      widths.map { |w| object.url(width: w, aspect_ratio: '1:1') }
     end
 
     def crop_url(width:, height:)
-      object.url(w: width, h: height)
+      object.url(width: width, height: height)
     end
 
     def latitude

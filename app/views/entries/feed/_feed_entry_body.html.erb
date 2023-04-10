@@ -1,5 +1,5 @@
 <% entry.photos.each do |photo| %>
-  <%= link_to image_tag(photo.url(w: 1280).html_safe, srcset: "#{photo.url(w: 1280)} 1x, #{photo.url(w: 2560)} 2x".html_safe, alt: photo.alt_text), entry.permalink_url(ref: 'Feed') %>
+  <%= link_to image_tag(photo.url(width: 1280).html_safe, srcset: "#{photo.url(width: 1280)} 1x, #{photo.url(width: 2560)} 2x".html_safe, alt: photo.alt_text), entry.permalink_url(ref: 'Feed') %>
 <% end %>
 <%= entry.formatted_body unless entry.body.blank? %>
 <%= render partial: 'entries/feed/exif', formats: :html, object: entry.photos.first, as: :photo if entry.is_single_photo? %>
