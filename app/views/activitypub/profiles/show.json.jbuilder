@@ -24,11 +24,11 @@ if @user.profile.avatar.attached?
     json.set! 'url', @user.profile.avatar_url
   end
 end
-if @user.profile.mastodon_banner_url.present?
+if @user.profile.banner_url.present?
   json.set! 'image' do
     json.set! 'type', 'Image'
     json.set! 'mediaType', 'image/jpeg'
-    json.set! 'url', @user.profile.mastodon_banner_url
+    json.set! 'url', @user.profile.banner_url
     if @user.profile.photo.blurhash.present?
       json.set! 'blurhash', @user.profile.photo.blurhash
     end

@@ -33,34 +33,33 @@ class Blog < ApplicationRecord
   end
 
   def favicon_url(opts = {})
-    opts.reverse_merge!(w: 16, fm: 'png')
-    Ix.path(self.favicon.key).to_url(opts.compact)
+    opts.reverse_merge!(width: 16, format: 'png')
+    thumbor_url(self.favicon.key, opts)
   end
 
   def touch_icon_url(opts = {})
-    opts.reverse_merge!(w: 32, fm: 'png')
-    Ix.path(self.touch_icon.key).to_url(opts.compact)
+    opts.reverse_merge!(width: 32, format: 'png')
+    thumbor_url(self.touch_icon.key, opts)
   end
 
   def logo_url(opts = {})
-    opts.reverse_merge!(h: 60, fm: 'png')
-    Ix.path(self.logo.key).to_url(opts.compact)
+    opts.reverse_merge!(height: 60, format: 'png')
+    thumbor_url(self.logo.key, opts)
   end
 
   def placeholder_url(opts = {})
-    Ix.path(self.placeholder.key).to_url(opts.compact)
+    thumbor_url(self.placeholder.key, opts)
   end
 
   def placeholder_srcset(srcset:, opts: {})
     opts.reverse_merge!(fm: 'jpg', q: 75, bg: 'fff')
-    imgix_path = Ix.path(self.placeholder.key)
     widths = srcset.reject { |width| width > self.placeholder.metadata[:width] }
     src_width = widths.first
     if opts[:ar].present?
       opts.merge!(fit: 'crop')
     end
-    src = imgix_path.to_url(opts.merge(w: src_width).compact)
-    srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w).compact)} #{w}w" }.join(', ')
+    src = thumbor_url(self.placeholder.key, opts.merge(width: src_width).compact)
+    srcset = widths.map { |w| "#{thumbor_url(self.placeholder.key, opts.merge(width: w).compact)} #{w}w" }.join(', ')
     return src, srcset
   end
 
