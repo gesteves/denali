@@ -109,10 +109,9 @@ class Photo < ApplicationRecord
 
   # Returns the url of the image, formatted & sized to fit into instagram stories'
   # 16:9 ratio
-  # TODO: Replace with non-imgix solution
   def instagram_story_url
-    opts = { w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90, fm: 'jpg' }
-    Ix.path(self.image.key).to_url(opts.compact)
+    opts = { width: 2160, height: 3840, fit_in: true, fill: 'blur', format: 'jpeg' }
+    self.url(opts)
   end
 
   def facebook_card_url
