@@ -100,6 +100,7 @@ class Photo < ApplicationRecord
 
   # Returns the url of the image, formatted & sized to fit into instagram's
   # 5:4 ratio
+  # TODO: Replace with non-imgix solution
   def instagram_url
     opts = { w: 1080, fit: 'fill', bg: 'fff', pad: 50, q: 90, fm: 'jpg' }
     opts[:h] = self.is_vertical? ? 1350 : 1080
@@ -108,6 +109,7 @@ class Photo < ApplicationRecord
 
   # Returns the url of the image, formatted & sized to fit into instagram stories'
   # 16:9 ratio
+  # TODO: Replace with non-imgix solution
   def instagram_story_url
     opts = { w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90, fm: 'jpg' }
     Ix.path(self.image.key).to_url(opts.compact)
@@ -132,6 +134,7 @@ class Photo < ApplicationRecord
     self.crops.find_by(aspect_ratio: aspect_ratio)
   end
 
+  # TODO: Replace with non-imgix solution
   def blurhash_url(opts = {})
     opts.reverse_merge!(format: 'blurhash', w: 32)
     Ix.path(self.image.key).to_url(opts)
