@@ -127,11 +127,6 @@ class Photo < ApplicationRecord
     self.url(opts)
   end
 
-  def palette_url(opts = {})
-    opts.reverse_merge!(palette: 'json', colors: 6)
-    Ix.path(self.image.key).to_url(opts)
-  end
-
   def crop(aspect_ratio)
     return if aspect_ratio.blank?
     self.crops.find_by(aspect_ratio: aspect_ratio)
@@ -147,12 +142,6 @@ class Photo < ApplicationRecord
   def mastodon_focal_point
     return [] if focal_x.blank? || focal_y.blank?
     [((focal_x * 2) - 1), (1 - (focal_y * 2))].map { |f| f.round(3) }
-  end
-
-  def purge
-    url = Ix.path(self.image.key).to_url
-    uri = URI.parse(url)
-    Ix.purge(uri.path)
   end
 
   def has_dimensions?
