@@ -110,7 +110,7 @@ class Photo < ApplicationRecord
   # Returns the url of the image, formatted & sized to fit into instagram stories'
   # 16:9 ratio
   def instagram_story_url
-    opts = { width: 2160, height: 3840, fit_in: true, fill: 'blur', format: 'jpeg' }
+    opts = { width: 2160, height: 3840, fit_in: true, fill: 'auto', format: 'jpeg' }
     self.url(opts)
   end
 
