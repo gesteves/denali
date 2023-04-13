@@ -101,7 +101,7 @@ class Photo < ApplicationRecord
   # Returns the url of the image, formatted & sized to fit into instagram's
   # 5:4 ratio
   def instagram_url
-    opts = { fit_in: true, fill: 'fff', format: 'jpeg' }
+    opts = { fit_in: true, fill: 'fff', quality: 100, format: 'jpeg' }
     if self.is_vertical?
       opts.merge!(width: 1080, height: 1250)
       url = self.url(opts)
@@ -117,7 +117,7 @@ class Photo < ApplicationRecord
   # Returns the url of the image, formatted & sized to fit into instagram stories'
   # 16:9 ratio
   def instagram_story_url
-    opts = { width: 2160, height: 3840, fit_in: true, fill: 'auto', format: 'jpeg' }
+    opts = { width: 2160, height: 3840, fit_in: true, fill: 'auto', quality: 100, format: 'jpeg' }
     self.url(opts)
   end
 
