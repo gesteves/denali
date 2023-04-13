@@ -49,10 +49,10 @@ class Photo < ApplicationRecord
     thumbor_url(self.image.key, opts.compact)
   end
 
-  def srcset(srcset:, opts: {})
+  def srcset(srcset:, src: nil, opts: {})
     widths = has_dimensions? ? srcset.reject { |width| width > self.width } : srcset
     widths = widths.uniq.sort
-    src_width = widths.first
+    src_width = src || widths.first
 
     opts[:crop] = calculate_crop(opts) unless opts[:fit_in]
     src = thumbor_url(self.image.key, opts.merge(width: src_width).compact)

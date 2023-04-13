@@ -104,6 +104,7 @@ class EntriesController < ApplicationController
   def show
     @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film, :park)
     @srcset = PHOTOS[:entry][:srcset]
+    @src = PHOTOS[:entry][:src]
     @sizes = PHOTOS[:entry][:sizes].join(', ')
     preload_fonts
     respond_to do |format|

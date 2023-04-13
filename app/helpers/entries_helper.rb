@@ -9,12 +9,9 @@ module EntriesHelper
     PHOTOS[key]['srcset'].uniq.sort.reject { |width| width > photo.width }
   end
 
-  def json_schema_images(photo)
-    [
-      photo.url(width: 1200, aspect_ratio: '1:1', format: 'jpeg'),
-      photo.url(width: 1200, aspect_ratio: '4:3', format: 'jpeg'),
-      photo.url(width: 1200, aspect_ratio: '16:9', format: 'jpeg')
-    ]
+  def schema_photo_src(photo)
+    src, srcset = photo.srcset(srcset: PHOTOS[:entry][:srcset], src: PHOTOS[:entry][:src])
+    src
   end
 
   def exif_for_feeds(photo, separator: ' – ')
