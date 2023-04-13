@@ -1,3 +1,4 @@
+require 'mini_magick'
 class Photo < ApplicationRecord
   include Thumborizable
 
@@ -138,12 +139,6 @@ class Photo < ApplicationRecord
   def crop(aspect_ratio)
     return if aspect_ratio.blank?
     self.crops.find_by(aspect_ratio: aspect_ratio)
-  end
-
-  # TODO: Replace with non-imgix solution
-  def blurhash_url(opts = {})
-    opts.reverse_merge!(format: 'blurhash', w: 32)
-    Ix.path(self.image.key).to_url(opts)
   end
 
   # Focal points are stored as a [0,1] range,
@@ -345,10 +340,15 @@ class Photo < ApplicationRecord
   end
 
   def blurhash_data_uri(w: 32)
-    return unless self.has_dimensions?
+    return unless self.has_dimensions? && Blurhash.valid_blurhash?(self.blurhash)
     h = self.height_from_width(w)
     Rails.cache.fetch("blurhash-data-uri/#{self.blurhash}/w/#{w}/h/#{h}") do
-      Blurhash.to_data_uri(blurhash: self.blurhash, w: w, h: h)
+      pixels = Blurhash.decode(w, h, self.blurhash)
+      depth = 8
+      dimensions = [w, h]
+      map = 'rgba'
+      image = MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
+      "data:image/jpeg;base64,#{Base64.strict_encode64(image.to_blob)}"
     end
   end
 

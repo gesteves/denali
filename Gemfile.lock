@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/gesteves/blurhash
+  revision: 2d0433937d5dc4a376ff3f58d03014da79762b4f
+  branch: master
+  specs:
+    blurhash (0.1.7)
+
+GIT
   remote: https://github.com/gesteves/flickraw.git
   revision: c5336c74ca65e3004c4ae98616abefd1553494a3
   branch: update-upload-url
@@ -426,6 +433,7 @@ DEPENDENCIES
   autoprefixer-rails
   aws-sdk-cloudfront (~> 1)
   aws-sdk-s3 (~> 1)
+  blurhash!
   bootsnap
   brakeman
   bugsnag
