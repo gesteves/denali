@@ -25,7 +25,6 @@ gem "sprockets-rails"
 
 # Images
 gem 'ruby-thumbor'
-gem 'imgix'
 gem 'blurhash', git: 'https://github.com/gesteves/blurhash', branch: 'master'
 
 # Misc
