@@ -100,11 +100,18 @@ class Photo < ApplicationRecord
 
   # Returns the url of the image, formatted & sized to fit into instagram's
   # 5:4 ratio
-  # TODO: Replace with non-imgix solution
   def instagram_url
-    opts = { w: 1080, fit: 'fill', bg: 'fff', pad: 50, q: 90, fm: 'jpg' }
-    opts[:h] = self.is_vertical? ? 1350 : 1080
-    Ix.path(self.image.key).to_url(opts.compact)
+    opts = { fit_in: true, fill: 'fff', format: 'jpeg' }
+    if self.is_vertical?
+      opts.merge!(width: 1080, height: 1250)
+      url = self.url(opts)
+      opts.merge!(width: 1080, height: 1350)
+    else
+      opts.merge!(width: 980, height: 1080)
+      url = self.url(opts)
+      opts.merge!(width: 1080, height: 1080)
+    end
+    thumbor_url(url, opts)
   end
 
   # Returns the url of the image, formatted & sized to fit into instagram stories'
