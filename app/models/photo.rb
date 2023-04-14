@@ -104,14 +104,12 @@ class Photo < ApplicationRecord
   def instagram_url
     opts = { fit_in: true, fill: 'fff', quality: 100, format: 'jpeg' }
   
-    if self.is_vertical?
-      width, height = 1080, 1250
-      new_url = self.url(opts.merge(width: width, height: height))
+    new_url = if self.is_vertical?
       width, height = 1080, 1350
+      self.url(opts.merge(width: width, height: (height - 100)))
     else
-      width, height = 980, 1080
-      new_url = self.url(opts.merge(width: width, height: height))
       width, height = 1080, 1080
+      self.url(opts.merge(width: (width - 100), height: height))
     end
   
     thumbor_url(new_url, opts.merge(width: width, height: height))
