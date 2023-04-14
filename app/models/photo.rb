@@ -147,7 +147,11 @@ class Photo < ApplicationRecord
   # but Mastodon expects a [-1,1] range.
   def mastodon_focal_point
     return [] if focal_x.blank? || focal_y.blank?
-    [((focal_x * 2) - 1), (1 - (focal_y * 2))].map { |f| f.round(3) }
+
+    focal_x_transformed = ((focal_x * 2) - 1).round(3)
+    focal_y_transformed = ((focal_y * 2) - 1).round(3)
+
+    [focal_x_transformed, focal_y_transformed]
   end
 
   def has_dimensions?
