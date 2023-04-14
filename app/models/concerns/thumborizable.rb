@@ -6,7 +6,7 @@ module Thumborizable
   def thumbor_url(image, opts = {})
     return if image.blank?
 
-    url = image.start_with?('https://') ? image : "#{ENV['S3_BUCKET']}/#{image}"
+    url = image.start_with?('https://', 'http://') ? image : "#{ENV['S3_BUCKET']}/#{image}"
 
     filters = []
     filters << "fill(#{opts[:fill]},true)" if opts[:fill].present?
@@ -24,6 +24,7 @@ module Thumborizable
     params[:filters] = filters if filters.present?
 
     path = Thumb.generate(params)
-    "https://#{ENV['THUMBOR_DOMAIN']}/thumbor#{path}"
+    thumbor_path = ENV['THUMBOR_PATH'].presence ? "/#{ENV['THUMBOR_PATH']}" : ''
+    "https://#{ENV['THUMBOR_DOMAIN']}#{thumbor_path}#{path}"
   end
 end
