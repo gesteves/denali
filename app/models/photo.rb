@@ -103,16 +103,18 @@ class Photo < ApplicationRecord
   # 5:4 ratio
   def instagram_url
     opts = { fit_in: true, fill: 'fff', quality: 100, format: 'jpeg' }
+  
     if self.is_vertical?
-      opts.merge!(width: 1080, height: 1250)
-      url = self.url(opts)
-      opts.merge!(width: 1080, height: 1350)
+      width, height = 1080, 1250
+      new_url = self.url(opts.merge(width: width, height: height))
+      width, height = 1080, 1350
     else
-      opts.merge!(width: 980, height: 1080)
-      url = self.url(opts)
-      opts.merge!(width: 1080, height: 1080)
+      width, height = 980, 1080
+      new_url = self.url(opts.merge(width: width, height: height))
+      width, height = 1080, 1080
     end
-    thumbor_url(url, opts)
+  
+    thumbor_url(new_url, opts.merge(width: width, height: height))
   end
 
   # Returns the url of the image, formatted & sized to fit into instagram stories'
