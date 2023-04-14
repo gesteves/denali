@@ -147,7 +147,7 @@ class Photo < ApplicationRecord
     return [] if focal_x.blank? || focal_y.blank?
 
     focal_x_transformed = ((focal_x * 2) - 1).round(3)
-    focal_y_transformed = ((focal_y * 2) - 1).round(3)
+    focal_y_transformed = (1 - (focal_y * 2)).round(3)
 
     [focal_x_transformed, focal_y_transformed]
   end
