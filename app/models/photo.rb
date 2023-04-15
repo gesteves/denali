@@ -44,7 +44,6 @@ class Photo < ApplicationRecord
   end
 
   def url(opts = {})
-    opts.reverse_merge!(width: 1200)
     opts[:crop] = calculate_crop(opts) unless opts[:fit_in]
     thumbor_url(self.image.key, opts.compact)
   end
@@ -133,6 +132,11 @@ class Photo < ApplicationRecord
 
   def tumblr_url
     opts = { width: 2048, format: 'jpeg' }
+    self.url(opts)
+  end
+
+  def iphone_wallpaper_url
+    opts = { aspect_ratio: '19.5:9' }
     self.url(opts)
   end
 
