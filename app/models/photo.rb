@@ -136,7 +136,7 @@ class Photo < ApplicationRecord
   end
 
   def iphone_wallpaper_url
-    opts = { aspect_ratio: '19.5:9' }
+    opts = { aspect_ratio: '9:19.5' }
     self.url(opts)
   end
 
