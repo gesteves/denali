@@ -3,7 +3,7 @@
   - high
   - default
   - low
-:schedule:
+:scheduler:
   publish_queued_entries:
     cron: '0 0 * * * *'   # Runs every hour
     class: PublishWorker
