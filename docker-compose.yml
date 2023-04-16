@@ -12,7 +12,7 @@ services:
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
   redis:
-    image: redis
+    image: redis:6.2.11
     ports:
       - '6379:6379'
   elasticsearch:
