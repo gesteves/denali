@@ -9,10 +9,10 @@
       <%= html_escape render(partial: 'entries/feed/feed_entry_body', formats: :html, object: entry, as: :entry).to_str %>
     </content>
     <% if entry.is_photo?%>
-      <webfeeds:featuredImage url="<%= entry.photos.first.url(w: 2560, fm: 'jpg') %>" type="image/jpg" width="2560" height="<%= entry.photos.first.height_from_width(2560) %>"/>
+      <webfeeds:featuredImage url="<%= entry.photos.first.url(width: 2560, format: 'jpeg') %>" type="image/jpg" width="2560" height="<%= entry.photos.first.height_from_width(2560) %>"/>
     <% end %>
     <% entry.photos.each do |photo| %>
-      <media:content url="<%= photo.url(w: 1280, fm: 'jpg') %>" />
+      <media:content url="<%= photo.url(width: 1280, format: 'jpeg') %>" />
     <% end %>
     <author>
       <name><%= entry.user.name %></name>

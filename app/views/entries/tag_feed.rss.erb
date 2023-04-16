@@ -9,10 +9,10 @@
     <atom:link href="<%= tag_feed_url(tag: @tag_slug, format: 'rss') %>" rel="self" type="application/rss+xml"/>
     <webfeeds:accentColor>#BF0222</webfeeds:accentColor>
     <% if @photoblog.logo.attached? %>
-      <webfeeds:wordmark><%= @photoblog.logo_url(w: 192) %></webfeeds:wordmark>
+      <webfeeds:wordmark><%= @photoblog.logo_url(width: 192) %></webfeeds:wordmark>
     <% end %>
     <% if @photoblog.touch_icon.attached? %>
-      <webfeeds:icon><%=  @photoblog.touch_icon_url(w: 192) %></webfeeds:icon>
+      <webfeeds:icon><%=  @photoblog.touch_icon_url(width: 192) %></webfeeds:icon>
     <% end %>
     <webfeeds:related layout="card" target="browser"/>
     <%= render partial: 'entries/feed/entry', formats: :rss, collection: @entries, as: :entry, cached: true %>

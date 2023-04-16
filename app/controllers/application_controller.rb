@@ -107,12 +107,6 @@ class ApplicationController < ActionController::Base
     response.headers['Link'] = links.compact.join(', ')
   end
 
-  def preconnect_imgix
-    if request.format.html?
-      add_preconnect_link_header("https://#{ENV['IMGIX_DOMAIN']}")
-    end
-  end
-
   def preload_fonts
     if request.format.html?
       add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-300.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)

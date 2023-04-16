@@ -10,7 +10,6 @@ module Types
     field :blurhash_data_uri, String, null: true, description: "A base64 data URI of the placeholder for this photo"
     field :camera, Types::CameraType, null: true, description: "The camera used to take the photo"
     field :color, Boolean, null: true, method: :color?, description: "Whether or not the photo is in color"
-    field :dominant_color, String, null: true, description: "The most prominent color in the photo"
     field :download_url, String, null: true, description: "The URL to download the full size version of the image"
     field :exposure, String, null: true, description: "Exposure time of the photo"
     field :facebook_card_url, String, null: false, description: "URL of a version of the photo optimized for Facebook OpenGraph"
@@ -27,6 +26,7 @@ module Types
     field :horizontal, Boolean, null: false, method: :is_horizontal?, description: "Whether or not the photo is in landscape orientation"
     field :instagram_story_url, String, null: false, description: "URL of a version of the photo optimized for Instagram Stories"
     field :instagram_url, String, null: false, description: "URL of a version of the photo optimized for the Instagram feed"
+    field :iphone_wallpaper_url, String, null: false, description: "URL of a version of the photo optimized for an iPhone wallpaper"
     field :plain_metadata, String, null: true, description: "Metadata for the photo, in plain text"
     field :reddit_caption, String, null: true, description: "A reddit-friendly caption for this photo"
     field :iso, Integer, null: true, description: "ISO the photo was made at"
@@ -51,15 +51,15 @@ module Types
     end
 
     def urls(widths:)
-      widths.map { |w| object.url(w: w) }
+      widths.map { |w| object.url(width: w) }
     end
 
     def thumbnail_urls(widths:)
-      widths.map { |w| object.url(w: w, ar: '1:1') }
+      widths.map { |w| object.url(width: w, aspect_ratio: '1:1') }
     end
 
     def crop_url(width:, height:)
-      object.url(w: width, h: height)
+      object.url(width: width, height: height)
     end
 
     def latitude

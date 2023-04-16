@@ -1,4 +1,7 @@
+require 'mini_magick'
 class Photo < ApplicationRecord
+  include Thumborizable
+
   belongs_to :entry, touch: true, counter_cache: true, optional: true
   belongs_to :camera, optional: true
   belongs_to :lens, optional: true
@@ -41,94 +44,116 @@ class Photo < ApplicationRecord
   end
 
   def url(opts = {})
-    opts.reverse_merge!(w: 1200)
-    if opts[:rect].blank?
-      if opts[:ar].present? && (rect = self.crop(opts[:ar])&.to_rect)
-        opts[:rect] = rect
-        opts.delete(:ar)
-        opts.delete(:h)
-      elsif opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
-        opts.reverse_merge!(fit: 'crop')
-        opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
-      end
-    end
-    Ix.path(self.image.key).to_url(opts.compact)
+    opts[:crop] = calculate_crop(opts) unless opts[:fit_in]
+    thumbor_url(self.image.key, opts.compact)
   end
 
-  def srcset(srcset:, opts: {})
-    opts.reverse_merge!(q: 75)
-    imgix_path = Ix.path(self.image.key)
+  def srcset(srcset:, src: nil, opts: {})
     widths = has_dimensions? ? srcset.reject { |width| width > self.width } : srcset
     widths = widths.uniq.sort
-    src_width = widths.first
-    if opts[:rect].blank?
-      if opts[:ar].present? && (rect = self.crop(opts[:ar])&.to_rect)
-        opts[:rect] = rect
-        opts.delete(:ar)
-        opts.delete(:h)
-      elsif opts[:ar].present? || (opts[:w].present? && opts[:h].present? && opts[:h] != height_from_width(opts[:w]))
-        opts.reverse_merge!(fit: 'crop')
-        opts.merge!(crop: 'focalpoint', 'fp-x': self.focal_x, 'fp-y': self.focal_y) if self.focal_x.present? && self.focal_y.present?
-      end
-    end
-    src = imgix_path.to_url(opts.merge(w: src_width).compact)
-      srcset = widths.map { |w| "#{imgix_path.to_url(opts.merge(w: w).compact)} #{w}w" }.join(', ')
+    src_width = src || widths.first
+
+    opts[:crop] = calculate_crop(opts) unless opts[:fit_in]
+    src = thumbor_url(self.image.key, opts.merge(width: src_width).compact)
+    srcset = widths.map { |w| "#{thumbor_url(self.image.key, opts.merge(width: w).compact)} #{w}w" }.join(', ')
     return src, srcset
+  end
+
+  def calculate_crop(opts)
+    return opts[:crop] if opts[:crop].present?
+    if crop = self.crop(opts[:aspect_ratio])&.to_rect
+      crop
+    elsif opts[:aspect_ratio].present?
+      aspect_ratio_to_crop(opts[:aspect_ratio])
+    elsif opts[:width].present? && opts[:height].present? && opts[:height] != height_from_width(opts[:width])
+      aspect_ratio_to_crop("#{opts[:width]}:#{opts[:height]}")
+    else
+      nil
+    end
+  end
+
+  def aspect_ratio_to_crop(aspect_ratio)
+    aspect_ratio_parts = aspect_ratio.split(':').map(&:to_f)
+    target_aspect_ratio = aspect_ratio_parts[0] / aspect_ratio_parts[1]
+
+    # Default focal point to the center of the image if not provided
+    x_focal = self.focal_x || 0.5
+    y_focal = self.focal_y || 0.5
+
+    current_aspect_ratio = self.width.to_f / self.height.to_f
+
+    if current_aspect_ratio > target_aspect_ratio
+      new_width = target_aspect_ratio * self.height
+      new_height = self.height
+    else
+      new_width = self.width
+      new_height = self.width / target_aspect_ratio
+    end
+
+    left = (self.width - new_width) * x_focal
+    top = (self.height - new_height) * y_focal
+    right = left + new_width
+    bottom = top + new_height
+
+    [left, top, right, bottom].map(&:round)
   end
 
   # Returns the url of the image, formatted & sized to fit into instagram's
   # 5:4 ratio
   def instagram_url
-    opts = { w: 1080, fit: 'fill', bg: 'fff', pad: 50, q: 90, fm: 'jpg' }
-    opts[:h] = self.is_vertical? ? 1350 : 1080
-    self.url(opts)
+    opts = { fit_in: true, fill: 'fff', quality: 100, format: 'jpeg' }
+  
+    new_url = if self.is_vertical?
+      width, height = 1080, 1350
+      self.url(opts.merge(width: width, height: (height - 100)))
+    else
+      width, height = 1080, 1080
+      self.url(opts.merge(width: (width - 100), height: height))
+    end
+  
+    thumbor_url(new_url, opts.merge(width: width, height: height))
   end
 
   # Returns the url of the image, formatted & sized to fit into instagram stories'
   # 16:9 ratio
   def instagram_story_url
-    self.url(w: 2160, h: 3840, fit: 'fill', fill: 'blur', q: 90, fm: 'jpg')
+    opts = { width: 2160, height: 3840, fit_in: true, fill: 'auto', quality: 100, format: 'jpeg' }
+    self.url(opts)
   end
 
   def facebook_card_url
-    self.url(w: 1200, ar: '1200:630')
+    self.url(width: 1200, format: 'jpeg', aspect_ratio: '1200:630')
   end
 
   def mastodon_url
-    opts = { w: 2560, fm: 'jpg' }
+    opts = { width: 2560, format: 'jpeg' }
     self.url(opts)
   end
 
   def tumblr_url
-    opts = { w: 2048, fm: 'jpg' }
+    opts = { width: 2048, format: 'jpeg' }
     self.url(opts)
   end
 
-  def palette_url(opts = {})
-    opts.reverse_merge!(palette: 'json', colors: 6)
-    Ix.path(self.image.key).to_url(opts)
+  def iphone_wallpaper_url
+    opts = { aspect_ratio: '9:19.5' }
+    self.url(opts)
   end
 
   def crop(aspect_ratio)
+    return if aspect_ratio.blank?
     self.crops.find_by(aspect_ratio: aspect_ratio)
-  end
-
-  def blurhash_url(opts = {})
-    opts.reverse_merge!(fm: 'blurhash', w: 32)
-    Ix.path(self.image.key).to_url(opts)
   end
 
   # Focal points are stored as a [0,1] range,
   # but Mastodon expects a [-1,1] range.
   def mastodon_focal_point
     return [] if focal_x.blank? || focal_y.blank?
-    [((focal_x * 2) - 1), (1 - (focal_y * 2))].map { |f| f.round(3) }
-  end
 
-  def purge
-    url = Ix.path(self.image.key).to_url
-    uri = URI.parse(url)
-    Ix.purge(uri.path)
+    focal_x_transformed = ((focal_x * 2) - 1).round(3)
+    focal_y_transformed = (1 - (focal_y * 2)).round(3)
+
+    [focal_x_transformed, focal_y_transformed]
   end
 
   def has_dimensions?
@@ -323,10 +348,15 @@ class Photo < ApplicationRecord
   end
 
   def blurhash_data_uri(w: 32)
-    return unless self.has_dimensions?
+    return unless self.has_dimensions? && Blurhash.valid_blurhash?(self.blurhash)
     h = self.height_from_width(w)
     Rails.cache.fetch("blurhash-data-uri/#{self.blurhash}/w/#{w}/h/#{h}") do
-      Blurhash.to_data_uri(blurhash: self.blurhash, w: w, h: h)
+      pixels = Blurhash.decode(w, h, self.blurhash)
+      depth = 8
+      dimensions = [w, h]
+      map = 'rgba'
+      image = MiniMagick::Image.get_image_from_pixels(pixels, dimensions, map, depth, 'jpg')
+      "data:image/jpeg;base64,#{Base64.strict_encode64(image.to_blob)}"
     end
   end
 

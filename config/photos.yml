@@ -25,6 +25,7 @@ entry: &entry
     - 1170
     - 1284
     - 1366
+  src: 1280
   sizes:
     - "(min-width: 1680px) 1680px"
     - 100vw
