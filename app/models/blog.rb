@@ -16,6 +16,29 @@ class Blog < ApplicationRecord
 
   validates :name, :tag_line, :about, presence: true
 
+  INVALIDATION_PATHS = %w{
+    /
+    /1*
+    /2*
+    /3*
+    /4*
+    /5*
+    /6*
+    /7*
+    /8*
+    /9*
+    /page*
+    /tagged*
+    /search*
+    /related*
+    /sitemap*
+    /feed*
+    /oembed*
+    /activitypub*
+    /nodeinfo*
+    /about
+  }
+
   def formatted_tag_line
     markdown_to_html(self.tag_line)
   end
@@ -149,7 +172,7 @@ class Blog < ApplicationRecord
     end
   end
 
-  def purge_from_cdn(paths: '/*')
+  def purge_from_cdn(paths: INVALIDATION_PATHS)
     Rails.cache.clear
     CloudfrontInvalidationWorker.perform_async(paths)
   end
