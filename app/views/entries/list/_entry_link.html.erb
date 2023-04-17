@@ -1,5 +1,5 @@
 <% photo = entry.photos.first %>
-<a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %> target="_blank"">
+<a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
   <%= responsive_image_tag(
     photo: photo,
     srcset: @srcset,
