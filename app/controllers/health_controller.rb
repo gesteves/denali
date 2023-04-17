@@ -4,7 +4,7 @@ class HealthController < ApplicationController
 
   def show
     render plain: "OK", status: 200
-  rescue ActiveRecord::PendingMigrationError
-    render plain: "OK", status: 200
+  rescue
+    render plain: "Not OK", status: 500
   end
 end
