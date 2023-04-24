@@ -17,9 +17,16 @@ class ColorDetectionWorker < ApplicationWorker
     original_image = MiniMagick::Image.open(photo.url(width: 300))
     grayscaled_image = MiniMagick::Image.open(photo.url(width: 300, grayscale: true))
   
-    # Calculate the mean error per pixel between the two images
-    compare_result = original_image.compare(grayscaled_image, "mae")
-    mean_error_per_pixel = compare_result[1].to_f
+    # Calculate the mean error per pixel between the two images using the compare tool
+    compare_tool = MiniMagick::Tool::Compare.new
+    compare_tool.metric('mae')
+    compare_tool << original_image.path
+    compare_tool << grayscaled_image.path
+    compare_tool << 'null:'
+    compare_output, _ = compare_tool.call
+  
+    # Extract the mean absolute error from the output
+    mean_error_per_pixel = compare_output.split(' ')[1].to_f
   
     # Get the threshold from the environment variable or use a default value of 5
     threshold = ENV.fetch('MAE_THRESHOLD', 5).to_f
