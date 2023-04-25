@@ -16,6 +16,7 @@ class Webhook < ApplicationRecord
   def payload(entry)
     return to_ifttt(entry) if ifttt?
     return to_slack(entry) if slack?
+    return to_discord(entry) if discord?
     nil
   end
 
@@ -26,7 +27,11 @@ class Webhook < ApplicationRecord
   end
 
   def slack?
-    url.match?(/slack\.com/)
+    url.match?(/slack\.com/) || url.match?(/slack$/)
+  end
+
+  def discord?
+    url.match?(/discord\.com/)
   end
 
   def to_ifttt(entry)
@@ -40,6 +45,10 @@ class Webhook < ApplicationRecord
 
   def to_slack(entry)
     { text: "New entry published: #{entry.permalink_url}", unfurl_links: true }.to_json
+  end
+
+  def to_discord(entry)
+    { content: "New entry published: #{entry.permalink_url}" }.to_json
   end
 
   def cleanup_url
