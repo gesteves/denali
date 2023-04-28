@@ -292,7 +292,7 @@ class Entry < ApplicationRecord
   def enqueue_publish_jobs
     OpenGraphWorker.perform_async(self.id)
     InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
-    MastodonWorker.perform_async(self.id, self.mastodon_caption)
+    MastodonWorker.perform_async(self.id, self.mastodon_caption) if self.post_to_mastodon
     TumblrWorker.perform_async(self.id) if self.post_to_tumblr
     Webhook.deliver_all(self)
     PushSubscription.deliver_all(self)
