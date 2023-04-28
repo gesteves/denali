@@ -3,6 +3,7 @@
   <%= render partial: 'partials/follow_icon', locals: { url: search_url,                          icon: 'search',    label: "Search #{@photoblog.name}" } if @photoblog.show_search? && @photoblog.has_search? %>
   <%= render partial: 'partials/follow_icon', locals: { url: "mailto:#{@photoblog.email}",        icon: 'email',     label: 'Contact by email' }          if @photoblog.email.present? %>
   <%= render partial: 'partials/follow_icon', locals: { url: feed_url(format: 'atom', page: nil), icon: 'feed',      label: 'Subscribe to Feed' } %>
+  <%= render partial: 'partials/push_notifications' %>
   <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.flickr,                   icon: 'flickr',    label: 'Follow on Flickr',    rel: 'me', target: '_blank' } if @photoblog.flickr.present? %>
   <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.instagram,                icon: 'instagram', label: 'Follow on Instagram', rel: 'me', target: '_blank' } if @photoblog.instagram.present? %>
   <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.mastodon,                 icon: 'mastodon',  label: 'Follow on Mastodon',  rel: 'me', target: '_blank' } if @photoblog.mastodon.present? %>
