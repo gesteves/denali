@@ -120,6 +120,8 @@ Rails.application.routes.draw do
 
   #PWA
   get '/service_worker.js'             => 'service_worker#index', defaults: { format: 'js' }, :as => :service_worker
+  post '/push-notifications/subscribe' => 'push_subscriptions#create', :as => :push_subscribe
+  get '/manifest.json'                 => 'manifest#index', :as => :manifest
 
   # Admin
   get '/admin'                         => 'admin#index',      :as => :admin

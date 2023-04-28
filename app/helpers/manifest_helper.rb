@@ -1,0 +1,2 @@
+module ManifestHelper
+end

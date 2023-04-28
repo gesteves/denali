@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_07_145610) do
+ActiveRecord::Schema[7.0].define(version: 2023_04_27_230808) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -234,6 +234,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_07_145610) do
     t.index ["blog_id"], name: "index_publish_schedules_on_blog_id"
   end
 
+  create_table "push_subscriptions", force: :cascade do |t|
+    t.string "endpoint"
+    t.string "p256dh"
+    t.string "auth"
+    t.bigint "blog_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blog_id"], name: "index_push_subscriptions_on_blog_id"
+  end
+
   create_table "tag_customizations", force: :cascade do |t|
     t.text "instagram_hashtags"
     t.text "flickr_groups"
@@ -305,5 +315,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_12_07_145610) do
   add_foreign_key "photos", "lenses"
   add_foreign_key "profiles", "photos"
   add_foreign_key "profiles", "users"
+  add_foreign_key "push_subscriptions", "blogs"
   add_foreign_key "webhooks", "blogs"
 end

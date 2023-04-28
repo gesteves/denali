@@ -295,6 +295,7 @@ class Entry < ApplicationRecord
     MastodonWorker.perform_async(self.id, self.mastodon_caption)
     TumblrWorker.perform_async(self.id) if self.post_to_tumblr
     Webhook.deliver_all(self)
+    PushSubscription.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
     self.purge_from_cdn
   end
