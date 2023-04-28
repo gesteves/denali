@@ -5,7 +5,7 @@ export default class extends Controller {
 
   initialize() {
     if (!this.isPushSupported() || this.hasPermission()) {
-      this.element.parentNode.removeChild(this.element);
+      this.removeButton();
     }
   }
 
@@ -15,6 +15,10 @@ export default class extends Controller {
 
   hasPermission() {
     return Notification.permission === 'granted';
+  }
+
+  removeButton() {
+    this.element.parentNode.removeChild(this.element);
   }
 
   async requestPermission(event) {
@@ -39,6 +43,7 @@ export default class extends Controller {
       });
 
       this.sendSubscriptionToServer(subscription);
+      this.removeButton();
     } catch (error) {
       console.log(error);
     }
