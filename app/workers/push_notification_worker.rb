@@ -11,8 +11,16 @@ class PushNotificationWorker < ApplicationWorker
       private_key: ENV['VAPID_PRIVATE_KEY']
     }
 
+    title = if entry.is_photoset?
+      "New Photos Published"
+    elsif entry.is_single_photo?
+      "New Photo Published"
+    else
+      "New Entry Published"
+    end
+
     message = {
-      title: 'New photo',
+      title: title,
       body: entry.plain_title,
       icon: entry.blog.touch_icon_url(width: 512),
       image: entry.photos.first.url(width: 1920),
