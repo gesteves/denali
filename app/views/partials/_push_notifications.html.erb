@@ -1,6 +1,6 @@
 <li>
-  <a href="#" class="follow__link" title="Get notifications" aria-labelledby="follow-icon-bell" data-controller="push-notifications" data-push-notifications-subscribe-url-value="<%= push_subscribe_path %>" data-push-notifications-vapid-public-key-value="<%= ENV['VAPID_PUBLIC_KEY'] %>" data-action="click->push-notifications#requestPermission">
+  <button class="follow__link" title="Get notifications" aria-labelledby="follow-icon-bell" data-controller="push-notifications" data-push-notifications-subscribe-url-value="<%= push_subscribe_path %>" data-push-notifications-vapid-public-key-value="<%= ENV['VAPID_PUBLIC_KEY'] %>" data-action="click->push-notifications#requestPermission">
     <%= inline_svg 'bell-solid', class_name: 'follow__icon' %>
     <span class="sr-only" id="follow-icon-bell">Get notifications</span>
-  </a>
+  </button>
 </li>

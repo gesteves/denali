@@ -8,6 +8,8 @@
 }
 
 .follow__link {
+  background: none;
+  border: none;
   display: block;
   height: 20px;
   margin: 12px 5px;
@@ -15,6 +17,7 @@
   position: relative;
   width: 20px;
 
+  &,
   &:link,
   &:visited {
     fill: var(--color-icon-fill);
