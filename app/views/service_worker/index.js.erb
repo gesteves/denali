@@ -35,4 +35,29 @@
     event.respondWith(fetch(newRequest).then(response => { return response; }));
     return;
   });
+
+  self.addEventListener('push', function (event) {
+    const data = event.data.json();
+
+    const options = {
+      body: data.body,
+      icon: data.icon,
+      image: data.image,
+      data: {
+        dateOfArrival: Date.now(),
+        primaryKey: data.primaryKey || '-',
+        url: data.url
+      }
+    };
+
+    event.waitUntil(self.registration.showNotification(data.title, options));
+  });
+
+  self.addEventListener('notificationclick', function (event) {
+    const clickedNotification = event.notification;
+    clickedNotification.close();
+    event.waitUntil(clients.openWindow(clickedNotification.data.url));
+  });
+
+
 })();
