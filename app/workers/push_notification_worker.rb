@@ -12,11 +12,11 @@ class PushNotificationWorker < ApplicationWorker
     }
 
     title = if entry.is_photoset?
-      "New Photos Published"
+      "New photos published"
     elsif entry.is_single_photo?
-      "New Photo Published"
+      "New photo published"
     else
-      "New Entry Published"
+      "New entry published"
     end
 
     message = {
