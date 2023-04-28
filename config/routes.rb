@@ -118,6 +118,9 @@ Rails.application.routes.draw do
   match '/graphql'                     => 'graphql#options', via: :options
   post '/graphql'                      => 'graphql#execute'
 
+  # Web Push
+  post '/push-notifications/subscribe' => 'push_subscriptions#create', :as => :push_subscribe
+
   #PWA
   get '/service_worker.js'             => 'service_worker#index', defaults: { format: 'js' }, :as => :service_worker
 
