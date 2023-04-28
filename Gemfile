@@ -44,6 +44,7 @@ gem "image_processing", "~> 1.12"
 gem 'rack-brotli'
 gem 'htmlentities'
 gem 'public_suffix'
+gem 'web-push'
 
 # Monitoring
 gem 'bugsnag'
