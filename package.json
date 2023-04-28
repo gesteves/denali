@@ -24,7 +24,7 @@
     "turbolinks": "^5.2.0"
   },
   "devDependencies": {
-    "@webpack-cli/serve": "^1.7.0",
+    "@webpack-cli/serve": "^2.0.2",
     "babel-eslint": "^10.1.0",
     "eslint": "^4.0.0",
     "eslint-loader": "^2.0",
@@ -37,7 +37,7 @@
     "gulp-scss-lint-stylish": "^1.0",
     "gulp-svgmin": "^4.1",
     "gulp-svgstore": "^9.0",
-    "webpack-dev-server": "^4.13.3"
+    "webpack-dev-server": "^3.0"
   },
   "repository": {
     "type": "git",
