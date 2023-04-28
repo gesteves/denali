@@ -44,14 +44,26 @@ class Webhook < ApplicationRecord
   end
 
   def to_slack(entry)
-    { text: "New entry published: #{entry.permalink_url}", unfurl_links: true }.to_json
+    { text: "#{title(entry)}: #{entry.permalink_url}", unfurl_links: true }.to_json
   end
 
   def to_discord(entry)
-    { content: "New entry published: #{entry.permalink_url}" }.to_json
+    { content: "#{title(entry)}: #{entry.permalink_url}" }.to_json
   end
 
   def cleanup_url
     self.url = self.url.strip
+  end
+
+  private
+
+  def title(entry)
+    if entry.is_photoset?
+      "New Photos Published"
+    elsif entry.is_single_photo?
+      "New Photo Published"
+    else
+      "New Entry Published"
+    end
   end
 end
