@@ -12,7 +12,7 @@ class PushNotificationWorker < ApplicationWorker
     }
 
     message = {
-      title: entry.blog.name,
+      title: 'New photo',
       body: entry.plain_title,
       icon: entry.blog.touch_icon_url(width: 512),
       image: entry.photos.first.url(width: 1920),
