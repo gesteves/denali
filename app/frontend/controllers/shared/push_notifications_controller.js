@@ -28,6 +28,7 @@ export default class extends Controller {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
         this.subscribeUser();
+        this.removeButton();
       }
     } catch (error) {
       console.log(error);
@@ -43,7 +44,6 @@ export default class extends Controller {
       });
 
       this.sendSubscriptionToServer(subscription);
-      this.removeButton();
     } catch (error) {
       console.log(error);
     }
