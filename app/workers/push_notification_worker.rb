@@ -6,7 +6,7 @@ class PushNotificationWorker < ApplicationWorker
     return if push_subscription.blank? || entry.blank?
 
     vapid_keys = {
-      subject: "mailto:#{mailto_address}",
+      subject: "mailto:#{ENV['VAPID_MAILTO_ADDRESS']}",
       public_key: ENV['VAPID_PUBLIC_KEY'],
       private_key: ENV['VAPID_PRIVATE_KEY']
     }
@@ -31,10 +31,5 @@ class PushNotificationWorker < ApplicationWorker
     rescue WebPush::InvalidSubscription, WebPush::ExpiredSubscription => e
       push_subscription.destroy
     end
-  end
-
-  private
-  def mailto_address
-    ENV['VAPID_MAILTO_ADDRESS']
   end
 end
