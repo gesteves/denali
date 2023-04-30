@@ -3,8 +3,8 @@
   <div class="push-notifications" data-controller="push-notifications" data-push-notifications-vapid-public-key-value="<%= ENV['VAPID_PUBLIC_KEY'] %>" data-push-notifications-endpoint-url-value="<%= push_subscribe_path %>">
     <label class="push-notifications__label">
       <input class="push-notifications__checkbox" type="checkbox" data-push-notifications-target="checkbox" data-action="click->push-notifications#toggleSubscription">
-      Get push notifications when new photos are published
+      Get notifications when new photos are published
     </label>
-    <p class="push-notifications__message push-notifications__message--hidden" data-push-notifications-target="message">Some help text.</p>
+    <p class="push-notifications__message push-notifications__message--hidden" data-push-notifications-target="message"></p>
   </div>
 </aside>
