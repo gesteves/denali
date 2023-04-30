@@ -2,10 +2,6 @@
   <%= render partial: 'head' %>
 <% end %>
 
-<% content_for :javascript do %>
-  <%= javascript_pack_tag 'entry', defer: true %>
-<% end %>
-
 <article class="entry">
   <div class="entry__body">
     <h2 class="entry__headline">About <%= @photoblog.name %></h2>

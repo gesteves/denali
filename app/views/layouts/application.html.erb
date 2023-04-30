@@ -12,6 +12,7 @@
     <noscript><%= stylesheet_link_tag 'application', media: 'all' %></noscript>
   <% end %>
   <%= stylesheet_link_tag 'print', media: 'print' %>
+  <%= javascript_pack_tag 'application', defer: true %>
   <%= yield :javascript %>
   <%= render partial: 'partials/analytics_head' %>
 </head>
