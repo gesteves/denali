@@ -21,7 +21,7 @@ export default class extends Controller {
         this.checkboxTarget.checked = false;
       }
     } else if (this.deniedPermission()) {
-      this.disableCheckbox('Push notifications are disabled for this website');
+      this.disableCheckbox('Notifications are disabled for this website in your browser settings');
     } else {
       this.checkboxTarget.checked = false;
     }
@@ -60,7 +60,7 @@ export default class extends Controller {
       if (permission === 'granted') {
         this.subscribeUser();
       } else {
-        this.disableCheckbox('Push notifications are disabled for this website');
+        this.disableCheckbox('Notifications are disabled for this website in your browser settings');
       }
     } catch (error) {
       console.log(error);
