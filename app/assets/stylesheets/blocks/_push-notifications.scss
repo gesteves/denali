@@ -11,16 +11,9 @@
   line-height: var(--line-height-text-alt);
 }
 
-.push-notifications__message {
-  font-size: var(--font-size-text-alt);
-  font-style: italic;
-  line-height: var(--line-height-text-alt);
+.push-notifications__label--disabled {
+  color: var(--color-text-disabled);
 }
-
-.push-notifications__message--hidden {
-  display: none;
-}
-
 .push-notifications__checkbox {
   display: inline-block;
   height: 20px;
