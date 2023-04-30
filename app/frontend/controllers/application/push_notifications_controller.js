@@ -1,7 +1,7 @@
 import { Controller } from 'stimulus';
 
 export default class extends Controller {
-  static targets = ['checkbox', 'message'];
+  static targets = ['checkbox', 'message', 'label'];
   static values = { endpointUrl: String, vapidPublicKey: String };
 
   connect() {
@@ -10,7 +10,7 @@ export default class extends Controller {
 
   async setInitialState() {
     if (!this.isPushSupported()) {
-      this.disableCheckbox('Your browser doesn’t support push notifications');
+      this.disableCheckbox();
     } else if (this.hasPermission()) {
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
@@ -21,7 +21,7 @@ export default class extends Controller {
         this.checkboxTarget.checked = false;
       }
     } else if (this.deniedPermission()) {
-      this.disableCheckbox('You’ll need to allow notifications for this site in your browser’s settings to turn this on');
+      this.disableCheckbox();
     } else {
       this.checkboxTarget.checked = false;
     }
@@ -35,11 +35,10 @@ export default class extends Controller {
     }
   }
 
-  disableCheckbox(message) {
+  disableCheckbox() {
     this.checkboxTarget.checked = false;
     this.checkboxTarget.disabled = true;
-    this.messageTarget.classList.remove('push-notifications__message--hidden')
-    this.messageTarget.innerText = message;
+    this.labelTarget.classList.add('push-notifications__label--disabled')
   }
 
   isPushSupported() {
@@ -60,7 +59,7 @@ export default class extends Controller {
       if (permission === 'granted') {
         this.subscribeUser();
       } else {
-        this.disableCheckbox('Okay, I won’t send you any notifications');
+        this.disableCheckbox();
       }
     } catch (error) {
       console.log(error);

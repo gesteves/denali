@@ -14,6 +14,7 @@
   --color-share-text: white;
   --color-text: #{$color-gray-dark};
   --color-text-alt: #{$color-gray-medium};
+  --color-text-disabled: #{$color-gray-light};
   --color-tooltip: black;
   --color-tooltip-text: white;
   --entry-list-columns: 2;
@@ -46,6 +47,7 @@
     --color-logo-fill: white;
     --color-text: #{$color-gray-very-light};
     --color-text-alt: #{$color-gray-light};
+    --color-text-disabled: #{$color-gray-dark};
     --color-tooltip: #{$color-gray-very-dark};
     --color-tooltip-text: #{$color-gray-very-light};
   }
