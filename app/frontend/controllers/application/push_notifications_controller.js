@@ -13,7 +13,7 @@ export default class extends Controller {
    */
   async setInitialState() {
     if (!this.isPushSupported()) {
-      this.disableCheckbox();
+      this.removeComponent();
     } else if (this.hasPermission()) {
       const registration = await navigator.serviceWorker.ready;
       const subscription = await registration.pushManager.getSubscription();
@@ -43,12 +43,19 @@ export default class extends Controller {
   }
 
   /**
+   * Removes the entire component from the DOM.
+   */
+  removeComponent() {
+    this.element.parentNode.removeChild(this.element);
+  }
+
+  /**
    * Disables the checkbox and adds a disabled style to the label.
    */
   disableCheckbox() {
     this.checkboxTarget.checked = false;
     this.checkboxTarget.disabled = true;
-    this.labelTarget.classList.add('push-notifications__label--disabled')
+    this.labelTarget.classList.add('push-notifications__label--disabled');
   }
 
   /**
