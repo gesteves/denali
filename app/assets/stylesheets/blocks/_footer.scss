@@ -8,12 +8,15 @@
   padding: var(--gutter-horizontal) var(--gutter-vertical);
   width: 100%;
 
-  p,
-  ul {
+  p {
     font-size: var(--font-size-text-alt);
     line-height: var(--line-height-text-alt);
-    margin: 0;
+    margin: 1rem 0 0 0;
     text-align: center;
+
+    @media (min-width: $bp-xxs) {
+      margin: 0;
+    }
   }
 
   @media (min-width: $bp-xxs) {
@@ -29,20 +32,3 @@
   }
 }
 
-.footer__links {
-  li {
-    display: inline-block;
-  }
-
-  li::after {
-    content: ' · ';
-  }
-
-  li:last-of-type::after {
-    content: none;
-  }
-
-  @media (min-width: $bp-xxs) {
-    padding-left: 1rem;
-  }
-}
