@@ -1,12 +1,45 @@
 import { Controller } from 'stimulus';
 
 export default class extends Controller {
-  static values = { subscribeUrl: String, vapidPublicKey: String };
+  static targets = ['checkbox', 'message'];
+  static values = { endpointUrl: String, vapidPublicKey: String };
 
-  initialize() {
-    if (!this.isPushSupported() || this.hasPermission()) {
-      this.removeButton();
+  connect() {
+    this.setInitialState();
+  }
+
+  async setInitialState() {
+    if (!this.isPushSupported()) {
+      this.disableCheckbox('Your browser doesn’t support push notifications');
+    } else if (this.hasPermission()) {
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+
+      if (subscription) {
+        this.checkboxTarget.checked = true;
+      } else {
+        this.checkboxTarget.checked = false;
+      }
+    } else if (this.deniedPermission()) {
+      this.disableCheckbox('You’ll need to allow notifications for this site in your browser’s settings to turn this on');
+    } else {
+      this.checkboxTarget.checked = false;
     }
+  }
+
+  async toggleSubscription() {
+    if (this.checkboxTarget.checked) {
+      await this.requestPermissionAndSubscribe();
+    } else {
+      await this.unsubscribeUser();
+    }
+  }
+
+  disableCheckbox(message) {
+    this.checkboxTarget.checked = false;
+    this.checkboxTarget.disabled = true;
+    this.messageTarget.classList.remove('push-notifications__message--hidden')
+    this.messageTarget.innerText = message;
   }
 
   isPushSupported() {
@@ -17,18 +50,17 @@ export default class extends Controller {
     return Notification.permission === 'granted';
   }
 
-  removeButton() {
-    this.element.parentNode.removeChild(this.element);
+  deniedPermission() {
+    return Notification.permission === 'denied';
   }
 
-  async requestPermission(event) {
-    event.preventDefault();
-
+  async requestPermissionAndSubscribe() {
     try {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
         this.subscribeUser();
-        this.removeButton();
+      } else {
+        this.disableCheckbox('Okay, I won’t send you any notifications');
       }
     } catch (error) {
       console.log(error);
@@ -43,16 +75,30 @@ export default class extends Controller {
         applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKeyValue)
       });
 
-      this.sendSubscriptionToServer(subscription);
+      this.sendSubscriptionToServer(subscription, 'POST');
     } catch (error) {
       console.log(error);
     }
   }
 
-  async sendSubscriptionToServer(subscription) {
+  async unsubscribeUser() {
     try {
-      const response = await fetch(this.subscribeUrlValue, {
-        method: 'POST',
+      const registration = await navigator.serviceWorker.ready;
+      const subscription = await registration.pushManager.getSubscription();
+
+      if (subscription) {
+        await subscription.unsubscribe();
+        this.sendSubscriptionToServer(subscription, 'DELETE');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async sendSubscriptionToServer(subscription, method) {
+    try {
+      const response = await fetch(this.endpointUrlValue, {
+        method: method,
         headers: {
           'Content-Type': 'application/json'
         },

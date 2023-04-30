@@ -1,6 +1,10 @@
-<li>
-  <button class="follow__link" title="Get notifications" aria-labelledby="follow-icon-bell" data-controller="push-notifications" data-push-notifications-subscribe-url-value="<%= push_subscribe_path %>" data-push-notifications-vapid-public-key-value="<%= ENV['VAPID_PUBLIC_KEY'] %>" data-action="click->push-notifications#requestPermission">
-    <%= inline_svg 'bell-solid', class_name: 'follow__icon' %>
-    <span class="sr-only" id="follow-icon-bell">Get notifications</span>
-  </button>
-</li>
+<aside class="elsewhere" aria-labelledby="push-notifications">
+  <h2 class="elsewhere__heading" id="push-notifications">Don’t Miss Any Photos</h2>
+  <div class="push-notifications" data-controller="push-notifications" data-push-notifications-vapid-public-key-value="<%= ENV['VAPID_PUBLIC_KEY'] %>" data-push-notifications-endpoint-url-value="<%= push_subscribe_path %>">
+    <label class="push-notifications__label">
+      <input class="push-notifications__checkbox" type="checkbox" data-push-notifications-target="checkbox" data-action="click->push-notifications#toggleSubscription">
+      Get push notifications when new photos are published
+    </label>
+    <p class="push-notifications__message push-notifications__message--hidden" data-push-notifications-target="message">Some help text.</p>
+  </div>
+</aside>

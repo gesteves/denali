@@ -119,9 +119,10 @@ Rails.application.routes.draw do
   post '/graphql'                      => 'graphql#execute'
 
   #PWA
-  get '/service_worker.js'             => 'service_worker#index', defaults: { format: 'js' }, :as => :service_worker
-  post '/push-notifications/subscribe' => 'push_subscriptions#create', :as => :push_subscribe
-  get '/manifest.json'                 => 'manifest#index', :as => :manifest
+  get    '/service_worker.js'               => 'service_worker#index', defaults: { format: 'js' }, :as => :service_worker
+  get    '/manifest.json'                   => 'manifest#index', :as => :manifest
+  post   '/push-notifications/subscription' => 'push_subscriptions#create', :as => :push_subscribe
+  delete '/push-notifications/subscription' => 'push_subscriptions#destroy'
 
   # Admin
   get '/admin'                         => 'admin#index',      :as => :admin

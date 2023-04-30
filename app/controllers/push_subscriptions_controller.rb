@@ -1,5 +1,5 @@
 class PushSubscriptionsController < ApplicationController
-  skip_before_action :verify_authenticity_token, only: [:create]
+  skip_before_action :verify_authenticity_token
 
   def create
     subscription = push_subscription_params
@@ -13,6 +13,18 @@ class PushSubscriptionsController < ApplicationController
       render json: { status: 'success' }, status: :created
     else
       render json: { errors: push_subscription.errors }, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    subscription = push_subscription_params
+    push_subscription = PushSubscription.find_by(endpoint: subscription[:endpoint])
+
+    if push_subscription
+      push_subscription.destroy
+      render json: { status: 'accepted' }, status: :accepted
+    else
+      render json: { status: 'not found' }, status: :not_found
     end
   end
 
