@@ -107,6 +107,7 @@
   line-height: calc(24/14);
   margin: 0;
   text-align: center;
+  text-wrap: balance;
   width: 100%;
 
   @media (min-width: $bp-xs) {
@@ -132,5 +133,6 @@
   line-height: var(--line-height-text-alt);
   margin: 0;
   text-align: center;
+  text-wrap: balance;
   width: 100%;
 }

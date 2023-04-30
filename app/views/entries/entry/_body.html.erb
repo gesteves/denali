@@ -3,7 +3,7 @@
     <%= render partial: 'entries/entry/photo', collection: @photos, as: :photo %>
     <div class="entry__body">
       <h2 class="entry__headline <%= 'entry__headline--no-body' if entry.body.blank? %>">
-        <%= remove_widows(entry.plain_title).html_safe %>
+        <%= entry.plain_title %>
       </h2>
       <%= entry.formatted_body unless entry.body.blank? %>
     </div>

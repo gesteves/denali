@@ -80,13 +80,6 @@ module ApplicationHelper
     end
   end
 
-  def remove_widows(text)
-    words = text.split(/\s+/)
-    return text if words.size == 1
-    last_words = words.pop(2).join('&nbsp;')
-    words.append(last_words).join(' ')
-  end
-
   def activitypub_activitystream_context
     ["https://www.w3.org/ns/activitystreams",
      {
