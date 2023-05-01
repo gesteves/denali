@@ -183,7 +183,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.0.1)
       activesupport (>= 5.0)
-    graphql (2.0.16)
+    graphql (2.0.21)
     hashie (5.0.0)
     hiredis (0.6.3)
     hkdf (1.0.0)
