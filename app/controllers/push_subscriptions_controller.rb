@@ -22,7 +22,7 @@ class PushSubscriptionsController < ApplicationController
 
     if push_subscription
       push_subscription.destroy
-      render json: { status: 'accepted' }, status: :accepted
+      render json: { status: 'ok' }, status: :ok
     else
       render json: { status: 'not found' }, status: :not_found
     end
