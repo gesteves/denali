@@ -1,4 +1,4 @@
-/* global plausible, clicky */
+/* global plausible */
 
 /**
  * Product-agnostic function to make a page view tracking call.
@@ -8,7 +8,15 @@ export function trackPageView () {
   if (typeof plausible !== 'undefined') {
     plausible('pageview');
   }
-  if (typeof clicky !== 'undefined') {
-    clicky.log(window.location.pathname, document.title, 'pageview');
+}
+
+/**
+ * Product-agnostic function to make an event tracking call.
+ * Currently supports Plausible.
+ */
+export function trackEvent(event, props = {}) {
+  if (typeof plausible !== 'undefined') {
+    plausible(event, { props: props });
   }
 }
+
