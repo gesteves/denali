@@ -285,7 +285,7 @@ GEM
       omniauth (~> 1.9)
     openssl (3.1.0)
     pg (1.4.5)
-    psych (4.0.4)
+    psych (5.1.0)
       stringio
     public_suffix (5.0.1)
     puma (6.0.0)
@@ -338,7 +338,7 @@ GEM
     rb-fsevent (0.11.2)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
-    rdoc (6.4.0)
+    rdoc (6.5.0)
       psych (>= 4.0.0)
     redcarpet (3.6.0)
     redis (5.0.5)
@@ -370,7 +370,7 @@ GEM
     scss-lint (0.38.0)
       rainbow (~> 2.0)
       sass (~> 3.4.1)
-    sdoc (2.4.0)
+    sdoc (2.6.1)
       rdoc (>= 5.0)
     semantic_range (3.0.0)
     sidekiq (7.0.8)
@@ -397,7 +397,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    stringio (3.0.2)
+    stringio (3.0.6)
     strscan (3.0.4)
     thor (1.2.1)
     tilt (2.0.11)
@@ -473,7 +473,7 @@ DEPENDENCIES
   sanitize
   sass-rails (~> 6.0)
   scss-lint
-  sdoc (~> 2.4)
+  sdoc (~> 2.6)
   sidekiq
   sidekiq-scheduler
   spring
