@@ -24,6 +24,7 @@ module Types
     field :formatted_exposure, String, null: true, method: :formatted_exposure, description: "Exposure time of the photo, formatted"
     field :height, Integer, null: false, description: "Height of the original image"
     field :horizontal, Boolean, null: false, method: :is_horizontal?, description: "Whether or not the photo is in landscape orientation"
+    field :instagram_url, String, null: false, description: "URL of a version of the photo optimized for the Instagram feed"
     field :iphone_wallpaper_url, String, null: false, description: "URL of a version of the photo optimized for an iPhone wallpaper"
     field :plain_metadata, String, null: true, description: "Metadata for the photo, in plain text"
     field :reddit_caption, String, null: true, description: "A reddit-friendly caption for this photo"
