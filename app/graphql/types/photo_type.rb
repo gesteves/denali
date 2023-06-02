@@ -48,7 +48,7 @@ module Types
       argument :height, Integer, required: true, prepare: -> (height, ctx) { [MAX_WIDTH, height].min }
     end
     field :instagram_story_url, String, null: false, description: "URL of a version of the photo optimized for Instagram Stories" do
-      argument :crop, Boolean, required: true
+      argument :crop, Boolean, required: false, default_value: false
     end
 
     def urls(widths:)
