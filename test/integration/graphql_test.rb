@@ -31,13 +31,13 @@ class GraphqlTest < ActionDispatch::IntegrationTest
         entry(url: $url) {
           photos {
             instagramUrl
-            instagramStoryUrl(crop: $crop)
+            instagramStoryUrl
           }
         }
       }
     GRAPHQL
 
-    result = DenaliSchema.execute(query_string, variables: { url: entry_url, crop: true })
+    result = DenaliSchema.execute(query_string, variables: { url: entry_url })
     assert result['data']['entry']['photos'].present?
     assert_equal 1, result['data']['entry']['photos'].size
     assert result['data']['entry']['photos'][0]['instagramUrl'].present?
