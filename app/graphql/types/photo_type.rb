@@ -24,9 +24,6 @@ module Types
     field :formatted_exposure, String, null: true, method: :formatted_exposure, description: "Exposure time of the photo, formatted"
     field :height, Integer, null: false, description: "Height of the original image"
     field :horizontal, Boolean, null: false, method: :is_horizontal?, description: "Whether or not the photo is in landscape orientation"
-    field :cropped_instagram_story_url, String, null: false, description: "URL of a version of the photo cropped & optimized for Instagram Stories"
-    field :instagram_story_url, String, null: false, description: "URL of a version of the photo optimized for Instagram Stories"
-    field :instagram_url, String, null: false, description: "URL of a version of the photo optimized for the Instagram feed"
     field :iphone_wallpaper_url, String, null: false, description: "URL of a version of the photo optimized for an iPhone wallpaper"
     field :plain_metadata, String, null: true, description: "Metadata for the photo, in plain text"
     field :reddit_caption, String, null: true, description: "A reddit-friendly caption for this photo"
@@ -49,6 +46,9 @@ module Types
     field :crop_url, String, null: false, description: "URL for the photo, cropped at the given width and height" do
       argument :width, Integer, required: true, prepare: -> (width, ctx) { [MAX_WIDTH, width].min }
       argument :height, Integer, required: true, prepare: -> (height, ctx) { [MAX_WIDTH, height].min }
+    end
+    field :instagram_story_url, String, null: false, description: "URL of a version of the photo optimized for Instagram Stories" do
+      argument :crop, Boolean, required: true
     end
 
     def urls(widths:)
@@ -86,6 +86,10 @@ module Types
 
     def download_url
       object.image.url(disposition: :attachment) if context[:is_authorized]
+    end
+
+    def instagram_story_url(crop:)
+      object.instagram_story_url(crop: crop)
     end
   end
 end
