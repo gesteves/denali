@@ -24,6 +24,7 @@ module Types
     field :formatted_exposure, String, null: true, method: :formatted_exposure, description: "Exposure time of the photo, formatted"
     field :height, Integer, null: false, description: "Height of the original image"
     field :horizontal, Boolean, null: false, method: :is_horizontal?, description: "Whether or not the photo is in landscape orientation"
+    field :cropped_instagram_story_url, String, null: false, description: "URL of a version of the photo cropped & optimized for Instagram Stories"
     field :instagram_story_url, String, null: false, description: "URL of a version of the photo optimized for Instagram Stories"
     field :instagram_url, String, null: false, description: "URL of a version of the photo optimized for the Instagram feed"
     field :iphone_wallpaper_url, String, null: false, description: "URL of a version of the photo optimized for an iPhone wallpaper"

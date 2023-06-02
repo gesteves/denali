@@ -121,6 +121,13 @@ class Photo < ApplicationRecord
     self.url(opts)
   end
 
+  # Returns the url of the image, formatted & sized to fit into instagram stories'
+  # 16:9 ratio but cropped
+  def cropped_instagram_story_url
+    opts = { width: 2160, aspect_ratio: '9:16', quality: 100, format: 'jpeg' }
+    self.url(opts)
+  end
+
   def facebook_card_url
     self.url(width: 1200, format: 'jpeg', aspect_ratio: '1200:630')
   end
