@@ -27,7 +27,7 @@ class GraphqlTest < ActionDispatch::IntegrationTest
     set_up_images(entry)
 
     query_string = <<-GRAPHQL
-      query ($url: String!, $crop: Boolean!) {
+      query ($url: String!) {
         entry(url: $url) {
           photos {
             instagramUrl
