@@ -196,4 +196,11 @@
     border-top: var(--border-thin) solid var(--color-border);
     margin: var(--margin-text);
   }
+
+  iframe {
+    aspect-ratio: var(--aspect-ratio, 16 / 9);
+    display: block;
+    margin: 1.5rem 0;
+    width: 100%;
+  }
 }
