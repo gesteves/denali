@@ -140,7 +140,7 @@ class Photo < ApplicationRecord
   end
 
   def bluesky_url
-    opts = { width: 2048, format: 'jpeg' }
+    opts = { width: 1280, format: 'jpeg' }
     self.url(opts)
   end
 
