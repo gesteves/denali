@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_04_27_230808) do
+ActiveRecord::Schema[7.0].define(version: 2023_08_28_222032) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -120,6 +120,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_04_27_230808) do
     t.string "content_warning"
     t.text "tumblr_text"
     t.boolean "is_sensitive", default: false
+    t.boolean "post_to_bluesky", default: true
+    t.text "bluesky_text"
     t.index ["blog_id"], name: "index_entries_on_blog_id"
     t.index ["hide_from_search_engines"], name: "index_entries_on_hide_from_search_engines"
     t.index ["photos_count"], name: "index_entries_on_photos_count"

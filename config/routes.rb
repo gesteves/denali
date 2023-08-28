@@ -40,6 +40,7 @@ Rails.application.routes.draw do
         get 'instagram'
         get 'tumblr_reblog'
         get 'mastodon'
+        get 'bluesky'
         patch 'publish'
         patch 'queue'
         patch 'draft'
@@ -48,6 +49,7 @@ Rails.application.routes.draw do
         post 'tumblr_reblog'
         post 'tumblr_update'
         post 'mastodon'
+        post 'bluesky'
         post 'refresh_metadata'
       end
       collection do

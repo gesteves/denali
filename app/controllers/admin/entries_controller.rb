@@ -302,6 +302,33 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def bluesky
+    @entry = @photoblog.entries.published.find(params[:id])
+    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
+    if request.get?
+      @text = @entry.bluesky_caption
+      respond_to do |format|
+        format.html {
+          if params[:modal]
+            render layout: nil
+          else
+            render
+          end
+        }
+      end
+    elsif request.post?
+      BlueskyWorker.perform_async(@entry.id, params[:text])
+      @message = 'Your entry was shared on Bluesky.'
+      respond_to do |format|
+        format.html {
+          flash[:success] = @message
+          redirect_to session[:redirect_url] || admin_entry_path(@entry)
+        }
+        format.js { render 'admin/shared/notify' }
+      end
+    end
+  end
+
   def tumblr
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
@@ -384,7 +411,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_tumblr, :post_to_mastodon, :mastodon_text, :instagram_text, :tumblr_text, :show_location, :hide_from_search_engines, :content_warning, :is_sensitive, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_tumblr, :post_to_mastodon, :post_to_bluesky, :bluesky_text, :mastodon_text, :instagram_text, :tumblr_text, :show_location, :hide_from_search_engines, :content_warning, :is_sensitive, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location])
     end
 
     def set_redirect_url

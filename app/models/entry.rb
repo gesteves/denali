@@ -293,6 +293,7 @@ class Entry < ApplicationRecord
     OpenGraphWorker.perform_async(self.id)
     InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
     MastodonWorker.perform_async(self.id, self.mastodon_caption) if self.post_to_mastodon
+    BlueskyWorker.perform_async(self.id, self.bluesky_caption) if self.post_to_bluesky
     TumblrWorker.perform_async(self.id) if self.post_to_tumblr
     Webhook.deliver_all(self)
     PushSubscription.deliver_all(self)
@@ -454,6 +455,12 @@ class Entry < ApplicationRecord
     end
 
     caption << meta.join("\n").strip
+    caption.reject(&:blank?).join("\n\n")
+  end
+
+  def bluesky_caption
+    caption = [self.plain_title]
+    caption << self.bluesky_text
     caption.reject(&:blank?).join("\n\n")
   end
 
