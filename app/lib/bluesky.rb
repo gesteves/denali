@@ -97,13 +97,12 @@ class Bluesky
     }
 
     response = HTTParty.post("#{@base_url}/xrpc/com.atproto.server.createSession", body: body.to_json, headers: { "Content-Type" => "application/json" })
-
+    logger.info(response.body)
     if response.success?
       response = JSON.parse(response.body)
-
       Rails.cache.write(did_key, response["did"])
       Rails.cache.write(access_token_key, response["accessJwt"], expires_in: 1.hour)
-      Rails.cache.write(refresh_token_key, response["refreshJwt"])
+      Rails.cache.write(refresh_token_key, response["refreshJwt"], expires_in: 1.hour)
 
       response
     else
@@ -129,7 +128,7 @@ class Bluesky
       Rails.cache.write(access_token_key, response["accessJwt"], expires_in: 1.hour)
       response["accessJwt"]
     else
-      raise "Failed to refresh session: #{response.body}"
+      create_session["accessJwt"]
     end
   end
 
