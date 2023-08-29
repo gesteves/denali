@@ -83,7 +83,7 @@ class Bluesky
   end
 
   def access_token
-    Rails.cache.read(access_token_key) || refresh_session
+    Rails.cache.read(access_token_key) || create_session["accessJwt"]
   end
 
   def did
@@ -97,7 +97,6 @@ class Bluesky
     }
 
     response = HTTParty.post("#{@base_url}/xrpc/com.atproto.server.createSession", body: body.to_json, headers: { "Content-Type" => "application/json" })
-    logger.info(response.body)
     if response.success?
       response = JSON.parse(response.body)
       Rails.cache.write(did_key, response["did"])
