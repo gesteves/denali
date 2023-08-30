@@ -26,11 +26,28 @@ export function trackEvent(event, props = {}) {
 }
 
 /**
- * Removes UTM params and other crap from the page URL
+ * Removes specific UTM params and other query parameters from the page URL.
  */
 export function cleanUpUrl() {
-  if (window.location.search) {
-    const cleanURL = window.location.origin + window.location.pathname;
-    window.history.replaceState({}, document.title, cleanURL);
-  }
+  const currentUrl = new URL(window.location.href);
+  const params = currentUrl.searchParams;
+
+  // List of query parameters to remove
+  const paramsToRemove = [
+      'ref',
+      'source',
+      'utm_source',
+      'utm_medium',
+      'utm_campaign',
+      'utm_content',
+      'utm_term'
+  ];
+
+  paramsToRemove.forEach(param => {
+      params.delete(param);
+  });
+
+  const cleanURL = window.location.origin + window.location.pathname + (params.toString() ? '?' + params.toString() : '');
+  window.history.replaceState({}, document.title, cleanURL);
 }
+
