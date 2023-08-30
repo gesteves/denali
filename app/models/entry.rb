@@ -444,7 +444,7 @@ class Entry < ApplicationRecord
       meta << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
     end
 
-    meta << "🔗 #{self.permalink_url}"
+    meta << "🔗 #{self.permalink_url(ref: 'Mastodon')}"
     meta << "🏷️ #{mastodon_tags}" if mastodon_tags.present?
 
     caption = [self.plain_title]
@@ -514,7 +514,7 @@ class Entry < ApplicationRecord
     end
 
     caption = []
-    caption << "[#{self.plain_title}](#{self.permalink_url})"
+    caption << "[#{self.plain_title}](#{self.permalink_url(ref: 'Tumblr')})"
 
     if self.tumblr_text.present?
       caption << self.tumblr_text
