@@ -12,7 +12,7 @@ function setupPlausibleQueue() {
  */
 export function trackPageView() {
   setupPlausibleQueue();
-  plausible('pageview');
+  plausible('pageview', { u: window.location.href });
   cleanUpUrl();
 }
 
