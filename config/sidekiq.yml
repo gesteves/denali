@@ -11,7 +11,7 @@
       queue: high
       description: "Attempts to publish a queued entry every hour."
     share_random_photo:
-      cron: '0 14 * * *'
+      cron: '0 12 * * *'
       class: RandomShareWorker
       queue: high
       description: "Shares a random photo every day."
