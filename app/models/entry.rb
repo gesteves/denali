@@ -459,8 +459,16 @@ class Entry < ApplicationRecord
   end
 
   def bluesky_caption
-    caption = [self.plain_title]
-    caption << self.bluesky_text
+    meta = []
+
+    if is_photo?
+      photo = photos.first
+      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
+    end
+
+    caption = [self.plain_title, self.bluesky_text, meta.join("\n").strip]
     caption.reject(&:blank?).join("\n\n")
   end
 
