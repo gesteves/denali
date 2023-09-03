@@ -1,7 +1,7 @@
 class TumblrReblogWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id, text, state = 'auto')
+  def perform(entry_id, text = nil, state = 'auto')
     return if !Rails.env.production?
     return if ENV['TUMBLR_CONSUMER_KEY'].blank? || ENV['TUMBLR_CONSUMER_SECRET'].blank? || ENV['TUMBLR_ACCESS_TOKEN'].blank? || ENV['TUMBLR_ACCESS_TOKEN_SECRET'].blank?
 
