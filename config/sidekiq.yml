@@ -10,8 +10,18 @@
       class: PublishWorker
       queue: high
       description: "Attempts to publish a queued entry every hour."
-    share_random_photo:
-      cron: '0 12 * * *'
-      class: RandomShareWorker
+    random_bluesky:
+      cron: '0 12,14,16,18 * * *'
+      class: RandomBlueskyWorker
       queue: high
-      description: "Shares a random photo every day."
+      description: "Shares a random photo on Bluesky."
+    random_mastodon:
+      cron: '0 12 * * *'
+      class: RandomMastodonWorker
+      queue: high
+      description: "Shares a random photo on Mastodon."
+    random_tumblr:
+      cron: '0 12,14,16,18 * * *'
+      class: RandomTumblrWorker
+      queue: high
+      description: "Shares a random photo on Tumblr."
