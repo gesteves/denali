@@ -38,7 +38,7 @@ class Mastodon
     
     body = {
       file: URI.open(url),
-      description: HTMLEntities.new.decode(transliterate(alt_text)),
+      description: HTMLEntities.new.decode(ActiveSupport::Inflector.transliterate(alt_text)),
       focus: focal_point&.join(',')
     }.compact
 
