@@ -37,17 +37,17 @@ class Mastodon
     endpoint = "#{@base_url}/api/v2/media"
     
     body = {
-      file: URI.open(url),
+      file: HTTParty::UploadIO.new(URI.open(url).path, 'image/jpeg'),
       description: HTMLEntities.new.decode(alt_text),
       focus: focal_point&.join(',')
     }.compact
-
+  
     headers = {
       'Authorization': "Bearer #{@bearer_token}"
     }
-
-    response = HTTParty.post(endpoint, body: body, headers: headers)
-
+  
+    response = HTTParty.post(endpoint, headers: headers, body: body, multipart: true)
+  
     if response.code == 200
       JSON.parse(response.body)
     else
