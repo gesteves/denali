@@ -36,22 +36,18 @@ class Mastodon
   def upload_media(url:, alt_text:, focal_point: nil)
     endpoint = "#{@base_url}/api/v2/media"
     
-    file = File.open(URI.open(url).path, 'rb')
-    
     body = {
-      file: file,
+      file: URI.open(url),
       description: HTMLEntities.new.decode(alt_text),
       focus: focal_point&.join(',')
     }.compact
-  
+
     headers = {
       'Authorization': "Bearer #{@bearer_token}"
     }
-  
+
     response = HTTParty.post(endpoint, body: body, headers: headers)
-  
-    file.close
-  
+
     if response.code == 200
       JSON.parse(response.body)
     else
