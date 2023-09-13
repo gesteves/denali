@@ -36,8 +36,10 @@ class Mastodon
   def upload_media(url:, alt_text:, focal_point: nil)
     endpoint = "#{@base_url}/api/v2/media"
     
+    file_part = HTTParty::Request::MultipartPost::UploadIO.new(URI.open(url).path, 'image/jpeg')
+  
     body = {
-      file: HTTParty::UploadIO.new(URI.open(url).path, 'image/jpeg'),
+      file: file_part,
       description: HTMLEntities.new.decode(alt_text),
       focus: focal_point&.join(',')
     }.compact
@@ -46,12 +48,12 @@ class Mastodon
       'Authorization': "Bearer #{@bearer_token}"
     }
   
-    response = HTTParty.post(endpoint, headers: headers, body: body, multipart: true)
+    response = HTTParty.post(endpoint, body: body, headers: headers, multipart: true)
   
     if response.code == 200
       JSON.parse(response.body)
     else
       raise response.body
     end
-  end
+  end  
 end
