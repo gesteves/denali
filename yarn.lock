@@ -1094,10 +1094,10 @@
     webpack-cli "^3.3.12"
     webpack-sources "^1.4.3"
 
-"@shopify/draggable@1.0.0-beta.7":
-  version "1.0.0-beta.7"
-  resolved "https://registry.yarnpkg.com/@shopify/draggable/-/draggable-1.0.0-beta.7.tgz#58c3619ffd88841d337c2922506f4a85540ba7ee"
-  integrity sha512-xNHOcZScvRWfvPeCFyX0JRCuzJuzX1OSjIoJbTb8vYSkHrmw2nEKtnRQZa4p7SIGMxNC7LE50TPWl0J7XV6D0g==
+"@shopify/draggable@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@shopify/draggable/-/draggable-1.0.0.tgz#a5b17c481ae7cb1a8b99916cf5a13663dbd8f187"
+  integrity sha512-bqhTBDivaooGc/7prZxNS3Lvu8iiZr8xVZefeoNI5N2mhEdPU3DeYgMUxLnET8sJIaIVZp21gR0j+MF/qjf21Q==
 
 "@trysound/sax@0.2.0":
   version "0.2.0"
