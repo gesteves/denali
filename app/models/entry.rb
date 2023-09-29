@@ -466,7 +466,7 @@ class Entry < ApplicationRecord
       meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
-      meta << bluesky_tags
+      meta << "🏷️ #{bluesky_tags}" if bluesky_tags.present?
     end
 
     caption = [self.plain_title, self.bluesky_text, meta.join("\n").strip]
