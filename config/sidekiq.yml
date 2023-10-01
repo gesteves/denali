@@ -10,18 +10,36 @@
       class: PublishWorker
       queue: high
       description: "Attempts to publish a queued entry every hour."
-    random_bluesky:
-      cron: '0 12,14,16,18 * * *'
+    random_bluesky_landscape:
+      cron: '0 14 * * *'
       class: RandomBlueskyWorker
       queue: high
-      description: "Shares a random photo on Bluesky."
-    random_mastodon:
-      cron: '0 12,18 * * *'
+      keyword_argument: true
+      args: { tag: 'Landscapes'}
+      description: "Shares a random landscape photo on Bluesky."
+    random_bluesky_wildlife:
+      cron: '0 18 * * *'
+      class: RandomBlueskyWorker
+      queue: high
+      keyword_argument: true
+      args: { tag: 'Wildlife'}
+      description: "Shares a random wildlife photo on Bluesky."
+    random_mastodon_landscape:
+      cron: '0 14 * * *'
       class: RandomMastodonWorker
       queue: high
-      description: "Shares a random photo on Mastodon."
+      keyword_argument: true
+      args: { tag: 'Landscapes'}
+      description: "Shares a random landscape photo on Mastodon."
+    random_mastodon_wildlife:
+      cron: '0 18 * * *'
+      class: RandomMastodonWorker
+      queue: high
+      keyword_argument: true
+      args: { tag: 'Wildlife'}
+      description: "Shares a random wildlife photo on Mastodon."
     random_tumblr:
-      cron: '0 12,14,16,18 * * *'
+      cron: '0 14,18 * * *'
       class: RandomTumblrWorker
       queue: high
       description: "Shares a random photo on Tumblr."
