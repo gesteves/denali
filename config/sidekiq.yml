@@ -44,7 +44,7 @@
       queue: high
       keyword_argument: true
       args: { tag: 'Landscapes', platform: 'Tumblr' }
-      description: "Shares a random landscape photo on Mastodon."
+      description: "Shares a random landscape photo on Tumblr."
     random_tumblr_wildlife:
       cron: '0 18 * * *'
       class: RandomShareWorker
