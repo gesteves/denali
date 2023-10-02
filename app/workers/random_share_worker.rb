@@ -9,11 +9,11 @@ class RandomShareWorker < ApplicationWorker
 
     case platform
     when 'Bluesky'
-      entry = Entry.find(photoblog.entries.published.photo_entries.tagged_with(tag, any: true).where('published_at >= ?', 4.years.ago).pluck(:id).sample)
-      BlueskyWorker.perform_async(entry.id, entry.bluesky_caption) if entry.post_to_bluesky
+      entry = Entry.find(photoblog.entries.published.photo_entries.tagged_with(tag, any: true).where('published_at >= ?', 4.years.ago).where(post_to_bluesky: true).pluck(:id).sample)
+      BlueskyWorker.perform_async(entry.id, entry.bluesky_caption) if entry.present?
     when 'Mastodon'
-      entry = Entry.find(photoblog.entries.published.photo_entries.tagged_with(tag, any: true).where('published_at >= ?', 4.years.ago).pluck(:id).sample)
-      MastodonWorker.perform_async(entry.id, entry.mastodon_caption) if entry.post_to_mastodon
+      entry = Entry.find(photoblog.entries.published.photo_entries.tagged_with(tag, any: true).where('published_at >= ?', 4.years.ago).where(post_to_mastodon: true).pluck(:id).sample)
+      MastodonWorker.perform_async(entry.id, entry.mastodon_caption) if entry.present?
     when 'Tumblr'
       entry = Entry.find(photoblog.entries.posted_on_tumblr.photo_entries.tagged_with(tag, any: true).where('published_at >= ?', 4.years.ago).pluck(:id).sample)
       TumblrReblogWorker.perform_async(entry.id)
