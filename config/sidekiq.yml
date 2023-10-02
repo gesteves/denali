@@ -14,41 +14,35 @@
       cron: '0 14 * * *'
       class: RandomShareWorker
       queue: high
-      keyword_argument: true
-      args: { tag: 'Landscapes', platform: 'Bluesky' }
+      args: ['Landscapes', 'Bluesky']
       description: "Shares a random landscape photo on Bluesky."
     random_bluesky_wildlife:
       cron: '0 18 * * *'
       class: RandomShareWorker
       queue: high
-      keyword_argument: true
-      args: { tag: 'Wildlife', platform: 'Bluesky' }
+      args: ['Wildlife', 'Bluesky']
       description: "Shares a random wildlife photo on Bluesky."
     random_mastodon_landscape:
       cron: '0 14 * * *'
       class: RandomShareWorker
       queue: high
-      keyword_argument: true
-      args: { tag: 'Landscapes', platform: 'Mastodon' }
+      args: ['Landscapes', 'Mastodon']
       description: "Shares a random landscape photo on Mastodon."
     random_mastodon_wildlife:
       cron: '0 18 * * *'
       class: RandomShareWorker
       queue: high
-      keyword_argument: true
-      args: { tag: 'Wildlife', platform: 'Mastodon' }
+      args: ['Wildlife', 'Mastodon']
       description: "Shares a random wildlife photo on Mastodon."
     random_tumblr_landscape:
       cron: '0 14 * * *'
       class: RandomShareWorker
       queue: high
-      keyword_argument: true
-      args: { tag: 'Landscapes', platform: 'Tumblr' }
+      args: ['Landscapes', 'Tumblr']
       description: "Shares a random landscape photo on Tumblr."
     random_tumblr_wildlife:
       cron: '0 18 * * *'
       class: RandomShareWorker
       queue: high
-      keyword_argument: true
-      args: { tag: 'Wildlife', platform: 'Tumblr' }
+      args: ['Wildlife', 'Tumblr']
       description: "Shares a random wildlife photo on Tumblr."
