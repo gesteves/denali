@@ -1,8 +1,6 @@
 
 class RandomShareWorker < ApplicationWorker
-  def perform(args)
-    tag = args.first
-    platform = args.last
+  def perform(tag, platform)
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
     logger.info "[Queue] Attempting to share a random entry on #{platform}."
     photoblog = Blog.first
