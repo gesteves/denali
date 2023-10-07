@@ -7,7 +7,7 @@
     "node": "16.x"
   },
   "dependencies": {
-    "@rails/ujs": "^7.0.8",
+    "@rails/ujs": "^7.1.0",
     "@rails/webpacker": "^5.4.4",
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
