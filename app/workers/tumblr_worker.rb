@@ -30,7 +30,7 @@ class TumblrWorker < ApplicationWorker
       tags: entry.tumblr_tags,
       slug: entry.slug,
       caption: entry.tumblr_caption,
-      source_url: entry.permalink_url(ref: 'Tumblr'),
+      source_url: entry.permalink_url,
       format: 'markdown',
       state: state,
       date: entry.published_at.to_s,

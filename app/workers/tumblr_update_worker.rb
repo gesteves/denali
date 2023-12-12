@@ -38,7 +38,7 @@ class TumblrUpdateWorker < ApplicationWorker
       format: post_format,
       tags: entry.tumblr_tags,
       slug: entry.slug,
-      source_url: entry.permalink_url(ref: 'Tumblr'),
+      source_url: entry.permalink_url,
       date: entry.published_at.to_s,
       data: entry&.photos&.map { |p| URI.open(p.url(w: 2048)).path }
     }

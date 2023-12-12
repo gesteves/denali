@@ -1,8 +1,8 @@
 <% cache entry do %>
   <item>
-    <guid isPermaLink="true"><%= entry.permalink_url(ref: 'Feed') %></guid>
+    <guid isPermaLink="true"><%= entry.permalink_url %></guid>
     <pubDate><%= entry.published_at.utc.rfc822 %></pubDate>
-    <link><%= entry.permalink_url(ref: 'Feed') %></link>
+    <link><%= entry.permalink_url %></link>
     <title><%= entry.plain_title %></title>
     <description>
       <%= html_escape render(partial: 'entries/feed/feed_entry_body', formats: :html, object: entry, as: :entry).to_str %>
