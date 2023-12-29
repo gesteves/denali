@@ -669,6 +669,18 @@ class Entry < ApplicationRecord
     "https://www.tumblr.com/#{user.profile.tumblr_username}/#{tumblr_id}/"
   end
 
+  def track_recently_shared(platform)
+    key = "recently_shared:#{platform.downcase}"
+    default_limit = 100
+
+    limit = ENV['SHARE_RANDOM_PHOTOS_LIMIT']&.to_i
+    limit = default_limit unless limit&.positive?
+    limit -= 1
+
+    $redis.lpush(key, self.id)
+    $redis.ltrim(key, 0, limit)
+  end
+
   private
 
   def url_opts(opts)

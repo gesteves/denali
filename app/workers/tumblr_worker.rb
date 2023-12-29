@@ -44,6 +44,7 @@ class TumblrWorker < ApplicationWorker
     # (it'll change when the post gets published.)
     entry.tumblr_id = response['id_string']
     entry.save
+    entry.track_recently_shared('Tumblr')
 
     # Enqueue a job to fetch and store the Tumblr post's metadata
     # (the new Tumblr ID if and when it changes, and the reblog key.)

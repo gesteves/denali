@@ -37,5 +37,6 @@ class TumblrReblogWorker < ApplicationWorker
 
     response = tumblr.reblog(tumblr_username, opts)
     raise response.to_s if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
+    entry.track_recently_shared('Tumblr')
   end
 end

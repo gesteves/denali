@@ -10,22 +10,13 @@ class RandomShareWorker < ApplicationWorker
     case platform
     when 'Bluesky'
       entry = find_eligible_entry(tag, 'Bluesky')
-      if entry.present?
-        BlueskyWorker.perform_async(entry.id, entry.bluesky_caption)
-        record_share_in_redis(entry.id, 'Bluesky')
-      end
+      BlueskyWorker.perform_async(entry.id, entry.bluesky_caption) if entry.present?
     when 'Mastodon'
       entry = find_eligible_entry(tag, 'Mastodon')
-      if entry.present?
-        MastodonWorker.perform_async(entry.id, entry.mastodon_caption)
-        record_share_in_redis(entry.id, 'Mastodon')
-      end
+      MastodonWorker.perform_async(entry.id, entry.mastodon_caption) if entry.present?
     when 'Tumblr'
       entry = find_eligible_entry(tag, 'Tumblr')
-      if entry.present?
-        TumblrReblogWorker.perform_async(entry.id)
-        record_share_in_redis(entry.id, 'Tumblr')
-      end
+      TumblrReblogWorker.perform_async(entry.id) if entry.present?
     end
   end
 
@@ -43,25 +34,9 @@ class RandomShareWorker < ApplicationWorker
       photoblog.entries.posted_on_tumblr.photo_entries.tagged_with(tag, any: true).where('published_at >= ?', 4.years.ago).pluck(:id)
     end
 
-    recently_shared_ids = $redis.lrange("randomly_shared_entries:#{platform}", 0, -1)
+    recently_shared_ids = $redis.lrange("recently_shared:#{platform.downcase}", 0, -1)
     eligible_entry_ids -= recently_shared_ids.map(&:to_i)
 
     eligible_entry_ids.empty? ? nil : Entry.find(eligible_entry_ids.sample)
   end
-
-  def recently_shared?(entry_id, platform)
-    $redis.lrange("randomly_shared_entries:#{platform}", 0, -1).include?(entry_id.to_s)
-  end
-
-  def record_share_in_redis(entry_id, platform)
-    default_limit = 100
-
-    limit = ENV['SHARE_RANDOM_PHOTOS_LIMIT']&.to_i
-    limit = default_limit unless limit&.positive?
-    limit -= 1
-
-    $redis.lpush("randomly_shared_entries:#{platform}", entry_id)
-    $redis.ltrim("randomly_shared_entries:#{platform}", 0, limit)
-  end
-
 end
