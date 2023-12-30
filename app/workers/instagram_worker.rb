@@ -25,6 +25,7 @@ class InstagramWorker < ApplicationWorker
     end
 
     profile_ids.each { |id| post_to_buffer(id, opts, state) }
+    entry.track_recently_shared("Instagram")
   end
 
   private
