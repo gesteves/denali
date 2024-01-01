@@ -27,11 +27,11 @@ class RandomShareWorker < ApplicationWorker
 
     eligible_entry_ids = case platform
     when 'Bluesky'
-      photoblog.entries.published.photo_entries.tagged_with(tag, any: true).where(post_to_bluesky: true).pluck(:id)
+      photoblog.entries.published.photo_entries.tagged_with(tag).tagged_with("Black & White").tagged_with("United States").where(post_to_bluesky: true).pluck(:id)
     when 'Mastodon'
-      photoblog.entries.published.photo_entries.tagged_with(tag, any: true).where(post_to_mastodon: true).pluck(:id)
+      photoblog.entries.published.photo_entries.tagged_with(tag).tagged_with("Black & White").tagged_with("United States").where(post_to_mastodon: true).pluck(:id)
     when 'Tumblr'
-      photoblog.entries.posted_on_tumblr.photo_entries.tagged_with(tag, any: true).pluck(:id)
+      photoblog.entries.posted_on_tumblr.photo_entries.tagged_with(tag).pluck(:id)
     end
 
     recently_shared_ids = $redis.lrange("recently_shared:#{platform.downcase}", 0, -1)
