@@ -25,14 +25,7 @@ class RandomShareWorker < ApplicationWorker
   def find_eligible_entry(tag, platform)
     photoblog = Blog.first
 
-    eligible_entry_ids = case platform
-    when 'Bluesky'
-      photoblog.entries.published.photo_entries.tagged_with(tag).tagged_with("Black & White").tagged_with("United States").where(post_to_bluesky: true).pluck(:id)
-    when 'Mastodon'
-      photoblog.entries.published.photo_entries.tagged_with(tag).tagged_with("Black & White").tagged_with("United States").where(post_to_mastodon: true).pluck(:id)
-    when 'Tumblr'
-      photoblog.entries.posted_on_tumblr.photo_entries.tagged_with(tag).pluck(:id)
-    end
+    eligible_entry_ids = photoblog.entries.posted_on_tumblr.photo_entries.tagged_with(tag).pluck(:id)
 
     recently_shared_ids = $redis.lrange("recently_shared:#{platform.downcase}", 0, -1)
     eligible_entry_ids -= recently_shared_ids.map(&:to_i)
