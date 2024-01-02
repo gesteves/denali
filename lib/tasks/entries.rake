@@ -7,6 +7,8 @@ namespace :entries do
     # Updating the fields
     entries_to_update.find_each do |entry|
       entry.update(
+        post_to_flickr: false,
+        post_to_flickr_groups: false,
         post_to_instagram: false,
         post_to_tumblr: false,
         post_to_mastodon: false,
