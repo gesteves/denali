@@ -120,7 +120,7 @@ GEM
     aws-sigv4 (1.6.0)
       aws-eventstream (~> 1, >= 1.0.2)
     bindex (0.8.1)
-    bootsnap (1.15.0)
+    bootsnap (1.17.1)
       msgpack (~> 1.2)
     brakeman (6.0.0)
     brotli (0.4.0)
@@ -238,7 +238,7 @@ GEM
     minitest (5.19.0)
     mock_redis (0.36.0)
       ruby2_keywords
-    msgpack (1.6.0)
+    msgpack (1.7.2)
     multi_json (1.15.0)
     multi_xml (0.6.0)
     multipart-post (2.2.3)
