@@ -12,9 +12,26 @@ function setupPlausibleQueue() {
  */
 export function trackPageView() {
   setupPlausibleQueue();
-  plausible('pageview', { u: window.location.href });
+
+  // Extract the 'q' query parameter
+  const currentUrl = new URL(window.location.href);
+  const queryParams = currentUrl.searchParams;
+  const searchQuery = queryParams.get('q');
+
+  // Prepare the parameters object, including the page URL
+  const params = { u: currentUrl.href };
+
+  // If 'q' parameter exists, add 'search_query' to the properties
+  if (searchQuery) {
+    params.props = { ...params.props, search_query: searchQuery };
+  }
+
+  // Send the pageview event to Plausible with the parameters
+  plausible('pageview', params);
+
   cleanUpUrl();
 }
+
 
 /**
  * Product-agnostic function to make an event tracking call.
