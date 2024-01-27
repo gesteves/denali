@@ -56,19 +56,9 @@ module ApplicationHelper
     end
   end
 
-  # Embed the Blurhash image in an SVG with a blur filter
-  # https://css-tricks.com/the-blur-up-technique-for-loading-background-images/#recreating-the-blur-filter-with-svg
   def blurhash_svg(photo)
     svg = render partial: "partials/blurhash", locals: { width: photo.width, height: photo.height, blurhash: photo.blurhash_data_uri }
     "data:image/svg+xml;charset=utf-8,#{u svg.gsub(/\s+/, ' ')}"
-  end
-
-  def css_photo_dimensions(photo)
-    if photo.has_dimensions?
-      "--photo-height:#{photo.height};--photo-width:#{photo.width}"
-    elsif @photoblog.placeholder_processed?
-      "--photo-height:#{@photoblog.placeholder.metadata[:height]};--photo-width:#{@photoblog.placeholder.metadata[:width]}"
-    end
   end
 
   def inline_asset(filename, opts = {})
