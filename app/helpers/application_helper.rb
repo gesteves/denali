@@ -56,6 +56,8 @@ module ApplicationHelper
     end
   end
 
+  # Embed the Blurhash image in an SVG with a blur filter
+  # https://css-tricks.com/the-blur-up-technique-for-loading-background-images/#recreating-the-blur-filter-with-svg
   def blurhash_svg(photo)
     svg = render partial: "partials/blurhash", locals: { width: photo.width, height: photo.height, blurhash: photo.blurhash_data_uri }
     "data:image/svg+xml;charset=utf-8,#{u svg.gsub(/\s+/, ' ')}"
