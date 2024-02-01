@@ -431,27 +431,14 @@ class Entry < ApplicationRecord
   def mastodon_caption
     meta = []
 
-    if is_photo?
-      photo = photos.first
-      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
-
-      location = []
-      location << photo.formatted_location if photo.formatted_location.present?
-      location << "#{photo.territory_list} land" if photo.territories.present?
-
-      meta << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-    end
-
     meta << "🔗 #{self.permalink_url}"
     meta << "🏷️ #{mastodon_tags}" if mastodon_tags.present?
 
-    caption = [self.plain_title]
+    caption = []
     if self.mastodon_text.present?
       caption << self.mastodon_text
     else
-      caption << self.plain_body
+      caption << self.plain_title
     end
 
     caption << meta.join("\n").strip
@@ -461,15 +448,17 @@ class Entry < ApplicationRecord
   def bluesky_caption
     meta = []
 
-    if is_photo?
-      photo = photos.first
-      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
-      meta << "🏷️ #{bluesky_tags}" if bluesky_tags.present?
+    meta << "🔗 #{self.permalink_url}"
+    meta << "🏷️ #{bluesky_tags}" if bluesky_tags.present?
+
+    caption = []
+    if self.bluesky_text.present?
+      caption << self.bluesky_text
+    else
+      caption << self.plain_title
     end
 
-    caption = [self.plain_title, self.bluesky_text, meta.join("\n").strip]
+    caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
 

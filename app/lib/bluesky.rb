@@ -34,24 +34,6 @@ class Bluesky
       "images" => embedded_images
     } unless embedded_images.empty?
 
-    if url.present?
-      title = text.split(/\n+/).first
-      request_body[:record][:facets] = [
-        {
-          "features" => [
-            {
-              "uri" => url,
-              "$type" => "app.bsky.richtext.facet#link"
-            }
-          ],
-          "index" => {
-            "byteStart" => 0,
-            "byteEnd" => title.bytesize
-          }
-        }
-      ]
-    end
-
     headers = {
       "Authorization" => "Bearer #{access_token}",
       "Content-Type" => "application/json"
