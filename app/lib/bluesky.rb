@@ -38,8 +38,7 @@ class Bluesky
   
     if urls.any?
       request_body[:record][:facets] = []
-  
-      # Add facets for each URL found in the text
+      byte_offset = 0
       urls.each do |url|
         facet = {
           "features" => [
@@ -49,11 +48,13 @@ class Bluesky
             }
           ],
           "index" => {
-            "byteStart" => text.index(url),
-            "byteEnd" => text.index(url) + url.length
+            "byteStart" => text.byteslice(byte_offset..-1).index(url) + byte_offset,
+            "byteEnd" => text.byteslice(byte_offset..-1).index(url) + byte_offset + url.bytesize
           }
         }
         request_body[:record][:facets] << facet
+    
+        byte_offset += text.byteslice(byte_offset..-1).index(url) + byte_offset + url.bytesize
       end
     end
   
