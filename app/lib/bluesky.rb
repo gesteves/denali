@@ -7,19 +7,21 @@ class Bluesky
     }
   end
 
-  def skeet(text:, url: nil, photos: [])
-
+  def skeet(text:, photos: [])
     embedded_images = photos.take(4).map do |image_hash|
       cid = upload_photo(image_hash[:url])["blob"]["ref"]["$link"]
       {
         image: {
-            cid: cid,
-            mimeType: "image/jpeg"
+          cid: cid,
+          mimeType: "image/jpeg"
         },
         alt: image_hash[:alt_text]
       }
     end
-
+  
+    # Regular expression to find URLs in the text
+    urls = text.scan(/https?:\/\/\S+/)
+  
     request_body = {
       repo: did,
       collection: "app.bsky.feed.post",
@@ -28,17 +30,39 @@ class Bluesky
         createdAt: Time.now.iso8601
       }
     }
-
+  
     request_body[:record][:embed] = {
       "$type" => "app.bsky.embed.images",
       "images" => embedded_images
     } unless embedded_images.empty?
-
+  
+    if urls.any?
+      request_body[:record][:facets] = []
+  
+      # Add facets for each URL found in the text
+      urls.each do |url|
+        title = url # You can customize this to extract a title if needed
+        facet = {
+          "features" => [
+            {
+              "uri" => url,
+              "$type" => "app.bsky.richtext.facet#link"
+            }
+          ],
+          "index" => {
+            "byteStart" => text.index(url),
+            "byteEnd" => text.index(url) + url.length
+          }
+        }
+        request_body[:record][:facets] << facet
+      end
+    end
+  
     headers = {
       "Authorization" => "Bearer #{access_token}",
       "Content-Type" => "application/json"
     }
-
+    
     response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
                               body: request_body.to_json,
                               headers: headers)
