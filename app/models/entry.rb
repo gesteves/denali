@@ -464,9 +464,10 @@ class Entry < ApplicationRecord
 
   def bluesky_tags
     mammals = ['Bears', 'Wolves', 'Coyotes', 'Bison', 'Moose', 'Red Foxes', 'Pronghorn', 'Porcupines', 'Bighorn Sheep']
-    mastodon_tags = []
-    mastodon_tags << 'mammals' if (combined_tag_list & mammals).present?
-    mastodon_tags.map { |t| "##{t}" }.join(' ')
+    bluesky_tags = ['photography']
+    bluesky_tags << 'mammals' if (combined_tag_list & mammals).present?
+    bluesky_tags << 'landscapes' if combined_tag_list.include?('Landscapes')
+    bluesky_tags.map { |t| "##{t}" }.join(' ')
   end
 
 
