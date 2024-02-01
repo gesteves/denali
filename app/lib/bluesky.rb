@@ -7,21 +7,19 @@ class Bluesky
     }
   end
 
-  def skeet(text:, photos: [])
+  def skeet(text:, url: nil, photos: [])
+
     embedded_images = photos.take(4).map do |image_hash|
       cid = upload_photo(image_hash[:url])["blob"]["ref"]["$link"]
       {
         image: {
-          cid: cid,
-          mimeType: "image/jpeg"
+            cid: cid,
+            mimeType: "image/jpeg"
         },
         alt: image_hash[:alt_text]
       }
     end
-  
-    # Regular expression to find URLs in the text
-    urls = text.scan(/https?:\/\/\S+/)
-  
+
     request_body = {
       repo: did,
       collection: "app.bsky.feed.post",
@@ -30,17 +28,16 @@ class Bluesky
         createdAt: Time.now.iso8601
       }
     }
-  
+
     request_body[:record][:embed] = {
       "$type" => "app.bsky.embed.images",
       "images" => embedded_images
     } unless embedded_images.empty?
-  
-    if urls.any?
-      request_body[:record][:facets] = []
-      byte_offset = 0
-      urls.each do |url|
-        facet = {
+
+    if url.present?
+      title = text.split(/\n+/).first
+      request_body[:record][:facets] = [
+        {
           "features" => [
             {
               "uri" => url,
@@ -48,16 +45,13 @@ class Bluesky
             }
           ],
           "index" => {
-            "byteStart" => text.byteslice(byte_offset..-1).index(url) + byte_offset,
-            "byteEnd" => text.byteslice(byte_offset..-1).index(url) + byte_offset + url.bytesize
+            "byteStart" => 0,
+            "byteEnd" => title.bytesize
           }
         }
-        request_body[:record][:facets] << facet
-    
-        byte_offset += text.byteslice(byte_offset..-1).index(url) + byte_offset + url.bytesize
-      end
+      ]
     end
-  
+
     headers = {
       "Authorization" => "Bearer #{access_token}",
       "Content-Type" => "application/json"
