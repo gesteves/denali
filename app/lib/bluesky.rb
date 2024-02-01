@@ -41,7 +41,6 @@ class Bluesky
   
       # Add facets for each URL found in the text
       urls.each do |url|
-        title = url # You can customize this to extract a title if needed
         facet = {
           "features" => [
             {
@@ -62,7 +61,7 @@ class Bluesky
       "Authorization" => "Bearer #{access_token}",
       "Content-Type" => "application/json"
     }
-    
+
     response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
                               body: request_body.to_json,
                               headers: headers)
