@@ -429,9 +429,15 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_caption
-    meta = []
+    meta = ["🔗 #{self.permalink_url}"]
 
-    meta << "🔗 #{self.permalink_url}"
+    if is_photo?
+      photo = photos.first
+      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
+    end
+
     meta << "🏷️ #{mastodon_tags}" if mastodon_tags.present?
 
     caption = []
@@ -446,7 +452,7 @@ class Entry < ApplicationRecord
   end
 
   def bluesky_caption
-    meta = []
+    meta = ["🔗 #{self.permalink_url}"]
 
     if is_photo?
       photo = photos.first
@@ -454,7 +460,7 @@ class Entry < ApplicationRecord
       meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
     end
-    meta << "🔗 #{self.permalink_url}"
+
     meta << "🏷️ #{bluesky_tags}" if bluesky_tags.present?
 
     caption = []
