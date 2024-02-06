@@ -9,7 +9,7 @@ class BlueskyWorker < ApplicationWorker
     raise UnprocessedPhotoError unless entry.photos_have_dimensions?
 
     bluesky = Bluesky.new(base_url: ENV['BLUESKY_BASE_URL'], email: ENV['BLUESKY_EMAIL'], password: ENV['BLUESKY_PASSWORD'])
-    photos = entry.photos.to_a[0..4].map { |p| { url: p.bluesky_url, alt_text: p.alt_text } }
+    photos = entry.photos.to_a[0..4].map { |p| { url: p.bluesky_url, alt_text: p.alt_text, width: p.width, height: p.height } }
     bluesky.skeet(text: text, url: entry.permalink_url, photos: photos)
     entry.track_recently_shared('Bluesky')
   end

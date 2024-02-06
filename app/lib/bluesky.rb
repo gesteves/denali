@@ -9,14 +9,18 @@ class Bluesky
 
   def skeet(text:, url: nil, photos: [])
 
-    embedded_images = photos.take(4).map do |image_hash|
-      cid = upload_photo(image_hash[:url])["blob"]["ref"]["$link"]
+    embedded_images = photos.take(4).map do |photo|
+      cid = upload_photo(photo[:url])["blob"]["ref"]["$link"]
       {
         image: {
             cid: cid,
             mimeType: "image/jpeg"
         },
-        alt: image_hash[:alt_text]
+        alt: photo[:alt_text],
+        aspectRatio: {
+          width: photo[:width],
+          height: photo[:height]
+        }
       }
     end
 
