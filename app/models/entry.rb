@@ -448,6 +448,12 @@ class Entry < ApplicationRecord
   def bluesky_caption
     meta = []
 
+    if is_photo?
+      photo = photos.first
+      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
+    end
     meta << "🔗 #{self.permalink_url}"
     meta << "🏷️ #{bluesky_tags}" if bluesky_tags.present?
 
