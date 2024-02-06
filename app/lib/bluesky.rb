@@ -45,7 +45,7 @@ class Bluesky
       "Content-Type" => "application/json"
     }
 
-    response = self.class.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
+    response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
                               body: request_body.to_json,
                               headers: headers)
 
