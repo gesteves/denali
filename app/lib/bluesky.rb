@@ -30,6 +30,7 @@ class Bluesky
       collection: "app.bsky.feed.post",
       record: {
         text: text,
+        langs: ["en-US"],
         createdAt: Time.now.iso8601,
         facets: facets
       }
