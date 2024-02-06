@@ -7,8 +7,7 @@ class Bluesky
     }
   end
 
-  def skeet(text:, url: nil, photos: [])
-
+  def skeet(text:, photos: [])
     embedded_images = photos.take(4).map do |photo|
       cid = upload_photo(photo[:url])["blob"]["ref"]["$link"]
       {
@@ -24,12 +23,15 @@ class Bluesky
       }
     end
 
+    facets = parse_facets(text)
+
     request_body = {
       repo: did,
       collection: "app.bsky.feed.post",
       record: {
         text: text,
-        createdAt: Time.now.iso8601
+        createdAt: Time.now.iso8601,
+        facets: facets
       }
     }
 
@@ -38,30 +40,12 @@ class Bluesky
       "images" => embedded_images
     } unless embedded_images.empty?
 
-    if url.present?
-      title = text.split(/\n+/).first
-      request_body[:record][:facets] = [
-        {
-          "features" => [
-            {
-              "uri" => url,
-              "$type" => "app.bsky.richtext.facet#link"
-            }
-          ],
-          "index" => {
-            "byteStart" => 0,
-            "byteEnd" => title.bytesize
-          }
-        }
-      ]
-    end
-
     headers = {
       "Authorization" => "Bearer #{access_token}",
       "Content-Type" => "application/json"
     }
 
-    response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
+    response = self.class.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
                               body: request_body.to_json,
                               headers: headers)
 
@@ -73,6 +57,111 @@ class Bluesky
   end
 
   private
+
+  def byte_offsets_for_match(match_data, original_text)
+    start_char_index = match_data.offset(1)[0]
+    end_char_index = match_data.offset(1)[1]
+    byte_start = original_text[0...start_char_index].bytesize
+    byte_end = original_text[0...end_char_index].bytesize
+    [byte_start, byte_end]
+  end
+  
+  def parse_mentions(text)
+    spans = []
+    mention_regex = /[$|\W](@([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)/
+    text.scan(mention_regex) do |m|
+      byte_start, byte_end = byte_offsets_for_match($~, text)
+      spans << {
+        "start" => byte_start,
+        "end" => byte_end,
+        "handle" => m[0][1..]
+      }
+    end
+    spans
+  end
+  
+  def parse_urls(text)
+    spans = []
+    url_regex = /[$|\W](https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*[-a-zA-Z0-9@%_\+~#\/=])?)/
+    text.scan(url_regex) do |m|
+      byte_start, byte_end = byte_offsets_for_match($~, text)
+      spans << {
+        "start" => byte_start,
+        "end" => byte_end,
+        "url" => m[0]
+      }
+    end
+    spans
+  end
+
+  def parse_tags(text)
+    spans = []
+    tag_regex = /[$|\W](#\w+)/
+    text.scan(tag_regex) do |m|
+      byte_start, byte_end = byte_offsets_for_match($~, text)
+      spans << {
+        "start" => byte_start,
+        "end" => byte_end,
+        "tag" => m[0][1..] # Strip the leading # symbol
+      }
+    end
+    spans
+  end
+  
+  def parse_facets(text)
+    facets = []
+    parse_mentions(text).each do |m|
+      response = HTTParty.get("https://bsky.social/xrpc/com.atproto.identity.resolveHandle", query: {"handle" => m["handle"]})
+      
+      next if response.code == 400
+      did = response.parsed_response["did"]
+      
+      facets << {
+        "index" => {
+          "byteStart" => m["start"],
+          "byteEnd" => m["end"],
+        },
+        "features" => [
+          {
+            "$type" => "app.bsky.richtext.facet#mention",
+            "did" => did
+          }
+        ]
+      }
+    end
+  
+    parse_urls(text).each do |u|
+      facets << {
+        "index" => {
+          "byteStart" => u["start"],
+          "byteEnd" => u["end"],
+        },
+        "features" => [
+          {
+            "$type" => "app.bsky.richtext.facet#link",
+            "uri" => u["url"]
+          }
+        ]
+      }
+    end
+  
+    parse_tags(text).each do |t|
+      facets << {
+        "index" => {
+          "byteStart" => t["start"],
+          "byteEnd" => t["end"],
+        },
+        "features" => [
+          {
+            "$type" => "app.bsky.richtext.facet#tag",
+            "tag" => t["tag"]
+          }
+        ]
+      }
+    end
+  
+    facets
+  end 
 
   def did_key
     "bluesky:#{@auth[:identifier]}:did"

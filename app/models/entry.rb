@@ -448,15 +448,17 @@ class Entry < ApplicationRecord
   def bluesky_caption
     meta = []
 
-    if is_photo?
-      photo = photos.first
-      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
-      meta << "🏷️ #{bluesky_tags}" if bluesky_tags.present?
+    meta << "🔗 #{self.permalink_url}"
+    meta << "🏷️ #{bluesky_tags}" if bluesky_tags.present?
+
+    caption = []
+    if self.bluesky_text.present?
+      caption << self.bluesky_text
+    else
+      caption << self.plain_title
     end
 
-    caption = [self.plain_title, self.bluesky_text, meta.join("\n").strip]
+    caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
 
