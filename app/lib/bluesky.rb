@@ -114,7 +114,7 @@ class Bluesky
       response = HTTParty.get("https://bsky.social/xrpc/com.atproto.identity.resolveHandle", query: {"handle" => m["handle"]})
       
       next if response.code == 400
-      did = response.parsed_response["did"]
+      did = JSON.parse(response.body)["did"]
       
       facets << {
         "index" => {
