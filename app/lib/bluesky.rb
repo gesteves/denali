@@ -45,6 +45,8 @@ class Bluesky
       "Authorization" => "Bearer #{access_token}",
       "Content-Type" => "application/json"
     }
+    
+    logger.info "[Bluesky] #{request_body.to_json}"
 
     response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
                               body: request_body.to_json,
