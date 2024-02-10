@@ -475,11 +475,12 @@ class Entry < ApplicationRecord
   end
 
   def bluesky_tags
-    mammals = ['Bears', 'Wolves', 'Coyotes', 'Bison', 'Moose', 'Red Foxes', 'Pronghorn', 'Porcupines', 'Bighorn Sheep']
+    mammals = combined_tag_list & ['Bears', 'Wolves', 'Coyotes', 'Bison', 'Moose', 'Red Foxes', 'Pronghorn', 'Porcupines', 'Bighorn Sheep']
     bluesky_tags = ['Photography']
-    bluesky_tags << 'Mammals' if (combined_tag_list & mammals).present?
-    bluesky_tags << 'Landscapes' if combined_tag_list.include?('Landscapes')
-    bluesky_tags.map { |t| "##{t}" }.join(' ')
+    bluesky_tags += combined_tag_list & ['Landscapes', 'Wildlife']
+    bluesky_tags += mammals if mammals.present?
+    bluesky_tags << 'Mammals' if mammals.present?
+    bluesky_tags.map { |t| "##{t.gsub(/[^0-9a-zA-Z]+/, '')}" }.join(' ')
   end
 
 
