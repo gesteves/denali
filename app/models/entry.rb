@@ -475,12 +475,20 @@ class Entry < ApplicationRecord
   end
 
   def bluesky_tags
-    mammals = combined_tag_list & ['Bears', 'Wolves', 'Coyotes', 'Bison', 'Moose', 'Red Foxes', 'Pronghorn', 'Porcupines', 'Bighorn Sheep']
     bluesky_tags = ['Photography']
-    bluesky_tags += combined_tag_list & ['Landscapes', 'Wildlife']
+    bluesky_tags += combined_tag_list & ['Landscapes', 'Wildlife', 'Birds']
+
+    # Mammals for the mammals feed
+    mammals = combined_tag_list & ['Bears', 'Wolves', 'Coyotes', 'Bison', 'Moose', 'Red Foxes', 'Pronghorn', 'Porcupines', 'Bighorn Sheep']
     bluesky_tags += mammals if mammals.present?
     bluesky_tags << 'Mammals' if mammals.present?
-    bluesky_tags.map { |t| "##{t.gsub(/[^0-9a-zA-Z]+/, '')}" }.join(' ')
+
+    # Birds for the birds feed
+    birds = combined_tag_list & ['Great Gray Owls', 'Bald Eagles', 'Golden Eagles', 'Goose', 'Trumpeter Swan', 'Red-tailed Hawks', 'Ravens', 'Sandhill Cranes', 'Ospreys', 'White Pelicans']
+    bluesky_tags += birds if birds.present?
+    bluesky_tags << 'Birds' if birds.present?
+
+    bluesky_tags.uniq.sort.map { |t| "##{t.gsub(/[^0-9a-zA-Z]+/, '')}" }.join(' ')
   end
 
 
