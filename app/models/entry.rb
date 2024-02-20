@@ -461,7 +461,7 @@ class Entry < ApplicationRecord
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
     end
 
-    meta << "🏷️ #{bluesky_tags}" if bluesky_tags.present?
+    meta << "\n#{bluesky_tags}" if bluesky_tags.present?
 
     caption = []
     if self.bluesky_text.present?
