@@ -438,7 +438,7 @@ class Entry < ApplicationRecord
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
     end
 
-    meta << "🏷️ #{mastodon_tags}" if mastodon_tags.present?
+    meta << "\n#{mastodon_tags}" if mastodon_tags.present?
 
     caption = []
     if self.mastodon_text.present?
