@@ -142,9 +142,8 @@ namespace :tumblr do
 
       limit = 50
       offset = 0
-      deleted = 0
 
-      puts "Updating Tumblr post IDs and reblog keys"
+      puts "Deleting #{total_posts} Tumblr posts"
 
       while offset < total_posts
         puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
@@ -159,14 +158,10 @@ namespace :tumblr do
 
         posts.each do |post|
           tumblr_id = post['id_string']
-          tumblr_url = post['post_url']
           puts "Deleting tumblr post #{tumblr_id}: #{tumblr_url}"
-          tumblr.delete(tumblr_username, tumblr_id)
-          deleted += 1
+          TumblrDeleteWorker.perform_async(tumblr_username, tumblr_id)
         end
-        offset += posts.size
       end
-      puts "Deleted #{deleted} Tumblr entries, out of #{total_posts}."
     end
   end
 end
