@@ -158,7 +158,7 @@ namespace :tumblr do
 
         posts.each do |post|
           tumblr_id = post['id_string']
-          puts "Deleting tumblr post #{tumblr_id}: #{tumblr_url}"
+          puts "Enqueing job to delete tumblr post #{tumblr_id}: #{tumblr_url}"
           TumblrDeleteWorker.perform_async(tumblr_username, tumblr_id)
         end
       end
