@@ -124,4 +124,49 @@ namespace :tumblr do
       puts "Updated Tumblr IDs and reblog keys on #{updated} entries, out of #{total_posts} queued Tumblr posts."
     end
   end
+
+  namespace :delete do
+    desc 'Update Tumblr IDs and reblog keys'
+    task :posts => :environment do
+      tumblr = Tumblr::Client.new({
+        consumer_key: ENV['TUMBLR_CONSUMER_KEY'],
+        consumer_secret: ENV['TUMBLR_CONSUMER_SECRET'],
+        oauth_token: ENV['TUMBLR_ACCESS_TOKEN'],
+        oauth_token_secret: ENV['TUMBLR_ACCESS_TOKEN_SECRET']
+      })
+
+      tumblr_username = Blog.first.tumblr_username
+      next if tumblr_username.blank?
+
+      total_posts = tumblr.blog_info(tumblr_username)['blog']['posts']
+
+      limit = 50
+      offset = 0
+      deleted = 0
+
+      puts "Updating Tumblr post IDs and reblog keys"
+
+      while offset < total_posts
+        puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
+        response = tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo', reblog_info: true)
+
+        if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
+          puts response.to_s
+          break
+        end
+
+        posts = response['posts']
+
+        posts.each do |post|
+          tumblr_id = post['id_string']
+          tumblr_url = post['post_url']
+          puts "Deleting tumblr post #{tumblr_id}: #{tumblr_url}"
+          tumblr.delete(tumblr_username, tumblr_id)
+          deleted += 1
+        end
+        offset += posts.size
+      end
+      puts "Deleted #{deleted} Tumblr entries, out of #{total_posts}."
+    end
+  end
 end
