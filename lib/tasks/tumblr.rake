@@ -138,7 +138,7 @@ namespace :tumblr do
       tumblr_username = Blog.first.tumblr_username
       next if tumblr_username.blank?
 
-      response = tumblr.blog_info(tumblr_username)['blog']['posts']
+      response = tumblr.blog_info(tumblr_username)
 
       if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
         puts response.to_s
