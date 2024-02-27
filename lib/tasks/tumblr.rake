@@ -138,7 +138,14 @@ namespace :tumblr do
       tumblr_username = Blog.first.tumblr_username
       next if tumblr_username.blank?
 
-      total_posts = tumblr.blog_info(tumblr_username)['blog']['posts']
+      response = tumblr.blog_info(tumblr_username)['blog']['posts']
+
+      if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
+        puts response.to_s
+        next
+      end
+
+      total_posts = response['blog']['posts']
 
       limit = 50
       offset = 0
@@ -147,7 +154,7 @@ namespace :tumblr do
       puts "Deleting #{total_posts} Tumblr posts"
 
       while offset < total_posts
-        puts "  Fetching posts #{offset + 1}-#{offset + limit}…"
+        puts "  Fetching posts #{offset + 1}-#{offset + limit} out of #{total_posts}…"
         response = tumblr.posts(tumblr_username, offset: offset, limit: limit, type: 'photo', reblog_info: true)
 
         if response['errors'].present? || (response['status'].present? && response['status'] >= 400)
