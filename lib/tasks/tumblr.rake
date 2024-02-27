@@ -142,6 +142,7 @@ namespace :tumblr do
 
       limit = 50
       offset = 0
+      tumblr_ids = []
 
       puts "Deleting #{total_posts} Tumblr posts"
 
@@ -154,14 +155,13 @@ namespace :tumblr do
           break
         end
 
-        posts = response['posts']
-
-        posts.each do |post|
-          tumblr_id = post['id_string']
-          puts "Enqueing job to delete tumblr post #{tumblr_id}"
-          TumblrDeleteWorker.perform_async(tumblr_username, tumblr_id)
-        end
+        tumblr_ids += response['posts'].map { |post| post['id_string']
         offset += posts.size
+      end
+
+      tumblr_ids.flatten.compact.uniq.each do |tumblr_id|
+        puts "Enqueing job to delete tumblr post #{tumblr_id}"
+        TumblrDeleteWorker.perform_async(tumblr_username, tumblr_id)
       end
     end
   end
