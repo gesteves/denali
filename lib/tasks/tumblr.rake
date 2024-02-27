@@ -161,6 +161,7 @@ namespace :tumblr do
           puts "Enqueing job to delete tumblr post #{tumblr_id}"
           TumblrDeleteWorker.perform_async(tumblr_username, tumblr_id)
         end
+        offset += posts.size
       end
     end
   end
