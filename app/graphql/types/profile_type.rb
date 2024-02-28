@@ -9,7 +9,5 @@ module Types
     field :email, String, null: true, description: "Contact email for the user"
     field :flickr, String, null: true, description: "Flickr account for the user"
     field :instagram, String, null: true, description: "Instagram account for the user"
-    field :tumblr, String, null: true, description: "Tumblr account for the user"
-    field :tumblr_username, String, null: true, description: "Tumblr username for the user"
   end
 end

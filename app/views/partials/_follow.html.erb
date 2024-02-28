@@ -6,5 +6,4 @@
   <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.flickr,                   icon: 'flickr',    label: 'Follow on Flickr',    rel: 'me', target: '_blank' } if @photoblog.flickr.present? %>
   <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.instagram,                icon: 'instagram', label: 'Follow on Instagram', rel: 'me', target: '_blank' } if @photoblog.instagram.present? %>
   <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.mastodon,                 icon: 'mastodon',  label: 'Follow on Mastodon',  rel: 'me', target: '_blank' } if @photoblog.mastodon.present? %>
-  <%= render partial: 'partials/follow_icon', locals: { url: @photoblog.tumblr,                   icon: 'tumblr',    label: 'Follow on Tumblr',    rel: 'me', target: '_blank' } if @photoblog.tumblr.present? %>
 </ul>

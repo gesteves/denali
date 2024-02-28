@@ -81,10 +81,6 @@ class Entry < ApplicationRecord
     where('photos_count > 0')
   end
 
-  def self.posted_on_tumblr(order = 'entries.published_at DESC')
-    where(status: 'published').where.not(tumblr_id: nil).order(order)
-  end
-
   def self.indexable_in_search_engines
     where(status: 'published', hide_from_search_engines: false).order('published_at ASC')
   end
@@ -294,7 +290,6 @@ class Entry < ApplicationRecord
     InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
     MastodonWorker.perform_async(self.id, self.mastodon_caption) if self.post_to_mastodon
     BlueskyWorker.perform_async(self.id, self.bluesky_caption) if self.post_to_bluesky
-    TumblrWorker.perform_async(self.id) if self.post_to_tumblr
     Webhook.deliver_all(self)
     PushSubscription.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
@@ -525,70 +520,6 @@ class Entry < ApplicationRecord
     entry_albums.flatten.compact.uniq
   end
 
-  def tumblr_caption(html: false)
-    meta = []
-
-    if is_photo?
-      photo = photos.first
-      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
-
-      location = []
-      location << photo.formatted_location if photo.formatted_location.present?
-      location << "#{photo.territory_list} land" if photo.territories.present?
-
-      meta << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-    end
-
-    caption = []
-    caption << "[#{self.plain_title}](#{self.permalink_url})"
-
-    if self.tumblr_text.present?
-      caption << self.tumblr_text
-    else
-      caption << self.body
-    end
-
-    caption << meta.join("  \n").strip
-    markdown = caption.reject(&:blank?).join("\n\n")
-
-    html ? markdown_to_html(markdown) : markdown
-  end
-
-  def tumblr_tags
-    entry_tags = self.tags
-    entry_locations = self.locations
-    entry_equipment = self.equipment
-    entry_styles = self.styles
-    combined_tags = self.combined_tags
-    basic_tags = self.tag_list.clone
-    location_tags = self.location_list.clone
-    equipment_tags = self.equipment_list.clone
-    style_tags = self.style_list.clone
-    more_tags = self.combined_tag_list.clone
-    more_tags += ["Photographers on Tumblr", "Original Photographers"] if self.is_photo?
-
-    self.blog.tag_customizations.where.not(tumblr_tags: [nil, '']).each do |tag_customization|
-      hashtags = tag_customization.tumblr_tags_to_a
-      if tag_customization.matches_tags? entry_tags
-        basic_tags << hashtags
-      elsif tag_customization.matches_tags? entry_locations
-        location_tags << hashtags
-      elsif tag_customization.matches_tags? entry_equipment
-        equipment_tags << hashtags
-      elsif tag_customization.matches_tags? entry_styles
-        style_tags << hashtags
-      elsif tag_customization.matches_tags? combined_tags
-        more_tags << hashtags
-      end
-    end
-
-    tumblr_tags = basic_tags + location_tags + more_tags + equipment_tags + style_tags
-    tumblr_tags += ['mature'] if self.is_sensitive?
-    tumblr_tags.flatten.compact.uniq.map(&:downcase).sort.join(', ')
-  end
-
   def update_tags
     self.update_equipment_tags
     self.update_location_tags
@@ -660,24 +591,6 @@ class Entry < ApplicationRecord
 
   def photos_have_dimensions?
     photos.all? { |p| p.has_dimensions? }
-  end
-
-  def is_published_on_tumblr?
-    tumblr_id.present? && tumblr_reblog_key.present?
-  end
-
-  def is_on_tumblr?
-    tumblr_id.present?
-  end
-
-  def tumblr_reblog_url
-    return unless is_published_on_tumblr?
-    "https://www.tumblr.com/reblog/#{user.profile.tumblr_username}/#{tumblr_id}/#{tumblr_reblog_key}"
-  end
-
-  def tumblr_url
-    return unless is_published_on_tumblr?
-    "https://www.tumblr.com/#{user.profile.tumblr_username}/#{tumblr_id}/"
   end
 
   def track_recently_shared(platform)

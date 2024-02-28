@@ -11,9 +11,6 @@
     <% if @photoblog.mastodon.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.mastodon %>" rel="me" title="Follow on Mastodon" aria-label="Follow on Mastodon" target="_blank"><%= inline_svg :mastodon, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Mastodon</span></a></li>
     <% end %>
-    <% if @photoblog.tumblr.present? %>
-      <li class="elsewhere__item"><a href="<%= @photoblog.tumblr %>" rel="me" title="Follow on Tumblr" aria-label="Follow on Tumblr" target="_blank"><%= inline_svg :tumblr, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Tumblr</span></a></li>
-    <% end %>
   </ul>
 </aside>
 

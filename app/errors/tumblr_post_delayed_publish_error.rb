@@ -1,1 +1,0 @@
-class TumblrPostDelayedPublishError < StandardError; end

@@ -195,7 +195,6 @@ def import_entry(data)
     entry.body = data[:body]
     entry.status = data[:status]
     entry.post_to_instagram = false
-    entry.post_to_tumblr = false
     entry.post_to_flickr = false
     entry.post_to_flickr_groups = false
     entry.published_at = Time.parse(data[:publishedAt]) if data[:publishedAt].present?

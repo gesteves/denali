@@ -163,7 +163,6 @@ class Admin::EntriesController < AdminController
           photo.encode_blurhash
         end
         @entry.purge_from_cdn
-        TumblrUpdateWorker.perform_in(1.minute, @entry.id) if @entry.is_on_tumblr?
         OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to admin_entry_path(@entry) }
@@ -329,60 +328,6 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def tumblr
-    @entry = @photoblog.entries.published.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    TumblrWorker.perform_async(@entry.id, 'queue')
-    @message = 'Your entry was shared on Tumblr.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
-    end
-  end
-
-  def tumblr_update
-    @entry = @photoblog.entries.published.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    TumblrUpdateWorker.perform_async(@entry.id) if @entry.is_on_tumblr?
-    @message = 'Your entry was updated on Tumblr.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
-    end
-  end
-
-  def tumblr_reblog
-    @entry = @photoblog.entries.published.find(params[:id])
-    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    if request.get?
-      respond_to do |format|
-        format.html {
-          if params[:modal]
-            render layout: nil
-          else
-            render
-          end
-        }
-      end
-    elsif request.post?
-      TumblrReblogWorker.perform_async(@entry.id, params[:text], params[:state])
-      @message = 'Your entry was reblogged on Tumblr.'
-      respond_to do |format|
-        format.html {
-          flash[:success] = @message
-          redirect_to session[:redirect_url] || admin_entry_path(@entry)
-        }
-        format.js { render 'admin/shared/notify' }
-      end
-    end
-  end
-
   def refresh_metadata
     @entry.update_tags
     @entry.photos.each do |photo|
@@ -411,7 +356,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_tumblr, :post_to_mastodon, :post_to_bluesky, :bluesky_text, :mastodon_text, :instagram_text, :tumblr_text, :show_location, :hide_from_search_engines, :content_warning, :is_sensitive, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_flickr_groups, :post_to_instagram, :post_to_mastodon, :post_to_bluesky, :bluesky_text, :mastodon_text, :instagram_text, :show_location, :hide_from_search_engines, :content_warning, :is_sensitive, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location])
     end
 
     def set_redirect_url

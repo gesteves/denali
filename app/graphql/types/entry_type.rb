@@ -16,8 +16,6 @@ module Types
     field :slug, String, null: false, description: "The slug at the end of the entry's URL"
     field :status, String, null: false, description: "The publish status of the entry"
     field :title, String, null: false, description: "The title of the entry, as entered by the author"
-    field :tumblr_caption, String, null: true, description: "A Tumblr-friendly caption for this entry"
-    field :tumblr_tags, String, null: true, description: "List of Tumblr tags this entry can be tagged with"
     field :url, String, null: false, method: :permalink_url, description: "Permalink URL for the entry"
     field :content_warning, String, null: true, method: :content_warning, description: "Content warning for this entry"
     field :is_sensitive, Boolean, null: false, method: :is_sensitive, description: "Whether or not the entry contains sensitive content"

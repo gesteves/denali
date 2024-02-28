@@ -134,11 +134,6 @@ class Photo < ApplicationRecord
     self.url(opts)
   end
 
-  def tumblr_url
-    opts = { width: 2048, format: 'jpeg' }
-    self.url(opts)
-  end
-
   def bluesky_url
     width = self.is_vertical? ? width_from_height(2000) : 2000
     opts = { width: width, format: 'jpeg', quality: 60 }

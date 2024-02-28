@@ -37,20 +37,6 @@ class Profile < ApplicationRecord
     photo.url(opts)
   end
 
-  def tumblr_username
-    return if self.tumblr.blank?
-    uri = URI.parse(self.tumblr)
-    domain = PublicSuffix.parse(uri.host)
-    username = if domain.domain == 'tumblr.com' && (domain.trd.blank? || domain.trd == 'www')
-      uri.path.split('/').last
-    elsif domain.domain == 'tumblr.com' && domain.trd.present?
-      domain.trd
-    else
-      domain.subdomain || domain.domain
-    end
-    username.presence
-  end
-
   private
 
   def parameterize_username

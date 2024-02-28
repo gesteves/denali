@@ -41,13 +41,6 @@ module Activitypub::ProfileHelper
         value: attachment_link(@user.profile.instagram)
       }
     end
-    if @user.profile.tumblr.present?
-      attachments << {
-        type: "PropertyValue",
-        name: "Tumblr",
-        value: attachment_link(@user.profile.tumblr)
-      }
-    end
     attachments.sort { |a, b| a[:name] <=> b[:name] }
   end
 
