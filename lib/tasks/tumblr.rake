@@ -163,6 +163,8 @@ namespace :tumblr do
         end
 
         posts = response['posts']
+        break if posts.empty?
+        
         tumblr_ids += posts.map { |post| post['id_string'] }
         offset += posts.size
       end
