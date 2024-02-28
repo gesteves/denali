@@ -162,7 +162,8 @@ namespace :tumblr do
           break
         end
 
-        tumblr_ids += response['posts'].map { |post| post['id_string'] }
+        posts = response['posts']
+        tumblr_ids += posts.map { |post| post['id_string'] }
         offset += posts.size
       end
 
