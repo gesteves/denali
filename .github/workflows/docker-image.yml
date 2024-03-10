@@ -14,5 +14,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag denali:$(date +%s) --tag denali:latest
+    - name: Authenticate with Docker Hub
+      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+    - name: Set tag variable with current timestamp
+      id: set_tag
+      run: echo "TAG=$(date +%s)" >> $GITHUB_ENV
+
+    - name: Build Docker image
+      run: docker build . --file Dockerfile -t clifff/denali:${{ steps.set_tag.outputs.TAG }} -t clifff/denali:latest
+
+    - name: Push Docker image to Docker Hub
+      run: |
+        docker push clifff/denali:${{ steps.set_tag.outputs.TAG }}
+        docker push clifff/denali:latest
