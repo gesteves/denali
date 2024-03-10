@@ -25,9 +25,9 @@ jobs:
       run: echo "TAG=$(date +%s)" >> $GITHUB_ENV
 
     - name: Build Docker image
-      run: docker build . --file Dockerfile -t clifff/denali:${{ steps.set_tag.outputs.TAG }} -t clifff/denali:latest
+      run: docker build . --file Dockerfile -t clifff/denali:$TAG -t clifff/denali:latest
 
     - name: Push Docker image to Docker Hub
       run: |
-        docker push clifff/denali:${{ steps.set_tag.outputs.TAG }}
+        docker push clifff/denali:$TAG
         docker push clifff/denali:latest
