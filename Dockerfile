@@ -18,10 +18,9 @@ RUN gem update --system 3.4.22 --no-document && \
     gem install -N bundler
 
 # Install packages needed to install nodejs
-RUN --mount=type=cache,id=dev-apt-cache,sharing=locked,target=/var/cache/apt \
-    --mount=type=cache,id=dev-apt-lib,sharing=locked,target=/var/lib/apt \
-    apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Install Node.js
 ARG NODE_VERSION=14.17.3
@@ -35,9 +34,7 @@ RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz
 FROM base as build
 
 # Install packages needed to build gems and node modules
-RUN --mount=type=cache,id=dev-apt-cache,sharing=locked,target=/var/cache/apt \
-    --mount=type=cache,id=dev-apt-lib,sharing=locked,target=/var/lib/apt \
-    apt-get update -qq && \
+RUN apt-get update -qq && \
     apt-get install --no-install-recommends -y build-essential libpq-dev node-gyp pkg-config python
 
 # Install yarn
@@ -49,20 +46,13 @@ ENV PATH="/usr/local/node/bin:$PATH"
 
 # Install application gems
 COPY --link Gemfile Gemfile.lock ./
-RUN --mount=type=cache,id=bld-gem-cache,sharing=locked,target=/srv/vendor \
-    bundle config set app_config .bundle && \
-    bundle config set path /srv/vendor && \
-    bundle install && \
+RUN bundle install && \
     bundle exec bootsnap precompile --gemfile && \
-    bundle clean && \
-    mkdir -p vendor && \
-    bundle config set path vendor && \
-    cp -ar /srv/vendor .
+    rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
 # Install node modules
 COPY --link package.json yarn.lock ./
-RUN --mount=type=cache,id=bld-yarn-cache,target=/root/.yarn \
-    YARN_CACHE_FOLDER=/root/.yarn yarn install --frozen-lockfile
+RUN yarn install --frozen-lockfile
 
 # Copy application code
 COPY --link . .
@@ -78,10 +68,9 @@ RUN SECRET_KEY_BASE=DUMMY ./bin/rails assets:precompile
 FROM base
 
 # Install packages needed for deployment
-RUN --mount=type=cache,id=dev-apt-cache,sharing=locked,target=/var/cache/apt \
-    --mount=type=cache,id=dev-apt-lib,sharing=locked,target=/var/lib/apt \
-    apt-get update -qq && \
-    apt-get install --no-install-recommends -y curl imagemagick libjemalloc2 postgresql-client
+RUN apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl imagemagick libjemalloc2 postgresql-client && \
+    rm -rf /var/lib/apt/lists /var/cache/apt/archives
 
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
