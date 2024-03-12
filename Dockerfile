@@ -2,7 +2,7 @@
 
 # Make sure RUBY_VERSION matches the Ruby version in .ruby-version and Gemfile
 ARG RUBY_VERSION=2.6.8
-FROM ruby:$RUBY_VERSION-alpine as base
+FROM ruby:$RUBY_VERSION-slim as base
 
 # Rails app lives here
 WORKDIR /rails
@@ -18,26 +18,27 @@ RUN gem update --system 3.4.22 --no-document && \
     gem install -N bundler
 
 # Install packages needed to install nodejs
-RUN --mount=type=cache,id=dev-apk-cache,sharing=locked,target=/var/cache/apk \
-    apk update && \
-    apk add curl tzdata
+RUN --mount=type=cache,id=dev-apt-cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,id=dev-apt-lib,sharing=locked,target=/var/lib/apt \
+    apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl
 
 # Install Node.js
 ARG NODE_VERSION=14.17.3
 ENV PATH=/usr/local/node/bin:$PATH
-RUN curl -sL https://unofficial-builds.nodejs.org/download/release/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64-musl.tar.gz | tar xz -C /tmp/ && \
-    mkdir /usr/local/node && \
-    cp -rp /tmp/node-v${NODE_VERSION}-linux-x64-musl/* /usr/local/node/ && \
-    rm -rf /tmp/node-v${NODE_VERSION}-linux-x64-musl
+RUN curl -sL https://github.com/nodenv/node-build/archive/master.tar.gz | tar xz -C /tmp/ && \
+    /tmp/node-build-master/bin/node-build "${NODE_VERSION}" /usr/local/node && \
+    rm -rf /tmp/node-build-master
 
 
 # Throw-away build stage to reduce size of final image
 FROM base as build
 
 # Install packages needed to build gems and node modules
-RUN --mount=type=cache,id=dev-apk-cache,sharing=locked,target=/var/cache/apk \
-    apk update && \
-    apk add build-base gyp libpq-dev pkgconfig python3
+RUN --mount=type=cache,id=dev-apt-cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,id=dev-apt-lib,sharing=locked,target=/var/lib/apt \
+    apt-get update -qq && \
+    apt-get install --no-install-recommends -y build-essential libpq-dev node-gyp pkg-config python
 
 # Install yarn
 ARG YARN_VERSION=1.22.19
@@ -77,17 +78,18 @@ RUN SECRET_KEY_BASE=DUMMY ./bin/rails assets:precompile
 FROM base
 
 # Install packages needed for deployment
-RUN --mount=type=cache,id=dev-apk-cache,sharing=locked,target=/var/cache/apk \
-    apk update && \
-    apk add curl imagemagick jemalloc libpq postgresql-client
+RUN --mount=type=cache,id=dev-apt-cache,sharing=locked,target=/var/cache/apt \
+    --mount=type=cache,id=dev-apt-lib,sharing=locked,target=/var/lib/apt \
+    apt-get update -qq && \
+    apt-get install --no-install-recommends -y curl imagemagick libjemalloc2 postgresql-client
 
 # Copy built artifacts: gems, application
 COPY --from=build "${BUNDLE_PATH}" "${BUNDLE_PATH}"
 COPY --from=build /rails /rails
 
 # Run and own only the runtime files as a non-root user for security
-RUN addgroup --system --gid 1000 rails && \
-    adduser --system rails --uid 1000 --ingroup rails --home /home/rails --shell /bin/sh rails && \
+RUN groupadd --system --gid 1000 rails && \
+    useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
     chown -R 1000:1000 db log tmp
 USER 1000:1000
 
