@@ -141,7 +141,7 @@ GEM
       activesupport (> 3)
       elasticsearch (~> 5)
       hashie
-    elasticsearch-rails (5.1.0)
+    elasticsearch-rails (8.0.0)
     elasticsearch-transport (5.0.5)
       faraday
       multi_json
@@ -443,7 +443,7 @@ DEPENDENCIES
   bugsnag
   byebug
   elasticsearch-model (~> 5.0)
-  elasticsearch-rails (~> 5.0)
+  elasticsearch-rails (~> 8.0)
   exifr
   figaro
   flickraw!
