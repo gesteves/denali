@@ -24,7 +24,7 @@ class Photo < ApplicationRecord
   after_commit :update_park, if: :changed_location?
 
   def touch_entry
-    self.entry&.touch
+    self.entry.touch unless self.entry.destroyed?
   end
 
   def update_entry_equipment_tags
