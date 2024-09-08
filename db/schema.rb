@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_08_143941) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_08_151526) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,7 +64,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_08_143941) do
     t.string "email"
     t.string "flickr"
     t.string "instagram"
-    t.string "tumblr"
     t.string "mastodon"
     t.string "bluesky"
   end
@@ -112,14 +111,10 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_08_143941) do
     t.datetime "modified_at", precision: nil
     t.text "instagram_text"
     t.boolean "post_to_flickr_groups", default: true
-    t.string "tumblr_id"
     t.boolean "hide_from_search_engines", default: false
-    t.boolean "post_to_tumblr", default: true
-    t.string "tumblr_reblog_key"
     t.text "mastodon_text"
     t.boolean "post_to_mastodon", default: true
     t.string "content_warning"
-    t.text "tumblr_text"
     t.boolean "is_sensitive", default: false
     t.boolean "post_to_bluesky", default: true
     t.text "bluesky_text"
@@ -133,7 +128,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_08_143941) do
     t.index ["published_at"], name: "index_entries_on_published_at"
     t.index ["show_location"], name: "index_entries_on_show_location"
     t.index ["status"], name: "index_entries_on_status"
-    t.index ["tumblr_id"], name: "index_entries_on_tumblr_id"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
@@ -216,7 +210,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_08_143941) do
     t.string "username"
     t.string "name"
     t.string "instagram"
-    t.string "tumblr"
     t.string "flickr"
     t.string "email"
     t.string "summary"
@@ -257,7 +250,6 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_08_143941) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.text "flickr_albums"
-    t.text "tumblr_tags"
     t.index ["blog_id"], name: "index_tag_customizations_on_blog_id"
   end
 
