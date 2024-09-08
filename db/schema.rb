@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_08_28_222032) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_08_143234) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -66,6 +66,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_28_222032) do
     t.string "instagram"
     t.string "tumblr"
     t.string "mastodon"
+    t.string "bluesky"
   end
 
   create_table "cameras", force: :cascade do |t|

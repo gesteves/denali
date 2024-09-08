@@ -85,6 +85,19 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
+      <%= f.label :bluesky, 'Bluesky', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :bluesky, placeholder: 'The blog’s Bluesky account, e.g. https://bsky.app/profile/gesteves.bsky.social', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
       <%= f.label :flickr, 'Flickr', class: 'label' %>
     </div>
     <div class="field-body">

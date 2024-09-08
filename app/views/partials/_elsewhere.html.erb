@@ -2,6 +2,9 @@
   <h2 class="elsewhere__heading" id="elsewhere">Elsewhere on the Web</h2>
   <ul class="elsewhere__list">
     <li class="elsewhere__item"><a href="<%= feed_url %>" title="Subscribe to Feed" aria-label="Subscribe to Feed"><%= inline_svg :feed, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Feed</span></a></li>
+    <% if @photoblog.bluesky.present? %>
+      <li class="elsewhere__item"><a href="<%= @photoblog.bluesky %>" rel="me" title="Follow on Bluesky" aria-label="Follow on Bluesky" target="_blank"><%= inline_svg :bluesky, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Bluesky</span></a></li>
+    <% end %>
     <% if @photoblog.flickr.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.flickr %>" rel="me" title="Follow on Flickr" aria-label="Follow on Flickr" target="_blank"><%= inline_svg :flickr, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Flickr</span></a></li>
     <% end %>
