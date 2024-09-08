@@ -17,8 +17,6 @@ class RandomShareWorker < ApplicationWorker
       MastodonWorker.perform_async(entry.id, entry.mastodon_caption)
     when 'Instagram'
       InstagramWorker.perform_async(entry.id, entry.instagram_caption)
-    when 'Tumblr'
-      TumblrReblogWorker.perform_async(entry.id)
     end
   end
 

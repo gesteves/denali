@@ -5,7 +5,6 @@ Bugsnag.configure do |config|
     ActiveRecord::RecordNotFound
     Aws::CloudFront::Errors::ServiceUnavailable
     Aws::CloudFront::Errors::TooManyInvalidationsInProgress
-    TumblrPostDelayedPublishError
     UnprocessedPhotoError
   }
 end

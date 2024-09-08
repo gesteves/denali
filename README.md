@@ -22,7 +22,7 @@ A simple, fast photoblogging CMS built in Ruby on Rails which features responsiv
 
 ### More features
 
-* Cross-posting of entries to Instagram, Tumblr, Mastodon, and Flickr
+* Cross-posting of entries to Instagram, Bluesky, Mastodon, and Flickr
 * Auto-tagging of entries by location, equipment, and style
 * Automatic generation of [blurhashes](https://blurha.sh/) for image placeholders
 * Automatic generation of Instagram hashtags, and image crops for feed and stories
