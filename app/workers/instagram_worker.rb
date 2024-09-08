@@ -25,7 +25,7 @@ class InstagramWorker < ApplicationWorker
     end
 
     profile_ids.each { |id| post_to_buffer(id, opts, state) }
-    entry.track_recently_shared("Instagram")
+    entry.update!(last_shared_on_instagram_at: Time.current)
   end
 
   private

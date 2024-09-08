@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_08_143234) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_08_143941) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -123,6 +123,9 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_08_143234) do
     t.boolean "is_sensitive", default: false
     t.boolean "post_to_bluesky", default: true
     t.text "bluesky_text"
+    t.datetime "last_shared_on_instagram_at"
+    t.datetime "last_shared_on_bluesky_at"
+    t.datetime "last_shared_on_mastodon_at"
     t.index ["blog_id"], name: "index_entries_on_blog_id"
     t.index ["hide_from_search_engines"], name: "index_entries_on_hide_from_search_engines"
     t.index ["photos_count"], name: "index_entries_on_photos_count"

@@ -26,19 +26,28 @@ class RandomShareWorker < ApplicationWorker
 
   def find_eligible_entry(tag, platform)
     photoblog = Blog.first
+    months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
+    months_ago = months.months.ago
 
-    eligible_entry_ids = case platform
+    eligible_entries = case platform
     when 'Bluesky'
-      photoblog.entries.published.tagged_with(tag).where(post_to_bluesky: true).pluck(:id)
+      photoblog.entries.published
+               .tagged_with(tag)
+               .where(post_to_bluesky: true)
+               .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago)
     when 'Mastodon'
-      photoblog.entries.published.tagged_with(tag).where(post_to_mastodon: true).pluck(:id)
+      photoblog.entries.published
+               .tagged_with(tag)
+               .where(post_to_mastodon: true)
+               .where("last_shared_on_mastodon_at IS NULL OR last_shared_on_mastodon_at < ?", months_ago)
     when 'Instagram'
-      photoblog.entries.published.tagged_with(tag).where(post_to_instagram: true).pluck(:id)
+      photoblog.entries.published
+               .tagged_with(tag)
+               .where(post_to_instagram: true)
+               .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", months_ago)
     end
 
-    recently_shared_ids = $redis.lrange("recently_shared:#{platform.downcase}", 0, -1)
-    eligible_entry_ids -= recently_shared_ids.map(&:to_i)
-
-    eligible_entry_ids.empty? ? nil : Entry.find(eligible_entry_ids.sample)
+    return nil if eligible_entries.empty?
+    eligible_entries.sample
   end
 end
