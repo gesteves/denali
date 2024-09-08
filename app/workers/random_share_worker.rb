@@ -45,7 +45,6 @@ class RandomShareWorker < ApplicationWorker
                .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", months_ago)
     end
 
-    return nil if eligible_entries.empty?
     eligible_entries.sample
   end
 end
