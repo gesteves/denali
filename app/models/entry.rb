@@ -424,7 +424,7 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_caption
-    meta = ["🔗 #{self.short_permalink_url}"]
+    meta = ["🔗 #{self.permalink_url}"]
 
     if is_photo?
       photo = photos.first
@@ -447,7 +447,7 @@ class Entry < ApplicationRecord
   end
 
   def bluesky_caption
-    meta = ["🔗 #{self.short_permalink_url}"]
+    meta = ["🔗 #{self.permalink_url}"]
 
     if is_photo?
       photo = photos.first
