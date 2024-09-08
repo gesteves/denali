@@ -141,6 +141,7 @@ class Blog < ApplicationRecord
       email
       flickr
       header_logo_svg
+      bluesky
       instagram
       mastodon
       meta_description
