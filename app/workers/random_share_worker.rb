@@ -1,7 +1,7 @@
 class RandomShareWorker < ApplicationWorker
   def perform(tag, platform)
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
-    logger.info "[Queue] Attempting to share a random entry on #{platform}."
+    logger.info "[Social] Attempting to share a random entry on #{platform}."
 
     photoblog = Blog.first
     current_time = Time.current.in_time_zone(photoblog.time_zone)
@@ -44,7 +44,7 @@ class RandomShareWorker < ApplicationWorker
                .where(post_to_instagram: true)
                .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", months_ago)
     end
-
+    logger.info "[Social] There are #{eligible_entries.size} #{tag} entries eligible to be shared on #{platform}."
     eligible_entries.sample
   end
 end
