@@ -5,7 +5,7 @@ class RandomShareWorker < ApplicationWorker
 
     photoblog = Blog.first
     current_time = Time.current.in_time_zone(photoblog.time_zone)
-    return if current_time.to_date == photoblog.entries.published.first.published_at.in_time_zone(photoblog.time_zone).to_date
+    return if Entry.queued.count > 0 && current_time.to_date == photoblog.entries.published.first.published_at.in_time_zone(photoblog.time_zone).to_date
 
     entry = find_eligible_entry(tag, platform)
     return if entry.blank?
