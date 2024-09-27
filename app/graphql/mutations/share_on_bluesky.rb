@@ -1,14 +1,9 @@
 module Mutations
   class ShareOnBluesky < BaseMutation
-    
-    class ShareOnBlueskyInput < Types::BaseInputObject
-      argument :url, String, required: true
-    end
-
     field :entry, Types::EntryType, null: false
     field :errors, [String], null: false
 
-    argument :input, ShareOnBlueskyInput, required: true
+    argument :input, Types::ShareOnBlueskyInput, required: true
 
     def resolve(input:)
       url = input[:url]
