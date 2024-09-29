@@ -6,19 +6,17 @@ module Mutations
     field :errors, [String], null: false
 
     def resolve(url:)
-      entry = Entry.find_by_url(url: url)
-
-      if entry.present?
+      begin
+        entry = Entry.find_by_url(url: url)
         BlueskyWorker.perform_async(entry.id, entry.bluesky_caption)
-
         {
           entry: entry,
           errors: []
         }
-      else
+      rescue => e
         {
           entry: nil,
-          errors: ["Entry not found for the provided URL."]
+          errors: [e]
         }
       end
     end
