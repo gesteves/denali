@@ -14,7 +14,7 @@
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/2000
           <% if @entry.last_shared_on_instagram_at.present? %>
-            – Last shared <%= time_ago_in_words(@entry.last_shared_on_instagram_at) %> ago
+            – <span class="<%= instagram_share_warning_class(@entry) %>">Last shared <%= time_ago_in_words(@entry.last_shared_on_instagram_at) %> ago</span>
           <% end %>
           </p>
         </div>

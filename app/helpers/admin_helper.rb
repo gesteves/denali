@@ -11,4 +11,22 @@ module AdminHelper
   def pluralize_with_delimiter(word, count)
     "#{number_with_delimiter count} #{word.pluralize(count)}"
   end
+
+  def bluesky_share_warning_class(entry)
+    months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
+    months_ago = months.months.ago
+    entry.last_shared_on_bluesky_at >= months_ago ? "has-text-danger" : "has-text-current"
+  end
+
+  def instagram_share_warning_class(entry)
+    months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
+    months_ago = months.months.ago
+    entry.last_shared_on_instagram_at >= months_ago ? "has-text-danger" : "has-text-current"
+  end
+
+  def mastodon_share_warning_class(entry)
+    months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
+    months_ago = months.months.ago
+    entry.last_shared_on_mastodon_at >= months_ago ? "has-text-danger" : "has-text-current"
+  end
 end
