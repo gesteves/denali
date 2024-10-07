@@ -4,7 +4,6 @@
     <%= form_with url: bluesky_admin_entry_path(@entry.id), method: :post, local: false, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
     <header class="modal-card-head">
       <h1 class="modal-card-title">Share on Bluesky</h1>
-      <p>Last shared on <%= @entry.last_shared_on_bluesky_at.strftime('%B %-d, %Y at %-l:%M %p') %></p>
       <button class="delete" data-action="click->modal#close"></button>
     </header>
     <section class="modal-card-body">
@@ -14,6 +13,9 @@
             <%= form.text_area :text, value: @text.html_safe, placeholder: 'Your Bluesky caption…', maxlength: 300, required: true, class: 'textarea', rows: 8, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/300</p>
+          <% if @entry.last_shared_on_bluesky_at.present? %>
+            <p class="help">Last shared <%= @entry.last_shared_on_bluesky_at.strftime('%B %-d, %Y') %></p>
+          <% end %>
         </div>
       </div>
     </section>
