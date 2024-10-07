@@ -4,6 +4,7 @@
     <%= form_with url: mastodon_admin_entry_path(@entry.id), method: :post, local: false, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
     <header class="modal-card-head">
       <h1 class="modal-card-title">Share on Mastodon</h1>
+      <p>Last shared on <%= @entry.last_shared_on_mastodon_at.strftime('%B %-d, %Y at %-l:%M %p') %></p>
       <button class="delete" data-action="click->modal#close"></button>
     </header>
     <section class="modal-card-body">
