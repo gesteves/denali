@@ -15,6 +15,8 @@
           <p class="help"><span data-character-counter-target="characterCount">0</span>/500
           <% if @entry.last_shared_on_mastodon_at.present? %>
             – <span class="<%= mastodon_share_warning_class(@entry) %>">Last shared <%= time_ago_in_words(@entry.last_shared_on_mastodon_at) %> ago</span>
+          <% else %>
+            – Never shared on Mastodon
           <% end %>
           </p>
         </div>

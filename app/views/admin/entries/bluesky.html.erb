@@ -15,6 +15,8 @@
           <p class="help"><span data-character-counter-target="characterCount">0</span>/300
           <% if @entry.last_shared_on_bluesky_at.present? %>
             – <span class="<%= bluesky_share_warning_class(@entry) %>">Last shared <%= time_ago_in_words(@entry.last_shared_on_bluesky_at) %> ago</span>
+          <% else %>
+            – Never shared on Bluesky
           <% end %>
           </p>
         </div>
