@@ -53,10 +53,10 @@ jobs:
       - name: Install packages
         run: yarn install --frozen-lockfile
       # Add or replace database setup steps here
+      - name: Drop database (if exists)
+        run: bin/rails db:drop || true
       - name: Create database
         run: bin/rails db:create
-      - name: Set up database schema
-        run: bin/rails db:schema:load
       - name: Run migrations
         run: bin/rails db:migrate
       # Add or replace test runners here
