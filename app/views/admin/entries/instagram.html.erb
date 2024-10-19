@@ -12,15 +12,7 @@
           <div class="control is-expanded">
             <%= form.text_area :text, value: @text.html_safe, placeholder: 'Your Instagram caption…', maxlength: 2000, required: true, class: 'textarea', rows: 8, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
           </div>
-          <p class="help"><span data-character-counter-target="characterCount">0</span>/2000
-          – <span class="<%= instagram_share_warning_class(@entry) %>">
-            <% if @entry.last_shared_on_instagram_at.present? %>
-              Last shared <%= time_ago_in_words(@entry.last_shared_on_instagram_at) %> ago
-            <% else %>
-              Never shared
-            <% end %>
-          </span>
-          </p>
+          <p class="help"><span data-character-counter-target="characterCount">0</span>/2000</p>
         </div>
         <div class="control">
           <label class="radio">
@@ -31,6 +23,12 @@
             <%= form.radio_button :state, :queue %>
             Send to queue in <%= link_to 'Buffer', 'https://publish.buffer.com', target: '_blank' %>
           </label>
+        </div>
+        <hr class="hr">
+        <div class="field is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= last_shared_on_instagram_tag(@entry) %>
+          </div>
         </div>
       </div>
     </section>
