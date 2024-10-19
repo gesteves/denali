@@ -5,7 +5,6 @@ class Admin::EntriesController < AdminController
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
-  skip_before_action :require_login, only: [:latest_hashtags]
 
   # GET /admin/entries
   def index
