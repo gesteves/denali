@@ -9,7 +9,7 @@ kill_timeout = 5
   [build.args]
     BUNDLER_VERSION = "2.3.13"
     NODE_VERSION = "16.15.0"
-    RUBY_VERSION = "3.3.5"
+    RUBY_VERSION = "3.2.2"
 
 [deploy]
   release_command = "bin/rails fly:release"
