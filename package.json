@@ -37,7 +37,7 @@
     "gulp-scss-lint-stylish": "^1.0",
     "gulp-svgmin": "^4.1",
     "gulp-svgstore": "^9.0",
-    "webpack-dev-server": "^3.0"
+    "webpack-dev-server": "^5.1"
   },
   "repository": {
     "type": "git",
