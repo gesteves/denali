@@ -11,9 +11,6 @@ on:
   pull_request:
     branches: [ release ]
 env:
-  IMGIX_DOMAIN: ${{ secrets.IMGIX_DOMAIN }}
-  IMGIX_API_KEY: ${{ secrets.IMGIX_API_KEY }}
-  IMGIX_TOKEN: ${{ secrets.IMGIX_TOKEN }}
   S3_REGION: ${{ secrets.S3_REGION }}
   S3_BUCKET: ${{ secrets.S3_BUCKET }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
