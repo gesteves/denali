@@ -13,11 +13,13 @@
             <%= form.text_area :text, value: @text.html_safe, placeholder: 'Your Instagram caption…', maxlength: 2000, required: true, class: 'textarea', rows: 8, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/2000
-          <% if @entry.last_shared_on_instagram_at.present? %>
-            – <span class="<%= instagram_share_warning_class(@entry) %>">Last shared <%= time_ago_in_words(@entry.last_shared_on_instagram_at) %> ago</span>
-          <% else %>
-            – Never shared on Instagram
-          <% end %>
+          – <span class="<%= instagram_share_warning_class(@entry) %>">
+            <% if @entry.last_shared_on_instagram_at.present? %>
+              Last shared <%= time_ago_in_words(@entry.last_shared_on_instagram_at) %> ago
+            <% else %>
+              Never shared
+            <% end %>
+          </span>
           </p>
         </div>
         <div class="control">
