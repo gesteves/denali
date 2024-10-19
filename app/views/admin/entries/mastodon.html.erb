@@ -12,11 +12,13 @@
           <div class="control is-expanded">
             <%= form.text_area :text, value: @text.html_safe, placeholder: 'Your Mastodon caption…', maxlength: 500, required: true, class: 'textarea', rows: 8, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
           </div>
-          <p class="help"><span data-character-counter-target="characterCount">0</span>/500
-          <% if @entry.last_shared_on_mastodon_at.present? %>
-            – <span class="<%= mastodon_share_warning_class(@entry) %>">Last shared <%= time_ago_in_words(@entry.last_shared_on_mastodon_at) %> ago</span>
-          <% end %>
-          </p>
+          <p class="help"><span data-character-counter-target="characterCount">0</span>/500</p>
+        </div>
+        <hr class="hr">
+        <div class="field is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= last_shared_on_mastodon_tag(@entry) %>
+          </div>
         </div>
       </div>
     </section>

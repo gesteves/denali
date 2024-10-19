@@ -12,11 +12,13 @@
           <div class="control is-expanded">
             <%= form.text_area :text, value: @text.html_safe, placeholder: 'Your Bluesky caption…', maxlength: 300, required: true, class: 'textarea', rows: 8, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
           </div>
-          <p class="help"><span data-character-counter-target="characterCount">0</span>/300
-          <% if @entry.last_shared_on_bluesky_at.present? %>
-            – <span class="<%= bluesky_share_warning_class(@entry) %>">Last shared <%= time_ago_in_words(@entry.last_shared_on_bluesky_at) %> ago</span>
-          <% end %>
-          </p>
+          <p class="help"><span data-character-counter-target="characterCount">0</span>/300</p>
+        </div>
+        <hr class="hr">
+        <div class="field is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= last_shared_on_bluesky_tag(@entry) %>
+          </div>
         </div>
       </div>
     </section>
