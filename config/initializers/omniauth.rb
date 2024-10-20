@@ -1,5 +1,4 @@
 OmniAuth.config.logger = Rails.logger
-OmniAuth.config.silence_get_warning = true
 Rails.application.config.middleware.use OmniAuth::Builder do
   opts = {
     scope: 'userinfo.email, userinfo.profile',
