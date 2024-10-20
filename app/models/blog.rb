@@ -36,8 +36,6 @@ class Blog < ApplicationRecord
     /feed*
     /oembed*
     /preview*
-    /activitypub*
-    /nodeinfo*
     /about
   }
 

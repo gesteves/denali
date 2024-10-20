@@ -1,2 +1,0 @@
-module Activitypub::OutboxHelper
-end

@@ -315,7 +315,6 @@ class Entry < ApplicationRecord
       /oembed*
       /search*
       /related*
-      /activitypub*
       /nodeinfo*
     }
 

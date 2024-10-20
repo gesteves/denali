@@ -71,22 +71,4 @@ module ApplicationHelper
       Rails.application.assets[filename].to_s.html_safe
     end
   end
-
-  def activitypub_activitystream_context
-    ["https://www.w3.org/ns/activitystreams",
-     {
-      ostatus: "http://ostatus.org#",
-			atomUri: "ostatus:atomUri",
-			inReplyToAtomUri: "ostatus:inReplyToAtomUri",
-			sensitive: "as:sensitive",
-			toot: "http://joinmastodon.org/ns#",
-      blurhash: "toot:blurhash",
-      focalPoint: {
-        '@container': "@list",
-        '@id': "toot:focalPoint"
-      },
-      Hashtag: "as:Hashtag"
-     }
-    ]
-  end
 end

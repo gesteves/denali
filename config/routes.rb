@@ -142,20 +142,6 @@ Rails.application.routes.draw do
   # Pages
   get '/about'                         => 'blogs#about', :as => :about
 
-  # ActivityPub
-  get '/.well-known/webfinger'             => 'well_known/webfinger#show', :as => :webfinger
-  get '/.well-known/host-meta'             => 'well_known/host_meta#show'
-  get '/.well-known/nodeinfo'              => 'well_known/nodeinfo#index'
-  get '/nodeinfo/2.0'                      => 'well_known/nodeinfo#show', :as => :nodeinfo
-  namespace :activitypub do
-    post '/inbox/:user_id'                 => 'inboxes#index',       constraints: { user_id: /\d+/ },                     :as => :inbox
-    get  '/entry/:user_id/:entry_id'       => 'entries#show',        constraints: { user_id: /\d+/, entry_id: /\d+/ },    :as => :entry
-    get  '/activity/:user_id/:activity_id' => 'activities#show',     constraints: { user_id: /\d+/, activity_id: /\d+/ }, :as => :activity
-    get  '/outbox/:user_id'                => 'outboxes#index',      constraints: { user_id: /\d+/ },                     :as => :outbox
-    get  '/outbox/:user_id/:page'          => 'outboxes#activities', constraints: { user_id: /\d+/, page: /\d+/ },        :as => :outbox_activities
-    get  '/user/:user_id'                  => 'profiles#show',       constraints: { user_id: /\d+/ },                     :as => :profile
-  end
-
   # Miscellaneous
   get '/healthcheck'                   => 'health#show', :as => :health_check
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }

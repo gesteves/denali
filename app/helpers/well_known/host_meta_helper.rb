@@ -1,2 +1,0 @@
-module WellKnown::HostMetaHelper
-end

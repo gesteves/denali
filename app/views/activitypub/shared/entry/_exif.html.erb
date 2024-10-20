@@ -1,7 +1,0 @@
-📷 <%= photo.formatted_camera %><br>
-<% if photo.formatted_exif.present? && photo.film.blank? %>
-🎞 <%= photo.formatted_exif %> <br>
-<% end %>
-<% if photo.film.present? %>
-🎞 <%= photo.film.display_name %> <br>
-<% end %>
