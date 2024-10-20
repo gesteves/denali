@@ -1,10 +1,4 @@
 Rails.application.routes.draw do
-  namespace :well_known do
-    get 'nodeinfo/index'
-    get 'nodeinfo/show'
-    get 'host_meta/show'
-    get 'webfinger/show'
-  end
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'
   mount Sidekiq::Web => '/admin/sidekiq', constraints: lambda { |request| request.session[:user_id].present? && User.find(request.session[:user_id]).present? }
