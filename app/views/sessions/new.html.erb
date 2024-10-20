@@ -5,5 +5,7 @@
 <% end %>
 
 <div class="signin">
-  <a href="/auth/google_oauth2" class="button">Sign in with Google</a>
+  <%= form_tag("/auth/google_oauth2", method: 'post') do %>
+    <button type="submit" class="button">Sign in with Google</button>
+  <% end %>
 </div>

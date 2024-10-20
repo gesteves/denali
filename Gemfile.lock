@@ -304,6 +304,9 @@ GEM
     omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
       omniauth (~> 2.0)
+    omniauth-rails_csrf_protection (1.0.2)
+      actionpack (>= 4.2)
+      omniauth (~> 2.0)
     openssl (3.2.0)
     pg (1.5.8)
     psych (5.1.2)
@@ -497,6 +500,7 @@ DEPENDENCIES
   mock_redis
   oauth
   omniauth-google-oauth2
+  omniauth-rails_csrf_protection
   pg (~> 1.4)
   public_suffix
   puma

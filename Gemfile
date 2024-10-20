@@ -10,6 +10,7 @@ gem 'bootsnap', require: false
 
 # Auth
 gem 'omniauth-google-oauth2'
+gem 'omniauth-rails_csrf_protection'
 
 # AWS
 gem 'aws-sdk-cloudfront', '~> 1'
