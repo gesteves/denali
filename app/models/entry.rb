@@ -315,7 +315,6 @@ class Entry < ApplicationRecord
       /oembed*
       /search*
       /related*
-      /nodeinfo*
     }
 
     if self.is_published?
