@@ -5,5 +5,7 @@
 <% end %>
 
 <div class="signin">
-  <%= link_to "Sign in with Google", "/auth/google_oauth2", method: :post, class: "button" %>
+  <%= form_tag("/auth/google_oauth2", method: 'post') do %>
+    <button type="submit" class="button">Login with Developer</button>
+  <% end %>
 </div>
