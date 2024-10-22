@@ -71,7 +71,7 @@ Rails.application.configure do
   # information to avoid inadvertent exposure of personally identifiable information (PII). If you
   # want to log everything, set the level to "debug".
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
-  config.lograge.enabled = true
+  config.lograge.enabled = ENV.fetch("LOGRAGE_ENABLED", "true") == "true"
 
   # Use a different cache store in production.
   if ENV['REDIS_CACHE_URL'].present?
