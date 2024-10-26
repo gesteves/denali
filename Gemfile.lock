@@ -308,7 +308,7 @@ GEM
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     openssl (3.2.0)
-    pg (1.5.8)
+    pg (1.5.9)
     psych (5.1.2)
       stringio
     public_suffix (6.0.1)
@@ -500,7 +500,7 @@ DEPENDENCIES
   oauth
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
-  pg (~> 1.4)
+  pg (~> 1.5)
   public_suffix
   puma
   rack-attack
