@@ -196,7 +196,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    graphql (2.3.18)
+    graphql (2.3.19)
       base64
       fiber-storage
     hashie (5.0.0)
