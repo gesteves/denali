@@ -74,8 +74,17 @@ Rails.application.configure do
   config.lograge.enabled = ENV.fetch("LOGRAGE_ENABLED", "true") == "true"
 
   # Use a different cache store in production.
-  if ENV['REDIS_CACHE_URL'].present?
-    config.cache_store = :redis_cache_store, { url: ENV['REDIS_CACHE_URL'] }
+  if ENV["MEMCACHIER_SERVERS"].present?
+    config.cache_store = :mem_cache_store,
+      (ENV["MEMCACHIER_SERVERS"] || "").split(","),
+      {
+        username: ENV["MEMCACHIER_USERNAME"],
+        password: ENV["MEMCACHIER_PASSWORD"],
+        failover: true,
+        socket_timeout: 1.5,
+        socket_failure_delay: 0.2,
+        down_retry_delay: 60
+      }
   end
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
