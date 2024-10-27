@@ -54,6 +54,7 @@ gem 'skylight'
 # Caching
 gem 'redis'
 gem 'hiredis'
+gem 'dalli'
 
 # Background Jobs
 gem 'sidekiq'
