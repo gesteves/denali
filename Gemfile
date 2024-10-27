@@ -49,6 +49,7 @@ gem 'web-push'
 
 # Monitoring
 gem 'bugsnag'
+gem 'skylight'
 
 # Caching
 gem 'redis'
