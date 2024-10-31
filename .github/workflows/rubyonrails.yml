@@ -1,15 +1,11 @@
-# This workflow uses actions that are not certified by GitHub.  They are
-# provided by a third-party and are governed by separate terms of service,
-# privacy policy, and support documentation.
-#
-# This workflow will install a prebuilt Ruby version, install dependencies, and
-# run tests and linters.
 name: "Ruby on Rails CI"
+
 on:
   push:
-    branches: [ release ]
+    branches: [release]
   pull_request:
-    branches: [ release ]
+    branches: [release]
+
 env:
   S3_REGION: ${{ secrets.S3_REGION }}
   S3_BUCKET: ${{ secrets.S3_BUCKET }}
@@ -22,35 +18,50 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
+
     services:
       postgres:
-        image: postgres:11-alpine
+        image: postgres:latest
         ports:
-          - "5432:5432"
+          - 5432:5432
         env:
           POSTGRES_DB: rails_test
           POSTGRES_USER: rails
           POSTGRES_PASSWORD: password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     env:
       RAILS_ENV: test
-      DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
+      DATABASE_URL: postgres://rails:password@localhost:5432/rails_test
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      # Add or replace dependency steps here
-      - name: Install Ruby and gems
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version-file: '.ruby-version'
-      - name: Install Node
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-      - name: Install packages
-        run: yarn install --frozen-lockfile
-      # Add or replace database setup steps here
-      - name: Set up database schema
-        run: bin/rails db:schema:load
-      # Add or replace test runners here
-      - name: Run tests
-        run: bin/rails test
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version-file: '.nvmrc'
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version-file: '.ruby-version'
+
+    - name: Install dependencies
+      run: |
+        gem install bundler
+        bundle install --jobs 4 --retry 3
+        yarn install --frozen-lockfile
+
+    - name: Set up database
+      run: |
+        bin/rails db:create
+        bin/rails db:schema:load
+
+    - name: Run tests
+      run: bin/rails test
