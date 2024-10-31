@@ -41,12 +41,11 @@ jobs:
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@v1
         with:
-          bundler-cache: true
+          ruby-version-file: '.ruby-version'
       - name: Install Node
         uses: actions/setup-node@v3
         with:
-          node-version: 16
-          cache: 'yarn'
+          node-version-file: '.nvmrc'
       - name: Install packages
         run: yarn install --frozen-lockfile
       # Add or replace database setup steps here
