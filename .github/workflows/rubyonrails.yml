@@ -15,6 +15,7 @@ env:
   GOOGLE_APPS_DOMAIN: ${{ secrets.GOOGLE_APPS_DOMAIN }}
   GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
   GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+  NODE_OPTIONS: "--openssl-legacy-provider"
 jobs:
   test:
     runs-on: ubuntu-latest
