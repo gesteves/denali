@@ -61,8 +61,8 @@ jobs:
         bundle install --jobs 4 --retry 3
         yarn install --frozen-lockfile
 
-    - name: Set up database
-      run: bin/rails db:schema:load
+    - name: Run migrations
+      run: bin/rails db:migrate
 
     - name: Compile assets
       run: bin/rails assets:precompile
