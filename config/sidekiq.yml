@@ -22,3 +22,15 @@
       queue: high
       args: ['Wildlife', 'Bluesky']
       description: "Shares a random wildlife photo on Bluesky."
+    random_mastodon_landscape:
+      cron: '0 14 * * *'
+      class: RandomShareWorker
+      queue: high
+      args: ['Landscapes', 'Mastodon']
+      description: "Shares a random landscape photo on Mastodon."
+    random_mastodon_wildlife:
+      cron: '0 18 * * *'
+      class: RandomShareWorker
+      queue: high
+      args: ['Wildlife', 'Mastodon']
+      description: "Shares a random wildlife photo on Mastodon."
