@@ -93,30 +93,28 @@ class Bluesky
   # @return [Array<Hash>] an array of hashes containing URL data, including byte offsets and the URLs.
   #         The method also returns the modified text with Markdown syntax replaced by the link label.
   def parse_urls(text)
-    modified_text = text.dup # Work on a copy to ensure changes persist
     spans = []
     markdown_regex = /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/ # Matches Markdown-style links like [example](http://example.com)
     url_regex = /[$|\W](https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*[-a-zA-Z0-9@%_\+~#\/=])?)/
-
-    # Process Markdown-style links first
-    modified_text.scan(markdown_regex) do |match|
-      label, url = match
-      match_data = $~
-      byte_start, byte_end = byte_offsets_for_match(match_data, modified_text)
-
-      # Replace the Markdown-style link in the text with just the label
-      modified_text[byte_start...byte_end] = label
-
-      # Update byte offsets to match the label-only text
-      byte_end = byte_start + label.bytesize
-
+  
+    modified_text = text.dup # Create a copy to ensure changes persist
+  
+    # Replace Markdown links and capture spans
+    modified_text.gsub!(markdown_regex) do |match|
+      label = $1
+      url = $2
+      match_data = Regexp.last_match
+      byte_start, byte_end = byte_offsets_for_match(match_data, text)
+  
       spans << {
         "start" => byte_start,
-        "end" => byte_end,
+        "end" => byte_start + label.bytesize,
         "url" => url
       }
+  
+      label
     end
-
+  
     # Process plain URLs
     modified_text.scan(url_regex) do |m|
       byte_start, byte_end = byte_offsets_for_match($~, modified_text)
@@ -126,12 +124,9 @@ class Bluesky
         "url" => m[0]
       }
     end
-
-    puts text
-    puts modified_text
+  
     [spans, modified_text]
   end
-
 
   # Parses #hashtags in the text and returns their byte offsets and tags.
   #
