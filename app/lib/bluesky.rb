@@ -97,7 +97,7 @@ class Bluesky
   def parse_urls(text)
     spans = []
     markdown_regex = /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/ # Matches Markdown-style links like [example](http://example.com)
-    url_regex = /(?<!\()https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*)/ # Matches plain URLs but avoids capturing those inside Markdown links
+    url_regex = /\bhttps?:\/\/[^\s<>\]]+/ # Matches plain URLs starting with http:// or https://
   
     modified_text = text.dup # Work on a copy of the original text
   
@@ -118,20 +118,20 @@ class Bluesky
     end
   
     # Process plain URLs
-    modified_text.scan(url_regex) do |m|
+    modified_text.scan(url_regex) do |url|
       match_data = Regexp.last_match
       byte_start, byte_end = byte_offsets_for_match(match_data, modified_text)
   
       spans << {
         "start" => byte_start,
         "end" => byte_end,
-        "url" => m[0]
+        "url" => url
       }
     end
   
     [spans, modified_text]
-  end  
-
+  end
+  
   # Parses #hashtags in the text and returns their byte offsets and tags.
   #
   # @param text [String] the text to scan for hashtags.
