@@ -127,6 +127,8 @@ class Bluesky
       }
     end
 
+    puts text
+    puts modified_text
     [spans, modified_text]
   end
 
