@@ -98,13 +98,35 @@ class Bluesky
     spans
   end
 
-  # Parses URLs in the text and returns their byte offsets and URLs.
+  # Parses URLs, including Markdown-style links, in the text and returns their byte offsets and associated data.
   #
-  # @param text [String] the text to scan for URLs.
-  # @return [Array<Hash>] an array of hashes containing URL data including byte offsets and the URLs.
+  # @param text [String] the text to scan for URLs and Markdown links.
+  # @return [Array<Hash>] an array of hashes containing URL data, including byte offsets and the URLs.
   def parse_urls(text)
     spans = []
+    markdown_regex = /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/ # Matches Markdown-style links like [example](http://example.com)
     url_regex = /[$|\W](https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*[-a-zA-Z0-9@%_\+~#\/=])?)/
+
+    # Process Markdown-style links first
+    text.scan(markdown_regex) do |match|
+      label, url = match
+      match_data = $~
+      byte_start, byte_end = byte_offsets_for_match(match_data, text)
+
+      # Replace the Markdown-style link in the original text with just the label
+      text[byte_start...byte_end] = label
+
+      # Update byte offsets to match the label-only text
+      byte_end = byte_start + label.bytesize
+
+      spans << {
+        "start" => byte_start,
+        "end" => byte_end,
+        "url" => url
+      }
+    end
+
+    # Process plain URLs
     text.scan(url_regex) do |m|
       byte_start, byte_end = byte_offsets_for_match($~, text)
       spans << {
@@ -113,6 +135,7 @@ class Bluesky
         "url" => m[0]
       }
     end
+
     spans
   end
 
@@ -140,6 +163,21 @@ class Bluesky
   # @return [Array<Hash>] an array of facet hashes, including mention, URL, and tag facets.
   def parse_facets(text)
     facets = []
+    parse_urls(text).each do |u|
+      facets << {
+        "index" => {
+          "byteStart" => u["start"],
+          "byteEnd" => u["end"],
+        },
+        "features" => [
+          {
+            "$type" => "app.bsky.richtext.facet#link",
+            "uri" => u["url"]
+          }
+        ]
+      }
+    end
+    
     parse_mentions(text).each do |m|
       response = HTTParty.get("https://bsky.social/xrpc/com.atproto.identity.resolveHandle", query: {"handle" => m["handle"]})
 
@@ -155,21 +193,6 @@ class Bluesky
           {
             "$type" => "app.bsky.richtext.facet#mention",
             "did" => did
-          }
-        ]
-      }
-    end
-
-    parse_urls(text).each do |u|
-      facets << {
-        "index" => {
-          "byteStart" => u["start"],
-          "byteEnd" => u["end"],
-        },
-        "features" => [
-          {
-            "$type" => "app.bsky.richtext.facet#link",
-            "uri" => u["url"]
           }
         ]
       }
