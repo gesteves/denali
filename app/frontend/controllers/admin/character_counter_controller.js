@@ -18,10 +18,8 @@ export default class extends Controller {
    */
   updateCharacterCount () {
     const splitter = new GraphemeSplitter();
-    const processedText = this.stripMarkdown(this.inputTarget.value); // Strip Markdown
-    const graphemes = splitter.splitGraphemes(processedText); // Count Unicode graphemes
-
-    const count = graphemes.length;
+    const plainText = this.stripMarkdown(this.inputTarget.value); // Strip Markdown
+    const count = splitter.countGraphemes(plainText); // Count Unicode graphemes
 
     this.characterCountTarget.innerHTML = count;
     if (count > (this.maxCharacters - 10)) {
