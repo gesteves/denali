@@ -457,11 +457,8 @@ class Entry < ApplicationRecord
     meta << "🏷️ #{bluesky_tags}" if bluesky_tags.present?
 
     caption = []
-    if self.bluesky_text.present?
-      caption << self.bluesky_text
-    else
-      caption << self.plain_title
-    end
+    caption << "[#{self.plain_title}](#{self.permalink_url})"
+    caption << self.bluesky_text if self.bluesky_text.present?
 
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
