@@ -445,7 +445,7 @@ class Entry < ApplicationRecord
   end
 
   def bluesky_caption
-    meta = ["🔗 #{self.permalink_url}"]
+    meta = []
 
     if is_photo?
       photo = photos.first
