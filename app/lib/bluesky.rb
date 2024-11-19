@@ -31,38 +31,25 @@ class Bluesky
       }
     end
 
-    facets = parse_facets(text)
-
-    request_body = {
-      repo: did,
-      collection: "app.bsky.feed.post",
-      record: {
-        text: text,
-        langs: ["en-US"],
-        createdAt: Time.now.iso8601,
-        facets: facets
-      }
+    record_data = {
+      text: text,
+      langs: ["en-US"],
+      createdAt: Time.now.iso8601,
+      facets: parse_facets(text)
     }
 
-    request_body[:record][:embed] = {
+    record_data[:embed] = {
       "$type" => "app.bsky.embed.images",
       "images" => embedded_images
     } unless embedded_images.empty?
 
-    headers = {
-      "Authorization" => "Bearer #{access_token}",
-      "Content-Type" => "application/json"
+    record = {
+      repo: did,
+      collection: "app.bsky.feed.post",
+      record: record_data
     }
 
-    response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
-                              body: request_body.to_json,
-                              headers: headers)
-
-    if response.success?
-      JSON.parse(response.body)
-    else
-      raise "Failed to post to Bluesky: #{response.body}"
-    end
+    create_record(record)
   end
 
   private
@@ -177,12 +164,10 @@ class Bluesky
         ]
       }
     end
-    
-    parse_mentions(text).each do |m|
-      response = HTTParty.get("https://bsky.social/xrpc/com.atproto.identity.resolveHandle", query: {"handle" => m["handle"]})
 
-      next if response.code == 400
-      did = JSON.parse(response.body)["did"]
+    parse_mentions(text).each do |m|
+      did = resolve_handle(m["handle"])
+      next unless did
 
       facets << {
         "index" => {
@@ -214,6 +199,38 @@ class Bluesky
     end
 
     facets
+  end
+
+  # Resolves a handle to its DID using the Bluesky API.
+  #
+  # @param handle [String] the handle to resolve.
+  # @return [String, nil] the DID if resolved successfully, or nil if the handle cannot be resolved.
+  def resolve_handle(handle)
+    response = HTTParty.get("#{@base_url}/xrpc/com.atproto.identity.resolveHandle", query: { "handle" => handle })
+
+    return nil if response.code == 400
+    JSON.parse(response.body)["did"]
+  end
+
+  # Creates a record in the Bluesky API for the specified collection.
+  #  # @param record [Hash] the record data to send to the API.
+  # @return [Hash] the parsed response body if successful.
+  # @raise [RuntimeError] if the post request fails.
+  def create_record(record)
+    headers = {
+      "Authorization" => "Bearer #{access_token}",
+      "Content-Type" => "application/json"
+    }
+
+    response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
+                             body: record.to_json,
+                             headers: headers)
+
+    if response.success?
+      JSON.parse(response.body)
+    else
+      raise "Failed to create record in collection #{collection}: #{response.body}"
+    end
   end
 
   # Returns the cache key for the user's DID.
