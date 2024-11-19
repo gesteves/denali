@@ -113,9 +113,6 @@ class Bluesky
       label
     end
   
-    [spans, modified_text]
-  end  
-  
     # Process plain URLs
     modified_text.scan(url_regex) do |m|
       byte_start, byte_end = byte_offsets_for_match($~, modified_text)
