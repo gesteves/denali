@@ -50,6 +50,8 @@ class Bluesky
       collection: "app.bsky.feed.post",
       record: record_data
     }
+
+    puts record.to_json
   
     create_record(record)
   end
