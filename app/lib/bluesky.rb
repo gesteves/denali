@@ -238,7 +238,7 @@ class Bluesky
     if response.success?
       JSON.parse(response.body)
     else
-      raise "Failed to create record in collection #{collection}: #{response.body}"
+      raise "Failed to create record: #{response.body}"
     end
   end
 
