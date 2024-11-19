@@ -97,7 +97,7 @@ class Bluesky
     # Step 1: Render Markdown to HTML
     renderer = Redcarpet::Render::HTML.new(hard_wrap: false)
     markdown = Redcarpet::Markdown.new(renderer, autolink: true, no_intra_emphasis: true, fenced_code_blocks: true)
-    html = markdown.render(text)
+    html = Redcarpet::Render::SmartyPants.render(markdown.render(text))
   
     # Step 2: Extract <a> tags using Nokogiri
     doc = Nokogiri::HTML.fragment(html)
@@ -109,6 +109,7 @@ class Bluesky
     fragment = Nokogiri::HTML.fragment(html)
     fragment.css('br').each { |br| br.replace("\n") }
     plain_text = Sanitize.fragment(fragment.to_html).strip
+    plain_text = plain_text.gsub(/ *\n+ */, "\n")
   
     # Step 4: Find each label's position in the plain text
     spans = []
