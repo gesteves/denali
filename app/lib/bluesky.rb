@@ -30,12 +30,14 @@ class Bluesky
         }
       }
     end
+
+    facets, plain_text = parse_facets(text)
   
     record_data = {
-      text: text,
+      text: plain_text,
       langs: ["en-US"],
       createdAt: Time.now.iso8601,
-      facets: parse_facets(text)
+      facets: facets
     }
   
     record_data[:embed] = {
@@ -48,10 +50,10 @@ class Bluesky
       collection: "app.bsky.feed.post",
       record: record_data
     }
-
+  
     create_record(record)
   end
-
+  
   private
 
   # Calculates byte offsets for a match found in a string.
@@ -90,20 +92,44 @@ class Bluesky
   # @param text [String] the text to scan for URLs.
   # @return [Array<Hash>] an array of hashes containing URL data, including byte offsets and the URLs.
   def parse_urls(text)
+    links = []
+  
+    # Step 1: Render Markdown to HTML
+    renderer = Redcarpet::Render::HTML.new(hard_wrap: false)
+    markdown = Redcarpet::Markdown.new(renderer, autolink: true, no_intra_emphasis: true, fenced_code_blocks: true)
+    html = markdown.render(text)
+  
+    # Step 2: Extract <a> tags using Nokogiri
+    doc = Nokogiri::HTML.fragment(html)
+    doc.css('a').each do |link|
+      links << { label: link.text.strip, url: link['href'] }
+    end
+  
+    # Step 3: Convert HTML to plain text with preserved line breaks
+    fragment = Nokogiri::HTML.fragment(html)
+    fragment.css('br').each { |br| br.replace("\n") }
+    plain_text = Sanitize.fragment(fragment.to_html).strip
+  
+    # Step 4: Find each label's position in the plain text
     spans = []
-    url_regex = /[$|\W](https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*[-a-zA-Z0-9@%_\+~#\/=])?)/
-
-    text.scan(url_regex) do |m|
-      byte_start, byte_end = byte_offsets_for_match($~, text)
+    links.each do |link|
+      label = link[:label]
+      url = link[:url]
+  
+      # Find the first occurrence of the label in the plain text
+      byte_start = plain_text.index(label)
+      next unless byte_start # Skip if the label is not found
+  
+      byte_end = byte_start + label.bytesize
       spans << {
         "start" => byte_start,
         "end" => byte_end,
-        "url" => m[0]
+        "url" => url
       }
     end
-
-    spans
-  end
+  
+    [spans, plain_text]
+  end  
 
   # Parses #hashtags in the text and returns their byte offsets and tags.
   #
@@ -128,13 +154,17 @@ class Bluesky
   # @param text [String] the text to scan for facets.
   # @return [Array<Hash>] an array of facet hashes, including mention, URL, and tag facets.
   def parse_facets(text)
+    url_spans, plain_text = parse_urls(text)
     facets = []
-
-    parse_urls(text).each do |u|
+  
+    # Add URL facets
+    url_spans.each do |u|
+      next unless u["url"] =~ /\Ahttps?:\/\// # Ensure the URL is valid
+  
       facets << {
         "index" => {
           "byteStart" => u["start"],
-          "byteEnd" => u["end"],
+          "byteEnd" => u["end"]
         },
         "features" => [
           {
@@ -144,16 +174,16 @@ class Bluesky
         ]
       }
     end
-
-    # Parse mentions
-    parse_mentions(text).each do |m|
+  
+    # Add mention facets
+    parse_mentions(plain_text).each do |m|
       did = resolve_handle(m["handle"])
       next unless did
-
+  
       facets << {
         "index" => {
           "byteStart" => m["start"],
-          "byteEnd" => m["end"],
+          "byteEnd" => m["end"]
         },
         "features" => [
           {
@@ -163,13 +193,13 @@ class Bluesky
         ]
       }
     end
-
-    # Parse hashtags
-    parse_tags(text).each do |t|
+  
+    # Add hashtag facets
+    parse_tags(plain_text).each do |t|
       facets << {
         "index" => {
           "byteStart" => t["start"],
-          "byteEnd" => t["end"],
+          "byteEnd" => t["end"]
         },
         "features" => [
           {
@@ -179,9 +209,9 @@ class Bluesky
         ]
       }
     end
-
-    facets
-  end
+  
+    [facets, plain_text]
+  end  
 
   # Resolves a handle to its DID using the Bluesky API.
   #
