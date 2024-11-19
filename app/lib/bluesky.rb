@@ -30,25 +30,27 @@ class Bluesky
         }
       }
     end
-
+  
+    facets, modified_text = parse_facets(text)
+  
     record_data = {
-      text: text,
+      text: modified_text,
       langs: ["en-US"],
       createdAt: Time.now.iso8601,
-      facets: parse_facets(text)
+      facets: facets
     }
-
+  
     record_data[:embed] = {
       "$type" => "app.bsky.embed.images",
       "images" => embedded_images
     } unless embedded_images.empty?
-
+  
     record = {
       repo: did,
       collection: "app.bsky.feed.post",
       record: record_data
     }
-
+  
     create_record(record)
   end
 
@@ -89,19 +91,21 @@ class Bluesky
   #
   # @param text [String] the text to scan for URLs and Markdown links.
   # @return [Array<Hash>] an array of hashes containing URL data, including byte offsets and the URLs.
+  #         The method also returns the modified text with Markdown syntax replaced by the link label.
   def parse_urls(text)
+    modified_text = text.dup # Work on a copy to ensure changes persist
     spans = []
     markdown_regex = /\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/ # Matches Markdown-style links like [example](http://example.com)
     url_regex = /[$|\W](https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&\/=]*[-a-zA-Z0-9@%_\+~#\/=])?)/
 
     # Process Markdown-style links first
-    text.scan(markdown_regex) do |match|
+    modified_text.scan(markdown_regex) do |match|
       label, url = match
       match_data = $~
-      byte_start, byte_end = byte_offsets_for_match(match_data, text)
+      byte_start, byte_end = byte_offsets_for_match(match_data, modified_text)
 
-      # Replace the Markdown-style link in the original text with just the label
-      text[byte_start...byte_end] = label
+      # Replace the Markdown-style link in the text with just the label
+      modified_text[byte_start...byte_end] = label
 
       # Update byte offsets to match the label-only text
       byte_end = byte_start + label.bytesize
@@ -114,8 +118,8 @@ class Bluesky
     end
 
     # Process plain URLs
-    text.scan(url_regex) do |m|
-      byte_start, byte_end = byte_offsets_for_match($~, text)
+    modified_text.scan(url_regex) do |m|
+      byte_start, byte_end = byte_offsets_for_match($~, modified_text)
       spans << {
         "start" => byte_start,
         "end" => byte_end,
@@ -123,8 +127,9 @@ class Bluesky
       }
     end
 
-    spans
+    [spans, modified_text]
   end
+
 
   # Parses #hashtags in the text and returns their byte offsets and tags.
   #
@@ -148,9 +153,13 @@ class Bluesky
   #
   # @param text [String] the text to scan for facets.
   # @return [Array<Hash>] an array of facet hashes, including mention, URL, and tag facets.
+  #         The modified text with any Markdown links replaced is also returned.
   def parse_facets(text)
     facets = []
-    parse_urls(text).each do |u|
+
+    # Parse URLs (including Markdown links) and retrieve the modified text
+    url_spans, modified_text = parse_urls(text)
+    url_spans.each do |u|
       facets << {
         "index" => {
           "byteStart" => u["start"],
@@ -165,7 +174,8 @@ class Bluesky
       }
     end
 
-    parse_mentions(text).each do |m|
+    # Parse mentions
+    parse_mentions(modified_text).each do |m|
       did = resolve_handle(m["handle"])
       next unless did
 
@@ -183,7 +193,8 @@ class Bluesky
       }
     end
 
-    parse_tags(text).each do |t|
+    # Parse hashtags
+    parse_tags(modified_text).each do |t|
       facets << {
         "index" => {
           "byteStart" => t["start"],
@@ -198,7 +209,7 @@ class Bluesky
       }
     end
 
-    facets
+    [facets, modified_text]
   end
 
   # Resolves a handle to its DID using the Bluesky API.
