@@ -7,9 +7,12 @@ import GraphemeSplitter from 'grapheme-splitter';
  */
 export default class extends Controller {
   static targets = ['characterCount', 'input'];
-
+  static values = {
+    maxLength: Number
+  }
+  
   connect () {
-    this.maxCharacters = parseInt(this.inputTarget.maxLength);
+    this.maxCharacters = this.hasMaxLengthValue ? this.maxLengthValue : parseInt(this.inputTarget.maxLength, 10);
     this.updateCharacterCount();
   }
 
