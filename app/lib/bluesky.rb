@@ -112,22 +112,31 @@ class Bluesky
   
     # Step 4: Find each label's position in the plain text
     spans = []
+    current_index = 0 # Tracks how much of the text has been processed
+
     links.each do |link|
       label = link[:label]
       url = link[:url]
-  
-      # Find the first occurrence of the label in the plain text
-      byte_start = plain_text.index(label)
-      next unless byte_start # Skip if the label is not found
-  
+
+      # Find the next occurrence of the label in the remaining text
+      match_index = plain_text.byteslice(current_index..).index(label)
+      next unless match_index # Skip if the label is not found
+
+      # Calculate the byte start and end based on the current position
+      byte_start = current_index + match_index
       byte_end = byte_start + label.bytesize
+
+      # Add the span for the link
       spans << {
         "start" => byte_start,
         "end" => byte_end,
         "url" => url
       }
+
+      # Update current_index to continue searching after this label
+      current_index = byte_end
     end
-  
+
     [spans, plain_text]
   end  
 
