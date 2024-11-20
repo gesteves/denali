@@ -248,6 +248,7 @@ class Bluesky
                              headers: headers)
 
     if response.success?
+      puts response.body
       JSON.parse(response.body)
     else
       raise "Failed to create record: #{response.body}"
