@@ -241,14 +241,11 @@ class Bluesky
       "Content-Type" => "application/json"
     }
 
-    puts record.to_json
-
     response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
                              body: record.to_json,
                              headers: headers)
 
     if response.success?
-      puts response.body
       JSON.parse(response.body)
     else
       raise "Failed to create record: #{response.body}"
