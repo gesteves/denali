@@ -241,7 +241,7 @@ class Bluesky
       "Content-Type" => "application/json"
     }
 
-    puts record
+    puts record.to_json
 
     response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
                              body: record.to_json,
