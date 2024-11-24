@@ -291,7 +291,6 @@ class Bluesky
                              headers: headers)
 
     if response.success?
-      puts "#{record[:collection]} record created: #{response.body}"
       JSON.parse(response.body)
     else
       raise "Failed to create #{record[:collection]} record: #{response.body}"
