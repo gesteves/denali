@@ -16,14 +16,22 @@ class Bluesky
   #
   # @param text [String] the raw text of the post with Markdown syntax.
   # @return [Boolean] true if the plain text is valid, false otherwise.
-  def self.valid_post_length?(text)
+  def valid_post_length?(text)
     return false unless text.is_a?(String)
 
+    post_length(text) <= 300
+  end
+
+  # Verifies that the plain text of a post is equal to or less than 300 Unicode graphemes.
+  #
+  # @param text [String] the raw text of the post with Markdown syntax.
+  # @return [Boolean] true if the plain text is valid, false otherwise.
+  def post_length(text)
     # Parse URLs and remove Markdown, leaving only the plain text
-    _, plain_text = new(base_url: "", email: "", password: "").parse_urls(text)
+    _, plain_text = parse_urls(text)
 
     # Count the Unicode graphemes in the plain text
-    plain_text.each_grapheme_cluster.to_a.size <= 300
+    plain_text.each_grapheme_cluster.to_a.size
   end
 
   # Skeets (sorry, Jay) with optional photos to Bluesky.
