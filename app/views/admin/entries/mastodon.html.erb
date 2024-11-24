@@ -1,4 +1,4 @@
-<div class="modal is-active"  data-controller="modal" data-controller="character-counter" data-character-counter-max-length-value="500">
+<div class="modal is-active"  data-controller="modal character-counter" data-character-counter-max-length-value="500">
   <div class="modal-background" data-action="click->modal#close"></div>
   <div class="modal-card">
     <%= form_with url: mastodon_admin_entry_path(@entry.id), method: :post, local: false, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
