@@ -254,7 +254,7 @@ class Bluesky
   end
 
   # Creates a record in the Bluesky API for the specified collection.
-  #  # @param record [Hash] the record data to send to the API.
+  # @param record [Hash] the record data to send to the API.
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
   def create_record(record)
@@ -268,9 +268,10 @@ class Bluesky
                              headers: headers)
 
     if response.success?
+      puts "#{record[:collection]} record created: #{response.body}"
       JSON.parse(response.body)
     else
-      raise "Failed to create record: #{response.body}"
+      raise "Failed to create #{record[:collection]} record: #{response.body}"
     end
   end
 
