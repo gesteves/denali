@@ -17,9 +17,15 @@ class Bluesky
   # @param text [String] the text of the post.
   # @param photos [Array<Hash>] an optional array of hashes representing photos.
   #   Each hash should include :url, :alt_text, :width, and :height.
+  # @param reply_to [Hash] optional hash containing the root and parent URIs and CIDs for the post being replied to.
+  #   Example:
+  #   {
+  #     root: { uri: "at://...", cid: "..." },
+  #     parent: { uri: "at://...", cid: "..." }
+  #   }
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
-  def skeet(text:, photos: [])
+  def skeet(text:, photos: [], reply_to: nil)
     embedded_images = photos.take(4).map do |photo|
       {
         image: upload_photo(photo[:url])["blob"],
@@ -32,29 +38,45 @@ class Bluesky
     end
 
     facets, plain_text = parse_facets(text)
-  
+
     record_data = {
       text: plain_text,
       langs: ["en-US"],
       createdAt: Time.now.iso8601,
       facets: facets
     }
-  
+
     record_data[:embed] = {
       "$type" => "app.bsky.embed.images",
       "images" => embedded_images
     } unless embedded_images.empty?
-  
+
+    record_data[:reply] = reply_to if valid_reply?(reply_to)
+
     record = {
       repo: did,
       collection: "app.bsky.feed.post",
       record: record_data
     }
-  
+
     create_record(record)
   end
-  
+
   private
+
+  # Checks if the reply_to hash is valid.
+  #
+  # @param reply_to [Hash] the hash containing the root and parent reply data.
+  # @return [Boolean] true if valid, false otherwise.
+  def valid_reply?(reply_to)
+    return false unless reply_to.is_a?(Hash)
+
+    # Check for root and parent keys
+    [:root, :parent].all? do |key|
+      # Ensure each key exists and contains :uri and :cid
+      reply_to[key]&.is_a?(Hash) && reply_to[key].key?(:uri) && reply_to[key].key?(:cid)
+    end
+  end
 
   # Calculates byte offsets for a match found in a string.
   #
@@ -93,39 +115,39 @@ class Bluesky
   # @return [Array<Hash>] an array of hashes containing URL data, including byte offsets and the URLs.
   def parse_urls(text)
     links = []
-  
+
     # Step 1: Render Markdown to HTML
     renderer = Redcarpet::Render::HTML.new(hard_wrap: false)
     markdown = Redcarpet::Markdown.new(renderer, autolink: true, no_intra_emphasis: true, fenced_code_blocks: true)
     html = Redcarpet::Render::SmartyPants.render(markdown.render(text))
-  
+
     # Step 2: Extract <a> tags using Nokogiri
     doc = Nokogiri::HTML.fragment(html)
     doc.css('a').each do |link|
       links << { label: link.text.strip, url: link['href'] }
     end
-  
+
     # Step 3: Convert HTML to plain text with preserved line breaks
     fragment = Nokogiri::HTML.fragment(html)
     fragment.css('br').each { |br| br.replace("\n") }
     plain_text = Sanitize.fragment(fragment.to_html).strip
     plain_text = plain_text.gsub(/ *(\n+) */, '\1')
-  
+
     # Step 4: Find each label's position in the plain text
     spans = []
     links.each do |link|
       label = link[:label]
       url = link[:url]
-    
+
       # Use a match iterator to find all occurrences of the label
       plain_text.enum_for(:scan, Regexp.new(Regexp.escape(label))).each do
         match_start = Regexp.last_match.begin(0)
         match_end = Regexp.last_match.end(0)
-    
+
         # Convert character offsets to byte offsets
         byte_start = plain_text[0...match_start].bytesize
         byte_end = plain_text[0...match_end].bytesize
-    
+
         # Add the span for the link
         spans << {
           "start" => byte_start,
@@ -134,9 +156,9 @@ class Bluesky
         }
       end
     end
-    
+
     [spans, plain_text]
-  end  
+  end
 
   # Parses #hashtags in the text and returns their byte offsets and tags.
   #
@@ -163,11 +185,11 @@ class Bluesky
   def parse_facets(text)
     url_spans, plain_text = parse_urls(text)
     facets = []
-  
+
     # Add URL facets
     url_spans.each do |u|
       next unless u["url"] =~ /\Ahttps?:\/\// # Ensure the URL is valid
-  
+
       facets << {
         "index" => {
           "byteStart" => u["start"],
@@ -181,12 +203,12 @@ class Bluesky
         ]
       }
     end
-  
+
     # Add mention facets
     parse_mentions(plain_text).each do |m|
       did = resolve_handle(m["handle"])
       next unless did
-  
+
       facets << {
         "index" => {
           "byteStart" => m["start"],
@@ -200,7 +222,7 @@ class Bluesky
         ]
       }
     end
-  
+
     # Add hashtag facets
     parse_tags(plain_text).each do |t|
       facets << {
@@ -216,9 +238,9 @@ class Bluesky
         ]
       }
     end
-  
+
     [facets, plain_text]
-  end  
+  end
 
   # Resolves a handle to its DID using the Bluesky API.
   #
