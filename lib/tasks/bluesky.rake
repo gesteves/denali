@@ -1,7 +1,6 @@
 namespace :bluesky do
   desc "Post a thread to Bluesky from a YAML file"
   task skeet: :environment do
-
     file_path = Rails.root.join('config', 'skeets.yml')
     unless File.exist?(file_path)
       puts "YAML file not found at #{file_path}"
@@ -33,6 +32,7 @@ namespace :bluesky do
 
       next if text.blank?
 
+      # If entry_id is provided, load photos from the Entry
       if entry_id.present?
         entry = Entry.published.find_by(id: entry_id)
 
@@ -45,6 +45,16 @@ namespace :bluesky do
               height: p.height
             }
           end
+        end
+      end
+
+      # For the first post, allow specifying `root` and `parent` as nested structures
+      if index.zero?
+        if post_data[:root]&.is_a?(Hash) && post_data[:root][:uri] && post_data[:root][:cid]
+          root_post = { uri: post_data[:root][:uri], cid: post_data[:root][:cid] }
+        end
+        if post_data[:parent]&.is_a?(Hash) && post_data[:parent][:uri] && post_data[:parent][:cid]
+          parent_post = { uri: post_data[:parent][:uri], cid: post_data[:parent][:cid] }
         end
       end
 
