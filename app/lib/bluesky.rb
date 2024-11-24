@@ -12,7 +12,7 @@ class Bluesky
     }
   end
 
-  # Verifies that the plain text of a post is equal to or less than 300 Unicode graphemes.
+  # Verifies that the text of a post is equal to or less than 300 Unicode graphemes.
   #
   # @param text [String] the raw text of the post with Markdown syntax.
   # @return [Boolean] true if the plain text is valid, false otherwise.
@@ -22,7 +22,7 @@ class Bluesky
     post_length(text) <= 300
   end
 
-  # Verifies that the plain text of a post is equal to or less than 300 Unicode graphemes.
+  # Returns the length of the post text in Unicode graphemes.
   #
   # @param text [String] the raw text of the post with Markdown syntax.
   # @return [Boolean] true if the plain text is valid, false otherwise.
