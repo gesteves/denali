@@ -24,9 +24,9 @@ namespace :bluesky do
     # Initialize variables to keep track of the thread
     root_post = nil
     parent_post = nil
-    entry = nil
 
     posts_data.each_with_index do |post_data, index|
+      entry = nil
       text = post_data[:text]
       entry_id = post_data[:entry_id]
       photos = post_data[:photos] || []
