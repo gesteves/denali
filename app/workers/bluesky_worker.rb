@@ -11,7 +11,6 @@ class BlueskyWorker < ApplicationWorker
     bluesky = Bluesky.new(base_url: ENV['BLUESKY_BASE_URL'], email: ENV['BLUESKY_EMAIL'], password: ENV['BLUESKY_PASSWORD'])
     photos = entry.photos.to_a[0..4].map { |p| { url: p.bluesky_url, alt_text: p.alt_text, width: p.width, height: p.height } }
     bluesky.skeet(text: text, photos: photos, in_reply_to: in_reply_to)
-    entry.update!(last_shared_on_bluesky_at: Time.current)
+    entry.update!(last_shared_on_bluesky_at: Time.current) unless in_reply_to.present?
   end
-
 end
