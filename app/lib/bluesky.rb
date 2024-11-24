@@ -112,25 +112,31 @@ class Bluesky
   # Parses @mentions in the text and returns their byte offsets and handles.
   #
   # @param text [String] the text to scan for mentions.
-  # @return [Array<Hash>] an array of hashes containing mention data including byte offsets and handles.
+  # @return [Array<Hash>] an array of mention facets
   def parse_mentions(text)
-    spans = []
     mention_regex = /[$|\W](@([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)/
+    facets = []
+
     text.scan(mention_regex) do |m|
       byte_start, byte_end = byte_offsets_for_match($~, text)
-      spans << {
-        "start" => byte_start,
-        "end" => byte_end,
-        "handle" => m[0][1..]
+      did = resolve_handle(m[0][1..])
+      next unless did
+
+      facets << {
+        "index" => { "byteStart" => byte_start, "byteEnd" => byte_end },
+        "features" => [
+          { "$type" => "app.bsky.richtext.facet#mention", "did" => did }
+        ]
       }
     end
-    spans
+
+    facets
   end
 
   # Parses URLs, in the text and returns their byte offsets and associated data.
   #
   # @param text [String] the text to scan for URLs.
-  # @return [Array<Hash>] an array of hashes containing URL data, including byte offsets and the URLs.
+  # @return [Array] an array where the first element is an array of URL facets, and the second element is the plain text with Markdown removed.
   def parse_urls(text)
     links = []
 
@@ -139,21 +145,24 @@ class Bluesky
     markdown = Redcarpet::Markdown.new(renderer, autolink: true, no_intra_emphasis: true, fenced_code_blocks: true)
     html = Redcarpet::Render::SmartyPants.render(markdown.render(text))
 
-    # Step 2: Extract <a> tags using Nokogiri
+    # Step 2: Extract <a> tags using Nokogiri, store their labels and URLs
     doc = Nokogiri::HTML.fragment(html)
     doc.css('a').each do |link|
       links << { label: link.text.strip, url: link['href'] }
     end
 
-    # Step 3: Convert HTML to plain text with preserved line breaks
+    # Step 3: Convert HTML to plain text:
+    # - Preserve line breaks
+    # - Remove HTML tags
+    # - Decode HTML entities
     fragment = Nokogiri::HTML.fragment(html)
     fragment.css('br').each { |br| br.replace("\n") }
     plain_text = Sanitize.fragment(fragment.to_html).strip
     plain_text = plain_text.gsub(/ *(\n+) */, '\1')
     plain_text = HTMLEntities.new.decode(plain_text)
 
-    # Step 4: Find each label's position in the plain text
-    spans = []
+    # Step 4: Find each link's label's position in the plain text, and construct facets
+    facets = []
     links.each do |link|
       label = link[:label]
       url = link[:url]
@@ -167,98 +176,50 @@ class Bluesky
         byte_start = plain_text[0...match_start].bytesize
         byte_end = plain_text[0...match_end].bytesize
 
-        # Add the span for the link
-        spans << {
-          "start" => byte_start,
-          "end" => byte_end,
-          "url" => url
+        # Add the facet to the array
+        facets << {
+          "index" => { "byteStart" => byte_start, "byteEnd" => byte_end },
+          "features" => [
+            { "$type" => "app.bsky.richtext.facet#link", "uri" => url }
+          ]
         }
       end
     end
 
-    [spans, plain_text]
+    [facets, plain_text]
   end
 
   # Parses #hashtags in the text and returns their byte offsets and tags.
   #
   # @param text [String] the text to scan for hashtags.
-  # @return [Array<Hash>] an array of hashes containing tag data including byte offsets and the tags.
+  # @return [Array<Hash>] an array of tag facets.
   def parse_tags(text)
-    spans = []
     tag_regex = /[$|\W](#\w+)/
-    text.scan(tag_regex) do |m|
-      byte_start, byte_end = byte_offsets_for_match($~, text)
-      spans << {
-        "start" => byte_start,
-        "end" => byte_end,
-        "tag" => m[0][1..] # Strip the leading # symbol
-      }
-    end
-    spans
-  end
-
-  # Parses mentions, URLs, and hashtags in the text and converts them into facets.
-  #
-  # @param text [String] the text to scan for facets.
-  # @return [Array<Hash>] an array of facet hashes, including mention, URL, and tag facets.
-  def parse_facets(text)
-    url_spans, plain_text = parse_urls(text)
     facets = []
 
-    # Add URL facets
-    url_spans.each do |u|
-      next unless u["url"] =~ /\Ahttps?:\/\// # Ensure the URL is valid
-
+    text.scan(tag_regex) do |m|
+      byte_start, byte_end = byte_offsets_for_match($~, text)
       facets << {
-        "index" => {
-          "byteStart" => u["start"],
-          "byteEnd" => u["end"]
-        },
+        "index" => { "byteStart" => byte_start, "byteEnd" => byte_end },
         "features" => [
-          {
-            "$type" => "app.bsky.richtext.facet#link",
-            "uri" => u["url"]
-          }
+          { "$type" => "app.bsky.richtext.facet#tag", "tag" => m[0][1..] } # Strip leading #
         ]
       }
     end
 
-    # Add mention facets
-    parse_mentions(plain_text).each do |m|
-      did = resolve_handle(m["handle"])
-      next unless did
+    facets
+  end
 
-      facets << {
-        "index" => {
-          "byteStart" => m["start"],
-          "byteEnd" => m["end"]
-        },
-        "features" => [
-          {
-            "$type" => "app.bsky.richtext.facet#mention",
-            "did" => did
-          }
-        ]
-      }
-    end
+  # Parses mentions, URLs, and hashtags in the text and returns their facets and plain text.
+  #
+  # @param text [String] the text to scan for facets.
+  # @return [Array] an array where the first element is all facets, and the second element is the plain text.
+  def parse_facets(text)
+    url_facets, plain_text = parse_urls(text)
+    mention_facets = parse_mentions(plain_text) # Mentions work with plain text
+    tag_facets = parse_tags(plain_text)         # Tags also work with plain text
 
-    # Add hashtag facets
-    parse_tags(plain_text).each do |t|
-      facets << {
-        "index" => {
-          "byteStart" => t["start"],
-          "byteEnd" => t["end"]
-        },
-        "features" => [
-          {
-            "$type" => "app.bsky.richtext.facet#tag",
-            "tag" => t["tag"]
-          }
-        ]
-      }
-    end
-
-    [facets, plain_text]
+    [url_facets + mention_facets + tag_facets, plain_text]
   end
 
   # Converts a Bluesky post URL into an at-uri.
