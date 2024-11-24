@@ -154,6 +154,7 @@ class Bluesky
     fragment.css('br').each { |br| br.replace("\n") }
     plain_text = Sanitize.fragment(fragment.to_html).strip
     plain_text = plain_text.gsub(/ *(\n+) */, '\1')
+    plain_text = HTMLEntities.new.decode(plain_text)
 
     # Step 4: Find each label's position in the plain text
     spans = []
