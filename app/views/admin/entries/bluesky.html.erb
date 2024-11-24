@@ -1,4 +1,4 @@
-<div class="modal is-active"  data-controller="modal">
+<div class="modal is-active"  data-controller="modal" data-controller="character-counter" data-character-counter-max-length-value="300">
   <div class="modal-background" data-action="click->modal#close"></div>
   <div class="modal-card">
     <%= form_with url: bluesky_admin_entry_path(@entry.id), method: :post, local: false, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
@@ -8,7 +8,7 @@
     </header>
     <section class="modal-card-body">
       <div class="content">
-        <div class="field" data-controller="character-counter" data-character-counter-max-length-value="300">
+        <div class="field">
           <div class="control is-expanded">
             <%= form.text_area :text, value: @text.html_safe, placeholder: 'Your Bluesky caption…', required: true, class: 'textarea', rows: 8, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
           </div>
@@ -25,7 +25,7 @@
     <footer class="modal-card-foot">
       <div class="field is-grouped">
         <p class="control">
-          <%= form.submit "Share", class: 'button is-success' %>
+          <%= form.submit "Share", class: 'button is-success', 'data-character-counter-target': 'submit' %>
         </p>
         <p class="control">
           <button class="button is-light" data-action="click->modal#close">Cancel</button>

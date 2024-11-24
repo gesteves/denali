@@ -6,11 +6,11 @@ import GraphemeSplitter from 'grapheme-splitter';
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['characterCount', 'input'];
+  static targets = ['characterCount', 'input', 'submit'];
   static values = {
     maxLength: Number
   }
-  
+
   connect () {
     this.maxCharacters = this.hasMaxLengthValue ? this.maxLengthValue : parseInt(this.inputTarget.maxLength, 10);
     this.updateCharacterCount();
@@ -29,6 +29,12 @@ export default class extends Controller {
       this.characterCountTarget.classList.add('has-text-danger');
     } else {
       this.characterCountTarget.classList.remove('has-text-danger');
+    }
+
+    if (count > this.maxCharacters) {
+      this.submitTarget.disabled = true;
+    } else {
+      this.submitTarget.disabled = false;
     }
   }
 
