@@ -54,7 +54,9 @@ class Bluesky
       }
     end
 
+    # Extract facets from the rich text provided, and return them, and the plain text.
     facets, plain_text = parse_facets(text)
+    # Construct the reply object for the post, if provided.
     reply = construct_reply(in_reply_to)
 
     record_data = {
@@ -109,7 +111,7 @@ class Bluesky
     [byte_start, byte_end]
   end
 
-  # Parses @mentions in the text and returns their byte offsets and handles.
+  # Parses @mentions in the text and returns an array of app.bsky.richtext.facet#mention facets.
   #
   # @param text [String] the text to scan for mentions.
   # @return [Array<Hash>] an array of mention facets
@@ -133,7 +135,7 @@ class Bluesky
     facets
   end
 
-  # Parses URLs, in the text and returns their byte offsets and associated data.
+  # Parses URLs in the text and returns an array of app.bsky.richtext.facet#link facets, and the text with Markdown removed.
   #
   # @param text [String] the text to scan for URLs.
   # @return [Array] an array where the first element is an array of URL facets, and the second element is the plain text with Markdown removed.
@@ -151,10 +153,11 @@ class Bluesky
       links << { label: link.text.strip, url: link['href'] }
     end
 
-    # Step 3: Convert HTML to plain text:
-    # - Preserve line breaks
-    # - Remove HTML tags
-    # - Decode HTML entities
+    # Step 3: Convert HTML to plain text, by:
+    # - Converting <br> tags to newlines to preserve line breaks
+    # - Removing all HTML tags
+    # - Removing leading/trailing whitespace around line breaks
+    # - Decoding HTML entities (e.g. &amp; -> &)
     fragment = Nokogiri::HTML.fragment(html)
     fragment.css('br').each { |br| br.replace("\n") }
     plain_text = Sanitize.fragment(fragment.to_html).strip
@@ -189,7 +192,7 @@ class Bluesky
     [facets, plain_text]
   end
 
-  # Parses #hashtags in the text and returns their byte offsets and tags.
+  # Parses #hashtags in the text and returns an array of app.bsky.richtext.facet#tag facets.
   #
   # @param text [String] the text to scan for hashtags.
   # @return [Array<Hash>] an array of tag facets.
