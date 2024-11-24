@@ -39,15 +39,10 @@ class Bluesky
   # @param text [String] the text of the post.
   # @param photos [Array<Hash>] an optional array of hashes representing photos.
   #   Each hash should include :url, :alt_text, :width, and :height.
-  # @param reply_to [Hash] optional hash containing the root and parent URIs and CIDs for the post being replied to.
-  #   Example:
-  #   {
-  #     root: { uri: "at://...", cid: "..." },
-  #     parent: { uri: "at://...", cid: "..." }
-  #   }
+  # @param in_reply_to [String, nil] the public URL of a post to reply to. Optional.
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
-  def skeet(text:, photos: [], reply_to: nil)
+  def skeet(text:, photos: [], in_reply_to: nil)
     embedded_images = photos.take(4).map do |photo|
       {
         image: upload_photo(photo[:url])["blob"],
@@ -60,6 +55,7 @@ class Bluesky
     end
 
     facets, plain_text = parse_facets(text)
+    reply = construct_reply(in_reply_to)
 
     record_data = {
       text: plain_text,
@@ -73,7 +69,7 @@ class Bluesky
       "images" => embedded_images
     } unless embedded_images.empty?
 
-    record_data[:reply] = reply_to if valid_reply?(reply_to)
+    record_data[:reply] = reply if reply.present?
 
     record = {
       repo: did,
@@ -265,6 +261,36 @@ class Bluesky
     [facets, plain_text]
   end
 
+  # Converts a Bluesky post URL into an at-uri.
+  #
+  # @param post_url [String] the public Bluesky post URL.
+  # @return [String] the at-uri for the post.
+  # @raise [ArgumentError] if the post URL is invalid.
+  def post_url_to_at_uri(post_url)
+    # Validate the URL
+    uri = URI.parse(post_url)
+    return unless uri.host == 'bsky.app' && uri.path.start_with?('/profile/')
+
+    # Extract components from the URL
+    path_parts = uri.path.split('/')
+    did_or_handle = path_parts[2] # The part after /profile/
+    post_id = path_parts[4]       # The part after /post/
+
+    # Ensure we have a valid DID/handle and  post ID
+    return if did_or_handle.blank? || post_id.blank?
+
+    # If the profile path contains a DID, construct the at-uri directly
+    if did_or_handle.start_with?('did:plc:')
+      "at://#{did_or_handle}/app.bsky.feed.post/#{post_id}"
+    else
+      # Resolve the handle to a DID
+      did = resolve_handle(did_or_handle)
+      return if did.blank?
+
+      "at://#{did}/app.bsky.feed.post/#{post_id}"
+    end
+  end
+
   # Resolves a handle to its DID using the Bluesky API.
   #
   # @param handle [String] the handle to resolve.
@@ -274,6 +300,25 @@ class Bluesky
 
     return nil if response.code == 400
     JSON.parse(response.body)["did"]
+  end
+
+  # Retrieves the post thread from the Bluesky API for a given at-uri.
+  #
+  # @param at_uri [String] the at-uri of the post.
+  # @return [Hash] the parsed response from the Bluesky API.
+  # @raise [RuntimeError] if the API request fails.
+  def get_post_thread(at_uri)
+    response = HTTParty.get(
+      "#{@base_url}/xrpc/app.bsky.feed.getPostThread",
+      query: { "uri" => at_uri },
+      headers: { "Authorization" => "Bearer #{access_token}" }
+    )
+
+    if response.success?
+      JSON.parse(response.body)
+    else
+      raise "Failed to retrieve post thread: #{response.body}"
+    end
   end
 
   # Creates a record in the Bluesky API for the specified collection.
@@ -365,6 +410,44 @@ class Bluesky
       JSON.parse(response.body)
     else
       raise "Failed to upload photo: #{response.body}"
+    end
+  end
+
+  # Constructs the reply object for a given post URL.
+  #
+  # @param post_url [String] the public URL of the post to reply to.
+  # @return [Hash, nil] the reply object to include in the post or nil if no post_url is provided.
+  def construct_reply(post_url)
+    return if post_url.blank?
+
+    # Convert the URL to an at-uri
+    at_uri = post_url_to_at_uri(post_url)
+    return if at_uri.blank?
+
+    # Fetch the post thread data
+    thread = get_post_thread(at_uri)
+
+    # Check if the post has a reply object in its record
+    post_record = thread.dig("thread", "post", "record")
+    if post_record&.key?("reply")
+      {
+        root: post_record["reply"]["root"],
+        parent: {
+          uri: thread.dig("thread", "post", "uri"),
+          cid: thread.dig("thread", "post", "cid")
+        }
+      }
+    else
+      {
+        root: {
+          uri: thread.dig("thread", "post", "uri"),
+          cid: thread.dig("thread", "post", "cid")
+        },
+        parent: {
+          uri: thread.dig("thread", "post", "uri"),
+          cid: thread.dig("thread", "post", "cid")
+        }
+      }
     end
   end
 end
