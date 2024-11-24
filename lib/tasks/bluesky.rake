@@ -8,8 +8,8 @@ namespace :bluesky do
       exit(1)
     end
 
-    # Load posts from YAML file
-    posts_data = YAML.load_file(file_path)["posts"]
+    # Load posts from YAML file and symbolize keys
+    posts_data = YAML.load_file(file_path).deep_symbolize_keys[:posts]
     if posts_data.blank? || !posts_data.is_a?(Array)
       puts "Invalid or empty YAML structure in #{file_path}"
       exit(1)
@@ -24,14 +24,28 @@ namespace :bluesky do
     # Initialize variables to keep track of the thread
     root_post = nil
     parent_post = nil
+    entry = nil
 
     posts_data.each_with_index do |post_data, index|
-      text = post_data["text"]
-      photos = post_data["photos"] || []
+      text = post_data[:text]
+      entry_id = post_data[:entry_id]
+      photos = post_data[:photos] || []
 
-      if text.blank?
-        puts "Skipping post ##{index + 1} due to missing text"
-        next
+      next if text.blank?
+
+      if entry_id.present?
+        entry = Entry.published.find_by(id: entry_id)
+
+        if entry&.is_photo?
+          photos = entry.photos.to_a[0..4].map do |p|
+            {
+              url: p.bluesky_url,
+              alt_text: p.alt_text,
+              width: p.width,
+              height: p.height
+            }
+          end
+        end
       end
 
       reply_to = {}
@@ -51,12 +65,11 @@ namespace :bluesky do
         response = bluesky.skeet(text: text, photos: photos, reply_to: reply_to)
         root_post ||= { uri: response["uri"], cid: response["cid"] }
         parent_post = { uri: response["uri"], cid: response["cid"] }
+        entry&.update!(last_shared_on_bluesky_at: Time.current)
       rescue => e
-        puts "Failed to post #{index + 1}: #{e.message}"
+        puts "Failed to post ##{index + 1}: #{e.message}"
         break
       end
     end
-
-    puts "Thread posted successfully!" if root_post
   end
 end
