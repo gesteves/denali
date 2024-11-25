@@ -42,23 +42,17 @@ class Bluesky
   # @param in_reply_to [String, nil] the public URL of a post to reply to. Optional.
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
-  def skeet(text:, photos: [], in_reply_to: nil)
-    embedded_images = photos.take(4).map do |photo|
-      {
-        image: upload_photo(photo[:url])["blob"],
-        alt: photo[:alt_text],
-        aspectRatio: {
-          width: photo[:width],
-          height: photo[:height]
-        }
-      }
-    end
-
-    # Extract facets from the rich text provided, and return them, and the plain text.
+  def skeet(text:, photos: [], in_reply_to: nil, quote: nil)
+    # Extract facets from the rich text provided and return them, and the plain text
     facets, plain_text = parse_facets(text)
-    # Construct the reply object for the post, if provided.
+
+    # Construct the reply object for the post, if provided
     reply = construct_reply(in_reply_to)
 
+    # Construct the embed object, if provided
+    embed = construct_embed(photos, quote)
+
+    # Construct the record data for the skeet
     record_data = {
       text: plain_text,
       langs: ["en-US"],
@@ -66,11 +60,7 @@ class Bluesky
       facets: facets
     }
 
-    record_data[:embed] = {
-      "$type" => "app.bsky.embed.images",
-      "images" => embedded_images
-    } unless embedded_images.empty?
-
+    record_data[:embed] = embed if embed.present?
     record_data[:reply] = reply if reply.present?
 
     record = {
@@ -258,6 +248,7 @@ class Bluesky
   # @return [Hash] the parsed response from the Bluesky API.
   # @raise [RuntimeError] if the API request fails.
   def get_post_thread(at_uri)
+    return if at_uri.blank?
     response = HTTParty.get(
       "#{@base_url}/xrpc/app.bsky.feed.getPostThread",
       query: { "uri" => at_uri },
@@ -396,6 +387,65 @@ class Bluesky
         parent: {
           uri: thread.dig("thread", "post", "uri"),
           cid: thread.dig("thread", "post", "cid")
+        }
+      }
+    end
+  end
+
+  # Constructs the embed object for a post.
+  #
+  # @param photos [Array<Hash>] an array of photos, each with :url, :alt_text, :width, and :height.
+  # @param quote [String, nil] the URL of the post to quote. Optional.
+  # @return [Hash, nil] the constructed embed object or nil if neither photos nor quote are provided.
+  def construct_embed(photos, quote)
+    # Prepare embedded images if photos are provided
+    embedded_images = photos.take(4).map do |photo|
+      {
+        image: upload_photo(photo[:url])["blob"],
+        alt: photo[:alt_text],
+        aspectRatio: {
+          width: photo[:width],
+          height: photo[:height]
+        }
+      }
+    end
+
+    # Construct the quote object if a quote URL is provided
+    quoted_record = if quote.present?
+                      # Convert the quote URL to an at-uri
+                      at_uri = post_url_to_at_uri(quote)
+
+                      # Fetch the post thread and get the record's URI and CID
+                      thread = get_post_thread(at_uri)
+                      {
+                        "cid" => thread&.dig("thread", "post", "cid"),
+                        "uri" => thread&.dig("thread", "post", "uri")
+                      }.compact
+                    end
+
+    # Construct the embed object based on the presence of photos and quote
+    if embedded_images.empty? && quoted_record.blank?
+      nil # No embed if both photos and quote are absent
+    elsif embedded_images.any? && quoted_record.blank?
+      {
+        "$type" => "app.bsky.embed.images",
+        "images" => embedded_images
+      }
+    elsif embedded_images.empty? && quoted_record.present?
+      {
+        "$type" => "app.bsky.embed.record",
+        "record" => quoted_record
+      }
+    elsif embedded_images.any? && quoted_record.present?
+      {
+        "$type" => "app.bsky.embed.recordWithMedia",
+        "media" => {
+          "$type" => "app.bsky.embed.images",
+          "images" => embedded_images
+        },
+        "record" => {
+          "$type" => "app.bsky.embed.record",
+          "record" => quoted_record
         }
       }
     end
