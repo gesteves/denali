@@ -315,7 +315,7 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      BlueskyWorker.perform_async(@entry.id, params[:text])
+      BlueskyWorker.perform_async(@entry.id, params[:text], params[:in_reply_to], params[:quote])
       @message = 'Your entry was shared on Bluesky.'
       respond_to do |format|
         format.html {

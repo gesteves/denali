@@ -1,7 +1,7 @@
 class BlueskyWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id, text, in_reply_to = nil)
+  def perform(entry_id, text, in_reply_to = nil, quote = nil)
     return if !Rails.env.production?
     return if ENV['BLUESKY_BASE_URL'].blank? || ENV['BLUESKY_EMAIL'].blank? || ENV['BLUESKY_PASSWORD'].blank?
     entry = Entry.published.find(entry_id)
@@ -10,7 +10,7 @@ class BlueskyWorker < ApplicationWorker
 
     bluesky = Bluesky.new(base_url: ENV['BLUESKY_BASE_URL'], email: ENV['BLUESKY_EMAIL'], password: ENV['BLUESKY_PASSWORD'])
     photos = entry.photos.to_a[0..4].map { |p| { url: p.bluesky_url, alt_text: p.alt_text, width: p.width, height: p.height } }
-    bluesky.skeet(text: text, photos: photos, in_reply_to: in_reply_to)
+    bluesky.skeet(text: text, photos: photos, in_reply_to: in_reply_to, quote: quote)
     entry.update!(last_shared_on_bluesky_at: Time.current) unless in_reply_to.present?
   end
 end

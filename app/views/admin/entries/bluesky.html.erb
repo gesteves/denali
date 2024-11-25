@@ -14,6 +14,16 @@
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/300</p>
         </div>
+        <div class="field">
+          <div class="control is-expanded">
+            <%= form.text_field :in_reply_to, placeholder: 'The URL of a Bluesky post to reply to, e.g. https://bsky.app/profile/allencompassingtrip.com/post/3lbpl6yom3t2w', class: 'input', autocomplete: 'off' %>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control is-expanded">
+            <%= form.text_field :quote, placeholder: 'The URL of a Bluesky post to quote, e.g. https://bsky.app/profile/allencompassingtrip.com/post/3lbpl6yom3t2w', class: 'input', autocomplete: 'off' %>
+          </div>
+        </div>
         <hr class="hr">
         <div class="field is-grouped is-grouped-multiline">
           <div class="control">
