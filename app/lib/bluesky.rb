@@ -84,20 +84,6 @@ class Bluesky
 
   private
 
-  # Checks if the reply_to hash is valid.
-  #
-  # @param reply_to [Hash] the hash containing the root and parent reply data.
-  # @return [Boolean] true if valid, false otherwise.
-  def valid_reply?(reply_to)
-    return false unless reply_to.is_a?(Hash)
-
-    # Check for root and parent keys
-    [:root, :parent].all? do |key|
-      # Ensure each key exists and contains :uri and :cid
-      reply_to[key]&.is_a?(Hash) && reply_to[key].key?(:uri) && reply_to[key].key?(:cid)
-    end
-  end
-
   # Calculates byte offsets for a match found in a string.
   #
   # @param match_data [MatchData] the match data object.
