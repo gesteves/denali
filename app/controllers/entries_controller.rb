@@ -4,7 +4,7 @@ class EntriesController < ApplicationController
 
   skip_before_action :verify_authenticity_token
   before_action :load_tags, only: [:tagged, :tag_feed]
-  before_action :set_max_age, except: [:amp, :short, :random]
+  before_action :set_max_age, except: [:amp, :short, :random, :random_bluesky]
   before_action :set_entry, only: [:show, :amp]
 
   def index
@@ -126,6 +126,14 @@ class EntriesController < ApplicationController
 
   def random
     entry = Entry.find(Entry.published.where('published_at >= ?', 4.years.ago).pluck(:id).sample)
+    response.headers['Cache-Control'] = "s-maxage=#{ENV['RANDOM_CACHE_TTL']}, max-age=0, public"
+    redirect_to entry.permalink_url, status: 302
+  end
+
+  def random_bluesky
+    entry = photoblog.entries.published
+    .where(post_to_bluesky: true)
+    .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago).sample
     response.headers['Cache-Control'] = "s-maxage=#{ENV['RANDOM_CACHE_TTL']}, max-age=0, public"
     redirect_to entry.permalink_url, status: 302
   end
