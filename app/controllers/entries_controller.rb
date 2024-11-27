@@ -131,6 +131,8 @@ class EntriesController < ApplicationController
   end
 
   def random_bluesky
+    months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
+    months_ago = months.months.ago
     entry = @photoblog.entries.published
     .where(post_to_bluesky: true)
     .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago).sample
