@@ -131,7 +131,7 @@ class EntriesController < ApplicationController
   end
 
   def random_bluesky
-    entry = photoblog.entries.published
+    entry = @photoblog.entries.published
     .where(post_to_bluesky: true)
     .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago).sample
     response.headers['Cache-Control'] = "s-maxage=#{ENV['RANDOM_CACHE_TTL']}, max-age=0, public"
