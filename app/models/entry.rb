@@ -433,13 +433,8 @@ class Entry < ApplicationRecord
 
     meta << "\n#{mastodon_tags}" if mastodon_tags.present?
 
-    caption = []
-    if self.mastodon_text.present?
-      caption << self.mastodon_text
-    else
-      caption << self.plain_title
-    end
-
+    caption = [self.plain_title]
+    caption << self.mastodon_text if self.mastodon_text.present?
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
