@@ -8,7 +8,7 @@ namespace :geocode do
 
   desc 'Update reverse geocoding for all photos with missing country'
   task :missing_country => :environment do
-    Photo.where(country: nil).find_each do |photo|
+    Photo.where(country: nil).where.not(latitude: nil, longitude: nil).find_each do |photo|
       puts "Geocoding photo for entry #{photo.entry.permalink_url}"
       photo.geocode
     end
