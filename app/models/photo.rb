@@ -251,7 +251,12 @@ class Photo < ApplicationRecord
     elsif self.locality == 'Ciudad de México'
       ['Mexico City, Mexico']
     else
-      [self.locality, self.administrative_area, self.country]
+      case self.country
+      when 'United States', 'United Kingdom', 'Canada'
+        [self.locality, self.administrative_area, self.country]
+      else
+        [self.locality, self.country]
+      end
     end
     parts.reject(&:blank?).uniq.join(', ').gsub("'", "’")
   end
