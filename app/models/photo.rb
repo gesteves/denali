@@ -244,35 +244,62 @@ class Photo < ApplicationRecord
   end
 
   def formatted_location
-    parts = if self.park.present?
-      case self.country
-      when 'United States', 'United Kingdom', 'Canada'
-        [self.park.display_name, self.administrative_area, self.country]
-      else
-        [self.park.display_name, self.country]
-      end
+    parts = location_parts
+    parts.reject(&:blank?).uniq.join(', ').gsub("'", "'")
+  end
+
+  def location_parts
+    return ['Mexico City, Mexico'] if is_mexico_city?
+    return ['Buenos Aires, Argentina'] if is_buenos_aires?
+    return ['Santiago, Chile'] if is_santiago_de_chile?
+
+    if self.park.present?
+      park_location_parts
     elsif self.location.present?
-      case self.country
-      when 'United States', 'United Kingdom', 'Canada'
-        [self.location, self.administrative_area, self.country]
-      else
-        [self.location, self.country]
-      end
-    elsif self.locality == 'Ciudad de México'
-      ['Mexico City, Mexico']
-    elsif self.administrative_area == 'Buenos Aires'
-      ['Buenos Aires, Argentina']
-    elsif self.administrative_area == 'Región Metropolitana' && self.country == 'Chile'
-      ['Santiago, Chile']
+      custom_location_parts
     else
-      case self.country
-      when 'United States', 'United Kingdom', 'Canada'
-        [self.locality, self.administrative_area, self.country]
-      else
-        [self.locality, self.country]
-      end
+      default_location_parts
     end
-    parts.reject(&:blank?).uniq.join(', ').gsub("'", "’")
+  end
+
+  def is_santiago_de_chile?
+    self.administrative_area == 'Región Metropolitana' && self.country == 'Chile'
+  end
+
+  def is_buenos_aires?
+    self.administrative_area == 'Buenos Aires' && self.country == 'Argentina'
+  end
+
+  def is_mexico_city?
+    self.locality == 'Ciudad de México' && self.country == 'Mexico'
+  end
+
+  def park_location_parts
+    if show_region?
+      [self.park.display_name, self.administrative_area, self.country]
+    else
+      [self.park.display_name, self.country]
+    end
+  end
+
+  def custom_location_parts
+    if show_region?
+      [self.location, self.administrative_area, self.country]
+    else
+      [self.location, self.country]
+    end
+  end
+
+  def default_location_parts
+    if show_region?
+      [self.locality, self.administrative_area, self.country]
+    else
+      [self.locality, self.country]
+    end
+  end
+
+  def show_region?
+    ['United States', 'United Kingdom', 'Canada'].include?(self.country)
   end
 
   def territory_list
