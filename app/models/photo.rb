@@ -245,9 +245,19 @@ class Photo < ApplicationRecord
 
   def formatted_location
     parts = if self.park.present?
-      [self.park.display_name, self.administrative_area, self.country]
+      case self.country
+      when 'United States', 'United Kingdom', 'Canada'
+        [self.park.display_name, self.administrative_area, self.country]
+      else
+        [self.park.display_name, self.country]
+      end
     elsif self.location.present?
-      [self.location, self.administrative_area, self.country]
+      case self.country
+      when 'United States', 'United Kingdom', 'Canada'
+        [self.location, self.administrative_area, self.country]
+      else
+        [self.location, self.country]
+      end
     elsif self.locality == 'Ciudad de México'
       ['Mexico City, Mexico']
     elsif self.administrative_area == 'Buenos Aires'
