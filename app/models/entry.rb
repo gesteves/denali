@@ -418,6 +418,7 @@ class Entry < ApplicationRecord
     mastodon_tags = []
     mastodon_tags << 'Photography' if is_photo?
     mastodon_tags += combined_tag_list & valid_tags
+    mastodon_tags += 'StreetPhotography' if combined_tag_list.include?('Streets')
     mastodon_tags.map { |t| "##{t}" }.join(' ')
   end
 
@@ -460,7 +461,7 @@ class Entry < ApplicationRecord
   end
 
   def bluesky_tags
-    bluesky_tags = ['Photography']
+    bluesky_tags = combined_tag_list.include?('Streets') ? ['Street Photography'] : ['Photography']
     bluesky_tags += combined_tag_list & ['Landscapes', 'Wildlife', 'Birds']
 
     # Mammals for the mammals feed
