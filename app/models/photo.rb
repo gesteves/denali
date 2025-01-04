@@ -244,15 +244,16 @@ class Photo < ApplicationRecord
   end
 
   def formatted_location
-    if self.park.present?
-      [self.park.display_name, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
+    parts = if self.park.present?
+      [self.park.display_name, self.administrative_area, self.country]
     elsif self.location.present?
-      [self.location, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
+      [self.location, self.administrative_area, self.country]
     elsif self.locality == 'Ciudad de México'
-      'Mexico City, Mexico'
+      ['Mexico City, Mexico']
     else
-      [self.locality, self.administrative_area, self.country].reject(&:blank?).join(", ")
+      [self.locality, self.administrative_area, self.country]
     end
+    parts.reject(&:blank?).uniq.join(', ')
   end
 
   def territory_list
