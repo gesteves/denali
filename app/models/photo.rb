@@ -253,7 +253,7 @@ class Photo < ApplicationRecord
     else
       [self.locality, self.administrative_area, self.country]
     end
-    parts.reject(&:blank?).uniq.join(', ')
+    parts.reject(&:blank?).uniq.join(', ').gsub!("'", "’")
   end
 
   def territory_list
