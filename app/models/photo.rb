@@ -244,12 +244,18 @@ class Photo < ApplicationRecord
   end
 
   def formatted_location
+    # Replace single quotes with curly single quotes, so places like "Coeur d’Alene" look right.
+    city = self.locality&.gsub!("'", "’")
+    region = self.administrative_area&.gsub!("'", "’")
+    country = self.country&.gsub!("'", "’")
+
     if self.park.present?
-      [self.park.display_name, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
+      [self.park.display_name, region, country].reject(&:blank?).uniq.join(', ')
     elsif self.location.present?
-      [self.location, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
+      [self.location, region, country].reject(&:blank?).uniq.join(', ')
     else
-      [self.locality, self.administrative_area, self.country].reject(&:blank?).uniq.join(', ')
+      return 'Mexico City, Mexico' if city == 'Ciudad de México'
+      [city, region, country].reject(&:blank?).join(", ")
     end
   end
 
