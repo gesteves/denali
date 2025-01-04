@@ -250,6 +250,10 @@ class Photo < ApplicationRecord
       [self.location, self.administrative_area, self.country]
     elsif self.locality == 'Ciudad de México'
       ['Mexico City, Mexico']
+    elsif self.administrative_area == 'Buenos Aires'
+      ['Buenos Aires, Argentina']
+    elsif self.administrative_area == 'Región Metropolitana' && self.country == 'Chile'
+      ['Santiago, Chile']
     else
       case self.country
       when 'United States', 'United Kingdom', 'Canada'
