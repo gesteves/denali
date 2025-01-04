@@ -418,7 +418,7 @@ class Entry < ApplicationRecord
     mastodon_tags = []
     mastodon_tags << 'Photography' if is_photo?
     mastodon_tags += combined_tag_list & valid_tags
-    mastodon_tags += 'StreetPhotography' if combined_tag_list.include?('Streets')
+    mastodon_tags << 'StreetPhotography' if combined_tag_list.include?('Streets')
     mastodon_tags.map { |t| "##{t}" }.join(' ')
   end
 
