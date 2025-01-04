@@ -41,7 +41,7 @@ class PhotoExifWorker < ApplicationWorker
         photo.location = park || location
       end
       if exif.image_description.present? && photo.alt_text.blank?
-        photo.alt_text = exif.image_description.encode('UTF-8')
+        photo.alt_text = exif.image_description.force_encoding('UTF-8').encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
       end
     end
     photo.save!
