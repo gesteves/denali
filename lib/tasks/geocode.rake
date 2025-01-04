@@ -5,4 +5,9 @@ namespace :geocode do
       photo.geocode
     end
   end
+
+  desc 'Rename Ciudad de México to Mexico City'
+  task :translate_mexico_city => :environment do
+    Photo.where(locality: 'Ciudad de México').update_all(locality: 'Mexico City')
+  end
 end
