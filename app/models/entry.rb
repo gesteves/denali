@@ -413,6 +413,10 @@ class Entry < ApplicationRecord
     caption.reject(&:blank?).join("\n\n")
   end
 
+  def valid_instagram_caption?
+    instagram_caption.length <= 2200
+  end
+
   def mastodon_tags
     valid_tags = %w{ Landscapes Wildlife }
     mastodon_tags = []
@@ -438,6 +442,10 @@ class Entry < ApplicationRecord
     caption << self.mastodon_text if self.mastodon_text.present?
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
+  end
+
+  def valid_mastodon_caption?
+    mastodon_caption.length <= 500
   end
 
   def bluesky_caption

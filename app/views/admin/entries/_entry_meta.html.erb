@@ -61,4 +61,22 @@
       </div>
     </div>
   <% end %>
+
+  <% if entry.post_to_instagram? && !entry.valid_instagram_caption? %>
+    <div class="control">
+      <div class="tags has-addons">
+        <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
+        <span class="tag">Instagram caption too long</span>
+      </div>
+    </div>
+  <% end %>
+
+  <% if entry.post_to_mastodon? && !entry.valid_mastodon_caption? %>
+    <div class="control">
+      <div class="tags has-addons">
+        <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
+        <span class="tag">Mastodon caption too long</span>
+      </div>
+    </div>
+  <% end %>
 </div>
