@@ -52,4 +52,13 @@
       </div>
     </div>
   <% end %>
+
+  <% if entry.post_to_bluesky? && !entry.valid_bluesky_caption? %>
+    <div class="control">
+      <div class="tags has-addons">
+        <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
+        <span class="tag">Bluesky caption too long</span>
+      </div>
+    </div>
+  <% end %>
 </div>

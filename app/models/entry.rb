@@ -477,6 +477,10 @@ class Entry < ApplicationRecord
     bluesky_tags.uniq.sort.map { |t| "##{t.gsub(/[^0-9a-zA-Z]+/, '')}" }.join(' ')
   end
 
+  def valid_bluesky_caption?
+    bluesky = Bluesky.new(base_url: ENV['BLUESKY_BASE_URL'], email: ENV['BLUESKY_EMAIL'], password: ENV['BLUESKY_PASSWORD'])
+    bluesky.valid_post_length?(self.bluesky_caption)
+  end
 
   def plain_caption
     text = []
