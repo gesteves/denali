@@ -271,7 +271,8 @@ class Photo < ApplicationRecord
   end
 
   def is_new_york_city?
-    self.locality == 'New York' && self.administrative_area == 'New York' && self.country == 'United States'
+    (self.administrative_area == 'New York' && self.country == 'United States' ) &&
+    (self.locality == 'New York' || ['Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island'].include?(self.sublocality))
   end
 
   def park_location_parts
