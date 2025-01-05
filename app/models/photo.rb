@@ -252,7 +252,7 @@ class Photo < ApplicationRecord
     return ['Mexico City, Mexico'] if is_mexico_city?
     return ['Buenos Aires, Argentina'] if is_buenos_aires?
     return ['Santiago, Chile'] if is_santiago_de_chile?
-    return [self.sublocality, self.locality, self.country] if is_new_york_city?
+    return [self.sublocality, "New York City", self.country] if is_new_york_city?
 
     if self.park.present?
       park_location_parts
