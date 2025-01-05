@@ -249,11 +249,6 @@ class Photo < ApplicationRecord
   end
 
   def location_parts
-    return ['Mexico City, Mexico'] if is_mexico_city?
-    return ['Buenos Aires, Argentina'] if is_buenos_aires?
-    return ['Santiago, Chile'] if is_santiago_de_chile?
-    return [self.sublocality, "New York City", self.country] if is_new_york_city?
-
     if self.park.present?
       park_location_parts
     elsif self.location.present?
@@ -296,6 +291,11 @@ class Photo < ApplicationRecord
   end
 
   def default_location_parts
+    return ['Mexico City, Mexico'] if is_mexico_city?
+    return ['Buenos Aires, Argentina'] if is_buenos_aires?
+    return ['Santiago, Chile'] if is_santiago_de_chile?
+    return [self.sublocality, "New York City", self.country] if is_new_york_city?
+
     if show_region?
       [self.locality, self.administrative_area, self.country]
     else
