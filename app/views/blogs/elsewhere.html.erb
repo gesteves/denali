@@ -1,13 +1,27 @@
 <% content_for :head do %>
-  <%= render partial: 'head' %>
+  <title><%= @page_title %></title>
+  <meta name="description" content="Where to follow Guillermo Esteves on social media.">
+  <link rel="canonical" href="<%= elsewhere_url %>">
+
+  <meta property="og:title" content="Elsewhere on the Web">
+  <% if @photoblog.logo.attached? %>
+    <meta property="og:image" content="<%= @photoblog.logo_url(width: 1200, height: 630, format: 'png', fit_in: true, fill: 'fff') %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+  <% end %>
+  <meta property="og:description" content="Where to follow Guillermo Esteves on social media.">
+  <meta property="og:url" content="<%= elsewhere_url %>">
+  <meta property="og:type" content="Website">
+  <meta property="og:site_name" content="<%= @photoblog.name %>">
+  <meta property="og:locale" content="en_US">
+  <%= auto_discovery_link_tag :atom, feed_url(format: 'atom'), title: @photoblog.name %>
 <% end %>
 
 <article class="entry">
   <div class="entry__body">
     <h2 class="entry__headline">Elsewhere on the Web</h2>
     <%# TODO: Put this on the CMS %>
-    <p>I usually publish new photographs once a day; if you want to see them as soon as they’re published, the easiest way is to <a href="/feed">subscribe to the feed</a> in your favorite news reader. I’m partial to <a href="https://feedbin.com">Feedbin</a>, but <a href="https://www.theverge.com/24036427/rss-feed-reader-best"><cite>The Verge</cite> has a few more suggestions</a>.</p>
-    <p>If you prefer, you can also follow me on social media:</p>
+    <p>I usually publish new photographs once a day; if you want to see them as soon as they’re published, the easiest way is to <a href="/feed">subscribe to the feed</a> in your favorite news reader. I’m partial to <a href="https://feedbin.com">Feedbin</a>, but <a href="https://www.theverge.com/24036427/rss-feed-reader-best"><cite>The Verge</cite> has a few more suggestions</a>. If you prefer, you can also follow me on social media:</p>
 
     <ul>
     <li><a href="https://www.flickr.com/photos/gesteves/">Flickr</a></li>
