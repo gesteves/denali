@@ -16,14 +16,14 @@ module EntriesHelper
 
   # Generates a paragraph with camera, lens, and film details
   def feed_camera_details(photo)
-    return unless photo.camera.present?
+    return if photo.camera.blank?
 
     details = []
     details << "Photographed with #{photo.camera.article} #{photo.camera.display_name}"
     details << "+ #{photo.lens.display_name}" if photo.lens.present? && !photo.camera.is_phone?
     details << "on #{photo.film.display_name}" if photo.film.present?
 
-    "<p>📷 #{details.join(' ')}</p>".html_safe
+    "📷 #{details.join(' ')}</br>".html_safe
   end
 
   # Generates a paragraph with EXIF details like focal length, exposure, aperture, and ISO
@@ -41,17 +41,17 @@ module EntriesHelper
     end
     details << "ISO #{photo.iso}" if photo.iso.present?
 
-    "<p>🎞️ #{details.join(' – ')}</p>".html_safe
+    "🎞️ #{details.join(' – ')}<br>".html_safe
   end
 
   # Generates a paragraph with location and territories details
   def feed_location(photo)
-    return unless photo.formatted_location.present? || photo.territories.present?
+    return if photo.formatted_location.blank? && photo.territories.blank?
 
     details = []
     details << photo.formatted_location if photo.formatted_location.present?
     details << "#{photo.territory_list} land" if photo.territories.present?
 
-    "<p>📍 #{details.join(' – ')}</p>".html_safe
+    "📍 #{details.join(' – ')}".html_safe
   end
 end
