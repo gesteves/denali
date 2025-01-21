@@ -1,15 +1,5 @@
 <% if photo.camera.present? %>
   <hr>
-  <p>
-    Photographed with <%= photo.camera.article %> <%= photo.camera.display_name %>
-    <% if photo.lens.present? && !photo.camera.is_phone? %>
-      + <%= photo.lens.display_name %>
-    <% end %>
-    <% if photo.film.present? %>
-      on <%= photo.film.display_name %>
-    <% end %>
-  <% if photo.film.blank? %>
-     – <%= exif_for_feeds(photo) %>
-  <% end %>
-  </p>
+  <%= feed_camera_details(photo) %>
+  <%= feed_exif(photo) %>
 <% end %>

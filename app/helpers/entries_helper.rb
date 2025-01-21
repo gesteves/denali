@@ -14,17 +14,44 @@ module EntriesHelper
     src
   end
 
-  def exif_for_feeds(photo, separator: ' – ')
-    exif = []
-    exif << "#{photo.focal_length_with_unit} focal length" if photo.focal_length.present?
+  # Generates a paragraph with camera, lens, and film details
+  def feed_camera_details(photo)
+    return unless photo.camera.present?
+
+    details = []
+    details << "Photographed with #{photo.camera.article} #{photo.camera.display_name}"
+    details << "+ #{photo.lens.display_name}" if photo.lens.present? && !photo.camera.is_phone?
+    details << "on #{photo.film.display_name}" if photo.film.present?
+
+    "<p>#{details.join(' ')}</p>".html_safe
+  end
+
+  # Generates a paragraph with EXIF details like focal length, exposure, aperture, and ISO
+  def feed_exif(photo)
+    return if photo.film.present?
+
+    details = []
+    details << "#{photo.focal_length_with_unit} focal length" if photo.focal_length.present?
     if photo.exposure.present? && photo.f_number.present?
-      exif << "#{photo.formatted_exposure} at #{photo.formatted_aperture}"
+      details << "#{photo.formatted_exposure} at #{photo.formatted_aperture}"
     elsif photo.exposure.present?
-      exif << photo.formatted_aperture
+      details << photo.formatted_exposure
     elsif photo.f_number.present?
-      exif << photo.formatted_aperture
+      details << photo.formatted_aperture
     end
-    exif << "ISO #{photo.iso}"
-    exif.join(separator)
+    details << "ISO #{photo.iso}" if photo.iso.present?
+
+    "<p>#{details.join(' · ')}</p>".html_safe
+  end
+
+  # Generates a paragraph with location and territories details
+  def feed_location(photo)
+    return unless photo.formatted_location.present? || photo.territories.present?
+
+    details = []
+    details << photo.formatted_location if photo.formatted_location.present?
+    details << "#{photo.territory_list} land" if photo.territories.present?
+
+    "<p>#{details.join(' · ')}</p>".html_safe
   end
 end
