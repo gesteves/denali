@@ -2,6 +2,7 @@ class InstagramWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
   def perform(entry_id, text, state = 'auto')
+    return if ENV['PUBLISH_ON_INSTAGRAM'].blank?
     return if !Rails.env.production?
     return if ENV['BUFFER_ACCESS_TOKEN'].blank?
     entry = Entry.published.find(entry_id)
