@@ -1,9 +1,7 @@
 <% if entry.photos.first.camera.present? || entry.show_location? %>
   <hr>
   <p>
-    <small>
-      <%= render partial: 'entries/feed/exif', formats: :html, object: entry.photos.first, as: :photo if entry.photos.first.camera.present?  %>
-      <%= render partial: 'entries/feed/location', formats: :html, object: entry.photos.first, as: :photo if entry.show_location? %>
-    </small>
+    <%= render partial: 'entries/feed/exif', formats: :html, object: entry.photos.first, as: :photo if entry.photos.first.camera.present?  %>
+    <%= render partial: 'entries/feed/location', formats: :html, object: entry.photos.first, as: :photo if entry.show_location? %>
   </p>
 <% end %>
