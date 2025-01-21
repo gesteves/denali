@@ -136,6 +136,7 @@ Rails.application.routes.draw do
 
   # Pages
   get '/about'                         => 'blogs#about', :as => :about
+  get '/elsewhere'                     => 'blogs#elsewhere', :as => :elsewhere
 
   # Miscellaneous
   get '/healthcheck'                   => 'health#show', :as => :health_check
