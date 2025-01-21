@@ -23,7 +23,7 @@ module EntriesHelper
     details << "+ #{photo.lens.display_name}" if photo.lens.present? && !photo.camera.is_phone?
     details << "on #{photo.film.display_name}" if photo.film.present?
 
-    "<p>#{details.join(' ')}</p>".html_safe
+    "<p>📷 #{details.join(' ')}</p>".html_safe
   end
 
   # Generates a paragraph with EXIF details like focal length, exposure, aperture, and ISO
@@ -41,7 +41,7 @@ module EntriesHelper
     end
     details << "ISO #{photo.iso}" if photo.iso.present?
 
-    "<p>#{details.join(' · ')}</p>".html_safe
+    "<p>🎞️ #{details.join(' – ')}</p>".html_safe
   end
 
   # Generates a paragraph with location and territories details
@@ -52,6 +52,6 @@ module EntriesHelper
     details << photo.formatted_location if photo.formatted_location.present?
     details << "#{photo.territory_list} land" if photo.territories.present?
 
-    "<p>#{details.join(' · ')}</p>".html_safe
+    "<p>📍 #{details.join(' – ')}</p>".html_safe
   end
 end
