@@ -23,7 +23,7 @@ module EntriesHelper
     details << "+ #{photo.lens.display_name}" if photo.lens.present? && !photo.camera.is_phone?
     details << "on #{photo.film.display_name}" if photo.film.present?
 
-    "📷 #{details.join(' ')}</br>".html_safe
+    "📷 #{details.join(' ')}<br>".html_safe
   end
 
   # Generates a paragraph with EXIF details like focal length, exposure, aperture, and ISO
