@@ -9,12 +9,4 @@ class BlogsController < ApplicationController
       format.html
     end
   end
-
-  def elsewhere
-    preload_fonts
-    @page_title = "Elsewhere on the Web – #{@photoblog.name}"
-    respond_to do |format|
-      format.html
-    end
-  end
 end

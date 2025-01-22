@@ -136,7 +136,7 @@ Rails.application.routes.draw do
 
   # Pages
   get '/about'                         => 'blogs#about', :as => :about
-  get '/elsewhere'                     => 'blogs#elsewhere', :as => :elsewhere
+  get '/elsewhere', to: redirect('/about', status: 301)
 
   # Miscellaneous
   get '/healthcheck'                   => 'health#show', :as => :health_check
