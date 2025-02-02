@@ -67,6 +67,9 @@ jobs:
     - name: Set up database
       run: bin/rails db:schema:load
 
+    - name: List Bulma folder
+      run: ls -la node_modules/bulma
+
     - name: Compile assets
       run: bin/rails assets:precompile
 
