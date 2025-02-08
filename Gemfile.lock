@@ -200,9 +200,10 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    graphql (2.4.8)
+    graphql (2.4.9)
       base64
       fiber-storage
+      logger
     hashie (5.0.0)
     htmlentities (4.3.4)
     httparty (0.22.0)
