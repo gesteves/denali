@@ -41,7 +41,7 @@ gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
 gem 'rack-attack'
-gem "image_processing", "~> 1.12"
+gem "image_processing", "~> 1.14"
 gem 'rack-brotli'
 gem 'htmlentities'
 gem 'public_suffix'
