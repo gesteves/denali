@@ -419,6 +419,7 @@ class Entry < ApplicationRecord
 
   def mastodon_tags
     valid_tags = %w{ Landscapes Wildlife }
+    valid_tags += ['National Parks', 'National Monuments']
     mastodon_tags = []
     mastodon_tags << 'Photography' if is_photo?
     mastodon_tags += combined_tag_list & valid_tags
@@ -470,7 +471,7 @@ class Entry < ApplicationRecord
 
   def bluesky_tags
     bluesky_tags = combined_tag_list.include?('Streets') ? ['Street Photography'] : ['Photography']
-    bluesky_tags += combined_tag_list & ['Landscapes', 'Wildlife', 'Birds']
+    bluesky_tags += combined_tag_list & ['Landscapes', 'Wildlife', 'Birds', 'National Parks', 'National Monuments']
 
     # Mammals for the mammals feed
     mammals = combined_tag_list & ['Bears', 'Wolves', 'Coyotes', 'Bison', 'Moose', 'Red Foxes', 'Pronghorn', 'Porcupines', 'Bighorn Sheep']
