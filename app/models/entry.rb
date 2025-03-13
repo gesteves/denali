@@ -418,8 +418,7 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_tags
-    valid_tags = %w{ Landscapes Wildlife }
-    valid_tags += ['National Parks', 'National Monuments']
+    valid_tags = %w{ Landscapes Wildlife NationalParks NationalMonuments }
     mastodon_tags = []
     mastodon_tags << 'Photography' if is_photo?
     mastodon_tags += combined_tag_list & valid_tags
