@@ -418,13 +418,13 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_tags
-    valid_tags = %w{ Landscapes Wildlife NationalParks NationalMonuments }
+    valid_tags = ['Landscapes', 'Wildlife', 'National Parks', 'National Monuments']
     mastodon_tags = []
     mastodon_tags << 'Photography' if is_photo?
     mastodon_tags += combined_tag_list & valid_tags
     mastodon_tags << 'StreetPhotography' if combined_tag_list.include?('Streets')
-    mastodon_tags.map { |t| "##{t}" }.join(' ')
-  end
+    mastodon_tags.map { |t| "##{t.gsub(' ', '')}" }.join(' ')
+  end  
 
   def mastodon_caption
     meta = ["🔗 #{self.permalink_url}"]
