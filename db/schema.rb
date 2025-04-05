@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_08_151526) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_05_202108) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  enable_extension "pg_catalog.plpgsql"
 
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
@@ -63,7 +63,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_08_151526) do
     t.boolean "show_search", default: false
     t.string "email"
     t.string "flickr"
-    t.string "instagram"
     t.string "mastodon"
     t.string "bluesky"
   end
@@ -106,10 +105,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_08_151526) do
     t.integer "position"
     t.boolean "post_to_flickr", default: true
     t.boolean "show_location", default: true
-    t.boolean "post_to_instagram", default: true
     t.string "preview_hash"
     t.datetime "modified_at", precision: nil
-    t.text "instagram_text"
     t.boolean "post_to_flickr_groups", default: true
     t.boolean "hide_from_search_engines", default: false
     t.text "mastodon_text"
@@ -118,7 +115,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_08_151526) do
     t.boolean "is_sensitive", default: false
     t.boolean "post_to_bluesky", default: true
     t.text "bluesky_text"
-    t.datetime "last_shared_on_instagram_at"
     t.datetime "last_shared_on_bluesky_at"
     t.datetime "last_shared_on_mastodon_at"
     t.index ["blog_id"], name: "index_entries_on_blog_id"
@@ -209,7 +205,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_08_151526) do
   create_table "profiles", force: :cascade do |t|
     t.string "username"
     t.string "name"
-    t.string "instagram"
     t.string "flickr"
     t.string "email"
     t.string "summary"
