@@ -140,7 +140,6 @@ class Blog < ApplicationRecord
       flickr
       header_logo_svg
       bluesky
-      instagram
       mastodon
       meta_description
       name

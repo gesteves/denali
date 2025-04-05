@@ -1,9 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  instagram_hashtags: MyText
   flickr_groups: MyText
 
 two:
-  instagram_hashtags: MyText
   flickr_groups: MyText

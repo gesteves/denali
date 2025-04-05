@@ -8,6 +8,5 @@ module Types
     field :user, Types::UserType, null: false, description: "The user of this profile"
     field :email, String, null: true, description: "Contact email for the user"
     field :flickr, String, null: true, description: "Flickr account for the user"
-    field :instagram, String, null: true, description: "Instagram account for the user"
   end
 end

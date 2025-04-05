@@ -44,7 +44,6 @@ panda:
   show_location: true
   photos_count: 1
   post_to_flickr: true
-  post_to_instagram: true
   position: 1
   preview_hash: b3f0e6d43bc2f565ecec6ea5580f20165faefd589dfcc7829a1dbc2ee1228a7d
 

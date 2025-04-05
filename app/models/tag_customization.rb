@@ -8,10 +8,6 @@ class TagCustomization < ApplicationRecord
   before_save :cleanup_flickr_albums
   after_save :cleanup_flickr_groups, if: :saved_change_to_flickr_groups?
 
-  def instagram_hashtags_to_a
-    self.instagram_hashtags.split(/\s+/)
-  end
-
   def flickr_groups_to_a
     return [] if self.flickr_groups.blank?
     self.flickr_groups.split(/\s+/)
@@ -38,18 +34,6 @@ class TagCustomization < ApplicationRecord
                               &.join("\n")
   end
 
-  def cleanup_hashtags
-    self.instagram_hashtags = self.instagram_hashtags
-                                    &.split(/\s+/)
-                                    &.map { |h| h.gsub(/[^\w_]/, '')}
-                                    &.reject(&:blank?)
-                                    &.map(&:downcase)
-                                    &.map { |h| "##{h}" }
-                                    &.uniq
-                                    &.sort
-                                    &.join("\n")
-  end
-
   def cleanup_flickr_groups
     UpdateTagCustomizationWorker.perform_async(self.id)
   end
@@ -64,7 +48,7 @@ class TagCustomization < ApplicationRecord
   end
 
   def fields_cannot_be_blank
-    if self.instagram_hashtags.blank? && self.flickr_groups.blank? && self.flickr_albums.blank?
+    if self.flickr_groups.blank? && self.flickr_albums.blank?
       errors.add(:base, 'You need to fill out at least one of the fields')
     end
   end

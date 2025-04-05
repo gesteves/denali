@@ -5,11 +5,6 @@
    <% end %>
 </td>
 <td>
-   <% tag_customization.instagram_hashtags_to_a.each do |t| %>
-     <%= link_to t, "https://www.instagram.com/explore/tags/#{t.gsub('#', '')}/", class: 'tag' %><br>
-   <% end %>
-</td>
-<td>
    <% tag_customization.flickr_groups_slugs.each do |group| %>
      <%= link_to group, "https://www.flickr.com/groups/#{group}", class: 'tag' %><br>
    <% end %>

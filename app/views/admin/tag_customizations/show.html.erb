@@ -21,7 +21,6 @@
     <thead>
       <tr>
       <th>Tags</th>
-      <th>Instagram Hashtags</th>
       <th>Flickr Groups</th>
       <th>Flickr Albums</th>
       </tr>
@@ -31,11 +30,6 @@
         <td>
           <% @tag_customization.tags.sort{ |a,b| a.name <=> b.name }.each do |t| %>
             <%= link_to t.name, admin_tagged_entries_path(t.slug), class: 'tag is-link' %><br>
-          <% end %>
-        </td>
-        <td>
-          <% @tag_customization.instagram_hashtags_to_a.each do |t| %>
-            <%= link_to t, "https://www.instagram.com/explore/tags/#{t.gsub('#', '')}/", class: 'tag' %><br>
           <% end %>
         </td>
         <td>

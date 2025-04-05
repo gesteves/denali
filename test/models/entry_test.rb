@@ -35,7 +35,6 @@ class EntryTest < ActiveSupport::TestCase
     entry.save
     assert entry.is_draft?
     assert_equal 0, FlickrWorker.jobs.size
-    assert_equal 0, InstagramWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
   end
 
@@ -46,18 +45,16 @@ class EntryTest < ActiveSupport::TestCase
     entry.save
     assert entry.is_queued?
     assert_equal 0, FlickrWorker.jobs.size
-    assert_equal 0, InstagramWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
   end
 
   test 'should be published' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog, user: user, post_to_flickr: false, post_to_instagram: false)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'published', blog: blog, user: user, post_to_flickr: false)
     entry.save
     assert entry.is_published?
     assert_equal 0, FlickrWorker.jobs.size
-    assert_equal 0, InstagramWorker.jobs.size
     assert_equal 2, WebhookWorker.jobs.size
   end
 
@@ -130,14 +127,12 @@ class EntryTest < ActiveSupport::TestCase
   test 'publish should enqueue jobs' do
     user = users(:guille)
     blog = blogs(:allencompassingtrip)
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user, post_to_flickr: false, post_to_instagram: false)
+    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user, post_to_flickr: false)
     entry.save
     assert_equal 0, FlickrWorker.jobs.size
-    assert_equal 0, InstagramWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
     entry.publish
     assert_equal 0, FlickrWorker.jobs.size
-    assert_equal 0, InstagramWorker.jobs.size
     assert_equal 2, WebhookWorker.jobs.size
   end
 
@@ -148,7 +143,6 @@ class EntryTest < ActiveSupport::TestCase
     entry.save
     entry.queue
     assert_equal 0, FlickrWorker.jobs.size
-    assert_equal 0, InstagramWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
   end
 
@@ -159,7 +153,6 @@ class EntryTest < ActiveSupport::TestCase
     entry.save
     entry.draft
     assert_equal 0, FlickrWorker.jobs.size
-    assert_equal 0, InstagramWorker.jobs.size
     assert_equal 0, WebhookWorker.jobs.size
   end
 
@@ -270,28 +263,6 @@ class EntryTest < ActiveSupport::TestCase
     assert_equal 1, entry_1.position
   end
 
-  test 'instagram hashtags' do
-    user = users(:guille)
-    blog = blogs(:allencompassingtrip)
-
-    tag = TagCustomization.new(instagram_hashtags: 'awildlifehashtag', blog: blog)
-    tag.tag_list.add('tag a', 'tag b')
-    tag.save!
-    tag.reload
-
-    entry = Entry.new(title: 'Title', body: 'Body.', status: 'queued', blog: blog, user: user)
-    entry.save!
-
-    assert_empty entry.instagram_hashtags
-
-    entry.add_tags('tag a')
-    entry.reload
-    assert_empty entry.instagram_hashtags
-
-    entry.add_tags('tag b')
-    entry.reload
-    assert_not_empty entry.instagram_hashtags
-  end
 
   test 'flickr groups' do
     user = users(:guille)

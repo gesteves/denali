@@ -4,8 +4,6 @@ module Types
     field :body, String, null: true, description: "The body of the entry, as entered by the author, in Markdown"
     field :formatted_body, String, null: true, description: "The body of the entry, formatted in HTML"
     field :plain_caption, String, null: true, description: "A plain text caption for this entry"
-    field :instagram_caption, String, null: true, description: "A Instagram-friendly caption for this entry"
-    field :instagram_hashtags, String, null: true, description: "List of Instagram hashtags this entry can be tagged with"
     field :modified_at, String, null: false, description: "Date & time the entry was last publicly modified"
     field :photos_count, Integer, null: false, description: "Number of photos in this entry"
     field :plain_body, String, null: true, description: "The body of the entry, in plain text"

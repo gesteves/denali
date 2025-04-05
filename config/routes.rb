@@ -31,13 +31,11 @@ Rails.application.routes.draw do
       member do
         get 'crops'
         get 'prints'
-        get 'instagram'
         get 'mastodon'
         get 'bluesky'
         patch 'publish'
         patch 'queue'
         patch 'draft'
-        post 'instagram'
         post 'mastodon'
         post 'bluesky'
         post 'refresh_metadata'

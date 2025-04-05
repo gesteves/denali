@@ -287,7 +287,6 @@ class Entry < ApplicationRecord
 
   def enqueue_publish_jobs
     OpenGraphWorker.perform_async(self.id)
-    InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
     MastodonWorker.perform_async(self.id, self.mastodon_caption) if self.post_to_mastodon
     BlueskyWorker.perform_async(self.id, self.bluesky_caption) if self.post_to_bluesky
     Webhook.deliver_all(self)
@@ -355,68 +354,6 @@ class Entry < ApplicationRecord
     self.photos.where.not(territories: nil).map { |p| JSON.parse(p.territories) }.flatten.uniq.join(' ')
   end
 
-  def instagram_hashtags(count = 30)
-    entry_tags = self.tags
-    entry_locations = self.locations
-    entry_equipment = self.equipment
-    entry_styles = self.styles
-    combined_tags = self.combined_tags
-    tags = []
-    location_tags = []
-    equipment_tags = []
-    style_tags = []
-    more_tags = []
-
-    self.blog.tag_customizations.where.not(instagram_hashtags: [nil, '']).each do |tag_customization|
-      hashtags = tag_customization.instagram_hashtags_to_a
-      if tag_customization.matches_tags? entry_tags
-        tags << hashtags
-      elsif tag_customization.matches_tags? entry_locations
-        location_tags << hashtags
-      elsif tag_customization.matches_tags? entry_equipment
-        equipment_tags << hashtags
-      elsif tag_customization.matches_tags? entry_styles
-        style_tags << hashtags
-      elsif tag_customization.matches_tags? combined_tags
-        more_tags << hashtags
-      end
-    end
-
-    instagram_tags = more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
-    instagram_tags.flatten.compact.uniq[0, count].shuffle.join(' ')
-  end
-
-  def instagram_caption
-    meta = []
-
-    if is_photo?
-      photo = photos.first
-      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
-      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
-      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
-
-      location = []
-      location << photo.formatted_location if photo.formatted_location.present?
-      location << "#{photo.territory_list} land" if photo.territories.present?
-
-      meta << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
-    end
-
-    caption = [self.plain_title]
-    if self.instagram_text.present?
-      caption << self.instagram_text
-    else
-      caption << self.plain_body
-    end
-
-    caption << meta.join("\n").strip
-    caption.reject(&:blank?).join("\n\n")
-  end
-
-  def valid_instagram_caption?
-    instagram_caption.length <= 2200
-  end
-
   def mastodon_tags
     valid_tags = ['Landscapes', 'Wildlife', 'National Parks', 'National Monuments']
     mastodon_tags = []
@@ -424,7 +361,7 @@ class Entry < ApplicationRecord
     mastodon_tags += combined_tag_list & valid_tags
     mastodon_tags << 'StreetPhotography' if combined_tag_list.include?('Streets')
     mastodon_tags.map { |t| "##{t.gsub(' ', '')}" }.join(' ')
-  end  
+  end
 
   def mastodon_caption
     meta = ["🔗 #{self.permalink_url}"]
