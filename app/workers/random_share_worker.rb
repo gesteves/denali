@@ -28,17 +28,17 @@ class RandomShareWorker < ApplicationWorker
     eligible_entries = case platform
     when 'Bluesky'
       photoblog.entries.published
-               .tagged_with(tags, match_all: true)
+               .tagged_with(tags)
                .where(post_to_bluesky: true)
                .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago)
     when 'Mastodon'
       photoblog.entries.published
-               .tagged_with(tags, match_all: true)
+               .tagged_with(tags)
                .where(post_to_mastodon: true)
                .where("last_shared_on_mastodon_at IS NULL OR last_shared_on_mastodon_at < ?", months_ago)
     when 'Instagram'
       photoblog.entries.published
-               .tagged_with(tags, match_all: true)
+               .tagged_with(tags)
                .where(post_to_instagram: true)
                .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", months_ago)
     end
