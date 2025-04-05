@@ -49,6 +49,7 @@ class TagCustomization < ApplicationRecord
     self.bluesky_hashtags = self.bluesky_hashtags
                                     &.split(/\s+/)
                                     &.map { |h| convert_to_hashtag(h) }
+                                    &.reject(&:blank?)
                                     &.uniq
                                     &.sort
                                     &.join("\n")
@@ -56,6 +57,7 @@ class TagCustomization < ApplicationRecord
     self.mastodon_hashtags = self.mastodon_hashtags
                                     &.split(/\s+/)
                                     &.map { |h| convert_to_hashtag(h) }
+                                    &.reject(&:blank?)
                                     &.uniq
                                     &.sort
                                     &.join("\n")
