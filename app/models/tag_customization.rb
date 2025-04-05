@@ -9,10 +9,12 @@ class TagCustomization < ApplicationRecord
   after_save :cleanup_flickr_groups, if: :saved_change_to_flickr_groups?
 
   def bluesky_hashtags_to_a
+    return [] if self.bluesky_hashtags.blank?
     self.bluesky_hashtags.split(/\s+/)
   end
 
   def mastodon_hashtags_to_a
+    return [] if self.mastodon_hashtags.blank?
     self.mastodon_hashtags.split(/\s+/)
   end
 
