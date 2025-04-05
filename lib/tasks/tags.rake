@@ -7,4 +7,9 @@ namespace :tags do
     end
     Blog.first.purge_from_cdn
   end
+
+  desc 'Remove tag customizations that only have Instagram hashtags'
+  task :remove_instagram_hashtags => :environment do
+    TagCustomization.where.not(instagram_hashtags: nil).where(flickr_groups: [nil, ''], flickr_albums: [nil, '']).destroy_all
+  end
 end
