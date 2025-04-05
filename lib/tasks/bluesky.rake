@@ -1,6 +1,7 @@
 namespace :bluesky do
   desc "Change post_to_bluesky to true"
   task update_post_to_bluesky: :environment do
+    return if ENV["TAGS"].blank?
     tags = Array(ENV["TAGS"].split(",").map(&:strip))
     photoblog = Blog.first
     entries = photoblog.entries.tagged_with(tags)
