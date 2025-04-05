@@ -1,5 +1,5 @@
 class TagCustomization < ApplicationRecord
-  validate :tag_list_must_be_unique, :fields_cannot_be_blank
+  validate :fields_cannot_be_blank
   validates :tag_list, presence: true
   belongs_to :blog, touch: true, optional: true
   acts_as_taggable_on :tags
@@ -7,6 +7,7 @@ class TagCustomization < ApplicationRecord
   before_save :cleanup_hashtags
   before_save :cleanup_flickr_albums
   after_save :cleanup_flickr_groups, if: :saved_change_to_flickr_groups?
+  before_create :merge_existing_tag_customization
 
   def bluesky_hashtags_to_a
     return [] if self.bluesky_hashtags.blank?
@@ -66,11 +67,17 @@ class TagCustomization < ApplicationRecord
 
   private
 
-  def tag_list_must_be_unique
-    tag_customizations = TagCustomization.where.not(id: self.id).tagged_with(self.tag_list, :match_all => true)
-    if tag_customizations.any? { |tc| tc.tag_list.size == self.tag_list.size }
-      errors.add(:tag_list, "already exists")
-    end
+  def merge_existing_tag_customization
+    existing = TagCustomization.where.not(id: self.id).tagged_with(self.tag_list, match_all: true).first
+    return unless existing
+
+    # Merge hashtags
+    self.bluesky_hashtags = [self.bluesky_hashtags, existing.bluesky_hashtags].compact.join("\n")
+    self.mastodon_hashtags = [self.mastodon_hashtags, existing.mastodon_hashtags].compact.join("\n")
+    self.flickr_groups = [self.flickr_groups, existing.flickr_groups].compact.join("\n")
+    self.flickr_albums = [self.flickr_albums, existing.flickr_albums].compact.join("\n")
+
+    existing.destroy
   end
 
   def fields_cannot_be_blank
