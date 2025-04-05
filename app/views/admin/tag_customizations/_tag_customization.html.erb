@@ -6,12 +6,12 @@
 </td>
 <td>
   <% tag_customization.bluesky_hashtags_to_a.each do |hashtag| %>
-    <%= hashtag %><br>
+    <%= link_to hashtag, "https://bsky.app/hashtag/#{hashtag.gsub('#', '')}/", class: 'tag' %><br>
   <% end %>
 </td>
 <td>
   <% tag_customization.mastodon_hashtags_to_a.each do |hashtag| %>
-    <%= hashtag %><br>
+    <%= link_to hashtag, "https://mastodon.social/tags/#{hashtag.gsub('#', '')}", class: 'tag' %><br>
   <% end %>
 </td>
 <td>
