@@ -5,6 +5,16 @@
    <% end %>
 </td>
 <td>
+  <% tag_customization.bluesky_hashtags_to_a.each do |hashtag| %>
+    <%= hashtag %><br>
+  <% end %>
+</td>
+<td>
+  <% tag_customization.mastodon_hashtags_to_a.each do |hashtag| %>
+    <%= hashtag %><br>
+  <% end %>
+</td>
+<td>
    <% tag_customization.flickr_groups_slugs.each do |group| %>
      <%= link_to group, "https://www.flickr.com/groups/#{group}", class: 'tag' %><br>
    <% end %>

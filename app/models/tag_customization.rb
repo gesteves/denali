@@ -4,8 +4,17 @@ class TagCustomization < ApplicationRecord
   belongs_to :blog, touch: true, optional: true
   acts_as_taggable_on :tags
 
+  before_save :cleanup_hashtags
   before_save :cleanup_flickr_albums
   after_save :cleanup_flickr_groups, if: :saved_change_to_flickr_groups?
+
+  def bluesky_hashtags_to_a
+    self.bluesky_hashtags.split(/\s+/)
+  end
+
+  def mastodon_hashtags_to_a
+    self.mastodon_hashtags.split(/\s+/)
+  end
 
   def flickr_groups_to_a
     return [] if self.flickr_groups.blank?
@@ -33,6 +42,26 @@ class TagCustomization < ApplicationRecord
                               &.join("\n")
   end
 
+  def cleanup_hashtags
+    self.bluesky_hashtags = self.bluesky_hashtags
+                                    &.split(/\s+/)
+                                    &.map { |h| h.gsub(/[^\w_]/, '')}
+                                    &.reject(&:blank?)
+                                    &.map { |h| "##{h}" }
+                                    &.uniq
+                                    &.sort
+                                    &.join("\n")
+
+    self.mastodon_hashtags = self.mastodon_hashtags
+                                    &.split(/\s+/)
+                                    &.map { |h| h.gsub(/[^\w_]/, '')}
+                                    &.reject(&:blank?)
+                                    &.map { |h| "##{h}" }
+                                    &.uniq
+                                    &.sort
+                                    &.join("\n")
+  end
+
   def cleanup_flickr_groups
     UpdateTagCustomizationWorker.perform_async(self.id)
   end
@@ -47,7 +76,7 @@ class TagCustomization < ApplicationRecord
   end
 
   def fields_cannot_be_blank
-    if self.flickr_groups.blank? && self.flickr_albums.blank?
+    if self.bluesky_hashtags.blank? && self.mastodon_hashtags.blank? && self.flickr_groups.blank? && self.flickr_albums.blank?
       errors.add(:base, 'You need to fill out at least one of the fields')
     end
   end

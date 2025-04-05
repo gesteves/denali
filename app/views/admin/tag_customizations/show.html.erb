@@ -21,6 +21,8 @@
     <thead>
       <tr>
       <th>Tags</th>
+      <th>Bluesky Hashtags</th>
+      <th>Mastodon Hashtags</th>
       <th>Flickr Groups</th>
       <th>Flickr Albums</th>
       </tr>
@@ -33,8 +35,17 @@
           <% end %>
         </td>
         <td>
+          <% @tag_customization.bluesky_hashtags_to_a.each do |hashtag| %>
+            <%= hashtag %><br>
+          <% end %>
+        </td>
+        <td>
+          <% @tag_customization.mastodon_hashtags_to_a.each do |hashtag| %>
+            <%= hashtag %><br>
+          <% end %>
+        </td>
+        <td>
           <% @tag_customization.flickr_groups_to_a.each do |group| %>
-            <%= link_to group, group, class: 'tag' %><br>
           <% end %>
         </td>
         <td>

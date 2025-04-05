@@ -354,13 +354,66 @@ class Entry < ApplicationRecord
     self.photos.where.not(territories: nil).map { |p| JSON.parse(p.territories) }.flatten.uniq.join(' ')
   end
 
-  def mastodon_tags
-    valid_tags = ['Landscapes', 'Wildlife', 'National Parks', 'National Monuments']
-    mastodon_tags = []
-    mastodon_tags << 'Photography' if is_photo?
-    mastodon_tags += combined_tag_list & valid_tags
-    mastodon_tags << 'StreetPhotography' if combined_tag_list.include?('Streets')
-    mastodon_tags.map { |t| "##{t.gsub(' ', '')}" }.join(' ')
+  def bluesky_hashtags(count = 5)
+    entry_tags = self.tags
+    entry_locations = self.locations
+    entry_equipment = self.equipment
+    entry_styles = self.styles
+    combined_tags = self.combined_tags
+    tags = []
+    location_tags = []
+    equipment_tags = []
+    style_tags = []
+    more_tags = []
+
+    self.blog.tag_customizations.where.not(bluesky_hashtags: [nil, '']).each do |tag_customization|
+      hashtags = tag_customization.bluesky_hashtags_to_a
+      if tag_customization.matches_tags? entry_tags
+        tags << hashtags
+      elsif tag_customization.matches_tags? entry_locations
+        location_tags << hashtags
+      elsif tag_customization.matches_tags? entry_equipment
+        equipment_tags << hashtags
+      elsif tag_customization.matches_tags? entry_styles
+        style_tags << hashtags
+      elsif tag_customization.matches_tags? combined_tags
+        more_tags << hashtags
+      end
+    end
+
+    bluesky_tags = more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
+    bluesky_tags.flatten.compact.uniq.take(count).shuffle.join(' ')
+  end
+
+  def mastodon_hashtags(count = 5)
+    entry_tags = self.tags
+    entry_locations = self.locations
+    entry_equipment = self.equipment
+    entry_styles = self.styles
+    combined_tags = self.combined_tags
+    tags = []
+    location_tags = []
+    equipment_tags = []
+    style_tags = []
+    more_tags = []
+
+    self.blog.tag_customizations.where.not(mastodon_hashtags: [nil, '']).each do |tag_customization|
+      hashtags = tag_customization.mastodon_hashtags_to_a
+      if tag_customization.matches_tags? entry_tags
+        tags << hashtags
+      elsif tag_customization.matches_tags? entry_locations
+        location_tags << hashtags
+      elsif tag_customization.matches_tags? entry_equipment
+        equipment_tags << hashtags
+      elsif tag_customization.matches_tags? entry_styles
+        style_tags << hashtags
+      elsif tag_customization.matches_tags? combined_tags
+        more_tags << hashtags
+      end
+    end
+
+    mastodon_tags = more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
+    mastodon_tags.flatten.compact.uniq.take(count).shuffle.join(' ')
   end
 
   def mastodon_caption
@@ -373,7 +426,7 @@ class Entry < ApplicationRecord
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
     end
 
-    meta << "\n#{mastodon_tags}" if mastodon_tags.present?
+    meta << "\n#{mastodon_hashtags}" if mastodon_hashtags.present?
 
     caption = [self.plain_title]
     caption << self.mastodon_text if self.mastodon_text.present?
@@ -395,7 +448,7 @@ class Entry < ApplicationRecord
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
     end
 
-    meta << "🏷️ #{bluesky_tags}" if bluesky_tags.present?
+    meta << "🏷️ #{bluesky_hashtags}" if bluesky_hashtags.present?
 
     caption = []
     caption << "[#{self.plain_title}](#{self.permalink_url})"
@@ -403,21 +456,6 @@ class Entry < ApplicationRecord
 
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
-  end
-
-  def bluesky_tags
-    bluesky_tags = combined_tag_list.include?('Streets') ? ['Street Photography'] : ['Photography']
-    bluesky_tags += combined_tag_list & ['Landscapes', 'Wildlife', 'National Parks', 'National Monuments']
-
-    # Mammals for the mammals feed
-    mammals = combined_tag_list & ['Bears', 'Wolves', 'Coyotes', 'Bison', 'Moose', 'Red Foxes', 'Pronghorn', 'Porcupines', 'Bighorn Sheep']
-    bluesky_tags += mammals if mammals.present?
-
-    # Birds for the birds feed
-    birds = combined_tag_list & ['Great Gray Owls', 'Bald Eagles', 'Golden Eagles', 'Goose', 'Trumpeter Swan', 'Red-tailed Hawks', 'Ravens', 'Sandhill Cranes', 'Ospreys', 'White Pelicans']
-    bluesky_tags += birds if birds.present?
-
-    bluesky_tags.uniq.sort.map { |t| "##{t.gsub(/[^0-9a-zA-Z]+/, '')}" }.join(' ')
   end
 
   def valid_bluesky_caption?
