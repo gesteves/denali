@@ -1,9 +1,11 @@
 class RandomShareWorker < ApplicationWorker
-  def perform(tag, platform)
+  def perform(tags, platform)
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
-    logger.info "[Social] Attempting to share a random entry on #{platform}."
+    # Convert to array if a single tag is passed
+    tags = Array(tags)
+    logger.info "[Social] Attempting to share a random entry with tags #{tags.join(', ')} on #{platform}."
 
-    entry = find_eligible_entry(tag, platform)
+    entry = find_eligible_entry(tags, platform)
     return if entry.blank?
 
     case platform
@@ -18,7 +20,7 @@ class RandomShareWorker < ApplicationWorker
 
   private
 
-  def find_eligible_entry(tag, platform)
+  def find_eligible_entry(tags, platform)
     photoblog = Blog.first
     months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
     months_ago = months.months.ago
@@ -26,21 +28,21 @@ class RandomShareWorker < ApplicationWorker
     eligible_entries = case platform
     when 'Bluesky'
       photoblog.entries.published
-               .tagged_with(tag)
+               .tagged_with(tags, match_all: true)
                .where(post_to_bluesky: true)
                .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago)
     when 'Mastodon'
       photoblog.entries.published
-               .tagged_with(tag)
+               .tagged_with(tags, match_all: true)
                .where(post_to_mastodon: true)
                .where("last_shared_on_mastodon_at IS NULL OR last_shared_on_mastodon_at < ?", months_ago)
     when 'Instagram'
       photoblog.entries.published
-               .tagged_with(tag)
+               .tagged_with(tags, match_all: true)
                .where(post_to_instagram: true)
                .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", months_ago)
     end
-    logger.info "[Social] There are #{eligible_entries.size} #{tag} entries eligible to be shared on #{platform}."
+    logger.info "[Social] There are #{eligible_entries.size} entries tagged with #{tags.join(', ')} eligible to be shared on #{platform}."
     eligible_entries.sample
   end
 end

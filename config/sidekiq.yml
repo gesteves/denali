@@ -34,3 +34,9 @@
       queue: high
       args: ['Wildlife', 'Mastodon']
       description: "Shares a random wildlife photo on Mastodon."
+    random_bluesky_cherry_blossoms:
+      cron: '0 8 * 4 *'  # Run at 8:00 AM every day, but only in April
+      class: RandomShareWorker
+      queue: high
+      args: [['Cherry Blossoms', 'Color'], 'Bluesky']
+      description: "Share a random cherry blossom photo on Bluesky daily during April"
