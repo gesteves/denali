@@ -45,18 +45,14 @@ class TagCustomization < ApplicationRecord
   def cleanup_hashtags
     self.bluesky_hashtags = self.bluesky_hashtags
                                     &.split(/\s+/)
-                                    &.map { |h| h.gsub(/[^\w_]/, '')}
-                                    &.reject(&:blank?)
-                                    &.map { |h| "##{h}" }
+                                    &.map { |h| convert_to_hashtag(h) }
                                     &.uniq
                                     &.sort
                                     &.join("\n")
 
     self.mastodon_hashtags = self.mastodon_hashtags
                                     &.split(/\s+/)
-                                    &.map { |h| h.gsub(/[^\w_]/, '')}
-                                    &.reject(&:blank?)
-                                    &.map { |h| "##{h}" }
+                                    &.map { |h| convert_to_hashtag(h) }
                                     &.uniq
                                     &.sort
                                     &.join("\n")
@@ -79,5 +75,10 @@ class TagCustomization < ApplicationRecord
     if self.bluesky_hashtags.blank? && self.mastodon_hashtags.blank? && self.flickr_groups.blank? && self.flickr_albums.blank?
       errors.add(:base, 'You need to fill out at least one of the fields')
     end
+  end
+
+  def convert_to_hashtag(text)
+    return if text.blank?
+    "##{text.parameterize.split(/-/).map(&:capitalize).join}"
   end
 end
