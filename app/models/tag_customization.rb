@@ -81,6 +81,6 @@ class TagCustomization < ApplicationRecord
 
   def convert_to_hashtag(text)
     return if text.blank?
-    "##{text.gsub(/[^a-zA-Z0-9]/, ' ').strip.split(/\s+/).map(&:capitalize).join}"
+    "##{text.gsub(/[^a-zA-Z0-9]/, ' ').strip.split(/\s+/).join}"
   end
 end
