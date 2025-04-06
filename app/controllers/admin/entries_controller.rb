@@ -119,7 +119,7 @@ class Admin::EntriesController < AdminController
     if @entry.publish
       flash[:success] = 'Your entry was published!'
     else
-      flash[:warning] = 'Your entry couldn't be published…'
+      flash[:warning] = 'Your entry couldn’t be published…'
     end
     redirect_to admin_entries_path
   end
@@ -129,7 +129,7 @@ class Admin::EntriesController < AdminController
     if @entry.queue
       flash[:success] = 'Your entry was sent to the queue.'
     else
-      flash[:warning] = 'Your entry couldn't be queued…'
+      flash[:warning] = 'Your entry couldn’t be queued…'
     end
     redirect_to queued_admin_entries_path
   end
@@ -139,7 +139,7 @@ class Admin::EntriesController < AdminController
     if @entry.draft
       flash[:success] = 'Your entry was moved to the drafts.'
     else
-      flash[:warning] = 'Your entry couldn't be moved to the drafts…'
+      flash[:warning] = 'Your entry couldn’t be moved to the drafts…'
     end
     redirect_to drafts_admin_entries_path
   end
@@ -155,7 +155,7 @@ class Admin::EntriesController < AdminController
         flash[:success] = "Your entry was saved!"
         format.html { redirect_to new_admin_entry_path(continue: true) }
       else
-        flash[:warning] = 'Your entry couldn't be saved…'
+        flash[:warning] = 'Your entry couldn’t be saved…'
         format.html { render :new }
       end
     end
@@ -177,7 +177,7 @@ class Admin::EntriesController < AdminController
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to admin_entry_path(@entry) }
       else
-        flash[:warning] = 'Your entry couldn't be updated…'
+        flash[:warning] = 'Your entry couldn’t be updated…'
         format.html { render :edit }
       end
     end
@@ -219,7 +219,7 @@ class Admin::EntriesController < AdminController
       format.json {
         response = {
           status: 'success',
-          message: 'The changes you've made to the queue have been saved!'
+          message: 'The changes you’ve made to the queue have been saved!'
         }
         render json: response
       }
@@ -318,7 +318,7 @@ class Admin::EntriesController < AdminController
       photo.detect_colors
       photo.encode_blurhash
     end
-    @message = 'Your entry's metadata is being updated. This may take a few moments.'
+    @message = 'Your entry’s metadata is being updated. This may take a few moments.'
     respond_to do |format|
       format.html {
         flash[:success] = @message
