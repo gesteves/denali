@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     get '/entries/queued/organize'    => 'entries#organize_queue'
     post '/entries/queued/update'     => 'entries#update_queue'
     get '/entries/queued/schedule'    => 'publish_schedules#index'
+    get '/entries/review_alt_text'    => 'entries#review_alt_text'
     get '/equipment'                  => 'equipment#index'
     get '/locations'                  => 'locations#index'
     get '/map'                        => 'maps#index', :as => :map

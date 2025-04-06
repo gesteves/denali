@@ -54,6 +54,14 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def review_alt_text
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).where(photos: { alt_text: nil }).or(@photoblog.entries.includes(photos: [:image_attachment, :image_blob]).where(photos: { auto_generated_alt_text: true }))
+    @page_title = 'Alt text review'
+    respond_to do |format|
+      format.html
+    end
+  end
+
   # GET /admin/entries/:id
   def show
     set_srcset
