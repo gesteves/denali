@@ -42,7 +42,7 @@ class PhotoExifWorker < ApplicationWorker
       end
       if exif.image_description.present? && photo.alt_text.blank?
         photo.alt_text = exif.image_description.force_encoding('UTF-8').encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
-      else
+      elsif photo.alt_text.blank?
         AltTextWorker.perform_async(photo_id)
       end
     end
