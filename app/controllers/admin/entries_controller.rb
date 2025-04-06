@@ -60,6 +60,7 @@ class Admin::EntriesController < AdminController
     entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob])
       .joins(:photos)
       .merge(Photo.needs_alt_text_review)
+      .distinct
       .order('entries.created_at DESC')
     @entries_count = entries.count
     @entries = entries.page(@page)
