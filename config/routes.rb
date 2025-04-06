@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     get '(page/:page)', :action => :index, :on => :collection
     get 'queued(/page/:page)', :action => :queued, :on => :collection
     get 'drafts(/page/:page)', :action => :drafts, :on => :collection
+    get 'review_alt_text(/page/:page)', :action => :review_alt_text, :on => :collection
   end
 
   namespace :admin do
@@ -21,7 +22,6 @@ Rails.application.routes.draw do
     get '/entries/queued/organize'    => 'entries#organize_queue'
     post '/entries/queued/update'     => 'entries#update_queue'
     get '/entries/queued/schedule'    => 'publish_schedules#index'
-    get '/entries/review_alt_text'    => 'entries#review_alt_text'
     get '/equipment'                  => 'equipment#index'
     get '/locations'                  => 'locations#index'
     get '/map'                        => 'maps#index', :as => :map
@@ -46,6 +46,7 @@ Rails.application.routes.draw do
         get 'queued'
         get 'drafts'
         get 'photo'
+        get 'review_alt_text'
       end
       resources :photos, only: [] do
         member do

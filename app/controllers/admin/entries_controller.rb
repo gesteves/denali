@@ -55,10 +55,13 @@ class Admin::EntriesController < AdminController
   end
 
   def review_alt_text
+    set_srcset
+    @page = params[:page] || 1
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob])
       .where(photos: { alt_text: [nil, ""] })
       .or(@photoblog.entries.where(photos: { auto_generated_alt_text: true }))
       .order('entries.created_at DESC')
+      .page(@page)
     @page_title = 'Alt text review'
     respond_to do |format|
       format.html
