@@ -11,11 +11,11 @@ Rails.application.routes.draw do
     get '(page/:page)', :action => :index, :on => :collection
     get 'queued(/page/:page)', :action => :queued, :on => :collection
     get 'drafts(/page/:page)', :action => :drafts, :on => :collection
-    get 'review_alt_text(/page/:page)', :action => :review_alt_text, :on => :collection
   end
 
   namespace :admin do
     get '/entries/tagged/:tag(/page/:page)'     => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
+    get '/entries/review/alt-text(/page/:page)' => 'entries#review_alt_text', constraints: { page: /\d+/ }, :as => 'review_alt_text'
     get '/entries/search'             => 'entries#search', :as => :search
     get '/entries/edit'               => 'entries#edit'
     get '/entries/share'              => 'entries#share'
@@ -46,7 +46,6 @@ Rails.application.routes.draw do
         get 'queued'
         get 'drafts'
         get 'photo'
-        get 'review_alt_text'
       end
       resources :photos, only: [] do
         member do
