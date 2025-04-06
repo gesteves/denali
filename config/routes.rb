@@ -39,6 +39,7 @@ Rails.application.routes.draw do
         post 'mastodon'
         post 'bluesky'
         post 'refresh_metadata'
+        post 'generate_alt_text'
       end
       collection do
         get 'queued'

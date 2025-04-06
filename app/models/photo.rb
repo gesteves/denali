@@ -393,6 +393,10 @@ class Photo < ApplicationRecord
     PhotoExifWorker.perform_async(self.id)
   end
 
+  def generate_alt_text
+    AltTextWorker.perform_async(self.id)
+  end
+
   def geocode
     PhotoGeocodeWorker.perform_async(self.id)
   end

@@ -317,6 +317,20 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def generate_alt_text
+    @entry.photos.each do |photo|
+      photo.generate_alt_text
+    end
+    @message = 'The alt text is being generated. This may take a few moments.'
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render 'admin/shared/notify' }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
