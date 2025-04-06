@@ -140,6 +140,12 @@ class Photo < ApplicationRecord
     self.url(opts)
   end
 
+  def chatgpt_url
+    width = self.is_vertical? ? width_from_height(2000) : 2000
+    opts = { width: width, format: 'jpeg', quality: 60 }
+    self.url(opts)
+  end
+
   def iphone_wallpaper_url
     opts = { aspect_ratio: '9:19.5' }
     self.url(opts)

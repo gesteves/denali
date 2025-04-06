@@ -51,6 +51,7 @@
                   <div class="field">
                     <div class="control is-expanded">
                       <%= p.text_field :alt_text, placeholder: 'Write alt text for this photo…', class: 'input' %>
+                      <%= p.hidden_field :auto_generated_alt_text, value: false %>
                       <%= p.hidden_field :position, 'data-position': '' %>
                     </div>
                   </div>

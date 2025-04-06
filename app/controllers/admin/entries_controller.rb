@@ -328,7 +328,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_flickr_groups, :post_to_mastodon, :post_to_bluesky, :bluesky_text, :mastodon_text, :show_location, :hide_from_search_engines, :content_warning, :is_sensitive, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_flickr_groups, :post_to_mastodon, :post_to_bluesky, :bluesky_text, :mastodon_text, :show_location, :hide_from_search_engines, :content_warning, :is_sensitive, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location, :auto_generated_alt_text])
     end
 
     def set_redirect_url

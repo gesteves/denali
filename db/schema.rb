@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_05_202541) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_06_162959) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -193,6 +193,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_05_202541) do
     t.text "territories"
     t.string "location"
     t.bigint "park_id"
+    t.boolean "auto_generated_alt_text", default: false
     t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["film_id"], name: "index_photos_on_film_id"

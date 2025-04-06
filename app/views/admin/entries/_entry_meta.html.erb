@@ -44,6 +44,15 @@
     </div>
   <% end %>
 
+  <% if entry.photos.any? { |p| p.auto_generated_alt_text? } %>
+    <div class="control">
+      <div class="tags has-addons">
+        <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
+        <span class="tag">Review alt text</span>
+      </div>
+    </div>
+  <% end %>
+
   <% if entry.photos.any? { |p| p.focal_x.blank? || p.focal_y.blank? } %>
     <div class="control">
       <div class="tags has-addons">
