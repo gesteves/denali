@@ -42,7 +42,7 @@
                       <div class="field-body">
                         <div class="field">
                           <div class="control is-expanded">
-                            <%= p.text_field :alt_text, placeholder: 'Write alt text for this photo…', class: 'input' %>
+                            <%= p.text_area :alt_text, placeholder: 'Write alt text for this photo…', class: 'input', rows: 4 %>
                             <%= p.hidden_field :id %>
                             <%= p.hidden_field :position, 'data-position': '' %>
                             <%= p.hidden_field :_destroy, 'data-photo-form-target': 'destroy' %>
