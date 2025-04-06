@@ -23,6 +23,8 @@ class Photo < ApplicationRecord
   after_commit :update_entry_style_tags, if: :changed_style?
   after_commit :update_park, if: :changed_location?
 
+  scope :needs_alt_text_review, -> { where(alt_text: [nil, ""]).or(where(auto_generated_alt_text: true)) }
+
   def touch_entry
     self.entry.touch unless self.entry.destroyed?
   end
