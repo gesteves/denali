@@ -57,11 +57,12 @@ class Admin::EntriesController < AdminController
   def review_alt_text
     set_srcset
     @page = params[:page] || 1
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob])
+    entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob])
       .joins(:photos)
       .merge(Photo.needs_alt_text_review)
       .order('entries.created_at DESC')
-      .page(@page)
+    @entries_count = entries.count
+    @entries = entries.page(@page)
     @page_title = 'Alt text review'
     respond_to do |format|
       format.html

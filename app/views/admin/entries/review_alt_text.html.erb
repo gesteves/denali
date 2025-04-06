@@ -1,6 +1,6 @@
 <% cache [@photoblog, @page] do %>
   <h1 class="title is-size-5-mobile">Alt text review</h1>
-  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', @entries.size %></h2>
+  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', @entries_count %></h2>
   <hr class="hr">
   <% if @entries.size == 0 %>
     <article class="message is-info">
