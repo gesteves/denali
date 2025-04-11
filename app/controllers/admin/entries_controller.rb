@@ -78,7 +78,7 @@ class Admin::EntriesController < AdminController
     entries = @photoblog.entries.published.includes(photos: [:image_attachment, :image_blob])
       .where(post_to_bluesky: true)
       .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago)
-      .order(Arel.sql('RANDOM()'))
+      .reorder(Arel.sql('RANDOM()'))
     @entries_count = entries.count
     @entries = entries.page(@page)
     @page_title = 'Shareable on Bluesky'
