@@ -70,6 +70,23 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def shareable_on_bluesky
+    set_srcset
+    @page = params[:page] || 1
+    months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
+    months_ago = months.months.ago
+    entries = @photoblog.entries.published.includes(photos: [:image_attachment, :image_blob])
+      .where(post_to_bluesky: true)
+      .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago)
+      .order(Arel.sql('RANDOM()'))
+    @entries_count = entries.count
+    @entries = entries.page(@page)
+    @page_title = 'Shareable on Bluesky'
+    respond_to do |format|
+      format.html
+    end
+  end
+
   # GET /admin/entries/:id
   def show
     set_srcset

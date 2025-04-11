@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get '/entries/tagged/:tag(/page/:page)'     => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
     get '/entries/review/alt-text(/page/:page)' => 'entries#review_alt_text', constraints: { page: /\d+/ }, :as => 'review_alt_text'
+    get '/entries/bluesky(/page/:page)'         => 'entries#shareable_on_bluesky', constraints: { page: /\d+/ }, :as => 'shareable_on_bluesky'
     get '/entries/search'             => 'entries#search', :as => :search
     get '/entries/edit'               => 'entries#edit'
     get '/entries/share'              => 'entries#share'
