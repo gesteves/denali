@@ -1,18 +1,20 @@
 class RandomShareWorker < ApplicationWorker
-  def perform(tags = nil, platform)
+  def perform(tags = nil, platforms)
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
-    # Convert to array if a single tag is passed, or use empty array if nil
     tags = Array(tags)
-    logger.info "[Social] Attempting to share a random entry#{tags.any? ? " with tags #{tags.join(', ')}" : ""} on #{platform}."
+    platforms = Array(platforms)
+    logger.info "[Social] Attempting to share a random entry#{tags.any? ? " with tags #{tags.join(', ')}" : ""} on #{platforms.join(', ')}."
 
-    entry = find_eligible_entry(tags, platform)
-    return if entry.blank?
+    platforms.each do |platform|
+      entry = find_eligible_entry(tags, platform)
+      next if entry.blank?
 
-    case platform
-    when 'Bluesky'
-      BlueskyWorker.perform_async(entry.id, entry.bluesky_caption)
-    when 'Mastodon'
-      MastodonWorker.perform_async(entry.id, entry.mastodon_caption)
+      case platform
+      when 'Bluesky'
+        BlueskyWorker.perform_async(entry.id, entry.bluesky_caption)
+      when 'Mastodon'
+        MastodonWorker.perform_async(entry.id, entry.mastodon_caption)
+      end
     end
   end
 

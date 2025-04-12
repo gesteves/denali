@@ -10,45 +10,33 @@
       class: PublishWorker
       queue: high
       description: "Attempts to publish a queued entry every hour."
-    random_mastodon_landscape:
-      cron: '0 14 * * *'
-      class: RandomShareWorker
-      queue: high
-      args: ['Landscapes', 'Mastodon']
-      description: "Shares a random landscape photo on Mastodon."
-    random_mastodon_wildlife:
-      cron: '0 18 * * *'
-      class: RandomShareWorker
-      queue: high
-      args: ['Wildlife', 'Mastodon']
-      description: "Shares a random wildlife photo on Mastodon."
-    random_bluesky_landscape:
-      cron: '0 12 * * *'  # Run at 12:00 PM ET every day
-      class: RandomShareWorker
-      queue: high
-      args: ['Landscapes', 'Bluesky']
-      description: "Shares a random landscape photo on Bluesky."
-    random_bluesky_wildlife:
-      cron: '0 16 * * *'  # Run at 4:00 PM ET every day
-      class: RandomShareWorker
-      queue: high
-      args: ['Wildlife', 'Bluesky']
-      description: "Shares a random wildlife photo on Bluesky."
-    random_bluesky_cherry_blossoms:
+    random_cherry_blossoms:
       cron: '0 10 * 4 *'  # Run at 10:00 AM ET every day, but only in April
       class: RandomShareWorker
       queue: high
-      args: [['Cherry Blossoms', 'Color'], 'Bluesky']
-      description: "Share a random cherry blossom photo on Bluesky daily during April"
-    random_bluesky_any_morning:
+      args: [['Cherry Blossoms', 'Color'], ['Bluesky', 'Mastodon']]
+      description: "Share a random cherry blossom photo on Bluesky and Mastodon daily during April"
+    random_landscape:
+      cron: '0 12 * * *'  # Run at 12:00 PM ET every day
+      class: RandomShareWorker
+      queue: high
+      args: ['Landscapes', ['Bluesky', 'Mastodon']]
+      description: "Shares a random landscape photo on Bluesky and Mastodon."
+    random_any_morning:
       cron: '0 14 * * *'  # Run at 2:00 PM ET every day
       class: RandomShareWorker
       queue: high
-      args: [nil, 'Bluesky']
-      description: "Share a random photo on Bluesky daily at 2 PM"
-    random_bluesky_any_evening:
+      args: [nil, ['Bluesky', 'Mastodon']]
+      description: "Share a random photo on Bluesky and Mastodon daily at 2 PM"
+    random_wildlife:
+      cron: '0 16 * * *'  # Run at 4:00 PM ET every day
+      class: RandomShareWorker
+      queue: high
+      args: ['Wildlife', ['Bluesky', 'Mastodon']]
+      description: "Shares a random wildlife photo on Bluesky and Mastodon."
+    random_any_evening:
       cron: '0 18 * * *'  # Run at 6:00 PM ET every day
       class: RandomShareWorker
       queue: high
-      args: [nil, 'Bluesky']
-      description: "Share a random photo on Bluesky daily at 6 PM"
+      args: [nil, ['Bluesky', 'Mastodon']]
+      description: "Share a random photo on Bluesky and Mastodon daily at 6 PM"
