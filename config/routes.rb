@@ -90,7 +90,6 @@ Rails.application.routes.draw do
   get '/tagged/:tag(/page/:page)'       => 'entries#tagged',  constraints: { page: /\d+/ }, defaults: { format: 'html' }, :as => :tag
   get '/search'                         => 'entries#search', :as => :search
   get '/random'                         => 'entries#random', :as => :random
-  get '/random/bluesky'                 => 'entries#random_bluesky', :as => :random_bluesky
 
   # Entry
   get '/p/:id'                              => 'entries#short',       constraints: { id: /\w+/ }, :as => :entry

@@ -130,16 +130,6 @@ class EntriesController < ApplicationController
     redirect_to entry.permalink_url, status: 302
   end
 
-  def random_bluesky
-    months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
-    months_ago = months.months.ago
-    entry = @photoblog.entries.published
-    .where(post_to_bluesky: true)
-    .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago).sample
-    response.headers['Cache-Control'] = "s-maxage=#{ENV['RANDOM_CACHE_TTL']}, max-age=0, public"
-    redirect_to entry.permalink_url, status: 302
-  end
-
   def amp
     http_cache_forever(public: true) do
       redirect_to(@entry.permalink_url, status: 301)
