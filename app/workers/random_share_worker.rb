@@ -1,5 +1,5 @@
 class RandomShareWorker < ApplicationWorker
-  def perform(tags = nil, platforms)
+  def perform(tags, platforms)
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
     tags = Array(tags)
     platforms = Array(platforms)

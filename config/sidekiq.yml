@@ -26,7 +26,7 @@
       cron: '0 14 * * *'  # Run at 2:00 PM ET every day
       class: RandomShareWorker
       queue: high
-      args: [nil, ['Bluesky', 'Mastodon']]
+      args: [[], ['Bluesky', 'Mastodon']]
       description: "Share a random photo on Bluesky and Mastodon daily at 2 PM"
     random_wildlife:
       cron: '0 16 * * *'  # Run at 4:00 PM ET every day
@@ -38,5 +38,5 @@
       cron: '0 18 * * *'  # Run at 6:00 PM ET every day
       class: RandomShareWorker
       queue: high
-      args: [nil, ['Bluesky', 'Mastodon']]
+      args: [[], ['Bluesky', 'Mastodon']]
       description: "Share a random photo on Bluesky and Mastodon daily at 6 PM"
