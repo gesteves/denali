@@ -4,7 +4,7 @@ class EntriesController < ApplicationController
 
   skip_before_action :verify_authenticity_token
   before_action :load_tags, only: [:tagged, :tag_feed]
-  before_action :set_max_age, except: [:amp, :short, :random, :random_bluesky]
+  before_action :set_max_age, except: [:amp, :short, :random]
   before_action :set_entry, only: [:show, :amp]
 
   def index
