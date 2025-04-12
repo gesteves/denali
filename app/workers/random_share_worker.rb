@@ -3,6 +3,7 @@ class RandomShareWorker < ApplicationWorker
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
     tags = Array(tags)
     platforms = Array(platforms)
+    return if platforms.empty?
     logger.info "[Social] Attempting to share a random entry#{tags.any? ? " with tags #{tags.join(', ')}" : ""} on #{platforms.join(', ')}."
 
     platforms.each do |platform|
