@@ -78,7 +78,6 @@ class Admin::EntriesController < AdminController
       .where(post_to_bluesky: true)
       .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago)
       .reorder(Arel.sql('RANDOM()'))
-      .limit(10)
     @entries_count = @entries.count
     @page_title = 'Shareable on Bluesky'
     respond_to do |format|
