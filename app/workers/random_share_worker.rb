@@ -1,9 +1,9 @@
 class RandomShareWorker < ApplicationWorker
-  def perform(tags, platform)
+  def perform(tags = nil, platform)
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
-    # Convert to array if a single tag is passed
+    # Convert to array if a single tag is passed, or use empty array if nil
     tags = Array(tags)
-    logger.info "[Social] Attempting to share a random entry with tags #{tags.join(', ')} on #{platform}."
+    logger.info "[Social] Attempting to share a random entry#{tags.any? ? " with tags #{tags.join(', ')}" : ""} on #{platform}."
 
     entry = find_eligible_entry(tags, platform)
     return if entry.blank?
@@ -23,19 +23,18 @@ class RandomShareWorker < ApplicationWorker
     months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
     months_ago = months.months.ago
 
+    base_query = photoblog.entries.published
+    base_query = base_query.tagged_with(tags) if tags.any?
+
     eligible_entries = case platform
     when 'Bluesky'
-      photoblog.entries.published
-               .tagged_with(tags)
-               .where(post_to_bluesky: true)
+      base_query.where(post_to_bluesky: true)
                .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago)
     when 'Mastodon'
-      photoblog.entries.published
-               .tagged_with(tags)
-               .where(post_to_mastodon: true)
+      base_query.where(post_to_mastodon: true)
                .where("last_shared_on_mastodon_at IS NULL OR last_shared_on_mastodon_at < ?", months_ago)
     end
-    logger.info "[Social] There are #{eligible_entries.size} entries tagged with #{tags.join(', ')} eligible to be shared on #{platform}."
+    logger.info "[Social] There are #{eligible_entries.size} entries#{tags.any? ? " tagged with #{tags.join(', ')}" : ""} eligible to be shared on #{platform}."
     eligible_entries.sample
   end
 end
