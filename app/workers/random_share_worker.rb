@@ -9,7 +9,7 @@ class RandomShareWorker < ApplicationWorker
     platforms.each do |platform|
       entry = find_eligible_entry(tags, platform)
       next if entry.blank?
-
+      logger.info "[Social] Sharing “#{entry.title}” (#{entry.permalink_url}) on #{platform}."
       case platform
       when 'Bluesky'
         BlueskyWorker.perform_async(entry.id, entry.bluesky_caption)
