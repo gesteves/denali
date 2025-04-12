@@ -72,15 +72,14 @@ class Admin::EntriesController < AdminController
 
   def shareable_on_bluesky
     set_srcset
-    @page = params[:page] || 1
     months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
     months_ago = months.months.ago
-    entries = @photoblog.entries.published.includes(photos: [:image_attachment, :image_blob])
+    @entries = @photoblog.entries.published.includes(photos: [:image_attachment, :image_blob])
       .where(post_to_bluesky: true)
       .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago)
       .reorder(Arel.sql('RANDOM()'))
-    @entries_count = entries.count
-    @entries = entries.page(@page)
+      .limit(10)
+    @entries_count = @entries.count
     @page_title = 'Shareable on Bluesky'
     respond_to do |format|
       format.html
