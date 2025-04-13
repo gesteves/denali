@@ -22,7 +22,7 @@
       queue: high
       args: ['Landscapes', ['Bluesky', 'Mastodon']]
       description: "Shares a random landscape photo on Bluesky and Mastodon."
-    random_any_morning:
+    random_any:
       cron: '0 14 * * *'  # Run at 2:00 PM ET every day
       class: RandomShareWorker
       queue: high
@@ -34,9 +34,3 @@
       queue: high
       args: ['Wildlife', ['Bluesky', 'Mastodon']]
       description: "Shares a random wildlife photo on Bluesky and Mastodon."
-    random_any_evening:
-      cron: '0 18 * * *'  # Run at 6:00 PM ET every day
-      class: RandomShareWorker
-      queue: high
-      args: [[], ['Bluesky', 'Mastodon']]
-      description: "Share a random photo on Bluesky and Mastodon daily at 6 PM"
