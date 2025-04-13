@@ -11,25 +11,25 @@
       queue: high
       description: "Attempts to publish a queued entry every hour."
     random_cherry_blossoms:
-      cron: '0 10 * 4 *'  # Run at 10:00 AM ET every day, but only in April
+      cron: '0 12 * 4 *'  # Run at 12:00 PM ET every day, but only in April
       class: RandomShareWorker
       queue: high
       args: [['Cherry Blossoms', 'Color'], ['Bluesky', 'Mastodon']]
       description: "Share a random cherry blossom photo on Bluesky and Mastodon daily during April"
     random_landscape:
-      cron: '0 12 * * *'  # Run at 12:00 PM ET every day
+      cron: '0 14 * * *'  # Run at 2:00 PM ET every day
       class: RandomShareWorker
       queue: high
       args: ['Landscapes', ['Bluesky', 'Mastodon']]
       description: "Shares a random landscape photo on Bluesky and Mastodon."
     random_any:
-      cron: '0 14 * * *'  # Run at 2:00 PM ET every day
+      cron: '0 16 * * *'  # Run at 4:00 PM ET every day
       class: RandomShareWorker
       queue: high
       args: [[], ['Bluesky', 'Mastodon']]
       description: "Share a random photo on Bluesky and Mastodon daily at 2 PM"
     random_wildlife:
-      cron: '0 16 * * *'  # Run at 4:00 PM ET every day
+      cron: '0 18 * * *'  # Run at 6:00 PM ET every day
       class: RandomShareWorker
       queue: high
       args: ['Wildlife', ['Bluesky', 'Mastodon']]
