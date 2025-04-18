@@ -6,7 +6,7 @@
 :scheduler:
   :schedule:
     publish_queued_entries:
-      cron: '0 0 * * * *'
+      cron: '0 0 * * * *' # Run every hour
       class: PublishWorker
       queue: high
       description: "Attempts to publish a queued entry every hour."
@@ -15,28 +15,28 @@
       class: RandomShareWorker
       queue: high
       args: [['Cherry Blossoms', 'Color'], ['Bluesky', 'Mastodon']]
-      description: "Share a random cherry blossom photo on Bluesky and Mastodon daily during April"
+      description: "Share a random cherry blossom photo on Bluesky and Mastodon once a day in April."
     random_landscape:
       cron: '0 14 * * *'  # Run at 2:00 PM ET every day
       class: RandomShareWorker
       queue: high
       args: ['Landscapes', ['Bluesky', 'Mastodon']]
-      description: "Shares a random landscape photo on Bluesky and Mastodon."
+      description: "Shares a random landscape photo on Bluesky and Mastodon once a day."
     random_once_a_day:
       cron: '0 16 * 4 *'  # Run at 4:00 PM ET every day
       class: RandomShareWorker
       queue: high
       args: [[], ['Bluesky', 'Mastodon']]
-      description: "Share a random photo on Bluesky and Mastodon daily at 4:00 PM ET in April"
+      description: "Share a random photo on Bluesky and Mastodon once a day in April."
     random_twice_a_day:
       cron: '0 12,16 * 1,2,3,5,6,7,8,9,10,11,12 *'  # Run at 12:00 PM ET and 4:00 PM ET every day, except in April
       class: RandomShareWorker
       queue: high
       args: [[], ['Bluesky', 'Mastodon']]
-      description: "Share a random photo on Bluesky and Mastodon daily 12:00 PM ET and 4:00 PM ET every day, except in April"
+      description: "Share a random photo on Bluesky and Mastodon twice a day, except in April."
     random_wildlife:
       cron: '0 18 * * *'  # Run at 6:00 PM ET every day
       class: RandomShareWorker
       queue: high
       args: ['Wildlife', ['Bluesky', 'Mastodon']]
-      description: "Shares a random wildlife photo on Bluesky and Mastodon."
+      description: "Shares a random wildlife photo on Bluesky and Mastodon once a day."
