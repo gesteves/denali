@@ -6,12 +6,12 @@
 :scheduler:
   :schedule:
     publish_queued_entries:
-      cron: '0 0 * * * *'   # Runs every hour
+      cron: '0 0 * * * *'
       class: PublishWorker
       queue: high
       description: "Attempts to publish a queued entry every hour."
     random_cherry_blossoms:
-      cron: '0 12 * 4 *'  # Run at 12:00 PM ET every day, but only in April
+      cron: '0 12 * 4 *'  # Run at 12:00 PM ET every day in April
       class: RandomShareWorker
       queue: high
       args: [['Cherry Blossoms', 'Color'], ['Bluesky', 'Mastodon']]
@@ -22,12 +22,18 @@
       queue: high
       args: ['Landscapes', ['Bluesky', 'Mastodon']]
       description: "Shares a random landscape photo on Bluesky and Mastodon."
-    random_any:
-      cron: '0 16 * * *'  # Run at 4:00 PM ET every day
+    random_once_a_day:
+      cron: '0 16 * 4 *'  # Run at 4:00 PM ET every day
       class: RandomShareWorker
       queue: high
       args: [[], ['Bluesky', 'Mastodon']]
-      description: "Share a random photo on Bluesky and Mastodon daily at 2 PM"
+      description: "Share a random photo on Bluesky and Mastodon daily at 4:00 PM ET in April"
+    random_twice_a_day:
+      cron: '0 12,16 * 1,2,3,5,6,7,8,9,10,11,12 *'  # Run at 12:00 PM ET and 4:00 PM ET every day, except in April
+      class: RandomShareWorker
+      queue: high
+      args: [[], ['Bluesky', 'Mastodon']]
+      description: "Share a random photo on Bluesky and Mastodon daily 12:00 PM ET and 4:00 PM ET every day, except in April"
     random_wildlife:
       cron: '0 18 * * *'  # Run at 6:00 PM ET every day
       class: RandomShareWorker
