@@ -193,7 +193,7 @@ GEM
     faraday_middleware (1.2.1)
       faraday (~> 1.0)
     ffi (1.17.1)
-    fiber-storage (1.0.0)
+    fiber-storage (1.0.1)
     figaro (1.2.0)
       thor (>= 0.14.0, < 2)
     fugit (1.11.1)
@@ -201,7 +201,7 @@ GEM
       raabro (~> 1.4)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    graphql (2.5.2)
+    graphql (2.5.4)
       base64
       fiber-storage
       logger
