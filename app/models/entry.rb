@@ -381,7 +381,7 @@ class Entry < ApplicationRecord
       end
     end
 
-    bluesky_tags = more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
+    bluesky_tags = ['#Photography'] + more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
     bluesky_tags.flatten.compact.uniq.take(count).shuffle.join(' ')
   end
 
@@ -412,7 +412,7 @@ class Entry < ApplicationRecord
       end
     end
 
-    mastodon_tags = more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
+    mastodon_tags = ['#Photography'] + more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
     mastodon_tags.flatten.compact.uniq.take(count).shuffle.join(' ')
   end
 
