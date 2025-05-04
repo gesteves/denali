@@ -5,7 +5,7 @@ class AltTextWorker < ApplicationWorker
     raise UnprocessedPhotoError unless photo.has_dimensions?
 
     body = {
-      model: 'gpt-4o',
+      model: 'gpt-4.1',
       store: false,
       instructions: instructions,
       user: photo.entry.user.id.to_s,
