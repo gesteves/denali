@@ -57,7 +57,6 @@ class AltTextWorker < ApplicationWorker
       **Instructions**:
       - Receive the image and write a short alt text that describes its contents.
       - Keep the description factual and objective. Omit subjective details such as the mood of the image.
-      - Start with a very short summary of the whole image in one sentence. Then, provide a detailed description of its contents. That way, a person using a screen reader can move on if the summary is enough, or let their screen reader read the more detailed description.
       - Do not specify if the image is in color or black and white.
       - When quoting text present within the image, you **must** use double quotes (" ") and use sentence casing.
       - Do not output any text except the alt text itself, so the user can simply copy and paste the entire output elsewhere.
