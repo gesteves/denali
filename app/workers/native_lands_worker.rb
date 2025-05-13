@@ -1,10 +1,11 @@
 class NativeLandsWorker < ApplicationWorker
 
   def perform(photo_id)
+    return if ENV['NATIVE_LAND_API_KEY'].blank?
     photo = Photo.find(photo_id)
     return if !photo.has_location?
     raise UnprocessedPhotoError unless photo.has_dimensions?
-    url = "https://native-land.ca/wp-json/nativeland/v1/api/index.php?maps=territories&position=#{photo.latitude},#{photo.longitude}"
+    url = "https://native-land.ca/wp-json/nativeland/v1/api/index.php?maps=territories&position=#{photo.latitude},#{photo.longitude}&key=#{ENV['NATIVE_LAND_API_KEY']}"
     response = HTTParty.get(url)
     if response.code >= 400
       raise "Native Lands API request failed: #{response.body}"
