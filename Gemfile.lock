@@ -319,7 +319,7 @@ GEM
       actionpack (>= 4.2)
       omniauth (~> 2.0)
     openssl (3.3.0)
-    pg (1.6.0)
+    pg (1.6.1)
     pp (0.6.2)
       prettyprint
     prettyprint (0.2.0)
