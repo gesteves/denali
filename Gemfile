@@ -29,7 +29,7 @@ gem 'ruby-thumbor'
 gem 'blurhash', git: 'https://github.com/gesteves/blurhash', branch: 'master'
 
 # Misc
-gem 'jbuilder', '~> 2.11'
+gem 'jbuilder', '~> 2.14'
 gem 'sdoc', '~> 2.6', group: :doc
 gem 'acts_as_list'
 gem 'redcarpet'
