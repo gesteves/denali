@@ -426,7 +426,7 @@ GEM
     scss-lint (0.38.0)
       rainbow (~> 2.0)
       sass (~> 3.4.1)
-    sdoc (2.6.2)
+    sdoc (2.6.4)
       rdoc (>= 5.0)
     securerandom (0.4.1)
     semantic_range (3.0.0)
