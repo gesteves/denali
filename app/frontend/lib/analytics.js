@@ -20,26 +20,25 @@ function setUpPlausible() {
 /**
  * Product-agnostic function to make a page view tracking call.
  * Currently supports Plausible.
+ * @param {Object} additionalProps - Optional additional properties to include with the pageview.
  */
-export function trackPageView() {
+export function trackPageView(additionalProps = {}) {
   setUpPlausible();
 
-  // Extract the 'q' query parameter
   const currentUrl = new URL(window.location.href);
-  const queryParams = currentUrl.searchParams;
-  const searchQuery = queryParams.get('q');
+  const searchQuery = currentUrl.searchParams.get('q');
 
-  // Prepare the parameters object, including the page URL
   const params = { u: currentUrl.href };
 
-  // If 'q' parameter exists, add 'search_query' to the properties
-  if (searchQuery) {
-    params.props = { search_query: searchQuery };
+  // Combine search query with any additional props
+  if (searchQuery || Object.keys(additionalProps).length > 0) {
+    params.props = { ...additionalProps };
+    if (searchQuery) {
+      params.props.search_query = searchQuery;
+    }
   }
 
-  // Send the pageview event to Plausible with the parameters
   plausible('pageview', params);
-
   cleanUpUrl();
 }
 
@@ -51,7 +50,7 @@ export function trackPageView() {
  */
 export function trackEvent(event, props = {}) {
   setUpPlausible();
-  plausible(event, { props: props });
+  plausible(event, { props });
 }
 
 /**
@@ -63,7 +62,6 @@ export function cleanUpUrl() {
   const currentUrl = new URL(window.location.href);
   const params = currentUrl.searchParams;
 
-  // List of query parameters to remove
   const paramsToRemove = [
     'ref',
     'source',
