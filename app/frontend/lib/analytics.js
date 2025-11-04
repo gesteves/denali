@@ -22,7 +22,7 @@ function setUpPlausible() {
  * Currently supports Plausible.
  */
 export function trackPageView() {
-  setupPlausible();
+  setUpPlausible();
 
   // Extract the 'q' query parameter
   const currentUrl = new URL(window.location.href);
@@ -34,7 +34,7 @@ export function trackPageView() {
 
   // If 'q' parameter exists, add 'search_query' to the properties
   if (searchQuery) {
-    params.props = { ...params.props, search_query: searchQuery };
+    params.props = { search_query: searchQuery };
   }
 
   // Send the pageview event to Plausible with the parameters
