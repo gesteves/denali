@@ -417,7 +417,7 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_caption
-    meta = ["🔗 #{self.permalink_url}"]
+    meta = ["🔗 #{self.permalink_url(utm_source: 'mastodon', utm_medium: 'social')}"]
 
     if is_photo?
       photo = photos.first
@@ -451,7 +451,7 @@ class Entry < ApplicationRecord
     meta << "🏷️ #{bluesky_hashtags}" if bluesky_hashtags.present?
 
     caption = []
-    caption << "[#{self.plain_title}](#{self.permalink_url})"
+    caption << "[#{self.plain_title}](#{self.permalink_url(utm_source: 'bluesky', utm_medium: 'social')})"
     caption << self.bluesky_text if self.bluesky_text.present?
 
     caption << meta.join("\n").strip
