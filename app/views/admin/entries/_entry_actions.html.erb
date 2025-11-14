@@ -28,7 +28,7 @@
       <% if entry.is_photo? %>
         <%= link_to icon('Prints', 'fas fa-print'), prints_admin_entry_path(entry), class: 'dropdown-item' %>
       <% end %>
-      <%= link_to icon('Refresh metadata', 'fas fa-sync'), refresh_metadata_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: 'This will refresh the entry's metadata and update its tags. Do you want to proceed?' }, class: 'dropdown-item' %>
+      <%= link_to icon('Refresh metadata', 'fas fa-sync'), refresh_metadata_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: 'This will refresh the entry’s metadata and update its tags. Do you want to proceed?' }, class: 'dropdown-item' %>
       <%= link_to icon('Generate alt text', 'fas fa-eye-low-vision'), generate_alt_text_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: 'This will overwrite the alt text for the photos in this entry. Do you want to proceed?' }, class: 'dropdown-item' %>
       <hr class="dropdown-divider">
       <% if entry.is_queued? %>
