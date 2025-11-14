@@ -148,6 +148,7 @@ class Blog < ApplicationRecord
       show_search
       tag_line
       time_zone
+      hide_from_search_engines
     }
 
     if attributes.any? { |attr| saved_change_to_attribute? (attr) }

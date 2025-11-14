@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_14_200138) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_14_204816) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -65,6 +65,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_14_200138) do
     t.string "flickr"
     t.string "mastodon"
     t.string "bluesky"
+    t.boolean "hide_from_search_engines", default: false
   end
 
   create_table "cameras", force: :cascade do |t|
