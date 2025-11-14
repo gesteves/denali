@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_06_162959) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_14_200138) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -203,24 +203,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_06_162959) do
     t.index ["park_id"], name: "index_photos_on_park_id"
   end
 
-  create_table "profiles", force: :cascade do |t|
-    t.string "username"
-    t.string "name"
-    t.string "flickr"
-    t.string "email"
-    t.string "summary"
-    t.text "bio"
-    t.string "meta_description"
-    t.bigint "photo_id"
-    t.bigint "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "website"
-    t.index ["photo_id"], name: "index_profiles_on_photo_id"
-    t.index ["user_id"], name: "index_profiles_on_user_id"
-    t.index ["username"], name: "index_profiles_on_username"
-  end
-
   create_table "publish_schedules", force: :cascade do |t|
     t.integer "hour"
     t.bigint "blog_id"
@@ -309,8 +291,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_06_162959) do
   add_foreign_key "photos", "entries"
   add_foreign_key "photos", "films"
   add_foreign_key "photos", "lenses"
-  add_foreign_key "profiles", "photos"
-  add_foreign_key "profiles", "users"
   add_foreign_key "push_subscriptions", "blogs"
   add_foreign_key "webhooks", "blogs"
 end
