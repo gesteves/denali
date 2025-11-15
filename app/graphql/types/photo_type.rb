@@ -25,6 +25,7 @@ module Types
     field :height, Integer, null: false, description: "Height of the original image"
     field :horizontal, Boolean, null: false, method: :is_horizontal?, description: "Whether or not the photo is in landscape orientation"
     field :instagram_url, String, null: false, description: "URL of a version of the photo optimized for the Instagram feed"
+    field :threads_url, String, null: false, description: "URL of a version of the photo optimized for the Threads feed"
     field :iphone_wallpaper_url, String, null: false, description: "URL of a version of the photo optimized for an iPhone wallpaper"
     field :plain_metadata, String, null: true, description: "Metadata for the photo, in plain text"
     field :iso, Integer, null: true, description: "ISO the photo was made at"

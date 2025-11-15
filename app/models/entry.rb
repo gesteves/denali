@@ -495,6 +495,36 @@ class Entry < ApplicationRecord
     instagram_caption.length <= 2200
   end
 
+  def threads_caption
+    meta = []
+
+    if is_photo?
+      photo = photos.first
+      meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
+      meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
+      meta << "🎞 #{photo.film.display_name}" if photo.film.present?
+
+      location = []
+      location << photo.formatted_location if photo.formatted_location.present?
+      location << "#{photo.territory_list} land" if photo.territories.present?
+
+      meta << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
+    end
+
+    meta << "🔗 #{self.permalink_url(utm_source: 'Threads', utm_medium: 'social')}"
+
+    caption = [self.plain_title]
+
+    if self.threads_text.present?
+      caption << self.instagram_text
+    else
+      caption << self.plain_body
+    end
+
+    caption << meta.join("\n").strip
+    caption.reject(&:blank?).join("\n\n")
+  end
+
   def plain_caption
     text = []
     text << self.plain_title

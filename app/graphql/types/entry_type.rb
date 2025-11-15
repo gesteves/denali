@@ -11,6 +11,7 @@ module Types
     field :instagram_caption, String, null: true, description: "An Instagram-friendly caption for this entry"
     field :bluesky_caption, String, null: true, description: "A Bluesky-friendly caption for this entry"
     field :mastodon_caption, String, null: true, description: "A Mastodon-friendly caption for this entry"
+    field :threads_caption, String, null: true, description: "A Threads-friendly caption for this entry"
     field :preview_hash, String, null: false, description: "A unique identifier for unpublished entries"
     field :published_at, String, null: true, description: "Date & time the entry was published at"
     field :short_url, String, null: true, method: :short_permalink_url, description: "Shorter version of the permalink URL for the entry"
