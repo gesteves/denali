@@ -306,7 +306,7 @@ class Admin::EntriesController < AdminController
   end
 
   def instagram_story
-    @entry = @photoblog.entries.published.find(params[:id])
+    @entry = @photoblog.entries.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     InstagramStoryWorker.perform_async(@entry.id)
     @message = 'Your entry was shared on your Instagram Stories.'
