@@ -30,4 +30,8 @@ module AdminHelper
   def last_shared_on_mastodon_tag(entry)
     last_shared_tag(entry.last_shared_on_mastodon_at)
   end
+
+  def last_shared_on_instagram_tag(entry)
+    last_shared_tag(entry.last_shared_on_instagram_at)
+  end
 end

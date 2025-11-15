@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_14_204816) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_15_211756) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -118,6 +118,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_14_204816) do
     t.text "bluesky_text"
     t.datetime "last_shared_on_bluesky_at"
     t.datetime "last_shared_on_mastodon_at"
+    t.boolean "post_to_instagram", default: true
+    t.text "instagram_text"
+    t.datetime "last_shared_on_instagram_at"
     t.index ["blog_id"], name: "index_entries_on_blog_id"
     t.index ["hide_from_search_engines"], name: "index_entries_on_hide_from_search_engines"
     t.index ["photos_count"], name: "index_entries_on_photos_count"

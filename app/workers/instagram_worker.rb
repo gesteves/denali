@@ -14,7 +14,7 @@ class InstagramWorker < ApplicationWorker
       ig_account_id: ENV['INSTAGRAM_ACCOUNT_ID']
     )
 
-    photos = entry.photos.to_a[0..9].map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
+    photos = entry.photos.to_a[0..19].map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
 
     if photos.size == 1
       # Post a single photo
@@ -24,7 +24,7 @@ class InstagramWorker < ApplicationWorker
         alt_text: photos.first[:alt_text]
       )
     else
-      # Post as a carousel (2-10 photos)
+      # Post as a carousel (2-20 photos)
       instagram.post_carousel(
         photos: photos,
         caption: text
@@ -32,7 +32,7 @@ class InstagramWorker < ApplicationWorker
     end
 
     # Update timestamp if the field exists
-    entry.update_column(:last_shared_on_instagram_at, Time.current) if entry.respond_to?(:last_shared_on_instagram_at=)
+    entry.update!(last_shared_on_instagram_at: Time.current)
   end
 end
 
