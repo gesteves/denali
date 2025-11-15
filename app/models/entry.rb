@@ -516,13 +516,17 @@ class Entry < ApplicationRecord
     caption = [self.plain_title]
 
     if self.threads_text.present?
-      caption << self.instagram_text
+      caption << self.threads_text
     else
       caption << self.plain_body
     end
 
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
+  end
+
+  def threads_topic
+    "Photographers of Threads" if self.is_photo? || self.is_photoset?
   end
 
   def plain_caption
