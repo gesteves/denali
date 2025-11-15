@@ -34,4 +34,8 @@ module AdminHelper
   def last_shared_on_instagram_tag(entry)
     last_shared_tag(entry.last_shared_on_instagram_at)
   end
+
+  def last_shared_on_threads_tag(entry)
+    last_shared_tag(entry.last_shared_on_threads_at)
+  end
 end
