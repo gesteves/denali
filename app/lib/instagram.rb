@@ -154,6 +154,22 @@ class Instagram
     publish_media(carousel_container_id)
   end
 
+  # Posts a single photo to Instagram Stories.
+  # Stories don't support captions or alt text and require 9:16 aspect ratio (1080x1920 recommended).
+  #
+  # @param photo_url [String] the URL of the photo to post.
+  # @return [Hash] the parsed response body if successful.
+  # @raise [RuntimeError] if the post request fails.
+  def post_story(photo_url:)
+    # Create story container
+    story_container_id = create_story_container(
+      image_url: photo_url
+    )
+
+    # Publish the story
+    publish_media(story_container_id)
+  end
+
   private
 
   # Creates a media container for a single image.
@@ -218,6 +234,37 @@ class Instagram
     else
       parsed_body = JSON.parse(response.body) rescue response.body
       raise "Failed to create carousel container: #{parsed_body}"
+    end
+  end
+
+  # Creates a media container for an Instagram Story.
+  # Stories don't support captions or alt text and require 9:16 aspect ratio (1080x1920 recommended).
+  #
+  # @param image_url [String] the URL of the image.
+  # @return [String] the story container ID.
+  # @raise [RuntimeError] if the story container creation fails.
+  def create_story_container(image_url:)
+    body = {
+      media_type: 'STORIES',
+      image_url: image_url
+    }
+
+    headers = {
+      'Content-Type' => 'application/json',
+      'Authorization' => "Bearer #{access_token}"
+    }
+
+    response = HTTParty.post(
+      "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media",
+      body: body.to_json,
+      headers: headers
+    )
+
+    if response.success?
+      JSON.parse(response.body)['id']
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to create story container: #{parsed_body}"
     end
   end
 

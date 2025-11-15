@@ -43,6 +43,7 @@ Rails.application.routes.draw do
         post 'mastodon'
         post 'bluesky'
         post 'instagram'
+        post 'instagram_story'
         post 'threads'
         post 'refresh_metadata'
         post 'generate_alt_text'
