@@ -290,6 +290,7 @@ class Entry < ApplicationRecord
     MastodonWorker.perform_async(self.id, self.mastodon_caption) if self.post_to_mastodon
     BlueskyWorker.perform_async(self.id, self.bluesky_caption) if self.post_to_bluesky
     InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
+    ThreadsWorker.perform_async(self.id, self.threads_caption) if self.post_to_threads
     Webhook.deliver_all(self)
     PushSubscription.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
