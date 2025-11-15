@@ -35,11 +35,13 @@ Rails.application.routes.draw do
         get 'prints'
         get 'mastodon'
         get 'bluesky'
+        get 'instagram'
         patch 'publish'
         patch 'queue'
         patch 'draft'
         post 'mastodon'
         post 'bluesky'
+        post 'instagram'
         post 'refresh_metadata'
         post 'generate_alt_text'
       end
