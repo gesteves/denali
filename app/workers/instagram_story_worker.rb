@@ -4,7 +4,7 @@ class InstagramStoryWorker < ApplicationWorker
   def perform(entry_id)
     return if !Rails.env.production?
     return if ENV['INSTAGRAM_APP_ID'].blank? || ENV['INSTAGRAM_APP_SECRET'].blank? || ENV['INSTAGRAM_ACCESS_TOKEN'].blank? || ENV['INSTAGRAM_ACCOUNT_ID'].blank?
-    entry = Entry.published.find(entry_id)
+    entry = Entry.find(entry_id)
     return if !entry.is_photo?
     raise UnprocessedPhotoError unless entry.photos_have_dimensions?
 
