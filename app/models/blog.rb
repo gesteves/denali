@@ -138,6 +138,8 @@ class Blog < ApplicationRecord
       copyright
       email
       flickr
+      instagram
+      threads
       header_logo_svg
       bluesky
       mastodon

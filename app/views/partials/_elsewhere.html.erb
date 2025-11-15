@@ -8,8 +8,14 @@
     <% if @photoblog.flickr.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.flickr %>" rel="me" title="Follow on Flickr" aria-label="Follow on Flickr" target="_blank"><%= inline_svg :flickr, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Flickr</span></a></li>
     <% end %>
+    <% if @photoblog.instagram.present? %>
+      <li class="elsewhere__item"><a href="<%= @photoblog.instagram %>" rel="me" title="Follow on Instagram" aria-label="Follow on Instagram" target="_blank"><%= inline_svg :instagram, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Instagram</span></a></li>
+    <% end %>
     <% if @photoblog.mastodon.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.mastodon %>" rel="me" title="Follow on Mastodon" aria-label="Follow on Mastodon" target="_blank"><%= inline_svg :mastodon, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Mastodon</span></a></li>
+    <% end %>
+    <% if @photoblog.threads.present? %>
+      <li class="elsewhere__item"><a href="<%= @photoblog.threads %>" rel="me" title="Follow on Threads" aria-label="Follow on Threads" target="_blank"><%= inline_svg :threads, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Threads</span></a></li>
     <% end %>
   </ul>
 </aside>

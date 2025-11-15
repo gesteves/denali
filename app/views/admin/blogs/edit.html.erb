@@ -111,12 +111,38 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
+      <%= f.label :instagram, 'Instagram', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :instagram, placeholder: 'The blog’s Instagram account, e.g. https://www.instagram.com/gesteves/', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
       <%= f.label :mastodon, 'Mastodon', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control is-expanded">
           <%= f.text_field :mastodon, placeholder: 'The blog’s Mastodon account, e.g. https://mastodon.social/@gesteves/', class: 'input', autocomplete: 'off' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :threads, 'Threads', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :threads, placeholder: 'The blog’s Threads account, e.g. https://www.threads.net/@gesteves/', class: 'input', autocomplete: 'off' %>
         </div>
       </div>
     </div>
