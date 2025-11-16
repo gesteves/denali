@@ -1,15 +1,16 @@
 class RandomShareWorker < ApplicationWorker
-  def perform(tags, platforms)
+  def perform(tags, platforms, not_shared_in_months = 12)
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
     tags = Array(tags)
     platforms = Array(platforms)
+    not_shared_in_months = not_shared_in_months.to_i
     return if platforms.empty?
     logger.info "[Social] Attempting to share a random entry#{tags.any? ? " with tags #{tags.join(', ')}" : ""} on #{platforms.join(', ')}."
 
     campaign = tags.empty? ? "random" : "random-#{tags.join(' ').parameterize}"
 
     platforms.each do |platform|
-      entry = find_eligible_entry(tags, platform)
+      entry = find_eligible_entry(tags, platform, not_shared_in_months)
       next if entry.blank?
       logger.info "[Social] Sharing “#{entry.title}” (#{entry.permalink_url}) on #{platform}."
       case platform
@@ -27,10 +28,9 @@ class RandomShareWorker < ApplicationWorker
 
   private
 
-  def find_eligible_entry(tags, platform)
+  def find_eligible_entry(tags, platform, not_shared_in_months)
     photoblog = Blog.first
-    months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
-    months_ago = months.months.ago
+    months_ago = not_shared_in_months.months.ago
 
     base_query = photoblog.entries.published
     base_query = base_query.tagged_with(tags) if tags.any?

@@ -14,7 +14,7 @@
       cron: '0 12 * 4 *'  # Run at 12:00 PM ET every day in April
       class: RandomShareWorker
       queue: high
-      args: ['Cherry Blossoms', ['Bluesky', 'Mastodon', 'Instagram', 'Threads']]
+      args: ['Cherry Blossoms', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 1]
       description: "Share a random cherry blossom photo on Bluesky, Mastodon, Instagram and Threads once a day in April."
     random_landscape:
       cron: '0 14 * * *'  # Run at 2:00 PM ET every day
