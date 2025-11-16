@@ -282,7 +282,7 @@ class Admin::EntriesController < AdminController
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     if request.get?
-      @text = @entry.instagram_caption
+      @text = @entry.instagram_caption(utm_campaign: 'share')
       respond_to do |format|
         format.html {
           if params[:modal]
@@ -323,7 +323,7 @@ class Admin::EntriesController < AdminController
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     if request.get?
-      @text = @entry.threads_caption
+      @text = @entry.threads_caption(utm_campaign: 'share')
       respond_to do |format|
         format.html {
           if params[:modal]
@@ -350,7 +350,7 @@ class Admin::EntriesController < AdminController
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     if request.get?
-      @text = @entry.mastodon_caption
+      @text = @entry.mastodon_caption(utm_campaign: 'share')
       respond_to do |format|
         format.html {
           if params[:modal]
