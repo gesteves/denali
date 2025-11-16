@@ -516,11 +516,7 @@ class Entry < ApplicationRecord
 
     caption = [self.plain_title]
 
-    if self.threads_text.present?
-      caption << self.threads_text
-    else
-      caption << self.plain_body
-    end
+    caption << self.threads_text if self.threads_text.present?
 
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
@@ -528,6 +524,10 @@ class Entry < ApplicationRecord
 
   def threads_topic
     "Photographers of Threads" if self.is_photo?
+  end
+
+  def valid_threads_caption?
+    threads_caption.length <= 500
   end
 
   def plain_caption

@@ -208,9 +208,9 @@
   <div class="field-body">
     <div class="field" data-controller="character-counter">
       <div class="control is-expanded">
-        <%= f.text_area :threads_text, placeholder: 'Threads caption…', class: 'textarea', maxlength: 10000, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
+        <%= f.text_area :threads_text, placeholder: 'Threads caption…', class: 'textarea', maxlength: 500, 'data-character-counter-target': 'input', 'data-action': 'input->character-counter#updateCharacterCount' %>
       </div>
-      <p class="help"><span data-character-counter-target="characterCount">0</span>/10000</p>
+      <p class="help"><span data-character-counter-target="characterCount">0</span>/500</p>
     </div>
   </div>
 </div>
