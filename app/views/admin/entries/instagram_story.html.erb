@@ -8,19 +8,16 @@
     </header>
     <section class="modal-card-body">
       <div class="content">
-        <div class="field">
+        <div class="field is-grouped">
           <div class="control">
             <label class="checkbox">
               <%= form.check_box :crop, { checked: false, 'data-instagram-story-preview-target': 'checkbox', 'data-action': 'change->instagram-story-preview#updatePreview' }, 'true', 'false' %>
-              Use cropped image (9:16 aspect ratio)
+              Use cropped image
             </label>
-            <p class="help">If checked, the image will be cropped to fit Instagram Stories' 9:16 aspect ratio. Otherwise, it will be fitted with black bars.</p>
           </div>
-        </div>
-        <div class="field">
           <div class="control">
-            <figure class="image" style="max-width: 300px; margin: 0 auto;">
-              <img src="<%= @uncropped_url %>" alt="<%= @alt_text %>" data-instagram-story-preview-target="preview" style="width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+            <figure class="image is-128x128">
+              <img src="<%= @uncropped_url %>" alt="<%= @alt_text %>" data-instagram-story-preview-target="preview" class="is-rounded" style="object-fit: contain; border: 1px solid #ddd;">
             </figure>
           </div>
         </div>
