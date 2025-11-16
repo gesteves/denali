@@ -12,11 +12,11 @@
     <section class="modal-card-body">
       <div class="content">
         <article class="media" data-controller="instagram-story-preview" data-instagram-story-preview-cropped-url-value="<%= cropped_url %>" data-instagram-story-preview-uncropped-url-value="<%= uncropped_url %>">
-          <figure class="media-left">
-            <p class="image is-9x16">
+          <div class="media-left">
+            <figure class="image is-9x16">
               <img style="max-width: 128px" data-instagram-story-preview-target="thumbnail" src="<%= uncropped_url %>" alt="<%= photo.alt_text %>" />
-            </p>
-          </figure>
+            </figure>
+          </div>
           <div class="media-content">
             <div class="field">
               <div class="control">
