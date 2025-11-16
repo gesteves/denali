@@ -20,9 +20,9 @@
           <div class="control">
             <label class="checkbox instagram-story-preview__checkbox">
               <%= form.check_box :crop, { checked: false, 'data-instagram-story-preview-target': 'checkbox', 'data-action': 'change->instagram-story-preview#updateThumbnail' }, 'true', 'false' %>
-              Crop to fill screen
+              Zoom to fill frame
             </label>
-            <p class="help">When checked, the image will be cropped to fill the entire story frame. When unchecked, the image will be scaled to fit with black bars on the sides.</p>
+            <p class="help">When checked, the image will be zoomed and cropped to fill the entire story frame. When unchecked, the full image will be shown."</p>
           </div>
         </div>
       </div>
