@@ -36,7 +36,6 @@ Rails.application.routes.draw do
         get 'mastodon'
         get 'bluesky'
         get 'instagram'
-        get 'instagram_story'
         get 'threads'
         patch 'publish'
         patch 'queue'

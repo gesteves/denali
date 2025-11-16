@@ -1,7 +1,7 @@
 class InstagramStoryWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
-  def perform(entry_id, crop = false)
+  def perform(entry_id)
     return if !Rails.env.production?
     return if ENV['INSTAGRAM_APP_ID'].blank? || ENV['INSTAGRAM_APP_SECRET'].blank? || ENV['INSTAGRAM_ACCESS_TOKEN'].blank? || ENV['INSTAGRAM_ACCOUNT_ID'].blank?
     entry = Entry.find(entry_id)
@@ -19,7 +19,7 @@ class InstagramStoryWorker < ApplicationWorker
     return if photo.blank?
 
     instagram.post_story(
-      photo_url: photo.instagram_story_url(crop: crop)
+      photo_url: photo.instagram_story_url
     )
   end
 end
