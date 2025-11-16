@@ -22,7 +22,7 @@
         <%= link_to icon('Share on Instagram', 'fa-brands fa-instagram'), instagram_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <% if entry.is_photo? %>
-        <%= link_to icon('Share on Instagram Stories', 'fa-brands fa-instagram'), instagram_story_admin_entry_path(entry), class: 'dropdown-item', remote: true, method: :post, data: { confirm: 'Are you sure you want to share this entry on your Instagram Stories? This can’t be undone!' } %>
+        <%= link_to icon('Share on Instagram Story', 'fa-brands fa-instagram'), instagram_story_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <% if entry.is_photo? && entry.is_published? %>
         <%= link_to icon('Share on Threads', 'fa-brands fa-threads'), threads_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>

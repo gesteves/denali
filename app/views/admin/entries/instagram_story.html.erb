@@ -1,0 +1,49 @@
+<% photo = @entry.photos.first %>
+<% cropped_url = photo.instagram_story_url(crop: true) %>
+<% uncropped_url = photo.instagram_story_url(crop: false) %>
+<div class="modal is-active" data-controller="modal">
+  <div class="modal-background" data-action="click->modal#close"></div>
+  <div class="modal-card">
+    <%= form_with url: instagram_story_admin_entry_path(@entry.id), method: :post, local: false, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
+    <header class="modal-card-head">
+      <h1 class="modal-card-title">Share on Instagram Story</h1>
+      <button class="delete" data-action="click->modal#close"></button>
+    </header>
+    <section class="modal-card-body">
+      <article class="media" data-controller="instagram-story-preview" data-instagram-story-preview-cropped-url-value="<%= cropped_url %>" data-instagram-story-preview-uncropped-url-value="<%= uncropped_url %>">
+        <figure class="media-left">
+          <p class="image is-64x64">
+            <img data-instagram-story-preview-target="thumbnail" src="<%= uncropped_url %>" alt="<%= photo.alt_text %>" />
+          </p>
+        </figure>
+        <div class="media-content">
+          <div class="field">
+            <div class="control">
+              <label class="checkbox">
+                <%= form.check_box :crop, { checked: false, 'data-instagram-story-preview-target': 'checkbox', 'data-action': 'change->instagram-story-preview#updateThumbnail' }, 'true', 'false' %>
+                Crop to 9:16
+              </label>
+            </div>
+          </div>
+        </div>
+      </article>
+      <hr class="hr">
+      <div class="field is-grouped is-grouped-multiline">
+        <div class="control">
+          <%= last_shared_on_instagram_tag(@entry) %>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <div class="field is-grouped">
+        <p class="control">
+          <%= form.submit "Share", class: 'button is-success' %>
+        </p>
+        <p class="control">
+          <button class="button is-light" data-action="click->modal#close">Cancel</button>
+        </p>
+      </div>
+    </footer>
+    <% end %>
+  </div>
+</div>

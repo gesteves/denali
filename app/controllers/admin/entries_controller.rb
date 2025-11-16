@@ -308,14 +308,27 @@ class Admin::EntriesController < AdminController
   def instagram_story
     @entry = @photoblog.entries.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    InstagramStoryWorker.perform_async(@entry.id)
-    @message = 'Your entry was shared on your Instagram Stories.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
+    if request.get?
+      respond_to do |format|
+        format.html {
+          if params[:modal]
+            render layout: nil
+          else
+            render
+          end
+        }
+      end
+    elsif request.post?
+      crop = params[:crop] == 'true'
+      InstagramStoryWorker.perform_async(@entry.id, crop)
+      @message = 'Your entry was shared on your Instagram Story.'
+      respond_to do |format|
+        format.html {
+          flash[:success] = @message
+          redirect_to session[:redirect_url] || admin_entry_path(@entry)
+        }
+        format.js { render 'admin/shared/notify' }
+      end
     end
   end
 
