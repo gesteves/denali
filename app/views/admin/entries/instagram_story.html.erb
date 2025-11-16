@@ -10,16 +10,14 @@
       <button class="delete" data-action="click->modal#close"></button>
     </header>
     <section class="modal-card-body">
-      <nav class="level" data-controller="instagram-story-preview" data-instagram-story-preview-cropped-url-value="<%= cropped_url %>" data-instagram-story-preview-uncropped-url-value="<%= uncropped_url %>">
-        <div class="level-left">
-          <div class="level-item">
-            <p class="image is-128x128">
-              <img data-instagram-story-preview-target="thumbnail" src="<%= uncropped_url %>" alt="<%= photo.alt_text %>" />
+      <div class="content">
+        <article class="media" data-controller="instagram-story-preview" data-instagram-story-preview-cropped-url-value="<%= cropped_url %>" data-instagram-story-preview-uncropped-url-value="<%= uncropped_url %>">
+          <figure class="media-left">
+            <p class="image is-9x16">
+              <img style="max-width: 128px" data-instagram-story-preview-target="thumbnail" src="<%= uncropped_url %>" alt="<%= photo.alt_text %>" />
             </p>
-          </div>
-        </div>
-        <div class="level-right">
-          <div class="level-item">
+          </figure>
+          <div class="media-content">
             <div class="field">
               <div class="control">
                 <label class="checkbox">
@@ -29,8 +27,8 @@
               </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </article>
+      </div>
     </section>
     <footer class="modal-card-foot">
       <div class="field is-grouped">
