@@ -274,9 +274,9 @@ class Entry < ApplicationRecord
 
   def permalink_url(params = {})
     if self.is_published?
-      entry_long_url(self.id, self.slug, params)
+      entry_long_url(self.id, self.slug, params.compact)
     else
-      preview_entry_url(self.preview_hash, self.slug, params)
+      preview_entry_url(self.preview_hash, self.slug, params.compact)
     end
   end
 
@@ -418,8 +418,8 @@ class Entry < ApplicationRecord
     mastodon_tags.flatten.compact.uniq.take(count).shuffle.join(' ')
   end
 
-  def mastodon_caption
-    meta = ["🔗 #{self.permalink_url(utm_source: 'Mastodon', utm_medium: 'social')}"]
+  def mastodon_caption(utm_source: 'Mastodon', utm_medium: 'social', utm_campaign: nil)
+    meta = ["🔗 #{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)}"]
 
     if is_single_photo?
       photo = photos.first
@@ -440,7 +440,7 @@ class Entry < ApplicationRecord
     mastodon_caption.length <= 500
   end
 
-  def bluesky_caption
+  def bluesky_caption(utm_source: 'Bluesky', utm_medium: 'social', utm_campaign: nil)
     meta = []
 
     if is_single_photo?
@@ -453,7 +453,7 @@ class Entry < ApplicationRecord
     meta << "🏷️ #{bluesky_hashtags}" if bluesky_hashtags.present?
 
     caption = []
-    caption << "[#{self.plain_title}](#{self.permalink_url(utm_source: 'Bluesky', utm_medium: 'social')})"
+    caption << "[#{self.plain_title}](#{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)})"
     caption << self.bluesky_text if self.bluesky_text.present?
 
     caption << meta.join("\n").strip
@@ -496,7 +496,7 @@ class Entry < ApplicationRecord
     instagram_caption.length <= 2200
   end
 
-  def threads_caption
+  def threads_caption(utm_source: 'Threads', utm_medium: 'social', utm_campaign: nil)
     meta = []
 
     if is_single_photo?
@@ -512,7 +512,7 @@ class Entry < ApplicationRecord
       meta << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
     end
 
-    meta << "🔗 #{self.permalink_url(utm_source: 'Threads', utm_medium: 'social')}"
+    meta << "🔗 #{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)}"
 
     caption = [self.plain_title]
 

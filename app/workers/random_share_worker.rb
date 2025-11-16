@@ -1,5 +1,5 @@
 class RandomShareWorker < ApplicationWorker
-  def perform(tags, platforms)
+  def perform(tags, platforms, campaign)
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
     tags = Array(tags)
     platforms = Array(platforms)
@@ -12,13 +12,13 @@ class RandomShareWorker < ApplicationWorker
       logger.info "[Social] Sharing “#{entry.title}” (#{entry.permalink_url}) on #{platform}."
       case platform
       when 'Bluesky'
-        BlueskyWorker.perform_async(entry.id, entry.bluesky_caption)
+        BlueskyWorker.perform_async(entry.id, entry.bluesky_caption(utm_campaign: campaign))
       when 'Mastodon'
-        MastodonWorker.perform_async(entry.id, entry.mastodon_caption)
+        MastodonWorker.perform_async(entry.id, entry.mastodon_caption(utm_campaign: campaign))
       when 'Instagram'
         InstagramWorker.perform_async(entry.id, entry.instagram_caption)
       when 'Threads'
-        ThreadsWorker.perform_async(entry.id, entry.threads_caption)
+        ThreadsWorker.perform_async(entry.id, entry.threads_caption(utm_campaign: campaign))
       end
     end
   end
