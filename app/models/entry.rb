@@ -527,7 +527,7 @@ class Entry < ApplicationRecord
   end
 
   def threads_topic
-    "Photographers of Threads" if self.is_photo? || self.is_photoset?
+    "Photographers of Threads" if self.is_photo?
   end
 
   def plain_caption
