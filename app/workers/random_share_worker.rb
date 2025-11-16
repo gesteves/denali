@@ -1,11 +1,12 @@
 class RandomShareWorker < ApplicationWorker
-  def perform(tags, platforms, campaign)
+  def perform(tags, platforms)
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
     tags = Array(tags)
     platforms = Array(platforms)
     return if platforms.empty?
     logger.info "[Social] Attempting to share a random entry#{tags.any? ? " with tags #{tags.join(', ')}" : ""} on #{platforms.join(', ')}."
 
+    campaign = set_campaign_name(tags)
     platforms.each do |platform|
       entry = find_eligible_entry(tags, platform)
       next if entry.blank?
@@ -24,6 +25,14 @@ class RandomShareWorker < ApplicationWorker
   end
 
   private
+
+  def set_campaign_name(tags)
+    if tags.empty?
+      "random"
+    else
+      "random-#{tags.join(' ').parameterize}"
+    end
+  end
 
   def find_eligible_entry(tags, platform)
     photoblog = Blog.first

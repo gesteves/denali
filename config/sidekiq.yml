@@ -14,29 +14,29 @@
       cron: '0 12 * 4 *'  # Run at 12:00 PM ET every day in April
       class: RandomShareWorker
       queue: high
-      args: ['Cherry Blossoms', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 'random-cherry-blossoms']
+      args: ['Cherry Blossoms', ['Bluesky', 'Mastodon', 'Instagram', 'Threads']]
       description: "Share a random cherry blossom photo on Bluesky, Mastodon, Instagram and Threads once a day in April."
     random_landscape:
       cron: '0 14 * * *'  # Run at 2:00 PM ET every day
       class: RandomShareWorker
       queue: high
-      args: ['Landscapes', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 'random-landscape']
+      args: ['Landscapes', ['Bluesky', 'Mastodon', 'Instagram', 'Threads']]
       description: "Shares a random landscape photo on Bluesky, Mastodon, Instagram and Threads once a day."
     random_once_a_day:
       cron: '0 16 * 4 *'  # Run at 4:00 PM ET every day
       class: RandomShareWorker
       queue: high
-      args: [[], ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 'random-once-a-day']
+      args: [[], ['Bluesky', 'Mastodon', 'Instagram', 'Threads']]
       description: "Share a random photo on Bluesky, Mastodon, Instagram and Threads once a day in April."
     random_twice_a_day:
       cron: '0 12,16 * 1,2,3,5,6,7,8,9,10,11,12 *'  # Run at 12:00 PM ET and 4:00 PM ET every day, except in April
       class: RandomShareWorker
       queue: high
-      args: [[], ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 'random-twice-a-day']
+      args: [[], ['Bluesky', 'Mastodon', 'Instagram', 'Threads']]
       description: "Share a random photo on Bluesky, Mastodon, Instagram and Threads twice a day, except in April."
     random_wildlife:
       cron: '0 18 * * *'  # Run at 6:00 PM ET every day
       class: RandomShareWorker
       queue: high
-      args: ['Wildlife', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 'random-wildlife']
+      args: ['Wildlife', ['Bluesky', 'Mastodon', 'Instagram', 'Threads']]
       description: "Shares a random wildlife photo on Bluesky, Mastodon, Instagram and Threads once a day."
