@@ -377,7 +377,7 @@ class Admin::EntriesController < AdminController
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     if request.get?
-      @text = @entry.bluesky_caption
+      @text = @entry.bluesky_caption(utm_campaign: 'share')
       respond_to do |format|
         format.html {
           if params[:modal]
