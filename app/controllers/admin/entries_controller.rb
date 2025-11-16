@@ -313,7 +313,6 @@ class Admin::EntriesController < AdminController
       photo = @entry.photos.first
       @cropped_url = photo.instagram_story_url(crop: true) if photo.present?
       @uncropped_url = photo.instagram_story_url(crop: false) if photo.present?
-      @alt_text = photo.alt_text if photo.present?
       respond_to do |format|
         format.html {
           if params[:modal]
