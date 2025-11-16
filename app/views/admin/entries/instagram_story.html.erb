@@ -1,0 +1,48 @@
+<div class="modal is-active" data-controller="modal instagram-story-preview" data-instagram-story-preview-cropped-url-value="<%= @cropped_url %>" data-instagram-story-preview-uncropped-url-value="<%= @uncropped_url %>">
+  <div class="modal-background" data-action="click->modal#close"></div>
+  <div class="modal-card">
+    <%= form_with url: instagram_story_admin_entry_path(@entry.id), method: :post, local: false, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
+    <header class="modal-card-head">
+      <h1 class="modal-card-title">Share on Instagram Stories</h1>
+      <button class="delete" data-action="click->modal#close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="content">
+        <div class="field">
+          <div class="control">
+            <label class="checkbox">
+              <%= form.check_box :crop, { checked: false, 'data-instagram-story-preview-target': 'checkbox', 'data-action': 'change->instagram-story-preview#updatePreview' }, 'true', 'false' %>
+              Use cropped image (9:16 aspect ratio)
+            </label>
+            <p class="help">If checked, the image will be cropped to fit Instagram Stories' 9:16 aspect ratio. Otherwise, it will be fitted with black bars.</p>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <figure class="image" style="max-width: 300px; margin: 0 auto;">
+              <img src="<%= @uncropped_url %>" alt="Preview" data-instagram-story-preview-target="preview" style="width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+            </figure>
+          </div>
+        </div>
+        <hr class="hr">
+        <div class="field is-grouped is-grouped-multiline">
+          <div class="control">
+            <%= last_shared_on_instagram_tag(@entry) %>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <div class="field is-grouped">
+        <p class="control">
+          <%= form.submit "Share", class: 'button is-success', data: { confirm: 'Are you sure you want to share this entry on your Instagram Stories? This can\'t be undone!' } %>
+        </p>
+        <p class="control">
+          <button class="button is-light" data-action="click->modal#close">Cancel</button>
+        </p>
+      </div>
+    </footer>
+    <% end %>
+  </div>
+</div>
+
