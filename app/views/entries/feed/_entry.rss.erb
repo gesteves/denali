@@ -2,7 +2,7 @@
   <item>
     <guid isPermaLink="true"><%= entry.permalink_url %></guid>
     <pubDate><%= entry.published_at.utc.rfc822 %></pubDate>
-    <link><%= entry.permalink_url %></link>
+    <link><%= entry.permalink_url(utm_source: 'Feed', utm_medium: 'feed', utm_content: 'title') %></link>
     <title><%= entry.plain_title %></title>
     <description>
       <%= html_escape render(partial: 'entries/feed/feed_entry_body', formats: :html, object: entry, as: :entry).to_str %>
