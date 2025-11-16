@@ -421,7 +421,7 @@ class Entry < ApplicationRecord
   def mastodon_caption
     meta = ["🔗 #{self.permalink_url(utm_source: 'Mastodon', utm_medium: 'social')}"]
 
-    if is_photo?
+    if is_single_photo?
       photo = photos.first
       meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
@@ -443,7 +443,7 @@ class Entry < ApplicationRecord
   def bluesky_caption
     meta = []
 
-    if is_photo?
+    if is_single_photo?
       photo = photos.first
       meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
@@ -468,7 +468,7 @@ class Entry < ApplicationRecord
   def instagram_caption
     meta = []
 
-    if is_photo?
+    if is_single_photo?
       photo = photos.first
       meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
@@ -499,7 +499,7 @@ class Entry < ApplicationRecord
   def threads_caption
     meta = []
 
-    if is_photo?
+    if is_single_photo?
       photo = photos.first
       meta << "📷 #{photo.formatted_camera}" if photo.formatted_camera.present?
       meta << "🎞 #{photo.formatted_exif}" if photo.formatted_exif.present? && photo.film.blank?
