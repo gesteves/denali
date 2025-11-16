@@ -298,10 +298,10 @@ class Instagram
   #
   # @param container_id [String] the media container ID to wait for.
   # @param max_attempts [Integer] maximum number of status checks (default: 10).
-  # @param wait_seconds [Integer] seconds to wait between checks (default: 5).
+  # @param wait_seconds [Integer] seconds to wait between checks (default: 10).
   # @return [void]
   # @raise [RuntimeError] if the container doesn't become ready or encounters an error.
-  def wait_for_container_ready(container_id, max_attempts: 10, wait_seconds: 5)
+  def wait_for_container_ready(container_id, max_attempts: 10, wait_seconds: 10)
     max_attempts.times do |attempt|
       status = check_container_status(container_id)
 
