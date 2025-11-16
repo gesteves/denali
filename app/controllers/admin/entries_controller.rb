@@ -282,7 +282,7 @@ class Admin::EntriesController < AdminController
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     if request.get?
-      @text = @entry.instagram_caption(utm_campaign: 'share')
+      @text = @entry.instagram_caption
       respond_to do |format|
         format.html {
           if params[:modal]
