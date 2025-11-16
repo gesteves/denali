@@ -111,29 +111,15 @@ class Threads
   # @param photo_url [String] the URL of the photo to post.
   # @param caption [String] the caption for the photo (max 500 characters).
   # @param alt_text [String] the alt text for the photo (for accessibility).
-  # @param latitude [Float, nil] the latitude for location tagging.
-  # @param longitude [Float, nil] the longitude for location tagging.
   # @param topic_tag [String, nil] the topic tag for the post.
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
-  def post_photo(photo_url:, caption: '', alt_text: nil, latitude: nil, longitude: nil, topic_tag: nil)
-    # Search for location if coordinates are provided
-    # Continue without location if search fails
-    location_id = nil
-    if latitude.present? && longitude.present?
-      begin
-        location_id = search_location(latitude: latitude, longitude: longitude)
-      rescue => e
-        Rails.logger.warn "Threads location search failed: #{e.message}. Continuing without location tagging."
-      end
-    end
-
+  def post_photo(photo_url:, caption: '', alt_text: nil, topic_tag: nil)
     # Create media container
     media_container_id = create_media_container(
       image_url: photo_url,
       caption: caption,
       alt_text: alt_text,
-      location_id: location_id,
       topic_tag: topic_tag
     )
 
@@ -143,25 +129,13 @@ class Threads
 
   # Posts multiple photos to Threads as a carousel.
   #
-  # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption, :latitude, :longitude.
+  # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
   # @param caption [String] the main caption for the carousel post (max 500 characters).
   # @param topic_tag [String, nil] the topic tag for the post.
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
   def post_carousel(photos:, caption: '', topic_tag: nil)
     raise ArgumentError, "Carousel must contain 2-20 photos" if photos.empty? || photos.size > 20
-
-    # Use location from first photo for the carousel (Threads carousels use a single location)
-    # Continue without location if search fails
-    first_photo = photos.first
-    location_id = nil
-    if first_photo[:latitude].present? && first_photo[:longitude].present?
-      begin
-        location_id = search_location(latitude: first_photo[:latitude], longitude: first_photo[:longitude])
-      rescue => e
-        Rails.logger.warn "Threads location search failed: #{e.message}. Continuing without location tagging."
-      end
-    end
 
     # Create media containers for each photo
     media_container_ids = photos.map do |photo|
@@ -177,11 +151,10 @@ class Threads
     # Threads API recommends waiting ~30 seconds on average
     sleep(30)
 
-    # Create carousel container with location and topic
+    # Create carousel container with topic
     carousel_container_id = create_carousel_container(
       children: media_container_ids,
       caption: caption,
-      location_id: location_id,
       topic_tag: topic_tag
     )
 
@@ -191,45 +164,16 @@ class Threads
 
   private
 
-  # Searches for a location using latitude and longitude coordinates.
-  #
-  # @param latitude [Float] the latitude of the location.
-  # @param longitude [Float] the longitude of the location.
-  # @return [String, nil] the location ID if found, nil otherwise.
-  # @raise [RuntimeError] if the location search fails.
-  def search_location(latitude:, longitude:)
-    response = HTTParty.get(
-      "#{THREADS_API_BASE}/location_search",
-      query: {
-        latitude: latitude,
-        longitude: longitude,
-        access_token: access_token
-      }
-    )
-
-    unless response.success?
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to search location: #{parsed_body}"
-    end
-
-    parsed = JSON.parse(response.body)
-    locations = parsed['data'] || []
-
-    # Return the first location ID if available
-    locations.first&.dig('id')&.to_s
-  end
-
   # Creates a media container for a single image.
   #
   # @param image_url [String] the URL of the image.
   # @param caption [String] the caption for the image (max 500 characters).
   # @param alt_text [String, nil] the alt text for the image (for accessibility).
-  # @param location_id [String, nil] the location ID for location tagging.
   # @param topic_tag [String, nil] the topic tag for the post.
   # @param is_carousel_item [Boolean] whether this is a carousel item (default: false).
   # @return [String] the media container ID.
   # @raise [RuntimeError] if the media container creation fails.
-  def create_media_container(image_url:, caption: '', alt_text: nil, location_id: nil, topic_tag: nil, is_carousel_item: false)
+  def create_media_container(image_url:, caption: '', alt_text: nil, topic_tag: nil, is_carousel_item: false)
     body = {
       media_type: 'IMAGE',
       image_url: image_url,
@@ -237,7 +181,6 @@ class Threads
     }
     body[:is_carousel_item] = true if is_carousel_item
     body[:alt_text] = alt_text if alt_text.present?
-    body[:location_id] = location_id if location_id.present?
     body[:topic_tag] = topic_tag if topic_tag.present?
 
     response = HTTParty.post(
@@ -258,17 +201,15 @@ class Threads
   #
   # @param children [Array<String>] an array of media container IDs.
   # @param caption [String] the caption for the carousel (max 500 characters).
-  # @param location_id [String, nil] the location ID for location tagging.
   # @param topic_tag [String, nil] the topic tag for the post.
   # @return [String] the carousel container ID.
   # @raise [RuntimeError] if the carousel container creation fails.
-  def create_carousel_container(children:, caption: '', location_id: nil, topic_tag: nil)
+  def create_carousel_container(children:, caption: '', topic_tag: nil)
     body = {
       media_type: 'CAROUSEL',
       children: children.join(','),
       text: caption
     }
-    body[:location_id] = location_id if location_id.present?
     body[:topic_tag] = topic_tag if topic_tag.present?
 
     response = HTTParty.post(

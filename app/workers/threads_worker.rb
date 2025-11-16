@@ -17,9 +17,7 @@ class ThreadsWorker < ApplicationWorker
     photos = entry.photos.to_a[0..19].map do |p|
       {
         url: p.threads_url,
-        alt_text: p.alt_text,
-        latitude: p.latitude,
-        longitude: p.longitude
+        alt_text: p.alt_text
       }
     end
 
@@ -29,8 +27,6 @@ class ThreadsWorker < ApplicationWorker
         photo_url: photos.first[:url],
         caption: text,
         alt_text: photos.first[:alt_text],
-        latitude: photos.first[:latitude],
-        longitude: photos.first[:longitude],
         topic_tag: entry.threads_topic.presence
       )
     else
