@@ -10,28 +10,30 @@
       <button class="delete" data-action="click->modal#close"></button>
     </header>
     <section class="modal-card-body">
-      <article class="media" data-controller="instagram-story-preview" data-instagram-story-preview-cropped-url-value="<%= cropped_url %>" data-instagram-story-preview-uncropped-url-value="<%= uncropped_url %>">
-        <figure class="media-left">
-          <p class="image is-64x64">
-            <img data-instagram-story-preview-target="thumbnail" src="<%= uncropped_url %>" alt="<%= photo.alt_text %>" />
-          </p>
-        </figure>
-        <div class="media-content">
-          <div class="field">
-            <div class="control">
-              <label class="checkbox">
-                <%= form.check_box :crop, { checked: false, 'data-instagram-story-preview-target': 'checkbox', 'data-action': 'change->instagram-story-preview#updateThumbnail' }, 'true', 'false' %>
-                Crop to 9:16
-              </label>
+      <div class="content">
+        <article class="media" data-controller="instagram-story-preview" data-instagram-story-preview-cropped-url-value="<%= cropped_url %>" data-instagram-story-preview-uncropped-url-value="<%= uncropped_url %>">
+          <figure class="media-left">
+            <p class="image is-128x128">
+              <img data-instagram-story-preview-target="thumbnail" src="<%= uncropped_url %>" alt="<%= photo.alt_text %>" />
+            </p>
+          </figure>
+          <div class="media-content">
+            <div class="field">
+              <div class="control">
+                <label class="checkbox">
+                  <%= form.check_box :crop, { checked: false, 'data-instagram-story-preview-target': 'checkbox', 'data-action': 'change->instagram-story-preview#updateThumbnail' }, 'true', 'false' %>
+                  Crop to 9:16
+                </label>
+              </div>
+            </div>
+            <hr class="hr">
+            <div class="field is-grouped is-grouped-multiline">
+              <div class="control">
+                <%= last_shared_on_instagram_tag(@entry) %>
+              </div>
             </div>
           </div>
-        </div>
-      </article>
-      <hr class="hr">
-      <div class="field is-grouped is-grouped-multiline">
-        <div class="control">
-          <%= last_shared_on_instagram_tag(@entry) %>
-        </div>
+        </article>
       </div>
     </section>
     <footer class="modal-card-foot">
