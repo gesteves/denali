@@ -3,13 +3,14 @@
 }
 
 .instagram-story-preview__image {
-  aspect-ratio: 9 / 16;
+
   display: inline-block;
   max-width: 200px;
   margin: 0 auto;
 }
 
 .instagram-story-preview__thumbnail {
+  aspect-ratio: 9 / 16;
   width: 100%;
   height: auto;
   border-radius: 8px;
