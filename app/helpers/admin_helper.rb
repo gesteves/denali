@@ -14,9 +14,7 @@ module AdminHelper
 
   def last_shared_tag(date)
     text = date.blank? ? "Never" : "#{time_ago_in_words(date)} ago"
-    months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
-    months_ago = months.months.ago
-    css_class = date.blank? || date < months_ago ? "tag is-success" : "tag is-danger"
+    css_class = date.blank? || date < 1.year.ago ? "tag is-success" : "tag is-danger"
 
     content_tag(:div, class: "tags has-addons") do
       content_tag(:span, "Last shared", class: css_class) + content_tag(:span, text, class: "tag")
