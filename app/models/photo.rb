@@ -105,10 +105,10 @@ class Photo < ApplicationRecord
     opts = { fit_in: true, fill: 'fff', quality: 100, format: 'jpeg' }
 
     new_url = if self.is_vertical?
-      width, height = 1080, 1350
+      width, height = 1440, 1800
       self.url(opts.merge(width: width, height: (height - 100)))
     else
-      width, height = 1080, 1080
+      width, height = 1440, 1440
       self.url(opts.merge(width: (width - 100), height: height))
     end
 
