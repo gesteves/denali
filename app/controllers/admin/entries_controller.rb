@@ -72,11 +72,9 @@ class Admin::EntriesController < AdminController
 
   def shareable_on_bluesky
     set_srcset
-    months = (ENV['RANDOM_SHARING_MONTHS_THRESHOLD'] || 6).to_i
-    months_ago = months.months.ago
     @entries = @photoblog.entries.published.includes(photos: [:image_attachment, :image_blob])
       .where(post_to_bluesky: true)
-      .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", months_ago)
+      .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", 1.year.ago)
       .limit(10)
       .reorder(Arel.sql('RANDOM()'))
     @entries_count = @entries.count
