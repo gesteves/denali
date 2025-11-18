@@ -27,6 +27,186 @@ class Instagram
     end
   end
 
+  # Creates a media container for a single photo for the Instagram feed.
+  #
+  # @param photo_url [String] the URL of the photo to post.
+  # @param caption [String] the caption for the photo.
+  # @param alt_text [String] the alt text for the photo (for accessibility).
+  #   Supported for image posts as of March 24, 2025.
+  # @return [String] the media container ID.
+  # @raise [RuntimeError] if the post request fails.
+  def create_photo_container(photo_url:, caption: '', alt_text: nil)
+    create_media_container(
+      image_url: photo_url,
+      caption: caption,
+      alt_text: alt_text
+    )
+  end
+
+  # Creates a media container for multiple photos for the Instagram feed as a carousel.
+  #
+  # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
+  # @param caption [String] the main caption for the carousel post.
+  # @return [String] the carousel container ID.
+  # @raise [RuntimeError] if the post request fails.
+  def create_carousel_container(photos:, caption: '')
+    raise ArgumentError, "Carousel must contain 2-10 photos" if photos.empty? || photos.size > 10
+
+    # Create media containers for each photo
+    media_container_ids = photos.map do |photo|
+      create_media_container(
+        image_url: photo[:url],
+        caption: photo[:caption] || '',
+        alt_text: photo[:alt_text]
+      )
+    end
+
+    body = {
+      media_type: 'CAROUSEL',
+      children: media_container_ids.join(','),
+      caption: caption
+    }
+
+    headers = {
+      'Content-Type' => 'application/json',
+      'Authorization' => "Bearer #{access_token}"
+    }
+
+    response = HTTParty.post(
+      "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media",
+      body: body.to_json,
+      headers: headers
+    )
+
+    if response.success?
+      JSON.parse(response.body)['id']
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to create carousel container: #{parsed_body}"
+    end
+  end
+
+  # Creates a media container for a single photo for Instagram Stories.
+  # Stories don't support captions or alt text and require 9:16 aspect ratio (1080x1920 recommended).
+  #
+  # @param photo_url [String] the URL of the photo to post.
+  # @return [String] the story container ID.
+  # @raise [RuntimeError] if the post request fails.
+  def create_story_container(photo_url:)
+    body = {
+      media_type: 'STORIES',
+      image_url: photo_url
+    }
+
+    headers = {
+      'Content-Type' => 'application/json',
+      'Authorization' => "Bearer #{access_token}"
+    }
+
+    response = HTTParty.post(
+      "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media",
+      body: body.to_json,
+      headers: headers
+    )
+
+    if response.success?
+      JSON.parse(response.body)['id']
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to create story container: #{parsed_body}"
+    end
+  end
+
+  # Checks the status of a media container.
+  #
+  # @param container_id [String] the media container ID to check.
+  # @return [String] the status code (EXPIRED, ERROR, FINISHED, IN_PROGRESS, or PUBLISHED).
+  # @raise [RuntimeError] if the status check fails.
+  def get_container_status(container_id)
+    headers = {
+      'Authorization' => "Bearer #{access_token}"
+    }
+
+    response = HTTParty.get(
+      "#{INSTAGRAM_GRAPH_API_BASE}/#{container_id}",
+      query: { fields: 'status_code' },
+      headers: headers
+    )
+
+    if response.success?
+      parsed = JSON.parse(response.body)
+      parsed['status_code']
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to check container status: #{parsed_body}"
+    end
+  end
+
+  # Publishes a media container to the Instagram feed.
+  #
+  # @param container_id [String] the media container ID to publish.
+  # @return [Hash] the parsed response body if successful.
+  # @raise [RuntimeError] if the publish request fails or container is not ready.
+  def publish_container(container_id)
+
+    body = {
+      creation_id: container_id
+    }
+
+    headers = {
+      'Content-Type' => 'application/json',
+      'Authorization' => "Bearer #{access_token}"
+    }
+
+    response = HTTParty.post(
+      "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media_publish",
+      body: body.to_json,
+      headers: headers
+    )
+
+    if response.success?
+      JSON.parse(response.body)
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to publish media: #{parsed_body}"
+    end
+  end
+
+  private
+
+  # Creates a media container for a single image.
+  #
+  # @param image_url [String] the URL of the image.
+  # @param caption [String] the caption for the image.
+  # @param alt_text [String, nil] the alt text for the image (for accessibility).
+  # @return [String] the media container ID.
+  # @raise [RuntimeError] if the media container creation fails.
+  def create_media_container(image_url:, caption: '', alt_text: nil)
+    body = {
+      image_url: image_url,
+      caption: caption
+    }
+    body[:alt_text] = alt_text if alt_text.present?
+
+    headers = {
+      'Content-Type' => 'application/json',
+      'Authorization' => "Bearer #{access_token}"
+    }
+
+    response = HTTParty.post(
+      "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media",
+      body: body.to_json,
+      headers: headers
+    )
+
+    if response.success?
+      JSON.parse(response.body)['id']
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to create media container: #{parsed_body}"
+    end
+  end
+
   # Returns the cache key for the access token.
   #
   # @return [String] the cache key for the access token.
@@ -104,258 +284,6 @@ class Instagram
   # @return [void]
   def clear_cached_token
     Rails.cache.delete(access_token_cache_key)
-  end
-
-  # Posts a single photo to the Instagram feed.
-  #
-  # @param photo_url [String] the URL of the photo to post.
-  # @param caption [String] the caption for the photo.
-  # @param alt_text [String] the alt text for the photo (for accessibility).
-  #   Supported for image posts as of March 24, 2025.
-  # @return [Hash] the parsed response body if successful.
-  # @raise [RuntimeError] if the post request fails.
-  def post_photo(photo_url:, caption: '', alt_text: nil)
-    # Create media container
-    media_container_id = create_media_container(
-      image_url: photo_url,
-      caption: caption,
-      alt_text: alt_text
-    )
-
-    # Publish the media
-    publish_media(media_container_id)
-  end
-
-  # Posts multiple photos to the Instagram feed as a carousel.
-  #
-  # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
-  # @param caption [String] the main caption for the carousel post.
-  # @return [Hash] the parsed response body if successful.
-  # @raise [RuntimeError] if the post request fails.
-  def post_carousel(photos:, caption: '')
-    raise ArgumentError, "Carousel must contain 2-10 photos" if photos.empty? || photos.size > 10
-
-    # Create media containers for each photo
-    media_container_ids = photos.map do |photo|
-      create_media_container(
-        image_url: photo[:url],
-        caption: photo[:caption] || '',
-        alt_text: photo[:alt_text]
-      )
-    end
-
-    # Create carousel container
-    carousel_container_id = create_carousel_container(
-      children: media_container_ids,
-      caption: caption
-    )
-
-    # Publish the carousel
-    publish_media(carousel_container_id)
-  end
-
-  # Posts a single photo to Instagram Stories.
-  # Stories don't support captions or alt text and require 9:16 aspect ratio (1080x1920 recommended).
-  #
-  # @param photo_url [String] the URL of the photo to post.
-  # @return [Hash] the parsed response body if successful.
-  # @raise [RuntimeError] if the post request fails.
-  def post_story(photo_url:)
-    # Create story container
-    story_container_id = create_story_container(
-      image_url: photo_url
-    )
-
-    # Publish the story
-    publish_media(story_container_id)
-  end
-
-  private
-
-  # Creates a media container for a single image.
-  #
-  # @param image_url [String] the URL of the image.
-  # @param caption [String] the caption for the image.
-  # @param alt_text [String, nil] the alt text for the image (for accessibility).
-  # @return [String] the media container ID.
-  # @raise [RuntimeError] if the media container creation fails.
-  def create_media_container(image_url:, caption: '', alt_text: nil)
-    body = {
-      image_url: image_url,
-      caption: caption
-    }
-    body[:alt_text] = alt_text if alt_text.present?
-
-    headers = {
-      'Content-Type' => 'application/json',
-      'Authorization' => "Bearer #{access_token}"
-    }
-
-    response = HTTParty.post(
-      "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media",
-      body: body.to_json,
-      headers: headers
-    )
-
-    if response.success?
-      JSON.parse(response.body)['id']
-    else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to create media container: #{parsed_body}"
-    end
-  end
-
-  # Creates a carousel container with multiple media items.
-  #
-  # @param children [Array<String>] an array of media container IDs.
-  # @param caption [String] the caption for the carousel.
-  # @return [String] the carousel container ID.
-  # @raise [RuntimeError] if the carousel container creation fails.
-  def create_carousel_container(children:, caption: '')
-    body = {
-      media_type: 'CAROUSEL',
-      children: children.join(','),
-      caption: caption
-    }
-
-    headers = {
-      'Content-Type' => 'application/json',
-      'Authorization' => "Bearer #{access_token}"
-    }
-
-    response = HTTParty.post(
-      "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media",
-      body: body.to_json,
-      headers: headers
-    )
-
-    if response.success?
-      JSON.parse(response.body)['id']
-    else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to create carousel container: #{parsed_body}"
-    end
-  end
-
-  # Creates a media container for an Instagram Story.
-  # Stories don't support captions or alt text and require 9:16 aspect ratio (1080x1920 recommended).
-  #
-  # @param image_url [String] the URL of the image.
-  # @return [String] the story container ID.
-  # @raise [RuntimeError] if the story container creation fails.
-  def create_story_container(image_url:)
-    body = {
-      media_type: 'STORIES',
-      image_url: image_url
-    }
-
-    headers = {
-      'Content-Type' => 'application/json',
-      'Authorization' => "Bearer #{access_token}"
-    }
-
-    response = HTTParty.post(
-      "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media",
-      body: body.to_json,
-      headers: headers
-    )
-
-    if response.success?
-      JSON.parse(response.body)['id']
-    else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to create story container: #{parsed_body}"
-    end
-  end
-
-  # Checks the status of a media container.
-  #
-  # @param container_id [String] the media container ID to check.
-  # @return [String] the status code (EXPIRED, ERROR, FINISHED, IN_PROGRESS, or PUBLISHED).
-  # @raise [RuntimeError] if the status check fails.
-  def check_container_status(container_id)
-    headers = {
-      'Authorization' => "Bearer #{access_token}"
-    }
-
-    response = HTTParty.get(
-      "#{INSTAGRAM_GRAPH_API_BASE}/#{container_id}",
-      query: { fields: 'status_code' },
-      headers: headers
-    )
-
-    if response.success?
-      parsed = JSON.parse(response.body)
-      parsed['status_code']
-    else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to check container status: #{parsed_body}"
-    end
-  end
-
-  # Waits for a media container to be ready for publishing.
-  # Polls the container status up to 10 times, waiting 5 seconds between checks.
-  #
-  # @param container_id [String] the media container ID to wait for.
-  # @param max_attempts [Integer] maximum number of status checks (default: 10).
-  # @param wait_seconds [Integer] seconds to wait between checks (default: 10).
-  # @return [void]
-  # @raise [RuntimeError] if the container doesn't become ready or encounters an error.
-  def wait_for_container_ready(container_id, max_attempts: 10, wait_seconds: 10)
-    max_attempts.times do |attempt|
-      status = check_container_status(container_id)
-
-      case status
-      when 'FINISHED'
-        return # Container is ready
-      when 'PUBLISHED'
-        return # Already published
-      when 'ERROR'
-        raise "Media container failed with ERROR status"
-      when 'EXPIRED'
-        raise "Media container expired before it could be published"
-      when 'IN_PROGRESS'
-        # Continue waiting
-        sleep(wait_seconds) unless attempt == max_attempts - 1
-      else
-        raise "Unknown container status: #{status}"
-      end
-    end
-
-    raise "Media container did not become ready after #{max_attempts} attempts"
-  end
-
-  # Publishes a media container to the Instagram feed.
-  # Waits for the container to be ready before attempting to publish.
-  #
-  # @param creation_id [String] the media container ID to publish.
-  # @return [Hash] the parsed response body if successful.
-  # @raise [RuntimeError] if the publish request fails or container is not ready.
-  def publish_media(creation_id)
-    # Wait for the container to be ready before publishing
-    wait_for_container_ready(creation_id)
-
-    body = {
-      creation_id: creation_id
-    }
-
-    headers = {
-      'Content-Type' => 'application/json',
-      'Authorization' => "Bearer #{access_token}"
-    }
-
-    response = HTTParty.post(
-      "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media_publish",
-      body: body.to_json,
-      headers: headers
-    )
-
-    if response.success?
-      JSON.parse(response.body)
-    else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to publish media: #{parsed_body}"
-    end
   end
 end
 

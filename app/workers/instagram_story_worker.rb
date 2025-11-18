@@ -14,13 +14,16 @@ class InstagramStoryWorker < ApplicationWorker
       ig_account_id: ENV['INSTAGRAM_ACCOUNT_ID']
     )
 
-    # Stories only support single photos, use the first photo
+    # Stories only support single photos, so use the first photo
     photo = entry.photos.first
     return if photo.blank?
 
-    instagram.post_story(
+    container_id = instagram.create_story_container(
       photo_url: photo.instagram_story_url(crop: crop)
     )
+    raise "Failed to create Instagram story container for entry #{entry_id}: container_id is blank" if container_id.blank?
+
+    InstagramPublishWorker.perform_in(30.seconds, entry_id, container_id, false)
   end
 end
 
