@@ -17,14 +17,12 @@ class InstagramWorker < ApplicationWorker
     photos = entry.photos.to_a[0..9].map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
 
     container_id = if photos.size == 1
-      # Post a single photo
       instagram.create_photo_container(
         photo_url: photos.first[:url],
         caption: text,
         alt_text: photos.first[:alt_text]
       )
     else
-      # Post as a carousel (2-10 photos)
       instagram.create_carousel_container(
         photos: photos,
         caption: text

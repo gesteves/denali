@@ -32,7 +32,6 @@ class Instagram
   # @param photo_url [String] the URL of the photo to post.
   # @param caption [String] the caption for the photo.
   # @param alt_text [String] the alt text for the photo (for accessibility).
-  #   Supported for image posts as of March 24, 2025.
   # @return [String] the media container ID.
   # @raise [RuntimeError] if the post request fails.
   def create_photo_container(photo_url:, caption: '', alt_text: nil)

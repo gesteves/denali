@@ -21,7 +21,7 @@ class InstagramStoryWorker < ApplicationWorker
     container_id = instagram.create_story_container(
       photo_url: photo.instagram_story_url(crop: crop)
     )
-    raise "Failed to create Instagram story container for entry #{entry_id}: container_id is blank" if container_id.blank?
+    raise "Failed to create Instagram Story container for entry #{entry_id}: container_id is blank" if container_id.blank?
 
     InstagramPublishWorker.perform_in(30.seconds, entry_id, container_id, false)
   end

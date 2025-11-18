@@ -22,7 +22,6 @@ class ThreadsWorker < ApplicationWorker
     end
 
     container_id = if photos.size == 1
-      # Post a single photo
       threads.create_photo_container(
         photo_url: photos.first[:url],
         caption: text,
@@ -30,7 +29,6 @@ class ThreadsWorker < ApplicationWorker
         topic_tag: entry.threads_topic.presence
       )
     else
-      # Post as a carousel (2-20 photos)
       threads.create_carousel_container(
         photos: photos,
         caption: text,
