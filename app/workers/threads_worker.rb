@@ -21,9 +21,9 @@ class ThreadsWorker < ApplicationWorker
       }
     end
 
-    if photos.size == 1
+    container_id = if photos.size == 1
       # Post a single photo
-      threads.post_photo(
+      threads.create_photo_container(
         photo_url: photos.first[:url],
         caption: text,
         alt_text: photos.first[:alt_text],
@@ -31,15 +31,16 @@ class ThreadsWorker < ApplicationWorker
       )
     else
       # Post as a carousel (2-20 photos)
-      threads.post_carousel(
+      threads.create_carousel_container(
         photos: photos,
         caption: text,
         topic_tag: entry.threads_topic.presence
       )
     end
 
-    # Update timestamp if the field exists
-    entry.update_column(:last_shared_on_threads_at, Time.current)
+    raise "Failed to create Threads container for entry #{entry_id}: container_id is blank" if container_id.blank?
+
+    ThreadsPublishWorker.perform_in(30.seconds, entry_id, container_id)
   end
 end
 

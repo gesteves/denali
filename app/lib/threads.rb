@@ -27,6 +27,124 @@ class Threads
     end
   end
 
+  # Creates a media container for a single photo for Threads.
+  #
+  # @param photo_url [String] the URL of the photo to post.
+  # @param caption [String] the caption for the photo (max 500 characters).
+  # @param alt_text [String] the alt text for the photo (for accessibility).
+  # @param topic_tag [String, nil] the topic tag for the post.
+  # @return [String] the media container ID.
+  # @raise [RuntimeError] if the post request fails.
+  def create_photo_container(photo_url:, caption: '', alt_text: nil, topic_tag: nil)
+    create_media_container(
+      image_url: photo_url,
+      caption: caption,
+      alt_text: alt_text,
+      topic_tag: topic_tag
+    )
+  end
+
+  # Creates a media container for multiple photos for Threads as a carousel.
+  #
+  # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
+  # @param caption [String] the main caption for the carousel post (max 500 characters).
+  # @param topic_tag [String, nil] the topic tag for the post.
+  # @return [String] the carousel container ID.
+  # @raise [RuntimeError] if the post request fails.
+  def create_carousel_container(photos:, caption: '', topic_tag: nil)
+    raise ArgumentError, "Carousel must contain 2-20 photos" if photos.empty? || photos.size > 20
+
+    # Create media containers for each photo
+    media_container_ids = photos.map do |photo|
+      create_media_container(
+        image_url: photo[:url],
+        caption: photo[:caption] || '',
+        alt_text: photo[:alt_text],
+        is_carousel_item: true
+      )
+    end
+
+    body = {
+      media_type: 'CAROUSEL',
+      children: media_container_ids.join(','),
+      text: caption
+    }
+    body[:topic_tag] = topic_tag if topic_tag.present?
+
+    response = HTTParty.post(
+      "#{THREADS_API_BASE}/#{@threads_user_id}/threads",
+      body: body,
+      query: { access_token: access_token }
+    )
+
+    if response.success?
+      JSON.parse(response.body)['id']
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to create carousel container: #{parsed_body}"
+    end
+  end
+
+  # Publishes a media container to Threads.
+  # Note: Threads API recommends waiting ~30 seconds after container creation before publishing.
+  #
+  # @param container_id [String] the media container ID to publish.
+  # @return [Hash] the parsed response body if successful.
+  # @raise [RuntimeError] if the publish request fails.
+  def publish_container(container_id)
+    body = {
+      creation_id: container_id
+    }
+
+    response = HTTParty.post(
+      "#{THREADS_API_BASE}/#{@threads_user_id}/threads_publish",
+      body: body,
+      query: { access_token: access_token }
+    )
+
+    if response.success?
+      JSON.parse(response.body)
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to publish media: #{parsed_body}"
+    end
+  end
+
+  private
+
+  # Creates a media container for a single image.
+  #
+  # @param image_url [String] the URL of the image.
+  # @param caption [String] the caption for the image (max 500 characters).
+  # @param alt_text [String, nil] the alt text for the image (for accessibility).
+  # @param topic_tag [String, nil] the topic tag for the post.
+  # @param is_carousel_item [Boolean] whether this is a carousel item (default: false).
+  # @return [String] the media container ID.
+  # @raise [RuntimeError] if the media container creation fails.
+  def create_media_container(image_url:, caption: '', alt_text: nil, topic_tag: nil, is_carousel_item: false)
+    body = {
+      media_type: 'IMAGE',
+      image_url: image_url,
+      text: caption
+    }
+    body[:is_carousel_item] = true if is_carousel_item
+    body[:alt_text] = alt_text if alt_text.present?
+    body[:topic_tag] = topic_tag if topic_tag.present?
+
+    response = HTTParty.post(
+      "#{THREADS_API_BASE}/#{@threads_user_id}/threads",
+      body: body,
+      query: { access_token: access_token }
+    )
+
+    if response.success?
+      JSON.parse(response.body)['id']
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to create media container: #{parsed_body}"
+    end
+  end
+
   # Returns the cache key for the access token.
   #
   # @return [String] the cache key for the access token.
@@ -106,154 +224,5 @@ class Threads
     Rails.cache.delete(access_token_cache_key)
   end
 
-  # Posts a single photo to Threads.
-  #
-  # @param photo_url [String] the URL of the photo to post.
-  # @param caption [String] the caption for the photo (max 500 characters).
-  # @param alt_text [String] the alt text for the photo (for accessibility).
-  # @param topic_tag [String, nil] the topic tag for the post.
-  # @return [Hash] the parsed response body if successful.
-  # @raise [RuntimeError] if the post request fails.
-  def post_photo(photo_url:, caption: '', alt_text: nil, topic_tag: nil)
-    # Create media container
-    media_container_id = create_media_container(
-      image_url: photo_url,
-      caption: caption,
-      alt_text: alt_text,
-      topic_tag: topic_tag
-    )
-
-    # Publish the media
-    publish_media(media_container_id)
-  end
-
-  # Posts multiple photos to Threads as a carousel.
-  #
-  # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
-  # @param caption [String] the main caption for the carousel post (max 500 characters).
-  # @param topic_tag [String, nil] the topic tag for the post.
-  # @return [Hash] the parsed response body if successful.
-  # @raise [RuntimeError] if the post request fails.
-  def post_carousel(photos:, caption: '', topic_tag: nil)
-    raise ArgumentError, "Carousel must contain 2-20 photos" if photos.empty? || photos.size > 20
-
-    # Create media containers for each photo
-    media_container_ids = photos.map do |photo|
-      create_media_container(
-        image_url: photo[:url],
-        caption: photo[:caption] || '',
-        alt_text: photo[:alt_text],
-        is_carousel_item: true
-      )
-    end
-
-    # Wait for all containers to be ready before creating carousel
-    # Threads API recommends waiting ~30 seconds on average
-    sleep(30)
-
-    # Create carousel container with topic
-    carousel_container_id = create_carousel_container(
-      children: media_container_ids,
-      caption: caption,
-      topic_tag: topic_tag
-    )
-
-    # Publish the carousel
-    publish_media(carousel_container_id)
-  end
-
-  private
-
-  # Creates a media container for a single image.
-  #
-  # @param image_url [String] the URL of the image.
-  # @param caption [String] the caption for the image (max 500 characters).
-  # @param alt_text [String, nil] the alt text for the image (for accessibility).
-  # @param topic_tag [String, nil] the topic tag for the post.
-  # @param is_carousel_item [Boolean] whether this is a carousel item (default: false).
-  # @return [String] the media container ID.
-  # @raise [RuntimeError] if the media container creation fails.
-  def create_media_container(image_url:, caption: '', alt_text: nil, topic_tag: nil, is_carousel_item: false)
-    body = {
-      media_type: 'IMAGE',
-      image_url: image_url,
-      text: caption
-    }
-    body[:is_carousel_item] = true if is_carousel_item
-    body[:alt_text] = alt_text if alt_text.present?
-    body[:topic_tag] = topic_tag if topic_tag.present?
-
-    response = HTTParty.post(
-      "#{THREADS_API_BASE}/#{@threads_user_id}/threads",
-      body: body,
-      query: { access_token: access_token }
-    )
-
-    if response.success?
-      JSON.parse(response.body)['id']
-    else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to create media container: #{parsed_body}"
-    end
-  end
-
-  # Creates a carousel container with multiple media items.
-  #
-  # @param children [Array<String>] an array of media container IDs.
-  # @param caption [String] the caption for the carousel (max 500 characters).
-  # @param topic_tag [String, nil] the topic tag for the post.
-  # @return [String] the carousel container ID.
-  # @raise [RuntimeError] if the carousel container creation fails.
-  def create_carousel_container(children:, caption: '', topic_tag: nil)
-    body = {
-      media_type: 'CAROUSEL',
-      children: children.join(','),
-      text: caption
-    }
-    body[:topic_tag] = topic_tag if topic_tag.present?
-
-    response = HTTParty.post(
-      "#{THREADS_API_BASE}/#{@threads_user_id}/threads",
-      body: body,
-      query: { access_token: access_token }
-    )
-
-    if response.success?
-      JSON.parse(response.body)['id']
-    else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to create carousel container: #{parsed_body}"
-    end
-  end
-
-  # Publishes a media container to Threads.
-  # Waits for the container to be ready before attempting to publish.
-  # Threads API recommends waiting ~30 seconds before publishing.
-  #
-  # @param creation_id [String] the media container ID to publish.
-  # @return [Hash] the parsed response body if successful.
-  # @raise [RuntimeError] if the publish request fails.
-  def publish_media(creation_id)
-    # Wait for the container to be ready before publishing
-    # Threads API recommends waiting ~30 seconds on average
-    sleep(30)
-
-    body = {
-      creation_id: creation_id
-    }
-
-    response = HTTParty.post(
-      "#{THREADS_API_BASE}/#{@threads_user_id}/threads_publish",
-      body: body,
-      query: { access_token: access_token }
-    )
-
-    if response.success?
-      JSON.parse(response.body)
-    else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to publish media: #{parsed_body}"
-    end
-  end
 end
 
