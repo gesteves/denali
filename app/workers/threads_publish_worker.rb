@@ -14,8 +14,25 @@ class ThreadsPublishWorker < ApplicationWorker
       threads_user_id: ENV['THREADS_USER_ID']
     )
 
-    threads.publish_container(container_id)
-    entry.update_column(:last_shared_on_threads_at, Time.current)
+    status = threads.get_container_status(container_id)
+
+    case status
+    when 'FINISHED'
+      threads.publish_container(container_id)
+      entry.update!(last_shared_on_threads_at: Time.current)
+    when 'PUBLISHED'
+      Rails.logger.info "Media container #{container_id} for entry #{entry_id} is already published"
+      return
+    when 'ERROR'
+      raise "Media container #{container_id} failed with ERROR status"
+    when 'EXPIRED'
+      Rails.logger.info "Media container #{container_id} for entry #{entry_id} expired before it could be published"
+      return
+    when 'IN_PROGRESS'
+      raise "Media container #{container_id} is still in progress"
+    else
+      raise "Unknown container status: #{status} for container #{container_id}"
+    end
   end
 end
 

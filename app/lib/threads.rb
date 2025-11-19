@@ -85,6 +85,29 @@ class Threads
     end
   end
 
+  # Checks the status of a media container.
+  #
+  # @param container_id [String] the media container ID to check.
+  # @return [String] the status (EXPIRED, ERROR, FINISHED, IN_PROGRESS, or PUBLISHED).
+  # @raise [RuntimeError] if the status check fails.
+  def get_container_status(container_id)
+    response = HTTParty.get(
+      "#{THREADS_API_BASE}/#{container_id}",
+      query: {
+        fields: 'status,error_message',
+        access_token: access_token
+      }
+    )
+
+    if response.success?
+      parsed = JSON.parse(response.body)
+      parsed['status']
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to check container status: #{parsed_body}"
+    end
+  end
+
   # Publishes a media container to Threads.
   # Note: Threads API recommends waiting ~30 seconds after container creation before publishing.
   #

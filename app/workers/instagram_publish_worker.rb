@@ -20,11 +20,13 @@ class InstagramPublishWorker < ApplicationWorker
       instagram.publish_container(container_id)
       entry.update!(last_shared_on_instagram_at: Time.current) if update_timestamp
     when 'PUBLISHED'
+      Rails.logger.info "Media container #{container_id} for entry #{entry_id} is already published"
+      return
+    when 'EXPIRED'
+      Rails.logger.info "Media container #{container_id} for entry #{entry_id} expired before it could be published"
       return
     when 'ERROR'
       raise "Media container #{container_id} failed with ERROR status"
-    when 'EXPIRED'
-      raise "Media container #{container_id} expired before it could be published"
     when 'IN_PROGRESS'
       raise "Media container #{container_id} is still in progress"
     else
