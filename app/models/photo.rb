@@ -296,11 +296,11 @@ class Photo < ApplicationRecord
   end
 
   def instagram_location_id
-    self.park&.instagram_location_id
+    self.park&.instagram_location_id&.presence
   end
 
   def threads_location_id
-    self.park&.threads_location_id
+    self.park&.threads_location_id&.presence
   end
 
   def custom_location_parts
