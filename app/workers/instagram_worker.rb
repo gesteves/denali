@@ -15,19 +15,20 @@ class InstagramWorker < ApplicationWorker
     )
 
     photos = entry.photos.to_a[0..9].map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
+    location_id = entry.photos.first.instagram_location_id
 
     container_id = if photos.size == 1
       instagram.create_photo_container(
         photo_url: photos.first[:url],
         caption: text,
         alt_text: photos.first[:alt_text],
-        location_id: entry.instagram_location_id
+        location_id: location_id
       )
     else
       instagram.create_carousel_container(
         photos: photos,
         caption: text,
-        location_id: entry.instagram_location_id
+        location_id: location_id
       )
     end
 

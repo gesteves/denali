@@ -527,31 +527,6 @@ class Entry < ApplicationRecord
     "Photographers of Threads" if self.is_photo?
   end
 
-  def threads_location_id
-    return nil if ENV['ADD_LOCATIONS_TO_THREADS'].blank?
-    return "1218801332248375" if self.location_list.include?("Grand Teton National Park")
-    return "5688310114545744" if self.location_list.include?("Yellowstone National Park")
-    return "997476204279232" if self.location_list.include?("Mount Rainier National Park")
-    return "1409771866175835" if self.location_list.include?("Yosemite National Park")
-    return "796830508349232" if self.location_list.include?("Zion National Park")
-    return "1686998451683036" if self.location_list.include?("Grand Canyon National Park")
-    return "788430943158887" if self.location_list.include?("Glacier National Park")
-    return "805973970760744" if self.location_list.include?("National Elk Refuge")
-    nil
-  end
-
-  def instagram_location_id
-    return nil if ENV['ADD_LOCATIONS_TO_INSTAGRAM'].blank?
-    return "130250293656242" if self.location_list.include?("Grand Teton National Park")
-    return "151418891540140" if self.location_list.include?("Yellowstone National Park")
-    return "275854322484638" if self.location_list.include?("Mount Rainier National Park")
-    return "138795446168746" if self.location_list.include?("Yosemite National Park")
-    return "143664062331242" if self.location_list.include?("Zion National Park")
-    return "131965493514224" if self.location_list.include?("Grand Canyon National Park")
-    return "74553624911" if self.location_list.include?("Glacier National Park")
-    nil
-  end
-
   def valid_threads_caption?
     threads_caption.length <= 500
   end

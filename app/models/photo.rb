@@ -295,6 +295,14 @@ class Photo < ApplicationRecord
     end
   end
 
+  def instagram_location_id
+    self.park&.instagram_location_id
+  end
+
+  def threads_location_id
+    self.park&.threads_location_id
+  end
+
   def custom_location_parts
     if show_region?
       [self.location, self.administrative_area, self.country]

@@ -20,6 +20,7 @@ class ThreadsWorker < ApplicationWorker
         alt_text: p.alt_text
       }
     end
+    location_id = entry.photos.first.threads_location_id
 
     container_id = if photos.size == 1
       threads.create_photo_container(
@@ -27,14 +28,14 @@ class ThreadsWorker < ApplicationWorker
         caption: text,
         alt_text: photos.first[:alt_text],
         topic_tag: entry.threads_topic.presence,
-        location_id: entry.threads_location_id
+        location_id: location_id
       )
     else
       threads.create_carousel_container(
         photos: photos,
         caption: text,
         topic_tag: entry.threads_topic.presence,
-        location_id: entry.threads_location_id
+        location_id: location_id
       )
     end
 

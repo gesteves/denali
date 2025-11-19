@@ -23,6 +23,6 @@ class Admin::ParksController < AdminController
 
   private
   def park_params
-    params.require(:park).permit(:display_name)
+    params.require(:park).permit(:display_name, :instagram_location_id, :threads_location_id)
   end
 end
