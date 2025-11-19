@@ -18,6 +18,10 @@ class Park < ApplicationRecord
     Park.all.map(&:display_name).reject(&:blank?).uniq
   end
 
+  def entries_count
+    Entry.joins(:photos).where(photos: { park_id: id }).distinct.count
+  end
+
   private
 
   def changes_to_fields?
