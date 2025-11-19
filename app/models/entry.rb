@@ -419,7 +419,7 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_caption(utm_source: 'Mastodon', utm_medium: 'social', utm_campaign: nil)
-    meta = ["🔗 #{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)}"]
+    meta = []
 
     if is_single_photo?
       photo = photos.first
@@ -428,6 +428,7 @@ class Entry < ApplicationRecord
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
     end
 
+    meta << "🔗 #{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)}"
     meta << "\n#{mastodon_hashtags}" if mastodon_hashtags.present?
 
     caption = [self.plain_title]
