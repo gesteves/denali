@@ -1,5 +1,6 @@
 class InstagramPublishWorker < ApplicationWorker
   sidekiq_options queue: 'high'
+  sidekiq_options retry_for: 5.minutes
 
   def perform(entry_id, container_id, update_timestamp = true)
     return if !Rails.env.production?
@@ -16,6 +17,8 @@ class InstagramPublishWorker < ApplicationWorker
     status = instagram.get_container_status(container_id)
 
     case status
+    when 'IN_PROGRESS'
+      raise MediaContainerInProgressError, "Media container #{container_id} for entry #{entry_id} is still in progress"
     when 'FINISHED'
       instagram.publish_container(container_id)
       entry.update!(last_shared_on_instagram_at: Time.current) if update_timestamp
@@ -26,11 +29,9 @@ class InstagramPublishWorker < ApplicationWorker
       Rails.logger.info "Media container #{container_id} for entry #{entry_id} expired before it could be published"
       return
     when 'ERROR'
-      raise "Media container #{container_id} failed with ERROR status"
-    when 'IN_PROGRESS'
-      raise "Media container #{container_id} is still in progress"
+      raise "Media container #{container_id} for entry #{entry_id} failed with ERROR status"
     else
-      raise "Unknown container status: #{status} for container #{container_id}"
+      raise "Media container #{container_id} for entry #{entry_id} has unexpected status: #{status}"
     end
   end
 end
