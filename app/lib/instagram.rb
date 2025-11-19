@@ -32,13 +32,15 @@ class Instagram
   # @param photo_url [String] the URL of the photo to post.
   # @param caption [String] the caption for the photo.
   # @param alt_text [String] the alt text for the photo (for accessibility).
+  # @param location_id [String, nil] the location ID for the post.
   # @return [String] the media container ID.
   # @raise [RuntimeError] if the post request fails.
-  def create_photo_container(photo_url:, caption: '', alt_text: nil)
+  def create_photo_container(photo_url:, caption: '', alt_text: nil, location_id: nil)
     create_media_container(
       image_url: photo_url,
       caption: caption,
-      alt_text: alt_text
+      alt_text: alt_text,
+      location_id: location_id
     )
   end
 
@@ -46,9 +48,10 @@ class Instagram
   #
   # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
   # @param caption [String] the main caption for the carousel post.
+  # @param location_id [String, nil] the location ID for the post.
   # @return [String] the carousel container ID.
   # @raise [RuntimeError] if the post request fails.
-  def create_carousel_container(photos:, caption: '')
+  def create_carousel_container(photos:, caption: '', location_id: nil)
     raise ArgumentError, "Carousel must contain 2-10 photos" if photos.empty? || photos.size > 10
 
     # Create media containers for each photo
@@ -63,8 +66,9 @@ class Instagram
     body = {
       media_type: 'CAROUSEL',
       children: media_container_ids.join(','),
-      caption: caption
-    }
+      caption: caption,
+      location_id: location_id
+    }.compact
 
     headers = {
       'Content-Type' => 'application/json',
@@ -178,14 +182,16 @@ class Instagram
   # @param image_url [String] the URL of the image.
   # @param caption [String] the caption for the image.
   # @param alt_text [String, nil] the alt text for the image (for accessibility).
+  # @param location_id [String, nil] the location ID for the post.
   # @return [String] the media container ID.
   # @raise [RuntimeError] if the media container creation fails.
-  def create_media_container(image_url:, caption: '', alt_text: nil)
+  def create_media_container(image_url:, caption: '', alt_text: nil, location_id: nil)
     body = {
       image_url: image_url,
-      caption: caption
-    }
-    body[:alt_text] = alt_text if alt_text.present?
+      caption: caption,
+      location_id: location_id,
+      alt_text: alt_text
+    }.compact
 
     headers = {
       'Content-Type' => 'application/json',
