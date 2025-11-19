@@ -528,6 +528,7 @@ class Entry < ApplicationRecord
   end
 
   def threads_location_id
+    return nil if ENV['ADD_LOCATIONS_TO_THREADS'].blank?
     return "1218801332248375" if self.tags.include?("Grand Teton National Park")
     return "5688310114545744" if self.tags.include?("Yellowstone National Park")
     return "997476204279232" if self.tags.include?("Mount Rainier National Park")
@@ -540,6 +541,7 @@ class Entry < ApplicationRecord
   end
 
   def instagram_location_id
+    return nil if ENV['ADD_LOCATIONS_TO_INSTAGRAM'].blank?
     return "130250293656242" if self.tags.include?("Grand Teton National Park")
     return "151418891540140" if self.tags.include?("Yellowstone National Park")
     return "275854322484638" if self.tags.include?("Mount Rainier National Park")
