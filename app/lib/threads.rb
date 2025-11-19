@@ -33,14 +33,16 @@ class Threads
   # @param caption [String] the caption for the photo (max 500 characters).
   # @param alt_text [String] the alt text for the photo (for accessibility).
   # @param topic_tag [String, nil] the topic tag for the post.
+  # @param location_id [String, nil] the location ID for the post.
   # @return [String] the media container ID.
   # @raise [RuntimeError] if the post request fails.
-  def create_photo_container(photo_url:, caption: '', alt_text: nil, topic_tag: nil)
+  def create_photo_container(photo_url:, caption: '', alt_text: nil, topic_tag: nil, location_id: nil)
     create_media_container(
       image_url: photo_url,
       caption: caption,
       alt_text: alt_text,
-      topic_tag: topic_tag
+      topic_tag: topic_tag,
+      location_id: location_id
     )
   end
 
@@ -49,16 +51,16 @@ class Threads
   # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
   # @param caption [String] the main caption for the carousel post (max 500 characters).
   # @param topic_tag [String, nil] the topic tag for the post.
+  # @param location_id [String, nil] the location ID for the post.
   # @return [String] the carousel container ID.
   # @raise [RuntimeError] if the post request fails.
-  def create_carousel_container(photos:, caption: '', topic_tag: nil)
+  def create_carousel_container(photos:, caption: '', topic_tag: nil, location_id: nil)
     raise ArgumentError, "Carousel must contain 2-20 photos" if photos.empty? || photos.size > 20
 
     # Create media containers for each photo
     media_container_ids = photos.map do |photo|
       create_media_container(
         image_url: photo[:url],
-        caption: photo[:caption] || '',
         alt_text: photo[:alt_text],
         is_carousel_item: true
       )
@@ -67,9 +69,10 @@ class Threads
     body = {
       media_type: 'CAROUSEL',
       children: media_container_ids.join(','),
-      text: caption
-    }
-    body[:topic_tag] = topic_tag if topic_tag.present?
+      text: caption,
+      topic_tag: topic_tag,
+      location_id: location_id
+    }.compact
 
     response = HTTParty.post(
       "#{THREADS_API_BASE}/#{@threads_user_id}/threads",
@@ -142,17 +145,19 @@ class Threads
   # @param alt_text [String, nil] the alt text for the image (for accessibility).
   # @param topic_tag [String, nil] the topic tag for the post.
   # @param is_carousel_item [Boolean] whether this is a carousel item (default: false).
+  # @param location_id [String, nil] the location ID for the post.
   # @return [String] the media container ID.
   # @raise [RuntimeError] if the media container creation fails.
-  def create_media_container(image_url:, caption: '', alt_text: nil, topic_tag: nil, is_carousel_item: false)
+  def create_media_container(image_url:, caption: '', alt_text: nil, topic_tag: nil, is_carousel_item: false, location_id: nil)
     body = {
       media_type: 'IMAGE',
       image_url: image_url,
-      text: caption
-    }
-    body[:is_carousel_item] = true if is_carousel_item
-    body[:alt_text] = alt_text if alt_text.present?
-    body[:topic_tag] = topic_tag if topic_tag.present?
+      text: caption,
+      alt_text: alt_text,
+      topic_tag: topic_tag,
+      is_carousel_item: is_carousel_item,
+      location_id: location_id
+    }.compact
 
     response = HTTParty.post(
       "#{THREADS_API_BASE}/#{@threads_user_id}/threads",
