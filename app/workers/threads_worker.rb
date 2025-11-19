@@ -26,13 +26,15 @@ class ThreadsWorker < ApplicationWorker
         photo_url: photos.first[:url],
         caption: text,
         alt_text: photos.first[:alt_text],
-        topic_tag: entry.threads_topic.presence
+        topic_tag: entry.threads_topic.presence,
+        location_id: entry.threads_location_id
       )
     else
       threads.create_carousel_container(
         photos: photos,
         caption: text,
-        topic_tag: entry.threads_topic.presence
+        topic_tag: entry.threads_topic.presence,
+        location_id: entry.threads_location_id
       )
     end
 

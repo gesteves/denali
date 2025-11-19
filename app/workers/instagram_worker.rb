@@ -20,12 +20,14 @@ class InstagramWorker < ApplicationWorker
       instagram.create_photo_container(
         photo_url: photos.first[:url],
         caption: text,
-        alt_text: photos.first[:alt_text]
+        alt_text: photos.first[:alt_text],
+        location_id: entry.instagram_location_id
       )
     else
       instagram.create_carousel_container(
         photos: photos,
-        caption: text
+        caption: text,
+        location_id: entry.instagram_location_id
       )
     end
 
