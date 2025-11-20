@@ -300,6 +300,7 @@ class Photo < ApplicationRecord
   end
 
   def threads_location_id
+    return "805973970760744" if self.location == "National Elk Refuge"
     self.park&.threads_location_id&.presence
   end
 
