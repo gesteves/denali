@@ -1,0 +1,12 @@
+<h1 class="title is-size-5-mobile">Shareable on Threads</h1>
+<h2 class="subtitle is-size-6-mobile">Showing <%= pluralize_with_delimiter 'entry', @entries_count %></h2>
+<hr class="hr">
+<% if @entries.size == 0 %>
+  <article class="message is-info">
+    <div class="message-body">
+      You don't have any entries that can be shared on Threads. Why don't you <a href="<%= new_admin_entry_path %>">write one</a>?
+    </div>
+  </article>
+<% else %>
+  <%= render partial: 'entry', collection: @entries, cached: true %>
+<% end %>
