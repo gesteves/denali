@@ -17,6 +17,9 @@ Rails.application.routes.draw do
     get '/entries/tagged/:tag(/page/:page)'     => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
     get '/entries/review/alt-text(/page/:page)' => 'entries#review_alt_text', constraints: { page: /\d+/ }, :as => 'review_alt_text'
     get '/entries/bluesky'            => 'entries#shareable_on_bluesky', :as => 'shareable_on_bluesky'
+    get '/entries/mastodon'           => 'entries#shareable_on_mastodon', :as => 'shareable_on_mastodon'
+    get '/entries/threads'            => 'entries#shareable_on_threads', :as => 'shareable_on_threads'
+    get '/entries/instagram'          => 'entries#shareable_on_instagram', :as => 'shareable_on_instagram'
     get '/entries/search'             => 'entries#search', :as => :search
     get '/entries/edit'               => 'entries#edit'
     get '/entries/share'              => 'entries#share'
