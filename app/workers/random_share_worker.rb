@@ -1,18 +1,19 @@
 class RandomShareWorker < ApplicationWorker
-  def perform(tags, platforms, not_shared_in_months = 12)
+  def perform(tags, platforms, not_shared_in_months = 12, excluded_tags = [])
     return if ENV['SHARE_RANDOM_PHOTOS'].blank?
     tags = Array(tags)
     platforms = Array(platforms)
+    excluded_tags = Array(excluded_tags)
     not_shared_in_months = not_shared_in_months.to_i
     return if platforms.empty?
-    logger.info "[Social] Attempting to share a random entry#{tags.any? ? " with tags #{tags.join(', ')}" : ""} on #{platforms.join(', ')}."
+    logger.info "[Social] Attempting to share a random entry#{tags.any? ? " with tags #{tags.join(', ')}" : ""}#{excluded_tags.any? ? " excluding tags #{excluded_tags.join(', ')}" : ""} on #{platforms.join(', ')}."
 
     campaign = tags.empty? ? "random" : "random-#{tags.join(' ').parameterize}"
 
     platforms.each do |platform|
-      entry = find_eligible_entry(tags, platform, not_shared_in_months)
+      entry = find_eligible_entry(tags, excluded_tags, platform, not_shared_in_months)
       next if entry.blank?
-      logger.info "[Social] Sharing “#{entry.title}” (#{entry.permalink_url}) on #{platform}."
+      logger.info "[Social] Sharing \"#{entry.title}\" (#{entry.permalink_url}) on #{platform}."
       case platform
       when 'Bluesky'
         BlueskyWorker.perform_async(entry.id, entry.bluesky_caption(utm_campaign: campaign))
@@ -28,12 +29,13 @@ class RandomShareWorker < ApplicationWorker
 
   private
 
-  def find_eligible_entry(tags, platform, not_shared_in_months)
+  def find_eligible_entry(tags, excluded_tags, platform, not_shared_in_months)
     photoblog = Blog.first
     months_ago = not_shared_in_months.months.ago
 
     base_query = photoblog.entries.published
     base_query = base_query.tagged_with(tags) if tags.any?
+    base_query = base_query.tagged_with(excluded_tags, exclude: true) if excluded_tags.any?
 
     eligible_entries = case platform
     when 'Bluesky'
@@ -49,7 +51,7 @@ class RandomShareWorker < ApplicationWorker
       base_query.where(post_to_threads: true)
                .where("last_shared_on_threads_at IS NULL OR last_shared_on_threads_at < ?", months_ago)
     end
-    logger.info "[Social] There are #{eligible_entries.size} entries#{tags.any? ? " tagged with #{tags.join(', ')}" : ""} eligible to be shared on #{platform}."
+    logger.info "[Social] There are #{eligible_entries.size} entries#{tags.any? ? " tagged with #{tags.join(', ')}" : ""}#{excluded_tags.any? ? " excluding #{excluded_tags.join(', ')}" : ""} eligible to be shared on #{platform}."
     eligible_entries.sample
   end
 end
