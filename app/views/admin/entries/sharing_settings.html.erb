@@ -8,12 +8,10 @@
     </header>
     <section class="modal-card-body">
       <div class="content">
-        <div class="field is-horizontal">
-          <div class="field-label">
-            <%= form.label :post_to_bluesky, 'Share on Bluesky', class: 'label' %>
-          </div>
-          <div class="field-body">
+        <div class="columns is-multiline">
+          <div class="column is-half">
             <div class="field">
+              <label class="label is-size-6">Bluesky</label>
               <div class="control">
                 <div class="tabs is-toggle is-small" data-controller="radio-tab">
                   <ul>
@@ -33,14 +31,10 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="field is-horizontal">
-          <div class="field-label">
-            <%= form.label :post_to_mastodon, 'Share on Mastodon', class: 'label' %>
-          </div>
-          <div class="field-body">
+          <div class="column is-half">
             <div class="field">
+              <label class="label is-size-6">Mastodon</label>
               <div class="control">
                 <div class="tabs is-toggle is-small" data-controller="radio-tab">
                   <ul>
@@ -60,14 +54,10 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="field is-horizontal">
-          <div class="field-label">
-            <%= form.label :post_to_instagram, 'Share on Instagram', class: 'label' %>
-          </div>
-          <div class="field-body">
+          <div class="column is-half">
             <div class="field">
+              <label class="label is-size-6">Instagram</label>
               <div class="control">
                 <div class="tabs is-toggle is-small" data-controller="radio-tab">
                   <ul>
@@ -87,14 +77,10 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="field is-horizontal">
-          <div class="field-label">
-            <%= form.label :post_to_threads, 'Share on Threads', class: 'label' %>
-          </div>
-          <div class="field-body">
+          <div class="column is-half">
             <div class="field">
+              <label class="label is-size-6">Threads</label>
               <div class="control">
                 <div class="tabs is-toggle is-small" data-controller="radio-tab">
                   <ul>
