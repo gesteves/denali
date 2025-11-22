@@ -138,66 +138,6 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def shareable_on_bluesky_random
-    set_srcset
-    base_query = @photoblog.entries.published
-      .where(post_to_bluesky: true)
-      .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", 1.year.ago)
-    @entries_count = base_query.count
-    @entries = base_query.includes(photos: [:image_attachment, :image_blob])
-      .limit(10)
-      .reorder(Arel.sql('RANDOM()'))
-    @page_title = 'Shareable on Bluesky'
-    respond_to do |format|
-      format.html
-    end
-  end
-
-  def shareable_on_mastodon_random
-    set_srcset
-    base_query = @photoblog.entries.published
-      .where(post_to_mastodon: true)
-      .where("last_shared_on_mastodon_at IS NULL OR last_shared_on_mastodon_at < ?", 1.year.ago)
-    @entries_count = base_query.count
-    @entries = base_query.includes(photos: [:image_attachment, :image_blob])
-      .limit(10)
-      .reorder(Arel.sql('RANDOM()'))
-    @page_title = 'Shareable on Mastodon'
-    respond_to do |format|
-      format.html
-    end
-  end
-
-  def shareable_on_threads_random
-    set_srcset
-    base_query = @photoblog.entries.published
-      .where(post_to_threads: true)
-      .where("last_shared_on_threads_at IS NULL OR last_shared_on_threads_at < ?", 1.year.ago)
-    @entries_count = base_query.count
-    @entries = base_query.includes(photos: [:image_attachment, :image_blob])
-      .limit(10)
-      .reorder(Arel.sql('RANDOM()'))
-    @page_title = 'Shareable on Threads'
-    respond_to do |format|
-      format.html
-    end
-  end
-
-  def shareable_on_instagram_random
-    set_srcset
-    base_query = @photoblog.entries.published
-      .where(post_to_instagram: true)
-      .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", 1.year.ago)
-    @entries_count = base_query.count
-    @entries = base_query.includes(photos: [:image_attachment, :image_blob])
-      .limit(10)
-      .reorder(Arel.sql('RANDOM()'))
-    @page_title = 'Shareable on Instagram'
-    respond_to do |format|
-      format.html
-    end
-  end
-
   # GET /admin/entries/:id
   def show
     set_srcset
