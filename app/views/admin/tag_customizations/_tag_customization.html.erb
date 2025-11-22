@@ -15,8 +15,8 @@
   <% end %>
 </td>
 <td>
-  <% if tag_customization.threads_topic.present? %>
-    <span class="tag"><%= tag_customization.threads_topic %></span>
+  <% tag_customization.threads_topics_to_a.each do |topic| %>
+    <span class="tag"><%= topic %></span><br>
   <% end %>
 </td>
 <td>

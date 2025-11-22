@@ -52,13 +52,13 @@
 
 <div class="field is-horizontal">
   <div class="field-label is-normal">
-    <%= f.label :threads_topic, 'Topic', class: 'label' %>
+    <%= f.label :threads_topics, 'Topics', class: 'label' %>
   </div>
   <div class="field-body">
     <div class="field">
       <div class="control is-expanded">
-        <%= f.text_field :threads_topic, placeholder: 'Enter a topic for Threads…', class: 'input' %>
-        <p class="help">Entries will be shared on Threads with this topic.</p>
+        <%= f.text_area :threads_topics, placeholder: 'Enter topics for Threads, one per line…', class: 'textarea', rows: 10 %>
+        <p class="help">Entries will be shared on Threads using a random selection of these topics.</p>
       </div>
     </div>
   </div>

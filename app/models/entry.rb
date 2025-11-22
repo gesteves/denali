@@ -536,18 +536,18 @@ class Entry < ApplicationRecord
     style_topics = []
     more_topics = []
 
-    self.blog.tag_customizations.where.not(threads_topic: [nil, '']).each do |tag_customization|
-      topic = tag_customization.threads_topic
+    self.blog.tag_customizations.where.not(threads_topics: [nil, '']).each do |tag_customization|
+      topics_array = tag_customization.threads_topics_to_a
       if tag_customization.matches_tags? entry_tags
-        topics << topic
+        topics.concat(topics_array)
       elsif tag_customization.matches_tags? entry_locations
-        location_topics << topic
+        location_topics.concat(topics_array)
       elsif tag_customization.matches_tags? entry_equipment
-        equipment_topics << topic
+        equipment_topics.concat(topics_array)
       elsif tag_customization.matches_tags? entry_styles
-        style_topics << topic
+        style_topics.concat(topics_array)
       elsif tag_customization.matches_tags? combined_tags
-        more_topics << topic
+        more_topics.concat(topics_array)
       end
     end
 
