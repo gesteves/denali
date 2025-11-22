@@ -76,7 +76,7 @@ class Admin::EntriesController < AdminController
     base_query = @photoblog.entries.published
       .where(post_to_bluesky: true)
       .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", 1.year.ago)
-      .order(
+      .reorder(
         Arel.sql("CASE WHEN last_shared_on_bluesky_at IS NULL THEN 0 ELSE 1 END"), # Never shared first
         Arel.sql("CASE WHEN last_shared_on_bluesky_at IS NULL THEN published_at ELSE last_shared_on_bluesky_at END ASC") # Oldest/least recent first
       )
@@ -93,7 +93,7 @@ class Admin::EntriesController < AdminController
     base_query = @photoblog.entries.published
       .where(post_to_mastodon: true)
       .where("last_shared_on_mastodon_at IS NULL OR last_shared_on_mastodon_at < ?", 1.year.ago)
-      .order(
+      .reorder(
         Arel.sql("CASE WHEN last_shared_on_mastodon_at IS NULL THEN 0 ELSE 1 END"), # Never shared first
         Arel.sql("CASE WHEN last_shared_on_mastodon_at IS NULL THEN published_at ELSE last_shared_on_mastodon_at END ASC") # Oldest/least recent first
       )
@@ -110,7 +110,7 @@ class Admin::EntriesController < AdminController
     base_query = @photoblog.entries.published
       .where(post_to_threads: true)
       .where("last_shared_on_threads_at IS NULL OR last_shared_on_threads_at < ?", 1.year.ago)
-      .order(
+      .reorder(
         Arel.sql("CASE WHEN last_shared_on_threads_at IS NULL THEN 0 ELSE 1 END"), # Never shared first
         Arel.sql("CASE WHEN last_shared_on_threads_at IS NULL THEN published_at ELSE last_shared_on_threads_at END ASC") # Oldest/least recent first
       )
@@ -127,7 +127,7 @@ class Admin::EntriesController < AdminController
     base_query = @photoblog.entries.published
       .where(post_to_instagram: true)
       .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", 1.year.ago)
-      .order(
+      .reorder(
         Arel.sql("CASE WHEN last_shared_on_instagram_at IS NULL THEN 0 ELSE 1 END"), # Never shared first
         Arel.sql("CASE WHEN last_shared_on_instagram_at IS NULL THEN published_at ELSE last_shared_on_instagram_at END ASC") # Oldest/least recent first
       )
