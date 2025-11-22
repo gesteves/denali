@@ -457,7 +457,6 @@ class Entry < ApplicationRecord
     caption = []
     caption << "[#{self.plain_title}](#{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)})"
     caption << self.bluesky_text if self.bluesky_text.present?
-
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
@@ -484,12 +483,7 @@ class Entry < ApplicationRecord
     end
 
     caption = [self.plain_title]
-    if self.instagram_text.present?
-      caption << self.instagram_text
-    else
-      caption << self.plain_body
-    end
-
+    caption << self.instagram_text if self.instagram_text.present?
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
@@ -517,9 +511,7 @@ class Entry < ApplicationRecord
     meta << "🔗 #{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)}"
 
     caption = [self.plain_title]
-
     caption << self.threads_text if self.threads_text.present?
-
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
   end
