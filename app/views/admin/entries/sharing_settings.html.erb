@@ -8,106 +8,24 @@
     </header>
     <section class="modal-card-body">
       <div class="content">
-        <div class="columns is-multiline">
-          <div class="column is-half">
-            <div class="field is-grouped is-grouped-multiline">
-              <div class="control">
-                <span class="label is-size-6" style="margin-right: 0.75rem; margin-bottom: 0;">Bluesky</span>
-              </div>
-              <div class="control">
-                <div class="tabs is-toggle is-small" data-controller="radio-tab">
-                  <ul>
-                    <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
-                      <a>
-                        Yes
-                      </a>
-                    </li>
-                    <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
-                      <a>
-                        No
-                      </a>
-                    </li>
-                  </ul>
-                  <%= form.hidden_field :post_to_bluesky, value: @entry.post_to_bluesky.to_s, 'data-radio-tab-target': 'field' %>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="column is-half">
-            <div class="field is-grouped is-grouped-multiline">
-              <div class="control">
-                <span class="label is-size-6" style="margin-right: 0.75rem; margin-bottom: 0;">Mastodon</span>
-              </div>
-              <div class="control">
-                <div class="tabs is-toggle is-small" data-controller="radio-tab">
-                  <ul>
-                    <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
-                      <a>
-                        Yes
-                      </a>
-                    </li>
-                    <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
-                      <a>
-                        No
-                      </a>
-                    </li>
-                  </ul>
-                  <%= form.hidden_field :post_to_mastodon, value: @entry.post_to_mastodon.to_s, 'data-radio-tab-target': 'field' %>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="column is-half">
-            <div class="field is-grouped is-grouped-multiline">
-              <div class="control">
-                <span class="label is-size-6" style="margin-right: 0.75rem; margin-bottom: 0;">Instagram</span>
-              </div>
-              <div class="control">
-                <div class="tabs is-toggle is-small" data-controller="radio-tab">
-                  <ul>
-                    <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
-                      <a>
-                        Yes
-                      </a>
-                    </li>
-                    <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
-                      <a>
-                        No
-                      </a>
-                    </li>
-                  </ul>
-                  <%= form.hidden_field :post_to_instagram, value: @entry.post_to_instagram.to_s, 'data-radio-tab-target': 'field' %>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="column is-half">
-            <div class="field is-grouped is-grouped-multiline">
-              <div class="control">
-                <span class="label is-size-6" style="margin-right: 0.75rem; margin-bottom: 0;">Threads</span>
-              </div>
-              <div class="control">
-                <div class="tabs is-toggle is-small" data-controller="radio-tab">
-                  <ul>
-                    <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
-                      <a>
-                        Yes
-                      </a>
-                    </li>
-                    <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
-                      <a>
-                        No
-                      </a>
-                    </li>
-                  </ul>
-                  <%= form.hidden_field :post_to_threads, value: @entry.post_to_threads.to_s, 'data-radio-tab-target': 'field' %>
-                </div>
-              </div>
-            </div>
-          </div>
+        <p class="label">Automatically share on...</p>
+        <div class="checkboxes">
+          <label class="checkbox">
+            <%= form.check_box :post_to_bluesky %>
+            Bluesky
+          </label>
+          <label class="checkbox">
+            <%= form.check_box :post_to_mastodon %>
+            Mastodon
+          </label>
+          <label class="checkbox">
+            <%= form.check_box :post_to_instagram %>
+            Instagram
+          </label>
+          <label class="checkbox">
+            <%= form.check_box :post_to_threads %>
+            Threads
+          </label>
         </div>
       </div>
     </section>
