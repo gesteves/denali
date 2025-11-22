@@ -48,6 +48,23 @@
 </div>
 
 <hr class="hr">
+<h2 class="subtitle is-size-5-mobile">Threads</h2>
+
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :threads_topic, 'Topic', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_field :threads_topic, placeholder: 'Enter a topic for Threads…', class: 'input' %>
+        <p class="help">Entries will be shared on Threads with this topic.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="hr">
 <h2 class="subtitle is-size-5-mobile">Flickr</h2>
 <div class="field is-horizontal">
   <div class="field-label is-normal">

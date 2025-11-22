@@ -525,7 +525,34 @@ class Entry < ApplicationRecord
   end
 
   def threads_topic
-    "Photographers of Threads" if self.is_photo?
+    entry_tags = self.tags
+    entry_locations = self.locations
+    entry_equipment = self.equipment
+    entry_styles = self.styles
+    combined_tags = self.combined_tags
+    topics = []
+    location_topics = []
+    equipment_topics = []
+    style_topics = []
+    more_topics = []
+
+    self.blog.tag_customizations.where.not(threads_topic: [nil, '']).each do |tag_customization|
+      topic = tag_customization.threads_topic
+      if tag_customization.matches_tags? entry_tags
+        topics << topic
+      elsif tag_customization.matches_tags? entry_locations
+        location_topics << topic
+      elsif tag_customization.matches_tags? entry_equipment
+        equipment_topics << topic
+      elsif tag_customization.matches_tags? entry_styles
+        style_topics << topic
+      elsif tag_customization.matches_tags? combined_tags
+        more_topics << topic
+      end
+    end
+
+    all_topics = ['Photographers of Threads'] + more_topics + topics + location_topics + equipment_topics + style_topics
+    all_topics.uniq.sample.presence
   end
 
   def valid_threads_caption?

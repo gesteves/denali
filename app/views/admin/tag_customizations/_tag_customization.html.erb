@@ -15,6 +15,11 @@
   <% end %>
 </td>
 <td>
+  <% if tag_customization.threads_topic.present? %>
+    <span class="tag"><%= tag_customization.threads_topic %></span>
+  <% end %>
+</td>
+<td>
    <% tag_customization.flickr_groups_slugs.each do |group| %>
      <%= link_to group, "https://www.flickr.com/groups/#{group}", class: 'tag' %><br>
    <% end %>
