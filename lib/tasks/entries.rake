@@ -22,15 +22,16 @@ namespace :entries do
     end
 
     puts "DRY RUN!\n\n" if dry_run
-
-    puts "Found #{count} #{'entry'.pluralize(count)} tagged with '#{tag}' with at least one sharing setting enabled:\n\n"
+    puts "Entries:"
 
     entries.each do |entry|
       puts "  #{entry.title} - #{entry.permalink_url}"
     end
 
+    puts "\nFound #{count} #{'entry'.pluralize(count)} tagged with '#{tag}' with at least one sharing setting enabled."
+
     if !dry_run
-      puts "Updating #{count} #{'entry'.pluralize(count)}..."
+      puts "\nUpdating #{count} #{'entry'.pluralize(count)}..."
 
       updated_count = 0
       entries.find_each do |entry|
@@ -43,7 +44,7 @@ namespace :entries do
         updated_count += 1
       end
 
-      puts "Successfully updated #{updated_count} #{'entry'.pluralize(updated_count)}"
+      puts "\nSuccessfully updated #{updated_count} #{'entry'.pluralize(updated_count)}"
     end
   end
 end
