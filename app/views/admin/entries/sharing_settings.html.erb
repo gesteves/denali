@@ -1,0 +1,135 @@
+<div class="modal is-active" data-controller="modal">
+  <div class="modal-background" data-action="click->modal#close"></div>
+  <div class="modal-card">
+    <%= form_with url: sharing_settings_admin_entry_path(@entry.id), method: :post, local: false, html: { 'data-action': 'ajax:success->modal#close' } do |form| %>
+    <header class="modal-card-head">
+      <h1 class="modal-card-title">Sharing Settings</h1>
+      <button class="delete" data-action="click->modal#close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="content">
+        <%= form.fields_for :entry, @entry do |entry_form| %>
+        <div class="field is-horizontal">
+          <div class="field-label">
+            <%= entry_form.label :post_to_bluesky, 'Share on Bluesky', class: 'label' %>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <div class="tabs is-toggle is-small" data-controller="radio-tab">
+                  <ul>
+                    <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                      <a>
+                        Yes
+                      </a>
+                    </li>
+                    <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                      <a>
+                        No
+                      </a>
+                    </li>
+                  </ul>
+                  <%= entry_form.hidden_field :post_to_bluesky, value: @entry.post_to_bluesky.to_s, 'data-radio-tab-target': 'field' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label">
+            <%= entry_form.label :post_to_mastodon, 'Share on Mastodon', class: 'label' %>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <div class="tabs is-toggle is-small" data-controller="radio-tab">
+                  <ul>
+                    <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                      <a>
+                        Yes
+                      </a>
+                    </li>
+                    <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                      <a>
+                        No
+                      </a>
+                    </li>
+                  </ul>
+                  <%= entry_form.hidden_field :post_to_mastodon, value: @entry.post_to_mastodon.to_s, 'data-radio-tab-target': 'field' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label">
+            <%= entry_form.label :post_to_instagram, 'Share on Instagram', class: 'label' %>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <div class="tabs is-toggle is-small" data-controller="radio-tab">
+                  <ul>
+                    <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                      <a>
+                        Yes
+                      </a>
+                    </li>
+                    <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                      <a>
+                        No
+                      </a>
+                    </li>
+                  </ul>
+                  <%= entry_form.hidden_field :post_to_instagram, value: @entry.post_to_instagram.to_s, 'data-radio-tab-target': 'field' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field is-horizontal">
+          <div class="field-label">
+            <%= entry_form.label :post_to_threads, 'Share on Threads', class: 'label' %>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <div class="control">
+                <div class="tabs is-toggle is-small" data-controller="radio-tab">
+                  <ul>
+                    <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                      <a>
+                        Yes
+                      </a>
+                    </li>
+                    <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                      <a>
+                        No
+                      </a>
+                    </li>
+                  </ul>
+                  <%= entry_form.hidden_field :post_to_threads, value: @entry.post_to_threads.to_s, 'data-radio-tab-target': 'field' %>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% end %>
+      </div>
+    </section>
+    <footer class="modal-card-foot">
+      <div class="field is-grouped">
+        <p class="control">
+          <%= form.submit "Save", class: 'button is-success' %>
+        </p>
+        <p class="control">
+          <button class="button is-light" data-action="click->modal#close">Cancel</button>
+        </p>
+      </div>
+    </footer>
+    <% end %>
+  </div>
+</div>
+

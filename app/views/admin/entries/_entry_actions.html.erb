@@ -27,6 +27,7 @@
       <% if entry.is_photo? && entry.is_published? %>
         <%= link_to icon('Share on Threads', 'fa-brands fa-threads'), threads_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
+      <%= link_to icon('Sharing settings', 'fas fa-gear'), sharing_settings_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <hr class="dropdown-divider">
       <% if entry.is_photo? %>
         <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item' %>

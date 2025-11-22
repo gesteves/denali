@@ -45,6 +45,7 @@ Rails.application.routes.draw do
         get 'instagram'
         get 'instagram_story'
         get 'threads'
+        get 'sharing_settings'
         patch 'publish'
         patch 'queue'
         patch 'draft'
@@ -53,6 +54,7 @@ Rails.application.routes.draw do
         post 'instagram'
         post 'instagram_story'
         post 'threads'
+        post 'sharing_settings'
         post 'refresh_metadata'
         post 'generate_alt_text'
       end

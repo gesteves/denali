@@ -509,6 +509,41 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def sharing_settings
+    @entry = @photoblog.entries.find(params[:id])
+    if request.get?
+      respond_to do |format|
+        format.html {
+          if params[:modal]
+            render layout: nil
+          else
+            render
+          end
+        }
+      end
+    elsif request.post?
+      if @entry.update(sharing_settings_params)
+        @message = 'Sharing settings have been updated.'
+        respond_to do |format|
+          format.html {
+            flash[:success] = @message
+            redirect_to session[:redirect_url] || admin_entry_path(@entry)
+          }
+          format.js { render 'admin/shared/notify' }
+        end
+      else
+        @message = 'Sharing settings could not be updated.'
+        respond_to do |format|
+          format.html {
+            flash[:warning] = @message
+            redirect_to session[:redirect_url] || admin_entry_path(@entry)
+          }
+          format.js { render 'admin/shared/notify' }
+        end
+      end
+    end
+  end
+
   def refresh_metadata
     @entry.update_tags
     @entry.photos.each do |photo|
@@ -552,6 +587,10 @@ class Admin::EntriesController < AdminController
 
     def entry_params
       params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_instagram, :post_to_flickr_groups, :post_to_mastodon, :post_to_bluesky, :post_to_threads, :instagram_text, :threads_text, :bluesky_text, :mastodon_text, :show_location, :hide_from_search_engines, :content_warning, :is_sensitive, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location, :auto_generated_alt_text])
+    end
+
+    def sharing_settings_params
+      params.require(:entry).permit(:post_to_bluesky, :post_to_mastodon, :post_to_instagram, :post_to_threads)
     end
 
     def set_redirect_url
