@@ -332,7 +332,8 @@ class Entry < ApplicationRecord
   end
 
   def combined_tags
-    self.taggings.includes(:tag).map(&:tag).uniq.compact
+    taggings = association(:taggings).loaded? ? self.taggings : self.taggings.includes(:tag)
+    taggings.map(&:tag).uniq.compact
   end
 
   def combined_tag_list

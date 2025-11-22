@@ -10,7 +10,7 @@ class Admin::EntriesController < AdminController
   def index
     set_srcset
     @page = params[:page] || 1
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).published.page(@page)
+    @entries = @photoblog.entries.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).published.page(@page)
     @page_title = 'Published'
     respond_to do |format|
       format.html
@@ -22,7 +22,7 @@ class Admin::EntriesController < AdminController
     set_srcset
     @page = params[:page] || 1
     @count = ([@photoblog.publish_schedules_count.presence || 0, 1].max) * 7
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).queued.page(@page).per(@count)
+    @entries = @photoblog.entries.includes(:blog, blog: :publish_schedules, photos: [:image_attachment, :image_blob], taggings: :tag).queued.page(@page).per(@count)
     @page_title = 'Queued'
     respond_to do |format|
       format.html
@@ -33,7 +33,7 @@ class Admin::EntriesController < AdminController
   def drafts
     set_srcset
     @page = params[:page] || 1
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob], taggings: :tag).drafted.page(@page)
+    @entries = @photoblog.entries.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).drafted.page(@page)
     @page_title = 'Drafts'
     respond_to do |format|
       format.html
