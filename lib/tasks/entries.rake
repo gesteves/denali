@@ -10,20 +10,23 @@ namespace :entries do
       exit 1
     end
 
-    entries = Entry.tagged_with(tag)
+    entries = Entry.tagged_with(tag).where(
+      'post_to_mastodon = ? OR post_to_bluesky = ? OR post_to_instagram = ? OR post_to_threads = ?',
+      true, true, true, true
+    )
     count = entries.count
 
     if count == 0
-      puts "No entries found tagged with '#{tag}'"
+      puts "No entries found tagged with '#{tag}' that have at least one sharing setting enabled"
       return
     end
 
     puts "DRY RUN!\n\n" if dry_run
 
-    puts "Found #{count} #{'entry'.pluralize(count)} tagged with '#{tag}':\n\n"
+    puts "Found #{count} #{'entry'.pluralize(count)} tagged with '#{tag}' with at least one sharing setting enabled:\n\n"
 
     entries.each do |entry|
-      puts "  - #{entry.title} #{entry.permalink_url}\n\n"
+      puts "  #{entry.title} - #{entry.permalink_url}"
     end
 
     if !dry_run
