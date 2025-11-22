@@ -16,10 +16,14 @@ Rails.application.routes.draw do
   namespace :admin do
     get '/entries/tagged/:tag(/page/:page)'     => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
     get '/entries/review/alt-text(/page/:page)' => 'entries#review_alt_text', constraints: { page: /\d+/ }, :as => 'review_alt_text'
-    get '/entries/bluesky'            => 'entries#shareable_on_bluesky', :as => 'shareable_on_bluesky'
-    get '/entries/mastodon'           => 'entries#shareable_on_mastodon', :as => 'shareable_on_mastodon'
-    get '/entries/threads'            => 'entries#shareable_on_threads', :as => 'shareable_on_threads'
-    get '/entries/instagram'          => 'entries#shareable_on_instagram', :as => 'shareable_on_instagram'
+    get '/entries/bluesky(/page/:page)'            => 'entries#shareable_on_bluesky', constraints: { page: /\d+/ }, :as => 'shareable_on_bluesky'
+    get '/entries/mastodon(/page/:page)'           => 'entries#shareable_on_mastodon', constraints: { page: /\d+/ }, :as => 'shareable_on_mastodon'
+    get '/entries/threads(/page/:page)'            => 'entries#shareable_on_threads', constraints: { page: /\d+/ }, :as => 'shareable_on_threads'
+    get '/entries/instagram(/page/:page)'          => 'entries#shareable_on_instagram', constraints: { page: /\d+/ }, :as => 'shareable_on_instagram'
+    get '/entries/bluesky/random'                  => 'entries#shareable_on_bluesky_random', :as => 'shareable_on_bluesky_random'
+    get '/entries/mastodon/random'                 => 'entries#shareable_on_mastodon_random', :as => 'shareable_on_mastodon_random'
+    get '/entries/threads/random'                  => 'entries#shareable_on_threads_random', :as => 'shareable_on_threads_random'
+    get '/entries/instagram/random'                => 'entries#shareable_on_instagram_random', :as => 'shareable_on_instagram_random'
     get '/entries/search'             => 'entries#search', :as => :search
     get '/entries/edit'               => 'entries#edit'
     get '/entries/share'              => 'entries#share'

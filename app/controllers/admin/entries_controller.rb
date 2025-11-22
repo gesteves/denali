@@ -72,6 +72,58 @@ class Admin::EntriesController < AdminController
 
   def shareable_on_bluesky
     set_srcset
+    @page = params[:page] || 1
+    base_query = @photoblog.entries.published
+      .where(post_to_bluesky: true)
+      .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", 1.year.ago)
+    @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
+    @page_title = 'Shareable on Bluesky'
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def shareable_on_mastodon
+    set_srcset
+    @page = params[:page] || 1
+    base_query = @photoblog.entries.published
+      .where(post_to_mastodon: true)
+      .where("last_shared_on_mastodon_at IS NULL OR last_shared_on_mastodon_at < ?", 1.year.ago)
+    @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
+    @page_title = 'Shareable on Mastodon'
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def shareable_on_threads
+    set_srcset
+    @page = params[:page] || 1
+    base_query = @photoblog.entries.published
+      .where(post_to_threads: true)
+      .where("last_shared_on_threads_at IS NULL OR last_shared_on_threads_at < ?", 1.year.ago)
+    @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
+    @page_title = 'Shareable on Threads'
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def shareable_on_instagram
+    set_srcset
+    @page = params[:page] || 1
+    base_query = @photoblog.entries.published
+      .where(post_to_instagram: true)
+      .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", 1.year.ago)
+    @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
+    @page_title = 'Shareable on Instagram'
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def shareable_on_bluesky_random
+    set_srcset
     base_query = @photoblog.entries.published
       .where(post_to_bluesky: true)
       .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", 1.year.ago)
@@ -85,7 +137,7 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def shareable_on_mastodon
+  def shareable_on_mastodon_random
     set_srcset
     base_query = @photoblog.entries.published
       .where(post_to_mastodon: true)
@@ -100,7 +152,7 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def shareable_on_threads
+  def shareable_on_threads_random
     set_srcset
     base_query = @photoblog.entries.published
       .where(post_to_threads: true)
@@ -115,7 +167,7 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def shareable_on_instagram
+  def shareable_on_instagram_random
     set_srcset
     base_query = @photoblog.entries.published
       .where(post_to_instagram: true)
