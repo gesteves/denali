@@ -102,6 +102,7 @@ class EntriesController < ApplicationController
   end
 
   def show
+    ActiveRecord::Associations::Preloader.new(records: [@entry], associations: [:user, { taggings: :tag }]).call
     @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film, :park)
     @srcset = PHOTOS[:entry][:srcset]
     @src = PHOTOS[:entry][:src]
@@ -154,7 +155,7 @@ class EntriesController < ApplicationController
 
   def feed
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.photo_entries.page(1).per(@count)
+    @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.photo_entries.page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
     respond_to do |format|
       format.atom
@@ -165,7 +166,7 @@ class EntriesController < ApplicationController
 
   def tag_feed
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
+    @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     respond_to do |format|
       format.atom
