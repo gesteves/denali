@@ -59,9 +59,15 @@ export default class extends Controller {
     const nextPage = this.currentPageValue + 1;
     this.animateSpinner();
     // Handle query-parameter-based URLs (e.g., /search?q=term) vs path-based URLs (e.g., /entries)
-    const url = this.baseUrlValue.includes('?')
-      ? `${this.baseUrlValue}&page=${nextPage}.js`
-      : `${this.baseUrlValue}/page/${nextPage}.js`;
+    let url;
+    if (this.baseUrlValue.includes('?')) {
+      // For query-parameter URLs, insert .js before the query string
+      const [basePath, queryString] = this.baseUrlValue.split('?');
+      url = `${basePath}.js?${queryString}&page=${nextPage}`;
+    } else {
+      // For path-based URLs, use the existing format
+      url = `${this.baseUrlValue}/page/${nextPage}.js`;
+    }
     fetch(url)
       .then(fetchStatus)
       .then(fetchText)
