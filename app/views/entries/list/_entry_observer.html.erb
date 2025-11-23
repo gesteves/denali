@@ -1,7 +1,9 @@
 <% cache [entry, page_url] do %>
-  <li class="entry-list__item" data-controller="pagination" data-pagination-page-url="<%= page_url %>">
-    <div class="entry-list__wrapper" style="<%= css_aspect_ratio(entry.photos.first) %>">
-      <%= render partial: 'entries/list/entry_link', object: entry, as: :entry %>
-    </div>
-  </li>
+  <% if entry.present? && entry.photos.any? %>
+    <li class="entry-list__item" data-controller="pagination" data-pagination-page-url="<%= page_url %>">
+      <div class="entry-list__wrapper" style="<%= css_aspect_ratio(entry.photos.first) %>">
+        <%= render partial: 'entries/list/entry_link', object: entry, as: :entry %>
+      </div>
+    </li>
+  <% end %>
 <% end %>

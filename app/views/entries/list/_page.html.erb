@@ -1,4 +1,7 @@
 <% cache [entries, page_url] do %>
-  <%= render partial: 'entries/list/entry_observer', object: entries.shift, as: :entry, locals: { page_url: page_url }  %>
+  <% first_entry = entries.shift %>
+  <% if first_entry.present? %>
+    <%= render partial: 'entries/list/entry_observer', object: first_entry, as: :entry, locals: { page_url: page_url }  %>
+  <% end %>
   <%= render partial: 'entries/list/entry', collection: entries, as: :entry, cached: true  %>
 <% end %>
