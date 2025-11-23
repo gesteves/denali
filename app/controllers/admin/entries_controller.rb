@@ -138,6 +138,22 @@ class Admin::EntriesController < AdminController
     end
   end
 
+  def unshareable
+    set_srcset
+    @page = params[:page] || 1
+    base_query = @photoblog.entries.published
+      .where(post_to_bluesky: false)
+      .where(post_to_mastodon: false)
+      .where(post_to_threads: false)
+      .where(post_to_instagram: false)
+      .order(published_at: :desc)
+    @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
+    @page_title = 'Unshareable'
+    respond_to do |format|
+      format.html
+    end
+  end
+
   # GET /admin/entries/:id
   def show
     set_srcset

@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     get '/entries/mastodon(/page/:page)'           => 'entries#shareable_on_mastodon', constraints: { page: /\d+/ }, :as => 'shareable_on_mastodon'
     get '/entries/threads(/page/:page)'            => 'entries#shareable_on_threads', constraints: { page: /\d+/ }, :as => 'shareable_on_threads'
     get '/entries/instagram(/page/:page)'          => 'entries#shareable_on_instagram', constraints: { page: /\d+/ }, :as => 'shareable_on_instagram'
+    get '/entries/unshareable(/page/:page)'        => 'entries#unshareable', constraints: { page: /\d+/ }, :as => 'unshareable'
     get '/entries/search'             => 'entries#search', :as => :search
     get '/entries/edit'               => 'entries#edit'
     get '/entries/share'              => 'entries#share'
