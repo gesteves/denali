@@ -1,4 +1,5 @@
 import { Controller } from 'stimulus';
+import { trackEvent } from '../lib/analytics';
 
 export default class extends Controller {
   static targets = ['checkbox', 'label'];
@@ -112,6 +113,7 @@ export default class extends Controller {
       });
 
       this.sendSubscriptionToServer(subscription, 'POST');
+      trackEvent('push-notifications', { state: 'Subscribed' });
     } catch (error) {
       console.log(error);
     }
@@ -129,6 +131,7 @@ export default class extends Controller {
       if (subscription) {
         await subscription.unsubscribe();
         this.sendSubscriptionToServer(subscription, 'DELETE');
+        trackEvent('push-notifications', { state: 'Unsubscribed' });
       }
     } catch (error) {
       console.log(error);
@@ -171,5 +174,5 @@ export default class extends Controller {
       outputArray[i] = rawData.charCodeAt(i);
     }
     return outputArray;
-  }  
+  }
 }
