@@ -1,0 +1,17 @@
+<% cache [@photoblog, @query.parameterize, @page, @count] do %>
+  <% if @entries.present? %>
+    <%= render partial: 'entries/search/search_form' %>
+    <main data-controller="infinite-scroll" data-infinite-scroll-base-url-value="<%= @base_url %>" data-infinite-scroll-current-page-value="<%= @page %>">
+      <h2 id="search-results" class="sr-only"><%= @heading_title %></h2>
+      <ol class="entry-list" data-infinite-scroll-target="container" data-controller="grid" aria-busy="false" aria-labelledby="search-results">
+        <%= render partial: 'entries/list/page', object: @entries.to_a, as: :entries, locals: { page_url: @page_url }  %>
+      </ol>
+      <%= paginate @entries, target: 'infinite-scroll.paginator' %>
+      <%= render partial: 'partials/loading', locals: { target: 'infinite-scroll.spinner' } %>
+    </main>
+  <% else %>
+    <%= render partial: 'entries/search/search_form' %>
+    <h1 class="entry_list__heading">No results found for "<%= sanitize @query %>". Try searching for something else, like "film", "fujifilm", or "bears".</h1>
+  <% end %>
+<% end %>
+

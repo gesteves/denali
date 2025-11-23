@@ -1,9 +1,13 @@
 <% if @query.present? %>
   <% content_for :head do %>
-    <meta name="robots" content="noindex">
-    <title><%= @page_title %></title>
+    <%= render partial: 'entries/search/head' %>
   <% end %>
-  <%= render partial: 'entries/search/search_results' %>
+
+  <% content_for :inline_css do %>
+    <%= render partial: 'partials/inline_styles', locals: { stylesheet: 'entry_list.css' } %>
+  <% end %>
+
+  <%= render partial: 'entries/search/body' %>
 <% else %>
   <%= render partial: 'entries/search/search' %>
 <% end %>

@@ -3,7 +3,7 @@ import { Controller }             from 'stimulus';
 
 /**
  * Controls the infinite loading of entries on the
- * entries#index and entries#tagged views.
+ * entries#index, entries#tagged, and entries#search views.
  * @extends Controller
  */
 export default class extends Controller {
@@ -58,7 +58,11 @@ export default class extends Controller {
     }
     const nextPage = this.currentPageValue + 1;
     this.animateSpinner();
-    fetch(`${this.baseUrlValue}/page/${nextPage}.js`)
+    // Handle query-parameter-based URLs (e.g., /search?q=term) vs path-based URLs (e.g., /entries)
+    const url = this.baseUrlValue.includes('?')
+      ? `${this.baseUrlValue}&page=${nextPage}.js`
+      : `${this.baseUrlValue}/page/${nextPage}.js`;
+    fetch(url)
       .then(fetchStatus)
       .then(fetchText)
       .then(text => {

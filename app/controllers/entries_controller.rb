@@ -84,20 +84,28 @@ class EntriesController < ApplicationController
     @count = 48
     @query = params[:q]
     if @query.present?
-      @srcset = PHOTOS[:entry_list_square][:srcset]
-      @sizes = PHOTOS[:entry_list_square][:sizes].join(', ')
+      @srcset = PHOTOS[:entry_list][:srcset]
+      @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       results = Entry.published_search(@query, @page, @count)
       total_count = results.results.total
       records = results.records.includes(photos: [:image_attachment, :image_blob])
       @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
       @page_title = "Search results for “#{@query}” – #{@photoblog.name}"
       @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
+      @page_url = @page == 1 ? search_url(q: @query) : search_url(q: @query, page: @page)
+      @base_url = search_url(q: @query)
+      @heading_title = "Search Results"
+      respond_to do |format|
+        format.html
+        format.js { render status: @entries.empty? ? 404 : 200 }
+        format.all { redirect_to search_path, status: 301 }
+      end
     else
       @page_title = "Search – #{@photoblog.name}"
-    end
-    respond_to do |format|
-      format.html
-      format.all { redirect_to search_path, status: 301 }
+      respond_to do |format|
+        format.html
+        format.all { redirect_to search_path, status: 301 }
+      end
     end
   end
 
