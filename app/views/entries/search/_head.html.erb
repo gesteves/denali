@@ -3,7 +3,7 @@
   <meta name="description" content="<%= @photoblog.meta_description %>">
   <link rel="canonical" href="<%= @page == 1 ? search_url(q: @query) : search_url(q: @query, page: @page) %>">
   <meta name="robots" content="noindex">
-  <meta property="og:title" content="<%= "Search results for "#{@query}" – #{@photoblog.name}" %>">
+  <meta property="og:title" content="<%= "Search results for ”#{@query}” – #{@photoblog.name}" %>">
   <% if @entries.present? %>
     <meta property="og:image" content="<%= @entries.first.photos.first.url(width: 1200, height: 628) %>">
     <meta property="og:image:width" content="1200">
