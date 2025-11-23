@@ -1,5 +1,5 @@
 import { Controller } from 'stimulus';
-import { trackEvent } from '../lib/analytics';
+import { trackEvent } from '../../lib/analytics';
 
 export default class extends Controller {
   static targets = ['checkbox', 'label'];
