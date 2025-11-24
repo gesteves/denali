@@ -27,7 +27,7 @@ class Instagram
     end
   end
 
-  # Creates a media container for a single photo for the Instagram feed.
+  # Posts a single photo to the Instagram feed.
   #
   # @param photo_url [String] the URL of the photo to post.
   # @param caption [String] the caption for the photo.
@@ -35,13 +35,30 @@ class Instagram
   # @param location_id [String, nil] the location ID for the post.
   # @return [String] the media container ID.
   # @raise [RuntimeError] if the post request fails.
-  def create_photo_container(photo_url:, caption: '', alt_text: nil, location_id: nil)
-    create_media_container(
+  def post_photo(photo_url:, caption: '', alt_text: nil, location_id: nil)
+    media_container_id = create_media_container(
       image_url: photo_url,
       caption: caption,
       alt_text: alt_text,
       location_id: location_id
     )
+
+    wait_for_container_ready(media_container_id)
+    publish_container(media_container_id)
+  end
+
+  # Posts a carousel of photos to the Instagram feed.
+  #
+  # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
+  # @param caption [String] the main caption for the carousel post.
+  # @param location_id [String, nil] the location ID for the post.
+  # @return [String] the carousel container ID.
+  # @raise [RuntimeError] if the post request fails.
+  def post_carousel(photos:, caption: '', location_id: nil)
+    carousel_container_id = create_carousel_container(photos: photos, caption: caption, location_id: location_id)
+
+    wait_for_container_ready(carousel_container_id)
+    publish_container(carousel_container_id)
   end
 
   # Creates a media container for multiple photos for the Instagram feed as a carousel.
@@ -61,6 +78,11 @@ class Instagram
         caption: photo[:caption] || '',
         alt_text: photo[:alt_text]
       )
+    end
+
+    # Wait for all individual containers to be ready
+    media_container_ids.each do |container_id|
+      wait_for_container_ready(container_id)
     end
 
     body = {
@@ -87,6 +109,19 @@ class Instagram
       parsed_body = JSON.parse(response.body) rescue response.body
       raise "Failed to create carousel container: #{parsed_body}"
     end
+  end
+
+  # Posts a single photo to Instagram Stories.
+  # Stories don't support captions or alt text and require 9:16 aspect ratio (1080x1920 recommended).
+  #
+  # @param photo_url [String] the URL of the photo to post.
+  # @return [String] the story container ID.
+  # @raise [RuntimeError] if the post request fails.
+  def post_story(photo_url:)
+    story_container_id = create_story_container(photo_url: photo_url)
+
+    wait_for_container_ready(story_container_id)
+    publish_container(story_container_id)
   end
 
   # Creates a media container for a single photo for Instagram Stories.
@@ -176,6 +211,40 @@ class Instagram
   end
 
   private
+
+  # Waits for a container to be ready (status_code = FINISHED) with error handling and timeout.
+  # Polls up to 60 times (300 seconds / 5 minutes) with 5 second intervals.
+  #
+  # @param container_id [String] the media container ID to wait for.
+  # @raise [RuntimeError] if the container status_code is ERROR, EXPIRED, times out, or has unexpected status.
+  def wait_for_container_ready(container_id)
+    max_attempts = 60
+    attempt = 0
+
+    loop do
+      status = get_container_status(container_id)
+
+      case status
+      when 'FINISHED'
+        return
+      when 'PUBLISHED'
+        Rails.logger.info "Media container #{container_id} is already published"
+        return
+      when 'ERROR'
+        raise "Media container #{container_id} failed with ERROR status"
+      when 'EXPIRED'
+        raise "Media container #{container_id} expired before it could be published"
+      when 'IN_PROGRESS'
+        attempt += 1
+        if attempt >= max_attempts
+          raise "Media container #{container_id} is still in progress after #{max_attempts * 5} seconds"
+        end
+        sleep 5
+      else
+        raise "Media container #{container_id} has unexpected status: #{status}"
+      end
+    end
+  end
 
   # Creates a media container for a single image.
   #
