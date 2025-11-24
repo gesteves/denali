@@ -17,7 +17,7 @@ module AdminHelper
     css_class = date.blank? || date < 1.year.ago ? "tag is-success" : "tag is-danger"
 
     content_tag(:div, class: "tags has-addons") do
-      content_tag(:span, "Last shared", class: css_class) + content_tag(:span, text, class: "tag", title: date.strftime('%A, %B %-d, %Y at %-l:%M %p'))
+      content_tag(:span, "Last shared", class: css_class) + content_tag(:span, text, class: "tag", title: date.present? ? date.strftime('%A, %B %-d, %Y at %-l:%M %p') : 'Never shared')
     end
   end
 
