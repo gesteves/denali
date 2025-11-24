@@ -1,2 +1,0 @@
-class MediaContainerInProgressError < StandardError
-end
