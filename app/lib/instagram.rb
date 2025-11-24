@@ -61,6 +61,21 @@ class Instagram
     publish_container(carousel_container_id)
   end
 
+  # Posts a single photo to Instagram Stories.
+  # Stories don't support captions or alt text and require 9:16 aspect ratio (1080x1920 recommended).
+  #
+  # @param photo_url [String] the URL of the photo to post.
+  # @return [String] the story container ID.
+  # @raise [RuntimeError] if the post request fails.
+  def post_story(photo_url:)
+    story_container_id = create_story_container(photo_url: photo_url)
+
+    wait_for_container_ready(story_container_id)
+    publish_container(story_container_id)
+  end
+
+  private
+
   # Creates a media container for multiple photos for the Instagram feed as a carousel.
   #
   # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
@@ -109,19 +124,6 @@ class Instagram
       parsed_body = JSON.parse(response.body) rescue response.body
       raise "Failed to create carousel container: #{parsed_body}"
     end
-  end
-
-  # Posts a single photo to Instagram Stories.
-  # Stories don't support captions or alt text and require 9:16 aspect ratio (1080x1920 recommended).
-  #
-  # @param photo_url [String] the URL of the photo to post.
-  # @return [String] the story container ID.
-  # @raise [RuntimeError] if the post request fails.
-  def post_story(photo_url:)
-    story_container_id = create_story_container(photo_url: photo_url)
-
-    wait_for_container_ready(story_container_id)
-    publish_container(story_container_id)
   end
 
   # Creates a media container for a single photo for Instagram Stories.
@@ -209,8 +211,6 @@ class Instagram
       raise "Failed to publish media: #{parsed_body}"
     end
   end
-
-  private
 
   # Waits for a container to be ready (status_code = FINISHED) with error handling and timeout.
   # Polls up to 60 times (300 seconds / 5 minutes) with 5 second intervals.

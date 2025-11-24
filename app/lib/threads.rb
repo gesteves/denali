@@ -64,6 +64,8 @@ class Threads
     publish_container(carousel_container_id)
   end
 
+  private
+
   # Creates a media container for multiple photos for Threads as a carousel.
   #
   # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
@@ -135,7 +137,6 @@ class Threads
   end
 
   # Publishes a media container to Threads.
-  # Note: Threads API recommends waiting ~30 seconds after container creation before publishing.
   #
   # @param container_id [String] the media container ID to publish.
   # @return [Hash] the parsed response body if successful.
@@ -158,8 +159,6 @@ class Threads
       raise "Failed to publish media: #{parsed_body}"
     end
   end
-
-  private
 
   # Waits for a container to be ready (status = FINISHED) with error handling and timeout.
   # Polls up to 60 times (300 seconds / 5 minutes) with 5 second intervals.
