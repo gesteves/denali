@@ -38,7 +38,10 @@ class ThreadsWorker < ApplicationWorker
         location_id: location_id
       )
     end
-    entry.update!(last_shared_on_threads_at: Time.current)
+    entry.update!(
+      last_shared_on_threads_at: Time.current,
+      threads_shares_count: entry.threads_shares_count + 1
+    )
   end
 end
 

@@ -31,7 +31,10 @@ class InstagramWorker < ApplicationWorker
         location_id: location_id
       )
     end
-    entry.update!(last_shared_on_instagram_at: Time.current)
+    entry.update!(
+      last_shared_on_instagram_at: Time.current,
+      instagram_shares_count: entry.instagram_shares_count + 1
+    )
   end
 end
 

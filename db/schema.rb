@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_22_203109) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_25_000618) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -126,13 +126,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_22_203109) do
     t.boolean "post_to_threads", default: true
     t.text "threads_text"
     t.datetime "last_shared_on_threads_at"
+    t.integer "bluesky_shares_count", default: 0, null: false
+    t.integer "mastodon_shares_count", default: 0, null: false
+    t.integer "instagram_shares_count", default: 0, null: false
+    t.integer "threads_shares_count", default: 0, null: false
     t.index ["blog_id"], name: "index_entries_on_blog_id"
+    t.index ["bluesky_shares_count"], name: "index_entries_on_bluesky_shares_count"
     t.index ["hide_from_search_engines"], name: "index_entries_on_hide_from_search_engines"
+    t.index ["instagram_shares_count"], name: "index_entries_on_instagram_shares_count"
+    t.index ["mastodon_shares_count"], name: "index_entries_on_mastodon_shares_count"
     t.index ["photos_count"], name: "index_entries_on_photos_count"
     t.index ["preview_hash"], name: "index_entries_on_preview_hash"
     t.index ["published_at"], name: "index_entries_on_published_at"
     t.index ["show_location"], name: "index_entries_on_show_location"
     t.index ["status"], name: "index_entries_on_status"
+    t.index ["threads_shares_count"], name: "index_entries_on_threads_shares_count"
     t.index ["user_id"], name: "index_entries_on_user_id"
   end
 
