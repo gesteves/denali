@@ -36,4 +36,26 @@ module AdminHelper
   def last_shared_on_threads_tag(entry)
     last_shared_tag(entry.last_shared_on_threads_at)
   end
+
+  def shares_count_tag(count)
+    content_tag(:div, class: "tags has-addons") do
+      content_tag(:span, "Shared", class: "is-info") + content_tag(:span, pluralize(count, "time"), class: "tag")
+    end
+  end
+
+  def bluesky_shares_count_tag(entry)
+    shares_count_tag(entry.bluesky_shares_count)
+  end
+
+  def mastodon_shares_count_tag(entry)
+    shares_count_tag(entry.mastodon_shares_count)
+  end
+
+  def instagram_shares_count_tag(entry)
+    shares_count_tag(entry.instagram_shares_count)
+  end
+
+  def threads_shares_count_tag(entry)
+    shares_count_tag(entry.threads_shares_count)
+  end
 end
