@@ -77,8 +77,8 @@ class Admin::EntriesController < AdminController
       .where(post_to_bluesky: true)
       .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", 1.year.ago)
       .reorder(
-        Arel.sql("CASE WHEN last_shared_on_bluesky_at IS NULL THEN 0 ELSE 1 END"), # Never shared first
-        Arel.sql("CASE WHEN last_shared_on_bluesky_at IS NULL THEN published_at ELSE last_shared_on_bluesky_at END ASC") # Oldest/least recent first
+        :bluesky_shares_count,
+        Arel.sql("COALESCE(last_shared_on_bluesky_at, published_at) ASC")
       )
     @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
     @page_title = 'Shareable on Bluesky'
@@ -94,8 +94,8 @@ class Admin::EntriesController < AdminController
       .where(post_to_mastodon: true)
       .where("last_shared_on_mastodon_at IS NULL OR last_shared_on_mastodon_at < ?", 1.year.ago)
       .reorder(
-        Arel.sql("CASE WHEN last_shared_on_mastodon_at IS NULL THEN 0 ELSE 1 END"), # Never shared first
-        Arel.sql("CASE WHEN last_shared_on_mastodon_at IS NULL THEN published_at ELSE last_shared_on_mastodon_at END ASC") # Oldest/least recent first
+        :mastodon_shares_count,
+        Arel.sql("COALESCE(last_shared_on_mastodon_at, published_at) ASC")
       )
     @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
     @page_title = 'Shareable on Mastodon'
@@ -111,8 +111,8 @@ class Admin::EntriesController < AdminController
       .where(post_to_threads: true)
       .where("last_shared_on_threads_at IS NULL OR last_shared_on_threads_at < ?", 1.year.ago)
       .reorder(
-        Arel.sql("CASE WHEN last_shared_on_threads_at IS NULL THEN 0 ELSE 1 END"), # Never shared first
-        Arel.sql("CASE WHEN last_shared_on_threads_at IS NULL THEN published_at ELSE last_shared_on_threads_at END ASC") # Oldest/least recent first
+        :threads_shares_count,
+        Arel.sql("COALESCE(last_shared_on_threads_at, published_at) ASC")
       )
     @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
     @page_title = 'Shareable on Threads'
@@ -128,8 +128,8 @@ class Admin::EntriesController < AdminController
       .where(post_to_instagram: true)
       .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", 1.year.ago)
       .reorder(
-        Arel.sql("CASE WHEN last_shared_on_instagram_at IS NULL THEN 0 ELSE 1 END"), # Never shared first
-        Arel.sql("CASE WHEN last_shared_on_instagram_at IS NULL THEN published_at ELSE last_shared_on_instagram_at END ASC") # Oldest/least recent first
+        :instagram_shares_count,
+        Arel.sql("COALESCE(last_shared_on_instagram_at, published_at) ASC")
       )
     @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
     @page_title = 'Shareable on Instagram'
