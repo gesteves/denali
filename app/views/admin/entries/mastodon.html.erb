@@ -19,9 +19,11 @@
           <div class="control">
             <%= last_shared_on_mastodon_tag(@entry) %>
           </div>
-          <div class="control">
-            <%= mastodon_shares_count_tag(@entry) %>
-          </div>
+          <% if @entry.mastodon_shares_count > 0 %>
+            <div class="control">
+              <%= mastodon_shares_count_tag(@entry) %>
+            </div>
+          <% end %>
         </div>
       </div>
     </section>

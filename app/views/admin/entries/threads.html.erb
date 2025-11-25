@@ -19,9 +19,11 @@
           <div class="control">
             <%= last_shared_on_threads_tag(@entry) %>
           </div>
-          <div class="control">
-            <%= threads_shares_count_tag(@entry) %>
-          </div>
+          <% if @entry.threads_shares_count > 0 %>
+            <div class="control">
+              <%= threads_shares_count_tag(@entry) %>
+            </div>
+          <% end %>
         </div>
       </div>
     </section>
