@@ -60,7 +60,7 @@ class RandomShareWorker < ApplicationWorker
     # Select only entries with the minimum share count
     least_shared = eligible_entries.where(shares_column => min_shares)
 
-    logger.info "[Social] There are #{eligible_entries.count} entries#{tags.any? ? " tagged with #{tags.join(', ')}" : ""}#{excluded_tags.any? ? " excluding #{excluded_tags.join(', ')}" : ""} eligible to be shared on #{platform}."
+    logger.info "[Social] There are #{least_shared.count} entries#{tags.any? ? " tagged with #{tags.join(', ')}" : ""}#{excluded_tags.any? ? " excluding #{excluded_tags.join(', ')}" : ""} eligible to be shared on #{platform}."
     least_shared.sample
   end
 end
