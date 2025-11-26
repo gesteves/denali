@@ -39,18 +39,7 @@ module AdminHelper
 
   def shares_count_tag(count)
     content_tag(:div, class: "tags has-addons") do
-      share_text = case count
-                    when 0
-                      "Never"
-                    when 1
-                      "Once"
-                    when 2
-                      "Twice"
-                    else
-                      pluralize(count, "time")
-                    end
-      
-      content_tag(:span, "Shared", class: "tag is-info") + content_tag(:span, share_text, class: "tag")
+      content_tag(:span, "Shares", class: "tag is-info") + content_tag(:span, count, class: "tag")
     end
   end
 
