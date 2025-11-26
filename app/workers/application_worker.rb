@@ -8,8 +8,6 @@ class ApplicationWorker
     case exception
     when UnprocessedPhotoError
       count + 1
-    when MediaContainerInProgressError
-      5 * (count + 1)
     end
   end
 end
