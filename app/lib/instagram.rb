@@ -27,38 +27,36 @@ class Instagram
     end
   end
 
-  # Posts a single photo to the Instagram feed.
+  # Posts one or more photos to the Instagram feed.
+  # Automatically uses a single image post for one photo, or a carousel for multiple photos.
   #
-  # @param photo_url [String] the URL of the photo to post.
-  # @param caption [String] the caption for the photo.
-  # @param alt_text [String] the alt text for the photo (for accessibility).
+  # @param photos [Array<Hash>] an array of photo hashes, each with :url and :alt_text.
+  # @param caption [String] the caption for the post.
   # @param location_id [String, nil] the location ID for the post.
-  # @return [String] the media container ID.
+  # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
-  def post_photo(photo_url:, caption: '', alt_text: nil, location_id: nil)
-    media_container_id = create_media_container(
-      image_url: photo_url,
-      caption: caption,
-      alt_text: alt_text,
-      location_id: location_id
-    )
+  # @raise [ArgumentError] if photos array is empty or exceeds 10 photos.
+  def post(photos:, caption: '', location_id: nil)
+    raise ArgumentError, "Photos array cannot be empty" if photos.empty?
+    raise ArgumentError, "Photos array cannot exceed 10 photos" if photos.size > 10
+
+    if photos.size == 1
+      media_container_id = create_media_container(
+        image_url: photos.first[:url],
+        caption: caption,
+        alt_text: photos.first[:alt_text],
+        location_id: location_id
+      )
+    else
+      media_container_id = create_carousel_container(
+        photos: photos,
+        caption: caption,
+        location_id: location_id
+      )
+    end
 
     wait_for_container_ready(media_container_id)
     publish_container(media_container_id)
-  end
-
-  # Posts a carousel of photos to the Instagram feed.
-  #
-  # @param photos [Array<Hash>] an array of photo hashes, each with :url, :alt_text, and optionally :caption.
-  # @param caption [String] the main caption for the carousel post.
-  # @param location_id [String, nil] the location ID for the post.
-  # @return [String] the carousel container ID.
-  # @raise [RuntimeError] if the post request fails.
-  def post_carousel(photos:, caption: '', location_id: nil)
-    carousel_container_id = create_carousel_container(photos: photos, caption: caption, location_id: location_id)
-
-    wait_for_container_ready(carousel_container_id)
-    publish_container(carousel_container_id)
   end
 
   # Posts a single photo to Instagram Stories.

@@ -17,20 +17,11 @@ class InstagramWorker < ApplicationWorker
     photos = entry.photos.to_a[0..9].map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
     location_id = entry.photos.first.instagram_location_id
 
-    if photos.size == 1
-      instagram.post_photo(
-        photo_url: photos.first[:url],
-        caption: text,
-        alt_text: photos.first[:alt_text],
-        location_id: location_id
-      )
-    else
-      instagram.post_carousel(
-        photos: photos,
-        caption: text,
-        location_id: location_id
-      )
-    end
+    instagram.post(
+      photos: photos,
+      caption: text,
+      location_id: location_id
+    )
     entry.update!(
       last_shared_on_instagram_at: Time.current,
       instagram_shares_count: entry.instagram_shares_count + 1

@@ -20,24 +20,14 @@ class ThreadsWorker < ApplicationWorker
         alt_text: p.alt_text
       }
     end
-    location_id = entry.photos.first.threads_location_id
 
-    if photos.size == 1
-      threads.post_photo(
-        photo_url: photos.first[:url],
-        caption: text,
-        alt_text: photos.first[:alt_text],
-        topic_tag: entry.threads_topic.presence,
-        location_id: location_id
-      )
-    else
-      threads.post_carousel(
-        photos: photos,
-        caption: text,
-        topic_tag: entry.threads_topic.presence,
-        location_id: location_id
-      )
-    end
+    threads.post(
+      photos: photos,
+      caption: text,
+      topic_tag: entry.threads_topic.presence,
+      location_id: entry.photos.first.threads_location_id
+    )
+
     entry.update!(
       last_shared_on_threads_at: Time.current,
       threads_shares_count: entry.threads_shares_count + 1
