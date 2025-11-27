@@ -1,9 +1,9 @@
 <aside class="elsewhere" aria-labelledby="elsewhere">
   <% if @photoblog.elsewhere_heading.present? %>
-    <h2 class="elsewhere__heading" id="elsewhere"><%= @photoblog.elsewhere_heading %></h2>
+    <h2 class="elsewhere__heading" id="elsewhere"><%= @photoblog.elsewhere_heading.html_safe %></h2>
   <% end %>
   <% if @photoblog.elsewhere_cta.present? %>
-    <p class="elsewhere__cta"><%= @photoblog.elsewhere_cta %></p>
+    <p class="elsewhere__cta"><%= @photoblog.elsewhere_cta.html_safe %></p>
   <% end %>
   <ul class="elsewhere__list">
     <li class="elsewhere__item"><a href="<%= feed_url %>" title="Subscribe to Feed" aria-label="Subscribe to Feed"><%= inline_svg :feed, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Feed</span></a></li>
