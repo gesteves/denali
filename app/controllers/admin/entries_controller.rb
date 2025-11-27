@@ -73,14 +73,12 @@ class Admin::EntriesController < AdminController
   def shareable_on_bluesky
     set_srcset
     @page = params[:page] || 1
-    base_query = @photoblog.entries.published
-      .where(post_to_bluesky: true)
-      .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", 1.year.ago)
-      .reorder(
-        :bluesky_shares_count,
-        Arel.sql("COALESCE(last_shared_on_bluesky_at, published_at) ASC")
-      )
-    @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
+    @entries = @photoblog.entries.published
+      .shareable_on_bluesky
+      .with_minimum_bluesky_shares
+      .by_bluesky_share_priority
+      .includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag)
+      .page(@page)
     @page_title = 'Shareable on Bluesky'
     respond_to do |format|
       format.html
@@ -90,14 +88,12 @@ class Admin::EntriesController < AdminController
   def shareable_on_mastodon
     set_srcset
     @page = params[:page] || 1
-    base_query = @photoblog.entries.published
-      .where(post_to_mastodon: true)
-      .where("last_shared_on_mastodon_at IS NULL OR last_shared_on_mastodon_at < ?", 1.year.ago)
-      .reorder(
-        :mastodon_shares_count,
-        Arel.sql("COALESCE(last_shared_on_mastodon_at, published_at) ASC")
-      )
-    @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
+    @entries = @photoblog.entries.published
+      .shareable_on_mastodon
+      .with_minimum_mastodon_shares
+      .by_mastodon_share_priority
+      .includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag)
+      .page(@page)
     @page_title = 'Shareable on Mastodon'
     respond_to do |format|
       format.html
@@ -107,14 +103,12 @@ class Admin::EntriesController < AdminController
   def shareable_on_threads
     set_srcset
     @page = params[:page] || 1
-    base_query = @photoblog.entries.published
-      .where(post_to_threads: true)
-      .where("last_shared_on_threads_at IS NULL OR last_shared_on_threads_at < ?", 1.year.ago)
-      .reorder(
-        :threads_shares_count,
-        Arel.sql("COALESCE(last_shared_on_threads_at, published_at) ASC")
-      )
-    @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
+    @entries = @photoblog.entries.published
+      .shareable_on_threads
+      .with_minimum_threads_shares
+      .by_threads_share_priority
+      .includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag)
+      .page(@page)
     @page_title = 'Shareable on Threads'
     respond_to do |format|
       format.html
@@ -124,14 +118,12 @@ class Admin::EntriesController < AdminController
   def shareable_on_instagram
     set_srcset
     @page = params[:page] || 1
-    base_query = @photoblog.entries.published
-      .where(post_to_instagram: true)
-      .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", 1.year.ago)
-      .reorder(
-        :instagram_shares_count,
-        Arel.sql("COALESCE(last_shared_on_instagram_at, published_at) ASC")
-      )
-    @entries = base_query.includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag).page(@page)
+    @entries = @photoblog.entries.published
+      .shareable_on_instagram
+      .with_minimum_instagram_shares
+      .by_instagram_share_priority
+      .includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag)
+      .page(@page)
     @page_title = 'Shareable on Instagram'
     respond_to do |format|
       format.html

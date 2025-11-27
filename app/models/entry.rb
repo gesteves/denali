@@ -85,6 +85,59 @@ class Entry < ApplicationRecord
     where(status: 'published', hide_from_search_engines: false).order('published_at ASC')
   end
 
+  # Scopes for shareable entries on social platforms
+  def self.shareable_on_bluesky(not_shared_in: 1.year)
+    where(post_to_bluesky: true)
+      .where("last_shared_on_bluesky_at IS NULL OR last_shared_on_bluesky_at < ?", not_shared_in.ago)
+  end
+
+  def self.shareable_on_mastodon(not_shared_in: 1.year)
+    where(post_to_mastodon: true)
+      .where("last_shared_on_mastodon_at IS NULL OR last_shared_on_mastodon_at < ?", not_shared_in.ago)
+  end
+
+  def self.shareable_on_threads(not_shared_in: 1.year)
+    where(post_to_threads: true)
+      .where("last_shared_on_threads_at IS NULL OR last_shared_on_threads_at < ?", not_shared_in.ago)
+  end
+
+  def self.shareable_on_instagram(not_shared_in: 1.year)
+    where(post_to_instagram: true)
+      .where("last_shared_on_instagram_at IS NULL OR last_shared_on_instagram_at < ?", not_shared_in.ago)
+  end
+
+  def self.with_minimum_bluesky_shares
+    where(bluesky_shares_count: minimum(:bluesky_shares_count))
+  end
+
+  def self.with_minimum_mastodon_shares
+    where(mastodon_shares_count: minimum(:mastodon_shares_count))
+  end
+
+  def self.with_minimum_threads_shares
+    where(threads_shares_count: minimum(:threads_shares_count))
+  end
+
+  def self.with_minimum_instagram_shares
+    where(instagram_shares_count: minimum(:instagram_shares_count))
+  end
+
+  def self.by_bluesky_share_priority
+    reorder(:bluesky_shares_count, Arel.sql("COALESCE(last_shared_on_bluesky_at, published_at) ASC"))
+  end
+
+  def self.by_mastodon_share_priority
+    reorder(:mastodon_shares_count, Arel.sql("COALESCE(last_shared_on_mastodon_at, published_at) ASC"))
+  end
+
+  def self.by_threads_share_priority
+    reorder(:threads_shares_count, Arel.sql("COALESCE(last_shared_on_threads_at, published_at) ASC"))
+  end
+
+  def self.by_instagram_share_priority
+    reorder(:instagram_shares_count, Arel.sql("COALESCE(last_shared_on_instagram_at, published_at) ASC"))
+  end
+
   def self.full_search(query, page = 1, per_page = 10)
     search = {
       query: {

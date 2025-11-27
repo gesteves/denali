@@ -31,36 +31,26 @@ class RandomShareWorker < ApplicationWorker
 
   def find_eligible_entry(tags, excluded_tags, platform, not_shared_in_months)
     photoblog = Blog.first
-    months_ago = not_shared_in_months.months.ago
+    not_shared_in = not_shared_in_months.months
 
     base_query = photoblog.entries.published
     base_query = base_query.tagged_with(tags) if tags.any?
     base_query = base_query.tagged_with(excluded_tags, exclude: true) if excluded_tags.any?
 
-    shares_column, timestamp_column, post_flag = case platform
+    eligible_entries = case platform
     when 'Bluesky'
-      [:bluesky_shares_count, :last_shared_on_bluesky_at, :post_to_bluesky]
+      base_query.shareable_on_bluesky(not_shared_in: not_shared_in).with_minimum_bluesky_shares
     when 'Mastodon'
-      [:mastodon_shares_count, :last_shared_on_mastodon_at, :post_to_mastodon]
+      base_query.shareable_on_mastodon(not_shared_in: not_shared_in).with_minimum_mastodon_shares
     when 'Instagram'
-      [:instagram_shares_count, :last_shared_on_instagram_at, :post_to_instagram]
+      base_query.shareable_on_instagram(not_shared_in: not_shared_in).with_minimum_instagram_shares
     when 'Threads'
-      [:threads_shares_count, :last_shared_on_threads_at, :post_to_threads]
+      base_query.shareable_on_threads(not_shared_in: not_shared_in).with_minimum_threads_shares
     end
-
-    eligible_entries = base_query
-      .where(post_flag => true)
-      .where("#{timestamp_column} IS NULL OR #{timestamp_column} < ?", months_ago)
 
     return nil if eligible_entries.empty?
 
-    # Find the minimum share count among eligible entries
-    min_shares = eligible_entries.minimum(shares_column)
-
-    # Select only entries with the minimum share count
-    least_shared = eligible_entries.where(shares_column => min_shares)
-
-    logger.info "[Social] There are #{least_shared.count} entries#{tags.any? ? " tagged with #{tags.join(', ')}" : ""}#{excluded_tags.any? ? " excluding #{excluded_tags.join(', ')}" : ""} eligible to be shared on #{platform}."
-    least_shared.sample
+    logger.info "[Social] There are #{eligible_entries.count} entries#{tags.any? ? " tagged with #{tags.join(', ')}" : ""}#{excluded_tags.any? ? " excluding #{excluded_tags.join(', ')}" : ""} eligible to be shared on #{platform}."
+    eligible_entries.sample
   end
 end
