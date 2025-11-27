@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_11_25_000618) do
+ActiveRecord::Schema[8.0].define(version: 2025_11_27_190409) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,6 +68,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_11_25_000618) do
     t.boolean "hide_from_search_engines", default: false
     t.string "instagram"
     t.string "threads"
+    t.string "elsewhere_heading"
+    t.string "elsewhere_cta"
   end
 
   create_table "cameras", force: :cascade do |t|

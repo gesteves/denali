@@ -137,6 +137,8 @@ class Blog < ApplicationRecord
       analytics_head
       copyright
       email
+      elsewhere_cta
+      elsewhere_heading
       flickr
       instagram
       threads

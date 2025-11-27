@@ -454,6 +454,37 @@
   </div>
 
   <hr class="hr">
+  <h2 class="subtitle is-size-5-mobile">Customizable text</h2>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :elsewhere_heading, 'Follow heading', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :elsewhere_heading, placeholder: 'e.g. Break Up the Doomscrolling', class: 'input', autocomplete: 'off' %>
+        </div>
+        <p class="help">Heading text for the "follow me" section on posts.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :elsewhere_cta, 'Follow CTA', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :elsewhere_cta, placeholder: 'e.g. Add some photography to your favorite social feeds', class: 'input', autocomplete: 'off' %>
+        </div>
+        <p class="help">Call-to-action text displayed below the heading.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
 
   <div class="buttons is-right">
     <%= f.submit 'Save changes', class: 'button is-success' %>
