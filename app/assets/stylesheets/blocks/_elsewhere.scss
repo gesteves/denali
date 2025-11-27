@@ -12,6 +12,14 @@
   font-size: var(--font-size-subheading);
   font-weight: var(--font-weight-subheading);
   line-height: var(--line-height-subheading);
+  padding-bottom: 0.5rem;
+  text-align: center;
+}
+
+.elsewhere__cta {
+  color: var(--color-text-alt);
+  font-size: var(--font-size-text-alt);
+  line-height: var(--line-height-text-alt);
   padding-bottom: var(--gutter-horizontal);
   text-align: center;
 }
