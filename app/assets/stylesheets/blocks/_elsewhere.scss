@@ -14,6 +14,7 @@
   line-height: var(--line-height-subheading);
   padding-bottom: 0.5rem;
   text-align: center;
+  text-wrap: pretty;
 }
 
 .elsewhere__cta {
@@ -21,6 +22,7 @@
   font-size: var(--font-size-text-alt);
   line-height: var(--line-height-text-alt);
   text-align: center;
+  text-wrap: pretty;
 }
 
 .elsewhere__list {
