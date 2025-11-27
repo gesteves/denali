@@ -36,6 +36,7 @@
 
 .entry__headline {
   text-wrap: balance;
+  text-wrap: pretty;
 }
 
 .entry__headline--no-body {
@@ -46,6 +47,7 @@
   margin: 0 auto;
   max-width: $bp-m;
   padding: 0 var(--gutter-vertical) var(--gutter-horizontal);
+  text-wrap: pretty;
 }
 
 .entry__figure + .entry__body {
