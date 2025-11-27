@@ -12,17 +12,19 @@
   font-size: var(--font-size-subheading);
   font-weight: var(--font-weight-subheading);
   line-height: var(--line-height-subheading);
-  padding-bottom: 0.5rem;
   text-align: center;
-  text-wrap: pretty;
+  text-wrap: balance;
 }
 
 .elsewhere__cta {
   color: var(--color-text-alt);
   font-size: var(--font-size-text-alt);
+  font-style: italic;
   line-height: var(--line-height-text-alt);
+  margin: var(--margin-text);
+  margin-top: 0;
   text-align: center;
-  text-wrap: pretty;
+  text-wrap: balance;
 }
 
 .elsewhere__list {
