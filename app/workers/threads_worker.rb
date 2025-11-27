@@ -24,7 +24,7 @@ class ThreadsWorker < ApplicationWorker
     threads.post(
       photos: photos,
       caption: text,
-      topic_tag: entry.threads_topic.presence,
+      topic_tag: entry.threads_topic,
       location_id: entry.photos.first.threads_location_id
     )
 
