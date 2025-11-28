@@ -545,6 +545,13 @@ class Entry < ApplicationRecord
     instagram_caption.length <= 2200
   end
 
+  def instagram_hashtags
+    hashtags = combined_tag_list.map do |tag|
+      "##{tag.parameterize.split('-').map(&:capitalize).join}"
+    end
+    hashtags.take(30).join(' ').presence
+  end
+
   def threads_caption(utm_source: 'Threads', utm_medium: 'social', utm_campaign: nil)
     meta = []
 

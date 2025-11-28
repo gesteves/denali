@@ -72,6 +72,35 @@ class Instagram
     publish_container(story_container_id)
   end
 
+  # Posts a comment on an Instagram media object.
+  #
+  # @param media_id [String] the Instagram media ID to comment on.
+  # @param message [String] the text content of the comment.
+  # @return [Hash] the parsed response body containing the comment ID if successful.
+  # @raise [ArgumentError] if the message is blank.
+  # @raise [RuntimeError] if the comment request fails.
+  def post_comment(media_id:, message:)
+    raise ArgumentError, "Message cannot be blank" if message.blank?
+
+    headers = {
+      'Content-Type' => 'application/json',
+      'Authorization' => "Bearer #{access_token}"
+    }
+
+    response = HTTParty.post(
+      "#{INSTAGRAM_GRAPH_API_BASE}/#{media_id}/comments",
+      query: { message: message },
+      headers: headers
+    )
+
+    if response.success?
+      JSON.parse(response.body)
+    else
+      parsed_body = JSON.parse(response.body) rescue response.body
+      raise "Failed to post comment: #{parsed_body}"
+    end
+  end
+
   private
 
   # Creates a media container for multiple photos for the Instagram feed as a carousel.

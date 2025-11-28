@@ -17,7 +17,7 @@ class InstagramWorker < ApplicationWorker
     photos = entry.photos.to_a[0..9].map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
     location_id = entry.photos.first.instagram_location_id
 
-    instagram.post(
+    response = instagram.post(
       photos: photos,
       caption: text,
       location_id: location_id
@@ -26,6 +26,9 @@ class InstagramWorker < ApplicationWorker
       last_shared_on_instagram_at: Time.current,
       instagram_shares_count: entry.instagram_shares_count + 1
     )
+
+    instagram_post_id = response['id']
+    InstagramCommentWorker.perform_async(entry_id, instagram_post_id) if instagram_post_id.present?
   end
 end
 
