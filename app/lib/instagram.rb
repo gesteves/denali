@@ -211,7 +211,6 @@ class Instagram
   end
 
   # Waits for a container to be ready (status_code = FINISHED) with error handling and timeout.
-  # Polls up to 60 times (300 seconds / 5 minutes) with 5 second intervals.
   #
   # @param container_id [String] the media container ID to wait for.
   # @raise [RuntimeError] if the container status_code is ERROR, EXPIRED, times out, or has unexpected status.
@@ -220,6 +219,7 @@ class Instagram
     attempt = 0
 
     loop do
+      sleep 5
       status = get_container_status(container_id)
 
       case status
@@ -237,7 +237,6 @@ class Instagram
         if attempt >= max_attempts
           raise "Media container #{container_id} is still in progress after #{max_attempts * 5} seconds"
         end
-        sleep 5
       else
         raise "Media container #{container_id} has unexpected status: #{status}"
       end
