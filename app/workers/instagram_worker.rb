@@ -28,7 +28,7 @@ class InstagramWorker < ApplicationWorker
     )
 
     instagram_post_id = response['id']
-    InstagramCommentWorker.perform_async(entry_id, instagram_post_id) if instagram_post_id.present?
+    InstagramCommentWorker.perform_async(entry_id, instagram_post_id) if instagram_post_id.present? && entry.instagram_hashtags.present?
   end
 end
 
