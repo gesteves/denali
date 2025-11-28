@@ -16,13 +16,13 @@ class RandomShareWorker < ApplicationWorker
       logger.info "[Social] Sharing \"#{entry.title}\" (#{entry.permalink_url}) on #{platform}."
       case platform
       when 'Bluesky'
-        BlueskyWorker.perform_async(entry.id, entry.bluesky_caption(utm_campaign: campaign))
+        BlueskyWorker.perform_in(rand(1..60).minutes, entry.id, entry.bluesky_caption(utm_campaign: campaign))
       when 'Mastodon'
-        MastodonWorker.perform_async(entry.id, entry.mastodon_caption(utm_campaign: campaign))
+        MastodonWorker.perform_in(rand(1..60).minutes, entry.id, entry.mastodon_caption(utm_campaign: campaign))
       when 'Instagram'
-        InstagramWorker.perform_async(entry.id, entry.instagram_caption)
+        InstagramWorker.perform_in(rand(1..60).minutes, entry.id, entry.instagram_caption)
       when 'Threads'
-        ThreadsWorker.perform_async(entry.id, entry.threads_caption(utm_campaign: campaign))
+        ThreadsWorker.perform_in(rand(1..60).minutes, entry.id, entry.threads_caption(utm_campaign: campaign))
       end
     end
   end
