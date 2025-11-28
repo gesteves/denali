@@ -545,11 +545,35 @@ class Entry < ApplicationRecord
     instagram_caption.length <= 2200
   end
 
-  def instagram_hashtags
-    hashtags = combined_tag_list.map do |tag|
-      "##{tag.parameterize.split('-').map(&:capitalize).join}"
+  def instagram_hashtags(count = 30)
+    entry_tags = self.tags
+    entry_locations = self.locations
+    entry_equipment = self.equipment
+    entry_styles = self.styles
+    combined_tags = self.combined_tags
+    tags = []
+    location_tags = []
+    equipment_tags = []
+    style_tags = []
+    more_tags = []
+
+    self.blog.tag_customizations.where.not(instagram_hashtags: [nil, '']).each do |tag_customization|
+      hashtags = tag_customization.instagram_hashtags_to_a
+      if tag_customization.matches_tags? entry_tags
+        tags << hashtags
+      elsif tag_customization.matches_tags? entry_locations
+        location_tags << hashtags
+      elsif tag_customization.matches_tags? entry_equipment
+        equipment_tags << hashtags
+      elsif tag_customization.matches_tags? entry_styles
+        style_tags << hashtags
+      elsif tag_customization.matches_tags? combined_tags
+        more_tags << hashtags
+      end
     end
-    hashtags.take(30).join(' ').presence
+
+    instagram_tags = more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
+    instagram_tags.flatten.compact.uniq.take(count).shuffle.join(' ')
   end
 
   def threads_caption(utm_source: 'Threads', utm_medium: 'social', utm_campaign: nil)

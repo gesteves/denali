@@ -20,6 +20,11 @@ class TagCustomization < ApplicationRecord
     self.mastodon_hashtags.split(/\s+/)
   end
 
+  def instagram_hashtags_to_a
+    return [] if self.instagram_hashtags.blank?
+    self.instagram_hashtags.split(/\s+/)
+  end
+
   def flickr_groups_to_a
     return [] if self.flickr_groups.blank?
     self.flickr_groups.split(/\s+/)
@@ -67,6 +72,14 @@ class TagCustomization < ApplicationRecord
                                     &.uniq
                                     &.sort
                                     &.join("\n")
+
+    self.instagram_hashtags = self.instagram_hashtags
+                                    &.split(/\s+/)
+                                    &.map { |h| convert_to_hashtag(h) }
+                                    &.reject(&:blank?)
+                                    &.uniq
+                                    &.sort
+                                    &.join("\n")
   end
 
   def cleanup_flickr_groups
@@ -91,6 +104,7 @@ class TagCustomization < ApplicationRecord
     # Merge hashtags
     self.bluesky_hashtags = [self.bluesky_hashtags, existing.bluesky_hashtags].compact.join("\n")
     self.mastodon_hashtags = [self.mastodon_hashtags, existing.mastodon_hashtags].compact.join("\n")
+    self.instagram_hashtags = [self.instagram_hashtags, existing.instagram_hashtags].compact.join("\n")
     self.threads_topics = [self.threads_topics, existing.threads_topics].compact.join("\n")
     self.flickr_groups = [self.flickr_groups, existing.flickr_groups].compact.join("\n")
     self.flickr_albums = [self.flickr_albums, existing.flickr_albums].compact.join("\n")
@@ -99,7 +113,7 @@ class TagCustomization < ApplicationRecord
   end
 
   def fields_cannot_be_blank
-    if self.bluesky_hashtags.blank? && self.mastodon_hashtags.blank? && self.threads_topics.blank? && self.flickr_groups.blank? && self.flickr_albums.blank?
+    if self.bluesky_hashtags.blank? && self.mastodon_hashtags.blank? && self.instagram_hashtags.blank? && self.threads_topics.blank? && self.flickr_groups.blank? && self.flickr_albums.blank?
       errors.add(:base, 'You need to fill out at least one of the fields')
     end
   end

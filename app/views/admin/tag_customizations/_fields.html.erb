@@ -48,6 +48,23 @@
 </div>
 
 <hr class="hr">
+<h2 class="subtitle is-size-5-mobile">Instagram</h2>
+
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= f.label :instagram_hashtags, 'Hashtags', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= f.text_area :instagram_hashtags, placeholder: 'Enter hashtags, one per line…', class: 'textarea', rows: 10 %>
+        <p class="help">Entries shared on Instagram will include up to thirty of these hashtags in a comment.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="hr">
 <h2 class="subtitle is-size-5-mobile">Threads</h2>
 
 <div class="field is-horizontal">

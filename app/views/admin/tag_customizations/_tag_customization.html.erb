@@ -15,6 +15,11 @@
   <% end %>
 </td>
 <td>
+  <% tag_customization.instagram_hashtags_to_a.each do |hashtag| %>
+    <%= link_to hashtag, "https://www.instagram.com/explore/tags/#{hashtag.gsub('#', '')}/", class: 'tag' %><br>
+  <% end %>
+</td>
+<td>
   <% tag_customization.threads_topics_to_a.each do |topic| %>
     <span class="tag"><%= topic %></span><br>
   <% end %>
