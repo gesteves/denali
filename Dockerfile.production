@@ -1,17 +1,58 @@
-FROM ruby:3.4.7
+# Build stage
+FROM ruby:3.4.7 AS builder
 
-RUN apt-get update && apt-get install -y --no-install-recommends curl gnupg \
-    && curl -sL https://deb.nodesource.com/setup_16.x | bash - \
-    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /usr/share/keyrings/yarn-archive-keyring.gpg \
-    && echo "deb [signed-by=/usr/share/keyrings/yarn-archive-keyring.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
-    && apt-get update && apt-get install -y --no-install-recommends nodejs yarn
+# Install Node.js and Yarn
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    gnupg \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
+    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /etc/apt/keyrings/yarn.gpg \
+    && echo "deb [signed-by=/etc/apt/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends nodejs yarn \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN yarn global add gulp-cli
 
-RUN mkdir /app
 WORKDIR /app
-COPY . /app
-RUN bundle install
-RUN yarn install
-RUN bundle exec rake assets:precompile
-RUN bundle exec rake assets:clean
-RUN mkdir tmp/pids
+
+# Install gems first for caching
+COPY Gemfile Gemfile.lock ./
+RUN bundle config set --local deployment true \
+    && bundle config set --local without 'development test' \
+    && bundle install --jobs 4
+
+# Install JS dependencies
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile --production
+
+# Copy app and compile assets
+COPY . .
+RUN bundle exec rake assets:precompile \
+    && bundle exec rake assets:clean \
+    && rm -rf node_modules tmp/cache
+
+# Production stage
+FROM ruby:3.4.7-slim
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    libvips42 \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd -m -u 1000 rails
+
+WORKDIR /app
+
+# Copy built artifacts from builder
+COPY --from=builder /usr/local/bundle /usr/local/bundle
+COPY --from=builder /app /app
+
+RUN mkdir -p tmp/pids tmp/cache log \
+    && chown -R rails:rails tmp log
+
+USER rails
+
+EXPOSE 3000
+CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0"]

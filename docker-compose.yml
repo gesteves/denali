@@ -1,22 +1,49 @@
-version: '3.7'
 volumes:
   postgres-data:
   elasticsearch-data:
   bundle:
   node-modules:
+
+x-app: &app
+  build: .
+  volumes:
+    - .:/app
+    - bundle:/usr/local/bundle
+    - node-modules:/app/node_modules
+    - /app/tmp
+  env_file:
+    - .env
+  environment:
+    - REDIS_URL=redis://redis:6379/0
+    - ELASTICSEARCH_URL=elasticsearch
+    - ELASTICSEARCH_TIMEOUT=60
+
 services:
   postgres:
-    image: postgres:11.7
+    image: postgres:17
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
+      POSTGRES_HOST_AUTH_METHOD: trust
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   redis:
-    image: redis:6.2.11
+    image: redis:7-alpine
     ports:
       - '6379:6379'
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.14
+    platform: linux/amd64
     environment:
       - xpack.security.enabled=false
       - discovery.type=single-node
@@ -27,26 +54,25 @@ services:
       - '9300:9300'
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s http://localhost:9200/_cluster/health | grep -q 'green\\|yellow'"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+
   sidekiq:
-    build: .
+    <<: *app
     command: bundle exec sidekiq
     depends_on:
-      - postgres
-      - redis
-      - elasticsearch
-    environment:
-      - REDIS_URL=redis://redis:6379/0
-      - ELASTICSEARCH_URL=elasticsearch
-      - ELASTICSEARCH_TIMEOUT=60
-    env_file:
-      - '.env'
-    volumes:
-      - .:/app
-      - bundle:/usr/local/bundle
-      - node-modules:/app/node_modules
-      - /app/tmp
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+
   webpacker:
-    build: .
+    <<: *app
     command: ./bin/webpack-dev-server
     ports:
       - '3035:3035'
@@ -54,31 +80,21 @@ services:
       - NODE_ENV=development
       - RAILS_ENV=development
       - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
-    env_file:
-      - '.env'
-    volumes:
-      - .:/app
-      - bundle:/usr/local/bundle
-      - node-modules:/app/node_modules
-      - /app/tmp
+
   app:
-    build: .
+    <<: *app
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
-    volumes:
-      - .:/app
-      - bundle:/usr/local/bundle
-      - node-modules:/app/node_modules
-      - /app/tmp
     ports:
       - '3000:3000'
     depends_on:
-      - postgres
-      - redis
-      - elasticsearch
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
     environment:
       - WEBPACKER_DEV_SERVER_HOST=webpacker
       - ELASTICSEARCH_URL=elasticsearch
       - ELASTICSEARCH_TIMEOUT=60
       - REDIS_URL=redis://redis:6379/0
-    env_file:
-      - '.env'
