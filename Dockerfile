@@ -1,9 +1,10 @@
-FROM ruby:3.3.6
+FROM ruby:3.4.7
 
-RUN curl -sL https://deb.nodesource.com/setup_lts.x | bash -
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg -o /root/yarn-pubkey.gpg && apt-key add /root/yarn-pubkey.gpg
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install -y --no-install-recommends nodejs yarn
+RUN apt-get update && apt-get install -y --no-install-recommends curl gnupg \
+    && curl -sL https://deb.nodesource.com/setup_lts.x | bash - \
+    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /usr/share/keyrings/yarn-archive-keyring.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/yarn-archive-keyring.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list \
+    && apt-get update && apt-get install -y --no-install-recommends nodejs yarn
 RUN yarn global add gulp-cli
 
 RUN mkdir /app
