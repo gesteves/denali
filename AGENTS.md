@@ -13,6 +13,8 @@ Use `docker compose run` to execute commands:
 docker compose run app rails db:migrate
 docker compose run app rails console
 docker compose run app rails test
+docker compose run app rails generate model Foo name:string
+docker compose run app rails generate migration AddBarToFoo bar:integer
 
 # Bundle commands
 docker compose run app bundle install
