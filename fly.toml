@@ -5,7 +5,7 @@
 
 app = 'denali'
 primary_region = 'iad'
-console_command = '/rails/bin/rails console'
+console_command = '/app/bin/rails console'
 
 [build]
 
