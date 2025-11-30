@@ -33,7 +33,7 @@ Rails.application.configure do
   config.assets.version = '1'
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = ENV['DOMAIN'] if ENV['DOMAIN'].present?
+  config.action_controller.asset_host = ENV['ASSET_HOST'] if ENV['ASSET_HOST'].present?
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
