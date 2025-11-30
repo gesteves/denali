@@ -48,6 +48,18 @@ module.exports = function(api) {
         }
       ],
       [
+        '@babel/plugin-transform-private-methods',
+        {
+          loose: true
+        }
+      ],
+      [
+        '@babel/plugin-transform-private-property-in-object',
+        {
+          loose: true
+        }
+      ],
+      [
         '@babel/plugin-proposal-object-rest-spread',
         {
           useBuiltIns: true
