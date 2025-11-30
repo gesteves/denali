@@ -1,11 +1,11 @@
 # syntax=docker/dockerfile:1
+# Production Dockerfile for Fly.io
 
-# Base stage with Ruby and system dependencies
 FROM ruby:3.4.7-slim AS base
 
 WORKDIR /app
 
-# Install base packages needed for both build and runtime
+# Install base packages needed for runtime
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
     curl \
@@ -26,7 +26,6 @@ RUN mkdir -p /etc/apt/keyrings && \
     apt-get install -y --no-install-recommends nodejs yarn && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Set production environment
 ENV RAILS_ENV="production" \
     NODE_ENV="production" \
     BUNDLE_DEPLOYMENT="1" \
@@ -34,10 +33,9 @@ ENV RAILS_ENV="production" \
     BUNDLE_WITHOUT="development:test"
 
 
-# Build stage for compiling assets
+# Build stage
 FROM base AS build
 
-# Install packages needed to build gems and assets
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
     build-essential \
@@ -47,82 +45,46 @@ RUN apt-get update -qq && \
     pkg-config \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Install Gulp CLI for asset compilation
 RUN yarn global add gulp-cli
 
-# Install Ruby gems
 COPY Gemfile Gemfile.lock ./
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
-# Install Node.js dependencies
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile --production=false
 
-# Copy application code
 COPY . .
 
-# Precompile bootsnap code for faster boot times
 RUN bundle exec bootsnap precompile app/ lib/
 
 # Precompile assets
-# SECRET_KEY_BASE is required for asset compilation but the value doesn't matter
-RUN SECRET_KEY_BASE=dummy_key_for_asset_compilation bundle exec rails assets:precompile
+# NODE_OPTIONS needed for older webpack with Node 17+ / OpenSSL 3.0
+RUN SECRET_KEY_BASE=dummy_key_for_asset_compilation \
+    RAILS_SERVE_STATIC_FILES=true \
+    NODE_OPTIONS=--openssl-legacy-provider \
+    bundle exec rails webpacker:compile && \
+    SECRET_KEY_BASE=dummy_key_for_asset_compilation \
+    RAILS_SERVE_STATIC_FILES=true \
+    bundle exec rails assets:precompile
 
 
 # Production stage
-FROM base AS production
+FROM base
 
-# Install runtime packages only
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Copy built artifacts from build stage
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /app /app
 
-# Create non-root user for security
 RUN groupadd --system --gid 1000 rails && \
     useradd rails --uid 1000 --gid 1000 --create-home --shell /bin/bash && \
+    mkdir -p db log storage tmp && \
     chown -R rails:rails db log storage tmp
 USER rails:rails
 
-# Entrypoint prepares the database
 EXPOSE 3000
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
-
-
-# Development stage (used by docker-compose)
-FROM base AS development
-
-# Install packages needed to build gems
-RUN apt-get update -qq && \
-    apt-get install -y --no-install-recommends \
-    build-essential \
-    git \
-    libpq-dev \
-    libyaml-dev \
-    pkg-config \
-    && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
-
-# Reset environment for development
-ENV RAILS_ENV="development" \
-    NODE_ENV="development" \
-    BUNDLE_DEPLOYMENT="" \
-    BUNDLE_WITHOUT=""
-
-# Install Gulp CLI
-RUN yarn global add gulp-cli
-
-WORKDIR /app
-
-# Copy dependency files first for better layer caching
-COPY Gemfile Gemfile.lock ./
-RUN bundle install
-
-COPY package.json yarn.lock ./
-RUN yarn install
-
-COPY . .

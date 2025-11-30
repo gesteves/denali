@@ -7,7 +7,7 @@ volumes:
 x-app: &app
   build:
     context: .
-    target: development
+    dockerfile: Dockerfile.dev
   volumes:
     - .:/app
     - bundle:/usr/local/bundle
