@@ -55,11 +55,10 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
   config.lograge.enabled = ENV.fetch("LOGRAGE_ENABLED", "true") == "true"
 
-  # Use Redis for caching in production.
-  if ENV["REDIS_URL"].present?
+  # Use Redis for caching in production (separate from Sidekiq Redis).
+  if ENV["REDIS_CACHE_URL"].present?
     config.cache_store = :redis_cache_store, {
-      url: ENV["REDIS_URL"],
-      ssl_params: { verify_mode: OpenSSL::SSL::VERIFY_NONE },
+      url: ENV["REDIS_CACHE_URL"],
       error_handler: ->(method:, returning:, exception:) {
         Rails.logger.warn("Redis cache error: #{exception.class}: #{exception.message}")
       }

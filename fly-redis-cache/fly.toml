@@ -1,0 +1,29 @@
+# fly.toml app configuration file generated for denali-redis-cache on 2025-11-30T07:41:09-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'denali-redis-cache'
+primary_region = 'iad'
+
+[build]
+  image = 'redis:7-alpine'
+
+[processes]
+  app = "redis-server --save '' --appendonly no --maxmemory 64mb --maxmemory-policy allkeys-lru"
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 6379
+  auto_stop_machines = 'off'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [[services.ports]]
+    port = 6379
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
