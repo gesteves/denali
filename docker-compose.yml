@@ -17,7 +17,7 @@ x-app: &app
     - .env
   environment:
     - REDIS_URL=redis://redis:6379/0
-    - ELASTICSEARCH_URL=elasticsearch
+    - ELASTICSEARCH_URL=http://elasticsearch:9200
     - ELASTICSEARCH_TIMEOUT=60
 
 services:
@@ -44,13 +44,12 @@ services:
       retries: 5
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:5.6.14
-    platform: linux/amd64
+    image: elasticsearch:8.17.0
     environment:
-      - xpack.security.enabled=false
       - discovery.type=single-node
-      - cluster.name=docker-cluster
-      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.ml.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ports:
       - '9200:9200'
       - '9300:9300'
@@ -97,6 +96,6 @@ services:
         condition: service_healthy
     environment:
       - WEBPACKER_DEV_SERVER_HOST=webpacker
-      - ELASTICSEARCH_URL=elasticsearch
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
       - ELASTICSEARCH_TIMEOUT=60
       - REDIS_URL=redis://redis:6379/0
