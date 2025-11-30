@@ -151,19 +151,19 @@ GEM
     dockerfile-rails (1.7.10)
       rails (>= 3.0.0)
     drb (2.2.3)
-    elasticsearch (5.0.5)
-      elasticsearch-api (= 5.0.5)
-      elasticsearch-transport (= 5.0.5)
-    elasticsearch-api (5.0.5)
+    elastic-transport (8.4.1)
+      faraday (< 3)
       multi_json
-    elasticsearch-model (5.1.0)
+    elasticsearch (8.19.2)
+      elastic-transport (~> 8.3)
+      elasticsearch-api (= 8.19.2)
+    elasticsearch-api (8.19.2)
+      multi_json
+    elasticsearch-model (8.0.1)
       activesupport (> 3)
-      elasticsearch (~> 5)
+      elasticsearch (~> 8)
       hashie
-    elasticsearch-rails (5.1.0)
-    elasticsearch-transport (5.0.5)
-      faraday
-      multi_json
+    elasticsearch-rails (8.0.1)
     erb (6.0.0)
     erubi (1.13.1)
     et-orbi (1.2.11)
@@ -277,7 +277,7 @@ GEM
     mock_redis (0.53.0)
       redis (~> 5)
     msgpack (1.8.0)
-    multi_json (1.15.0)
+    multi_json (1.17.0)
     multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     multipart-post (2.4.1)
@@ -517,8 +517,8 @@ DEPENDENCIES
   bugsnag
   byebug
   dockerfile-rails (>= 1.7)
-  elasticsearch-model (~> 5.0)
-  elasticsearch-rails (~> 5.0)
+  elasticsearch-model (~> 8.0)
+  elasticsearch-rails (~> 8.0)
   exifr
   figaro
   flickraw!
