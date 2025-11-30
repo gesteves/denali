@@ -1,0 +1,25 @@
+# fly.toml app configuration file generated for denali-elasticsearch on 2025-11-30T12:34:15-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'denali-elasticsearch'
+primary_region = 'iad'
+
+[build]
+  image = 'elasticsearch:8.17.0'
+
+[env]
+  ES_JAVA_OPTS = '-Xms1g -Xmx1g'
+  'discovery.type' = 'single-node'
+  'xpack.ml.enabled' = 'false'
+  'xpack.security.enabled' = 'false'
+
+[[mounts]]
+  source = 'elasticsearch_data'
+  destination = '/usr/share/elasticsearch/data'
+
+[[vm]]
+  memory = '2048mb'
+  cpu_kind = 'shared'
+  cpus = 1

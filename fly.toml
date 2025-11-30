@@ -1,0 +1,49 @@
+# fly.toml app configuration file generated for denali on 2025-11-29T15:20:42-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'denali'
+primary_region = 'iad'
+console_command = '/app/bin/rails console'
+
+[build]
+
+[deploy]
+  release_command = 'bin/rails db:migrate'
+
+[env]
+  RAILS_ENV = 'production'
+  RAILS_LOG_TO_STDOUT = 'true'
+  RAILS_SERVE_STATIC_FILES = 'true'
+
+[processes]
+  web = 'bundle exec puma -C config/puma.rb'
+  worker = 'bundle exec sidekiq -t 25'
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['web']
+
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '10s'
+    method = 'GET'
+    path = '/healthcheck'
+
+[[vm]]
+  memory = '1024mb'
+  cpu_kind = 'shared'
+  cpus = 1
+  processes = ['web']
+
+[[vm]]
+  memory = '1024mb'
+  cpu_kind = 'shared'
+  cpus = 1
+  processes = ['worker']

@@ -62,13 +62,4 @@ module ApplicationHelper
     svg = render partial: "partials/blurhash", locals: { width: photo.width, height: photo.height, blurhash: photo.blurhash_data_uri }
     "data:image/svg+xml;charset=utf-8,#{u svg.gsub(/\s+/, ' ')}"
   end
-
-  def inline_asset(filename, opts = {})
-    opts.reverse_merge!(strip_charset: false)
-    if opts[:strip_charset]
-      Rails.application.assets[filename].to_s.gsub('@charset "UTF-8";', '').html_safe
-    else
-      Rails.application.assets[filename].to_s.html_safe
-    end
-  end
 end

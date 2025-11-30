@@ -33,7 +33,7 @@ Rails.application.configure do
   config.assets.version = '1'
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  config.action_controller.asset_host = ENV['DOMAIN'] if ENV['DOMAIN'].present?
+  config.action_controller.asset_host = ENV['ASSET_HOST'] if ENV['ASSET_HOST'].present?
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
@@ -55,18 +55,14 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
   config.lograge.enabled = ENV.fetch("LOGRAGE_ENABLED", "true") == "true"
 
-  # Use a different cache store in production.
-  if ENV["MEMCACHIER_SERVERS"].present?
-    config.cache_store = :mem_cache_store,
-      (ENV["MEMCACHIER_SERVERS"] || "").split(","),
-      {
-        username: ENV["MEMCACHIER_USERNAME"],
-        password: ENV["MEMCACHIER_PASSWORD"],
-        failover: true,
-        socket_timeout: 1.5,
-        socket_failure_delay: 0.2,
-        down_retry_delay: 60
+  # Use Redis for caching in production (separate from Sidekiq Redis).
+  if ENV["REDIS_CACHE_URL"].present?
+    config.cache_store = :redis_cache_store, {
+      url: ENV["REDIS_CACHE_URL"],
+      error_handler: ->(method:, returning:, exception:) {
+        Rails.logger.warn("Redis cache error: #{exception.class}: #{exception.message}")
       }
+    }
   end
 
   # Prevent health checks from clogging up the logs.

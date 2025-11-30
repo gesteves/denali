@@ -3,14 +3,12 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_action :set_release_version
   before_action :get_photoblog
   before_action :domain_redirect
   before_action :set_referrer_policy
-  before_action :is_repeat_visit?
   around_action :set_time_zone
 
-  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :is_repeat_visit?, :add_preconnect_link_header, :add_preload_link_header
+  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preconnect_link_header, :add_preload_link_header
 
   def default_url_options
     Rails.application.routes.default_url_options
@@ -41,10 +39,6 @@ class ApplicationController < ActionController::Base
 
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
-  end
-
-  def set_release_version
-    @release_version = ENV['HEROKU_RELEASE_VERSION']
   end
 
   def get_photoblog
@@ -81,10 +75,6 @@ class ApplicationController < ActionController::Base
 
   def set_time_zone(&block)
     Time.use_zone(@photoblog.time_zone, &block) if @photoblog.present?
-  end
-
-  def is_repeat_visit?
-    request.headers['X-Denali-Version'] == @release_version
   end
 
   def add_preload_link_header(url, opts = {})
