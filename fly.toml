@@ -37,6 +37,13 @@ console_command = '/rails/bin/rails console'
     path = '/healthcheck'
 
 [[vm]]
-  memory = '1gb'
+  memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
+  processes = ['web']
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
+  processes = ['worker']
