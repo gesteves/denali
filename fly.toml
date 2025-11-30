@@ -43,7 +43,7 @@ console_command = '/rails/bin/rails console'
   processes = ['web']
 
 [[vm]]
-  memory = '512mb'
+  memory = '1024mb'
   cpu_kind = 'shared'
   cpus = 1
   processes = ['worker']
