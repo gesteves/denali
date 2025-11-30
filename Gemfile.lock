@@ -147,7 +147,6 @@ GEM
     connection_pool (2.5.4)
     crass (1.0.6)
     csv (3.3.5)
-    dalli (3.2.8)
     date (3.5.0)
     dockerfile-rails (1.7.10)
       rails (>= 3.0.0)
@@ -517,7 +516,6 @@ DEPENDENCIES
   brakeman
   bugsnag
   byebug
-  dalli
   dockerfile-rails (>= 1.7)
   elasticsearch-model (~> 5.0)
   elasticsearch-rails (~> 5.0)
@@ -544,6 +542,7 @@ DEPENDENCIES
   rails (= 8.0.4)
   rails-controller-testing
   redcarpet
+  redis
   ruby-thumbor
   sanitize
   sass-rails (~> 6.0)

@@ -51,7 +51,7 @@ gem 'web-push'
 gem 'bugsnag'
 
 # Caching
-gem 'dalli'
+gem 'redis'
 
 # Background Jobs
 gem 'sidekiq'
