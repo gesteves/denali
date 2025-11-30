@@ -10,6 +10,7 @@ RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
     curl \
     gnupg \
+    imagemagick \
     libpq5 \
     libvips42 \
     libyaml-0-2 \
