@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_release_version
-    @release_version = ENV['HEROKU_RELEASE_VERSION']
+    @release_version = ENV['FLY_MACHINE_VERSION']
   end
 
   def get_photoblog

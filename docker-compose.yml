@@ -5,7 +5,9 @@ volumes:
   node-modules:
 
 x-app: &app
-  build: .
+  build:
+    context: .
+    target: development
   volumes:
     - .:/app
     - bundle:/usr/local/bundle

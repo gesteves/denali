@@ -10,6 +10,7 @@
 
 # Ignore .env
 .env
+.env.heroku
 
 # Ignore the default SQLite database.
 /db/*.sqlite3

@@ -90,3 +90,5 @@ group :test do
   gem 'mock_redis'
   gem 'rails-controller-testing'
 end
+
+gem "dockerfile-rails", ">= 1.7", :group => :development
