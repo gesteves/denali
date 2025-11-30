@@ -2,8 +2,4 @@
   <%= render partial: 'entries/list/head' %>
 <% end %>
 
-<% content_for :inline_css do %>
-  <%= render partial: 'partials/inline_styles', locals: { stylesheet: 'entry_list.css' } %>
-<% end %>
-
 <%= render partial: 'entries/list/body' %>
