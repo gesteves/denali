@@ -41,31 +41,87 @@ A simple, fast photoblogging CMS built in Ruby on Rails which features responsiv
 
 ## Common tasks
 
-### Deploying
+### Local development
+
+The app runs in Docker. All Rails, Ruby, and Node commands must be run inside the container.
+
+#### Starting the environment
+
+```bash
+docker compose up -d          # Start all services in background
+docker compose down           # Stop all services
+docker compose logs -f app    # Follow app logs
+```
+
+#### Building
+
+```bash
+docker compose build                    # Build/rebuild containers
+docker compose build --no-cache         # Full rebuild (no cache)
+docker compose up -d --build            # Rebuild and start
+```
+
+#### Running commands
+
+```bash
+docker compose run app rails console                  # Rails console
+docker compose run app rails db:migrate              # Run migrations
+docker compose run app rails test                    # Run tests
+docker compose run app rake <task>                   # Run rake tasks
+docker compose run app bundle install                # Install gems
+docker compose run app bash                          # Interactive shell
+```
+
+#### Troubleshooting
+
+```bash
+# Reset the database
+docker compose run app rails db:reset
+
+# Clear Rails cache
+docker compose run app rails tmp:clear
+
+# Recreate containers from scratch
+docker compose down
+docker compose up -d --build --force-recreate
+
+# Remove all volumes (deletes local database!)
+docker compose down -v
+
+# View container status
+docker compose ps
+
+# Check container resource usage
+docker compose top
+```
+
+### Production
+
+#### Deploying
 
 ```bash
 fly deploy
 ```
 
-### Viewing logs
+#### Viewing logs
 
 ```bash
 fly logs
 ```
 
-### SSH into the app
+#### SSH into the app
 
 ```bash
 fly ssh console
 ```
 
-### Rails console
+#### Rails console
 
 ```bash
 fly ssh console -C "/app/bin/rails console"
 ```
 
-### Running migrations
+#### Running migrations
 
 Migrations run automatically on deploy, but to run manually:
 
@@ -73,13 +129,13 @@ Migrations run automatically on deploy, but to run manually:
 fly ssh console -C "/app/bin/rails db:migrate"
 ```
 
-### Running rake tasks
+#### Running rake tasks
 
 ```bash
 fly ssh console -C "/app/bin/rake <task_name>"
 ```
 
-### Scaling
+#### Scaling
 
 ```bash
 # Check current scale
@@ -92,7 +148,7 @@ fly scale count web=2 worker=2
 fly scale vm shared-cpu-2x --memory 2048
 ```
 
-### Backing up the database
+#### Backing up the database
 
 The app uses Fly.io Managed Postgres, which includes automated backups. To create a manual backup:
 
