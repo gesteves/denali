@@ -87,7 +87,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: ":white_check_mark: Tests passed on `${{ github.ref_name }}` — ${{ github.repository }}"
+            text: ":white_check_mark: Tests passed on `${{ github.ref_name }}`"
 
       - name: Notify Slack (failure)
         if: needs.test.result == 'failure'
@@ -96,7 +96,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: ":x: Tests failed on `${{ github.ref_name }}` — ${{ github.repository }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            text: ":negative_squared_cross_mark: Tests failed on `${{ github.ref_name }}`\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
 
   deploy:
     name: Deploy app
@@ -126,7 +126,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: ":rocket: Deployed ${{ github.repository }} to Fly.io"
+            text: ":rocket: Deploy complete!"
 
       - name: Notify Slack (failure)
         if: needs.deploy.result == 'failure'
@@ -135,4 +135,4 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: ":fire: Deploy failed for ${{ github.repository }}\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            text: ":boom: Deploy failed!\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
