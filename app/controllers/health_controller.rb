@@ -18,7 +18,7 @@ class HealthController < ApplicationController
 
     # Check Cache Redis connection
     if ENV["REDIS_CACHE_URL"].present?
-      Rails.cache.redis.ping
+      Rails.cache.redis.with(&:ping)
     end
 
     render plain: "OK", status: :ok
