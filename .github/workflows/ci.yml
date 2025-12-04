@@ -80,6 +80,9 @@ jobs:
     if: always()
 
     steps:
+      - name: Set short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
+
       - name: Notify Slack (success)
         if: needs.test.result == 'success'
         uses: slackapi/slack-github-action@v2.1.1
@@ -92,11 +95,11 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: ":white_check_mark: *Tests passed* on `${{ github.ref_name }}`"
+                  text: "Tests *passed* on `${{ github.ref_name }}`"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> ${{ github.event.head_commit.message }}"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> ${{ github.event.head_commit.message }}"
               - type: "context"
                 elements:
                   - type: "mrkdwn"
@@ -114,11 +117,11 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: ":negative_squared_cross_mark: *Tests failed* on `${{ github.ref_name }}`"
+                  text: "Tests *failed* on `${{ github.ref_name }}`"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> ${{ github.event.head_commit.message }}"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> ${{ github.event.head_commit.message }}"
               - type: "context"
                 elements:
                   - type: "mrkdwn"
@@ -145,6 +148,9 @@ jobs:
     if: always() && needs.deploy.result != 'skipped'
 
     steps:
+      - name: Set short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
+
       - name: Notify Slack (success)
         if: needs.deploy.result == 'success'
         uses: slackapi/slack-github-action@v2.1.1
@@ -157,11 +163,11 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: ":rocket: *Deploy complete*"
+                  text: "Deploy *complete*"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> ${{ github.event.head_commit.message }}"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> ${{ github.event.head_commit.message }}"
               - type: "context"
                 elements:
                   - type: "mrkdwn"
@@ -179,11 +185,11 @@ jobs:
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: ":boom: *Deploy failed*"
+                  text: "Deploy *failed*"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> ${{ github.event.head_commit.message }}"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> ${{ github.event.head_commit.message }}"
               - type: "context"
                 elements:
                   - type: "mrkdwn"
