@@ -91,20 +91,11 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             text: "Tests passed on ${{ github.ref_name }}"
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "Tests *passed* on `${{ github.ref_name }}`"
-              - type: "divider"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> · ${{ github.event.head_commit.message }}"
-              - type: "context"
-                elements:
-                  - type: "mrkdwn"
-                    text: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+            attachments:
+              - color: "good"
+                fallback: "Tests passed on ${{ github.ref_name }}"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                footer: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
       - name: Notify Slack (failure)
         if: needs.test.result == 'failure'
@@ -114,20 +105,11 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             text: "Tests failed on ${{ github.ref_name }}"
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "Tests *failed* on `${{ github.ref_name }}`"
-              - type: "divider"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> · ${{ github.event.head_commit.message }}"
-              - type: "context"
-                elements:
-                  - type: "mrkdwn"
-                    text: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+            attachments:
+              - color: "danger"
+                fallback: "Tests failed on ${{ github.ref_name }}"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                footer: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
   deploy:
     name: Deploy app
@@ -161,20 +143,11 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             text: "Deploy complete"
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "Deploy *complete*"
-              - type: "divider"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> · ${{ github.event.head_commit.message }}"
-              - type: "context"
-                elements:
-                  - type: "mrkdwn"
-                    text: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+            attachments:
+              - color: "good"
+                fallback: "Deploy complete"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                footer: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
       - name: Notify Slack (failure)
         if: needs.deploy.result == 'failure'
@@ -184,17 +157,8 @@ jobs:
           webhook-type: incoming-webhook
           payload: |
             text: "Deploy failed"
-            blocks:
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "Deploy *failed*"
-              - type: "divider"
-              - type: "section"
-                text:
-                  type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> · ${{ github.event.head_commit.message }}"
-              - type: "context"
-                elements:
-                  - type: "mrkdwn"
-                    text: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+            attachments:
+              - color: "danger"
+                fallback: "Deploy failed"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                footer: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
