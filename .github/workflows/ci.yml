@@ -156,7 +156,7 @@ jobs:
         run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
 
       - name: Notify Slack (success)
-        if: needs.deploy.result == 'success'
+        if: needs.deploy.result == 'success' && needs.smoke-test.result == 'success'
         uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -169,7 +169,7 @@ jobs:
                 text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
-      - name: Notify Slack (failure)
+      - name: Notify Slack (deploy failed)
         if: needs.deploy.result == 'failure'
         uses: slackapi/slack-github-action@v2.1.1
         with:
@@ -180,5 +180,19 @@ jobs:
             attachments:
               - color: "danger"
                 fallback: "Deploy failed"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+
+      - name: Notify Slack (smoke test failed)
+        if: needs.deploy.result == 'success' && needs.smoke-test.result == 'failure'
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "Smoke test *failed* after deploy :fire:"
+            attachments:
+              - color: "danger"
+                fallback: "Smoke test failed after deploy"
                 text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
