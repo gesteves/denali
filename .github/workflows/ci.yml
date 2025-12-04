@@ -82,21 +82,47 @@ jobs:
     steps:
       - name: Notify Slack (success)
         if: needs.test.result == 'success'
-        uses: slackapi/slack-github-action@v2.0.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: ":white_check_mark: Tests passed on `${{ github.ref_name }}`"
+            text: "Tests passed on ${{ github.ref_name }}"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: ":white_check_mark: *Tests passed* on `${{ github.ref_name }}`"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> ${{ github.event.head_commit.message }}"
+              - type: "context"
+                elements:
+                  - type: "mrkdwn"
+                    text: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
       - name: Notify Slack (failure)
         if: needs.test.result == 'failure'
-        uses: slackapi/slack-github-action@v2.0.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: ":negative_squared_cross_mark: Tests failed on `${{ github.ref_name }}`\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            text: "Tests failed on ${{ github.ref_name }}"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: ":negative_squared_cross_mark: *Tests failed* on `${{ github.ref_name }}`"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> ${{ github.event.head_commit.message }}"
+              - type: "context"
+                elements:
+                  - type: "mrkdwn"
+                    text: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
   deploy:
     name: Deploy app
@@ -121,18 +147,44 @@ jobs:
     steps:
       - name: Notify Slack (success)
         if: needs.deploy.result == 'success'
-        uses: slackapi/slack-github-action@v2.0.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: ":rocket: Deploy complete!"
+            text: "Deploy complete"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: ":rocket: *Deploy complete*"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> ${{ github.event.head_commit.message }}"
+              - type: "context"
+                elements:
+                  - type: "mrkdwn"
+                    text: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
       - name: Notify Slack (failure)
         if: needs.deploy.result == 'failure'
-        uses: slackapi/slack-github-action@v2.0.0
+        uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: ":boom: Deploy failed!\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+            text: "Deploy failed"
+            blocks:
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: ":boom: *Deploy failed*"
+              - type: "section"
+                text:
+                  type: "mrkdwn"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> ${{ github.event.head_commit.message }}"
+              - type: "context"
+                elements:
+                  - type: "mrkdwn"
+                    text: "${{ github.repository }} · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
