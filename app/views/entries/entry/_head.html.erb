@@ -1,3 +1,4 @@
+<%# Template Dependency: entries/entry/schema %>
 <% cache [@photoblog, entry] do %>
   <% if !entry.is_published? || entry.hide_from_search_engines %>
     <meta name="robots" content="noindex">
