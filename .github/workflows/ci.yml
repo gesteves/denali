@@ -96,10 +96,11 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text: "Tests *passed* on `${{ github.ref_name }}`"
+              - type: "divider"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> – ${{ github.event.head_commit.message }}"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> · ${{ github.event.head_commit.message }}"
               - type: "context"
                 elements:
                   - type: "mrkdwn"
@@ -118,10 +119,11 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text: "Tests *failed* on `${{ github.ref_name }}`"
+              - type: "divider"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> – ${{ github.event.head_commit.message }}"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> · ${{ github.event.head_commit.message }}"
               - type: "context"
                 elements:
                   - type: "mrkdwn"
@@ -164,10 +166,11 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text: "Deploy *complete*"
+              - type: "divider"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> – ${{ github.event.head_commit.message }}"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> · ${{ github.event.head_commit.message }}"
               - type: "context"
                 elements:
                   - type: "mrkdwn"
@@ -186,10 +189,11 @@ jobs:
                 text:
                   type: "mrkdwn"
                   text: "Deploy *failed*"
+              - type: "divider"
               - type: "section"
                 text:
                   type: "mrkdwn"
-                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> – ${{ github.event.head_commit.message }}"
+                  text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> · ${{ github.event.head_commit.message }}"
               - type: "context"
                 elements:
                   - type: "mrkdwn"
