@@ -6,7 +6,12 @@ on:
   pull_request:
     branches: [release]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
+  PRODUCTION_URL: ${{ secrets.PRODUCTION_URL || 'https://denali.fly.dev' }}
   S3_REGION: ${{ secrets.S3_REGION }}
   S3_BUCKET: ${{ secrets.S3_BUCKET }}
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -125,10 +130,30 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
+  smoke-test:
+    name: Post-deploy smoke test
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: needs.deploy.result == 'success'
+
+    steps:
+      - name: Wait for deployment to stabilize
+        run: sleep 30
+
+      - name: Check health endpoint
+        run: |
+          curl --fail --retry 5 --retry-delay 10 --retry-all-errors \
+            https://denali.fly.dev/healthcheck
+
+      - name: Check homepage
+        run: |
+          curl --fail --retry 3 --retry-delay 5 \
+            ${{ env.PRODUCTION_URL }}/
+
   notify-deploy:
     name: Notify deploy result
     runs-on: ubuntu-latest
-    needs: deploy
+    needs: [deploy, smoke-test]
     if: always() && needs.deploy.result != 'skipped'
 
     steps:
@@ -142,10 +167,10 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Deploy *successful* :rocket:"
+            text: "Deployed *successfully* to <${{ env.PRODUCTION_URL }}|${{ env.PRODUCTION_URL }}> :rocket:"
             attachments:
               - color: "good"
-                fallback: "Deploy complete"
+                fallback: "Deployed successfully to ${{ env.PRODUCTION_URL }}"
                 text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
