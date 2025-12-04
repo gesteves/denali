@@ -90,7 +90,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Tests *passed* on `${{ github.ref_name }}` :white_check_mark:"
+            text: "Tests *passed* on `${{ github.ref_name }}`"
             attachments:
               - color: "good"
                 fallback: "Tests passed on ${{ github.ref_name }}"
@@ -104,7 +104,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Tests *failed* on `${{ github.ref_name }}` :negative_squared_cross_mark:"
+            text: "Tests *failed* on `${{ github.ref_name }}`"
             attachments:
               - color: "danger"
                 fallback: "Tests failed on ${{ github.ref_name }}"
@@ -156,7 +156,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Deploy *failed* :boom:"
+            text: "Deploy *failed* :warning:"
             attachments:
               - color: "danger"
                 fallback: "Deploy failed"
