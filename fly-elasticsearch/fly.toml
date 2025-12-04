@@ -20,6 +20,6 @@ primary_region = 'iad'
   destination = '/usr/share/elasticsearch/data'
 
 [[vm]]
-  memory = '2048mb'
   cpu_kind = 'shared'
   cpus = 1
+  memory = '2gb'
