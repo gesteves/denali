@@ -95,7 +95,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Tests *passed* on <${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|`${{ github.ref_name }}`>"
+            text: "Tests passed on <${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|`${{ github.ref_name }}`>"
             attachments:
               - color: "good"
                 fallback: "Tests passed on ${{ github.ref_name }}"
@@ -109,7 +109,7 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Tests *failed* on <${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|`${{ github.ref_name }}`>"
+            text: "Tests <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|failed> on <${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|`${{ github.ref_name }}`>"
             attachments:
               - color: "danger"
                 fallback: "Tests failed on ${{ github.ref_name }}"
@@ -124,6 +124,22 @@ jobs:
     if: github.ref == 'refs/heads/release' && github.event_name == 'push'
 
     steps:
+      - name: Set short SHA
+        run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
+
+      - name: Notify Slack (deploy starting)
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "Deploy <https://fly.io/apps/denali/monitoring|starting> :hourglass_flowing_sand:"
+            attachments:
+              - color: "#439FE0"
+                fallback: "Deploy starting: https://fly.io/apps/denali/monitoring"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+
       - uses: actions/checkout@v4
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
@@ -162,10 +178,10 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Deployed *successfully* to <${{ env.PRODUCTION_URL }}|${{ env.PRODUCTION_URL }}> :rocket:"
+            text: "Deploy <${{ env.PRODUCTION_URL }}|successful> :rocket:"
             attachments:
               - color: "good"
-                fallback: "Deployed successfully to ${{ env.PRODUCTION_URL }}"
+                fallback: "Deploy successful: ${{ env.PRODUCTION_URL }}"
                 text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
@@ -176,10 +192,10 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Deploy *failed* :warning:"
+            text: "Deploy <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|failed> :warning:"
             attachments:
               - color: "danger"
-                fallback: "Deploy failed"
+                fallback: "Deploy failed: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                 text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
@@ -190,9 +206,9 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Smoke test *failed* after deploy :fire:"
+            text: "Smoke test <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|failed> after deploy :fire:"
             attachments:
               - color: "danger"
-                fallback: "Smoke test failed after deploy"
+                fallback: "Smoke test failed after deploy: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
                 text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
