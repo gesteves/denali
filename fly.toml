@@ -26,7 +26,7 @@ console_command = '/app/bin/rails console'
   force_https = true
   auto_stop_machines = 'stop'
   auto_start_machines = true
-  min_machines_running = 1
+  min_machines_running = 0
   processes = ['web']
 
   [[http_service.checks]]
