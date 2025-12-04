@@ -40,7 +40,6 @@ gem 'httparty'
 gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
-gem 'rack-attack'
 gem "image_processing", "~> 1.14"
 gem 'rack-brotli'
 gem 'htmlentities'
