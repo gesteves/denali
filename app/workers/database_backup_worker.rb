@@ -11,12 +11,12 @@ class DatabaseBackupWorker < ApplicationWorker
     begin
       # Generate backup filename with timestamp
       timestamp = Time.current.strftime('%Y%m%d_%H%M%S')
-      filename = "denali_backup_#{timestamp}.sql.gz"
+      filename = "denali_backup_#{timestamp}.dump"
       filepath = Rails.root.join('tmp', filename)
 
-      # Create compressed database dump
+      # Create database dump
       logger.info "[Database Backup] Creating database dump: #{filename}"
-      system("pg_dump --no-acl --no-owner #{ENV['DATABASE_URL']} | gzip > #{filepath}")
+      system("pg_dump -Fc --no-acl --no-owner -f #{filepath} #{ENV['DATABASE_URL']}")
 
       unless $?.success?
         raise "Database dump failed with exit code #{$?.exitstatus}"
