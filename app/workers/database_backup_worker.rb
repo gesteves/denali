@@ -1,6 +1,8 @@
 require 'aws-sdk-s3'
 
 class DatabaseBackupWorker < ApplicationWorker
+  sidekiq_options retry_for: 1.day
+
   def perform
     return unless Rails.env.production?
     return if ENV['DB_BACKUP_BUCKET'].blank?
@@ -37,10 +39,6 @@ class DatabaseBackupWorker < ApplicationWorker
       end
 
       logger.info "[Database Backup] Backup uploaded successfully: #{filename}"
-    rescue => e
-      logger.error "[Database Backup] Backup failed: #{e.message}"
-      Bugsnag.notify(e) if defined?(Bugsnag)
-      raise
     ensure
       # Clean up local file
       if filepath && File.exist?(filepath)
