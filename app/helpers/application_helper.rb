@@ -12,7 +12,7 @@ module ApplicationHelper
       decoding: 'async'
     })
     tag.picture do
-      ENV['IMAGE_FORMATS']&.split(',')&.each do |format|
+      ['avif', 'webp'].each do |format|
         format_srcset = photo.srcset(srcset: srcset, opts: { aspect_ratio: aspect_ratio, format: format }.compact).last
         concat(tag.source(sizes: sizes, srcset: format_srcset, type: "image/#{format}"))
       end
