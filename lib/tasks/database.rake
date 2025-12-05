@@ -1,6 +1,13 @@
 require 'aws-sdk-s3'
 
 namespace :database do
+  desc 'Create a database backup and upload to S3'
+  task :backup => :environment do
+    puts "Starting database backup..."
+    DatabaseBackupWorker.perform_inline
+    puts "Backup complete!"
+  end
+
   desc 'Download the most recent database backup from S3'
   task :download_backup => :environment do
     if ENV['DB_BACKUP_BUCKET'].blank?

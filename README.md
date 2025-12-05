@@ -152,22 +152,35 @@ fly scale vm shared-cpu-2x --memory 2048
 
 #### Backing up the database
 
-The app uses Fly.io Managed Postgres, which includes automated backups. To create a manual backup:
+The app automatically creates daily database backups and uploads them to S3.
 
-1. Open a proxy to the Managed Postgres cluster:
+**Automated backups:**
+- Runs daily at 9:00 AM
+- Creates PostgreSQL custom format dumps (`.dump` files)
+- Uploads to the S3 bucket specified in `DB_BACKUP_BUCKET`
+- Only runs in production when `DB_BACKUP_BUCKET` and `DATABASE_URL` are set
+
+**Create a backup manually:**
 
 ```bash
-fly mpg proxy
+fly ssh console -C "rake database:backup"
 ```
 
-2. In another terminal, run `pg_dump` against the proxy:
+**Download the most recent backup:**
 
 ```bash
-pg_dump "postgres://fly-user:<password>@localhost:16380/fly-db" \
-  --no-owner \
-  --no-acl \
-  -F c \
-  -f denali_backup_$(date +%Y%m%d).dump
+# Locally (downloads to project root, requires DB_BACKUP_BUCKET and AWS credentials)
+docker compose run app rake database:download_backup
 ```
 
-Replace `<password>` with the `fly-user` password for the Managed Postgres cluster.
+**Restore a backup:**
+
+```bash
+pg_restore -d database_name denali_backup_YYYYMMDD_HHMMSS.dump
+```
+
+**Required environment variables:**
+- `DB_BACKUP_BUCKET` - S3 bucket name for backups
+- `DATABASE_URL` - Postgres connection string (automatically set by Fly.io)
+- `AWS_REGION` - AWS region (optional, defaults to `us-east-1`)
+- AWS credentials (via `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` or IAM roles)
