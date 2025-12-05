@@ -88,6 +88,18 @@ jobs:
       - name: Set short SHA
         run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
 
+      - name: Set branch or PR info
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "BRANCH_NAME=${{ github.head_ref }}" >> $GITHUB_ENV
+            echo "COMMIT_MESSAGE=${{ github.event.pull_request.head.commit.message }}" >> $GITHUB_ENV
+            echo "BRANCH_URL=${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}" >> $GITHUB_ENV
+          else
+            echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
+            echo "COMMIT_MESSAGE=${{ github.event.head_commit.message }}" >> $GITHUB_ENV
+            echo "BRANCH_URL=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}" >> $GITHUB_ENV
+          fi
+
       - name: Notify Slack (success)
         if: needs.test.result == 'success'
         uses: slackapi/slack-github-action@v2.1.1
@@ -95,11 +107,11 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Tests passed on <${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|`${{ github.ref_name }}`>"
+            text: "Tests passed on <${{ env.BRANCH_URL }}|`${{ env.BRANCH_NAME }}`>"
             attachments:
               - color: "good"
-                fallback: "Tests passed on ${{ github.ref_name }}"
-                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                fallback: "Tests passed on ${{ env.BRANCH_NAME }}"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
       - name: Notify Slack (failure)
@@ -109,11 +121,11 @@ jobs:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
           payload: |
-            text: "Tests <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|failed> on <${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}|`${{ github.ref_name }}`>"
+            text: "Tests <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|failed> on <${{ env.BRANCH_URL }}|`${{ env.BRANCH_NAME }}`>"
             attachments:
               - color: "danger"
-                fallback: "Tests failed on ${{ github.ref_name }}"
-                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                fallback: "Tests failed on ${{ env.BRANCH_NAME }}"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
   deploy:
