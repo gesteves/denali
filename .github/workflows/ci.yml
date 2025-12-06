@@ -101,7 +101,7 @@ jobs:
           fi
 
       - name: Notify Slack (success)
-        if: needs.test.result == 'success'
+        if: needs.test.result == 'success' && secrets.SLACK_WEBHOOK_URL != ''
         uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -115,7 +115,7 @@ jobs:
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
       - name: Notify Slack (failure)
-        if: needs.test.result == 'failure'
+        if: needs.test.result == 'failure' && secrets.SLACK_WEBHOOK_URL != ''
         uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -140,6 +140,7 @@ jobs:
         run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
 
       - name: Notify Slack (deploy starting)
+        if: secrets.SLACK_WEBHOOK_URL != ''
         uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -162,7 +163,7 @@ jobs:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
       - name: Notify Slack (deploy successful)
-        if: success()
+        if: success() && secrets.SLACK_WEBHOOK_URL != ''
         uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -176,7 +177,7 @@ jobs:
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
       - name: Notify Slack (deploy failed)
-        if: failure()
+        if: failure() && secrets.SLACK_WEBHOOK_URL != ''
         uses: slackapi/slack-github-action@v2.1.1
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
