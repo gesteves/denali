@@ -8,9 +8,6 @@ class SitemapsController < ApplicationController
     @entry_lastmods = @photoblog.entries.indexable_in_search_engines.pluck(:modified_at).each_slice(@items_per_sitemap).map { |page| page.max.strftime('%Y-%m-%dT%H:%M:%S%:z') }
     @entry_pages = [*1..total_entry_pages]
 
-    total_tag_pages = (ActsAsTaggableOn::Tag.all.count / @items_per_sitemap.to_f).ceil
-    @tag_pages = [*1..total_tag_pages]
-
     render format: 'xml'
   end
 
