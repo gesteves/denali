@@ -16,7 +16,11 @@ class SitemapsController < ApplicationController
 
   def entries
     @page = params[:page]
-    @entries = @photoblog.entries.indexable_in_search_engines.page(@page).per(@items_per_sitemap)
+    @entries = @photoblog.entries
+                         .indexable_in_search_engines
+                         .includes(photos: :image_attachment)
+                         .page(@page)
+                         .per(@items_per_sitemap)
     raise ActiveRecord::RecordNotFound if @entries.empty?
     render format: 'xml'
   end

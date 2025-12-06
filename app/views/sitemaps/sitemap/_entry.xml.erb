@@ -1,4 +1,12 @@
 <url>
   <loc><%= entry.permalink_url %></loc>
   <lastmod><%= entry.modified_at.strftime('%Y-%m-%dT%H:%M:%S%:z') %></lastmod>
+  <% entry.photos.each do |photo| %>
+  <image:image>
+    <image:loc><%= photo.sitemap_url %></image:loc>
+    <% if photo.alt_text.present? %>
+    <image:caption><![CDATA[<%= photo.alt_text %>]]></image:caption>
+    <% end %>
+  </image:image>
+  <% end %>
 </url>
