@@ -4,9 +4,9 @@ class SitemapsController < ApplicationController
   before_action :set_sitemap_item_count
 
   def index
-    total_entry_pages = (@photoblog.entries.indexable_in_search_engines.count / @items_per_sitemap.to_f).ceil
-    @entry_lastmods = @photoblog.entries.indexable_in_search_engines.pluck(:modified_at).each_slice(@items_per_sitemap).map { |page| page.max.strftime('%Y-%m-%dT%H:%M:%S%:z') }
-    @entry_pages = [*1..total_entry_pages]
+    modified_dates = @photoblog.entries.indexable_in_search_engines.pluck(:modified_at)
+    @entry_lastmods = modified_dates.each_slice(@items_per_sitemap).map { |page| page.max.strftime('%Y-%m-%dT%H:%M:%S%:z') }
+    @entry_pages = [*1..@entry_lastmods.length]
 
     render format: 'xml'
   end
@@ -19,13 +19,6 @@ class SitemapsController < ApplicationController
                          .page(@page)
                          .per(@items_per_sitemap)
     raise ActiveRecord::RecordNotFound if @entries.empty?
-    render format: 'xml'
-  end
-
-  def tags
-    @page = params[:page]
-    @tags = ActsAsTaggableOn::Tag.order('name asc').page(@page).per(@items_per_sitemap)
-    raise ActiveRecord::RecordNotFound if @tags.empty?
     render format: 'xml'
   end
 
