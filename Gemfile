@@ -53,6 +53,7 @@ gem 'bugsnag'
 gem 'redis'
 
 # Background Jobs
+gem 'connection_pool', '~> 2.5'  # Pin to 2.x until Sidekiq/redis-client support 3.0
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
 
