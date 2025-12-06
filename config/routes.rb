@@ -115,7 +115,6 @@ Rails.application.routes.draw do
   # Sitemaps
   get '/sitemap.:format'               => 'sitemaps#index', defaults: { format: 'xml' }, :as => :sitemap
   get '/sitemap/entries/:page.:format' => 'sitemaps#entries', constraints: { page: /\d+/ }, defaults: { format: 'xml' }, :as => :entries_sitemap
-  get '/sitemap/tags/:page.:format'    => 'sitemaps#tags', constraints: { page: /\d+/ }, defaults: { format: 'xml' }, :as => :tags_sitemap
 
   # GraphQL
   match '/graphql'                     => 'graphql#options', via: :options

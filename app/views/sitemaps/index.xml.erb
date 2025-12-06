@@ -7,11 +7,5 @@
       <lastmod><%= @entry_lastmods[page - 1] %></lastmod>
     </sitemap>
   <% end %>
-
-  <% @tag_pages.each do |page| %>
-    <sitemap>
-      <loc><%= tags_sitemap_url(page: page) %></loc>
-    </sitemap>
-  <% end %>
 </sitemapindex>
 <% end %>
