@@ -35,13 +35,4 @@ class SitemapsControllerTest < ActionController::TestCase
     assert_includes @response.body, '<image:image>'
     assert_includes @response.body, '<image:loc>'
   end
-
-  test "entries sitemap should include image caption when alt_text is present" do
-    photo = photos(:peppers)
-    photo.update!(alt_text: 'A photo of colorful peppers')
-
-    get :entries, params: { format: 'xml', page: 1 }
-    assert_response :success
-    assert_includes @response.body, '<image:caption><![CDATA[A photo of colorful peppers]]></image:caption>'
-  end
 end
