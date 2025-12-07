@@ -75,7 +75,12 @@ FROM base
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
     postgresql-client \
+    locales \
+    && echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen \
+    && locale-gen en_US.UTF-8 \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+ENV LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
 COPY --from=build /usr/local/bundle /usr/local/bundle
 COPY --from=build /app /app
