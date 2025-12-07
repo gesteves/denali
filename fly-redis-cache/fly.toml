@@ -10,7 +10,7 @@ primary_region = 'iad'
   image = 'redis:7-alpine'
 
 [processes]
-  app = "redis-server --save '' --appendonly no --maxmemory 64mb --maxmemory-policy allkeys-lru"
+  app = "redis-server --save '' --appendonly no --maxmemory 384mb --maxmemory-policy allkeys-lru"
 
 [[services]]
   protocol = 'tcp'
@@ -26,4 +26,4 @@ primary_region = 'iad'
 [[vm]]
   cpu_kind = 'shared'
   cpus = 1
-  memory = '256mb'
+  memory = '512mb'
