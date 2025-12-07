@@ -59,6 +59,9 @@ Rails.application.configure do
   if ENV["REDIS_CACHE_URL"].present?
     config.cache_store = :redis_cache_store, {
       url: ENV["REDIS_CACHE_URL"],
+      connect_timeout: 10,
+      read_timeout: 10,
+      write_timeout: 10,
       error_handler: ->(method:, returning:, exception:) {
         Rails.logger.warn("Redis cache error: #{exception.class}: #{exception.message}")
       }
