@@ -41,7 +41,7 @@
       args: ['Wildlife', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 12, 'Cherry Blossoms']
       description: "Shares a random wildlife photo on Bluesky, Mastodon, Instagram and Threads once a day."
     database_backup:
-      cron: '0 11 * * *'  # Run at 11:00 AM every day
+      cron: '0 0 * * *'  # Run at 12:00 AM every day
       class: DatabaseBackupWorker
       queue: low
       description: "Creates a database backup and uploads it to S3."
