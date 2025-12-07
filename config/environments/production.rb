@@ -63,7 +63,6 @@ Rails.application.configure do
       read_timeout: 20,
       write_timeout: 20,
       reconnect_attempts: 3,
-      pool_size: ENV.fetch("RAILS_MAX_THREADS", 5).to_i,
       error_handler: ->(method:, returning:, exception:) {
         Rails.logger.warn("Redis cache error: #{exception.class}: #{exception.message}")
       }
