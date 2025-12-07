@@ -9,7 +9,7 @@ namespace :database do
   end
 
   desc 'Download the most recent database backup from S3'
-  task :download_backup => :environment do
+  task :download => :environment do
     if ENV['DB_BACKUP_BUCKET'].blank?
       puts "Error: DB_BACKUP_BUCKET environment variable is not set"
       exit 1

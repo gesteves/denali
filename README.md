@@ -170,7 +170,7 @@ fly ssh console -C "rake database:backup"
 
 ```bash
 # Locally (downloads to project root, requires DB_BACKUP_BUCKET and AWS credentials)
-docker compose run app rake database:download_backup
+docker compose run app rake database:download
 ```
 
 **Restore a backup:**
