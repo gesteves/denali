@@ -10,7 +10,11 @@ primary_region = 'iad'
   image = 'redis:7-alpine'
 
 [processes]
-  app = "redis-server --save '' --appendonly no --maxmemory 384mb --maxmemory-policy allkeys-lru"
+  app = "redis-server --dir /data --save 60 1 --appendonly no --maxmemory 384mb --maxmemory-policy allkeys-lru"
+
+[mounts]
+  source = "redis_data"
+  destination = "/data"
 
 [[services]]
   protocol = 'tcp'
