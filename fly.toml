@@ -32,7 +32,7 @@ console_command = '/app/bin/rails console'
   [[http_service.checks]]
     interval = '60s'
     timeout = '5s'
-    grace_period = '10s'
+    grace_period = '30s'
     method = 'GET'
     path = '/healthcheck'
 
