@@ -21,7 +21,7 @@ primary_region = 'iad'
 
   [http_service.concurrency]
     type = 'requests'
-    soft_limit = 25
+    soft_limit = 50
 
   [[http_service.checks]]
     interval = '60s'
