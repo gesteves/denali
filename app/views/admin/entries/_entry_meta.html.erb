@@ -1,3 +1,4 @@
+<% photos = entry.photos.to_a %>
 <div class="field is-grouped is-grouped-multiline">
   <div class="control">
     <div class="tags has-addons">
@@ -26,7 +27,7 @@
     </div>
   <% end %>
 
-  <% if entry.show_location? && entry.photos.any? { |p| !p.has_location? } %>
+  <% if entry.show_location? && photos.any? { |p| !p.has_location? } %>
     <div class="control">
       <div class="tags has-addons">
         <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
@@ -35,7 +36,7 @@
     </div>
   <% end %>
 
-  <% if entry.photos.any? { |p| p.alt_text.blank? } %>
+  <% if photos.any? { |p| p.alt_text.blank? } %>
     <div class="control">
       <div class="tags has-addons">
         <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
@@ -44,7 +45,7 @@
     </div>
   <% end %>
 
-  <% if entry.photos.any? { |p| p.auto_generated_alt_text? } %>
+  <% if photos.any? { |p| p.auto_generated_alt_text? } %>
     <div class="control">
       <div class="tags has-addons">
         <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
@@ -53,7 +54,7 @@
     </div>
   <% end %>
 
-  <% if entry.photos.any? { |p| p.focal_x.blank? || p.focal_y.blank? } %>
+  <% if photos.any? { |p| p.focal_x.blank? || p.focal_y.blank? } %>
     <div class="control">
       <div class="tags has-addons">
         <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
