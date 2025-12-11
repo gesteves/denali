@@ -21,6 +21,7 @@ class Photo < ApplicationRecord
   after_commit :update_entry_location_tags, if: :changed_location?
   after_commit :update_entry_style_tags, if: :changed_style?
   after_commit :update_park, if: :changed_location?
+  after_commit :update_entry_caption_validity
 
   scope :needs_alt_text_review, -> { where(alt_text: [nil, ""]).or(where(auto_generated_alt_text: true)) }
 
@@ -38,6 +39,12 @@ class Photo < ApplicationRecord
 
   def update_entry_style_tags
     self.entry.update_style_tags
+  end
+
+  def update_entry_caption_validity
+    return if self.entry.nil? || self.entry.destroyed?
+    self.entry.send(:update_caption_validity)
+    self.entry.save
   end
 
   def self.oldest

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_07_025315) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_11_143111) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -132,6 +132,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_07_025315) do
     t.integer "mastodon_shares_count", default: 0, null: false
     t.integer "instagram_shares_count", default: 0, null: false
     t.integer "threads_shares_count", default: 0, null: false
+    t.boolean "valid_bluesky_caption", default: true, null: false
+    t.boolean "valid_mastodon_caption", default: true, null: false
+    t.boolean "valid_instagram_caption", default: true, null: false
+    t.boolean "valid_threads_caption", default: true, null: false
     t.index ["blog_id", "status", "created_at"], name: "index_entries_on_blog_status_created", order: { created_at: :desc }
     t.index ["blog_id", "status", "hide_from_search_engines", "modified_at"], name: "index_entries_on_blog_status_indexable"
     t.index ["blog_id", "status", "position"], name: "index_entries_on_blog_status_position"

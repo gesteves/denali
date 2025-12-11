@@ -16,6 +16,7 @@ class Entry < ApplicationRecord
   before_save :set_entry_slug
   before_save :set_preview_hash
   before_save :set_sensitive
+  before_save :update_caption_validity
 
   after_commit :handle_status_change, if: :saved_change_to_status?
 
@@ -491,10 +492,6 @@ class Entry < ApplicationRecord
     caption.reject(&:blank?).join("\n\n")
   end
 
-  def valid_mastodon_caption?
-    mastodon_caption.length <= 500
-  end
-
   def bluesky_caption(utm_source: 'Bluesky', utm_medium: 'social', utm_campaign: nil)
     meta = []
 
@@ -512,12 +509,6 @@ class Entry < ApplicationRecord
     caption << self.bluesky_text if self.bluesky_text.present?
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
-  end
-
-  def valid_bluesky_caption?
-    caption = bluesky_caption
-    cache_key = "entry:#{id}:valid_bluesky_caption:#{Digest::MD5.hexdigest(caption)}"
-    Rails.cache.fetch(cache_key) { Bluesky.valid_post_length?(caption) }
   end
 
   def instagram_caption
@@ -540,10 +531,6 @@ class Entry < ApplicationRecord
     caption << self.instagram_text if self.instagram_text.present?
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
-  end
-
-  def valid_instagram_caption?
-    instagram_caption.length <= 2200
   end
 
   def instagram_hashtags(count = 30)
@@ -630,10 +617,6 @@ class Entry < ApplicationRecord
 
     all_topics = ['Photographers of Threads'] + more_topics + topics + location_topics + equipment_topics + style_topics
     all_topics.uniq.sample.presence
-  end
-
-  def valid_threads_caption?
-    threads_caption.length <= 500
   end
 
   def plain_caption
@@ -780,6 +763,14 @@ class Entry < ApplicationRecord
       md5 = Digest::MD5.new
       self.preview_hash = md5.hexdigest(Time.current.to_i.to_s)
     end
+  end
+
+  def update_caption_validity
+    return if new_record?
+    self.valid_bluesky_caption = Bluesky.valid_post_length?(bluesky_caption)
+    self.valid_mastodon_caption = mastodon_caption.length <= 500
+    self.valid_instagram_caption = instagram_caption.length <= 2200
+    self.valid_threads_caption = threads_caption.length <= 500
   end
 
   def related_query(count = 12)
