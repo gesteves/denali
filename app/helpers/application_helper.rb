@@ -5,9 +5,9 @@ module ApplicationHelper
     # Pre-calculate crop once and reuse for all formats to avoid repeated queries
     crop = photo.calculate_crop({ aspect_ratio: aspect_ratio }.compact)
     base_opts = { crop: crop }.compact
-    jpg_src, jpg_srcset = photo.srcset(srcset: srcset, src: src, opts: base_opts.merge(aspect_ratio: aspect_ratio).compact)
+    _, jpg_srcset = photo.srcset(srcset: srcset, src: src, opts: base_opts.merge(aspect_ratio: aspect_ratio).compact)
     html_options.reverse_merge!({
-      src: jpg_src,
+      src: photo.sitemap_url,
       width: photo.width,
       height: aspect_ratio.present? ? photo.height_from_aspect_ratio(aspect_ratio) : photo.height,
       alt: photo.alt_text,
