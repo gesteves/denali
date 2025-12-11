@@ -1,7 +1,7 @@
 json.array! entry.photos do |photo|
   json.set! '@context', 'http://schema.org'
   json.set! '@type', 'ImageObject'
-  json.set! 'contentUrl', schema_photo_src(photo)
+  json.set! 'contentUrl', photo.sitemap_url
   json.set! 'creditText', entry.user.name
   json.creator do
     json.set! '@type', 'Person'

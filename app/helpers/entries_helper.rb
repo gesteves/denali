@@ -9,11 +9,6 @@ module EntriesHelper
     PHOTOS[key]['srcset'].uniq.sort.reject { |width| width > photo.width }
   end
 
-  def schema_photo_src(photo)
-    src, srcset = photo.srcset(srcset: PHOTOS[:entry][:srcset], src: PHOTOS[:entry][:src])
-    src
-  end
-
   # Generates a paragraph with camera, lens, and film details
   def feed_camera_details(photo)
     return if photo.camera.blank?
