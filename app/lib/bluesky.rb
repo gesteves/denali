@@ -1,4 +1,49 @@
 class Bluesky
+  # Verifies that the text of a post is equal to or less than 300 Unicode graphemes.
+  # Class method for use without authentication (e.g., validation checks).
+  #
+  # @param text [String] the raw text of the post with Markdown syntax.
+  # @return [Boolean] true if the plain text is valid, false otherwise.
+  def self.valid_post_length?(text)
+    return false unless text.is_a?(String)
+
+    post_length(text) <= 300
+  end
+
+  # Returns the length of the post text in Unicode graphemes.
+  # Class method for use without authentication (e.g., validation checks).
+  #
+  # @param text [String] the raw text of the post with Markdown syntax.
+  # @return [Integer] the length in Unicode graphemes.
+  def self.post_length(text)
+    # Parse URLs and remove Markdown, leaving only the plain text
+    _, plain_text = parse_urls_for_length(text)
+
+    # Count the Unicode graphemes in the plain text
+    plain_text.each_grapheme_cluster.to_a.size
+  end
+
+  # Parses URLs in text for length calculation purposes (class method).
+  # Lighter-weight version that only extracts plain text.
+  #
+  # @param text [String] the text to process.
+  # @return [Array] an array where the first element is nil (unused), and the second element is the plain text.
+  def self.parse_urls_for_length(text)
+    # Step 1: Render Markdown to HTML
+    renderer = Redcarpet::Render::HTML.new(hard_wrap: false)
+    markdown = Redcarpet::Markdown.new(renderer, autolink: true, no_intra_emphasis: true, fenced_code_blocks: true)
+    html = Redcarpet::Render::SmartyPants.render(markdown.render(text))
+
+    # Step 2: Convert HTML to plain text
+    fragment = Nokogiri::HTML.fragment(html)
+    fragment.css('br').each { |br| br.replace("\n") }
+    plain_text = Sanitize.fragment(fragment.to_html).strip
+    plain_text = plain_text.gsub(/ *(\n+) */, '\1')
+    plain_text = HTMLEntities.new.decode(plain_text)
+
+    [nil, plain_text]
+  end
+
   # Initializes a new instance of the Bluesky class.
   #
   # @param base_url [String] the base URL of the Bluesky API.
@@ -17,21 +62,15 @@ class Bluesky
   # @param text [String] the raw text of the post with Markdown syntax.
   # @return [Boolean] true if the plain text is valid, false otherwise.
   def valid_post_length?(text)
-    return false unless text.is_a?(String)
-
-    post_length(text) <= 300
+    self.class.valid_post_length?(text)
   end
 
   # Returns the length of the post text in Unicode graphemes.
   #
   # @param text [String] the raw text of the post with Markdown syntax.
-  # @return [Boolean] true if the plain text is valid, false otherwise.
+  # @return [Integer] the length in Unicode graphemes.
   def post_length(text)
-    # Parse URLs and remove Markdown, leaving only the plain text
-    _, plain_text = parse_urls(text)
-
-    # Count the Unicode graphemes in the plain text
-    plain_text.each_grapheme_cluster.to_a.size
+    self.class.post_length(text)
   end
 
   # Skeets (sorry, Jay) with optional photos to Bluesky.

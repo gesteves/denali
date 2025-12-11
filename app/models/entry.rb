@@ -515,8 +515,9 @@ class Entry < ApplicationRecord
   end
 
   def valid_bluesky_caption?
-    bluesky = Bluesky.new(base_url: ENV['BLUESKY_BASE_URL'], email: ENV['BLUESKY_EMAIL'], password: ENV['BLUESKY_PASSWORD'])
-    bluesky.valid_post_length?(self.bluesky_caption)
+    caption = bluesky_caption
+    cache_key = "entry:#{id}:valid_bluesky_caption:#{Digest::MD5.hexdigest(caption)}"
+    Rails.cache.fetch(cache_key) { Bluesky.valid_post_length?(caption) }
   end
 
   def instagram_caption
