@@ -725,6 +725,14 @@ class Entry < ApplicationRecord
     photos.all? { |p| p.has_dimensions? }
   end
 
+  def update_caption_validity
+    return if new_record?
+    self.valid_bluesky_caption = Bluesky.valid_post_length?(bluesky_caption)
+    self.valid_mastodon_caption = mastodon_caption.length <= 500
+    self.valid_instagram_caption = instagram_caption.length <= 2200
+    self.valid_threads_caption = threads_caption.length <= 500
+  end
+
   private
 
   def url_opts(opts)
@@ -763,14 +771,6 @@ class Entry < ApplicationRecord
       md5 = Digest::MD5.new
       self.preview_hash = md5.hexdigest(Time.current.to_i.to_s)
     end
-  end
-
-  def update_caption_validity
-    return if new_record?
-    self.valid_bluesky_caption = Bluesky.valid_post_length?(bluesky_caption)
-    self.valid_mastodon_caption = mastodon_caption.length <= 500
-    self.valid_instagram_caption = instagram_caption.length <= 2200
-    self.valid_threads_caption = threads_caption.length <= 500
   end
 
   def related_query(count = 12)

@@ -43,7 +43,7 @@ class Photo < ApplicationRecord
 
   def update_entry_caption_validity
     return if self.entry.nil? || self.entry.destroyed?
-    self.entry.send(:update_caption_validity)
+    self.entry.update_caption_validity
     self.entry.save
   end
 
