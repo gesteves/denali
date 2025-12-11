@@ -175,7 +175,14 @@ class Photo < ApplicationRecord
 
   def crop(aspect_ratio)
     return if aspect_ratio.blank?
-    self.crops.find_by(aspect_ratio: aspect_ratio)
+    # Memoize crop lookups to avoid repeated queries for the same aspect ratio
+    @crop_cache ||= {}
+    return @crop_cache[aspect_ratio] if @crop_cache.key?(aspect_ratio)
+    @crop_cache[aspect_ratio] = if association(:crops).loaded?
+      crops.find { |c| c.aspect_ratio == aspect_ratio }
+    else
+      crops.find_by(aspect_ratio: aspect_ratio)
+    end
   end
 
   # Focal points are stored as a [0,1] range,

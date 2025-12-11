@@ -2,7 +2,10 @@ module ApplicationHelper
 
   def responsive_image_tag(photo:, srcset: [3360], src: nil, sizes: '100vw', aspect_ratio: nil, html_options: {})
     return placeholder_image_tag(srcset: srcset, sizes: sizes, aspect_ratio: aspect_ratio, html_options: html_options) unless photo&.has_dimensions?
-    jpg_src, jpg_srcset = photo.srcset(srcset: srcset, src: src, opts: { aspect_ratio: aspect_ratio }.compact)
+    # Pre-calculate crop once and reuse for all formats to avoid repeated queries
+    crop = photo.calculate_crop({ aspect_ratio: aspect_ratio }.compact)
+    base_opts = { crop: crop }.compact
+    jpg_src, jpg_srcset = photo.srcset(srcset: srcset, src: src, opts: base_opts.merge(aspect_ratio: aspect_ratio).compact)
     html_options.reverse_merge!({
       src: jpg_src,
       width: photo.width,
@@ -13,7 +16,7 @@ module ApplicationHelper
     })
     tag.picture do
       ['avif', 'webp'].each do |format|
-        format_srcset = photo.srcset(srcset: srcset, opts: { aspect_ratio: aspect_ratio, format: format }.compact).last
+        format_srcset = photo.srcset(srcset: srcset, opts: base_opts.merge(aspect_ratio: aspect_ratio, format: format).compact).last
         concat(tag.source(sizes: sizes, srcset: format_srcset, type: "image/#{format}"))
       end
       concat(tag.source(sizes: sizes, srcset: jpg_srcset, type: 'image/jpeg'))
