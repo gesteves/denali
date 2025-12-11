@@ -111,7 +111,7 @@ class EntriesController < ApplicationController
 
   def show
     ActiveRecord::Associations::Preloader.new(records: [@entry], associations: [:user, { taggings: :tag }]).call
-    @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film, :park)
+    @photos = @entry.photos.includes(:image_attachment, :image_blob, :camera, :lens, :film, :park, :crops)
     @srcset = PHOTOS[:entry][:srcset]
     @src = PHOTOS[:entry][:src]
     @sizes = PHOTOS[:entry][:sizes].join(', ')

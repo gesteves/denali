@@ -1,12 +1,14 @@
-<% photo = entry.photos.first %>
-<% if photo.formatted_location.present? || photo.territories.present? %>
-  <h3 class="sr-only" id="location">Location</h3>
-  <ul class="location" aria-labelledby="location">
-    <% if photo.formatted_location.present? %>
-      <li class="location__field"><%= photo.formatted_location %></li>
-    <% end %>
-    <% if photo.territories.present? %>
-      <li class="location__field"><%= photo.territory_list %> land</li>
-    <% end %>
-  </ul>
+<% photo = local_assigns[:photo] || entry.photos.first %>
+<% cache photo do %>
+  <% if photo.formatted_location.present? || photo.territories.present? %>
+    <h3 class="sr-only" id="location">Location</h3>
+    <ul class="location" aria-labelledby="location">
+      <% if photo.formatted_location.present? %>
+        <li class="location__field"><%= photo.formatted_location %></li>
+      <% end %>
+      <% if photo.territories.present? %>
+        <li class="location__field"><%= photo.territory_list %> land</li>
+      <% end %>
+    </ul>
+  <% end %>
 <% end %>

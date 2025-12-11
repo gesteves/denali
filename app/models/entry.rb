@@ -297,25 +297,34 @@ class Entry < ApplicationRecord
     markdown_to_plaintext(self.title)
   end
 
-  def territories
+  def territories(photos_collection = nil)
     return unless self.show_location?
-    self.photos.where.not(territories: nil).map { |p| JSON.parse(p.territories) }.flatten.uniq
+    return @territories if defined?(@territories) && photos_collection.nil?
+    photos_to_check = photos_collection || (association(:photos).loaded? ? self.photos : self.photos.where.not(territories: nil))
+    result = photos_to_check.select { |p| p.territories.present? }.map { |p| JSON.parse(p.territories) }.flatten.uniq
+    @territories = result if photos_collection.nil?
+    result
   end
 
-  def territory_list
-    return unless self.show_location? && self.territories.present?
-    territory_list = if self.territories.size > 2
-      temporary_list = self.territories
+  def territory_list(photos_collection = nil)
+    return unless self.show_location?
+    return @territory_list if defined?(@territory_list) && photos_collection.nil?
+    territory_data = self.territories(photos_collection)
+    return unless territory_data.present?
+    result = if territory_data.size > 2
+      temporary_list = territory_data.dup
       last = temporary_list.pop
       "#{temporary_list.join(', ')}, and #{last}"
     else
-      self.territories.join(' and ')
+      territory_data.join(' and ')
     end
-    territory_list
+    @territory_list = result if photos_collection.nil?
+    result
   end
 
-  def meta_description
-    self&.photos&.first&.alt_text.presence || self.plain_body
+  def meta_description(photo = nil)
+    photo ||= self.photos.first
+    photo&.alt_text.presence || self.plain_body
   end
 
   def permalink_path
