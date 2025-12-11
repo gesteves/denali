@@ -45,6 +45,7 @@ gem 'rack-brotli'
 gem 'htmlentities'
 gem 'public_suffix'
 gem 'web-push'
+gem 'skylight'
 
 # Monitoring
 gem 'bugsnag'

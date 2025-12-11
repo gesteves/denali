@@ -451,6 +451,8 @@ GEM
       rufus-scheduler (~> 3.2)
       sidekiq (>= 7.3, < 9)
     simple_oauth (0.3.1)
+    skylight (7.0.0)
+      activesupport (>= 7.1.0)
     snaky_hash (2.0.3)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
@@ -549,6 +551,7 @@ DEPENDENCIES
   sdoc (~> 2.6)
   sidekiq
   sidekiq-scheduler
+  skylight
   spring
   spring-watcher-listen (~> 2.1.0)
   sprockets-rails
