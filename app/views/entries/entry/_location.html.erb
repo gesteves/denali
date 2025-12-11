@@ -1,4 +1,4 @@
-<% photo = entry.photos.first %>
+<% photo = local_assigns[:photo] || entry.photos.first %>
 <% if photo.formatted_location.present? || photo.territories.present? %>
   <h3 class="sr-only" id="location">Location</h3>
   <ul class="location" aria-labelledby="location">
