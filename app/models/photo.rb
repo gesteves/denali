@@ -447,6 +447,26 @@ class Photo < ApplicationRecord
     end
   end
 
+  def blurhash_svg_data_uri
+    return unless self.has_dimensions? && self.blurhash.present?
+    Rails.cache.fetch("#{cache_key_with_version}/blurhash-svg-data-uri") do
+      data_uri = blurhash_data_uri
+      return unless data_uri
+      svg = <<~SVG.squish
+        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 #{width} #{height}">
+          <filter id="blur" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feGaussianBlur stdDeviation="100" edgeMode="duplicate" />
+            <feComponentTransfer>
+              <feFuncA type="discrete" tableValues="1 1" />
+            </feComponentTransfer>
+          </filter>
+          <image filter="url(#blur)" xlink:href="#{data_uri}" x="0" y="0" height="100%" width="100%"/>
+        </svg>
+      SVG
+      "data:image/svg+xml;charset=utf-8,#{ERB::Util.url_encode(svg)}"
+    end
+  end
+
   def changed_dimensions?
     saved_change_to_width? || saved_change_to_height?
   end
