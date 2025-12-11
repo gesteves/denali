@@ -1,46 +1,35 @@
 class AltTextWorker < ApplicationWorker
   def perform(photo_id)
     photo = Photo.find(photo_id)
-    return if ENV['OPENAI_API_KEY'].blank?
+    return if ENV['ANTHROPIC_API_KEY'].blank?
     raise UnprocessedPhotoError unless photo.has_dimensions?
 
     body = {
-      model: 'gpt-5.1',
-      store: false,
-      instructions: instructions,
-      user: photo.entry.user.id.to_s,
-      input: [
+      model: 'claude-sonnet-4-5',
+      max_tokens: 1024,
+      system: instructions,
+      messages: [
         {
           role: 'user',
           content: [
             {
-              type: "input_image",
-              image_url: photo.chatgpt_url
+              type: "image",
+              source: {
+                type: "url",
+                url: photo.claude_url
+              }
+            },
+            {
+              type: "text",
+              text: "Write an alt text for this image."
             }
           ]
         }
-      ],
-      text: {
-        format: {
-          type: "json_schema",
-          name: "alt_text",
-          schema: {
-            type: "object",
-            properties: {
-              "altText": {
-                type: "string"
-              }
-            },
-            required: ["altText"],
-            additionalProperties: false,
-          },
-        }
-      }
+      ]
     }
 
-    response = Chatgpt.new.create_response(body)
-    json = JSON.parse(response['output']&.select { |o| o['role'] == 'assistant' }&.first&.dig('content')&.first&.dig('text'), symbolize_names: true)
-    alt_text = json[:altText]
+    response = Claude.new.create_message(body)
+    alt_text = response.dig('content', 0, 'text')&.strip
     raise if alt_text.blank?
     photo.alt_text = alt_text
     photo.auto_generated_alt_text = true
@@ -51,17 +40,16 @@ class AltTextWorker < ApplicationWorker
 
   def instructions
     <<~PROMPT
-      **Context**:
-      Social media networks and blog posts require images to have alt text for accessibility reasons. It's sometimes hard for humans to find the right words to describe them accurately for people with limited vision. Your job is to receive an image and write a short alt text that describes its contents objectively.
+      You are an expert at writing alt text for images for accessibility purposes. Your job is to receive an image and write a short alt text that describes its contents objectively.
 
-      **Instructions**:
-      - Receive the image and write a short alt text that describes its contents.
+      Instructions:
       - Keep the description factual and objective. Omit subjective details such as the mood of the image.
-      - Use present participles (verbs ending in -ing) rather than present tense verbs when describing actions (e.g., "a dog running" not "a dog runs").
+      - Use present participles (verbs ending in -ing) rather than present tense verbs when describing actions (e.g., "a dog running on the beach" not "a dog runs on the beach").
       - Do not specify if the image is in color or black and white.
-      - You **must** follow Chicago Manual of Style 18 conventions to write the description.
-      - Do not output any text except the alt text itself, so the user can simply copy and paste the entire output elsewhere.
+      - Follow Chicago Manual of Style 18 conventions.
       - The alt text must be less than 1,000 characters.
+
+      IMPORTANT: Output ONLY the alt text itself with no preamble, explanation, or additional text. The user should be able to copy and paste your entire response directly as the alt text.
     PROMPT
   end
 end

@@ -151,8 +151,8 @@ class Photo < ApplicationRecord
     self.url(opts)
   end
 
-  def chatgpt_url
-    width = self.is_vertical? ? width_from_height(2000) : 2000
+  def claude_url
+    width = self.is_vertical? ? width_from_height(1024) : 1024
     opts = { width: width, format: 'jpeg', quality: 60 }
     self.url(opts)
   end
