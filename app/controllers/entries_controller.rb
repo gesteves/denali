@@ -10,7 +10,7 @@ class EntriesController < ApplicationController
   def index
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.page(@page).per(@count)
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
     preload_fonts
     @srcset = PHOTOS[:entry_list][:srcset]
@@ -47,7 +47,7 @@ class EntriesController < ApplicationController
   def tagged
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     preload_fonts
     @srcset = PHOTOS[:entry_list][:srcset]
@@ -88,7 +88,7 @@ class EntriesController < ApplicationController
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
       results = Entry.published_search(@query, @page, @count)
       total_count = results.results.total
-      records = results.records.includes(photos: [:image_attachment, :image_blob])
+      records = results.records.includes(photos: [:image_attachment, :image_blob, :crops])
       @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
       @page_title = "Search results for “#{@query}” – #{@photoblog.name}"
       @page_title += " – Page #{@page}" unless @page.nil? || @page == 1

@@ -1,4 +1,4 @@
-<% photo = entry.association(:photos).loaded? ? entry.photos[0] : entry.photos.first %>
+<% photo = local_assigns[:photo] || (entry.association(:photos).loaded? ? entry.photos[0] : entry.photos.first) %>
 <a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
   <%= responsive_image_tag(
     photo: photo,

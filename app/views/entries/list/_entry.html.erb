@@ -1,7 +1,6 @@
-<% cache entry do %>
-  <li class="entry-list__item">
-    <div class="entry-list__wrapper" style="<%= css_aspect_ratio(entry.photos.first) %>">
-      <%= render partial: 'entries/list/entry_link', object: entry, as: :entry %>
-    </div>
-  </li>
-<% end %>
+<li class="entry-list__item">
+  <% photo = entry.association(:photos).loaded? ? entry.photos[0] : entry.photos.first %>
+  <div class="entry-list__wrapper" style="<%= css_aspect_ratio(photo) %>">
+    <%= render partial: 'entries/list/entry_link', object: entry, as: :entry, locals: { photo: photo } %>
+  </div>
+</li>
