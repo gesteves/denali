@@ -299,21 +299,27 @@ class Entry < ApplicationRecord
 
   def territories(photos_collection = nil)
     return unless self.show_location?
+    return @territories if defined?(@territories) && photos_collection.nil?
     photos_to_check = photos_collection || (association(:photos).loaded? ? self.photos : self.photos.where.not(territories: nil))
-    photos_to_check.select { |p| p.territories.present? }.map { |p| JSON.parse(p.territories) }.flatten.uniq
+    result = photos_to_check.select { |p| p.territories.present? }.map { |p| JSON.parse(p.territories) }.flatten.uniq
+    @territories = result if photos_collection.nil?
+    result
   end
 
   def territory_list(photos_collection = nil)
     return unless self.show_location?
+    return @territory_list if defined?(@territory_list) && photos_collection.nil?
     territory_data = self.territories(photos_collection)
     return unless territory_data.present?
-    if territory_data.size > 2
+    result = if territory_data.size > 2
       temporary_list = territory_data.dup
       last = temporary_list.pop
       "#{temporary_list.join(', ')}, and #{last}"
     else
       territory_data.join(' and ')
     end
+    @territory_list = result if photos_collection.nil?
+    result
   end
 
   def meta_description(photo = nil)
