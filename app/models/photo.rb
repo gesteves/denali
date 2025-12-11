@@ -21,7 +21,7 @@ class Photo < ApplicationRecord
   after_commit :update_entry_location_tags, if: :changed_location?
   after_commit :update_entry_style_tags, if: :changed_style?
   after_commit :update_park, if: :changed_location?
-  after_commit :update_entry_caption_validity
+  after_commit :update_entry_caption_validity, if: :changed_caption_attributes?
 
   scope :needs_alt_text_review, -> { where(alt_text: [nil, ""]).or(where(auto_generated_alt_text: true)) }
 
@@ -465,5 +465,13 @@ class Photo < ApplicationRecord
 
   def changed_style?
     saved_change_to_color? || saved_change_to_black_and_white? || saved_change_to_camera_id? || saved_change_to_film_id?
+  end
+
+  def changed_caption_attributes?
+    changed_territories? || changed_location? || changed_equipment?
+  end
+
+  def changed_territories?
+    saved_change_to_territories?
   end
 end
