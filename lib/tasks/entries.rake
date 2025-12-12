@@ -1,4 +1,42 @@
 namespace :entries do
+  desc 'Hide entries from search engines if they cannot be shared on any social network'
+  task :hide_unshared_from_search_engines => :environment do
+    dry_run = ENV['DRY_RUN'] == 'true' || ENV['DRY_RUN'] == '1'
+
+    entries = Entry.where(
+      'post_to_mastodon = ? OR post_to_bluesky = ? OR post_to_instagram = ? OR post_to_threads = ?',
+      false, false, false, false
+    ).where(hide_from_search_engines: false)
+
+    count = entries.count
+
+    if count == 0
+      puts "No entries found that need to be hidden from search engines"
+      return
+    end
+
+    puts "DRY RUN!\n\n" if dry_run
+    puts "Entries to hide from search engines:"
+
+    entries.each do |entry|
+      puts "  #{entry.title} - #{entry.permalink_url}"
+    end
+
+    puts "\nFound #{count} #{'entry'.pluralize(count)} that cannot be shared on any social network."
+
+    if !dry_run
+      puts "\nUpdating #{count} #{'entry'.pluralize(count)}..."
+
+      updated_count = 0
+      entries.find_each do |entry|
+        entry.update(hide_from_search_engines: true)
+        updated_count += 1
+      end
+
+      puts "\nSuccessfully updated #{updated_count} #{'entry'.pluralize(updated_count)}"
+    end
+  end
+
   desc 'Disable post_on* attributes for entries tagged with a specific tag'
   task :disable_sharing => :environment do
     tag = ENV['TAG']
