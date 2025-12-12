@@ -54,7 +54,7 @@
     </div>
   <% end %>
 
-  <% if photos.any? { |p| p.alt_text.present? && p.alt_text.length <= 100 } %>
+  <% if photos.any? { |p| p.alt_text.present? && p.alt_text.length <= 50 } %>
     <div class="control">
       <div class="tags has-addons">
         <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
