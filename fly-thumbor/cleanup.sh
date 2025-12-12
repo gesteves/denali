@@ -20,5 +20,13 @@ if [ -n "$USAGE" ] && [ "$USAGE" -gt 80 ]; then
   echo "[cleanup] Still above 80%, deleted $COUNT files older than 1 hour"
 fi
 
+# If still over 80%, delete all files
+USAGE=$(df --output=pcent "$STORAGE_PATH" 2>/dev/null | tail -1 | tr -d '% ')
+if [ -n "$USAGE" ] && [ "$USAGE" -gt 80 ]; then
+  COUNT=$(find "$STORAGE_PATH" -type f 2>/dev/null | wc -l)
+  find "$STORAGE_PATH" -type f -delete 2>/dev/null
+  echo "[cleanup] Still above 80%, deleted all $COUNT files"
+fi
+
 USAGE_AFTER=$(df --output=pcent "$STORAGE_PATH" 2>/dev/null | tail -1 | tr -d '% ')
 echo "[cleanup] Cleanup complete, disk usage: ${USAGE_AFTER}%"
