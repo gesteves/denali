@@ -6,7 +6,8 @@ Deploy [Thumbor](https://thumbor.readthedocs.io/) image processing service to Fl
 
 - **nginx** → reverse proxy on port 8888, handles `/thumbor/` prefix
 - **Thumbor** → image processing on port 8000
-- **supervisor** → process manager for both services
+- **supervisord** → process manager for nginx, Thumbor, and monit
+- **monit** → disk usage monitoring, triggers cleanup when disk exceeds 80%
 
 ## Prerequisites
 
@@ -232,6 +233,8 @@ fly deploy --no-cache
 | `thumbor.conf` | Thumbor settings |
 | `nginx.conf` | nginx reverse proxy config |
 | `supervisord.conf` | Process manager config |
+| `monitrc` | Disk monitoring config |
+| `cleanup.sh` | Cache cleanup script |
 
 ## Resources
 
