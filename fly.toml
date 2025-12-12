@@ -23,7 +23,7 @@ console_command = '/app/bin/rails console'
   web = 'bundle exec puma -C config/puma.rb'
   worker = 'bundle exec sidekiq -t 25'
 
-[restart]
+[[restart]]
   policy = 'on-fail'
   retries = 10
 
