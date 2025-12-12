@@ -62,7 +62,7 @@ class Admin::EntriesController < AdminController
       .merge(Photo.needs_alt_text_review)
       .distinct
       .order('entries.created_at DESC')
-    @entries_count = entries.count
+    @entries_count = entries.pluck(:id).count
     @entries = entries.page(@page)
     @page_title = 'Alt text review'
     respond_to do |format|
