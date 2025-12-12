@@ -1,6 +1,8 @@
 class HealthController < ApplicationController
   before_action :no_cache
-  skip_before_action :domain_redirect, :get_photoblog
+  skip_before_action :verify_authenticity_token
+  skip_before_action :domain_redirect
+  skip_before_action :get_photoblog
 
   def show
     # Check database connection
