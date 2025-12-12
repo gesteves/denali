@@ -24,7 +24,7 @@ console_command = '/app/bin/rails console'
   worker = 'bundle exec sidekiq -t 25'
 
 [[restart]]
-  policy = 'on-fail'
+  policy = 'on-failure'
   retries = 10
 
 [http_service]
