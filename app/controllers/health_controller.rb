@@ -1,28 +1,9 @@
 class HealthController < ApplicationController
   before_action :no_cache
   skip_before_action :verify_authenticity_token
-  skip_before_action :get_photoblog
   skip_before_action :domain_redirect
 
   def show
-    # Check database connection
-    ActiveRecord::Base.connection.execute("SELECT 1")
-
-    # Check Elasticsearch connection
-    if ENV['ELASTICSEARCH_URL'].present?
-      Elasticsearch::Model.client.ping
-    end
-
-    # Check Sidekiq Redis connection
-    if ENV["REDIS_URL"].present?
-      Sidekiq.redis(&:ping)
-    end
-
-    # Check Cache Redis connection
-    if ENV["REDIS_CACHE_URL"].present?
-      Rails.cache.redis.with(&:ping)
-    end
-
     render plain: "OK", status: :ok
   rescue StandardError => e
     Rails.logger.error("Health check failed: #{e.class}: #{e.message}")
