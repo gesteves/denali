@@ -23,7 +23,7 @@ class Photo < ApplicationRecord
   after_commit :update_park, if: :changed_location?
   after_commit :update_entry_caption_validity, if: :changed_caption_attributes?
 
-  scope :needs_alt_text_review, -> { where(alt_text: [nil, ""]).or(where(auto_generated_alt_text: true)) }
+  scope :needs_alt_text_review, -> { where(alt_text: [nil, ""]).or(where(auto_generated_alt_text: true)).or(where("LENGTH(alt_text) <= 100")) }
 
   def touch_entry
     self.entry.touch unless self.entry.destroyed?
