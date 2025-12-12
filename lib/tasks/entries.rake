@@ -27,11 +27,7 @@ namespace :entries do
     if !dry_run
       puts "\nUpdating #{count} #{'entry'.pluralize(count)}..."
 
-      updated_count = 0
-      entries.find_each do |entry|
-        entry.update(hide_from_search_engines: true)
-        updated_count += 1
-      end
+      updated_count = entries.update_all(hide_from_search_engines: true)
 
       puts "\nSuccessfully updated #{updated_count} #{'entry'.pluralize(updated_count)}"
     end
