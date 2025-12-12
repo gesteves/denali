@@ -23,6 +23,10 @@ console_command = '/app/bin/rails console'
   web = 'bundle exec puma -C config/puma.rb'
   worker = 'bundle exec sidekiq -t 25'
 
+[restart]
+  policy = 'on-fail'
+  retries = 10
+
 [http_service]
   internal_port = 3000
   force_https = true

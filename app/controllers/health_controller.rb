@@ -5,6 +5,9 @@ class HealthController < ApplicationController
 
   def show
     render plain: "OK", status: :ok
+  rescue ActiveRecord::ConnectionNotEstablished, PG::Error => e
+    Rails.logger.error("Health check failed due to database error: #{e.class}: #{e.message}. Exiting to trigger restart.")
+    Process.exit(1)
   rescue StandardError => e
     Rails.logger.error("Health check failed: #{e.class}: #{e.message}")
     render plain: "Not OK", status: :service_unavailable
