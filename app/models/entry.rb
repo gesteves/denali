@@ -16,7 +16,7 @@ class Entry < ApplicationRecord
   before_save :set_entry_slug
   before_save :set_preview_hash
   before_save :set_sensitive
-  before_save :update_caption_validity
+  before_save :update_caption_validity, if: :changed_caption_fields?
 
   after_commit :handle_status_change, if: :saved_change_to_status?
 
@@ -780,6 +780,14 @@ class Entry < ApplicationRecord
       md5 = Digest::MD5.new
       self.preview_hash = md5.hexdigest(Time.current.to_i.to_s)
     end
+  end
+
+  def changed_caption_fields?
+    title_changed? ||
+    mastodon_text_changed? ||
+    bluesky_text_changed? ||
+    instagram_text_changed? ||
+    threads_text_changed?
   end
 
   def related_query(count = 12)
