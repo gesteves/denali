@@ -1,35 +1,56 @@
 namespace :entries do
-  desc 'Hide entries from search engines if they cannot be shared on any social network'
-  task :hide_unshared_from_search_engines => :environment do
+  desc 'Hide entries from search engines if they cannot be shared on any social network, and vice versa'
+  task :set_search_engine_setting => :environment do
     dry_run = ENV['DRY_RUN'] == 'true' || ENV['DRY_RUN'] == '1'
 
-    entries = Entry.where(
+    puts "DRY RUN!\n\n" if dry_run
+
+    # Entries that can be shared on at least one platform should be visible to search engines
+    can_be_shared = Entry.where(
       'post_to_mastodon = ? OR post_to_bluesky = ? OR post_to_instagram = ? OR post_to_threads = ?',
-      false, false, false, false
-    ).where(hide_from_search_engines: false)
+      true, true, true, true
+    )
 
-    count = entries.count
+    # Entries that cannot be shared on any platform should be hidden from search engines
+    cannot_be_shared = Entry.where(
+      post_to_mastodon: false,
+      post_to_bluesky: false,
+      post_to_instagram: false,
+      post_to_threads: false
+    )
 
-    if count == 0
-      puts "No entries found that need to be hidden from search engines"
+    puts "Entries to set hide_from_search_engines = FALSE (can be shared): #{can_be_shared.count}"
+    puts "Entries to set hide_from_search_engines = TRUE (cannot be shared): #{cannot_be_shared.count}"
+    puts ""
+
+    total = can_be_shared.count + cannot_be_shared.count
+
+    if total == 0
+      puts "No entries need updating."
       return
     end
 
-    puts "DRY RUN!\n\n" if dry_run
-    puts "Entries to hide from search engines:"
+    hidden_count = 0
+    shown_count = 0
 
-    entries.each do |entry|
-      puts "  #{entry.title} - #{entry.permalink_url}"
-    end
+    unless dry_run
+      puts "Updating entries...\n\n"
 
-    puts "\nFound #{count} #{'entry'.pluralize(count)} that cannot be shared on any social network."
+      can_be_shared.find_each do |entry|
+        entry.update(hide_from_search_engines: false)
+        puts "  SHOW: #{entry.title} - #{entry.permalink_url}"
+        shown_count += 1
+      end
 
-    if !dry_run
-      puts "\nUpdating #{count} #{'entry'.pluralize(count)}..."
+      cannot_be_shared.find_each do |entry|
+        entry.update(hide_from_search_engines: true)
+        puts "  HIDE: #{entry.title} - #{entry.permalink_url}"
+        hidden_count += 1
+      end
 
-      updated_count = entries.update_all(hide_from_search_engines: true)
-
-      puts "\nSuccessfully updated #{updated_count} #{'entry'.pluralize(updated_count)}"
+      puts "\nSummary:"
+      puts "  #{hidden_count} #{'entry'.pluralize(hidden_count)} set to hide_from_search_engines = true"
+      puts "  #{shown_count} #{'entry'.pluralize(shown_count)} set to hide_from_search_engines = false"
     end
   end
 
