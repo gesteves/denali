@@ -19,6 +19,9 @@ console_command = '/app/bin/rails console'
   RAILS_MAX_THREADS = '10'
   WEB_CONCURRENCY = '1'
   SIDEKIQ_CONCURRENCY = '10'
+  CACHE_TTL = '86400'
+  SKYLIGHT_ENABLE_SIDEKIQ = 'true'
+  SKYLIGHT_IGNORED_ENDPOINTS = 'HealthController#show'
 
 [processes]
   web = 'bundle exec puma -C config/puma.rb'
