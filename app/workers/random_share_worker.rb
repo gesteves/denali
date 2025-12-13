@@ -1,6 +1,6 @@
 class RandomShareWorker < ApplicationWorker
   def perform(tags, platforms, not_shared_in_months = 12, excluded_tags = [])
-    return if ENV['SHARE_RANDOM_PHOTOS'].blank?
+    return if !Rails.env.production?
     tags = Array(tags)
     platforms = Array(platforms)
     excluded_tags = Array(excluded_tags)
