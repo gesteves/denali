@@ -3,6 +3,7 @@ import { trackEvent } from '../../lib/analytics';
 
 export default class extends Controller {
   static targets = ['button'];
+  static classes = ['on', 'off', 'disabled'];
   static values = { endpointUrl: String, vapidPublicKey: String, textOn: String, textOff: String };
 
   connect() {
@@ -50,8 +51,8 @@ export default class extends Controller {
   setSubscribedState() {
     this.isSubscribed = true;
     this.buttonTarget.textContent = this.textOnValue;
-    this.buttonTarget.classList.add('push-notifications__button--on');
-    this.buttonTarget.classList.remove('push-notifications__button--off');
+    this.buttonTarget.classList.add(this.onClass);
+    this.buttonTarget.classList.remove(this.offClass);
   }
 
   /**
@@ -60,8 +61,8 @@ export default class extends Controller {
   setUnsubscribedState() {
     this.isSubscribed = false;
     this.buttonTarget.textContent = this.textOffValue;
-    this.buttonTarget.classList.add('push-notifications__button--off');
-    this.buttonTarget.classList.remove('push-notifications__button--on');
+    this.buttonTarget.classList.add(this.offClass);
+    this.buttonTarget.classList.remove(this.onClass);
   }
 
   /**
@@ -76,7 +77,7 @@ export default class extends Controller {
    */
   disableButton() {
     this.buttonTarget.disabled = true;
-    this.buttonTarget.classList.add('push-notifications__button--disabled');
+    this.buttonTarget.classList.add(this.disabledClass);
   }
 
   /**
