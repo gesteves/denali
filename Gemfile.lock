@@ -144,7 +144,7 @@ GEM
     builder (3.3.0)
     byebug (12.0.0)
     concurrent-ruby (1.3.5)
-    connection_pool (2.5.5)
+    connection_pool (3.0.2)
     crass (1.0.6)
     csv (3.3.5)
     date (3.5.0)
@@ -517,7 +517,7 @@ DEPENDENCIES
   brakeman
   bugsnag
   byebug
-  connection_pool (~> 2.5)
+  connection_pool (~> 3.0)
   dockerfile-rails (>= 1.7)
   elasticsearch-model (~> 8.0)
   elasticsearch-rails (~> 8.0)
