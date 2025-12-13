@@ -11,12 +11,7 @@
   <% end %>
   <%= @photoblog.additional_meta_tags&.html_safe %>
   <link rel="manifest" href="<%= manifest_path %>">
-  <% if ENV['ENABLE_SVG_FAVICON'].present? %>
-    <link rel="icon" href="<%= image_url('svg/a.svg') %>" type="image/svg+xml">
-    <link rel="mask-icon" href="<%= image_url('svg/a.svg') %>" color="black">
-  <% elsif @photoblog.favicon.attached? %>
-    <link rel="icon" href="<%= @photoblog.favicon_url(width: 96) %>" type="image/png">
-  <% end %>
+  <link rel="icon" href="<%= @photoblog.favicon_url(width: 96) %>" type="image/png">
   <% if @photoblog.touch_icon.attached? %>
     <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(width: 180) %>" sizes="180x180">
     <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(width: 152) %>" sizes="152x152">
