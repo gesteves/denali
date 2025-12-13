@@ -18,6 +18,7 @@ console_command = '/app/bin/rails console'
   RAILS_SERVE_STATIC_FILES = 'true'
   RAILS_MAX_THREADS = '10'
   WEB_CONCURRENCY = '1'
+  SIDEKIQ_CONCURRENCY = '10'
 
 [processes]
   web = 'bundle exec puma -C config/puma.rb'
