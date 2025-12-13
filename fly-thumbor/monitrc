@@ -4,6 +4,10 @@
 set daemon 60
 set log /dev/stdout
 
+# HTTP interface required for monit to function properly
+set httpd port 2812
+    allow localhost
+
 # Disk space monitoring - trigger cleanup when storage exceeds 80%
 check filesystem storage with path /
     if space usage > 80% then exec "/usr/local/bin/cleanup.sh"
