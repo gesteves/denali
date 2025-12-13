@@ -135,7 +135,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: test
     concurrency: deploy-group
-    if: github.ref == 'refs/heads/release' && github.event_name == 'push' && !contains(github.event.head_commit.message, '#nodeploy')
+    if: github.ref == 'refs/heads/release' && github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip deploy]') && !contains(github.event.head_commit.message, '[no deploy]')
 
     steps:
       - name: Set short SHA
