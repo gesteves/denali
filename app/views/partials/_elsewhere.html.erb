@@ -23,5 +23,6 @@
       <li class="elsewhere__item"><a href="<%= @photoblog.threads %>" rel="me" title="Follow on Threads" aria-label="Follow on Threads" target="_blank"><%= inline_svg :threads, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Threads</span></a></li>
     <% end %>
   </ul>
+  <%= render partial: 'partials/push_notifications' %>
 </aside>
 

@@ -1,8 +1,10 @@
 .footer {
+  align-items: center;
   border-top: var(--border-thin) solid var(--color-border);
   display: flex;
   flex-flow: column;
-  justify-content: space-between;
+  gap: 1rem;
+  justify-content: center;
   margin: 0 auto;
   max-width: $bp-m;
   padding: var(--gutter-horizontal) var(--gutter-vertical);
@@ -11,16 +13,8 @@
   p {
     font-size: var(--font-size-text-alt);
     line-height: var(--line-height-text-alt);
-    margin: 1rem 0 0 0;
+    margin: 0;
     text-align: center;
-
-    @media (min-width: $bp-xxs) {
-      margin: 0;
-    }
-  }
-
-  @media (min-width: $bp-xxs) {
-    flex-flow: row nowrap;
   }
 
   @media (min-width: $bp-s) {
