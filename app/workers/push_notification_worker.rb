@@ -36,7 +36,7 @@ class PushNotificationWorker < ApplicationWorker
         vapid: vapid_keys,
         ttl: 86400
       )
-    rescue WebPush::InvalidSubscription, WebPush::ExpiredSubscription => e
+    rescue WebPush::InvalidSubscription, WebPush::ExpiredSubscription
       push_subscription.destroy
     end
   end
