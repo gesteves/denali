@@ -49,7 +49,7 @@
               </a>
             </li>
           </ul>
-          <%= f.hidden_field :show_location, value: 'true', 'data-radio-tab-target': 'field' %>
+          <%= f.hidden_field :show_location, 'data-radio-tab-target': 'field' %>
         </div>
       </div>
       <p class="help">Turning this off also prevents the entry from being automatically tagged with location names.</p>
@@ -77,7 +77,7 @@
               </a>
             </li>
           </ul>
-          <%= f.hidden_field :hide_from_search_engines, value: 'false', 'data-radio-tab-target': 'field' %>
+          <%= f.hidden_field :hide_from_search_engines, 'data-radio-tab-target': 'field' %>
         </div>
       </div>
       <p class="help">Prevents Google, Bing, and other search engines from indexing this entry.</p>
