@@ -143,7 +143,7 @@ class EntriesController < ApplicationController
 
   def random
     entry = Entry.find(Entry.published.where('published_at >= ?', 4.years.ago).pluck(:id).sample)
-    response.headers['Cache-Control'] = "s-maxage=#{ENV['RANDOM_CACHE_TTL']}, max-age=0, public"
+    response.headers['Cache-Control'] = "s-maxage=1, max-age=0, public"
     redirect_to entry.permalink_url, status: 302
   end
 
