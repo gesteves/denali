@@ -55,6 +55,8 @@ docker compose run app rails test test/models/entry_test.rb  # specific file
 
 This app is deployed on [Fly.io](https://fly.io). The main app configuration is in `fly.toml`.
 
+**Do NOT deploy from Claude Code.** The terminal output consumes excessive tokens. The user will deploy manually.
+
 ### Common Commands
 
 ```bash
