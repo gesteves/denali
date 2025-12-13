@@ -21,6 +21,7 @@ module Types
     field :url, String, null: false, method: :permalink_url, description: "Permalink URL for the entry"
     field :content_warning, String, null: true, method: :content_warning, description: "Content warning for this entry"
     field :is_sensitive, Boolean, null: false, method: :is_sensitive, description: "Whether or not the entry contains sensitive content"
+    field :show_location, Boolean, null: false, description: "Whether or not to show location information for this entry"
     field :user, Types::UserType, null: false, description: "The author of this entry"
     field :tags, [Types::TagType], null: true, description: "The list of tags this entry is tagged with"
     field :photos, [Types::PhotoType], null: true, description: "The list of photos in this entry"
