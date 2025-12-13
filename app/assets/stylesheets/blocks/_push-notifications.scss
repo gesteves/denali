@@ -1,22 +1,36 @@
-.push-notifications {
-  align-items: center;
-  display: flex;
-  flex-flow: column;
+$color-green: #2E7D32;
+
+.push-notifications__button {
+  @include button($color-red);
+  appearance: none;
+  border-radius: var(--border-radius);
+  display: block;
+  font-family: 'Lato', 'Helvetica Neue', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  margin: 0 auto;
+  padding: 6px 10px;
+  text-align: center;
+  width: fit-content;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
-.push-notifications__label {
-  align-items: center;
-  color: var(--color-text-alt);
-  display: flex;
-  font-size: var(--font-size-text-alt);
-  line-height: var(--line-height-text-alt);
+.push-notifications__button--off {
+  @include button($color-red);
 }
 
-.push-notifications__label--disabled {
-  color: var(--color-text-disabled);
+.push-notifications__button--on {
+  @include button($color-green);
 }
 
-.push-notifications__checkbox {
-  display: inline-block;
-  margin: 0 0.5rem 0 0;
+.push-notifications__button--disabled {
+  @include button($color-gray-light);
+  cursor: not-allowed;
+
+  &:hover {
+    cursor: not-allowed;
+  }
 }

@@ -2,15 +2,16 @@ import { Controller } from 'stimulus';
 import { trackEvent } from '../../lib/analytics';
 
 export default class extends Controller {
-  static targets = ['checkbox', 'label'];
-  static values = { endpointUrl: String, vapidPublicKey: String };
+  static targets = ['button'];
+  static values = { endpointUrl: String, vapidPublicKey: String, textOn: String, textOff: String };
 
   connect() {
+    this.isSubscribed = false;
     this.setInitialState();
   }
 
   /**
-   * Sets the initial state of the push notifications checkbox.
+   * Sets the initial state of the push notifications button.
    */
   async setInitialState() {
     if (!this.isPushSupported()) {
@@ -20,27 +21,47 @@ export default class extends Controller {
       const subscription = await registration.pushManager.getSubscription();
 
       if (subscription) {
-        this.checkboxTarget.checked = true;
+        this.setSubscribedState();
       } else {
-        this.checkboxTarget.checked = false;
+        this.setUnsubscribedState();
       }
     } else if (this.deniedPermission()) {
-      this.disableCheckbox();
+      this.disableButton();
     } else {
-      this.checkboxTarget.checked = false;
+      this.setUnsubscribedState();
     }
   }
 
   /**
-   * Toggles the push notification subscription state based on the checkbox.
+   * Toggles the push notification subscription state based on current state.
    * @returns {Promise}
    */
   async toggleSubscription() {
-    if (this.checkboxTarget.checked) {
-      await this.requestPermissionAndSubscribe();
-    } else {
+    if (this.isSubscribed) {
       await this.unsubscribeUser();
+    } else {
+      await this.requestPermissionAndSubscribe();
     }
+  }
+
+  /**
+   * Sets the button to the subscribed (on) state.
+   */
+  setSubscribedState() {
+    this.isSubscribed = true;
+    this.buttonTarget.textContent = this.textOnValue;
+    this.buttonTarget.classList.add('push-notifications__button--on');
+    this.buttonTarget.classList.remove('push-notifications__button--off');
+  }
+
+  /**
+   * Sets the button to the unsubscribed (off) state.
+   */
+  setUnsubscribedState() {
+    this.isSubscribed = false;
+    this.buttonTarget.textContent = this.textOffValue;
+    this.buttonTarget.classList.add('push-notifications__button--off');
+    this.buttonTarget.classList.remove('push-notifications__button--on');
   }
 
   /**
@@ -51,12 +72,11 @@ export default class extends Controller {
   }
 
   /**
-   * Disables the checkbox and adds a disabled style to the label.
+   * Disables the button.
    */
-  disableCheckbox() {
-    this.checkboxTarget.checked = false;
-    this.checkboxTarget.disabled = true;
-    this.labelTarget.classList.add('push-notifications__label--disabled');
+  disableButton() {
+    this.buttonTarget.disabled = true;
+    this.buttonTarget.classList.add('push-notifications__button--disabled');
   }
 
   /**
@@ -91,9 +111,9 @@ export default class extends Controller {
     try {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
-        this.subscribeUser();
+        await this.subscribeUser();
       } else {
-        this.disableCheckbox();
+        this.disableButton();
       }
     } catch (error) {
       console.log(error);
@@ -113,6 +133,7 @@ export default class extends Controller {
       });
 
       this.sendSubscriptionToServer(subscription, 'POST');
+      this.setSubscribedState();
       trackEvent('push-notifications', { state: 'Subscribed' });
     } catch (error) {
       console.log(error);
@@ -120,9 +141,9 @@ export default class extends Controller {
   }
 
   /**
- * Unsubscribes the user from push notifications and deletes the subscription from the server.
- * @returns {Promise}
- */
+   * Unsubscribes the user from push notifications and deletes the subscription from the server.
+   * @returns {Promise}
+   */
   async unsubscribeUser() {
     try {
       const registration = await navigator.serviceWorker.ready;
@@ -131,6 +152,7 @@ export default class extends Controller {
       if (subscription) {
         await subscription.unsubscribe();
         this.sendSubscriptionToServer(subscription, 'DELETE');
+        this.setUnsubscribedState();
         trackEvent('push-notifications', { state: 'Unsubscribed' });
       }
     } catch (error) {

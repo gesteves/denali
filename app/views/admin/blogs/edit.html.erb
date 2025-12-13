@@ -484,6 +484,34 @@
     </div>
   </div>
 
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :push_notifications_heading, 'Push notifications heading', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :push_notifications_heading, placeholder: 'e.g. Get Notified', class: 'input', autocomplete: 'off' %>
+        </div>
+        <p class="help">Heading text for the push notifications section.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :push_notifications_cta, 'Push notifications CTA', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control is-expanded">
+          <%= f.text_field :push_notifications_cta, placeholder: 'e.g. Get a push notification whenever new photos are published.', class: 'input', autocomplete: 'off' %>
+        </div>
+        <p class="help">Call-to-action text displayed below the heading.</p>
+      </div>
+    </div>
+  </div>
+
   <hr class="hr">
 
   <div class="buttons is-right">
