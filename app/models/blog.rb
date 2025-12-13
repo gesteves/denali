@@ -139,6 +139,8 @@ class Blog < ApplicationRecord
       email
       elsewhere_cta
       elsewhere_heading
+      push_notifications_cta
+      push_notifications_heading
       flickr
       instagram
       threads
@@ -163,7 +165,6 @@ class Blog < ApplicationRecord
   end
 
   def purge_from_cdn(paths: INVALIDATION_PATHS)
-    Rails.cache.clear
     CloudfrontInvalidationWorker.perform_async(paths)
   end
 end
