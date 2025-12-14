@@ -5,11 +5,10 @@
   max-width: var(--max-width);
   position: relative;
 
-  @supports (grid-template-rows: masonry) {
-    display: grid;
+  @supports (display: masonry) {
+    display: masonry;
     gap: var(--entry-list-gutters);
     grid-template-columns: repeat(var(--entry-list-columns), 1fr);
-    grid-template-rows: masonry;
   }
 }
 
@@ -34,7 +33,7 @@
   position: relative;
   width: calc((100%/var(--entry-list-columns)) - var(--entry-list-gutters));
 
-  @supports (grid-template-rows: masonry) {
+  @supports (display: masonry) {
     float: none;
     margin: 0;
     width: 100%;

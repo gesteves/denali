@@ -13,7 +13,7 @@ export default class extends Controller {
 
   connect () {
     // Do nothing if the browser supports native masonry!
-    if (CSS.supports('grid-template-rows: masonry')) {
+    if (CSS.supports('display: masonry')) {
       return;
     }
 
