@@ -24,18 +24,6 @@
   }
 }
 
-@mixin stripes($background-color: #CCC, $color: #FFF, $angle: -45deg) {
-  background-image: repeating-linear-gradient(
-    -45deg,
-    $background-color,
-    $background-color 10px,
-    shade($background-color, 2%) 10px,
-    shade($background-color, 2%) 20px
-  );
-  border: 1px solid shade($background-color, 10%);
-  color: $color;
-}
-
 @mixin clearfix {
   &:after {
     clear: both;
