@@ -1,11 +1,9 @@
-$color-green: #2E7D32;
-
 .push-notifications__button {
   @include button($color-red);
   appearance: none;
   border-radius: var(--border-radius);
   display: block;
-  font-family: 'Lato', 'Helvetica Neue', sans-serif;
+  font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.5;
   margin: 0 auto;
