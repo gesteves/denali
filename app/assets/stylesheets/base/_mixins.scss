@@ -62,3 +62,20 @@
     display: table;
   }
 }
+
+@mixin dotted-list {
+  color: var(--color-text-alt);
+  text-wrap: balance;
+
+  &__field {
+    display: inline;
+
+    &::after {
+      content: ' · ';
+    }
+
+    &:last-of-type::after {
+      content: none;
+    }
+  }
+}

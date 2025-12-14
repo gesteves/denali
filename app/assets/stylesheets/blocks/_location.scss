@@ -1,16 +1,3 @@
 .location {
-  color: var(--color-text-alt);
-  text-wrap: balance;
-}
-
-.location__field {
-  display: inline;
-
-  &::after {
-    content: ' · ';
-  }
-
-  &:last-of-type::after {
-    content: none;
-  }
+  @include dotted-list;
 }

@@ -1,17 +1,7 @@
 .exif {
-  color: var(--color-text-alt);
-  text-wrap: balance;
+  @include dotted-list;
 }
 
 .exif__field {
-  display: inline;
   white-space: nowrap;
-
-  &::after {
-    content: ' · ';
-  }
-
-  &:last-of-type::after {
-    content: none;
-  }
 }
