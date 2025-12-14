@@ -92,7 +92,12 @@
 }
 
 .entry__embed--youtube {
-  @include aspect-ratio(560, 315);
+  aspect-ratio: 560 / 315;
+
+  > * {
+    height: 100%;
+    width: 100%;
+  }
 }
 
 .entry__photo--zoomable {
