@@ -3,6 +3,7 @@ class Admin::CropsController < AdminController
   def create_or_update
     @entry = Entry.find(params[:entry_id])
     @photo = @entry.photos.find(params[:photo_id])
+    Rails.logger.info "Crop params for photo #{@photo.id}: #{crop_params.to_h.inspect}"
     crop = @photo.crops.find_or_create_by(aspect_ratio: crop_params[:aspect_ratio])
     if crop.update(crop_params)
       message = "The crop has been updated."
