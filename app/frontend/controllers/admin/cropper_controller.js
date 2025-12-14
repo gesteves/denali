@@ -53,15 +53,20 @@ export default class extends Controller {
       return;
     }
 
+    const x = Number.isNaN(value.x) ? 0 : value.x;
+    const y = Number.isNaN(value.y) ? 0 : value.y;
+    const width = Number.isNaN(value.width) ? 0 : value.width;
+    const height = Number.isNaN(value.height) ? 0 : value.height;
+
     let formData = new FormData();
-    this.cropXValue = value.x;
-    this.cropYValue = value.y;
-    this.cropWidthValue = value.width;
-    this.cropHeightValue = value.height;
-    formData.append('crop[x]', value.x);
-    formData.append('crop[y]', value.y);
-    formData.append('crop[width]', value.width);
-    formData.append('crop[height]', value.height);
+    this.cropXValue = x;
+    this.cropYValue = y;
+    this.cropWidthValue = width;
+    this.cropHeightValue = height;
+    formData.append('crop[x]', x);
+    formData.append('crop[y]', y);
+    formData.append('crop[width]', width);
+    formData.append('crop[height]', height);
     formData.append('crop[aspect_ratio]', this.aspectRatioValue);
 
     const fetchOpts = {
