@@ -56,10 +56,8 @@
 }
 
 .entry__meta {
+  @include content-block;
   border-top: var(--border-thin) solid var(--color-border);
-  margin: 0 auto;
-  max-width: $bp-m;
-  padding: var(--gutter-horizontal) var(--gutter-vertical);
 
   p,
   ul {
@@ -72,14 +70,12 @@
 }
 
 .entry__related {
+  @include content-block;
   border-top: var(--border-thick) solid var(--color-border);
   display: block;
   font-size: var(--font-size-subheading);
   font-weight: var(--font-weight-subheading);
   line-height: var(--line-height-subheading);
-  margin: 0 auto;
-  max-width: $bp-m;
-  padding: var(--gutter-horizontal) var(--gutter-vertical);
   text-align: center;
 }
 

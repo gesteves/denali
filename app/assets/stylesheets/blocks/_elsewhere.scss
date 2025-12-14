@@ -1,11 +1,9 @@
 .elsewhere {
+  @include content-block;
   border-top: var(--border-thick) solid var(--color-border);
   display: block;
   font-size: var(--font-size-heading);
   line-height: var(--line-height-heading);
-  margin: 0 auto;
-  max-width: $bp-m;
-  padding: var(--gutter-horizontal) var(--gutter-vertical);
 }
 
 .elsewhere__heading {

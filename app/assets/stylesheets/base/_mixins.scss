@@ -36,6 +36,20 @@
   color: $color;
 }
 
+@mixin clearfix {
+  &:after {
+    clear: both;
+    content: '';
+    display: table;
+  }
+}
+
+@mixin content-block($max-width: $bp-m) {
+  margin: 0 auto;
+  max-width: $max-width;
+  padding: var(--gutter-horizontal) var(--gutter-vertical);
+}
+
 @mixin dotted-list {
   color: var(--color-text-alt);
   text-wrap: balance;
