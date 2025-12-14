@@ -148,6 +148,10 @@ fly scale count web=2 worker=2
 
 # Scale machine size
 fly scale vm shared-cpu-2x --memory 2048
+
+# Scale worker memory
+fly scale memory 2gb -a denali --process-group worker
+fly scale memory 1gb -a denali --process-group worker
 ```
 
 #### Backing up the database
