@@ -407,7 +407,11 @@ class Photo < ApplicationRecord
   end
 
   def extract_metadata
-    PhotoExifWorker.perform_in(5.seconds, self.id)
+    if self.has_dimensions?
+      PhotoExifWorker.perform_async(self.id)
+    else
+      PhotoExifWorker.perform_in(5.seconds, self.id)
+    end
   end
 
   def generate_alt_text
@@ -423,11 +427,19 @@ class Photo < ApplicationRecord
   end
 
   def detect_colors
-    ColorDetectionWorker.perform_in(5.seconds, self.id)
+    if self.has_dimensions?
+      ColorDetectionWorker.perform_async(self.id)
+    else
+      ColorDetectionWorker.perform_in(5.seconds, self.id)
+    end
   end
 
   def encode_blurhash
-    BlurhashWorker.perform_in(5.seconds, self.id)
+    if self.has_dimensions?
+      BlurhashWorker.perform_async(self.id)
+    else
+      BlurhashWorker.perform_in(5.seconds, self.id)
+    end
   end
 
   def update_park
