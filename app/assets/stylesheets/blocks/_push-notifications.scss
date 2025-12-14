@@ -10,7 +10,7 @@
 }
 
 .push-notifications__button--on {
-  @include button($color-red);
+  @include button($color-gray-light);
 }
 
 .push-notifications__button--disabled {
