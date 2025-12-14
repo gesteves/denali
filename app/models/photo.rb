@@ -415,15 +415,27 @@ class Photo < ApplicationRecord
   end
 
   def generate_alt_text
-    AltTextWorker.perform_async(self.id)
+    if self.has_dimensions?
+      AltTextWorker.perform_async(self.id)
+    else
+      AltTextWorker.perform_in(5.seconds, self.id)
+    end
   end
 
   def geocode
-    PhotoGeocodeWorker.perform_async(self.id)
+    if self.has_dimensions?
+      PhotoGeocodeWorker.perform_async(self.id)
+    else
+      PhotoGeocodeWorker.perform_in(5.seconds, self.id)
+    end
   end
 
   def update_native_lands
-    NativeLandsWorker.perform_async(self.id)
+    if self.has_dimensions?
+      NativeLandsWorker.perform_async(self.id)
+    else
+      NativeLandsWorker.perform_in(5.seconds, self.id)
+    end
   end
 
   def detect_colors
@@ -443,7 +455,11 @@ class Photo < ApplicationRecord
   end
 
   def update_park
-    NationalParkWorker.perform_async(self.id)
+    if self.has_dimensions?
+      NationalParkWorker.perform_async(self.id)
+    else
+      NationalParkWorker.perform_in(5.seconds, self.id)
+    end
   end
 
   def blurhash_data_uri(w: 32)
