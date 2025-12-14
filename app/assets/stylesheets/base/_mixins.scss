@@ -32,9 +32,9 @@
   }
 }
 
-@mixin content-block($max-width: $bp-m) {
+@mixin content-block {
   margin: 0 auto;
-  max-width: $max-width;
+  max-width: var(--max-width-content);
   padding: var(--gutter-horizontal) var(--gutter-vertical);
 }
 

@@ -3,7 +3,7 @@
   flex-flow: row nowrap;
   justify-content: center;
   margin: var(--margin-content);
-  max-width: $bp-m;
+  max-width: var(--max-width-content);
   padding: 0 20px;
 
   @media (min-width: $bp-m) {

@@ -45,7 +45,7 @@
 
 .entry__body {
   margin: 0 auto;
-  max-width: $bp-m;
+  max-width: var(--max-width-content);
   padding: 0 var(--gutter-vertical) var(--gutter-horizontal);
   text-wrap: pretty;
 }

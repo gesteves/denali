@@ -5,7 +5,7 @@
   font-weight: var(--font-weight-subheading);
   line-height: var(--line-height-subheading);
   margin: var(--margin-content);
-  max-width: $bp-m;
+  max-width: var(--max-width-content);
   text-align: center;
   width: 100%;
 }
