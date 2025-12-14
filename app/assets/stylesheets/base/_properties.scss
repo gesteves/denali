@@ -21,6 +21,7 @@
   --entry-list-gutters: 8px;
   --font-sans: 'Lato', 'Helvetica Neue', sans-serif;
   --font-size-heading: 20px;
+  --font-size-photo-title: 14px;
   --font-size-subheading: 18px;
   --font-size-text: 16px;
   --font-size-text-alt: 14px;
@@ -29,6 +30,7 @@
   --gutter-horizontal: 24px;
   --gutter-vertical: 20px;
   --line-height-heading: calc(24 / 20);
+  --line-height-photo-title: calc(24 / 14);
   --line-height-subheading: calc(24 / 18);
   --line-height-text: calc(24 / 16);
   --line-height-text-alt: calc(24 / 14);
@@ -56,7 +58,14 @@
     --entry-list-columns: 3;
   }
 
+  @media (min-width: $bp-xs) {
+    --font-size-photo-title: 16px;
+    --line-height-photo-title: calc(24 / 16);
+  }
+
   @media (min-width: $bp-s) {
+    --font-size-photo-title: 20px;
+    --line-height-photo-title: calc(36 / 20);
     --font-size-heading: 28px;
     --font-size-subheading: 24px;
     --font-size-text: 20px;
@@ -70,6 +79,11 @@
     --margin-subheading: calc(36rem / 24) 0;
     --margin-text: calc(36rem / 20) 0;
     --margin-text-alt: calc(36rem / 14) 0;
+  }
+
+  @media (min-width: $bp-m) {
+    --font-size-photo-title: 22px;
+    --line-height-photo-title: calc(36 / 22);
   }
 
   @media (min-width: $bp-l) {
