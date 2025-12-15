@@ -532,7 +532,7 @@ class Entry < ApplicationRecord
     # Collect park codes (e.g., "yose") and generated initials (e.g., "ynp" from "Yosemite National Park")
     codes_and_initials = parks.flat_map do |park|
       result = []
-      result << park.code if park.code.present?
+      result << park.code.downcase if park.code.present?
       # Generate initials from display_name (e.g., "Yosemite National Park" -> "ynp")
       if park.display_name.present?
         initials = park.display_name.split.map { |word| word[0] }.join.downcase
