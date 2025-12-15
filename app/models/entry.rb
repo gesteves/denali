@@ -26,13 +26,6 @@ class Entry < ApplicationRecord
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['image'].blank? && attributes['id'].blank? }
 
-  SYNONYMS_CACHE_KEY = 'elasticsearch_synonyms'.freeze
-
-  # Load synonyms from Redis (populated by rake elasticsearch:update:entry)
-  def self.elasticsearch_synonyms
-    Rails.cache.read(SYNONYMS_CACHE_KEY) || []
-  end
-
   settings index: { number_of_shards: 1 } do
     settings do
       mappings dynamic: false do
@@ -58,10 +51,6 @@ class Entry < ApplicationRecord
 
     settings analysis: {
       filter: {
-        synonym_filter: {
-          type: :synonym,
-          synonyms: elasticsearch_synonyms
-        },
         asciifolding_preserve: {
           type: :asciifolding,
           preserve_original: true
@@ -71,7 +60,7 @@ class Entry < ApplicationRecord
         search_analyzer: {
           type: :custom,
           tokenizer: :standard,
-          filter: [:lowercase, :asciifolding_preserve, :synonym_filter]
+          filter: [:lowercase, :asciifolding_preserve]
         }
       }
     }
