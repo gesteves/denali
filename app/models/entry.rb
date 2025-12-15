@@ -248,14 +248,23 @@ class Entry < ApplicationRecord
       # ES returns buckets ordered by doc_count (most common first)
       es_tag_names = es_results.response.aggregations.matching_tags.buckets.map { |b| b['key'] }
 
-      # Only include tags from 'tags' or 'locations' contexts (exclude equipment/styles)
+      # Get tag IDs from 'tags' or 'locations' contexts
       valid_tag_ids = ActsAsTaggableOn::Tagging
         .where(context: ['tags', 'locations'])
         .distinct
         .pluck(:tag_id)
 
+      # Get tag IDs from 'equipment' or 'styles' contexts to exclude
+      excluded_tag_ids = ActsAsTaggableOn::Tagging
+        .where(context: ['equipment', 'styles'])
+        .distinct
+        .pluck(:tag_id)
+
+      # Subtract excluded from valid
+      filtered_tag_ids = valid_tag_ids - excluded_tag_ids
+
       tags_by_name = ActsAsTaggableOn::Tag
-        .where(name: es_tag_names, id: valid_tag_ids)
+        .where(name: es_tag_names, id: filtered_tag_ids)
         .index_by(&:name)
 
       # Preserve ES frequency order, filter to valid tags, take top 5
