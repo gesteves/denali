@@ -909,8 +909,7 @@ class Entry < ApplicationRecord
             term: { id: self.id }
           },
           should: [
-            # Use keyword field for exact tag slug matching (more precise)
-            { terms: { tag_slugs: self.tag_slugs } }
+            { match: { es_tag_slugs: self.es_tag_slugs } }
           ],
           minimum_should_match: 1
         }
