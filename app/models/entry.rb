@@ -919,8 +919,7 @@ class Entry < ApplicationRecord
           },
           should: [
             { match: { es_tag_slugs: self.es_tag_slugs } }
-          ],
-          minimum_should_match: 1
+          ]
         }
       },
       sort: [
