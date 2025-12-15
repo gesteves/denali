@@ -57,16 +57,8 @@
 
 .entry__meta {
   @include content-block;
+  @include meta-text;
   border-top: var(--border-thin) solid var(--color-border);
-
-  p,
-  ul {
-    color: var(--color-text-alt);
-    font-size: var(--font-size-text-alt);
-    line-height: var(--line-height-text-alt);
-    margin: 0;
-    text-align: center;
-  }
 }
 
 .entry__related {

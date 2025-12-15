@@ -1,4 +1,5 @@
 require 'elasticsearch/model'
+
 class Entry < ApplicationRecord
   include Elasticsearch::Model
   include Rails.application.routes.url_helpers
@@ -25,7 +26,56 @@ class Entry < ApplicationRecord
 
   accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['image'].blank? && attributes['id'].blank? }
 
-  settings index: { number_of_shards: 1 }
+  SYNONYMS_CACHE_KEY = 'elasticsearch_synonyms'.freeze
+
+  # Load synonyms from Redis (populated by rake elasticsearch:update:entry)
+  def self.elasticsearch_synonyms
+    Rails.cache.read(SYNONYMS_CACHE_KEY) || []
+  end
+
+  settings index: { number_of_shards: 1 } do
+    settings do
+      mappings dynamic: false do
+        indexes :id, type: :integer
+        indexes :blog_id, type: :integer
+        indexes :status, type: :keyword
+        indexes :photos_count, type: :integer
+        indexes :published_at, type: :date
+        indexes :created_at, type: :date
+
+        indexes :plain_title, type: :text, analyzer: :search_analyzer
+        indexes :plain_body, type: :text, analyzer: :search_analyzer
+        indexes :es_alt_text, type: :text, analyzer: :search_analyzer
+        indexes :es_tags, type: :text, analyzer: :search_analyzer
+        indexes :es_tag_slugs, type: :text, analyzer: :standard
+        indexes :es_territories, type: :text, analyzer: :search_analyzer
+
+        # Keyword fields for exact matching and aggregations
+        indexes :tag_names, type: :keyword
+        indexes :tag_slugs, type: :keyword
+      end
+    end
+
+    settings analysis: {
+      filter: {
+        synonym_filter: {
+          type: :synonym,
+          synonyms: elasticsearch_synonyms
+        },
+        asciifolding_preserve: {
+          type: :asciifolding,
+          preserve_original: true
+        }
+      },
+      analyzer: {
+        search_analyzer: {
+          type: :custom,
+          tokenizer: :standard,
+          filter: [:lowercase, :asciifolding_preserve, :synonym_filter]
+        }
+      }
+    }
+  end
 
   after_commit on: [:create] do
     ElasticsearchWorker.perform_async(self.id, 'create')
@@ -51,7 +101,9 @@ class Entry < ApplicationRecord
                            :es_territories,
                            :es_tags,
                            :es_tag_slugs,
-                           :es_alt_text])
+                           :es_alt_text,
+                           :tag_names,
+                           :tag_slugs])
   end
 
   def self.published(order = 'entries.published_at DESC')
@@ -142,15 +194,18 @@ class Entry < ApplicationRecord
   def self.full_search(query, page = 1, per_page = 10)
     search = {
       query: {
-        bool: {
-          must: [
-            { query_string: { query: query, default_operator: 'AND' } }
-          ]
+        multi_match: {
+          query: query,
+          fields: ['plain_title^2', 'plain_body', 'es_tags^3', 'es_alt_text', 'es_territories'],
+          type: 'best_fields',
+          operator: 'and',
+          fuzziness: 'AUTO',
+          prefix_length: 2
         }
       },
       sort: [
-        { created_at: 'desc' },
-        '_score'
+        '_score',
+        { created_at: 'desc' }
       ],
       size: per_page,
       from: (page.to_i - 1) * per_page
@@ -165,18 +220,60 @@ class Entry < ApplicationRecord
           must: [
             { term: { status: 'published' } },
             { range: { photos_count: { gt: 0 } } },
-            { multi_match: { query: query, fields: ['plain_*', 'es_*'], type: 'cross_fields', operator: 'and' } }
+            {
+              multi_match: {
+                query: query,
+                fields: ['plain_title^2', 'plain_body', 'es_tags^3', 'es_alt_text', 'es_territories'],
+                type: 'best_fields',
+                operator: 'and',
+                fuzziness: 'AUTO',
+                prefix_length: 2
+              }
+            }
           ]
         }
       },
+      aggs: {
+        matching_tags: {
+          terms: { field: 'tag_names', size: 10 }
+        }
+      },
       sort: [
-        { published_at: 'desc' },
-        '_score'
+        '_score',
+        { published_at: 'desc' }
       ],
       size: per_page,
       from: (page.to_i - 1) * per_page
     }
     self.search(search)
+  end
+
+  # Search with tag suggestions - returns both entries and top tags from results
+  def self.search_with_tag_suggestions(query, page = 1, per_page = 10)
+    # Run ES search with aggregations
+    es_results = published_search(query, page, per_page)
+
+    # Get the most common tags from the search results via ES aggregations
+    suggested_tags = []
+    if es_results.response.aggregations&.matching_tags&.buckets
+      # ES returns buckets ordered by doc_count (most common first)
+      es_tag_names = es_results.response.aggregations.matching_tags.buckets.map { |b| b['key'] }
+
+      # Only include tags from 'tags' or 'locations' contexts (exclude equipment/styles)
+      valid_tag_ids = ActsAsTaggableOn::Tagging
+        .where(context: ['tags', 'locations'])
+        .distinct
+        .pluck(:tag_id)
+
+      tags_by_name = ActsAsTaggableOn::Tag
+        .where(name: es_tag_names, id: valid_tag_ids)
+        .index_by(&:name)
+
+      # Preserve ES frequency order, filter to valid tags, take top 5
+      suggested_tags = es_tag_names.map { |name| tags_by_name[name] }.compact.take(5)
+    end
+
+    { entries: es_results, suggested_tags: suggested_tags }
   end
 
   def self.published_today
@@ -409,6 +506,14 @@ class Entry < ApplicationRecord
 
   def es_tag_slugs
     self.combined_tags.map { |t| t.slug.gsub(/-/, '') }.join(' ')
+  end
+
+  def tag_names
+    combined_tags.map(&:name)
+  end
+
+  def tag_slugs
+    combined_tags.map(&:slug)
   end
 
   def es_alt_text
@@ -815,8 +920,10 @@ class Entry < ApplicationRecord
             term: { id: self.id }
           },
           should: [
-            { match: { es_tag_slugs: self.es_tag_slugs } }
-          ]
+            # Use keyword field for exact tag slug matching (more precise)
+            { terms: { tag_slugs: self.tag_slugs } }
+          ],
+          minimum_should_match: 1
         }
       },
       sort: [

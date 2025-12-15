@@ -28,6 +28,6 @@
     <%= paginate @entries %>
   <% else %>
     <%= render partial: 'entries/search/search_form' %>
-    <h1 class="entry_list__heading">No results found for “<%= sanitize @query %>”. Try searching for something else, like “film”, “fujifilm”, or “bears”.</h1>
+    <h1 class="entry_list__heading">No results found for “<%= sanitize @query %>”.</h1>
   <% end %>
 <% end %>

@@ -177,12 +177,19 @@ class Admin::EntriesController < AdminController
     @count = 10
     @query = params[:q]
     @page_title = "Search"
+
     if @query.present?
       @page_title = "Search results for \"#{@query}\""
+
       results = Entry.full_search(@query, @page, @count)
+
       @total_count = results.results.total
-      @entries = Kaminari.paginate_array(results.records.includes(photos: [:image_attachment, :image_blob], taggings: :tag), total_count: @total_count).page(@page).per(@count)
+      @entries = Kaminari.paginate_array(
+        results.records.includes(photos: [:image_attachment, :image_blob], taggings: :tag),
+        total_count: @total_count
+      ).page(@page).per(@count)
     end
+
     respond_to do |format|
       format.html
     end

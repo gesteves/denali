@@ -83,14 +83,20 @@ class EntriesController < ApplicationController
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
     @query = params[:q]
+    @suggested_tags = []
+
     if @query.present?
       @srcset = PHOTOS[:entry_list][:srcset]
       @sizes = PHOTOS[:entry_list][:sizes].join(', ')
-      results = Entry.published_search(@query, @page, @count)
+
+      search_results = Entry.search_with_tag_suggestions(@query, @page, @count)
+      results = search_results[:entries]
+      @suggested_tags = search_results[:suggested_tags]
+
       total_count = results.results.total
       records = results.records.includes(photos: [:image_attachment, :image_blob, :crops])
       @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
-      @page_title = "Search results for “#{@query}” – #{@photoblog.name}"
+      @page_title = "Search results for ”#{@query}” – #{@photoblog.name}"
       @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
       @page_url = @page == 1 ? search_url(q: @query) : search_url(q: @query, page: @page)
       @base_url = search_url(q: @query)
