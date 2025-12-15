@@ -42,6 +42,7 @@ class Entry < ApplicationRecord
         indexes :es_tags, type: :text, analyzer: :search_analyzer
         indexes :es_tag_slugs, type: :text, analyzer: :standard
         indexes :es_territories, type: :text, analyzer: :search_analyzer
+        indexes :es_parks, type: :text, analyzer: :search_analyzer
 
         # Keyword fields for exact matching and aggregations
         indexes :tag_names, type: :keyword
@@ -91,6 +92,7 @@ class Entry < ApplicationRecord
                            :es_tags,
                            :es_tag_slugs,
                            :es_alt_text,
+                           :es_parks,
                            :tag_names,
                            :tag_slugs])
   end
@@ -185,7 +187,7 @@ class Entry < ApplicationRecord
       query: {
         multi_match: {
           query: query,
-          fields: ['plain_title^2', 'plain_body', 'es_tags^3', 'es_alt_text', 'es_territories'],
+          fields: ['plain_title^2', 'plain_body', 'es_tags^3', 'es_alt_text', 'es_territories', 'es_parks^2'],
           type: 'best_fields',
           operator: 'and',
           fuzziness: 'AUTO',
@@ -212,7 +214,7 @@ class Entry < ApplicationRecord
             {
               multi_match: {
                 query: query,
-                fields: ['plain_title^2', 'plain_body', 'es_tags^3', 'es_alt_text', 'es_territories'],
+                fields: ['plain_title^2', 'plain_body', 'es_tags^3', 'es_alt_text', 'es_territories', 'es_parks^2'],
                 type: 'best_fields',
                 operator: 'and',
                 fuzziness: 'AUTO',
@@ -521,6 +523,25 @@ class Entry < ApplicationRecord
   def es_territories
     return '' unless self.show_location?
     self.photos.where.not(territories: nil).map { |p| JSON.parse(p.territories) }.flatten.uniq.join(' ')
+  end
+
+  def es_parks
+    parks = self.photos.includes(:park).map(&:park).compact.uniq
+    return '' if parks.empty?
+
+    # Collect park codes (e.g., "yose") and generated initials (e.g., "ynp" from "Yosemite National Park")
+    codes_and_initials = parks.flat_map do |park|
+      result = []
+      result << park.code if park.code.present?
+      # Generate initials from display_name (e.g., "Yosemite National Park" -> "ynp")
+      if park.display_name.present?
+        initials = park.display_name.split.map { |word| word[0] }.join.downcase
+        result << initials if initials.length > 1
+      end
+      result
+    end
+
+    codes_and_initials.uniq.join(' ')
   end
 
   def bluesky_hashtags(count = 5)
