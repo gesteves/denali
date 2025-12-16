@@ -132,7 +132,7 @@ related_entries:
   # e.g., "365d" means entries 1 year before or after get half the boost
   scale: 365d
   # Decay factor (0-1): how much boost remains at the scale point
-  decay: 0.5
+  decay: 0.75
   # How to combine function score with query score
   boost_mode: multiply
   # Weight of the temporal proximity function
