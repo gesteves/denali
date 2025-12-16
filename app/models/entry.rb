@@ -55,13 +55,17 @@ class Entry < ApplicationRecord
         asciifolding_preserve: {
           type: :asciifolding,
           preserve_original: true
+        },
+        search_synonyms: {
+          type: :synonym_graph,
+          synonyms: SEARCH_CONFIG[:synonyms]
         }
       },
       analyzer: {
         search_analyzer: {
           type: :custom,
           tokenizer: :standard,
-          filter: [:lowercase, :asciifolding_preserve]
+          filter: [:lowercase, :asciifolding_preserve, :search_synonyms]
         }
       }
     }
@@ -183,15 +187,34 @@ class Entry < ApplicationRecord
   end
 
   def self.full_search(query, page = 1, per_page = 10)
+    recency = SEARCH_CONFIG[:recency_boost]
     search = {
+      min_score: SEARCH_CONFIG[:min_score],
       query: {
-        multi_match: {
-          query: query,
-          fields: ['plain_title', 'plain_body', 'es_tags^3', 'es_alt_text', 'es_territories', 'es_parks^2'],
-          type: 'best_fields',
-          operator: 'and',
-          fuzziness: 'AUTO',
-          prefix_length: 2
+        function_score: {
+          query: {
+            multi_match: {
+              query: query,
+              fields: ['plain_title', 'plain_body', 'es_tags^3', 'es_alt_text', 'es_territories', 'es_parks^2'],
+              type: 'best_fields',
+              operator: 'and',
+              fuzziness: 'AUTO',
+              prefix_length: 2
+            }
+          },
+          functions: [
+            {
+              gauss: {
+                created_at: {
+                  origin: recency[:origin],
+                  scale: recency[:scale],
+                  decay: recency[:decay]
+                }
+              },
+              weight: recency[:weight]
+            }
+          ],
+          boost_mode: recency[:boost_mode]
         }
       },
       sort: [
@@ -205,23 +228,42 @@ class Entry < ApplicationRecord
   end
 
   def self.published_search(query, page = 1, per_page = 10)
+    recency = SEARCH_CONFIG[:recency_boost]
     search = {
+      min_score: SEARCH_CONFIG[:min_score],
       query: {
-        bool: {
-          must: [
-            { term: { status: 'published' } },
-            { range: { photos_count: { gt: 0 } } },
-            {
-              multi_match: {
-                query: query,
-                fields: ['plain_title', 'plain_body', 'es_tags^3', 'es_alt_text', 'es_territories', 'es_parks^2'],
-                type: 'best_fields',
-                operator: 'and',
-                fuzziness: 'AUTO',
-                prefix_length: 2
-              }
+        function_score: {
+          query: {
+            bool: {
+              must: [
+                { term: { status: 'published' } },
+                { range: { photos_count: { gt: 0 } } },
+                {
+                  multi_match: {
+                    query: query,
+                    fields: ['plain_title', 'plain_body', 'es_tags^3', 'es_alt_text', 'es_territories', 'es_parks^2'],
+                    type: 'best_fields',
+                    operator: 'and',
+                    fuzziness: 'AUTO',
+                    prefix_length: 2
+                  }
+                }
+              ]
             }
-          ]
+          },
+          functions: [
+            {
+              gauss: {
+                published_at: {
+                  origin: recency[:origin],
+                  scale: recency[:scale],
+                  decay: recency[:decay]
+                }
+              },
+              weight: recency[:weight]
+            }
+          ],
+          boost_mode: recency[:boost_mode]
         }
       },
       aggs: {
