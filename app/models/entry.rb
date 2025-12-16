@@ -17,8 +17,8 @@ class Entry < ApplicationRecord
   before_save :set_entry_slug
   before_save :set_preview_hash
   before_save :set_sensitive
-  before_save :update_caption_validity, if: :changed_caption_fields?
 
+  after_commit :enqueue_caption_validity_job, if: :changed_caption_fields?
   after_commit :handle_status_change, if: :saved_change_to_status?
 
   acts_as_taggable_on :tags, :equipment, :locations, :styles
@@ -900,12 +900,8 @@ class Entry < ApplicationRecord
     photos.all? { |p| p.has_dimensions? }
   end
 
-  def update_caption_validity
-    return if new_record?
-    self.valid_bluesky_caption = Bluesky.valid_post_length?(bluesky_caption)
-    self.valid_mastodon_caption = mastodon_caption.length <= 500
-    self.valid_instagram_caption = instagram_caption.length <= 2200
-    self.valid_threads_caption = threads_caption.length <= 500
+  def enqueue_caption_validity_job
+    CaptionValidityWorker.perform_async(self.id)
   end
 
   private
@@ -949,11 +945,11 @@ class Entry < ApplicationRecord
   end
 
   def changed_caption_fields?
-    title_changed? ||
-    mastodon_text_changed? ||
-    bluesky_text_changed? ||
-    instagram_text_changed? ||
-    threads_text_changed?
+    saved_change_to_title? ||
+    saved_change_to_mastodon_text? ||
+    saved_change_to_bluesky_text? ||
+    saved_change_to_instagram_text? ||
+    saved_change_to_threads_text?
   end
 
   def related_query(count = 12)
