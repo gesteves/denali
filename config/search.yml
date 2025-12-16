@@ -42,3 +42,17 @@ synonyms:
   - "macro,closeup,close-up"
   - "street,streets,urban,street photography"
   - "grizzly,grizzly bear,brown bear"
+
+# Related entries temporal proximity
+# Entries closer in time to the current entry are boosted
+# Uses bidirectional Gaussian decay centered on the entry's date
+related_entries:
+  # Time period over which the boost decays to half
+  # e.g., "365d" means entries 1 year before or after get half the boost
+  scale: 365d
+  # Decay factor (0-1): how much boost remains at the scale point
+  decay: 0.5
+  # How to combine function score with query score
+  boost_mode: multiply
+  # Weight of the temporal proximity function
+  weight: 1.5

@@ -979,24 +979,39 @@ class Entry < ApplicationRecord
       self.created_at
     end
 
-    start_date = entry_date.beginning_of_day - 1.year
-    end_date = entry_date.end_of_day + 1.year
+    related_config = SEARCH_CONFIG[:related_entries]
 
     {
       query: {
-        bool: {
-          must: [
-            { term: { blog_id: self.blog_id } },
-            { term: { status: 'published' } },
-            { range: { photos_count: { gt: 0 } } },
-            { range: { published_at: { gte: start_date, lte: end_date } } }
-          ],
-          must_not: {
-            term: { id: self.id }
+        function_score: {
+          query: {
+            bool: {
+              must: [
+                { term: { blog_id: self.blog_id } },
+                { term: { status: 'published' } },
+                { range: { photos_count: { gt: 0 } } }
+              ],
+              must_not: {
+                term: { id: self.id }
+              },
+              should: [
+                { match: { es_tag_slugs: self.es_tag_slugs } }
+              ]
+            }
           },
-          should: [
-            { match: { es_tag_slugs: self.es_tag_slugs } }
-          ]
+          functions: [
+            {
+              gauss: {
+                published_at: {
+                  origin: entry_date.iso8601,
+                  scale: related_config[:scale],
+                  decay: related_config[:decay]
+                }
+              },
+              weight: related_config[:weight]
+            }
+          ],
+          boost_mode: related_config[:boost_mode]
         }
       },
       sort: [
