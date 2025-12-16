@@ -24,7 +24,7 @@
   transform: translateY(-50%);
   width: 20px;
   height: 20px;
-  color: var(--color-text-alt);
+  fill: var(--color-icon-fill);
   pointer-events: none;
 
   @media (min-width: $bp-s) {
