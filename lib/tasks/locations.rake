@@ -68,4 +68,19 @@ namespace :locations do
       end
     end
   end
+
+  namespace :clear do
+    desc 'Clears the location column for photos that have an associated park (DRY_RUN=true to preview)'
+    task :park_locations => :environment do
+      dry_run = ActiveModel::Type::Boolean.new.cast(ENV['DRY_RUN'])
+      photos = Photo.where.not(park_id: nil).where.not(location: [nil, ''])
+      puts "Found #{photos.count} photos with both a park and a location"
+      puts "DRY RUN - no changes will be made" if dry_run
+      photos.find_each do |photo|
+        puts "Clearing location '#{photo.location}' for photo #{photo.id} (park: #{photo.park.display_name})"
+        photo.update(location: nil) unless dry_run
+      end
+      puts "Done"
+    end
+  end
 end
