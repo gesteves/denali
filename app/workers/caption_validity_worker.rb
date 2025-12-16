@@ -2,7 +2,14 @@ class CaptionValidityWorker < ApplicationWorker
   sidekiq_options queue: 'low'
 
   def perform(entry_id)
-    entry = Entry.find(entry_id)
+    entry = Entry.includes(
+      :blog,
+      { taggings: :tag },
+      { photos: [:camera, :lens, :film, :park] }
+    ).find(entry_id)
+
+    # Preload all tag_customizations to avoid 4 separate queries
+    entry.blog.tag_customizations.load
 
     entry.update_columns(
       valid_bluesky_caption: Bluesky.valid_post_length?(entry.bluesky_caption),

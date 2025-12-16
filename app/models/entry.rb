@@ -538,6 +538,24 @@ class Entry < ApplicationRecord
     taggings.map(&:tag).uniq.compact
   end
 
+  # Returns tags for a specific context, using preloaded taggings when available
+  def tags_for_context(context)
+    if association(:taggings).loaded?
+      self.taggings.select { |t| t.context == context }.map(&:tag).uniq.compact
+    else
+      send(context.to_sym)
+    end
+  end
+
+  # Filter tag_customizations in memory when preloaded, otherwise query
+  def tag_customizations_with_field(field)
+    if blog.association(:tag_customizations).loaded?
+      blog.tag_customizations.select { |tc| tc.send(field).present? }
+    else
+      blog.tag_customizations.where.not(field => [nil, ''])
+    end
+  end
+
   def combined_tag_list
     self.combined_tags.map(&:name)
   end
@@ -587,18 +605,18 @@ class Entry < ApplicationRecord
   end
 
   def bluesky_hashtags(count = 5)
-    entry_tags = self.tags
-    entry_locations = self.locations
-    entry_equipment = self.equipment
-    entry_styles = self.styles
-    combined_tags = self.combined_tags
+    entry_tags = tags_for_context('tags')
+    entry_locations = tags_for_context('locations')
+    entry_equipment = tags_for_context('equipment')
+    entry_styles = tags_for_context('styles')
+    all_tags = combined_tags
     tags = []
     location_tags = []
     equipment_tags = []
     style_tags = []
     more_tags = []
 
-    self.blog.tag_customizations.where.not(bluesky_hashtags: [nil, '']).each do |tag_customization|
+    tag_customizations_with_field(:bluesky_hashtags).each do |tag_customization|
       hashtags = tag_customization.bluesky_hashtags_to_a
       if tag_customization.matches_tags? entry_tags
         tags << hashtags
@@ -608,7 +626,7 @@ class Entry < ApplicationRecord
         equipment_tags << hashtags
       elsif tag_customization.matches_tags? entry_styles
         style_tags << hashtags
-      elsif tag_customization.matches_tags? combined_tags
+      elsif tag_customization.matches_tags? all_tags
         more_tags << hashtags
       end
     end
@@ -618,18 +636,18 @@ class Entry < ApplicationRecord
   end
 
   def mastodon_hashtags(count = 5)
-    entry_tags = self.tags
-    entry_locations = self.locations
-    entry_equipment = self.equipment
-    entry_styles = self.styles
-    combined_tags = self.combined_tags
+    entry_tags = tags_for_context('tags')
+    entry_locations = tags_for_context('locations')
+    entry_equipment = tags_for_context('equipment')
+    entry_styles = tags_for_context('styles')
+    all_tags = combined_tags
     tags = []
     location_tags = []
     equipment_tags = []
     style_tags = []
     more_tags = []
 
-    self.blog.tag_customizations.where.not(mastodon_hashtags: [nil, '']).each do |tag_customization|
+    tag_customizations_with_field(:mastodon_hashtags).each do |tag_customization|
       hashtags = tag_customization.mastodon_hashtags_to_a
       if tag_customization.matches_tags? entry_tags
         tags << hashtags
@@ -639,7 +657,7 @@ class Entry < ApplicationRecord
         equipment_tags << hashtags
       elsif tag_customization.matches_tags? entry_styles
         style_tags << hashtags
-      elsif tag_customization.matches_tags? combined_tags
+      elsif tag_customization.matches_tags? all_tags
         more_tags << hashtags
       end
     end
@@ -709,18 +727,18 @@ class Entry < ApplicationRecord
   end
 
   def instagram_hashtags(count = 30)
-    entry_tags = self.tags
-    entry_locations = self.locations
-    entry_equipment = self.equipment
-    entry_styles = self.styles
-    combined_tags = self.combined_tags
+    entry_tags = tags_for_context('tags')
+    entry_locations = tags_for_context('locations')
+    entry_equipment = tags_for_context('equipment')
+    entry_styles = tags_for_context('styles')
+    all_tags = combined_tags
     tags = []
     location_tags = []
     equipment_tags = []
     style_tags = []
     more_tags = []
 
-    self.blog.tag_customizations.where.not(instagram_hashtags: [nil, '']).each do |tag_customization|
+    tag_customizations_with_field(:instagram_hashtags).each do |tag_customization|
       hashtags = tag_customization.instagram_hashtags_to_a
       if tag_customization.matches_tags? entry_tags
         tags << hashtags
@@ -730,7 +748,7 @@ class Entry < ApplicationRecord
         equipment_tags << hashtags
       elsif tag_customization.matches_tags? entry_styles
         style_tags << hashtags
-      elsif tag_customization.matches_tags? combined_tags
+      elsif tag_customization.matches_tags? all_tags
         more_tags << hashtags
       end
     end
@@ -764,18 +782,18 @@ class Entry < ApplicationRecord
   end
 
   def threads_topic
-    entry_tags = self.tags
-    entry_locations = self.locations
-    entry_equipment = self.equipment
-    entry_styles = self.styles
-    combined_tags = self.combined_tags
+    entry_tags = tags_for_context('tags')
+    entry_locations = tags_for_context('locations')
+    entry_equipment = tags_for_context('equipment')
+    entry_styles = tags_for_context('styles')
+    all_tags = combined_tags
     topics = []
     location_topics = []
     equipment_topics = []
     style_topics = []
     more_topics = []
 
-    self.blog.tag_customizations.where.not(threads_topics: [nil, '']).each do |tag_customization|
+    tag_customizations_with_field(:threads_topics).each do |tag_customization|
       topics_array = tag_customization.threads_topics_to_a
       if tag_customization.matches_tags? entry_tags
         topics.concat(topics_array)
@@ -785,7 +803,7 @@ class Entry < ApplicationRecord
         equipment_topics.concat(topics_array)
       elsif tag_customization.matches_tags? entry_styles
         style_topics.concat(topics_array)
-      elsif tag_customization.matches_tags? combined_tags
+      elsif tag_customization.matches_tags? all_tags
         more_topics.concat(topics_array)
       end
     end
