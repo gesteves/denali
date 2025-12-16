@@ -311,8 +311,8 @@ class Entry < ApplicationRecord
         .where(name: es_tag_names, id: filtered_tag_ids)
         .index_by(&:name)
 
-      # Preserve ES frequency order, filter to valid tags, take top 5
-      suggested_tags = es_tag_names.map { |name| tags_by_name[name] }.compact.take(5)
+      # Preserve ES frequency order, filter to valid tags, take top 10
+      suggested_tags = es_tag_names.map { |name| tags_by_name[name] }.compact.take(10)
     end
 
     { entries: es_results, suggested_tags: suggested_tags }
