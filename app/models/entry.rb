@@ -194,8 +194,8 @@ class Entry < ApplicationRecord
           query: {
             multi_match: {
               query: query,
-              fields: ['plain_title', 'plain_body', 'es_tags', 'es_alt_text', 'es_territories', 'es_parks'],
-              type: 'best_fields',
+              fields: ['plain_title^3', 'plain_body', 'es_tags^2', 'es_alt_text', 'es_territories', 'es_parks'],
+              type: 'most_fields',
               operator: 'and',
               fuzziness: 'AUTO',
               prefix_length: 2
@@ -239,8 +239,8 @@ class Entry < ApplicationRecord
                 {
                   multi_match: {
                     query: query,
-                    fields: ['plain_title', 'plain_body', 'es_tags', 'es_alt_text', 'es_territories', 'es_parks'],
-                    type: 'best_fields',
+                    fields: ['plain_title^3', 'plain_body', 'es_tags^2', 'es_alt_text', 'es_territories', 'es_parks'],
+                    type: 'most_fields',
                     operator: 'and',
                     fuzziness: 'AUTO',
                     prefix_length: 2
