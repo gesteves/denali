@@ -8,7 +8,7 @@ class NationalParkWorker < ApplicationWorker
     return if park_code.blank?
 
     code = park_code.downcase
-    return unless code.match? /^[a-z]{4,10}$/
+    return unless code.match?(/^[a-z]{4,10}$/)
 
     data = fetch_park(code)
     return if data.blank?
