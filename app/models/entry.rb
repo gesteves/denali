@@ -189,7 +189,6 @@ class Entry < ApplicationRecord
   def self.full_search(query, page = 1, per_page = 10)
     recency = SEARCH_CONFIG[:recency_boost]
     search = {
-      min_score: SEARCH_CONFIG[:min_score],
       query: {
         function_score: {
           query: {
@@ -230,7 +229,6 @@ class Entry < ApplicationRecord
   def self.published_search(query, page = 1, per_page = 10)
     recency = SEARCH_CONFIG[:recency_boost]
     search = {
-      min_score: SEARCH_CONFIG[:min_score],
       query: {
         function_score: {
           query: {

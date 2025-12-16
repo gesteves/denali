@@ -1,12 +1,6 @@
 # Search configuration for Elasticsearch
 # These values can be tweaked without code changes
 
-# Minimum relevance score for search results
-# Results below this threshold are filtered out
-# Higher values = stricter matching, fewer results
-# Lower values = more lenient, more results
-min_score: 0.01
-
 # Recency boost configuration
 # Newer content gets a relevance boost that decays over time
 recency_boost:
@@ -41,7 +35,7 @@ synonyms:
   - "flower,flowers,floral,bloom"
   - "macro,closeup,close-up"
   - "street,streets,urban,street photography"
-  - "grizzly,grizzly bear,brown bear"
+  - "grizzly,grizzly bear,brown bear,grizzlies"
 
 # Related entries temporal proximity
 # Entries closer in time to the current entry are boosted
@@ -55,4 +49,4 @@ related_entries:
   # How to combine function score with query score
   boost_mode: multiply
   # Weight of the temporal proximity function
-  weight: 1.5
+  weight: 1.2
