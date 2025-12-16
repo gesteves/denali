@@ -1,4 +1,5 @@
 class NationalParkWorker < ApplicationWorker
+  sidekiq_options retry: 5
 
   def perform(photo_id, park_code)
     photo = Photo.find(photo_id)
