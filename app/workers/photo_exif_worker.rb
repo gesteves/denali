@@ -37,8 +37,17 @@ class PhotoExifWorker < ApplicationWorker
         photo.film = Film.create_with(display_name: film_name, make: film_make, model: film_type).find_or_create_by(slug: film_name.parameterize) if film_make.present? && film_type.present?
 
         location = comment_array.find { |c| c =~ /^location:/i }&.gsub(/^location:/i, '')&.strip
-        park = comment_array.find { |c| c =~ /^park:/i }&.gsub(/^park:/i, '')&.strip&.downcase
-        photo.location = park || location if photo.location.blank?
+        photo.location = location if photo.location.blank? && location.present?
+
+        park_code = comment_array.find { |c| c =~ /^park:/i }&.gsub(/^park:/i, '')&.strip&.downcase
+        if park_code.present?
+          park = Park.find_by_code(park_code)
+          if park.present?
+            photo.park = park
+          else
+            NationalParkWorker.perform_async(photo_id, park_code)
+          end
+        end
       end
       if exif.image_description.present? && photo.alt_text.blank?
         photo.alt_text = exif.image_description.force_encoding('UTF-8').encode('UTF-8', invalid: :replace, undef: :replace, replace: '')

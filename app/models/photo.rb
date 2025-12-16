@@ -20,7 +20,6 @@ class Photo < ApplicationRecord
   after_commit :update_entry_equipment_tags, if: :changed_equipment?
   after_commit :update_entry_location_tags, if: :changed_location?
   after_commit :update_entry_style_tags, if: :changed_style?
-  after_commit :update_park, if: :changed_location?
   after_commit :update_entry_caption_validity, if: :changed_caption_attributes?
 
   scope :needs_alt_text_review, -> { where(alt_text: [nil, ""]).or(where(auto_generated_alt_text: true)) }
@@ -451,14 +450,6 @@ class Photo < ApplicationRecord
       BlurhashWorker.perform_async(self.id)
     else
       BlurhashWorker.perform_in(5.seconds, self.id)
-    end
-  end
-
-  def update_park
-    if self.has_dimensions?
-      NationalParkWorker.perform_async(self.id)
-    else
-      NationalParkWorker.perform_in(5.seconds, self.id)
     end
   end
 
