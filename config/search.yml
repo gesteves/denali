@@ -16,7 +16,7 @@ recency_boost:
   # multiply, sum, avg, first, max, min
   boost_mode: multiply
   # Weight of the recency function (higher = more impact)
-  weight: 1.2
+  weight: 1.5
 
 # Synonyms for search
 # Format: "word1,word2,word3" - all words are equivalent
