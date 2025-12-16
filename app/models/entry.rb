@@ -316,6 +316,28 @@ class Entry < ApplicationRecord
     { entries: es_results, suggested_tags: suggested_tags }
   end
 
+  def self.popular_tags(limit = 10)
+    # Get tag IDs from 'tags' or 'locations' contexts
+    valid_tag_ids = ActsAsTaggableOn::Tagging
+      .where(context: ['tags', 'locations'])
+      .distinct
+      .pluck(:tag_id)
+
+    # Get tag IDs from 'equipment' or 'styles' contexts to exclude
+    excluded_tag_ids = ActsAsTaggableOn::Tagging
+      .where(context: ['equipment', 'styles'])
+      .distinct
+      .pluck(:tag_id)
+
+    # Subtract excluded from valid
+    filtered_tag_ids = valid_tag_ids - excluded_tag_ids
+
+    ActsAsTaggableOn::Tag
+      .where(id: filtered_tag_ids)
+      .order(taggings_count: :desc)
+      .limit(limit)
+  end
+
   def self.published_today
     where('published_at >= ? and published_at <= ?', Time.current.beginning_of_day, Time.current.end_of_day)
   end

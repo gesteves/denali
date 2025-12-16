@@ -1,6 +1,6 @@
 <% if suggested_tags.present? %>
   <aside class="search-tags" aria-label="Suggested Tags">
-    <p>Looking for more? Explore these related tags.</p>
+    <p><%= title %></p>
     <ul class="tags">
       <% suggested_tags.each do |tag| %>
         <li><%= link_to tag.name, tag_url(tag.slug), { rel: 'tag', title: "All photos tagged ”#{tag.name}”", 'aria-label': tag.name } %></li>
