@@ -184,10 +184,11 @@ class Admin::EntriesController < AdminController
       results = Entry.full_search(@query, @page, @count)
 
       @total_count = results.results.total
-      @entries = Kaminari.paginate_array(
-        results.records.includes(photos: [:image_attachment, :image_blob], taggings: :tag),
-        total_count: @total_count
-      ).page(@page).per(@count)
+      # Preserve Elasticsearch score order by fetching IDs first, then reordering
+      hit_ids = results.response.hits.hits.map { |h| h._id.to_i }
+      records_by_id = Entry.includes(photos: [:image_attachment, :image_blob], taggings: :tag).where(id: hit_ids).index_by(&:id)
+      ordered_records = hit_ids.map { |id| records_by_id[id] }.compact
+      @entries = Kaminari.paginate_array(ordered_records, total_count: @total_count).page(@page).per(@count)
     end
 
     respond_to do |format|

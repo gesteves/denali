@@ -94,8 +94,11 @@ class EntriesController < ApplicationController
       @suggested_tags = search_results[:suggested_tags]
 
       total_count = results.results.total
-      records = results.records.includes(photos: [:image_attachment, :image_blob, :crops])
-      @entries = Kaminari.paginate_array(records, total_count: total_count).page(@page).per(@count)
+      # Preserve Elasticsearch score order by fetching IDs first, then reordering
+      hit_ids = results.response.hits.hits.map { |h| h._id.to_i }
+      records_by_id = Entry.includes(photos: [:image_attachment, :image_blob, :crops]).where(id: hit_ids).index_by(&:id)
+      ordered_records = hit_ids.map { |id| records_by_id[id] }.compact
+      @entries = Kaminari.paginate_array(ordered_records, total_count: total_count).page(@page).per(@count)
       @page_title = "Search results for ”#{@query}” – #{@photoblog.name}"
       @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
       @page_url = @page == 1 ? search_url(q: @query) : search_url(q: @query, page: @page)

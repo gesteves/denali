@@ -437,7 +437,11 @@ class Entry < ApplicationRecord
 
   def related(count: 12)
     begin
-      Entry.search(related_query(count)).records.includes(photos: [:image_attachment, :image_blob, :crops])
+      results = Entry.search(related_query(count))
+      # Preserve Elasticsearch score order by fetching IDs first, then reordering
+      hit_ids = results.response.hits.hits.map { |h| h._id.to_i }
+      records_by_id = Entry.includes(photos: [:image_attachment, :image_blob, :crops]).where(id: hit_ids).index_by(&:id)
+      hit_ids.map { |id| records_by_id[id] }.compact
     rescue => e
       logger.error "Fetching related entries failed with the following error: #{e}"
       nil
