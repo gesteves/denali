@@ -11,7 +11,7 @@ module ApplicationHelper
       width: photo.width,
       height: aspect_ratio.present? ? photo.height_from_aspect_ratio(aspect_ratio) : photo.height,
       alt: photo.alt_text,
-      loading: 'eager',
+      loading: 'lazy',
       decoding: 'async'
     })
     tag.picture do
