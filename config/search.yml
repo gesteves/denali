@@ -134,6 +134,6 @@ related_entries:
   # Decay factor (0-1): how much boost remains at the scale point
   decay: 0.75
   # How to combine function score with query score
-  boost_mode: multiply
+  boost_mode: sum
   # Weight of the temporal proximity function
-  weight: 1.2
+  weight: 0.1
