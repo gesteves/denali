@@ -132,10 +132,10 @@ related_entries:
 
   recency:
     scale: 365d
-    decay: 0.75
+    decay: 0.5
     weight: 0.1
 
   proximity:
-    scale: 10km
+    scale: 5km
     decay: 0.5
     weight: 0.1
