@@ -124,27 +124,16 @@ synonyms:
   - "wyoming,wy"
   - "washington dc,district of columbia,dc"
 
-# Related entries scoring
-# All three factors matter: tags, recency, and proximity
+# Related entries temporal proximity
+# Entries closer in time to the current entry are boosted
+# Uses bidirectional Gaussian decay centered on the entry's date
 related_entries:
-  # How to combine function scores with query score
-  # multiply = all factors must be strong
+  # Time period over which the boost decays to half
+  # e.g., "365d" means entries 1 year before or after get half the boost
+  scale: 365d
+  # Decay factor (0-1): how much boost remains at the scale point
+  decay: 0.75
+  # How to combine function score with query score
   boost_mode: multiply
-
-  # Temporal proximity - entries closer in time are boosted
-  recency:
-    # Time period over which the boost decays to half
-    scale: 365d
-    # Decay factor (0-1): how much boost remains at the scale point
-    decay: 0.5
-    # Weight of the recency function
-    weight: 1
-
-  # Geographic proximity - entries closer in location are boosted
-  proximity:
-    # Distance at which the boost decays to the decay value
-    scale: 10km
-    # Decay factor (0-1): how much boost remains at the scale point
-    decay: 0.5
-    # Weight of the proximity function
-    weight: 1
+  # Weight of the temporal proximity function
+  weight: 1.2
