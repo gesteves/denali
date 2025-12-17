@@ -21,7 +21,7 @@
   display: block;
   height: auto;
   margin: 0 auto;
-  max-height: 95vh;
+  max-height: calc(100vh - var(--gutter-horizontal));
   position: relative;
   width: auto;
   z-index: 101;
