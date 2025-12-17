@@ -137,3 +137,14 @@ related_entries:
   boost_mode: multiply
   # Weight of the temporal proximity function
   weight: 1.2
+
+# Geographic proximity for related entries
+# Entries closer in physical location are boosted
+proximity:
+  # Distance at which the boost decays to the decay value
+  # e.g., "100km" means entries 100km away get half the boost
+  scale: 1km
+  # Decay factor (0-1): how much boost remains at the scale point
+  decay: 0.5
+  # Weight of the proximity function (relative to recency)
+  weight: 4

@@ -43,6 +43,7 @@ class Entry < ApplicationRecord
         indexes :es_tag_slugs, type: :text, analyzer: :standard
         indexes :es_territories, type: :text, analyzer: :search_analyzer
         indexes :es_parks, type: :text, analyzer: :search_analyzer
+        indexes :es_location, type: :geo_point
 
         # Keyword fields for exact matching and aggregations
         indexes :tag_names, type: :keyword
@@ -97,6 +98,7 @@ class Entry < ApplicationRecord
                            :es_tag_slugs,
                            :es_alt_text,
                            :es_parks,
+                           :es_location,
                            :tag_names,
                            :tag_slugs])
   end
@@ -632,6 +634,13 @@ class Entry < ApplicationRecord
     codes_and_initials.uniq.join(' ')
   end
 
+  def es_location
+    return nil unless show_location?
+    photo = photos.find { |p| p.latitude.present? && p.longitude.present? }
+    return nil unless photo
+    { lat: photo.latitude, lon: photo.longitude }
+  end
+
   def bluesky_hashtags(count = 5)
     entry_tags = tags_for_context('tags')
     entry_locations = tags_for_context('locations')
@@ -1008,6 +1017,34 @@ class Entry < ApplicationRecord
     end
 
     related_config = SEARCH_CONFIG[:related_entries]
+    proximity_config = SEARCH_CONFIG[:proximity]
+
+    functions = [
+      {
+        gauss: {
+          published_at: {
+            origin: entry_date.iso8601,
+            scale: related_config[:scale],
+            decay: related_config[:decay]
+          }
+        },
+        weight: related_config[:weight]
+      }
+    ]
+
+    if es_location.present?
+      functions << {
+        gauss: {
+          es_location: {
+            origin: es_location,
+            scale: proximity_config[:scale],
+            decay: proximity_config[:decay]
+          }
+        },
+        filter: { exists: { field: 'es_location' } },
+        weight: proximity_config[:weight]
+      }
+    end
 
     {
       query: {
@@ -1030,18 +1067,7 @@ class Entry < ApplicationRecord
               ].reject { |clause| clause[:match][:es_tag_slugs][:query].blank? }
             }
           },
-          functions: [
-            {
-              gauss: {
-                published_at: {
-                  origin: entry_date.iso8601,
-                  scale: related_config[:scale],
-                  decay: related_config[:decay]
-                }
-              },
-              weight: related_config[:weight]
-            }
-          ],
+          functions: functions,
           boost_mode: related_config[:boost_mode]
         }
       },
