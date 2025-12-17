@@ -165,6 +165,7 @@ class Blog < ApplicationRecord
   end
 
   def purge_from_cdn(paths: INVALIDATION_PATHS)
+    self.touch
     CloudfrontInvalidationWorker.perform_async(paths)
   end
 end
