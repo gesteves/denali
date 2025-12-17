@@ -42,6 +42,16 @@ Do not attempt to run these commands directly on the host machine:
 
 The host machine may not have the correct Ruby version, gems, or database connectivity.
 
+## SVG Icons
+
+SVG icons are processed via Gulp. To add or update icons:
+
+1. Place the source SVG in `app/assets/images/svg/`
+2. Run the gulp task: `docker compose run app gulp svg`
+3. This minifies the SVG, strips inline styles/fills, adds ERB template variables, and outputs to `app/views/partials/svg/` as a partial
+
+The resulting partial can be used with `<%= render 'partials/svg/icon_name', class_name: 'my-class', aria_hidden: true %>`.
+
 ## Testing
 
 Uses Minitest (Rails default). Run tests with:
