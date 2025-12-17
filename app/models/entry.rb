@@ -600,6 +600,10 @@ class Entry < ApplicationRecord
     combined_tags.map(&:slug)
   end
 
+  def tag_slugs_for_context(context)
+    tags_for_context(context).map { |t| t.slug.gsub(/-/, '') }.join(' ')
+  end
+
   def es_alt_text
     self.photos.map { |p| p.alt_text }.reject(&:blank?).join(' ')
   end
@@ -1019,8 +1023,11 @@ class Entry < ApplicationRecord
                 term: { id: self.id }
               },
               should: [
-                { match: { es_tag_slugs: self.es_tag_slugs } }
-              ]
+                { match: { es_tag_slugs: { query: tag_slugs_for_context('tags'), boost: 3 } } },
+                { match: { es_tag_slugs: { query: tag_slugs_for_context('locations'), boost: 2 } } },
+                { match: { es_tag_slugs: { query: tag_slugs_for_context('equipment'), boost: 0.5 } } },
+                { match: { es_tag_slugs: { query: tag_slugs_for_context('styles'), boost: 0.5 } } }
+              ].reject { |clause| clause[:match][:es_tag_slugs][:query].blank? }
             }
           },
           functions: [
