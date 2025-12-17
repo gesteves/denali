@@ -1017,19 +1017,35 @@ class Entry < ApplicationRecord
     end
 
     related_config = SEARCH_CONFIG[:related_entries]
+    recency_config = related_config[:recency]
+    proximity_config = related_config[:proximity]
 
     functions = [
       {
         gauss: {
           published_at: {
             origin: entry_date.iso8601,
-            scale: related_config[:scale],
-            decay: related_config[:decay]
+            scale: recency_config[:scale],
+            decay: recency_config[:decay]
           }
         },
-        weight: related_config[:weight]
+        weight: recency_config[:weight]
       }
     ]
+
+    if es_location.present?
+      functions << {
+        gauss: {
+          es_location: {
+            origin: es_location,
+            scale: proximity_config[:scale],
+            decay: proximity_config[:decay]
+          }
+        },
+        filter: { exists: { field: 'es_location' } },
+        weight: proximity_config[:weight]
+      }
+    end
 
     {
       query: {
@@ -1045,8 +1061,10 @@ class Entry < ApplicationRecord
                 term: { id: self.id }
               },
               should: [
-                { match: { es_tag_slugs: self.es_tag_slugs } }
-              ]
+                { match: { es_tag_slugs: { query: tag_slugs_for_context('tags'), boost: 3 } } },
+                { match: { es_tag_slugs: { query: tag_slugs_for_context('locations'), boost: 2 } } },
+                { match: { es_tag_slugs: { query: tag_slugs_for_context('styles'), boost: 1 } } }
+              ].reject { |clause| clause[:match][:es_tag_slugs][:query].blank? }
             }
           },
           functions: functions,
