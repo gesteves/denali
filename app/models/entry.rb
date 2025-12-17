@@ -1017,18 +1017,19 @@ class Entry < ApplicationRecord
     end
 
     related_config = SEARCH_CONFIG[:related_entries]
-    proximity_config = SEARCH_CONFIG[:proximity]
+    recency_config = related_config[:recency]
+    proximity_config = related_config[:proximity]
 
     functions = [
       {
         gauss: {
           published_at: {
             origin: entry_date.iso8601,
-            scale: related_config[:scale],
-            decay: related_config[:decay]
+            scale: recency_config[:scale],
+            decay: recency_config[:decay]
           }
         },
-        weight: related_config[:weight]
+        weight: recency_config[:weight]
       }
     ]
 
