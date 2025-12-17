@@ -125,11 +125,11 @@ synonyms:
   - "washington dc,district of columbia,dc"
 
 # Related entries scoring
-# Tags are the primary ranking factor; recency and proximity are tiebreakers
+# All three factors matter: tags, recency, and proximity
 related_entries:
   # How to combine function scores with query score
-  # sum = tags dominate, functions are tiebreakers
-  boost_mode: sum
+  # multiply = all factors must be strong
+  boost_mode: multiply
 
   # Temporal proximity - entries closer in time are boosted
   recency:
@@ -138,13 +138,13 @@ related_entries:
     # Decay factor (0-1): how much boost remains at the scale point
     decay: 0.5
     # Weight of the recency function
-    weight: 0.1
+    weight: 1
 
   # Geographic proximity - entries closer in location are boosted
   proximity:
     # Distance at which the boost decays to the decay value
-    scale: 1km
+    scale: 10km
     # Decay factor (0-1): how much boost remains at the scale point
     decay: 0.5
     # Weight of the proximity function
-    weight: 0.1
+    weight: 1
