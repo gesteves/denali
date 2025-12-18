@@ -26,6 +26,7 @@
 }
 
 .entry-list__item {
+  border-radius: var(--photo-border-radius);
   display: block;
   float: left;
   margin: 0 calc(var(--entry-list-gutters)/2) var(--entry-list-gutters);
