@@ -763,7 +763,7 @@ class Entry < ApplicationRecord
     caption.reject(&:blank?).join("\n\n")
   end
 
-  def instagram_hashtags(count = 30)
+  def instagram_hashtags(count = 5)
     entry_tags = tags_for_context('tags')
     entry_locations = tags_for_context('locations')
     entry_equipment = tags_for_context('equipment')
