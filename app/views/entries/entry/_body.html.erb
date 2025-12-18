@@ -1,6 +1,6 @@
 <% cache entry do %>
   <article role="main" class="entry" data-controller="photo" data-photo-container-max-width-value="1680">
-    <div class="entry__figure">
+    <div class="entry__photos">
       <%= render partial: 'entries/entry/photo', collection: @photos, as: :photo, cached: true %>
     </div>
     <div class="entry__body">
