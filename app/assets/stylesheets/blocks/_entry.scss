@@ -26,7 +26,7 @@
   height: auto;
   margin: 0 auto;
   max-height: calc(100vh - var(--gutter-horizontal));
-  max-width: #{"min(var(--max-width), 100%)"};
+  max-width: Min(var(--max-width), 100%);
   position: relative;
   width: auto;
   z-index: 101;
