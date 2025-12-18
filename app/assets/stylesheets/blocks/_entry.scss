@@ -13,7 +13,7 @@
   width: 100%;
 
   picture:not(:first-child) > .entry__photo {
-    margin-top: var(--gutter-horizontal);
+    margin-top: var(--photo-container-padding);
   }
 }
 
@@ -23,7 +23,7 @@
   display: block;
   height: auto;
   margin: 0 auto;
-  max-height: calc(100vh - var(--gutter-horizontal));
+  max-height: calc(100vh - var(--photo-container-padding) * 2);
   max-width: Min(var(--max-width), 100%);
   position: relative;
   width: auto;
