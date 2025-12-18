@@ -5,11 +5,9 @@
 }
 
 .entry__figure {
-  background-color: var(--color-photo-background);
-  box-shadow: inset 0 0 80px 20px rgba(0, 0, 0, 0.3);
   font-size: 0;
   margin: 0 0 var(--gutter-horizontal);
-  padding: var(--gutter-horizontal) var(--gutter-vertical);
+  padding: 0 var(--gutter-vertical);
   position: relative;
   text-align: center;
   width: 100%;
