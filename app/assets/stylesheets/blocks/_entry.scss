@@ -7,7 +7,7 @@
 .entry__photos {
   font-size: 0;
   margin: 0 0 var(--gutter-horizontal);
-  padding: 0 var(--gutter-vertical);
+  padding: 0 calc(var(--photo-container-padding) / 2);
   position: relative;
   text-align: center;
   width: 100%;
