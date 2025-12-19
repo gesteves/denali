@@ -12,6 +12,10 @@
   line-height: var(--line-height-subheading);
   text-align: center;
   text-wrap: balance;
+
+  cite {
+    font-style: italic;
+  }
 }
 
 .elsewhere__cta {
