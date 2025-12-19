@@ -5,8 +5,8 @@
   max-width: var(--max-width);
   position: relative;
 
-  @supports (display: masonry) {
-    display: masonry;
+  @supports (display: grid-lanes) {
+    display: grid-lanes;
     gap: var(--entry-list-gutters);
     grid-template-columns: repeat(var(--entry-list-columns), 1fr);
   }
@@ -34,7 +34,7 @@
   position: relative;
   width: calc((100%/var(--entry-list-columns)) - var(--entry-list-gutters));
 
-  @supports (display: masonry) {
+  @supports (display: grid-lanes) {
     float: none;
     margin: 0;
     width: 100%;
