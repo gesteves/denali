@@ -3,12 +3,14 @@
   display: block;
   margin: var(--margin-content);
   max-width: var(--max-width);
+  padding: 0 calc(var(--entry-list-gutters)/2);
   position: relative;
 
   @supports (display: grid-lanes) {
     display: grid-lanes;
     gap: var(--entry-list-gutters);
     grid-template-columns: repeat(var(--entry-list-columns), 1fr);
+    padding: 0 var(--entry-list-gutters);
   }
 }
 
@@ -32,7 +34,7 @@
   margin: 0 calc(var(--entry-list-gutters)/2) var(--entry-list-gutters);
   overflow: hidden;
   position: relative;
-  width: calc((100%/var(--entry-list-columns)) - var(--entry-list-gutters));
+  width: calc(((100% - var(--entry-list-gutters))/var(--entry-list-columns)) - var(--entry-list-gutters));
 
   @supports (display: grid-lanes) {
     float: none;
