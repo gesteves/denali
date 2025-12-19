@@ -99,8 +99,9 @@ class ApplicationController < ActionController::Base
 
   def preload_fonts
     if request.format.html?
-      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-300.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
-      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v16-latin-regular.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
+      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v25-latin-300.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
+      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v25-latin-regular.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
+      add_preload_link_header(ActionController::Base.helpers.font_path('lato-v25-latin-italic.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
     end
   end
 end
