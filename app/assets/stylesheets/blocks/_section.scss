@@ -1,10 +1,12 @@
 .section {
-  @include content-block;
   border-top: var(--border-thick) solid var(--color-border);
   display: flex;
   flex-flow: column;
-  justify-content: center;
   gap: 1rem;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: var(--max-width-content);
+  padding: var(--gutter-horizontal) var(--gutter-vertical);
 
   p,
   ul {
