@@ -3,7 +3,12 @@
     <p><%= title %></p>
     <ul class="tags">
       <% suggested_tags.each do |tag| %>
-        <li><%= link_to tag.name, tag_url(tag.slug), { rel: 'tag', title: "All photos tagged ”#{tag.name}”", 'aria-label': tag.name } %></li>
+        <li>
+          <%= link_to tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”", 'aria-label': tag.name } do %>
+            <%= inline_svg :tag, class_name: 'tags__icon' %>
+            <span class="tags__label"><%= tag.name %></span>
+          <% end %>
+        </li>
       <% end %>
     </ul>
   </aside>
