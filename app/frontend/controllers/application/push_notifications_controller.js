@@ -18,13 +18,18 @@ export default class extends Controller {
     if (!this.isPushSupported()) {
       this.removeComponent();
     } else if (this.hasPermission()) {
-      const registration = await navigator.serviceWorker.ready;
-      const subscription = await registration.pushManager.getSubscription();
+      try {
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.getSubscription();
 
-      if (subscription) {
-        this.setSubscribedState();
-      } else {
-        this.setUnsubscribedState();
+        if (subscription) {
+          this.setSubscribedState();
+        } else {
+          this.setUnsubscribedState();
+        }
+      } catch (error) {
+        console.log(error);
+        this.disableButton();
       }
     } else if (this.deniedPermission()) {
       this.disableButton();
