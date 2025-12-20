@@ -20,6 +20,12 @@
   i {
     font-style: italic;
   }
+
+  hr {
+    border: none;
+    border-top: var(--border-thin) solid var(--color-border);
+    width: 25%;
+  }
 }
 
 .section--border-thin {
