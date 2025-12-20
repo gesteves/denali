@@ -2,9 +2,7 @@
   <% photo = entry.association(:photos).loaded? ? entry.photos[0] : entry.photos.first %>
   <% if entry.present? && photo.present? %>
     <li class="entry-list__item" data-controller="pagination" data-pagination-page-url="<%= page_url %>">
-      <div class="entry-list__wrapper" style="<%= css_aspect_ratio(photo) %>">
-        <%= render partial: 'entries/list/entry_link', object: entry, as: :entry, locals: { photo: photo } %>
-      </div>
+      <%= render partial: 'entries/list/entry_link', object: entry, as: :entry, locals: { photo: photo } %>
     </li>
   <% end %>
 <% end %>

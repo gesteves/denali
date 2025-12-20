@@ -1,6 +1,4 @@
 <li class="entry-list__item">
   <% photo = entry.association(:photos).loaded? ? entry.photos[0] : entry.photos.first %>
-  <div class="entry-list__wrapper" style="<%= css_aspect_ratio(photo) %>">
-    <%= render partial: 'entries/list/entry_link', object: entry, as: :entry, locals: { photo: photo } %>
-  </div>
+  <%= render partial: 'entries/list/entry_link', object: entry, as: :entry, locals: { photo: photo } %>
 </li>

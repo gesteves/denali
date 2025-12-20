@@ -43,19 +43,8 @@
   }
 }
 
-.entry-list__wrapper {
-  overflow: hidden;
-  padding-top: calc(var(--aspect-ratio, 1) * 100%);
-}
-
 .entry-list__link {
-  bottom: 0;
   display: block;
-  left: 0;
-  overflow: hidden;
-  position: absolute;
-  right: 0;
-  top: 0;
 
   &:hover,
   &:active {
@@ -67,7 +56,9 @@
   }
 
   &:focus .entry-list__photo-caption {
-    opacity: 1;
+    @media (-moz-touch-enabled: 0), (hover: hover) {
+      opacity: 1;
+    }
   }
 
   &:hover .entry-list__photo-caption {

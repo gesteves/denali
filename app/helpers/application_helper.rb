@@ -43,14 +43,6 @@ module ApplicationHelper
     render partial: "partials/svg/#{icon.to_s}", locals: { class_name: "#{class_name} #{class_name}--#{icon}".strip, aria_hidden: aria_hidden }
   end
 
-  def css_aspect_ratio(photo)
-    if photo.has_dimensions?
-      "--aspect-ratio:#{(photo.height.to_f/photo.width.to_f).floor(2)};"
-    elsif @photoblog.placeholder_processed?
-      "--aspect-ratio:#{@photoblog.placeholder_aspect_ratio};"
-    end
-  end
-
   def css_placeholder_background(photo)
     svg_uri = photo.blurhash_svg_data_uri
     if svg_uri.present?
