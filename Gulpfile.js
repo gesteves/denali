@@ -48,7 +48,10 @@ gulp.task('svg', function () {
     }))
     .pipe(replace('{{{', '<'))
     .pipe(replace('}}}', '>'))
-    .pipe(rename({ extname: '.html.erb', prefix: '_' }))
+    .pipe(rename(function(path) {
+      path.basename = '_' + path.basename.replace(/-/g, '_');
+      path.extname = '.html.erb';
+    }))
     .pipe(gulp.dest('app/views/partials/svg'));
 });
 
