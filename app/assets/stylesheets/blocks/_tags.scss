@@ -1,7 +1,8 @@
 .tags {
   display: flex;
-  flex: row wrap;
-  gap: 1rem;
+  flex-flow: row wrap;
+  gap: 0 1rem;
+  justify-content: center;
 
   [rel="tag"] {
     text-transform: lowercase;
