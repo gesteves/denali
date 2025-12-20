@@ -1,7 +1,8 @@
 <% if photo.camera.present? %>
   <div class="entry__meta-item">
+    <%= inline_svg :camera_light_full, class_name: 'entry__meta-icon' %>
     <p>
-      Photographed with <%= photo.camera.article %> <%= photo.camera.display_name %>
+      <%= photo.camera.display_name %>
       <% if photo.lens.present? && !photo.camera.is_phone? %>
         + <%= photo.lens.display_name %>
       <% end %>

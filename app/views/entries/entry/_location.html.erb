@@ -2,6 +2,7 @@
 <% cache photo do %>
   <% if photo.formatted_location.present? || photo.territories.present? %>
     <div class="entry__meta-item">
+      <%= inline_svg :map_location_dot_light_full, class_name: 'entry__meta-icon' %>
       <h3 class="sr-only" id="location">Location</h3>
       <ul class="location" aria-labelledby="location">
         <% if photo.formatted_location.present? %>

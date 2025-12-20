@@ -51,7 +51,19 @@
 }
 
 .entry__meta-item {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   text-wrap: balance;
+}
+
+.entry__meta-icon {
+  height: 16px;
+  width: 16px;
+
+  g, path {
+    fill: var(--color-icon-fill);
+  }
 }
 
 .entry__embed {

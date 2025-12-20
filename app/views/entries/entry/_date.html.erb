@@ -1,4 +1,5 @@
 <div class="entry__meta-item">
+  <%= inline_svg :calendar_light_full, class_name: 'entry__meta-icon' %>
   <p>
     <% if entry.is_published? %>
       Published on <%= link_to entry.published_at.strftime('%B %-d, %Y'), entry.permalink_url, 'data-short-url': entry.short_permalink_url, class: 'entry__permalink' %>
