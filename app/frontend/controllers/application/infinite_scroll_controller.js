@@ -14,7 +14,7 @@ export default class extends Controller {
   }
 
   connect () {
-    const botUserAgents = /(googlebot|google-structured-data-testing-tool|bingbot|mediapartners-google)/i
+    const botUserAgents = /(googlebot|google-structured-data-testing-tool|bingbot|mediapartners-google)/i;
 
     // If there's no loading spinner, there's nothing to observe.
     // If there's no paginator, it means there are no more pages to load.
@@ -38,7 +38,7 @@ export default class extends Controller {
    */
   preparePage () {
     this.spinnerTarget.classList.add('loading--active');
-    this.footer = document.querySelector('.footer');
+    this.footer = document.querySelector('#footer');
     this.footer.style.display = 'none';
     this.footer.setAttribute('aria-hidden', true);
     this.paginatorTarget.style.display = 'none';
