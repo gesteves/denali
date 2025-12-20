@@ -57,7 +57,10 @@
   @include button($color-gray-light);
   cursor: not-allowed;
 
-  &:hover {
+  &:hover,
+  &:active {
+    background-color: $color-gray-light;
+    box-shadow: inset 0 -3px 0 0 shade($color-gray-light, 10%);
     cursor: not-allowed;
   }
 }
@@ -77,14 +80,20 @@
   }
 }
 
-.button--green .button__icon--on,
-.button--gray .button__icon--off,
-.button--disabled .button__icon--off {
+.button__icon--on,
+.button__icon--off,
+.button__icon--disabled {
   display: none;
 }
 
-.button--green .button__icon--off,
-.button--gray .button__icon--on,
-.button--disabled .button__icon--on {
+.button--green .button__icon--off {
+  display: block;
+}
+
+.button--gray .button__icon--on {
+  display: block;
+}
+
+.button--disabled .button__icon--disabled {
   display: block;
 }

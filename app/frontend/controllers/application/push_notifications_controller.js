@@ -4,7 +4,7 @@ import { trackEvent } from '../../lib/analytics';
 export default class extends Controller {
   static targets = ['button', 'buttonText'];
   static classes = ['on', 'off', 'disabled'];
-  static values = { endpointUrl: String, vapidPublicKey: String, textOn: String, textOff: String };
+  static values = { endpointUrl: String, vapidPublicKey: String, textOn: String, textOff: String, textDisabled: String };
 
   connect() {
     this.isSubscribed = false;
@@ -77,7 +77,9 @@ export default class extends Controller {
    */
   disableButton() {
     this.buttonTarget.disabled = true;
+    this.buttonTarget.classList.remove(this.offClass, this.onClass);
     this.buttonTarget.classList.add(this.disabledClass);
+    this.buttonTextTarget.textContent = this.textDisabledValue;
   }
 
   /**
