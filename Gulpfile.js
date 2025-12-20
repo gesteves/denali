@@ -1,5 +1,7 @@
 'use strict';
 
+var fs          = require('fs');
+var path        = require('path');
 var cheerio     = require('gulp-cheerio');
 var gulp        = require('gulp');
 var rename      = require('gulp-rename');
@@ -23,9 +25,22 @@ gulp.task('sass', function() {
     }));
 });
 
+// Clean SVG partials folder
+function cleanSvgPartials() {
+  var dir = 'app/views/partials/svg';
+  if (fs.existsSync(dir)) {
+    fs.readdirSync(dir).forEach(function(file) {
+      if (file.endsWith('.html.erb')) {
+        fs.unlinkSync(path.join(dir, file));
+      }
+    });
+  }
+}
+
 // Minify and concatenate SVGs
 // and save as a Rails partial
 gulp.task('svg', function () {
+  cleanSvgPartials();
   return gulp.src(paths.svg)
     .pipe(svgmin())
     .pipe(cheerio({
