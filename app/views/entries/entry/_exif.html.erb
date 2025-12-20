@@ -1,29 +1,31 @@
 <% if photo.camera.present? %>
-  <p class="exif">
-    Photographed with <%= photo.camera.article %> <%= photo.camera.display_name %>
-    <% if photo.lens.present? && !photo.camera.is_phone? %>
-      + <%= photo.lens.display_name %>
+  <div class="entry__meta-item">
+    <p>
+      Photographed with <%= photo.camera.article %> <%= photo.camera.display_name %>
+      <% if photo.lens.present? && !photo.camera.is_phone? %>
+        + <%= photo.lens.display_name %>
+      <% end %>
+      <% if photo.film.present? %>
+        on <%= photo.film.display_name %>
+      <% end %>
+    </p>
+    <% if photo.film.blank? %>
+      <h3 class="sr-only" id="exif">EXIF data</h3>
+      <ul class="exif" aria-labelledby="exif">
+        <% if photo.focal_length.present? %>
+          <li class="exif__field"><%= photo.focal_length_with_unit %> focal length</li>
+        <% end %>
+        <% if photo.exposure.present? && photo.f_number.present? %>
+          <li class="exif__field"><%= photo.formatted_exposure %> at <%= photo.formatted_aperture %></li>
+        <% elsif photo.exposure.present? %>
+          <li class="exif__field"><%= photo.formatted_exposure %></li>
+        <% elsif photo.f_number.present? %>
+          <li class="exif__field"><%= photo.formatted_aperture %></li>
+        <% end %>
+        <% if photo.iso.present? %>
+          <li class="exif__field">ISO <%= photo.iso %></li>
+        <% end %>
+      </ul>
     <% end %>
-    <% if photo.film.present? %>
-      on <%= photo.film.display_name %>
-    <% end %>
-  </p>
-  <% if photo.film.blank? %>
-    <h3 class="sr-only" id="exif">EXIF data</h3>
-    <ul class="exif" aria-labelledby="exif">
-      <% if photo.focal_length.present? %>
-        <li class="exif__field"><%= photo.focal_length_with_unit %> focal length</li>
-      <% end %>
-      <% if photo.exposure.present? && photo.f_number.present? %>
-        <li class="exif__field"><%= photo.formatted_exposure %> at <%= photo.formatted_aperture %></li>
-      <% elsif photo.exposure.present? %>
-        <li class="exif__field"><%= photo.formatted_exposure %></li>
-      <% elsif photo.f_number.present? %>
-        <li class="exif__field"><%= photo.formatted_aperture %></li>
-      <% end %>
-      <% if photo.iso.present? %>
-        <li class="exif__field">ISO <%= photo.iso %></li>
-      <% end %>
-    </ul>
-  <% end %>
+  </div
 <% end %>

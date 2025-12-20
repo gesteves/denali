@@ -51,6 +51,10 @@
   @include content-block;
   @include meta-text;
   border-top: var(--border-thin) solid var(--color-border);
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .entry__related {

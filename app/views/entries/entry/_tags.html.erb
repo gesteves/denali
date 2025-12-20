@@ -1,6 +1,8 @@
-<h3 class="sr-only" id="tags">Tags</h3>
-<ul class="tags" aria-labelledby="tags">
-  <% tags.sort_by { |t| t.name }.each do |tag| %>
-    <li><%= link_to tag.name, tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”", 'aria-label': tag.name } %></li>
-  <% end %>
-</ul>
+<div class="entry__meta-item">
+  <h3 class="sr-only" id="tags">Tags</h3>
+  <ul class="tags" aria-labelledby="tags">
+    <% tags.sort_by { |t| t.name }.each do |tag| %>
+      <li><%= link_to tag.name, tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”", 'aria-label': tag.name } %></li>
+    <% end %>
+  </ul>
+</div>
