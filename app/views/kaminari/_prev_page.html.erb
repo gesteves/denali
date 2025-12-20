@@ -8,10 +8,10 @@
 -%>
 <span class="pagination__item">
   <% if current_page.first?  %>
-    <span class="pagination__link pagination__link--inactive"><%= inline_svg :angle_left, class_name: 'pagination__icon' %><%= t('views.pagination.previous').html_safe %></span>
+    <span class="pagination__link pagination__link--inactive"><%= inline_svg :angle_left_solid_full, class_name: 'pagination__icon' %><%= t('views.pagination.previous').html_safe %></span>
   <% else %>
     <%= link_to url, class: 'pagination__link' do %>
-      <%= inline_svg :angle_left, class_name: 'pagination__icon' %><span><%= t('views.pagination.previous').html_safe %></span>
+      <%= inline_svg :angle_left_solid_full, class_name: 'pagination__icon' %><span><%= t('views.pagination.previous').html_safe %></span>
     <% end %>
   <% end %>
 </span>

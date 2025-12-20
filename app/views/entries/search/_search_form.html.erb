@@ -1,6 +1,6 @@
 <%= form_tag(search_url, method: 'get', class: 'search') do %>
   <div class="search__input-wrapper">
-    <%= render partial: 'partials/svg/search', locals: { class_name: 'search__icon', aria_hidden: true } %>
+    <%= inline_svg :magnifying_glass_solid_full, class_name: 'search__icon' %>
     <%= text_field_tag :q, @query || '', placeholder: "What would you like to see?", class: 'search__input', autofocus: true %>
   </div>
 <% end %>

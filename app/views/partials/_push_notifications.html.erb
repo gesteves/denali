@@ -6,9 +6,9 @@
     <p><%= @photoblog.push_notifications_cta.html_safe %></p>
   <% end %>
   <button type="button" class="button button--centered button--green" data-push-notifications-target="button" data-action="click->push-notifications#toggleSubscription">
-    <%= inline_svg :bell, class_name: 'button__icon button__icon--off' %>
-    <%= inline_svg :bell_slash, class_name: 'button__icon button__icon--on' %>
-    <%= inline_svg :ban, class_name: 'button__icon button__icon--disabled' %>
+    <%= inline_svg :bell_solid_full, class_name: 'button__icon button__icon--off' %>
+    <%= inline_svg :bell_slash_solid_full, class_name: 'button__icon button__icon--on' %>
+    <%= inline_svg :ban_solid_full, class_name: 'button__icon button__icon--disabled' %>
     <span data-push-notifications-target="buttonText">Turn on notifications</span>
   </button>
 </section>
