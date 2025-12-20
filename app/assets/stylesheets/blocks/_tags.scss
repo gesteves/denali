@@ -1,10 +1,9 @@
 .tags {
-  li {
-    display: inline;
-  }
+  display: flex;
+  flex: row wrap;
+  gap: 1rem;
 
   [rel="tag"] {
-    margin: 0 2px;
     text-transform: lowercase;
     white-space: nowrap;
 
