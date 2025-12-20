@@ -28,7 +28,7 @@ module EntriesHelper
     details = []
     details << "#{photo.focal_length_with_unit} focal length" if photo.focal_length.present?
     if photo.exposure.present? && photo.f_number.present?
-      details << "#{photo.formatted_exposure} at #{photo.formatted_aperture}"
+      details << "#{photo.formatted_exposure} at #{photo.formatted_aperture.gsub('f', "<i>f</i>")}"
     elsif photo.exposure.present?
       details << photo.formatted_exposure
     elsif photo.f_number.present?

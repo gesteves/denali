@@ -17,7 +17,7 @@
           <li class="exif__field"><%= photo.focal_length_with_unit %> focal length</li>
         <% end %>
         <% if photo.exposure.present? && photo.f_number.present? %>
-          <li class="exif__field"><%= photo.formatted_exposure %> at <%= photo.formatted_aperture %></li>
+          <li class="exif__field"><%= photo.formatted_exposure %> at <%= photo.formatted_aperture.gsub('f', "<i>f</i>").html_safe %></li>
         <% elsif photo.exposure.present? %>
           <li class="exif__field"><%= photo.formatted_exposure %></li>
         <% elsif photo.f_number.present? %>
