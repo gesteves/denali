@@ -34,7 +34,7 @@
   margin: 0 calc(var(--entry-list-gutters)/2) var(--entry-list-gutters);
   overflow: hidden;
   position: relative;
-  width: calc(((100% - var(--entry-list-gutters))/var(--entry-list-columns)) - var(--entry-list-gutters));
+  width: calc((100% - (var(--entry-list-gutters) * var(--entry-list-columns))) / var(--entry-list-columns));
 
   @supports (display: grid-lanes) {
     float: none;
