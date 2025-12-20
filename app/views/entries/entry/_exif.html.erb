@@ -1,5 +1,6 @@
 <% if photo.camera.present? %>
   <div class="entry__meta-item">
+    <h3 class="sr-only" id="exif">EXIF data</h3>
     <%= inline_svg :camera_light_full, class_name: 'entry__meta-icon' %>
     <p>
       <%= photo.camera.display_name %>
@@ -11,8 +12,7 @@
       <% end %>
     </p>
     <% if photo.film.blank? %>
-      <h3 class="sr-only" id="exif">EXIF data</h3>
-      <ul class="exif" aria-labelledby="exif">
+      <ul class="exif">
         <% if photo.focal_length.present? %>
           <li class="exif__field"><%= photo.focal_length_with_unit %> focal length</li>
         <% end %>
