@@ -71,14 +71,3 @@
     padding: 16px 24px 16px 56px;
   }
 }
-
-.search-tags {
-  @include meta-text;
-  margin: 0 auto;
-  max-width: var(--max-width-content);
-  padding: 0 20px 20px;
-
-  @media (min-width: $bp-m) {
-    padding: 0 0 20px;
-  }
-}

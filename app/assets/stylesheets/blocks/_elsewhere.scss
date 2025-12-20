@@ -1,43 +1,13 @@
 .elsewhere {
-  @include content-block;
-  border-top: var(--border-thick) solid var(--color-border);
-  display: block;
-  font-size: var(--font-size-heading);
-  line-height: var(--line-height-heading);
-}
-
-.elsewhere__heading {
-  font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-subheading);
-  line-height: var(--line-height-subheading);
-  text-align: center;
-  text-wrap: balance;
-
-  cite {
-    font-style: italic;
-  }
-}
-
-.elsewhere__cta {
-  color: var(--color-text-alt);
-  font-size: var(--font-size-text-alt);
-  line-height: var(--line-height-text-alt);
-  margin: var(--margin-text);
-  margin-top: 0;
-  text-align: center;
-  text-wrap: balance;
-}
-
-.elsewhere__list {
   display: flex;
   flex-flow: row nowrap;
+  gap: 1.5rem;
   justify-content: center;
 }
 
 .elsewhere__item {
   display: block;
   flex: 0 0 auto;
-  margin: 0 10px 10px;
   text-align: left;
   white-space: nowrap;
 

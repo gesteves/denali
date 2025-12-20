@@ -38,17 +38,6 @@
   padding: var(--gutter-horizontal) var(--gutter-vertical);
 }
 
-@mixin meta-text {
-  p,
-  ul {
-    color: var(--color-text-alt);
-    font-size: var(--font-size-text-alt);
-    line-height: 1.5;
-    margin: 0;
-    text-align: center;
-  }
-}
-
 @mixin dotted-list {
   color: var(--color-text-alt);
   text-wrap: balance;

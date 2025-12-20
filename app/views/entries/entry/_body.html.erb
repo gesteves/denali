@@ -9,7 +9,7 @@
       </h2>
       <%= entry.formatted_body unless entry.body.blank? %>
     </div>
-    <aside class="entry__meta" aria-labelledby="entry-meta">
+    <aside class="section section--border-thin">
       <%= render partial: 'entries/entry/date', object: entry, as: :entry %>
       <%= render partial: 'entries/entry/exif', object: @photos.first, as: :photo if entry.is_single_photo? %>
       <%= render partial: 'entries/entry/location', object: entry, as: :entry, locals: { photo: @photos&.first } if entry.show_location? %>

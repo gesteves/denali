@@ -47,26 +47,6 @@
   text-wrap: pretty;
 }
 
-.entry__meta {
-  @include content-block;
-  @include meta-text;
-  border-top: var(--border-thin) solid var(--color-border);
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  gap: 1rem;
-}
-
-.entry__related {
-  @include content-block;
-  border-top: var(--border-thick) solid var(--color-border);
-  display: block;
-  font-size: var(--font-size-subheading);
-  font-weight: var(--font-weight-subheading);
-  line-height: var(--line-height-subheading);
-  text-align: center;
-}
-
 .entry__embed {
   margin: 12px 0;
 

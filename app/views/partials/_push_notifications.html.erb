@@ -1,9 +1,9 @@
-<section class="elsewhere" aria-labelledby="push" data-controller="push-notifications" data-push-notifications-vapid-public-key-value="<%= ENV['VAPID_PUBLIC_KEY'] %>" data-push-notifications-endpoint-url-value="<%= push_subscribe_path %>" data-push-notifications-text-on-value="Turn off notifications" data-push-notifications-text-off-value="Turn on notifications" data-push-notifications-on-class="push-notifications__button--on" data-push-notifications-off-class="push-notifications__button--off" data-push-notifications-disabled-class="push-notifications__button--disabled">
+<section class="section" data-controller="push-notifications" data-push-notifications-vapid-public-key-value="<%= ENV['VAPID_PUBLIC_KEY'] %>" data-push-notifications-endpoint-url-value="<%= push_subscribe_path %>" data-push-notifications-text-on-value="Turn off notifications" data-push-notifications-text-off-value="Turn on notifications" data-push-notifications-on-class="push-notifications__button--on" data-push-notifications-off-class="push-notifications__button--off" data-push-notifications-disabled-class="push-notifications__button--disabled">
   <% if @photoblog.push_notifications_heading.present? %>
-    <h2 class="elsewhere__heading" id="push"><%= @photoblog.push_notifications_heading.html_safe %></h2>
+    <h2 class="section__heading" id="push"><%= @photoblog.push_notifications_heading.html_safe %></h2>
   <% end %>
   <% if @photoblog.push_notifications_cta.present? %>
-    <p class="elsewhere__cta"><%= @photoblog.push_notifications_cta.html_safe %></p>
+    <p><%= @photoblog.push_notifications_cta.html_safe %></p>
   <% end %>
   <button type="button" class="push-notifications__button" data-push-notifications-target="button" data-action="click->push-notifications#toggleSubscription">
     Turn on notifications

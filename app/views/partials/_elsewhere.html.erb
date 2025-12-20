@@ -1,11 +1,11 @@
-<section class="elsewhere" aria-labelledby="elsewhere">
+<section class="section">
   <% if @photoblog.elsewhere_heading.present? %>
-    <h2 class="elsewhere__heading" id="elsewhere"><%= @photoblog.elsewhere_heading.html_safe %></h2>
+    <h2 class="section__heading" id="elsewhere"><%= @photoblog.elsewhere_heading.html_safe %></h2>
   <% end %>
   <% if @photoblog.elsewhere_cta.present? %>
-    <p class="elsewhere__cta"><%= @photoblog.elsewhere_cta.html_safe %></p>
+    <p><%= @photoblog.elsewhere_cta.html_safe %></p>
   <% end %>
-  <ul class="elsewhere__list">
+  <ul class="elsewhere">
     <li class="elsewhere__item"><a href="<%= feed_url %>" title="Subscribe to Feed" aria-label="Subscribe to Feed"><%= inline_svg :feed, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Feed</span></a></li>
     <% if @photoblog.bluesky.present? %>
       <li class="elsewhere__item"><a href="<%= @photoblog.bluesky %>" rel="me" title="Follow on Bluesky" aria-label="Follow on Bluesky" target="_blank"><%= inline_svg :bluesky, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Bluesky</span></a></li>
