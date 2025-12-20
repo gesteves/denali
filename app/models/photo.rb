@@ -245,7 +245,7 @@ class Photo < ApplicationRecord
   def formatted_aperture
     return '' if self.f_number.blank?
     f = "%g" % ("%.2f" % self.f_number)
-    "f/#{f}"
+    "<i>f</i>/#{f}".html_safe
   end
 
   def formatted_exposure
