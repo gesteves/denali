@@ -2,7 +2,7 @@ import { Controller } from 'stimulus';
 import { trackEvent } from '../../lib/analytics';
 
 export default class extends Controller {
-  static targets = ['button'];
+  static targets = ['button', 'buttonText'];
   static classes = ['on', 'off', 'disabled'];
   static values = { endpointUrl: String, vapidPublicKey: String, textOn: String, textOff: String };
 
@@ -50,7 +50,7 @@ export default class extends Controller {
    */
   setSubscribedState() {
     this.isSubscribed = true;
-    this.buttonTarget.textContent = this.textOnValue;
+    this.buttonTextTarget.textContent = this.textOnValue;
     this.buttonTarget.classList.add(this.onClass);
     this.buttonTarget.classList.remove(this.offClass);
   }
@@ -60,7 +60,7 @@ export default class extends Controller {
    */
   setUnsubscribedState() {
     this.isSubscribed = false;
-    this.buttonTarget.textContent = this.textOffValue;
+    this.buttonTextTarget.textContent = this.textOffValue;
     this.buttonTarget.classList.add(this.offClass);
     this.buttonTarget.classList.remove(this.onClass);
   }

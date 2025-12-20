@@ -6,6 +6,9 @@
 
 <div class="signin">
   <%= form_tag("/auth/google_oauth2", method: 'post') do %>
-    <button type="submit" class="button">Sign in with Google</button>
+    <button type="submit" class="button button--centered">
+      <%= inline_svg :google, class_name: 'button__icon' %>
+      <span class="button__text">Sign in with Google</span>
+    </button>
   <% end %>
 </div>
