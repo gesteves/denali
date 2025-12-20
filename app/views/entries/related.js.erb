@@ -1,11 +1,11 @@
 <% cache [@photoblog, @entry] do %>
   <% related = @entry.related %>
   <% if related.present? %>
-    <aside class="entry__related-entries" aria-labelledby="related-entries">
+    <section class="entry__related-entries" aria-labelledby="related-entries">
       <h2 class="entry__related" id="related-entries">Other Photos You Might Like</h2>
       <ol class="entry-list entry-list--related" data-controller="grid" aria-labelledby="related-entries">
         <%= render partial: 'entries/list/entry_square', collection: related, as: :entry, cached: true %>
       </ol>
-    </aside>
+    </section>
   <% end %>
 <% end %>

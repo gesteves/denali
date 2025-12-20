@@ -1,4 +1,4 @@
-<aside class="elsewhere" aria-labelledby="elsewhere">
+<section class="elsewhere" aria-labelledby="elsewhere">
   <% if @photoblog.elsewhere_heading.present? %>
     <h2 class="elsewhere__heading" id="elsewhere"><%= @photoblog.elsewhere_heading.html_safe %></h2>
   <% end %>
@@ -23,5 +23,5 @@
       <li class="elsewhere__item"><a href="<%= @photoblog.threads %>" rel="me" title="Follow on Threads" aria-label="Follow on Threads" target="_blank"><%= inline_svg :threads, class_name: 'elsewhere__icon' %><span class="elsewhere__label">Threads</span></a></li>
     <% end %>
   </ul>
-</aside>
+</section>
 
