@@ -267,8 +267,13 @@ class Entry < ApplicationRecord
         }
       },
       aggs: {
-        matching_tags: {
-          terms: { field: 'tag_names', size: 10 }
+        top_results: {
+          sampler: { shard_size: 10 },
+          aggs: {
+            matching_tags: {
+              terms: { field: 'tag_names', size: 20 }
+            }
+          }
         }
       },
       sort: [
@@ -286,11 +291,11 @@ class Entry < ApplicationRecord
     # Run ES search with aggregations
     es_results = published_search(query, page, per_page)
 
-    # Get the most common tags from the search results via ES aggregations
+    # Get the most common tags from the top 10 search results via ES aggregations
     suggested_tags = []
-    if es_results.response.aggregations&.matching_tags&.buckets
+    if es_results.response.aggregations&.top_results&.matching_tags&.buckets
       # ES returns buckets ordered by doc_count (most common first)
-      es_tag_names = es_results.response.aggregations.matching_tags.buckets.map { |b| b['key'] }
+      es_tag_names = es_results.response.aggregations.top_results.matching_tags.buckets.map { |b| b['key'] }
 
       # Get tag IDs from 'tags' or 'locations' contexts
       valid_tag_ids = ActsAsTaggableOn::Tagging
