@@ -111,7 +111,7 @@ class EntriesController < ApplicationController
       end
     else
       @page_title = "Search – #{@photoblog.name}"
-      @suggested_tags = Entry.popular_tags(100)
+      @suggested_tags = Entry.popular_tags(25)
       respond_to do |format|
         format.html
         format.all { redirect_to search_path, status: 301 }
