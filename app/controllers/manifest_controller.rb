@@ -1,4 +1,5 @@
 class ManifestController < ApplicationController
+  before_action :set_max_age
   def index
     @icons = [48, 72, 96, 144, 150, 168, 180, 192].map do |s|
       {
