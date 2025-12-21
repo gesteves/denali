@@ -5,7 +5,6 @@ module ApplicationHelper
     # Pre-calculate crop once and reuse for all formats to avoid repeated queries
     crop = photo.calculate_crop({ aspect_ratio: aspect_ratio }.compact)
     base_opts = { crop: crop }.compact
-    _, jpg_srcset = photo.srcset(srcset: srcset, src: src, opts: base_opts.merge(aspect_ratio: aspect_ratio).compact)
     html_options.reverse_merge!({
       src: photo.sitemap_url,
       width: photo.width,
@@ -15,11 +14,10 @@ module ApplicationHelper
       decoding: 'async'
     })
     tag.picture do
-      ['avif', 'webp'].each do |format|
+      ['avif', 'webp', 'jpeg'].each do |format|
         format_srcset = photo.srcset(srcset: srcset, opts: base_opts.merge(aspect_ratio: aspect_ratio, format: format).compact).last
         concat(tag.source(sizes: sizes, srcset: format_srcset, type: "image/#{format}"))
       end
-      concat(tag.source(sizes: sizes, srcset: jpg_srcset, type: 'image/jpeg'))
       concat(content_tag :img, nil, html_options)
     end
   end
