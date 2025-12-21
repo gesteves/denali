@@ -67,7 +67,8 @@ ActsAsTaggableOn::Tag.class_eval do
   end
 
   # Find tags that frequently co-occur with the given tag using Elasticsearch
-  # Returns tags ordered by how often they appear together with the source tag
+  # Returns tags ordered by how often they appear together with the source tag.
+  # Returns an empty array if Elasticsearch is unavailable.
   # @param tag [ActsAsTaggableOn::Tag, String] The tag to find related tags for
   # @param limit [Integer] Maximum number of tags to return
   # @param contexts [Array<String>, nil] Only include tags from these contexts (default: tags, locations)
@@ -98,17 +99,22 @@ ActsAsTaggableOn::Tag.class_eval do
       }
     }
 
-    results = Entry.search(search_def)
-    return [] unless results.response.aggregations&.co_occurring_tags&.buckets
+    begin
+      results = Entry.search(search_def)
+      return [] unless results.response.aggregations&.co_occurring_tags&.buckets
 
-    tag_names = results.response.aggregations.co_occurring_tags.buckets.map { |b| b['key'] }
-    return [] if tag_names.empty?
+      tag_names = results.response.aggregations.co_occurring_tags.buckets.map { |b| b['key'] }
+      return [] if tag_names.empty?
 
-    # Filter by contexts and preserve ES frequency order
-    tags_by_name = for_contexts(contexts: contexts, exclude_contexts: exclude_contexts)
-      .where(name: tag_names)
-      .index_by(&:name)
-    tag_names.map { |name| tags_by_name[name] }.compact.take(limit)
+      # Filter by contexts and preserve ES frequency order
+      tags_by_name = for_contexts(contexts: contexts, exclude_contexts: exclude_contexts)
+        .where(name: tag_names)
+        .index_by(&:name)
+      tag_names.map { |name| tags_by_name[name] }.compact.take(limit)
+    rescue => e
+      Rails.logger.error "Tag.related_to failed: #{e.message}"
+      []
+    end
   end
 
   # Find tags matching a search query using fuzzy text matching and synonyms
@@ -116,6 +122,7 @@ ActsAsTaggableOn::Tag.class_eval do
   # By default includes ALL tags (including equipment/styles) because if someone
   # searches "b&w", we want to show them the "black & white" tag.
   # Leverages synonyms defined in config/search.yml via the search_analyzer on es_tags.
+  # Returns an empty array if Elasticsearch is unavailable.
   # @param query [String] The search query
   # @param limit [Integer] Maximum number of tags to return
   # @param contexts [Array<String>, nil] Only include tags from these contexts (default: nil = all)
@@ -151,17 +158,22 @@ ActsAsTaggableOn::Tag.class_eval do
       }
     }
 
-    results = Entry.search(search_def)
-    return [] unless results.response.aggregations&.matching_tags&.buckets
+    begin
+      results = Entry.search(search_def)
+      return [] unless results.response.aggregations&.matching_tags&.buckets
 
-    tag_names = results.response.aggregations.matching_tags.buckets.map { |b| b['key'] }
-    return [] if tag_names.empty?
+      tag_names = results.response.aggregations.matching_tags.buckets.map { |b| b['key'] }
+      return [] if tag_names.empty?
 
-    # Filter by contexts (if specified) and preserve ES frequency order
-    tags_by_name = for_contexts(contexts: contexts, exclude_contexts: exclude_contexts)
-      .where(name: tag_names)
-      .index_by(&:name)
-    tag_names.map { |name| tags_by_name[name] }.compact.take(limit)
+      # Filter by contexts (if specified) and preserve ES frequency order
+      tags_by_name = for_contexts(contexts: contexts, exclude_contexts: exclude_contexts)
+        .where(name: tag_names)
+        .index_by(&:name)
+      tag_names.map { |name| tags_by_name[name] }.compact.take(limit)
+    rescue => e
+      Rails.logger.error "Tag.matching failed: #{e.message}"
+      []
+    end
   end
 
   # Instance method: find tags related to this tag
