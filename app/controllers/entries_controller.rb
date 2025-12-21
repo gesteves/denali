@@ -66,6 +66,7 @@ class EntriesController < ApplicationController
         @page_title = "#{@tags.first.name} – #{@photoblog.name}"
         @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
         @suggested_tags = ActsAsTaggableOn::Tag.related_to(@tags.first, limit: 20)
+        @suggested_tags_title = "You may also like these tags."
         render :index
       }
       format.js { render :index, status: @entries.empty? ? 404 : 200 }
