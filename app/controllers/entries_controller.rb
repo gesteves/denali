@@ -17,7 +17,6 @@ class EntriesController < ApplicationController
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
     @page_url = @page == 1 ? entries_url(page: nil) : entries_url(page: @page)
     @canonical_url = entries_url(page: nil)
-    @show_schema = true if @page == 1
     respond_to do |format|
       format.html {
         @page_description = @photoblog.meta_description
@@ -26,8 +25,10 @@ class EntriesController < ApplicationController
         @feed_url = feed_url(format: 'atom')
         @base_url = entries_url(page: nil).sub(/\/$/, '')
         @heading_title = "Latest entries"
+        @hide_title = true
         if @page.nil? || @page == 1
           @page_title = "#{@photoblog.name} – #{@photoblog.plain_tag_line}"
+          @show_schema = true
         else
           @page_title = "#{@photoblog.name} – #{@photoblog.plain_tag_line} – Page #{@page}"
         end
@@ -64,6 +65,7 @@ class EntriesController < ApplicationController
         @heading_title = "Entries tagged “#{@tags.first.name}”"
         @page_title = "#{@tags.first.name} – #{@photoblog.name}"
         @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
+        @suggested_tags = ActsAsTaggableOn::Tag.related_to(@tags.first, limit: 20)
         render :index
       }
       format.js { render :index, status: @entries.empty? ? 404 : 200 }
@@ -105,7 +107,7 @@ class EntriesController < ApplicationController
         @suggested_tags = search_results[:suggested_tags].presence || ActsAsTaggableOn::Tag.most_recently_used(limit: 20)
       else
         # No results: try to match tags based on the query to help users find content
-        @suggested_tags = ActsAsTaggableOn::Tag.matching(@query, limit: 20)
+        @suggested_tags = ActsAsTaggableOn::Tag.matching(@query, limit: 20).presence || ActsAsTaggableOn::Tag.most_recently_used(limit: 20)
       end
 
       @page_title = "Search results for “#{@query}” – #{@photoblog.name}"

@@ -1,0 +1,16 @@
+.main-content {
+
+  & > h2 {
+    border-bottom: var(--border-thick) solid var(--color-border);
+    font-size: var(--font-size-heading);
+    font-weight: var(--font-weight-heading);
+    line-height: var(--line-height-heading);
+    margin: var(--margin-heading);
+    margin-bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: var(--max-width-content);
+    padding-bottom: var(--gutter-horizontal);
+    text-align: center;
+  }
+}

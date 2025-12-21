@@ -2,19 +2,11 @@
   display: flex;
   flex-flow: row nowrap;
   justify-content: center;
-  margin: var(--margin-content);
-  max-width: var(--max-width-content);
-  padding: 0 20px;
-
-  @media (min-width: $bp-m) {
-    padding: 0;
-  }
 }
 
 .search__input-wrapper {
   position: relative;
   width: 100%;
-  max-width: 600px;
 }
 
 .search__icon {

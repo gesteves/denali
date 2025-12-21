@@ -1,7 +1,7 @@
 .entry-list {
   @include clearfix;
   display: block;
-  margin: var(--margin-content);
+  margin: var(--gutter-horizontal) auto;
   max-width: var(--max-width);
   padding: 0 calc(var(--entry-list-gutters)/2);
   position: relative;
@@ -21,11 +21,6 @@
   max-width: var(--max-width);
   padding: 0 var(--gutter-vertical) var(--gutter-horizontal);
   text-align: center;
-}
-
-.entry-list--related {
-  margin-bottom: 0;
-  margin-top: var(--gutter-horizontal);
 }
 
 .entry-list__item {

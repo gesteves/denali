@@ -3,14 +3,14 @@
 
   <% if @entries.present? %>
     <%= render partial: 'entries/list/related_tags',
-              locals: { title: "Here are some tags related to your search.", tags: @suggested_tags, query: @query } %>
+              locals: { title: "Here are some tags related to your search.", tags: @suggested_tags } %>
   <% else %>
     <%= render partial: 'entries/list/related_tags',
-              locals: { title: "No results found, but here are some tags you can explore.", tags: @suggested_tags, query: @query } %>
+              locals: { title: "No results found, but here are some tags you can explore.", tags: @suggested_tags } %>
   <% end %>
 
   <% if @entries.present? %>
-    <main data-controller="infinite-scroll" data-infinite-scroll-base-url-value="<%= @base_url %>" data-infinite-scroll-current-page-value="<%= @page %>">
+    <main class="main-content" data-controller="infinite-scroll" data-infinite-scroll-base-url-value="<%= @base_url %>" data-infinite-scroll-current-page-value="<%= @page %>">
       <h2 id="search-results" class="sr-only"><%= @heading_title %></h2>
       <ol class="entry-list" data-infinite-scroll-target="container" data-controller="grid" aria-busy="false" aria-labelledby="search-results">
         <%= render partial: 'entries/list/page', object: @entries.to_a, as: :entries, locals: { page_url: @page_url }  %>

@@ -40,7 +40,7 @@
   display: block;
   padding-left: 0;
   padding-right: 0;
-  max-width: 100%;
+  max-width: var(--max-width);
   width: 100%;
 }
 
