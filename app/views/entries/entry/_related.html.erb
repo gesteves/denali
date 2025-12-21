@@ -1,3 +1,14 @@
-<div data-controller="related-entries" data-related-entries-url-value="<%= entry.is_published? ? related_url(entry, format: 'js') : related_preview_url(entry.preview_hash, format: 'js')  %>" aria-busy="false" aria-live="polite">
-  <%= render partial: 'partials/loading', locals: { target: 'related-entries.spinner' } %>
-</div>
+<% if @related_entries.present? %>
+  <section class="section section--full-width" aria-labelledby="related-entries">
+    <h2 class="section__heading" id="related-entries">Other Photos You Might Like</h2>
+    <ol class="entry-list" data-controller="grid" aria-labelledby="related-entries">
+      <% @related_entries.each do |related_entry| %>
+        <% cache related_entry do %>
+          <li class="entry-list__item">
+            <%= render partial: 'entries/list/entry_link', object: related_entry, as: :entry, locals: { aspect_ratio: '1:1', srcset: @related_srcset, sizes: @related_sizes } %>
+          </li>
+        <% end %>
+      <% end %>
+    </ol>
+  </section>
+<% end %>

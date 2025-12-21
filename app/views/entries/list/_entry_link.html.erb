@@ -1,9 +1,11 @@
 <% photo = local_assigns[:photo] || (entry.association(:photos).loaded? ? entry.photos[0] : entry.photos.first) %>
+<% srcset = local_assigns[:srcset] || @srcset %>
+<% sizes = local_assigns[:sizes] || @sizes %>
 <a class="entry-list__link" href="<%= entry.permalink_url %>" aria-labelledby="<%= "entry-list-caption-#{entry.id}" %>">
   <%= responsive_image_tag(
     photo: photo,
-    srcset: @srcset,
-    sizes: @sizes,
+    srcset: srcset,
+    sizes: sizes,
     aspect_ratio: local_assigns[:aspect_ratio].presence,
     html_options: {
       alt: '',
