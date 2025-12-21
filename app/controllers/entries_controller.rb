@@ -180,22 +180,6 @@ class EntriesController < ApplicationController
     end
   end
 
-  def related
-    raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_related_entries?
-    @srcset = PHOTOS[:entry_list_square][:srcset]
-    @sizes = PHOTOS[:entry_list_square][:sizes].join(', ')
-    @entry = if params[:id].present?
-      @photoblog.entries.published.find(params[:id])
-    elsif params[:preview_hash].present?
-      @photoblog.entries.find_by!(preview_hash: params[:preview_hash])
-    end
-    respond_to do |format|
-      format.js {
-        redirect_to related_url(@entry, format: 'js'), status: 301 if params[:preview_hash].present? && @entry.is_published?
-      }
-    end
-  end
-
   def feed
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.photo_entries.page(1).per(@count)

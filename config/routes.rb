@@ -105,8 +105,6 @@ Rails.application.routes.draw do
   get '/p/:id'                              => 'entries#short',       constraints: { id: /\w+/ }, :as => :entry
   get '/preview/:preview_hash(/:slug)'      => 'entries#show',        defaults: { format: 'html' }, :as => :preview_entry
   get '/:id(/:slug)'                        => 'entries#show',        constraints: { id: /\d+/ }, defaults: { format: 'html' }, :as => :entry_long
-  get '/related/:id.:format'                => 'entries#related',     defaults: { format: 'js' }, constraints: { id: /\d+/ }, :as => :related
-  get '/related/:preview_hash.:format'      => 'entries#related',     defaults: { format: 'js' }, :as => :related_preview
 
   # Feeds
   get '/feed(.:format)'                  => 'entries#feed', defaults: { format: 'atom' }, :as => :feed
