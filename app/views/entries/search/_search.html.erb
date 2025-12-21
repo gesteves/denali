@@ -12,3 +12,7 @@
 <% end %>
 
 <%= render partial: 'entries/search/search_form' %>
+<% if  @suggested_tags.present? %>
+  <%= render partial: 'entries/search/tag_suggestions',
+            locals: { title: "Need some ideas? Explore these popular tags.", suggested_tags: @suggested_tags, query: @query } %>
+<% end %>
