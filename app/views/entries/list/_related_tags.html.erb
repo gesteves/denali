@@ -1,8 +1,10 @@
-<% if suggested_tags.present? %>
-  <aside class="section section--no-border" aria-label="Suggested Tags">
-    <p><%= title %></p>
+<% if local_assigns[:tags].present? %>
+  <section class="section section--no-border" aria-label="Suggested Tags">
+    <% if local_assigns[:title].present? %>
+      <p><%= title %></p>
+    <% end %>
     <ul class="tags">
-      <% suggested_tags.each do |tag| %>
+      <% tags.each do |tag| %>
         <li>
           <%= link_to tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”", 'aria-label': tag.name } do %>
             <%= inline_svg :tag_light_full, class_name: 'tags__icon' %>
@@ -11,5 +13,5 @@
         </li>
       <% end %>
     </ul>
-  </aside>
+  </section>
 <% end %>

@@ -2,11 +2,11 @@
   <%= render partial: 'entries/search/search_form' %>
 
   <% if @entries.present? %>
-    <%= render partial: 'entries/search/tag_suggestions',
-              locals: { title: "Looking for more? Here are some tags related to your search.", suggested_tags: @suggested_tags, query: @query } %>
+    <%= render partial: 'entries/list/related_tags',
+              locals: { title: "Looking for more? Here are some tags related to your search.", tags: @suggested_tags, query: @query } %>
   <% else %>
-    <%= render partial: 'entries/search/tag_suggestions',
-              locals: { title: "No results found, but here are some tags you can explore.", suggested_tags: @suggested_tags, query: @query } %>
+    <%= render partial: 'entries/list/related_tags',
+              locals: { title: "No results found, but here are some tags you can explore.", tags: @suggested_tags, query: @query } %>
   <% end %>
 
   <% if @entries.present? %>

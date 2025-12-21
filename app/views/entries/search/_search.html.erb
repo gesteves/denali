@@ -13,6 +13,6 @@
 
 <%= render partial: 'entries/search/search_form' %>
 <% if @suggested_tags.present? %>
-  <%= render partial: 'entries/search/tag_suggestions',
-            locals: { title: "Need some ideas? Here are some tags you might like.", suggested_tags: @suggested_tags, query: @query } %>
+  <%= render partial: 'entries/list/related_tags',
+            locals: { title: "Need some ideas? Here are some tags you might like.", tags: @suggested_tags } %>
 <% end %>
