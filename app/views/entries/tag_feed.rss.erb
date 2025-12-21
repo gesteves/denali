@@ -4,7 +4,7 @@
   <channel>
     <title><%= "#{@tags.first.name} - #{@photoblog.name}" %></title>
     <link><%= tag_url(tag: @tag_slug) %></link>
-    <description><%= "#{@photoblog.plain_tag_line} – Photos tagged “#{@tags.first.name}”" %></description>
+    <description><%= t('blog.tag_line') %> – Photos tagged "<%= @tags.first.name %>"</description>
     <pubDate><%= @entries.map(&:modified_at).max.utc.rfc822 %></pubDate>
     <atom:link href="<%= tag_feed_url(tag: @tag_slug, format: 'rss') %>" rel="self" type="application/rss+xml"/>
     <webfeeds:accentColor>#BF0222</webfeeds:accentColor>

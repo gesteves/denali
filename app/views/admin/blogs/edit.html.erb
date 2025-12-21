@@ -30,38 +30,12 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
-      <%= f.label :tag_line, 'Tag line', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control is-expanded">
-          <%= f.text_field :tag_line, placeholder: 'A short, clever tag line for this blog…', required: true, class: 'input'%>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
       <%= f.label :about, 'About this blog', class: 'label' %>
     </div>
     <div class="field-body">
       <div class="field">
         <div class="control is-expanded">
           <%= f.text_area :about, placeholder: 'The content of this blog’s about page…', required: true, class: 'textarea', rows: 20 %>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-      <%= f.label :copyright, 'Copyright', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control is-expanded">
-          <%= f.text_field :copyright, placeholder: 'The blog’s copyright line…', class: 'input', required: true, autocomplete: 'off' %>
         </div>
       </div>
     </div>
@@ -449,65 +423,6 @@
             <%= f.select :map_style, options_for_select(@map_styles, @photoblog.map_style) %>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-
-  <hr class="hr">
-  <h2 class="subtitle is-size-5-mobile">Customizable text</h2>
-
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-      <%= f.label :elsewhere_heading, 'Follow heading', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control is-expanded">
-          <%= f.text_field :elsewhere_heading, placeholder: 'e.g. Break Up the Doomscrolling', class: 'input', autocomplete: 'off' %>
-        </div>
-        <p class="help">Heading text for the "follow me" section on posts.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-      <%= f.label :elsewhere_cta, 'Follow CTA', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control is-expanded">
-          <%= f.text_field :elsewhere_cta, placeholder: 'e.g. Add some photography to your favorite social feeds', class: 'input', autocomplete: 'off' %>
-        </div>
-        <p class="help">Call-to-action text displayed below the heading.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-      <%= f.label :push_notifications_heading, 'Push notifications heading', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control is-expanded">
-          <%= f.text_field :push_notifications_heading, placeholder: 'e.g. Get Notified', class: 'input', autocomplete: 'off' %>
-        </div>
-        <p class="help">Heading text for the push notifications section.</p>
-      </div>
-    </div>
-  </div>
-
-  <div class="field is-horizontal">
-    <div class="field-label is-normal">
-      <%= f.label :push_notifications_cta, 'Push notifications CTA', class: 'label' %>
-    </div>
-    <div class="field-body">
-      <div class="field">
-        <div class="control is-expanded">
-          <%= f.text_field :push_notifications_cta, placeholder: 'e.g. Get a push notification whenever new photos are published.', class: 'input', autocomplete: 'off' %>
-        </div>
-        <p class="help">Call-to-action text displayed below the heading.</p>
       </div>
     </div>
   </div>

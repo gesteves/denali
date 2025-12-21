@@ -15,7 +15,7 @@ class Blog < ApplicationRecord
 
   after_commit :check_for_invalidation, if: :saved_changes?
 
-  validates :name, :tag_line, :about, presence: true
+  validates :name, :about, presence: true
 
   INVALIDATION_PATHS = %w{
     /
@@ -36,14 +36,6 @@ class Blog < ApplicationRecord
     /o*
     /a*
   }
-
-  def formatted_tag_line
-    markdown_to_html(self.tag_line)
-  end
-
-  def plain_tag_line
-    markdown_to_plaintext(self.tag_line)
-  end
 
   def formatted_about
     markdown_to_html(self.about)
@@ -133,12 +125,7 @@ class Blog < ApplicationRecord
       additional_meta_tags
       analytics_body
       analytics_head
-      copyright
       email
-      elsewhere_cta
-      elsewhere_heading
-      push_notifications_cta
-      push_notifications_heading
       flickr
       instagram
       threads
@@ -150,7 +137,6 @@ class Blog < ApplicationRecord
       posts_per_page
       show_related_entries
       show_search
-      tag_line
       time_zone
       hide_from_search_engines
     }

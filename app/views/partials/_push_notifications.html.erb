@@ -1,10 +1,6 @@
 <section class="section" data-controller="push-notifications" data-push-notifications-vapid-public-key-value="<%= ENV['VAPID_PUBLIC_KEY'] %>" data-push-notifications-endpoint-url-value="<%= push_subscribe_path %>" data-push-notifications-text-on-value="Turn off notifications" data-push-notifications-text-off-value="Turn on notifications" data-push-notifications-text-disabled-value="Notifications blocked" data-push-notifications-on-class="button--gray" data-push-notifications-off-class="button--green" data-push-notifications-disabled-class="button--disabled">
-  <% if @photoblog.push_notifications_heading.present? %>
-    <h2 class="section__heading" id="push"><%= @photoblog.push_notifications_heading.html_safe %></h2>
-  <% end %>
-  <% if @photoblog.push_notifications_cta.present? %>
-    <p><%= @photoblog.push_notifications_cta.html_safe %></p>
-  <% end %>
+  <h2 class="section__heading" id="push"><%= t('blog.push_notifications.heading') %></h2>
+  <p><%= t('blog.push_notifications.cta') %></p>
   <button type="button" class="button button--centered button--green" data-push-notifications-target="button" data-action="click->push-notifications#toggleSubscription">
     <%= inline_svg :bell_solid_full, class_name: 'button__icon button__icon--off' %>
     <%= inline_svg :bell_slash_solid_full, class_name: 'button__icon button__icon--on' %>

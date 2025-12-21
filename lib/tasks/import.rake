@@ -126,9 +126,7 @@ def graphql_query(operation_name:, variables: nil)
     query ImportBlog {
         blog {
         name
-        tagLine
         about
-        copyright
         postsPerPage
         timeZone
         metaDescription
@@ -178,7 +176,6 @@ def import_blog(data)
   end
 
   blog.about = data[:about]
-  blog.copyright = data[:copyright]
   blog.header_logo_svg = data[:headerLogoSvg]
   blog.map_style = data[:mapStyle]
   blog.meta_description = data[:metaDescription]
@@ -186,7 +183,6 @@ def import_blog(data)
   blog.posts_per_page = data[:postsPerPage]
   blog.show_related_entries = data[:showRelatedEntries]
   blog.show_search = data[:showSearch]
-  blog.tag_line = data[:tagLine]
   blog.time_zone = data[:timeZone]
   blog.save!
   puts "Saved changes to blog “#{blog.name}”"

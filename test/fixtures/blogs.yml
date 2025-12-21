@@ -2,9 +2,7 @@
 
 allencompassingtrip:
   name: 'All-Encompassing Trip'
-  tag_line: 'Photography by Guillermo Esteves'
   about: 'This is mah blog.'
   posts_per_page: 60
-  copyright: 'Guillermo Esteves'
   show_related_entries: true
   publish_schedules_count: 2

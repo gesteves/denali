@@ -4,7 +4,7 @@
   <channel>
     <title><%= @photoblog.name %></title>
     <link><%= root_url %></link>
-    <description><%= @photoblog.plain_tag_line %></description>
+    <description><%= t('blog.tag_line') %></description>
     <pubDate><%= @entries.map(&:modified_at).max.utc.rfc822 %></pubDate>
     <atom:link href="<%= feed_url(format: 'rss') %>" rel="self" type="application/rss+xml"/>
     <webfeeds:accentColor>#BF0222</webfeeds:accentColor>

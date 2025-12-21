@@ -58,12 +58,11 @@ class Admin::BlogsController < AdminController
   private
 
   def blog_params
-    params.require(:blog).permit(:name, :tag_line, :posts_per_page, :about, :copyright,
+    params.require(:blog).permit(:name, :posts_per_page, :about,
                                  :show_related_entries, :analytics_head, :analytics_body,
                                  :email, :flickr, :mastodon, :bluesky, :instagram, :threads,
                                  :header_logo_svg, :additional_meta_tags,
                                  :favicon, :touch_icon, :logo, :placeholder, :time_zone, :meta_description, :map_style,
-                                 :show_search, :hide_from_search_engines, :elsewhere_heading, :elsewhere_cta,
-                                 :push_notifications_heading, :push_notifications_cta)
+                                 :show_search, :hide_from_search_engines)
   end
 end

@@ -1,6 +1,6 @@
 <% if @related_entries.present? %>
   <section class="section section--full-width" aria-labelledby="related-entries">
-    <h2 class="section__heading" id="related-entries">Other Photos You Might Like</h2>
+    <h2 class="section__heading" id="related-entries"><%= t('blog.related_entries.heading') %></h2>
     <ol class="entry-list" data-controller="grid" aria-labelledby="related-entries">
       <% @related_entries.each do |related_entry| %>
         <% cache related_entry do %>

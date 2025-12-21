@@ -1,6 +1,4 @@
-<% cache @photoblog do %>
-  <footer class="section" id="footer">
-    <p>&copy; <%= Time.current.strftime('%Y') %> <%= @photoblog.copyright %></p>
-  </footer>
-  <%= render partial: 'partials/analytics_body' %>
-<% end %>
+<footer class="section" id="footer">
+  <p>&copy; <%= Time.current.strftime('%Y') %> <%= t('blog.copyright') %></p>
+</footer>
+<%= render partial: 'partials/analytics_body' %>

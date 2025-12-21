@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_13_220817) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_21_224246) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -46,10 +46,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_13_220817) do
     t.string "name"
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
-    t.text "tag_line"
     t.integer "posts_per_page", default: 10
     t.text "about"
-    t.string "copyright"
     t.boolean "show_related_entries", default: true
     t.text "header_logo_svg"
     t.text "additional_meta_tags"
@@ -68,10 +66,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_13_220817) do
     t.boolean "hide_from_search_engines", default: false
     t.string "instagram"
     t.string "threads"
-    t.string "elsewhere_heading"
-    t.string "elsewhere_cta"
-    t.string "push_notifications_heading"
-    t.string "push_notifications_cta"
   end
 
   create_table "cameras", force: :cascade do |t|

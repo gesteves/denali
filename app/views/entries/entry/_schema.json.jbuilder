@@ -8,5 +8,5 @@ json.array! entry.photos do |photo|
     json.name entry.user.name
     json.url about_url
   end
-  json.set! 'copyrightNotice', @photoblog.copyright
+  json.set! 'copyrightNotice', t('blog.copyright')
 end

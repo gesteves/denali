@@ -30,9 +30,24 @@
 # available at http://guides.rubyonrails.org/i18n.html.
 
 en:
+  blog:
+    tag_line: "Photography by Guillermo Esteves"
+    copyright: "Guillermo Esteves"
+    elsewhere:
+      heading: "Follow <cite>All-Encompassing Trip</cite>"
+      cta: "Stop doomscrolling—add some photography to your feed."
+    push_notifications:
+      heading: "Never Miss a Photo"
+      cta: "Get notified whenever new photos are published."
+    related_entries:
+      heading: "Other Photos You Might Like"
   views:
     pagination:
       next: "Next"
       previous: "Previous"
       first: "First"
       last: "Last"
+    push_notifications:
+      turn_on_notifications: "Turn on notifications"
+      turn_off_notifications: "Turn off notifications"
+      notifications_blocked: "Notifications blocked"
