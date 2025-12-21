@@ -1,68 +1,82 @@
 .header {
-  align-items: center;
-  display: flex;
-  flex-flow: column nowrap;
+  align-items: flex-start;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(12, 1fr);
   margin: var(--margin-content);
   max-width: var(--max-width);
   text-align: center;
-
-  @media (min-width: $bp-m) {
-    flex-flow: row nowrap;
-  }
 
   svg g {
     fill: var(--color-logo-fill);
   }
 }
 
-.header__section {
-  order: 3;
+.header__section--logo {
+  grid-column: 4 / -4;
 
-  &:first-of-type {
-    border-bottom: var(--border-thin) solid var(--color-border);
-    order: 2;
+  @media (min-width: $bp-xxxs) {
+    grid-column: 5 / -5;
+  }
+
+  @media (min-width: $bp-s) {
+    grid-column: 6 / -6;
   }
 
   @media (min-width: $bp-m) {
-    border-bottom: var(--border-thin) solid var(--color-border);
-    flex-grow: 1;
-    margin-bottom: 45px;
-    padding: 0 20px;
-    width: calc((100vw - 240px - 40px)/2);
-
-    &:first-of-type {
-      order: 1;
-    }
+    grid-row: 1 / 1;
   }
 
-  @media (min-width: $bp-xl) {
-    width: calc((var(--max-width) - 320px - 40px)/2);
+  @media (min-width: $bp-l) {
+    grid-column: 6 / -6;
+  }
+}
+
+.header__section--tagline {
+  border-bottom: var(--border-thin) solid var(--color-border);
+  grid-column: 1 / -1;
+  padding-bottom: 1rem;
+
+  @media (min-width: $bp-m) {
+    align-items: center;
+    display: flex;
+    grid-column: 1 / 6;
+    grid-row: 1 / 1;
+    height: 50%;
+    justify-content: center;
+    padding-bottom: 0;
+  }
+
+  @media (min-width: $bp-l) {
+    grid-column: 1 / 6;
+  }
+}
+
+.header__section--follow {
+  grid-column: 1 / -1;
+
+  @media (min-width: $bp-m) {
+    align-items: center;
+    border-bottom: var(--border-thin) solid var(--color-border);
+    display: flex;
+    grid-column: 8 / -1;
+    grid-row: 1 / 1;
+    height: 50%;
+    justify-content: center;
+  }
+
+  @media (min-width: $bp-l) {
+    grid-column: 8 / -1;
   }
 }
 
 .header__tagline {
   color: var(--color-text-alt);
   font-size: var(--font-size-text-alt);
-  line-height: 44px;
-
-  a:link,
-  a:visited {
-    color: var(--color-text-alt);
-  }
-
-  a:hover,
-  a:active {
-    color: var(--color-links);
-  }
 }
 
 .header__link {
   display: block;
-  font-size: 24px;
-  margin: 0 auto 12px;
-  max-width: 320px;
-  order: 1;
-  width: 200px;
 
   &:link,
   &:visited {
@@ -81,16 +95,5 @@
 
   g {
     transition: fill var(--transition-duration);
-  }
-
-  @media (min-width: $bp-m) {
-    margin: 0 auto;
-    order: 2;
-    padding: 0 20px;
-    width: 240px;
-  }
-
-  @media (min-width: $bp-l) {
-    width: 320px;
   }
 }

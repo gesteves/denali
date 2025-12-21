@@ -1,5 +1,5 @@
-<% cache @photoblog do %>
-  <header class="header">
+<header class="header">
+  <div class="header__section header__section--logo">
     <a href="/" class="header__link" aria-labelledby="header-photoblog-name">
       <h1>
         <% if @photoblog.header_logo_svg.present? %>
@@ -10,11 +10,12 @@
         <% end %>
       </h1>
     </a>
-    <div class="header__section">
-      <p class="header__tagline"><%= @photoblog.tag_line %></p>
-    </div>
-    <div class="header__section">
-      <%= render partial: 'partials/follow', formats: :html %>
-    </div>
-  </header>
-<% end %>
+  </div>
+  <div class="header__section header__section--tagline">
+    <p class="header__tagline"><%= @photoblog.tag_line %></p>
+  </div>
+  <div class="header__section header__section--follow">
+    <%= render partial: 'partials/follow', formats: :html %>
+  </div>
+</header>
+

@@ -1,19 +1,18 @@
 .follow {
-  font-family: initial;
-  text-align: center;
-
-  li {
-    display: inline-block;
-  }
+  align-items: center;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 1rem;
+  justify-content: center;
 }
 
 .follow__link {
+  align-items: center;
   background: none;
   border: none;
-  display: block;
+  display: flex;
   height: 20px;
-  margin: 12px 5px;
-  padding: 2px;
+  justify-content: center;
   position: relative;
   width: 20px;
 
