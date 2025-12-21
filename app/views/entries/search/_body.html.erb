@@ -3,7 +3,7 @@
 
   <% if @entries.present? %>
     <%= render partial: 'entries/list/related_tags',
-              locals: { title: "Looking for more? Here are some tags related to your search.", tags: @suggested_tags, query: @query } %>
+              locals: { title: "Here are some tags related to your search.", tags: @suggested_tags, query: @query } %>
   <% else %>
     <%= render partial: 'entries/list/related_tags',
               locals: { title: "No results found, but here are some tags you can explore.", tags: @suggested_tags, query: @query } %>

@@ -14,5 +14,5 @@
 <%= render partial: 'entries/search/search_form' %>
 <% if @suggested_tags.present? %>
   <%= render partial: 'entries/list/related_tags',
-            locals: { title: "Need some ideas? Here are some tags you might like.", tags: @suggested_tags } %>
+            locals: { title: "Don’t know where to start? Here are some tags you can explore.", tags: @suggested_tags } %>
 <% end %>
