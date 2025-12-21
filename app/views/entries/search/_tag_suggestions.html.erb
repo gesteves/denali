@@ -6,7 +6,7 @@
         <li>
           <%= link_to tag_url(tag.slug), { rel: 'tag', title: "All photos tagged “#{tag.name}”", 'aria-label': tag.name } do %>
             <%= inline_svg :tag_light_full, class_name: 'tags__icon' %>
-            <span class="tags__label"><%= tag.name %></span>
+            <span><%= tag.name %></span>
           <% end %>
         </li>
       <% end %>

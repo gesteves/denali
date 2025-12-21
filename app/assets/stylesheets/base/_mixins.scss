@@ -22,3 +22,37 @@
     }
   }
 }
+
+@mixin pills {
+  align-items: center;
+  background: transparent;
+  border-radius: var(--border-radius);
+  border: var(--border-thin) solid var(--color-border);
+  color: var(--color-text-alt);
+  cursor: pointer;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0 0.5em;
+  text-decoration: none;
+  transition: background var(--transition-duration), color var(--transition-duration), border-color var(--transition-duration);
+  white-space: nowrap;
+
+  &:hover,
+  &:focus,
+  &:active {
+    background: var(--color-accent);
+    color: var(--color-accent-hover);
+    border-color: var(--color-accent);
+    text-decoration: none;
+    outline: none;
+  }
+
+  svg {
+    height: 16px;
+    width: 16px;
+
+    g, path {
+      fill: currentColor;
+    }
+  }
+}
