@@ -24,7 +24,7 @@ class EntriesController < ApplicationController
         @og_title = @photoblog.name
         @feed_url = feed_url(format: 'atom')
         @base_url = entries_url(page: nil).sub(/\/$/, '')
-        @heading_title = "Latest entries"
+        @heading_title = "Latest photos"
         @hide_title = true
         if @page.nil? || @page == 1
           @page_title = "#{@photoblog.name} – #{@photoblog.plain_tag_line}"
@@ -62,7 +62,7 @@ class EntriesController < ApplicationController
         @og_title = "#{@tags.first.name} on #{@photoblog.name}"
         @feed_url = tag_feed_url(format: 'atom', tag: @tag_slug)
         @base_url = tag_url(tag: @tag_slug, page: nil)
-        @heading_title = "Entries tagged “#{@tags.first.name}”"
+        @heading_title = "Photos tagged “#{@tags.first.name}”"
         @page_title = "#{@tags.first.name} – #{@photoblog.name}"
         @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
         @suggested_tags = ActsAsTaggableOn::Tag.related_to(@tags.first, limit: 20)
