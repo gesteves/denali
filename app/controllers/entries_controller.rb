@@ -91,7 +91,6 @@ class EntriesController < ApplicationController
 
       search_results = Entry.search_with_tag_suggestions(@query, @page, @count)
       results = search_results[:entries]
-      @suggested_tags = search_results[:suggested_tags].presence || Entry.most_recently_used_tags(25)
 
       total_count = results.results.total
       # Preserve Elasticsearch score order by fetching IDs first, then reordering
@@ -99,7 +98,17 @@ class EntriesController < ApplicationController
       records_by_id = Entry.includes(photos: [:image_attachment, :image_blob, :crops]).where(id: hit_ids).index_by(&:id)
       ordered_records = hit_ids.map { |id| records_by_id[id] }.compact
       @entries = Kaminari.paginate_array(ordered_records, total_count: total_count).page(@page).per(@count)
-      @page_title = "Search results for ”#{@query}” – #{@photoblog.name}"
+
+      # Suggest tags based on whether we have results or not
+      if @entries.present?
+        # We have results: show tags from the search results, fall back to recently used
+        @suggested_tags = search_results[:suggested_tags].presence || ActsAsTaggableOn::Tag.most_recently_used(limit: 20)
+      else
+        # No results: try to match tags based on the query to help users find content
+        @suggested_tags = ActsAsTaggableOn::Tag.matching(@query, limit: 20)
+      end
+
+      @page_title = "Search results for “#{@query}” – #{@photoblog.name}"
       @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
       @page_url = @page == 1 ? search_url(q: @query) : search_url(q: @query, page: @page)
       @base_url = search_url(q: @query)
@@ -111,7 +120,7 @@ class EntriesController < ApplicationController
       end
     else
       @page_title = "Search – #{@photoblog.name}"
-      @suggested_tags = Entry.most_recently_used_tags(25)
+      @suggested_tags = ActsAsTaggableOn::Tag.most_recently_used(limit: 20)
       respond_to do |format|
         format.html
         format.all { redirect_to search_path, status: 301 }
