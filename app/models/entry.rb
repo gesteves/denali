@@ -530,11 +530,7 @@ class Entry < ApplicationRecord
     self.older&.touch
     self.newer&.touch
 
-    paths = if self.is_published?
-      ["#{entry_long_path(self.id)}/*", self.newer&.permalink_path, self.older&.permalink_path]
-    else
-      [self.permalink_path]
-    end
+    paths = [self.permalink_path]
 
     wildcard_paths = %w{
       /
