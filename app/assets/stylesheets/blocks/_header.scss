@@ -1,5 +1,5 @@
 .header {
-  align-items: flex-start;
+  align-items: flex-end;
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(12, 1fr);
@@ -9,6 +9,11 @@
 
   svg g {
     fill: var(--color-logo-fill);
+  }
+
+  @media (min-width: $bp-m) {
+    gap: 0 1rem;
+    grid-template-rows: 1fr 1fr;
   }
 }
 
@@ -24,7 +29,7 @@
   }
 
   @media (min-width: $bp-m) {
-    grid-row: 1 / 1;
+    grid-row: 1 / -1;
   }
 
   @media (min-width: $bp-l) {
@@ -38,13 +43,8 @@
   padding-bottom: 1rem;
 
   @media (min-width: $bp-m) {
-    align-items: center;
-    display: flex;
     grid-column: 1 / 6;
     grid-row: 1 / 1;
-    height: 50%;
-    justify-content: center;
-    padding-bottom: 0;
   }
 
   @media (min-width: $bp-l) {
@@ -56,13 +56,10 @@
   grid-column: 1 / -1;
 
   @media (min-width: $bp-m) {
-    align-items: center;
     border-bottom: var(--border-thin) solid var(--color-border);
-    display: flex;
     grid-column: 8 / -1;
     grid-row: 1 / 1;
-    height: 50%;
-    justify-content: center;
+    padding-bottom: 1rem;
   }
 
   @media (min-width: $bp-l) {
