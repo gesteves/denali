@@ -29,7 +29,7 @@ class Blog < ApplicationRecord
     /8*
     /9*
     /p*
-    /t*
+    /ta*
     /s*
     /r*
     /f*
