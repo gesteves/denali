@@ -91,7 +91,7 @@ class EntriesController < ApplicationController
 
       search_results = Entry.search_with_tag_suggestions(@query, @page, @count)
       results = search_results[:entries]
-      @suggested_tags = search_results[:suggested_tags]
+      @suggested_tags = search_results[:suggested_tags].presence || Entry.most_recently_used_tags(25)
 
       total_count = results.results.total
       # Preserve Elasticsearch score order by fetching IDs first, then reordering
@@ -111,7 +111,7 @@ class EntriesController < ApplicationController
       end
     else
       @page_title = "Search – #{@photoblog.name}"
-      @suggested_tags = Entry.popular_tags(25)
+      @suggested_tags = Entry.most_recently_used_tags(25)
       respond_to do |format|
         format.html
         format.all { redirect_to search_path, status: 301 }

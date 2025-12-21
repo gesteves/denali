@@ -340,6 +340,31 @@ class Entry < ApplicationRecord
       .limit(limit)
   end
 
+  def self.most_recently_used_tags(limit = 10)
+    # Get tag IDs from 'tags' or 'locations' contexts
+    valid_tag_ids = ActsAsTaggableOn::Tagging
+      .where(context: ['tags', 'locations'])
+      .distinct
+      .pluck(:tag_id)
+
+    # Get tag IDs from 'equipment' or 'styles' contexts to exclude
+    excluded_tag_ids = ActsAsTaggableOn::Tagging
+      .where(context: ['equipment', 'styles'])
+      .distinct
+      .pluck(:tag_id)
+
+    # Subtract excluded from valid
+    filtered_tag_ids = valid_tag_ids - excluded_tag_ids
+
+    # Get the most recent tagging date for each tag
+    ActsAsTaggableOn::Tag
+      .where(id: filtered_tag_ids)
+      .joins(:taggings)
+      .group('tags.id')
+      .order('MAX(taggings.created_at) DESC')
+      .limit(limit)
+  end
+
   def self.published_today
     where('published_at >= ? and published_at <= ?', Time.current.beginning_of_day, Time.current.end_of_day)
   end

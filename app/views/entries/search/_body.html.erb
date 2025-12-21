@@ -1,13 +1,12 @@
 <% cache [@photoblog, @query.parameterize, @page, @count, @suggested_tags&.map(&:id)] do %>
   <%= render partial: 'entries/search/search_form' %>
 
-  <% if @entries.present? && @suggested_tags.present? %>
+  <% if @entries.present? %>
     <%= render partial: 'entries/search/tag_suggestions',
-              locals: { title: "Looking for more? Explore these related tags.", suggested_tags: @suggested_tags, query: @query } %>
-  <% elsif @entries.blank? %>
-    <% tags_to_show = @suggested_tags.present? ? @suggested_tags : Entry.popular_tags(25) %>
+              locals: { title: "Looking for more? Here are some tags related to your search.", suggested_tags: @suggested_tags, query: @query } %>
+  <% else %>
     <%= render partial: 'entries/search/tag_suggestions',
-              locals: { title: "No results found, but here are some tags you can explore.", suggested_tags: tags_to_show, query: @query } %>
+              locals: { title: "No results found, but here are some tags you can explore.", suggested_tags: @suggested_tags, query: @query } %>
   <% end %>
 
   <% if @entries.present? %>
