@@ -552,33 +552,7 @@ class Entry < ApplicationRecord
     Webhook.deliver_all(self)
     PushSubscription.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
-    self.purge_from_cdn
-  end
-
-  def purge_from_cdn
-    self.touch
-    self.older&.touch
-    self.newer&.touch
-
-    paths = [self.permalink_path]
-
-    wildcard_paths = %w{
-      /
-      /page*
-      /sitemap*
-      /feed*
-      /oembed*
-      /search*
-      /related*
-    }
-
-    if self.is_published?
-      paths.concat(wildcard_paths)
-      paths.concat(self.combined_tags.map { |tag| "/tagged/#{tag.slug}*"})
-    end
-
-    paths = paths.flatten.reject(&:blank?).uniq
-    CloudfrontInvalidationWorker.perform_async(paths)
+    self.blog.purge_from_cdn
   end
 
   def send_photos_to_flickr

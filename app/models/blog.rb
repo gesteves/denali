@@ -28,15 +28,13 @@ class Blog < ApplicationRecord
     /7*
     /8*
     /9*
-    /page*
-    /tagged*
-    /search*
-    /related*
-    /sitemap*
-    /feed*
-    /oembed*
-    /preview*
-    /about
+    /p*
+    /t*
+    /s*
+    /r*
+    /f*
+    /o*
+    /a*
   }
 
   def formatted_tag_line
