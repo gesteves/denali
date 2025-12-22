@@ -41,11 +41,11 @@ module EntriesHelper
 
   # Generates a paragraph with location and territories details
   def feed_location(photo)
-    return if photo.formatted_location.blank? && photo.territories.blank?
+    return if photo.formatted_location.blank? && photo.territories.empty?
 
     details = []
     details << photo.formatted_location if photo.formatted_location.present?
-    details << "#{photo.territory_list} land" if photo.territories.present?
+    details << "#{photo.territory_list} land" if photo.territories.any?
 
     "📍 #{details.join(' – ')}".html_safe
   end

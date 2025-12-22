@@ -495,8 +495,8 @@ class Entry < ApplicationRecord
   def territories(photos_collection = nil)
     return unless self.show_location?
     return @territories if defined?(@territories) && photos_collection.nil?
-    photos_to_check = photos_collection || (association(:photos).loaded? ? self.photos : self.photos.where.not(territories: nil))
-    result = photos_to_check.select { |p| p.territories.present? }.map { |p| JSON.parse(p.territories) }.flatten.uniq
+    photos_to_check = photos_collection || self.photos
+    result = photos_to_check.flat_map(&:territories).uniq
     @territories = result if photos_collection.nil?
     result
   end
@@ -506,12 +506,12 @@ class Entry < ApplicationRecord
     return @territory_list if defined?(@territory_list) && photos_collection.nil?
     territory_data = self.territories(photos_collection)
     return unless territory_data.present?
-    result = if territory_data.size > 2
-      temporary_list = territory_data.dup
-      last = temporary_list.pop
-      "#{temporary_list.join(', ')}, and #{last}"
+    names = territory_data.map(&:name)
+    result = if names.size > 2
+      last = names.pop
+      "#{names.join(', ')}, and #{last}"
     else
-      territory_data.join(' and ')
+      names.join(' and ')
     end
     @territory_list = result if photos_collection.nil?
     result
@@ -612,7 +612,7 @@ class Entry < ApplicationRecord
 
   def es_territories
     return '' unless self.show_location?
-    self.photos.where.not(territories: nil).map { |p| JSON.parse(p.territories) }.flatten.uniq.join(' ')
+    self.photos.includes(:territories).flat_map { |p| p.territories.map(&:name) }.uniq.join(' ')
   end
 
   def es_parks

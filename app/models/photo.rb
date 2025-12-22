@@ -9,6 +9,8 @@ class Photo < ApplicationRecord
   belongs_to :park, optional: true
   has_one_attached :image
   has_many :crops, dependent: :destroy
+  has_many :photo_territories, dependent: :destroy
+  has_many :territories, through: :photo_territories
 
   acts_as_list scope: :entry
 
@@ -347,18 +349,15 @@ class Photo < ApplicationRecord
   end
 
   def territory_list
-    return unless self.territories.present?
-    parsed_list = JSON.parse(self.territories)
+    return unless territories.any?
+    names = territories.map(&:name)
 
-    territory_list = if parsed_list.size > 2
-      temporary_list = parsed_list
-      last = temporary_list.pop
-      "#{temporary_list.join(', ')}, and #{last}"
+    if names.size > 2
+      last = names.pop
+      "#{names.join(', ')}, and #{last}"
     else
-      parsed_list.join(' and ')
+      names.join(' and ')
     end
-
-    territory_list
   end
 
   def flickr_caption
@@ -509,10 +508,6 @@ class Photo < ApplicationRecord
   end
 
   def changed_caption_attributes?
-    changed_territories? || changed_location? || changed_equipment?
-  end
-
-  def changed_territories?
-    saved_change_to_territories?
+    changed_location? || changed_equipment?
   end
 end

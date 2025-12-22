@@ -17,7 +17,7 @@ class PhotoTest < ActiveSupport::TestCase
 
   test 'territories are rendered correctly' do
     photo = photos(:peppers)
-    assert photo.territories.blank?
+    assert photo.territories.empty?
     assert photo.territory_list.blank?
 
     photo = photos(:eastern)

@@ -81,8 +81,7 @@ module Types
     end
 
     def territories
-      return [] if object.territories.nil?
-      JSON.parse(object.territories)
+      object.territories.map(&:name)
     end
 
     def download_url

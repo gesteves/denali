@@ -10,7 +10,7 @@ class EntriesController < ApplicationController
   def index
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops]).published.photo_entries.page(@page).per(@count)
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops, :territories]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
     preload_fonts
     @srcset = PHOTOS[:entry_list][:srcset]
@@ -98,7 +98,7 @@ class EntriesController < ApplicationController
       total_count = results.results.total
       # Preserve Elasticsearch score order by fetching IDs first, then reordering
       hit_ids = results.response.hits.hits.map { |h| h._id.to_i }
-      records_by_id = Entry.includes(photos: [:image_attachment, :image_blob, :crops]).where(id: hit_ids).index_by(&:id)
+      records_by_id = Entry.includes(photos: [:image_attachment, :image_blob, :crops, :territories]).where(id: hit_ids).index_by(&:id)
       ordered_records = hit_ids.map { |id| records_by_id[id] }.compact
       @entries = Kaminari.paginate_array(ordered_records, total_count: total_count).page(@page).per(@count)
 
@@ -138,7 +138,7 @@ class EntriesController < ApplicationController
       associations: [
         :user,
         { taggings: :tag },
-        { photos: [:image_attachment, :image_blob, :camera, :lens, :film, :park, :crops] }
+        { photos: [:image_attachment, :image_blob, :camera, :lens, :film, :park, :crops, :territories] }
       ]
     ).call
     @photos = @entry.photos
@@ -177,7 +177,7 @@ class EntriesController < ApplicationController
 
   def feed
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.photo_entries.page(1).per(@count)
+    @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :territories]).published.photo_entries.page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
     respond_to do |format|
       format.atom
@@ -188,7 +188,7 @@ class EntriesController < ApplicationController
 
   def tag_feed
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
+    @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :territories]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     respond_to do |format|
       format.atom

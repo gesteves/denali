@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_22_011750) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_22_161258) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -184,6 +184,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_22_011750) do
     t.index ["slug"], name: "index_parks_on_slug"
   end
 
+  create_table "photo_territories", force: :cascade do |t|
+    t.bigint "photo_id", null: false
+    t.bigint "territory_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["photo_id", "territory_id"], name: "index_photo_territories_on_photo_id_and_territory_id", unique: true
+    t.index ["photo_id"], name: "index_photo_territories_on_photo_id"
+    t.index ["territory_id"], name: "index_photo_territories_on_territory_id"
+  end
+
   create_table "photos", id: :serial, force: :cascade do |t|
     t.text "alt_text"
     t.integer "position"
@@ -213,7 +223,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_22_011750) do
     t.boolean "color"
     t.boolean "black_and_white"
     t.string "dominant_color"
-    t.text "territories"
     t.string "location"
     t.bigint "park_id"
     t.boolean "auto_generated_alt_text", default: false
@@ -284,6 +293,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_22_011750) do
     t.index ["slug"], name: "index_tags_on_slug"
   end
 
+  create_table "territories", force: :cascade do |t|
+    t.string "slug"
+    t.string "name"
+    t.string "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_territories_on_slug", unique: true
+  end
+
   create_table "users", id: :serial, force: :cascade do |t|
     t.string "provider"
     t.string "uid"
@@ -311,6 +329,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_22_011750) do
   add_foreign_key "crops", "photos"
   add_foreign_key "entries", "blogs"
   add_foreign_key "entries", "users"
+  add_foreign_key "photo_territories", "photos"
+  add_foreign_key "photo_territories", "territories"
   add_foreign_key "photos", "cameras"
   add_foreign_key "photos", "entries"
   add_foreign_key "photos", "films"
