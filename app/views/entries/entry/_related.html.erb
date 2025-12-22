@@ -1,14 +1,17 @@
-<% if @related_entries.present? %>
-  <section class="section section--full-width" aria-labelledby="related-entries">
-    <h2 class="section__heading" id="related-entries"><%= t('blog.related_entries.heading') %></h2>
-    <ol class="entry-list" data-controller="grid" aria-labelledby="related-entries">
-      <% @related_entries.each do |related_entry| %>
-        <% cache related_entry do %>
+<% cache [@photoblog, entry] do %>
+  <% related_entries = entry.related %>
+  <% if related_entries.present? %>
+    <% srcset = PHOTOS[:entry_list_square][:srcset] %>
+    <% sizes = PHOTOS[:entry_list_square][:sizes].join(', ') %>
+    <section class="section section--full-width" aria-labelledby="related-entries">
+      <h2 class="section__heading" id="related-entries"><%= t('blog.related_entries.heading') %></h2>
+      <ol class="entry-list" data-controller="grid" aria-labelledby="related-entries">
+        <% related_entries.each do |related_entry| %>
           <li class="entry-list__item">
-            <%= render partial: 'entries/list/entry_link', object: related_entry, as: :entry, locals: { aspect_ratio: '1:1', srcset: @related_srcset, sizes: @related_sizes } %>
+            <%= render partial: 'entries/list/entry_link', object: related_entry, as: :entry, locals: { aspect_ratio: '1:1', srcset: srcset, sizes: sizes } %>
           </li>
         <% end %>
-      <% end %>
-    </ol>
-  </section>
+      </ol>
+    </section>
+  <% end %>
 <% end %>
