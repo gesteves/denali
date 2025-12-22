@@ -44,6 +44,12 @@
   width: 100%;
 }
 
+.section--smol-text {
+  p, ul {
+    font-size: var(--font-size-text-smol);
+  }
+}
+
 .section__heading {
   font-size: var(--font-size-subheading);
   font-weight: var(--font-weight-subheading);
