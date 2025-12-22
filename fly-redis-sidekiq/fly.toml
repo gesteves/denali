@@ -10,7 +10,7 @@ primary_region = 'iad'
   image = 'redis:7-alpine'
 
 [processes]
-  app = "redis-server --dir /data --save 60 1 --appendonly yes --appendfsync everysec --maxmemory 384mb --maxmemory-policy noeviction"
+  app = "redis-server --dir /data --save 60 1 --appendonly yes --appendfsync everysec --maxmemory 256mb --maxmemory-policy noeviction"
 
 [mounts]
   source = "redis_data"
