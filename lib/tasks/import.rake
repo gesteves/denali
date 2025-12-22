@@ -130,7 +130,6 @@ def graphql_query(operation_name:, variables: nil)
         postsPerPage
         timeZone
         metaDescription
-        mapStyle
         headerLogoSvg
         showSearch
         showRelatedEntries
@@ -177,7 +176,6 @@ def import_blog(data)
 
   blog.about = data[:about]
   blog.header_logo_svg = data[:headerLogoSvg]
-  blog.map_style = data[:mapStyle]
   blog.meta_description = data[:metaDescription]
   blog.name = data[:name]
   blog.posts_per_page = data[:postsPerPage]

@@ -4,14 +4,6 @@ class Admin::BlogsController < AdminController
   # GET /admin/blogs/1/edit
   def edit
     @page_title = 'Blog settings'
-    @map_styles = [
-      ['Streets', 'mapbox://styles/mapbox/streets-v11'],
-      ['Outdoors', 'mapbox://styles/mapbox/outdoors-v11'],
-      ['Light', 'mapbox://styles/mapbox/light-v10'],
-      ['Dark', 'mapbox://styles/mapbox/dark-v10'],
-      ['Satellite', 'mapbox://styles/mapbox/satellite-v9'],
-      ['Satellite streets', 'mapbox://styles/mapbox/satellite-streets-v11'],
-    ]
     @ttls = [
       ['Don’t cache', 0],
       ['1 minute',    1.minute],
@@ -62,7 +54,7 @@ class Admin::BlogsController < AdminController
                                  :show_related_entries, :analytics_head, :analytics_body,
                                  :email, :flickr, :mastodon, :bluesky, :instagram, :threads,
                                  :header_logo_svg, :additional_meta_tags,
-                                 :favicon, :touch_icon, :logo, :placeholder, :time_zone, :meta_description, :map_style,
+                                 :favicon, :touch_icon, :logo, :placeholder, :time_zone, :meta_description,
                                  :show_search, :hide_from_search_engines)
   end
 end

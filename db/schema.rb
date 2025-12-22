@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_21_224246) do
+ActiveRecord::Schema[8.0].define(version: 2025_12_22_011750) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -55,7 +55,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_21_224246) do
     t.integer "publish_schedules_count"
     t.string "time_zone", default: "UTC"
     t.text "meta_description"
-    t.string "map_style"
     t.text "analytics_head"
     t.text "analytics_body"
     t.boolean "show_search", default: false

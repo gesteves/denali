@@ -8,7 +8,6 @@ module Types
     field :copyright, String, null: true, description: "Copyright info for the blog"
     field :formatted_about, String, null: true, description: "A full description of the blog, formatted in HTML"
     field :header_logo_svg, String, null: true, description: "SVG for the main header logo"
-    field :map_style, String, null: true, description: "Style of the maps in the map view"
     field :meta_description, String, null: true, description: "Content of the description meta tag"
     field :name, String, null: true, description: "The title of the blog"
     field :plain_about, String, null: true, description: "A full description of the blog, in plain text"
