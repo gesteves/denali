@@ -4,7 +4,11 @@
   <meta name="description" content="<%= @page_description %>">
   <link rel="canonical" href="<%= @canonical_url %>">
   <meta property="og:title" content="<%= @og_title %>">
-  <% if @photoblog.logo.attached? %>
+  <% if @photoblog.og_image.attached? %>
+    <meta property="og:image" content="<%= @photoblog.og_image_url %>">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+  <% elsif @photoblog.logo.attached? %>
     <meta property="og:image" content="<%= @photoblog.logo_url(width: 1200, height: 630, format: 'png', fit_in: true, fill: 'fff') %>">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">

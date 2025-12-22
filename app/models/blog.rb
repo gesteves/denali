@@ -11,6 +11,7 @@ class Blog < ApplicationRecord
   has_one_attached :favicon
   has_one_attached :touch_icon
   has_one_attached :logo
+  has_one_attached :og_image
   has_one_attached :placeholder
 
   after_commit :check_for_invalidation, if: :saved_changes?
@@ -58,6 +59,11 @@ class Blog < ApplicationRecord
   def logo_url(opts = {})
     opts.reverse_merge!(height: 60, format: 'png')
     thumbor_url(self.logo.key, opts)
+  end
+
+  def og_image_url(opts = {})
+    opts.reverse_merge!(width: 1200, height: 630, format: 'jpeg')
+    thumbor_url(self.og_image.key, opts)
   end
 
   def placeholder_url(opts = {})

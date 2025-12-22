@@ -277,6 +277,33 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
+      <%= f.label :og_image, 'OpenGraph image', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="file">
+          <label class="file-label">
+            <%= f.file_field :og_image, accept: '.png,.jpg,.jpeg', class: 'file-input' %>
+            <span class="file-cta">
+              <span class="file-icon">
+                <i class="fas fa-image"></i>
+              </span>
+              <span class="file-label">
+                Choose an image…
+              </span>
+            </span>
+          </label>
+        </div>
+        <p class="help">Used as the default image when sharing pages on social media. Recommended size: 1200×630.</p>
+      </div>
+      <% if @photoblog.og_image.attached? %>
+        <div><%= image_tag @photoblog.og_image_url(width: 600, height: 315) %></div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
       <%= f.label :touch_icon, 'Icon', class: 'label' %>
     </div>
     <div class="field-body">
