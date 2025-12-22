@@ -10,9 +10,7 @@ class NativeLandsWorker < ApplicationWorker
     lng = photo.longitude.round(2)
     cache_key = "native_lands/#{lat}/#{lng}"
 
-    response_data = Rails.cache.fetch(cache_key, expires_in: 1.day) do
-      fetch_from_api(lat, lng)
-    end
+    response_data = fetch_from_api(lat, lng)
 
     return if response_data.blank?
 
