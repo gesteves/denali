@@ -1,0 +1,4 @@
+<tr>
+  <td><%= link_to_if territory.url.present?, territory.name, territory.url, target: '_blank', rel: 'noopener' %></td>
+  <td><%= pluralize_with_delimiter 'entry', territory.entries_count %></td>
+</tr>

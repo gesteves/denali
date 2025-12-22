@@ -1,0 +1,9 @@
+<% if @territories.blank? %>
+  <article class="message is-info">
+    <div class="message-body">
+      You don't have any territories.
+    </div>
+  </article>
+<% else %>
+  <%= render partial: 'territories', object: @territories %>
+<% end %>

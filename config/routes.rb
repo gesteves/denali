@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     get '/entries/queued/schedule'    => 'publish_schedules#index'
     get '/equipment'                  => 'equipment#index'
     get '/locations'                  => 'locations#index'
+    get '/territories'                => 'territories#index'
     get '/map'                        => 'maps#index', :as => :map
     get '/map/photos.:format'         => 'maps#photos', :as => :map_markers
     get '/map/photo/:id.:format'      => 'maps#photo', :as => :map_photo
