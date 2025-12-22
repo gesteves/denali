@@ -13,9 +13,6 @@
       <hr class="dropdown-divider">
       <%= link_to icon('Share', 'fas fa-share-square'), entry.permalink_url, 'data-controller': 'share', 'data-action': 'click->share#open', class: 'dropdown-item' %>
       <% if entry.is_photo? && entry.is_published? %>
-        <%= link_to icon('Share on Mastodon', 'fa-brands fa-mastodon'), mastodon_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
-      <% end %>
-      <% if entry.is_photo? && entry.is_published? %>
         <%= link_to icon('Share on Bluesky', 'fa-brands fa-bluesky'), bluesky_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <% if entry.is_photo? && entry.is_published? %>
@@ -23,6 +20,9 @@
       <% end %>
       <% if entry.is_photo? %>
         <%= link_to icon('Share on Instagram Story', 'fa-brands fa-instagram'), instagram_story_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
+      <% end %>
+      <% if entry.is_photo? && entry.is_published? %>
+        <%= link_to icon('Share on Mastodon', 'fa-brands fa-mastodon'), mastodon_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
       <% if entry.is_photo? && entry.is_published? %>
         <%= link_to icon('Share on Threads', 'fa-brands fa-threads'), threads_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
