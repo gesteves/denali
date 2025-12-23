@@ -1,12 +1,115 @@
 version: 2
+
+registries:
+  docker-hub:
+    type: docker-registry
+    url: https://registry.hub.docker.com
+    replaces-base: true
+
 updates:
+  # Ruby gems (Bundler)
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
-      interval: "weekly"	   
+      interval: "weekly"
       day: "saturday"
+    labels:
+      - "dependencies"
+      - "ruby"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      rails:
+        patterns:
+          - "rails*"
+          - "actioncable"
+          - "actionmailbox"
+          - "actionmailer"
+          - "actionpack"
+          - "actiontext"
+          - "actionview"
+          - "activejob"
+          - "activemodel"
+          - "activerecord"
+          - "activestorage"
+          - "activesupport"
+      aws:
+        patterns:
+          - "aws-sdk*"
+      development:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
+        exclude-patterns:
+          - "rails*"
+          - "aws-sdk*"
+
+  # JavaScript packages (npm/Yarn)
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
-      interval: "weekly"	   
+      interval: "weekly"
       day: "saturday"
+    labels:
+      - "dependencies"
+      - "javascript"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      babel:
+        patterns:
+          - "@babel/*"
+          - "babel-*"
+      webpack:
+        patterns:
+          - "webpack*"
+          - "@webpack-cli/*"
+      stimulus:
+        patterns:
+          - "@hotwired/*"
+          - "stimulus*"
+      development:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+      minor-and-patch:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "saturday"
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      actions:
+        patterns:
+          - "*"
+
+  # Docker base images
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "saturday"
+    labels:
+      - "dependencies"
+      - "docker"
+    commit-message:
+      prefix: "chore(deps)"
+    registries:
+      - docker-hub
