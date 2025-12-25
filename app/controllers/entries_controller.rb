@@ -150,6 +150,7 @@ class EntriesController < ApplicationController
       format.html {
         redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
         @page_title = "#{@entry.plain_title} – #{@photoblog.name}"
+        @has_territories = @entry.photos.any? { |p| p.territories.present? }
       }
       format.all { redirect_to(@entry.permalink_url, status: 301) }
     end

@@ -1,6 +1,8 @@
 <footer class="section section--smol-text" id="footer">
   <p>&copy; <%= Time.current.strftime('%Y') %> <%= t('blog.copyright') %></p>
-  <hr>
-  <p>Native land data courtesy of <a href="https://native-land.ca/" target="_blank">Native Land Digital</a>. It does not represent or intend to represent official or legal boundaries of any Indigenous nations.</p>
+  <% if @has_territories.present? %>
+    <hr>
+    <p>Native land data courtesy of <a href="https://native-land.ca/" target="_blank">Native Land Digital</a>. It does not represent or intend to represent official or legal boundaries of any Indigenous nations.</p>
+  <% end %>
 </footer>
 <%= render partial: 'partials/analytics_body' %>
