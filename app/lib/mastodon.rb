@@ -29,7 +29,9 @@ class Mastodon
     if response.code == 200
       JSON.parse(response.body)
     else
-      raise response.body
+      Rails.logger.error("[Mastodon] create_status failed: status=#{response.code}")
+      Rails.logger.error("[Mastodon] Response body: #{response.body.truncate(500)}")
+      raise "Mastodon create_status failed with status #{response.code}"
     end
   end
 
@@ -48,10 +50,12 @@ class Mastodon
 
     response = HTTParty.post(endpoint, body: body, headers: headers)
 
-    if response.code == 200
+    if response.code == 200 || response.code == 202
       JSON.parse(response.body)
     else
-      raise response.body
+      Rails.logger.error("[Mastodon] upload_media failed: status=#{response.code}, url=#{url}")
+      Rails.logger.error("[Mastodon] Response body: #{response.body.truncate(500)}")
+      raise "Mastodon upload_media failed with status #{response.code}"
     end
   end
 end
