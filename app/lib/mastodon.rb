@@ -48,7 +48,7 @@ class Mastodon
       'Authorization': "Bearer #{@bearer_token}"
     }
 
-    response = HTTParty.post(endpoint, body: body, headers: headers)
+    response = HTTParty.post(endpoint, body: body, headers: headers, stream_body: false)
 
     if response.code == 200 || response.code == 202
       JSON.parse(response.body)

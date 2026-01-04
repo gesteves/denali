@@ -505,7 +505,7 @@ DEPENDENCIES
   flickraw!
   graphql
   htmlentities
-  httparty
+  httparty (~> 0.24)
   image_processing (~> 1.14)
   jbuilder (~> 2.14)
   kaminari

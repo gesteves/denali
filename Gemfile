@@ -36,7 +36,7 @@ gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr', require: nil
 gem 'acts-as-taggable-on'
-gem 'httparty'
+gem 'httparty', '~> 0.24'
 gem 'kaminari'
 gem 'figaro'
 gem 'oauth'
