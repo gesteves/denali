@@ -1,0 +1,2 @@
+#!/bin/bash
+fly scale vm shared-cpu-1x --memory 1024 --process-group worker
