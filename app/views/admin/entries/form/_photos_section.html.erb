@@ -1,0 +1,21 @@
+<div class="field is-horizontal">
+  <div class="field-label">
+    <%= f.label :photos, 'Photos', class: 'label' %>
+    <a href="#" class="button" data-action="click->entry-form#addPhoto">
+      <span class="icon">
+        <i class="fas fa-plus-circle"></i>
+      </span>
+    </a>
+  </div>
+  <div class="field-body">
+    <div class="field is-extended">
+      <div data-entry-form-target="photos">
+        <% if @entry.persisted? && @entry.photos.any? %>
+          <%= render partial: 'admin/entries/form/existing_photo_fields', locals: { f: f, srcset: @srcset, sizes: @sizes } %>
+        <% else %>
+          <%= render partial: 'admin/entries/form/photo_fields', locals: { i: 0 } %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

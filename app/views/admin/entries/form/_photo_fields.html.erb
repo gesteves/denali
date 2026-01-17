@@ -1,0 +1,46 @@
+<%= fields_for :entry, @entry do |f| %>
+  <%= f.fields_for :photos, child_index: "#{(Time.current.to_f * 1000).to_i}#{i}" do |p| %>
+    <div class="draggable-source" data-controller="photo-form" data-photo-form-empty-value="true">
+      <div class="card" data-photo-form-target="fields">
+        <div class="card-content">
+          <div class="media photo-form">
+            <div class="media-content">
+              <div class="field is-grouped is-grouped-centered">
+                <div class="control">
+                  <div class="file is-boxed">
+                    <label class="file-label">
+                      <%= p.file_field :image, accept: '.jpg,.jpeg', class: 'file-input', 'data-action': 'click->photo-form#stopPropagation change->photo-form#addFromFile' %>
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-image"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose a photo…
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <%= render partial: 'admin/entries/form/photo_card_controls' %>
+        </div>
+      </div>
+
+      <div class="card is-hidden" data-photo-form-target="fields">
+        <div class="card-image is-clipped">
+          <img data-photo-form-target="thumbnail" />
+        </div>
+        <div class="card-content">
+          <div class="media photo-form">
+            <div class="media-content">
+              <%= render partial: 'admin/entries/form/photo_metadata_fields', locals: { p: p } %>
+            </div>
+          </div>
+          <%= render partial: 'admin/entries/form/photo_card_controls' %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>

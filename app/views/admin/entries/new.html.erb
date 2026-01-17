@@ -1,32 +1,4 @@
 <h1 class="title is-size-5-mobile">New entry</h1>
 <hr class="hr">
 
-<%= form_for([:admin, @entry], html: { multipart: true, 'data-controller': 'entry-form sluggifier', 'data-entry-form-photo-endpoint-value': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
-<div class="field is-horizontal">
-  <div class="field-label">
-    <%= f.label :photos, 'Photos', class: 'label' %>
-    <a href="#" class="button" data-action="click->entry-form#addPhoto">
-      <span class="icon">
-        <i class="fas fa-plus-circle"></i>
-      </span>
-    </a>
-  </div>
-  <div class="field-body">
-    <div class="field is-extended">
-      <div data-entry-form-target="photos">
-        <%= render partial: 'photo_fields', locals: { i: 0 } %>
-      </div>
-    </div>
-  </div>
-</div>
-
-  <%= render partial: 'entry_fields', locals: { f: f } %>
-  <%= render partial: 'entry_status', locals: { f: f } %>
-  <%= render partial: 'entry_sharing', locals: { f: f } %>
-  <%= render partial: 'entry_options', locals: { f: f } %>
-
-  <hr class="hr">
-  <div class="buttons is-right">
-    <%= f.submit 'Save entry', class: 'button is-success' %>
-  </div>
-<% end %>
+<%= render partial: 'admin/entries/form/form', locals: { submit_text: 'Save entry' } %>

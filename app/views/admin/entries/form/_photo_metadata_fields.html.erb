@@ -1,0 +1,48 @@
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= p.label :alt_text, 'Alt text', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= p.text_area :alt_text, placeholder: 'Write alt text for this photo…', class: 'textarea', rows: 4 %>
+        <%= p.hidden_field :position, 'data-position': '' %>
+        <% if local_assigns[:include_hidden_fields] %>
+          <%= p.hidden_field :id %>
+          <%= p.hidden_field :_destroy, 'data-photo-form-target': 'destroy' %>
+          <%= p.hidden_field :auto_generated_alt_text, value: false %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="hr">
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= p.label :park_id, 'National Park Unit', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <div class="select is-fullwidth">
+          <%= p.collection_select :park_id, Park.order(:display_name), :id, :display_name, { include_blank: "None" } %>
+        </div>
+      </div>
+      <p class="help">If the photo was made in a National Park, select it here.</p>
+    </div>
+  </div>
+</div>
+<hr class="hr">
+<div class="field is-horizontal">
+  <div class="field-label is-normal">
+    <%= p.label :location, 'Location', class: 'label' %>
+  </div>
+  <div class="field-body">
+    <div class="field">
+      <div class="control is-expanded">
+        <%= p.text_field :location, placeholder: 'The place where this photo was made…', class: 'input' %>
+      </div>
+      <p class="help">Use this for photos not made in a National Park.</p>
+    </div>
+  </div>
+</div>

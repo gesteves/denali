@@ -1,0 +1,14 @@
+<%= form_for([:admin, @entry], html: { multipart: true, 'data-controller': 'entry-form sluggifier', 'data-entry-form-photo-endpoint-value': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit' }) do |f| %>
+  <%= render partial: 'admin/entries/form/photos_section', locals: { f: f } %>
+  <%= render partial: 'admin/entries/form/entry_fields', locals: { f: f } %>
+  <% unless @entry.persisted? %>
+    <%= render partial: 'admin/entries/form/entry_status', locals: { f: f } %>
+  <% end %>
+  <%= render partial: 'admin/entries/form/entry_sharing', locals: { f: f } %>
+  <%= render partial: 'admin/entries/form/entry_options', locals: { f: f } %>
+
+  <hr class="hr">
+  <div class="buttons is-right">
+    <%= f.submit submit_text, class: 'button is-success' %>
+  </div>
+<% end %>
