@@ -400,51 +400,27 @@ class Photo < ApplicationRecord
   end
 
   def extract_metadata
-    if self.has_dimensions?
-      PhotoExifWorker.perform_async(self.id)
-    else
-      PhotoExifWorker.perform_in(5.seconds, self.id)
-    end
+    PhotoExifWorker.perform_async(self.id)
   end
 
   def generate_alt_text
-    if self.has_dimensions?
-      AltTextWorker.perform_async(self.id)
-    else
-      AltTextWorker.perform_in(5.seconds, self.id)
-    end
+    AltTextWorker.perform_async(self.id)
   end
 
   def geocode
-    if self.has_dimensions?
-      PhotoGeocodeWorker.perform_async(self.id)
-    else
-      PhotoGeocodeWorker.perform_in(5.seconds, self.id)
-    end
+    PhotoGeocodeWorker.perform_async(self.id)
   end
 
   def update_native_lands
-    if self.has_dimensions?
-      NativeLandsWorker.perform_async(self.id)
-    else
-      NativeLandsWorker.perform_in(5.seconds, self.id)
-    end
+    NativeLandsWorker.perform_async(self.id)
   end
 
   def detect_colors
-    if self.has_dimensions?
-      ColorDetectionWorker.perform_async(self.id)
-    else
-      ColorDetectionWorker.perform_in(5.seconds, self.id)
-    end
+    ColorDetectionWorker.perform_async(self.id)
   end
 
   def encode_blurhash
-    if self.has_dimensions?
-      BlurhashWorker.perform_async(self.id)
-    else
-      BlurhashWorker.perform_in(5.seconds, self.id)
-    end
+    BlurhashWorker.perform_async(self.id)
   end
 
   def blurhash_data_uri(w: 32)
