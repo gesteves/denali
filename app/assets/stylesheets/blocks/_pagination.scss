@@ -26,4 +26,16 @@
     height: 20px;
     width: 20px;
   }
+
+  &--inactive {
+    cursor: default;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: transparent;
+      color: var(--color-text-alt);
+      border-color: transparent;
+    }
+  }
 }
