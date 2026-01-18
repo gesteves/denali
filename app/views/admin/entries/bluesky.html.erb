@@ -28,6 +28,13 @@
           </div>
           <p class="help">The photo will be published quoting this post.</p>
         </div>
+        <div class="field">
+          <label class="label">Schedule for</label>
+          <div class="control">
+            <%= form.datetime_field :scheduled_at, class: 'input', min: Time.current.in_time_zone(@photoblog.time_zone).strftime('%Y-%m-%dT%H:%M') %>
+          </div>
+          <p class="help">Leave blank to share immediately.</p>
+        </div>
         <hr class="hr">
         <div class="field is-grouped is-grouped-multiline">
           <div class="control">

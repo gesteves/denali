@@ -361,8 +361,16 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      InstagramWorker.perform_async(@entry.id, params[:text])
-      @message = 'Your entry was shared on Instagram.'
+      scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+
+      if scheduled_at.present? && scheduled_at > Time.current
+        InstagramWorker.perform_at(scheduled_at, @entry.id, params[:text])
+        @message = "Your entry will be shared on Instagram at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
+      else
+        InstagramWorker.perform_async(@entry.id, params[:text])
+        @message = 'Your entry was shared on Instagram.'
+      end
+
       respond_to do |format|
         format.html {
           flash[:success] = @message
@@ -388,8 +396,16 @@ class Admin::EntriesController < AdminController
       end
     elsif request.post?
       crop = params[:crop] == 'true'
-      InstagramStoryWorker.perform_async(@entry.id, crop)
-      @message = 'Your entry was shared on your Instagram Story.'
+      scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+
+      if scheduled_at.present? && scheduled_at > Time.current
+        InstagramStoryWorker.perform_at(scheduled_at, @entry.id, crop)
+        @message = "Your entry will be shared on your Instagram Story at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
+      else
+        InstagramStoryWorker.perform_async(@entry.id, crop)
+        @message = 'Your entry was shared on your Instagram Story.'
+      end
+
       respond_to do |format|
         format.html {
           flash[:success] = @message
@@ -415,8 +431,16 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      ThreadsWorker.perform_async(@entry.id, params[:text])
-      @message = 'Your entry was shared on Threads.'
+      scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+
+      if scheduled_at.present? && scheduled_at > Time.current
+        ThreadsWorker.perform_at(scheduled_at, @entry.id, params[:text])
+        @message = "Your entry will be shared on Threads at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
+      else
+        ThreadsWorker.perform_async(@entry.id, params[:text])
+        @message = 'Your entry was shared on Threads.'
+      end
+
       respond_to do |format|
         format.html {
           flash[:success] = @message
@@ -442,8 +466,16 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      MastodonWorker.perform_async(@entry.id, params[:text])
-      @message = 'Your entry was shared on Mastodon.'
+      scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+
+      if scheduled_at.present? && scheduled_at > Time.current
+        MastodonWorker.perform_at(scheduled_at, @entry.id, params[:text])
+        @message = "Your entry will be shared on Mastodon at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
+      else
+        MastodonWorker.perform_async(@entry.id, params[:text])
+        @message = 'Your entry was shared on Mastodon.'
+      end
+
       respond_to do |format|
         format.html {
           flash[:success] = @message
@@ -469,8 +501,16 @@ class Admin::EntriesController < AdminController
         }
       end
     elsif request.post?
-      BlueskyWorker.perform_async(@entry.id, params[:text], params[:in_reply_to], params[:quote])
-      @message = 'Your entry was shared on Bluesky.'
+      scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+
+      if scheduled_at.present? && scheduled_at > Time.current
+        BlueskyWorker.perform_at(scheduled_at, @entry.id, params[:text], params[:in_reply_to], params[:quote])
+        @message = "Your entry will be shared on Bluesky at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
+      else
+        BlueskyWorker.perform_async(@entry.id, params[:text], params[:in_reply_to], params[:quote])
+        @message = 'Your entry was shared on Bluesky.'
+      end
+
       respond_to do |format|
         format.html {
           flash[:success] = @message
