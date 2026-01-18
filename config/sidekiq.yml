@@ -28,6 +28,7 @@
       queue: high
       args: [[], ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 12, 'Cherry Blossoms']
       description: "Share a random photo on Bluesky, Mastodon, Instagram and Threads once a day at 10:01 AM ET, unless a new photo was published."
+      enabled: false
     random_once_a_day:
       cron: '0 16 * 4 *'  # Run at 4:00 PM ET every day
       class: RandomShareWorker
