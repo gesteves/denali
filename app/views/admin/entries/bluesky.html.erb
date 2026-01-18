@@ -15,20 +15,6 @@
           <p class="help"><span data-character-counter-target="characterCount">0</span>/300</p>
         </div>
         <div class="field">
-          <label class="label">In reply to</label>
-          <div class="control is-expanded">
-            <%= form.text_field :in_reply_to, placeholder: 'https://bsky.app/profile/allencompassingtrip.com/post/3lbpl6yom3t2w', class: 'input', autocomplete: 'off' %>
-          </div>
-          <p class="help">The photo will be published as a reply to this post.</p>
-        </div>
-        <div class="field">
-          <label class="label">Repost with quote</label>
-          <div class="control is-expanded">
-            <%= form.text_field :quote, placeholder: 'https://bsky.app/profile/allencompassingtrip.com/post/3lbpl6yom3t2w', class: 'input', autocomplete: 'off' %>
-          </div>
-          <p class="help">The photo will be published quoting this post.</p>
-        </div>
-        <div class="field">
           <label class="label">Schedule for</label>
           <div class="control">
             <%= form.datetime_field :scheduled_at, class: 'input', min: Time.current.in_time_zone(@photoblog.time_zone).strftime('%Y-%m-%dT%H:%M') %>
