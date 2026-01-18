@@ -36,6 +36,22 @@ updates:
       aws:
         patterns:
           - "aws-sdk*"
+      sidekiq:
+        patterns:
+          - "sidekiq*"
+          - "connection_pool"
+      elasticsearch:
+        patterns:
+          - "elasticsearch*"
+      omniauth:
+        patterns:
+          - "omniauth*"
+      image-processing:
+        patterns:
+          - "image_processing"
+          - "ruby-thumbor"
+          - "blurhash"
+          - "exifr"
       development:
         dependency-type: "development"
         update-types:
@@ -48,6 +64,14 @@ updates:
         exclude-patterns:
           - "rails*"
           - "aws-sdk*"
+          - "sidekiq*"
+          - "connection_pool"
+          - "elasticsearch*"
+          - "omniauth*"
+          - "image_processing"
+          - "ruby-thumbor"
+          - "blurhash"
+          - "exifr"
 
   # JavaScript packages (npm/Yarn)
   - package-ecosystem: "npm"
@@ -73,6 +97,15 @@ updates:
         patterns:
           - "@hotwired/*"
           - "stimulus*"
+      gulp:
+        patterns:
+          - "gulp*"
+      eslint:
+        patterns:
+          - "eslint*"
+      leaflet:
+        patterns:
+          - "leaflet*"
       development:
         dependency-type: "development"
         update-types:
@@ -83,6 +116,16 @@ updates:
         update-types:
           - "minor"
           - "patch"
+        exclude-patterns:
+          - "@babel/*"
+          - "babel-*"
+          - "webpack*"
+          - "@webpack-cli/*"
+          - "@hotwired/*"
+          - "stimulus*"
+          - "gulp*"
+          - "eslint*"
+          - "leaflet*"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
