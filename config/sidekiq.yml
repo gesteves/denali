@@ -22,6 +22,12 @@
       queue: high
       args: ['Landscapes', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 12, 'Cherry Blossoms']
       description: "Shares a random landscape photo on Bluesky, Mastodon, Instagram and Threads once a day."
+    random_when_no_new_photo:
+      cron: '1 10 * * *'  # Run at 10:01 AM ET every day
+      class: RandomShareWorker
+      queue: high
+      args: [[], ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 12, 'Cherry Blossoms']
+      description: "Share a random photo on Bluesky, Mastodon, Instagram and Threads once a day at 10:01 AM ET, unless a new photo was published."
     random_once_a_day:
       cron: '0 16 * 4 *'  # Run at 4:00 PM ET every day
       class: RandomShareWorker

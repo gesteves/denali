@@ -1,6 +1,7 @@
 class RandomShareWorker < ApplicationWorker
   def perform(tags, platforms, not_shared_in_months = 12, excluded_tags = [])
     return if !Rails.env.production?
+    return if Entry.published.where('published_at > ?', 1.hour.ago).exists?
     tags = Array(tags)
     platforms = Array(platforms)
     excluded_tags = Array(excluded_tags)
