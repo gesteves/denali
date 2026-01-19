@@ -16,7 +16,7 @@
       <% end %>
       <hr class="dropdown-divider">
       <% if entry.is_photo? %>
-        <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item' %>
+        <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item', target: '_blank' %>
       <% end %>
       <% if entry.is_photo? && !entry.is_photoset? %>
         <%= link_to icon('Download', 'fas fa-download'), download_admin_entry_photo_path(entry_id: entry.id, id: entry.photos.first.id), class: 'dropdown-item' %>
