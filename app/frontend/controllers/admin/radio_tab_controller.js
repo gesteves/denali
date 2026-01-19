@@ -33,5 +33,6 @@ export default class extends Controller {
     tab.classList.add('is-active');
 
     this.fieldTarget.value = tab.getAttribute('data-radio-tab-value');
+    this.fieldTarget.dispatchEvent(new Event('change', { bubbles: true }));
   }
 }

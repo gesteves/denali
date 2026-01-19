@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :refresh_metadata, :generate_alt_text]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :refresh_metadata, :generate_alt_text, :share]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
@@ -336,13 +336,26 @@ class Admin::EntriesController < AdminController
 
   def prints
     set_srcset
-    @page_title = "Print options for “#{@entry.title}”"
+    @page_title = "Print options for "#{@entry.title}""
     @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
     @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
     respond_to do |format|
       format.html {
         render
       }
+    end
+  end
+
+  def share
+    raise ActiveRecord::RecordNotFound unless @entry.is_photo?
+    set_srcset
+    @page_title = "Share “#{@entry.title}”"
+    @bluesky_text = @entry.bluesky_caption(utm_campaign: 'share')
+    @mastodon_text = @entry.mastodon_caption(utm_campaign: 'share')
+    @threads_text = @entry.threads_caption(utm_campaign: 'share')
+    @instagram_text = @entry.instagram_caption
+    respond_to do |format|
+      format.html
     end
   end
 
@@ -362,12 +375,14 @@ class Admin::EntriesController < AdminController
       end
     elsif request.post?
       scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+      scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      if scheduled_at.present? && scheduled_at > Time.current
+      if scheduled
         InstagramWorker.perform_at(scheduled_at, @entry.id, params[:text])
         @message = "Your entry will be shared on Instagram at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
       else
-        InstagramWorker.perform_async(@entry.id, params[:text])
+        InstagramWorker.perform_inline(@entry.id, params[:text])
+        @entry.reload
         @message = 'Your entry was shared on Instagram.'
       end
 
@@ -377,6 +392,15 @@ class Admin::EntriesController < AdminController
           redirect_to session[:redirect_url] || admin_entry_path(@entry)
         }
         format.js { render 'admin/shared/notify' }
+        format.json {
+          render json: {
+            status: 'success',
+            message: @message,
+            shares_count: @entry.instagram_shares_count,
+            last_shared_at: @entry.last_shared_on_instagram_at&.strftime('%B %-d, %Y at %-l:%M %p'),
+            scheduled: scheduled
+          }
+        }
       end
     end
   end
@@ -397,12 +421,13 @@ class Admin::EntriesController < AdminController
     elsif request.post?
       crop = params[:crop] == 'true'
       scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+      scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      if scheduled_at.present? && scheduled_at > Time.current
+      if scheduled
         InstagramStoryWorker.perform_at(scheduled_at, @entry.id, crop)
         @message = "Your entry will be shared on your Instagram Story at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
       else
-        InstagramStoryWorker.perform_async(@entry.id, crop)
+        InstagramStoryWorker.perform_inline(@entry.id, crop)
         @message = 'Your entry was shared on your Instagram Story.'
       end
 
@@ -412,6 +437,13 @@ class Admin::EntriesController < AdminController
           redirect_to session[:redirect_url] || admin_entry_path(@entry)
         }
         format.js { render 'admin/shared/notify' }
+        format.json {
+          render json: {
+            status: 'success',
+            message: @message,
+            scheduled: scheduled
+          }
+        }
       end
     end
   end
@@ -432,12 +464,14 @@ class Admin::EntriesController < AdminController
       end
     elsif request.post?
       scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+      scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      if scheduled_at.present? && scheduled_at > Time.current
+      if scheduled
         ThreadsWorker.perform_at(scheduled_at, @entry.id, params[:text])
         @message = "Your entry will be shared on Threads at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
       else
-        ThreadsWorker.perform_async(@entry.id, params[:text])
+        ThreadsWorker.perform_inline(@entry.id, params[:text])
+        @entry.reload
         @message = 'Your entry was shared on Threads.'
       end
 
@@ -447,6 +481,15 @@ class Admin::EntriesController < AdminController
           redirect_to session[:redirect_url] || admin_entry_path(@entry)
         }
         format.js { render 'admin/shared/notify' }
+        format.json {
+          render json: {
+            status: 'success',
+            message: @message,
+            shares_count: @entry.threads_shares_count,
+            last_shared_at: @entry.last_shared_on_threads_at&.strftime('%B %-d, %Y at %-l:%M %p'),
+            scheduled: scheduled
+          }
+        }
       end
     end
   end
@@ -467,12 +510,14 @@ class Admin::EntriesController < AdminController
       end
     elsif request.post?
       scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+      scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      if scheduled_at.present? && scheduled_at > Time.current
+      if scheduled
         MastodonWorker.perform_at(scheduled_at, @entry.id, params[:text])
         @message = "Your entry will be shared on Mastodon at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
       else
-        MastodonWorker.perform_async(@entry.id, params[:text])
+        MastodonWorker.perform_inline(@entry.id, params[:text])
+        @entry.reload
         @message = 'Your entry was shared on Mastodon.'
       end
 
@@ -482,6 +527,15 @@ class Admin::EntriesController < AdminController
           redirect_to session[:redirect_url] || admin_entry_path(@entry)
         }
         format.js { render 'admin/shared/notify' }
+        format.json {
+          render json: {
+            status: 'success',
+            message: @message,
+            shares_count: @entry.mastodon_shares_count,
+            last_shared_at: @entry.last_shared_on_mastodon_at&.strftime('%B %-d, %Y at %-l:%M %p'),
+            scheduled: scheduled
+          }
+        }
       end
     end
   end
@@ -502,12 +556,14 @@ class Admin::EntriesController < AdminController
       end
     elsif request.post?
       scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+      scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      if scheduled_at.present? && scheduled_at > Time.current
+      if scheduled
         BlueskyWorker.perform_at(scheduled_at, @entry.id, params[:text], params[:in_reply_to], params[:quote])
         @message = "Your entry will be shared on Bluesky at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
       else
-        BlueskyWorker.perform_async(@entry.id, params[:text], params[:in_reply_to], params[:quote])
+        BlueskyWorker.perform_inline(@entry.id, params[:text], params[:in_reply_to], params[:quote])
+        @entry.reload
         @message = 'Your entry was shared on Bluesky.'
       end
 
@@ -517,6 +573,15 @@ class Admin::EntriesController < AdminController
           redirect_to session[:redirect_url] || admin_entry_path(@entry)
         }
         format.js { render 'admin/shared/notify' }
+        format.json {
+          render json: {
+            status: 'success',
+            message: @message,
+            shares_count: @entry.bluesky_shares_count,
+            last_shared_at: @entry.last_shared_on_bluesky_at&.strftime('%B %-d, %Y at %-l:%M %p'),
+            scheduled: scheduled
+          }
+        }
       end
     end
   end
@@ -542,6 +607,18 @@ class Admin::EntriesController < AdminController
             redirect_to session[:redirect_url] || admin_entry_path(@entry)
           }
           format.js { render 'admin/shared/notify' }
+          format.json {
+            render json: {
+              status: 'success',
+              message: @message,
+              settings: {
+                post_to_bluesky: @entry.post_to_bluesky,
+                post_to_mastodon: @entry.post_to_mastodon,
+                post_to_instagram: @entry.post_to_instagram,
+                post_to_threads: @entry.post_to_threads
+              }
+            }
+          }
         end
       else
         @message = 'Sharing settings could not be updated.'
@@ -551,6 +628,12 @@ class Admin::EntriesController < AdminController
             redirect_to session[:redirect_url] || admin_entry_path(@entry)
           }
           format.js { render 'admin/shared/notify' }
+          format.json {
+            render json: {
+              status: 'danger',
+              message: @message
+            }
+          }
         end
       end
     end

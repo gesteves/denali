@@ -11,22 +11,9 @@
     <div class="dropdown-content">
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
       <hr class="dropdown-divider">
-      <% if entry.is_photo? && entry.is_published? %>
-        <%= link_to icon('Share on Bluesky', 'fa-brands fa-bluesky'), bluesky_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
-      <% end %>
-      <% if entry.is_photo? && entry.is_published? %>
-        <%= link_to icon('Share on Instagram', 'fa-brands fa-instagram'), instagram_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
-      <% end %>
       <% if entry.is_photo? %>
-        <%= link_to icon('Share on Instagram Story', 'fa-brands fa-instagram'), instagram_story_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
+        <%= link_to icon('Share', 'fas fa-share-square'), share_admin_entry_path(entry), class: 'dropdown-item', target: '_blank' %>
       <% end %>
-      <% if entry.is_photo? && entry.is_published? %>
-        <%= link_to icon('Share on Mastodon', 'fa-brands fa-mastodon'), mastodon_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
-      <% end %>
-      <% if entry.is_photo? && entry.is_published? %>
-        <%= link_to icon('Share on Threads', 'fa-brands fa-threads'), threads_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
-      <% end %>
-      <%= link_to icon('Settings', 'fas fa-gear'), sharing_settings_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <hr class="dropdown-divider">
       <% if entry.is_photo? %>
         <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item' %>

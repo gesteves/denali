@@ -14,10 +14,12 @@ export default class extends Controller {
 
   /**
    * Updates the thumbnail image when the crop checkbox is toggled.
-   * @param {Event} event A change event from the checkbox.
+   * @param {Event} event A change event from the checkbox or hidden input.
    */
   updateThumbnail (event) {
-    const isCropped = event.target.checked;
+    const isCropped = event.target.type === 'checkbox'
+      ? event.target.checked
+      : event.target.value === 'true';
     this.thumbnailTarget.src = isCropped ? this.croppedUrlValue : this.uncroppedUrlValue;
   }
 }

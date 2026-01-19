@@ -1,0 +1,430 @@
+<% photo = @entry.photos.first %>
+<% cropped_url = photo.instagram_story_url(crop: true) %>
+<% uncropped_url = photo.instagram_story_url(crop: false) %>
+<% min_datetime = Time.current.in_time_zone(@photoblog.time_zone).strftime('%Y-%m-%dT%H:%M') %>
+
+<h1 class="title is-size-5-mobile">Share "<%= @entry.title %>"</h1>
+<hr class="hr">
+
+<% if @entry.is_published? %>
+  <%# Bluesky Section %>
+  <h2 class="subtitle is-size-5-mobile">Bluesky</h2>
+  <div data-controller="share-form character-counter" data-share-form-url-value="<%= bluesky_admin_entry_path(@entry) %>" data-share-form-platform-value="Bluesky" data-character-counter-max-length-value="300">
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Caption</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control is-expanded">
+            <textarea class="textarea" rows="6" placeholder="Your Bluesky caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @bluesky_text.html_safe %></textarea>
+          </div>
+          <p class="help"><span data-character-counter-target="characterCount">0</span>/300</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">In reply to</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control is-expanded">
+            <input type="text" class="input" placeholder="URL of post to reply to..." data-share-form-target="inReplyTo">
+          </div>
+          <p class="help">Leave blank to post as a new thread.</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Quote</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control is-expanded">
+            <input type="text" class="input" placeholder="URL of post to quote..." data-share-form-target="quote">
+          </div>
+          <p class="help">Leave blank to not quote any post.</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Schedule for</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input type="datetime-local" class="input" min="<%= min_datetime %>" data-share-form-target="scheduledAt">
+          </div>
+          <p class="help">Leave blank to share immediately.</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label"></div>
+      <div class="field-body">
+        <div class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
+          <div class="control">
+            <%= last_shared_on_bluesky_tag(@entry) %>
+          </div>
+          <% if @entry.bluesky_shares_count > 0 %>
+            <div class="control">
+              <%= bluesky_shares_count_tag(@entry) %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label"></div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <button type="button" class="button is-success" data-share-form-target="submit" data-character-counter-target="submit" data-action="click->share-form#submit">Share on Bluesky</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
+
+  <%# Instagram Section %>
+  <h2 class="subtitle is-size-5-mobile">Instagram</h2>
+  <div data-controller="share-form character-counter" data-share-form-url-value="<%= instagram_admin_entry_path(@entry) %>" data-share-form-platform-value="Instagram" data-character-counter-max-length-value="2000">
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Caption</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control is-expanded">
+            <textarea class="textarea" rows="6" placeholder="Your Instagram caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @instagram_text.html_safe %></textarea>
+          </div>
+          <p class="help"><span data-character-counter-target="characterCount">0</span>/2000</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Schedule for</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input type="datetime-local" class="input" min="<%= min_datetime %>" data-share-form-target="scheduledAt">
+          </div>
+          <p class="help">Leave blank to share immediately.</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label"></div>
+      <div class="field-body">
+        <div class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
+          <div class="control">
+            <%= last_shared_on_instagram_tag(@entry) %>
+          </div>
+          <% if @entry.instagram_shares_count > 0 %>
+            <div class="control">
+              <%= instagram_shares_count_tag(@entry) %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label"></div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <button type="button" class="button is-success" data-share-form-target="submit" data-character-counter-target="submit" data-action="click->share-form#submit">Share on Instagram</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
+<% end %>
+
+<%# Instagram Stories Section - shown for all entries %>
+<h2 class="subtitle is-size-5-mobile">Instagram Stories</h2>
+<div data-controller="share-form instagram-story-preview" data-share-form-url-value="<%= instagram_story_admin_entry_path(@entry) %>" data-share-form-platform-value="Instagram Story" data-instagram-story-preview-cropped-url-value="<%= cropped_url %>" data-instagram-story-preview-uncropped-url-value="<%= uncropped_url %>">
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <label class="label">Preview</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="instagram-story-preview__container">
+          <figure class="image instagram-story-preview__image">
+            <img data-instagram-story-preview-target="thumbnail" src="<%= uncropped_url %>" alt="<%= photo.alt_text %>" class="instagram-story-preview__thumbnail" />
+          </figure>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <label class="label">Fill frame</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>Yes</a>
+              </li>
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>No</a>
+              </li>
+            </ul>
+            <input type="hidden" value="false" data-radio-tab-target="field" data-share-form-target="crop" data-instagram-story-preview-target="checkbox" data-action="change->instagram-story-preview#updateThumbnail">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <label class="label">Schedule for</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <input type="datetime-local" class="input" min="<%= min_datetime %>" data-share-form-target="scheduledAt">
+        </div>
+        <p class="help">Leave blank to share immediately.</p>
+      </div>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-label"></div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <button type="button" class="button is-success" data-share-form-target="submit" data-action="click->share-form#submit">Share on Instagram Story</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="hr">
+
+<% if @entry.is_published? %>
+  <%# Mastodon Section %>
+  <h2 class="subtitle is-size-5-mobile">Mastodon</h2>
+  <div data-controller="share-form character-counter" data-share-form-url-value="<%= mastodon_admin_entry_path(@entry) %>" data-share-form-platform-value="Mastodon" data-character-counter-max-length-value="500">
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Caption</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control is-expanded">
+            <textarea class="textarea" rows="6" placeholder="Your Mastodon caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @mastodon_text.html_safe %></textarea>
+          </div>
+          <p class="help"><span data-character-counter-target="characterCount">0</span>/500</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Schedule for</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input type="datetime-local" class="input" min="<%= min_datetime %>" data-share-form-target="scheduledAt">
+          </div>
+          <p class="help">Leave blank to share immediately.</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label"></div>
+      <div class="field-body">
+        <div class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
+          <div class="control">
+            <%= last_shared_on_mastodon_tag(@entry) %>
+          </div>
+          <% if @entry.mastodon_shares_count > 0 %>
+            <div class="control">
+              <%= mastodon_shares_count_tag(@entry) %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label"></div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <button type="button" class="button is-success" data-share-form-target="submit" data-character-counter-target="submit" data-action="click->share-form#submit">Share on Mastodon</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
+
+  <%# Threads Section %>
+  <h2 class="subtitle is-size-5-mobile">Threads</h2>
+  <div data-controller="share-form character-counter" data-share-form-url-value="<%= threads_admin_entry_path(@entry) %>" data-share-form-platform-value="Threads" data-character-counter-max-length-value="500">
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Caption</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control is-expanded">
+            <textarea class="textarea" rows="6" placeholder="Your Threads caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @threads_text.html_safe %></textarea>
+          </div>
+          <p class="help"><span data-character-counter-target="characterCount">0</span>/500</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label is-normal">
+        <label class="label">Schedule for</label>
+      </div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <input type="datetime-local" class="input" min="<%= min_datetime %>" data-share-form-target="scheduledAt">
+          </div>
+          <p class="help">Leave blank to share immediately.</p>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label"></div>
+      <div class="field-body">
+        <div class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
+          <div class="control">
+            <%= last_shared_on_threads_tag(@entry) %>
+          </div>
+          <% if @entry.threads_shares_count > 0 %>
+            <div class="control">
+              <%= threads_shares_count_tag(@entry) %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="field is-horizontal">
+      <div class="field-label"></div>
+      <div class="field-body">
+        <div class="field">
+          <div class="control">
+            <button type="button" class="button is-success" data-share-form-target="submit" data-character-counter-target="submit" data-action="click->share-form#submit">Share on Threads</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="hr">
+<% end %>
+
+<%# Sharing Settings Section - shown for all entries %>
+<h2 class="subtitle is-size-5-mobile">Sharing Settings</h2>
+<div data-controller="sharing-settings" data-sharing-settings-url-value="<%= sharing_settings_admin_entry_path(@entry) %>">
+  <p class="mb-4">Automatically share on...</p>
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <label class="label">Bluesky</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>Yes</a>
+              </li>
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>No</a>
+              </li>
+            </ul>
+            <input type="hidden" value="<%= @entry.post_to_bluesky %>" data-radio-tab-target="field" data-sharing-settings-target="blueskyField" data-action="change->sharing-settings#save">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <label class="label">Mastodon</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>Yes</a>
+              </li>
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>No</a>
+              </li>
+            </ul>
+            <input type="hidden" value="<%= @entry.post_to_mastodon %>" data-radio-tab-target="field" data-sharing-settings-target="mastodonField" data-action="change->sharing-settings#save">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <label class="label">Instagram</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>Yes</a>
+              </li>
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>No</a>
+              </li>
+            </ul>
+            <input type="hidden" value="<%= @entry.post_to_instagram %>" data-radio-tab-target="field" data-sharing-settings-target="instagramField" data-action="change->sharing-settings#save">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <label class="label">Threads</label>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>Yes</a>
+              </li>
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>No</a>
+              </li>
+            </ul>
+            <input type="hidden" value="<%= @entry.post_to_threads %>" data-radio-tab-target="field" data-sharing-settings-target="threadsField" data-action="change->sharing-settings#save">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="help">Entries are automatically shared on the selected platforms when they're first published, and randomly no more than once a year.</p>
+</div>

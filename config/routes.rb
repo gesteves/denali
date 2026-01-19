@@ -23,7 +23,6 @@ Rails.application.routes.draw do
     get '/entries/unshareable(/page/:page)'        => 'entries#unshareable', constraints: { page: /\d+/ }, :as => 'unshareable'
     get '/entries/search'             => 'entries#search', :as => :search
     get '/entries/edit'               => 'entries#edit'
-    get '/entries/share'              => 'entries#share'
     get '/entries/queued/organize'    => 'entries#organize_queue'
     post '/entries/queued/update'     => 'entries#update_queue'
     get '/entries/queued/schedule'    => 'publish_schedules#index'
@@ -36,6 +35,7 @@ Rails.application.routes.draw do
 
     resources :entries, concerns: :paginatable do
       member do
+        get 'share'
         get 'crops'
         get 'prints'
         get 'mastodon'
