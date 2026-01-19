@@ -53,7 +53,6 @@ Rails.application.routes.draw do
         post 'instagram_story'
         post 'threads'
         post 'sharing_settings'
-        post 'refresh_metadata'
         get 'review_alt_text'
       end
       collection do

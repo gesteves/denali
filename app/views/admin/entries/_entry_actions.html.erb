@@ -24,7 +24,6 @@
       <% if entry.is_photo? %>
         <%= link_to icon('Prints', 'fas fa-print'), prints_admin_entry_path(entry), class: 'dropdown-item' %>
       <% end %>
-      <%= link_to icon('Refresh metadata', 'fas fa-sync'), refresh_metadata_admin_entry_path(entry.id), remote: true, method: :post, data: { confirm: "This will refresh the entry's metadata and update its tags. Do you want to proceed?" }, class: 'dropdown-item' %>
       <%= link_to icon('Review alt text', 'fas fa-eye-low-vision'), review_alt_text_admin_entry_path(entry), class: 'dropdown-item', target: '_blank' %>
       <hr class="dropdown-divider">
       <% if entry.is_queued? %>

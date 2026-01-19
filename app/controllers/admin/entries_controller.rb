@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :refresh_metadata, :review_alt_text, :share]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :review_alt_text, :share]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
@@ -636,23 +636,6 @@ class Admin::EntriesController < AdminController
           }
         end
       end
-    end
-  end
-
-  def refresh_metadata
-    @entry.update_tags
-    @entry.photos.each do |photo|
-      photo.extract_metadata
-      photo.detect_colors
-      photo.encode_blurhash
-    end
-    @message = 'Your entry’s metadata is being updated. This may take a few moments.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
     end
   end
 
