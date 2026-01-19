@@ -11,7 +11,6 @@
     <div class="dropdown-content">
       <%= link_to icon('Edit', 'fas fa-edit'), edit_admin_entry_path(entry), class: 'dropdown-item' %>
       <hr class="dropdown-divider">
-      <%= link_to icon('Share', 'fas fa-share-square'), entry.permalink_url, 'data-controller': 'share', 'data-action': 'click->share#open', class: 'dropdown-item' %>
       <% if entry.is_photo? && entry.is_published? %>
         <%= link_to icon('Share on Bluesky', 'fa-brands fa-bluesky'), bluesky_admin_entry_path(entry), class: 'dropdown-item', 'data-controller': 'modal', 'data-action': 'click->modal#open' %>
       <% end %>
