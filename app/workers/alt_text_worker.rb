@@ -31,8 +31,8 @@ class AltTextWorker < ApplicationWorker
     response = Claude.new.create_message(body)
     alt_text = response.dig('content', 0, 'text')&.strip
     raise if alt_text.blank?
-    photo.alt_text = alt_text
-    photo.auto_generated_alt_text = true
+    photo.auto_generated_alt_text = alt_text
+    photo.alt_text_needs_review = true
     photo.save!
   end
 

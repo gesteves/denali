@@ -45,11 +45,11 @@
     </div>
   <% end %>
 
-  <% if photos.any? { |p| p.auto_generated_alt_text? } %>
+  <% if photos.any? { |p| p.alt_text_needs_review? } %>
     <div class="control">
       <div class="tags has-addons">
         <span class="tag is-warning"><i class="fas fa-exclamation-triangle"></i></span>
-        <span class="tag">Auto-generated alt text</span>
+        <span class="tag">Alt text needs review</span>
       </div>
     </div>
   <% end %>

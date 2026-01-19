@@ -1,15 +1,64 @@
-<% cache [@photoblog, @page] do %>
-  <h1 class="title is-size-5-mobile">Alt text review</h1>
-  <h2 class="subtitle is-size-6-mobile"><%= pluralize_with_delimiter 'entry', @entries_count %></h2>
-  <hr class="hr">
-  <% if @entries.size == 0 %>
-    <article class="message is-info">
-      <div class="message-body">
-        You don’t have any entries where the alt text needs to be reviewed. Yay!
+<h1 class="title is-size-5-mobile">Review alt text</h1>
+<h2 class="subtitle is-size-6-mobile"><%= @entry.plain_title %></h2>
+<hr class="hr">
+
+<% @entry.photos.each do |photo| %>
+  <div class="box" data-controller="alt-text-review"
+       data-alt-text-review-generate-url-value="<%= generate_alt_text_admin_photo_path(photo) %>"
+       data-alt-text-review-approve-url-value="<%= approve_alt_text_admin_photo_path(photo) %>">
+    <div class="columns">
+      <div class="column is-one-third">
+        <div class="card-image">
+          <div class="image image-container">
+            <%= responsive_image_tag(
+              photo: photo,
+              srcset: @srcset,
+              sizes: @sizes,
+              html_options: {
+                class: 'placeholder',
+                style: css_placeholder_background(photo),
+                'data-controller': 'placeholder',
+                'data-action': 'load->placeholder#removeBackground'
+              }) %>
+          </div>
+        </div>
       </div>
-    </article>
-  <% else %>
-    <%= render partial: 'entry', collection: @entries, cached: true %>
-    <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
-  <% end %>
+
+      <div class="column">
+        <div class="field">
+          <label class="label">Current alt text</label>
+          <div class="notification is-light" data-alt-text-review-target="currentAltText">
+            <% if photo.alt_text.present? %>
+              <%= photo.alt_text %>
+            <% else %>
+              <em class="has-text-grey">No alt text set</em>
+            <% end %>
+          </div>
+        </div>
+
+        <div class="field <%= 'is-hidden' unless photo.alt_text_needs_review? %>" data-alt-text-review-target="generatedField">
+          <label class="label">AI-generated alt text</label>
+          <div class="control">
+            <textarea class="textarea" data-alt-text-review-target="generatedAltText"><%= photo.auto_generated_alt_text %></textarea>
+          </div>
+          <p class="help">Edit the text above as needed, or click Generate to create a new suggestion.</p>
+        </div>
+
+        <div class="field is-grouped">
+          <div class="control">
+            <button class="button" data-action="click->alt-text-review#generate" data-alt-text-review-target="generateButton">
+              <span class="icon"><i class="fas fa-sparkles"></i></span>
+              <span>Generate</span>
+            </button>
+          </div>
+          <div class="control <%= 'is-hidden' unless photo.alt_text_needs_review? %>" data-alt-text-review-target="saveButtonContainer">
+            <button class="button is-success" data-action="click->alt-text-review#save" data-alt-text-review-target="saveButton">
+              <span class="icon"><i class="fas fa-check"></i></span>
+              <span>Save</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 <% end %>

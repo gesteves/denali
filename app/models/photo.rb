@@ -24,7 +24,14 @@ class Photo < ApplicationRecord
   after_commit :update_entry_style_tags, if: :changed_style?
   after_commit :update_entry_caption_validity, if: :changed_caption_attributes?
 
-  scope :needs_alt_text_review, -> { where(alt_text: [nil, ""]).or(where(auto_generated_alt_text: true)) }
+  scope :needs_alt_text_review, -> { where(alt_text: [nil, ""]).or(where(alt_text_needs_review: true)) }
+
+  def approve_auto_generated_alt_text!(text)
+    update!(
+      alt_text: text,
+      alt_text_needs_review: false
+    )
+  end
 
   def touch_entry
     self.entry.touch unless self.entry.destroyed?

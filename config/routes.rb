@@ -15,7 +15,7 @@ Rails.application.routes.draw do
 
   namespace :admin do
     get '/entries/tagged/:tag(/page/:page)'     => 'entries#tagged', constraints: { page: /\d+/ }, :as => 'tagged_entries'
-    get '/entries/review/alt-text(/page/:page)' => 'entries#review_alt_text', constraints: { page: /\d+/ }, :as => 'review_alt_text'
+    get '/entries/review/alt-text(/page/:page)' => 'entries#alt_text_review_queue', constraints: { page: /\d+/ }, :as => 'alt_text_review_queue'
     get '/entries/bluesky(/page/:page)'            => 'entries#shareable_on_bluesky', constraints: { page: /\d+/ }, :as => 'shareable_on_bluesky'
     get '/entries/mastodon(/page/:page)'           => 'entries#shareable_on_mastodon', constraints: { page: /\d+/ }, :as => 'shareable_on_mastodon'
     get '/entries/threads(/page/:page)'            => 'entries#shareable_on_threads', constraints: { page: /\d+/ }, :as => 'shareable_on_threads'
@@ -54,7 +54,7 @@ Rails.application.routes.draw do
         post 'threads'
         post 'sharing_settings'
         post 'refresh_metadata'
-        post 'generate_alt_text'
+        get 'review_alt_text'
       end
       collection do
         get 'queued'
@@ -71,6 +71,13 @@ Rails.application.routes.draw do
             post 'create_or_update'
           end
         end
+      end
+    end
+
+    resources :photos, only: [] do
+      member do
+        post :generate_alt_text
+        post :approve_alt_text
       end
     end
 

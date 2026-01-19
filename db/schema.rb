@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_12_22_161258) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_19_220406) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -225,7 +225,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_12_22_161258) do
     t.string "dominant_color"
     t.string "location"
     t.bigint "park_id"
-    t.boolean "auto_generated_alt_text", default: false
+    t.boolean "alt_text_needs_review", default: false
+    t.text "auto_generated_alt_text"
     t.index ["camera_id"], name: "index_photos_on_camera_id"
     t.index ["entry_id"], name: "index_photos_on_entry_id"
     t.index ["film_id"], name: "index_photos_on_film_id"

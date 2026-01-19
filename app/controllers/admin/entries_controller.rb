@@ -1,7 +1,7 @@
 class Admin::EntriesController < AdminController
   include TagList
 
-  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :refresh_metadata, :generate_alt_text, :share]
+  before_action :set_entry, only: [:show, :edit, :update, :destroy, :publish, :queue, :draft, :crops, :prints, :refresh_metadata, :review_alt_text, :share]
   before_action :get_tags, only: [:new, :edit, :create, :update]
   before_action :load_tags, only: [:tagged]
   before_action :set_redirect_url, if: -> { request.get? }, except: [:photo]
@@ -54,7 +54,7 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def review_alt_text
+  def alt_text_review_queue
     set_srcset
     @page = params[:page] || 1
     entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob])
@@ -656,17 +656,11 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def generate_alt_text
-    @entry.photos.each do |photo|
-      photo.generate_alt_text
-    end
-    @message = 'The alt text is being generated. This may take a few moments.'
+  def review_alt_text
+    set_srcset
+    @page_title = "Review alt text for "#{@entry.title}""
     respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
+      format.html
     end
   end
 
@@ -681,7 +675,7 @@ class Admin::EntriesController < AdminController
     end
 
     def entry_params
-      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_instagram, :post_to_flickr_groups, :post_to_mastodon, :post_to_bluesky, :post_to_threads, :instagram_text, :threads_text, :bluesky_text, :mastodon_text, :show_location, :hide_from_search_engines, :content_warning, :is_sensitive, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location, :park_id, :auto_generated_alt_text])
+      params.require(:entry).permit(:title, :body, :slug, :status, :tag_list, :post_to_flickr, :post_to_instagram, :post_to_flickr_groups, :post_to_mastodon, :post_to_bluesky, :post_to_threads, :instagram_text, :threads_text, :bluesky_text, :mastodon_text, :show_location, :hide_from_search_engines, :content_warning, :is_sensitive, photos_attributes: [:image, :id, :_destroy, :position, :alt_text, :focal_x, :focal_y, :location, :park_id, :alt_text_needs_review])
     end
 
     def sharing_settings_params
