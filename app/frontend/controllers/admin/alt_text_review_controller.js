@@ -6,10 +6,11 @@ import { fetchStatus, fetchJson, sendNotification } from '../../lib/utils';
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['currentAltText', 'generatedAltText', 'generateButton', 'saveButton', 'generatedField', 'saveButtonContainer'];
+  static targets = ['currentAltText', 'generatedAltText', 'generateButton', 'saveButton', 'generatedField', 'saveButtonContainer', 'dismissButton', 'dismissButtonContainer'];
   static values = {
     generateUrl: String,
-    approveUrl: String
+    approveUrl: String,
+    dismissUrl: String
   }
 
   connect () {
@@ -41,6 +42,7 @@ export default class extends Controller {
         this.generatedAltTextTarget.value = json.auto_generated_alt_text;
         this.generatedFieldTarget.classList.remove('is-hidden');
         this.saveButtonContainerTarget.classList.remove('is-hidden');
+        this.dismissButtonContainerTarget.classList.remove('is-hidden');
         sendNotification('Alt text generated.', 'success');
       })
       .catch(() => {
@@ -79,6 +81,7 @@ export default class extends Controller {
         this.currentAltTextTarget.textContent = json.alt_text;
         this.generatedFieldTarget.classList.add('is-hidden');
         this.saveButtonContainerTarget.classList.add('is-hidden');
+        this.dismissButtonContainerTarget.classList.add('is-hidden');
         sendNotification('Alt text saved.', 'success');
       })
       .catch(() => {
@@ -87,6 +90,42 @@ export default class extends Controller {
       .finally(() => {
         this.saveButtonTarget.classList.remove('is-loading');
         this.saveButtonTarget.disabled = false;
+      });
+  }
+
+  /**
+   * Dismisses the AI-generated alt text without saving.
+   * @param {Event} event Click event from the dismiss button.
+   */
+  dismiss (event) {
+    event.preventDefault();
+    this.dismissButtonTarget.classList.add('is-loading');
+    this.dismissButtonTarget.disabled = true;
+
+    const fetchOpts = {
+      method: 'POST',
+      headers: new Headers({
+        'X-CSRF-Token': this.csrfToken,
+        'Accept': 'application/json'
+      }),
+      credentials: 'include'
+    };
+
+    fetch(this.dismissUrlValue, fetchOpts)
+      .then(fetchStatus)
+      .then(fetchJson)
+      .then(() => {
+        this.generatedFieldTarget.classList.add('is-hidden');
+        this.saveButtonContainerTarget.classList.add('is-hidden');
+        this.dismissButtonContainerTarget.classList.add('is-hidden');
+        sendNotification('Alt text dismissed.', 'success');
+      })
+      .catch(() => {
+        sendNotification('Failed to dismiss alt text.', 'danger');
+      })
+      .finally(() => {
+        this.dismissButtonTarget.classList.remove('is-loading');
+        this.dismissButtonTarget.disabled = false;
       });
   }
 }

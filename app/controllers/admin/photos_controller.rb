@@ -1,5 +1,5 @@
 class Admin::PhotosController < AdminController
-  before_action :set_photo, only: [:generate_alt_text, :approve_alt_text]
+  before_action :set_photo, only: [:generate_alt_text, :approve_alt_text, :dismiss_alt_text]
 
   def download
     entry = Entry.find(params[:entry_id])
@@ -44,6 +44,15 @@ class Admin::PhotosController < AdminController
           status: 'success',
           alt_text: @photo.alt_text
         }
+      }
+    end
+  end
+
+  def dismiss_alt_text
+    @photo.update!(alt_text_needs_review: false)
+    respond_to do |format|
+      format.json {
+        render json: { status: 'success' }
       }
     end
   end

@@ -5,7 +5,8 @@
 <% @entry.photos.each do |photo| %>
   <div class="box" data-controller="alt-text-review"
        data-alt-text-review-generate-url-value="<%= generate_alt_text_admin_photo_path(photo) %>"
-       data-alt-text-review-approve-url-value="<%= approve_alt_text_admin_photo_path(photo) %>">
+       data-alt-text-review-approve-url-value="<%= approve_alt_text_admin_photo_path(photo) %>"
+       data-alt-text-review-dismiss-url-value="<%= dismiss_alt_text_admin_photo_path(photo) %>">
     <div class="columns">
       <div class="column is-one-third">
         <div class="card-image">
@@ -55,6 +56,12 @@
             <button class="button is-success" data-action="click->alt-text-review#save" data-alt-text-review-target="saveButton">
               <span class="icon"><i class="fas fa-check"></i></span>
               <span>Save</span>
+            </button>
+          </div>
+          <div class="control <%= 'is-hidden' unless photo.alt_text_needs_review? %>" data-alt-text-review-target="dismissButtonContainer">
+            <button class="button" data-action="click->alt-text-review#dismiss" data-alt-text-review-target="dismissButton">
+              <span class="icon"><i class="fas fa-times"></i></span>
+              <span>Dismiss</span>
             </button>
           </div>
         </div>

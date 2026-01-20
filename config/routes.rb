@@ -77,6 +77,7 @@ Rails.application.routes.draw do
       member do
         post :generate_alt_text
         post :approve_alt_text
+        post :dismiss_alt_text
       end
     end
 
