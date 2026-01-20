@@ -27,7 +27,7 @@
 
       <div class="column">
         <div class="field">
-          <label class="label">Current alt text</label>
+          <label class="label">Alt text</label>
           <div class="notification is-light" data-alt-text-review-target="currentAltText">
             <% if photo.alt_text.present? %>
               <%= photo.alt_text %>
@@ -42,11 +42,11 @@
           <div class="control">
             <textarea class="textarea" data-alt-text-review-target="generatedAltText"><%= photo.auto_generated_alt_text %></textarea>
           </div>
-          <p class="help">Edit the text above as needed, or click Generate to create a new suggestion.</p>
+          <p class="help">Edit as needed before saving, or click “Generate” to get a new suggestion.</p>
         </div>
 
         <div class="field is-hidden" data-alt-text-review-target="editField">
-          <label class="label">Edit alt text</label>
+          <label class="label">Alt text</label>
           <div class="control">
             <textarea class="textarea" data-alt-text-review-target="editAltText"></textarea>
           </div>
