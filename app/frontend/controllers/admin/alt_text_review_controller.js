@@ -43,7 +43,6 @@ export default class extends Controller {
         this.generatedFieldTarget.classList.remove('is-hidden');
         this.saveButtonContainerTarget.classList.remove('is-hidden');
         this.dismissButtonContainerTarget.classList.remove('is-hidden');
-        sendNotification('Alt text generated.', 'success');
       })
       .catch(() => {
         sendNotification('Failed to generate alt text.', 'danger');
@@ -82,7 +81,6 @@ export default class extends Controller {
         this.generatedFieldTarget.classList.add('is-hidden');
         this.saveButtonContainerTarget.classList.add('is-hidden');
         this.dismissButtonContainerTarget.classList.add('is-hidden');
-        sendNotification('Alt text saved.', 'success');
       })
       .catch(() => {
         sendNotification('Failed to save alt text.', 'danger');
@@ -118,7 +116,6 @@ export default class extends Controller {
         this.generatedFieldTarget.classList.add('is-hidden');
         this.saveButtonContainerTarget.classList.add('is-hidden');
         this.dismissButtonContainerTarget.classList.add('is-hidden');
-        sendNotification('Alt text dismissed.', 'success');
       })
       .catch(() => {
         sendNotification('Failed to dismiss alt text.', 'danger');
