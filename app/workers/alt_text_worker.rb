@@ -5,7 +5,7 @@ class AltTextWorker < ApplicationWorker
     raise UnprocessedPhotoError unless photo.has_dimensions?
 
     body = {
-      model: 'claude-sonnet-4-5',
+      model: ENV.fetch('ANTHROPIC_MODEL', 'claude-haiku-4-5'),
       max_tokens: 1024,
       system: instructions,
       messages: [
