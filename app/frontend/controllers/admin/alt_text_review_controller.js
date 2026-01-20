@@ -6,7 +6,7 @@ import { fetchStatus, fetchJson, sendNotification } from '../../lib/utils';
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['currentAltText', 'generatedAltText', 'generateButton', 'saveButton', 'generatedField', 'saveButtonContainer', 'dismissButton', 'dismissButtonContainer'];
+  static targets = ['currentAltText', 'generatedAltText', 'generateButton', 'saveButton', 'generatedField', 'saveButtonContainer', 'dismissButton', 'dismissButtonContainer', 'editButton', 'editButtonContainer', 'editField', 'editAltText', 'generateButtonContainer'];
   static values = {
     generateUrl: String,
     approveUrl: String,
@@ -43,6 +43,7 @@ export default class extends Controller {
         this.generatedFieldTarget.classList.remove('is-hidden');
         this.saveButtonContainerTarget.classList.remove('is-hidden');
         this.dismissButtonContainerTarget.classList.remove('is-hidden');
+        this.editButtonContainerTarget.classList.add('is-hidden');
       })
       .catch(() => {
         sendNotification('Failed to generate alt text.', 'danger');
@@ -54,6 +55,33 @@ export default class extends Controller {
   }
 
   /**
+   * Opens the edit mode for directly editing the current alt text.
+   * @param {Event} event Click event from the edit button.
+   */
+  edit (event) {
+    event.preventDefault();
+    // Copy current text to edit textarea
+    this.editAltTextTarget.value = this.currentAltTextTarget.textContent.trim();
+    // Show edit field, hide current alt text display
+    this.editFieldTarget.classList.remove('is-hidden');
+    this.currentAltTextTarget.parentElement.classList.add('is-hidden');
+    // Hide Generate and Edit buttons
+    this.generateButtonContainerTarget.classList.add('is-hidden');
+    this.editButtonContainerTarget.classList.add('is-hidden');
+    // Show Dismiss and Save buttons
+    this.dismissButtonContainerTarget.classList.remove('is-hidden');
+    this.saveButtonContainerTarget.classList.remove('is-hidden');
+  }
+
+  /**
+   * Checks if the controller is in edit mode (editing current alt text directly).
+   * @returns {boolean} True if in edit mode.
+   */
+  isInEditMode () {
+    return !this.editFieldTarget.classList.contains('is-hidden');
+  }
+
+  /**
    * Saves the approved alt text.
    * @param {Event} event Click event from the save button.
    */
@@ -61,6 +89,9 @@ export default class extends Controller {
     event.preventDefault();
     this.saveButtonTarget.classList.add('is-loading');
     this.saveButtonTarget.disabled = true;
+
+    const inEditMode = this.isInEditMode();
+    const textValue = inEditMode ? this.editAltTextTarget.value : this.generatedAltTextTarget.value;
 
     const fetchOpts = {
       method: 'POST',
@@ -70,7 +101,7 @@ export default class extends Controller {
         'Content-Type': 'application/json'
       }),
       credentials: 'include',
-      body: JSON.stringify({ text: this.generatedAltTextTarget.value })
+      body: JSON.stringify({ text: textValue })
     };
 
     fetch(this.approveUrlValue, fetchOpts)
@@ -79,8 +110,12 @@ export default class extends Controller {
       .then(json => {
         this.currentAltTextTarget.textContent = json.alt_text;
         this.generatedFieldTarget.classList.add('is-hidden');
+        this.editFieldTarget.classList.add('is-hidden');
+        this.currentAltTextTarget.parentElement.classList.remove('is-hidden');
         this.saveButtonContainerTarget.classList.add('is-hidden');
         this.dismissButtonContainerTarget.classList.add('is-hidden');
+        this.generateButtonContainerTarget.classList.remove('is-hidden');
+        this.editButtonContainerTarget.classList.remove('is-hidden');
       })
       .catch(() => {
         sendNotification('Failed to save alt text.', 'danger');
@@ -114,8 +149,12 @@ export default class extends Controller {
       .then(fetchJson)
       .then(() => {
         this.generatedFieldTarget.classList.add('is-hidden');
+        this.editFieldTarget.classList.add('is-hidden');
+        this.currentAltTextTarget.parentElement.classList.remove('is-hidden');
         this.saveButtonContainerTarget.classList.add('is-hidden');
         this.dismissButtonContainerTarget.classList.add('is-hidden');
+        this.generateButtonContainerTarget.classList.remove('is-hidden');
+        this.editButtonContainerTarget.classList.remove('is-hidden');
       })
       .catch(() => {
         sendNotification('Failed to dismiss alt text.', 'danger');
