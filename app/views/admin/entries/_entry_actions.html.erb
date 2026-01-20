@@ -17,11 +17,7 @@
       <hr class="dropdown-divider">
       <% if entry.is_photo? %>
         <%= link_to icon('Alt text', 'fas fa-eye-low-vision'), review_alt_text_admin_entry_path(entry), class: 'dropdown-item', target: '_blank' %>
-      <% end %>
-      <% if entry.is_photo? %>
         <%= link_to icon('Crops', 'fas fa-crop'), crops_admin_entry_path(entry), class: 'dropdown-item', target: '_blank' %>
-      <% end %>
-      <% if entry.is_photo? %>
         <%= link_to icon('Prints', 'fas fa-print'), prints_admin_entry_path(entry), class: 'dropdown-item' %>
       <% end %>
       <% if entry.is_photo? && !entry.is_photoset? %>
