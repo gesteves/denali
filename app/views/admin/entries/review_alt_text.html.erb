@@ -47,21 +47,21 @@
 
         <div class="field is-grouped">
           <div class="control">
-            <button class="button" data-action="click->alt-text-review#generate" data-alt-text-review-target="generateButton">
+            <button class="button is-info" data-action="click->alt-text-review#generate" data-alt-text-review-target="generateButton">
               <span class="icon"><i class="fas fa-sparkles"></i></span>
               <span>Generate</span>
+            </button>
+          </div>
+          <div class="control <%= 'is-hidden' unless photo.alt_text_needs_review? %>" data-alt-text-review-target="dismissButtonContainer">
+            <button class="button is-danger" data-action="click->alt-text-review#dismiss" data-alt-text-review-target="dismissButton">
+              <span class="icon"><i class="fas fa-times"></i></span>
+              <span>Dismiss</span>
             </button>
           </div>
           <div class="control <%= 'is-hidden' unless photo.alt_text_needs_review? %>" data-alt-text-review-target="saveButtonContainer">
             <button class="button is-success" data-action="click->alt-text-review#save" data-alt-text-review-target="saveButton">
               <span class="icon"><i class="fas fa-check"></i></span>
               <span>Save</span>
-            </button>
-          </div>
-          <div class="control <%= 'is-hidden' unless photo.alt_text_needs_review? %>" data-alt-text-review-target="dismissButtonContainer">
-            <button class="button" data-action="click->alt-text-review#dismiss" data-alt-text-review-target="dismissButton">
-              <span class="icon"><i class="fas fa-times"></i></span>
-              <span>Dismiss</span>
             </button>
           </div>
         </div>
