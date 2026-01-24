@@ -1,3 +1,5 @@
+@use '../base/variables' as vars;
+
 .modal {
-  backdrop-filter: blur($backdrop-blur);
+  backdrop-filter: blur(vars.$backdrop-blur);
 }

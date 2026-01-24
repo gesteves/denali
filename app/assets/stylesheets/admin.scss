@@ -1,23 +1,27 @@
-@import 'base/functions';
-@import 'admin/base/variables';
-@import 'vendors/reset';
-@import 'awesomplete/awesomplete';
-@import 'bulma/bulma';
-@import 'admin/base/misc';
-@import 'admin/blocks/logo';
-@import 'admin/blocks/card';
-@import 'admin/blocks/placeholder';
-@import 'admin/blocks/share_image';
-@import 'admin/blocks/focal_point';
-@import 'admin/blocks/photo_form';
-@import 'admin/blocks/modal';
-@import 'admin/blocks/notifications';
-@import 'admin/blocks/queue';
-@import 'admin/blocks/map';
-@import 'admin/blocks/image_container';
-@import 'admin/blocks/crop';
-@import 'admin/blocks/instagram_story_preview';
+@use 'base/functions' as fn;
+@use 'admin/base/variables' as vars;
+@use 'vendors/reset';
+@use 'awesomplete/awesomplete';
 
-@import 'leaflet.markercluster/dist/MarkerCluster.Default';
-@import 'leaflet.markercluster/dist/MarkerCluster';
-@import 'croppr/dist/croppr';
+// Bulma
+@use 'bulma/sass';
+
+// Admin blocks
+@use 'admin/base/misc';
+@use 'admin/blocks/logo';
+@use 'admin/blocks/card';
+@use 'admin/blocks/placeholder';
+@use 'admin/blocks/share_image';
+@use 'admin/blocks/focal_point';
+@use 'admin/blocks/photo_form';
+@use 'admin/blocks/modal';
+@use 'admin/blocks/notifications';
+@use 'admin/blocks/queue';
+@use 'admin/blocks/map';
+@use 'admin/blocks/image_container';
+@use 'admin/blocks/crop';
+@use 'admin/blocks/instagram_story_preview';
+
+@use 'leaflet.markercluster/dist/MarkerCluster.Default' as MarkerClusterDefault;
+@use 'leaflet.markercluster/dist/MarkerCluster' as MarkerCluster;
+@use 'croppr/dist/croppr';

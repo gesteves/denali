@@ -1,14 +1,18 @@
+@use 'sass:color';
+@use 'bulma/sass/utilities/initial-variables' as iv;
+@use '../base/variables' as vars;
+
 .queue__item {
   float: left;
-  margin: 0 #{$size-7} #{$size-4};
-  width: calc(100%/2 - #{$size-4});
+  margin: 0 iv.$size-7 iv.$size-4;
+  width: calc(100%/2 - iv.$size-4);
 
-  @media (min-width: $tablet) {
-    width: calc(100%/4 - #{$size-4});
+  @media (min-width: iv.$tablet) {
+    width: calc(100%/4 - iv.$size-4);
   }
 
-  @media (min-width: $desktop) {
-    width: calc(100%/5 - #{$size-4});
+  @media (min-width: iv.$desktop) {
+    width: calc(100%/5 - iv.$size-4);
   }
 }
 
@@ -19,14 +23,14 @@
   width: 100%;
 
   span {
-    background-color: transparentize($black, 0.1);
+    background-color: color.adjust(iv.$black, $alpha: -0.1);
     bottom: 0;
-    padding: $size-7;
+    padding: iv.$size-7;
     position: absolute;
 
     @supports (backdrop-filter: none) {
-      backdrop-filter: blur($backdrop-blur);
-      background-color: transparentize($black, 0.35);
+      backdrop-filter: blur(vars.$backdrop-blur);
+      background-color: color.adjust(iv.$black, $alpha: -0.35);
       width: 100%;
     }
   }
