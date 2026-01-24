@@ -10,7 +10,7 @@
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@rails/ujs": "^7.1",
-    "esbuild": "^0.24.0",
+    "esbuild": "^0.25.0",
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
     "bulma": "^0.9.4",
