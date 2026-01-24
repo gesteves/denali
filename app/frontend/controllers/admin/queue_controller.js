@@ -1,7 +1,6 @@
 import { Controller } from 'stimulus';
 import { fetchStatus, fetchJson, sendNotification } from '../../lib/utils';
 import { Sortable } from '@shopify/draggable';
-import $ from 'jquery';
 import moment from 'moment-timezone';
 
 /**
@@ -111,7 +110,7 @@ export default class extends Controller {
    */
   discard (event) {
     event.preventDefault();
-    const container = $(this.containerTarget);
+    const container = this.containerTarget;
     if (!window.confirm('Are you sure you want to discard the changes you’ve made?')) {
       return false;
     }
@@ -122,7 +121,7 @@ export default class extends Controller {
         const b_position = parseInt(b.getAttribute('data-entry-position-original'), 10);
         return a_position - b_position;
       }).forEach(card => {
-        container.append($(card).detach());
+        container.appendChild(card);
       });
 
     this.updateCards();

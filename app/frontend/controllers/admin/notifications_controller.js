@@ -1,5 +1,4 @@
 import { Controller } from 'stimulus';
-import $ from 'jquery';
 
 /**
  * Controls the notifications.
@@ -19,12 +18,12 @@ export default class extends Controller {
   add (event) {
     const status = event.detail.status;
     const message = event.detail.message;
-    const notification = $(`<div class="notification is-${status} is-transparent" data-notifications-target="notification" data-action="click->notifications#close">${message}</div>`);
+    const notificationHtml = `<div class="notification is-${status} is-transparent" data-notifications-target="notification" data-action="click->notifications#close">${message}</div>`;
     if (this.hasNotificationTarget) {
       this.closeAll();
-      $(this.containerTarget).prepend(notification);
+      this.containerTarget.insertAdjacentHTML('afterbegin', notificationHtml);
     } else {
-      $(this.containerTarget).prepend(notification);
+      this.containerTarget.insertAdjacentHTML('afterbegin', notificationHtml);
       this.toggle();
     }
   }

@@ -1,6 +1,5 @@
 import { Controller } from 'stimulus';
 import { fetchStatus, fetchText, fetchJson, sendNotification } from '../../lib/utils';
-import $ from 'jquery';
 
 /**
  * Controls editing and deleting tags.
@@ -19,7 +18,6 @@ export default class extends Controller {
   /**
    * Adds a tag to the entries with the current tag. Sends the new tag name to the
    * server via Fetch, receives the updated tag's markup, and replaces it on the page.
-   * TODO: Remove the jQuery dependency.
    * @param {Event} event A click event from the add link.
    */
   add (event) {
@@ -50,7 +48,6 @@ export default class extends Controller {
   /**
    * Edits a tag. Sends the new tag name to the server via Fetch, receives
    * the updated tag's markup, and replaces it on the page.
-   * TODO: Remove the jQuery dependency.
    * @param {Event} event A click event from the edit link.
    */
   edit (event) {
@@ -76,7 +73,7 @@ export default class extends Controller {
       .then(fetchStatus)
       .then(fetchText)
       .then(html => {
-        $(this.element).replaceWith(html);
+        this.element.outerHTML = html;
         sendNotification(`The “${this.nameValue}” tag has been renamed to “${prompt}”.`);
       });
   }

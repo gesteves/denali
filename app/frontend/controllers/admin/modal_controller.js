@@ -1,6 +1,5 @@
 import { Controller } from 'stimulus';
 import { fetchStatus, fetchText } from '../../lib/utils';
-import $ from 'jquery';
 
 /**
  * Controls the modals.
@@ -15,7 +14,6 @@ export default class extends Controller {
 
   /**
    * Fetches the button's destination and opens it in a modal window.
-   * TODO: Remove the jQuery dependency.
    * @param {Event} event A click event from the button.
    */
   open (event) {
@@ -33,7 +31,7 @@ export default class extends Controller {
     fetch(`${url}?modal=true`, fetchOpts)
       .then(fetchStatus)
       .then(fetchText)
-      .then(html => $('body').append(html));
+      .then(html => document.body.insertAdjacentHTML('beforeend', html));
   }
 
   /**

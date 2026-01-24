@@ -1,6 +1,5 @@
 import { Controller } from 'stimulus';
 import { fetchStatus, fetchText } from '../../lib/utils';
-import $ from 'jquery';
 import { Sortable, Plugins } from '@shopify/draggable';
 
 /**
@@ -33,7 +32,6 @@ export default class extends Controller {
   /**
    * Fetches a new set of fields to add another photo to the entry,
    * add appends it to the form.
-   * TODO: Remove jQuery dependency.
    * @param {Event} event A click event from the add photo button.
    */
   addPhoto (event) {
@@ -50,7 +48,7 @@ export default class extends Controller {
     fetch(this.photoEndpointValue, fetchOpts)
       .then(fetchStatus)
       .then(fetchText)
-      .then(html => $(this.photosTarget).append(html));
+      .then(html => this.photosTarget.insertAdjacentHTML('beforeend', html));
   }
 
   /**
