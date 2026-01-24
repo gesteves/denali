@@ -58,9 +58,8 @@ COPY . .
 
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Build JavaScript with esbuild and precompile assets
-RUN yarn build && \
-    SECRET_KEY_BASE=dummy_key_for_asset_compilation \
+# Precompile assets (jsbundling-rails runs yarn build automatically)
+RUN SECRET_KEY_BASE=dummy_key_for_asset_compilation \
     RAILS_SERVE_STATIC_FILES=true \
     bundle exec rails assets:precompile
 

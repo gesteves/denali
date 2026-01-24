@@ -10,6 +10,7 @@
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@rails/ujs": "^7.1",
+    "esbuild": "^0.24.0",
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
     "bulma": "^0.9.4",
@@ -25,7 +26,6 @@
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
-    "esbuild": "^0.24.0",
     "eslint": "^4.0.0",
     "gulp": "^5.0.1",
     "gulp-cheerio": "^1.0",
