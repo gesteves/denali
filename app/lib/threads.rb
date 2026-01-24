@@ -167,7 +167,7 @@ class Threads
     attempt = 0
 
     loop do
-      sleep 5
+      sleep 5 unless Rails.env.test?
       status = get_container_status(container_id)
 
       case status
