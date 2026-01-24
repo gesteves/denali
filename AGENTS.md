@@ -12,7 +12,7 @@ Use `docker compose run` to execute commands:
 # Rails commands
 docker compose run app rails db:migrate
 docker compose run app rails console
-docker compose run app rails test
+docker compose run app bundle exec rspec
 docker compose run app rails generate model Foo name:string
 docker compose run app rails generate migration AddBarToFoo bar:integer
 
@@ -54,11 +54,12 @@ The resulting partial can be used with `<%= render 'partials/svg/icon_name', cla
 
 ## Testing
 
-Uses Minitest (Rails default). Run tests with:
+Uses RSpec. Run tests with:
 
 ```bash
-docker compose run app rails test
-docker compose run app rails test test/models/entry_test.rb  # specific file
+docker compose run app bundle exec rspec
+docker compose run app bundle exec rspec spec/models/entry_spec.rb  # specific file
+docker compose run app bundle exec rspec spec/models/entry_spec.rb:42  # specific line
 ```
 
 ## Fly.io Deployment

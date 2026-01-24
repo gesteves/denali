@@ -1,8 +1,0 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-square:
-  x: 0.1
-  'y': 0.1
-  width: 1
-  height: 1
-  aspect_ratio: '1:1'

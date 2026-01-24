@@ -76,7 +76,7 @@ jobs:
         run: bin/rails assets:precompile
 
       - name: Run tests
-        run: bin/rails test
+        run: bundle exec rspec
 
   notify-test:
     name: Notify test result

@@ -4,3 +4,8 @@
 require File.expand_path('../config/application', __FILE__)
 
 Rails.application.load_tasks
+
+# Set RSpec as the default task
+if defined?(RSpec)
+  task default: :spec
+end

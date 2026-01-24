@@ -42,3 +42,6 @@ yarn-error.log*
 .yarn-integrity
 *.dump
 *.pem
+
+# Ignore SimpleCov coverage reports
+/coverage

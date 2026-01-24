@@ -1,8 +1,0 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-allencompassingtrip:
-  name: 'All-Encompassing Trip'
-  about: 'This is mah blog.'
-  posts_per_page: 60
-  show_related_entries: true
-  publish_schedules_count: 2

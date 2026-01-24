@@ -68,7 +68,7 @@ docker compose up -d --build            # Rebuild and start
 ```bash
 docker compose run app rails console                 # Rails console
 docker compose run app rails db:migrate              # Run migrations
-docker compose run app rails test                    # Run tests
+docker compose run app bundle exec rspec             # Run tests
 docker compose run app rake <task>                   # Run rake tasks
 docker compose run app bundle install                # Install gems
 docker compose run app bash                          # Interactive shell
