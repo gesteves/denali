@@ -3,11 +3,8 @@
 @use 'vendors/reset';
 @use 'awesomplete/awesomplete';
 
-// Bulma with customizations
-@use 'bulma/sass' with (
-  $primary: #BF0222,
-  $notification-padding: 1.25rem 1.5rem
-);
+// Bulma
+@use 'bulma/sass';
 
 // Admin blocks
 @use 'admin/base/misc';
