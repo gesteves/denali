@@ -1,7 +1,9 @@
+@use 'bulma/sass/utilities/initial-variables' as iv;
+
 .logo svg {
   height: 32px;
 
-  @media (min-width: $desktop) {
+  @media (min-width: iv.$desktop) {
     height: 48px;
   }
 }

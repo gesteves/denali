@@ -135,6 +135,9 @@ GEM
     connection_pool (2.5.5)
     crass (1.0.6)
     csv (3.3.5)
+    dartsass-rails (0.5.1)
+      railties (>= 6.0.0)
+      sass-embedded (~> 1.63)
     date (3.5.0)
     dockerfile-rails (1.7.10)
       rails (>= 3.0.0)
@@ -192,6 +195,12 @@ GEM
       raabro (~> 1.4)
     globalid (1.3.0)
       activesupport (>= 6.1)
+    google-protobuf (4.33.4-aarch64-linux-gnu)
+      bigdecimal
+      rake (>= 13)
+    google-protobuf (4.33.4-x86_64-linux-gnu)
+      bigdecimal
+      rake (>= 13)
     graphql (2.5.16)
       base64
       fiber-storage
@@ -404,16 +413,10 @@ GEM
       crass (~> 1.0.2)
       nokogiri (>= 1.16.8)
     sass (3.4.25)
-    sass-rails (6.0.0)
-      sassc-rails (~> 2.1, >= 2.1.1)
-    sassc (2.4.0)
-      ffi (~> 1.9)
-    sassc-rails (2.1.2)
-      railties (>= 4.0.0)
-      sassc (>= 2.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
+    sass-embedded (1.97.3-aarch64-linux-gnu)
+      google-protobuf (~> 4.31)
+    sass-embedded (1.97.3-x86_64-linux-gnu)
+      google-protobuf (~> 4.31)
     scss-lint (0.38.0)
       rainbow (~> 2.0)
       sass (~> 3.4.1)
@@ -445,7 +448,6 @@ GEM
       sprockets (>= 3.0.0)
     stringio (3.1.8)
     thor (1.4.0)
-    tilt (2.4.0)
     timeout (0.5.0)
     tsort (0.2.0)
     turbolinks (5.2.1)
@@ -488,6 +490,7 @@ DEPENDENCIES
   bugsnag
   byebug
   connection_pool (~> 2.5)
+  dartsass-rails
   dockerfile-rails (>= 1.7)
   elasticsearch-model (~> 8.0)
   elasticsearch-rails (~> 8.0)
@@ -517,7 +520,6 @@ DEPENDENCIES
   redis
   ruby-thumbor
   sanitize
-  sass-rails (~> 6.0)
   scss-lint
   sdoc (~> 2.6)
   sidekiq

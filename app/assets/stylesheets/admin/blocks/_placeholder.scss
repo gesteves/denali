@@ -1,5 +1,7 @@
+@use '../base/variables' as vars;
+
 .placeholder {
-  background: var(--placeholder, $color-gray-very-light);
+  background: var(--placeholder, vars.$color-gray-very-light);
   background-repeat: no-repeat;
   background-size: cover;
 }

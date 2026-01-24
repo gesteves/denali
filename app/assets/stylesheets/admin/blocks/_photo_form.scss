@@ -1,8 +1,10 @@
+@use 'bulma/sass/utilities/initial-variables' as iv;
+
 .photo-form {
   align-items: stretch;
   flex-flow: column nowrap;
 
-  @media (min-width: $tablet) {
+  @media (min-width: iv.$tablet) {
     flex-flow: row nowrap;
   }
 }
@@ -13,7 +15,7 @@
   flex-flow: row nowrap;
   justify-content: space-between;
 
-  @media (max-width: $tablet) {
+  @media (max-width: iv.$tablet) {
     margin-left: 0;
     margin-top: 1rem;
   }
