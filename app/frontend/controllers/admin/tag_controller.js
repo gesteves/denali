@@ -1,4 +1,4 @@
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 import { fetchStatus, fetchText, fetchJson, sendNotification } from '../../lib/utils';
 
 /**

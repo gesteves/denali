@@ -1,4 +1,4 @@
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 /**
  * Controls the ability to zoom in on photos. Checks their dimensions to decide

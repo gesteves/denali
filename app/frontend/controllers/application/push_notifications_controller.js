@@ -1,4 +1,4 @@
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 import { trackEvent } from '../../lib/analytics';
 
 export default class extends Controller {

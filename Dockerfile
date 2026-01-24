@@ -58,12 +58,8 @@ COPY . .
 
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Precompile assets
-# NODE_OPTIONS needed for older webpack with Node 17+ / OpenSSL 3.0
-RUN SECRET_KEY_BASE=dummy_key_for_asset_compilation \
-    RAILS_SERVE_STATIC_FILES=true \
-    NODE_OPTIONS=--openssl-legacy-provider \
-    bundle exec rails webpacker:compile && \
+# Build JavaScript with esbuild and precompile assets
+RUN yarn build && \
     SECRET_KEY_BASE=dummy_key_for_asset_compilation \
     RAILS_SERVE_STATIC_FILES=true \
     bundle exec rails assets:precompile

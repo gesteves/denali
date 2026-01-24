@@ -72,15 +72,12 @@ services:
       elasticsearch:
         condition: service_healthy
 
-  webpacker:
+  js:
     <<: *app
-    command: ./bin/webpack-dev-server
-    ports:
-      - '3035:3035'
+    command: yarn build:watch
     environment:
       - NODE_ENV=development
       - RAILS_ENV=development
-      - WEBPACKER_DEV_SERVER_HOST=0.0.0.0
 
   app:
     <<: *app
@@ -95,7 +92,6 @@ services:
       elasticsearch:
         condition: service_healthy
     environment:
-      - WEBPACKER_DEV_SERVER_HOST=webpacker
       - ELASTICSEARCH_URL=http://elasticsearch:9200
       - ELASTICSEARCH_TIMEOUT=60
       - REDIS_URL=redis://redis:6379/0

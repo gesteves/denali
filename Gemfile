@@ -20,7 +20,7 @@ gem 'aws-sdk-s3', '~> 1'
 gem 'sass-rails', '~> 6.0'
 gem 'autoprefixer-rails'
 gem 'uglifier', '>= 1.3.0'
-gem 'webpacker'
+gem 'jsbundling-rails'
 gem 'turbolinks', '~> 5.2.1'
 gem "sprockets-rails"
 

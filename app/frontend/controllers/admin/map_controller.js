@@ -1,6 +1,6 @@
 /* global L */
 import { fetchStatus, fetchJson } from '../../lib/utils';
-import { Controller }             from 'stimulus';
+import { Controller }             from '@hotwired/stimulus';
 
 /**
  * Controls the Map view, setting up the map, the markers, and the popups.

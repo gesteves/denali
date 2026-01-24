@@ -3,9 +3,13 @@
   "version": "1.0.0",
   "description": "A simple, fast photoblogging CMS built in Ruby on Rails which features responsive, high-resolution images. You can see it live at [All-Encompassing Trip](http://www.allencompassingtrip.com).",
   "main": "Gulpfile.js",
+  "scripts": {
+    "build": "esbuild app/frontend/packs/application.js app/frontend/packs/admin.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
+    "build:watch": "esbuild app/frontend/packs/application.js app/frontend/packs/admin.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --watch=forever"
+  },
   "dependencies": {
+    "@hotwired/stimulus": "^3.2.2",
     "@rails/ujs": "^7.1",
-    "@rails/webpacker": "^5.4.4",
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
     "bulma": "^0.9.4",
@@ -17,13 +21,12 @@
     "leaflet.markercluster": "^0.5.0",
     "masonry-layout": "^4.2.2",
     "moment-timezone": "^0.6.0",
-    "stimulus": "^3.2.2",
     "turbolinks": "^5.2.0"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
+    "esbuild": "^0.24.0",
     "eslint": "^4.0.0",
-    "eslint-loader": "^2.0",
     "gulp": "^5.0.1",
     "gulp-cheerio": "^1.0",
     "gulp-jshint": "^2.0",
@@ -32,8 +35,7 @@
     "gulp-scss-lint": "^1.0.0",
     "gulp-scss-lint-stylish": "^1.0",
     "gulp-svgmin": "^4.1",
-    "gulp-svgstore": "^9.0",
-    "webpack-dev-server": "^3.11.3"
+    "gulp-svgstore": "^9.0"
   },
   "repository": {
     "type": "git",

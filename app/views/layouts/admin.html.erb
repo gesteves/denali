@@ -13,7 +13,7 @@
   <%= stylesheet_link_tag 'admin', media: 'all', 'data-turbolinks-track': 'reload' %>
   <%= csrf_meta_tags %>
   <%= yield :javascript %>
-  <%= javascript_pack_tag 'admin', defer: true, 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'admin', defer: true, 'data-turbolinks-track': 'reload' %>
   <script src="https://kit.fontawesome.com/2935e37c07.js" crossorigin="anonymous"></script>
 </head>
 <body data-controller="notifications" data-action="notify->notifications#add" <% if content_for?(:body_class) %>class="<%= yield :body_class %>"<% end %>>

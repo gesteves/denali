@@ -1,5 +1,5 @@
 import { fetchStatus, fetchText } from '../../lib/utils';
-import { Controller }             from 'stimulus';
+import { Controller }             from '@hotwired/stimulus';
 
 /**
  * Controls the infinite loading of entries on the
