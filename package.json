@@ -5,18 +5,21 @@
   "main": "Gulpfile.js",
   "scripts": {
     "build": "node node_modules/esbuild/bin/esbuild app/frontend/packs/application.js app/frontend/packs/admin.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets",
-    "build:watch": "node node_modules/esbuild/bin/esbuild app/frontend/packs/application.js app/frontend/packs/admin.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --watch=forever"
+    "build:watch": "node node_modules/esbuild/bin/esbuild app/frontend/packs/application.js app/frontend/packs/admin.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --watch=forever",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@rails/ujs": "^7.1",
-    "esbuild": "^0.25.0",
     "@shopify/draggable": "1.0.0-beta.7",
     "awesomplete": "^1.1.5",
     "bulma": "^1.0.0",
     "caniuse-lite": "^1.0.30001766",
     "clipboard": "^2.0.11",
     "croppr": "^2.3.1",
+    "esbuild": "^0.25.0",
     "grapheme-splitter": "^1.0.4",
     "leaflet-hash": "^0.2.1",
     "leaflet.markercluster": "^0.5.0",
@@ -25,6 +28,7 @@
     "turbolinks": "^5.2.0"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "^4.0.18",
     "babel-eslint": "^10.1.0",
     "eslint": "^4.0.0",
     "gulp": "^5.0.1",
@@ -35,7 +39,9 @@
     "gulp-scss-lint": "^1.0.0",
     "gulp-scss-lint-stylish": "^1.0",
     "gulp-svgmin": "^4.1",
-    "gulp-svgstore": "^9.0"
+    "gulp-svgstore": "^9.0",
+    "jsdom": "^27.4.0",
+    "vitest": "^4.0.18"
   },
   "repository": {
     "type": "git",

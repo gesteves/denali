@@ -78,6 +78,9 @@ jobs:
       - name: Run tests
         run: bundle exec rspec
 
+      - name: Run JavaScript tests
+        run: npm run test:run
+
   notify-test:
     name: Notify test result
     runs-on: ubuntu-latest
