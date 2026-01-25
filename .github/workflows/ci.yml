@@ -144,7 +144,7 @@ jobs:
       - name: Set short SHA and commit message
         run: |
           echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
-          echo "COMMIT_MESSAGE=$(echo "${{ env.COMMIT_MESSAGE }}" | head -n 1 | sed 's/"/\&quot;/g')" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | head -n 1 | sed 's/"/\&quot;/g')" >> $GITHUB_ENV
 
       - name: Notify Slack (deploy starting)
         continue-on-error: true
