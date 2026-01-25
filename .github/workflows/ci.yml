@@ -76,15 +76,89 @@ jobs:
         run: bin/rails assets:precompile
 
       - name: Run tests
-        run: bundle exec rspec
+        id: rspec
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          bundle exec rspec 2>&1 | tee rspec-output.log
+          echo "outcome=success" >> $GITHUB_OUTPUT
+        env:
+          RSPEC_FAILED: false
+
+      - name: Check RSpec result
+        if: steps.rspec.outcome == 'failure'
+        run: echo "RSPEC_FAILED=true" >> $GITHUB_ENV
 
       - name: Run JavaScript tests
-        run: npm run test:run
+        id: vitest
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          npm run test:run 2>&1 | tee vitest-output.log
+
+      - name: Check Vitest result
+        if: steps.vitest.outcome == 'failure'
+        run: echo "VITEST_FAILED=true" >> $GITHUB_ENV
+
+      - name: Upload test logs
+        if: steps.rspec.outcome == 'failure' || steps.vitest.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: |
+            rspec-output.log
+            vitest-output.log
+          retention-days: 1
+
+      - name: Fail if tests failed
+        if: steps.rspec.outcome == 'failure' || steps.vitest.outcome == 'failure'
+        run: exit 1
+
+  analyze-test-failure:
+    name: Analyze test failure
+    runs-on: ubuntu-latest
+    needs: test
+    if: failure()
+    outputs:
+      analysis: ${{ steps.claude.outputs.conclusion }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download test logs
+        uses: actions/download-artifact@v4
+        with:
+          name: test-logs
+          path: logs
+
+      - name: Prepare log content
+        id: logs
+        run: |
+          {
+            echo 'content<<EOF'
+            echo "=== RSpec Output (last 100 lines) ==="
+            tail -100 logs/rspec-output.log 2>/dev/null || echo "No RSpec log"
+            echo ""
+            echo "=== Vitest Output (last 100 lines) ==="
+            tail -100 logs/vitest-output.log 2>/dev/null || echo "No Vitest log"
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
+
+      - name: Analyze failure with Claude
+        id: claude
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Analyze this test failure output and provide a short sentence explaining what failed and why. Be specific about the test names and error types. No markdown formatting.
+
+            ${{ steps.logs.outputs.content }}
+          claude_args: "--max-turns 1 --model claude-haiku-4-5"
 
   notify-test:
     name: Notify test result
     runs-on: ubuntu-latest
-    needs: test
+    needs: [test, analyze-test-failure]
     if: always()
 
     steps:
@@ -118,8 +192,23 @@ jobs:
                 text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
+      - name: Notify Slack (failure with analysis)
+        if: needs.test.result == 'failure' && needs.analyze-test-failure.outputs.analysis
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "Tests <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|failed> on <${{ env.BRANCH_URL }}|`${{ env.BRANCH_NAME }}`>"
+            attachments:
+              - color: "danger"
+                fallback: "Tests failed on ${{ env.BRANCH_NAME }}: ${{ needs.analyze-test-failure.outputs.analysis }}"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}\n\n${{ needs.analyze-test-failure.outputs.analysis }}"
+                footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+
       - name: Notify Slack (failure)
-        if: needs.test.result == 'failure'
+        if: needs.test.result == 'failure' && !needs.analyze-test-failure.outputs.analysis
         continue-on-error: true
         uses: slackapi/slack-github-action@v2.1.1
         with:
@@ -163,12 +252,41 @@ jobs:
 
       - name: Deploy to Fly.io
         id: fly_deploy
-        run: flyctl deploy --remote-only
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          flyctl deploy --remote-only 2>&1 | tee deploy-output.log
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
+      - name: Prepare deploy log
+        id: deploy_log
+        if: steps.fly_deploy.outcome == 'failure'
+        run: |
+          {
+            echo 'content<<EOF'
+            tail -100 deploy-output.log
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
+
+      - name: Analyze deploy failure with Claude
+        id: claude_deploy
+        if: steps.fly_deploy.outcome == 'failure'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Analyze this Fly.io deploy failure and provide a short sentence explaining what went wrong. Be specific. No markdown formatting.
+
+            ${{ steps.deploy_log.outputs.content }}
+          claude_args: "--max-turns 1 --model claude-haiku-4-5"
+
+      - name: Fail if deploy failed
+        if: steps.fly_deploy.outcome == 'failure'
+        run: exit 1
+
       - name: Notify Slack (deploy successful)
-        if: success()
+        if: steps.fly_deploy.outcome == 'success'
         continue-on-error: true
         uses: slackapi/slack-github-action@v2.1.1
         with:
@@ -182,8 +300,23 @@ jobs:
                 text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
+      - name: Notify Slack (deploy failed with analysis)
+        if: steps.fly_deploy.outcome == 'failure' && steps.claude_deploy.outputs.conclusion
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "Deploy <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|failed> :warning:"
+            attachments:
+              - color: "danger"
+                fallback: "Deploy failed: ${{ steps.claude_deploy.outputs.conclusion }}"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}\n\n${{ steps.claude_deploy.outputs.conclusion }}"
+                footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+
       - name: Notify Slack (deploy failed)
-        if: failure()
+        if: steps.fly_deploy.outcome == 'failure' && !steps.claude_deploy.outputs.conclusion
         continue-on-error: true
         uses: slackapi/slack-github-action@v2.1.1
         with:
