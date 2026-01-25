@@ -150,7 +150,7 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
-            Analyze this test failure output and provide a short sentence explaining what failed and why. Be specific about the test names and error types. No markdown formatting.
+            Analyze this test failure output and provide a short sentence explaining what failed and why, which will be shown in a Slack notification. Be specific about the test names and reason for the failures. Only use the following Slack Markdown formatting: _italic_, *bold*, ~strike~, and `inline code`.
 
             ${{ steps.logs.outputs.content }}
           claude_args: "--max-turns 1 --model claude-haiku-4-5"
@@ -276,7 +276,7 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
-            Analyze this Fly.io deploy failure and provide a short sentence explaining what went wrong. Be specific. No markdown formatting.
+            Analyze this Fly.io deploy failure and provide a short sentence explaining what went wrong, which will be shown in a Slack notification. Be specific, but keep it short. Only use the following Slack Markdown formatting: _italic_, *bold*, ~strike~, and `inline code`.
 
             ${{ steps.deploy_log.outputs.content }}
           claude_args: "--max-turns 1 --model claude-haiku-4-5"
