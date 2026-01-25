@@ -45,3 +45,4 @@ yarn-error.log*
 
 # Ignore SimpleCov coverage reports
 /coverage
+spec/examples.txt
