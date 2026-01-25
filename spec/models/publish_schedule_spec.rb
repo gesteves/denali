@@ -19,7 +19,7 @@ RSpec.describe PublishSchedule, type: :model do
   end
 
   describe 'touching entries' do
-    let(:blog) { create(:blog) }
+    let(:blog) { Blog.first || create(:blog) }
     let(:user) { create(:user) }
 
     it 'touches queued entries when schedule is saved' do
@@ -31,6 +31,42 @@ RSpec.describe PublishSchedule, type: :model do
 
       entry.reload
       expect(entry.updated_at).not_to eq(original_updated_at)
+    end
+
+    it 'touches queued entries when schedule is updated' do
+      schedule = create(:publish_schedule, blog: blog)
+      entry = create(:entry, :queued, blog: blog, user: user)
+      original_updated_at = entry.updated_at
+
+      sleep(0.01)
+      schedule.update!(hour: 15)
+
+      entry.reload
+      expect(entry.updated_at).not_to eq(original_updated_at)
+    end
+
+    it 'touches queued entries when schedule is destroyed' do
+      schedule = create(:publish_schedule, blog: blog)
+      entry = create(:entry, :queued, blog: blog, user: user)
+      original_updated_at = entry.updated_at
+
+      sleep(0.01)
+      schedule.destroy
+
+      entry.reload
+      expect(entry.updated_at).not_to eq(original_updated_at)
+    end
+
+    it 'does not touch published entries' do
+      entry = create(:entry, :published, blog: blog, user: user)
+      original_updated_at = entry.updated_at
+
+      sleep(0.01)
+      create(:publish_schedule, blog: blog)
+
+      entry.reload
+      # Use be_within to handle database timestamp precision differences
+      expect(entry.updated_at).to be_within(0.001.seconds).of(original_updated_at)
     end
   end
 end

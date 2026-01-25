@@ -95,6 +95,11 @@ RSpec.configure do |config|
     Sidekiq::Worker.clear_all
   end
 
+  # Set ActiveStorage URL options for tests
+  config.before(:each) do
+    ActiveStorage::Current.url_options = { host: 'localhost', port: 3000 }
+  end
+
   # WebMock - disable all external HTTP requests by default
   config.before(:each) do
     WebMock.disable_net_connect!(allow_localhost: true)
@@ -108,6 +113,8 @@ RSpec.configure do |config|
         filename: filename
       )
       photo.image.analyze
+      # Reload the photo to ensure image metadata is accessible
+      photo.reload
     end
 
     def set_up_images(entry)
