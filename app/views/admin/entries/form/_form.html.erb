@@ -1,4 +1,4 @@
-<%= form_with(model: [:admin, @entry], multipart: true, 'data-controller': 'entry-form sluggifier', 'data-entry-form-photo-endpoint-value': photo_admin_entries_path, 'data-action': 'submit->entry-form#submit') do |f| %>
+<%= form_with(model: [:admin, @entry], multipart: true, data: { controller: 'entry-form sluggifier', entry_form_photo_endpoint_value: photo_admin_entries_path, action: 'submit->entry-form#submit' }) do |f| %>
   <%= render partial: 'admin/entries/form/photos_section', locals: { f: f } %>
   <%= render partial: 'admin/entries/form/entry_fields', locals: { f: f } %>
   <% unless @entry.persisted? %>
