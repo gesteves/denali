@@ -31,10 +31,8 @@ export default class extends Controller {
       this.characterCountTarget.classList.remove('has-text-danger');
     }
 
-    if (count > this.maxCharacters) {
-      this.submitTarget.disabled = true;
-    } else {
-      this.submitTarget.disabled = false;
+    if (this.hasSubmitTarget) {
+      this.submitTarget.disabled = count > this.maxCharacters;
     }
   }
 

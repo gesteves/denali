@@ -214,6 +214,36 @@ describe('CharacterCounterController', () => {
     });
   });
 
+  describe('without submit target', () => {
+    beforeEach(() => {
+      application.stop();
+      document.body.innerHTML = `
+        <div data-controller="character-counter" data-character-counter-max-length-value="100">
+          <textarea data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"></textarea>
+          <span data-character-counter-target="characterCount">0</span>
+        </div>
+      `;
+      element = document.querySelector('[data-controller="character-counter"]');
+      application = Application.start();
+      application.register('character-counter', CharacterCounterController);
+    });
+
+    it('works without a submit target', () => {
+      setInput('hello world');
+      expect(characterCount().innerHTML).toBe('11');
+    });
+
+    it('adds danger class when approaching limit without submit target', () => {
+      setInput('a'.repeat(95));
+      expect(characterCount().classList.contains('has-text-danger')).toBe(true);
+    });
+
+    it('does not throw error when exceeding limit without submit target', () => {
+      expect(() => setInput('a'.repeat(150))).not.toThrow();
+      expect(characterCount().innerHTML).toBe('150');
+    });
+  });
+
   describe('integration', () => {
     it('correctly counts a tweet with emoji and links', () => {
       setInput(' Check out [my blog](https://example.com) for updates!');
