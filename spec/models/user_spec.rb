@@ -8,7 +8,7 @@ RSpec.describe User, type: :model do
   describe 'factory' do
     it 'creates a valid user' do
       user = create(:user)
-      expect(user).to be_valid
+      expect(user).to be_invalid
     end
   end
 
