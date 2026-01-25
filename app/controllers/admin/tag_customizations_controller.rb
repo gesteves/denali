@@ -24,7 +24,7 @@ class Admin::TagCustomizationsController < AdminController
         format.html { redirect_to admin_tag_customizations_path }
       else
         flash[:warning] = 'The tag settings couldn’t be saved…'
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
       end
     end
   end
@@ -47,7 +47,7 @@ class Admin::TagCustomizationsController < AdminController
       else
         format.html {
           flash[:warning] = 'Your changes couldn’t be saved…'
-          render :edit
+          render :edit, status: :unprocessable_entity
         }
       end
     end

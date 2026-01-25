@@ -47,11 +47,12 @@ RSpec.describe "Admin::Parks", type: :request do
     end
 
     it "renders edit on invalid params" do
-      allow_any_instance_of(Park).to receive(:update).and_return(false)
+      allow(Park).to receive(:find).with(park.id.to_s).and_return(park)
+      allow(park).to receive(:update).and_return(false)
       patch admin_park_path(park), params: {
         park: { display_name: '' }
       }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 end

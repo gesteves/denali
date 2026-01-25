@@ -39,11 +39,12 @@ RSpec.describe "Admin::Films", type: :request do
     end
 
     it "renders edit on invalid params" do
-      allow_any_instance_of(Film).to receive(:update).and_return(false)
+      allow(Film).to receive(:find).with(film.id.to_s).and_return(film)
+      allow(film).to receive(:update).and_return(false)
       patch admin_film_path(film), params: {
         film: { display_name: '' }
       }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 end

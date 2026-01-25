@@ -62,7 +62,8 @@ RSpec.describe "Admin::Tags", type: :request do
     end
 
     it "returns error on invalid update" do
-      allow_any_instance_of(ActsAsTaggableOn::Tag).to receive(:update).and_return(false)
+      allow(ActsAsTaggableOn::Tag).to receive(:find).with(tag.id.to_s).and_return(tag)
+      allow(tag).to receive(:update).and_return(false)
       patch admin_tag_path(id: tag.id), params: { name: '' }, as: :json
       expect(response).to have_http_status(:bad_request)
     end

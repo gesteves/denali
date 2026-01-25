@@ -39,11 +39,12 @@ RSpec.describe "Admin::Cameras", type: :request do
     end
 
     it "renders edit on invalid params" do
-      allow_any_instance_of(Camera).to receive(:update).and_return(false)
+      allow(Camera).to receive(:find).with(camera.id.to_s).and_return(camera)
+      allow(camera).to receive(:update).and_return(false)
       patch admin_camera_path(camera), params: {
         camera: { display_name: '' }
       }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 end

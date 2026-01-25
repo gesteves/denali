@@ -1,8 +1,8 @@
-<%= form_for([:admin, @camera]) do |f| %>
+<%= form_with(model: [:admin, @camera]) do |f| %>
   <% if @camera.errors.any? %>
     <article class="message is-danger">
       <div class="message-header">
-        <p>Welp, the changes couldn't be saved.</p>
+        <p>Welp, the changes couldn’t be saved.</p>
         <button class="delete"></button>
       </div>
       <div class="message-body">

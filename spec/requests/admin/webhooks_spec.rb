@@ -55,7 +55,7 @@ RSpec.describe "Admin::Webhooks", type: :request do
       post admin_webhooks_path, params: {
         webhook: { url: '' }
       }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:unprocessable_entity)
       expect(flash[:warning]).to be_present
     end
   end
@@ -85,11 +85,12 @@ RSpec.describe "Admin::Webhooks", type: :request do
     end
 
     it "renders edit on invalid params" do
-      allow_any_instance_of(Webhook).to receive(:update).and_return(false)
+      allow(Webhook).to receive(:find).with(webhook.id.to_s).and_return(webhook)
+      allow(webhook).to receive(:update).and_return(false)
       patch admin_webhook_path(webhook), params: {
         webhook: { url: '' }
       }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 

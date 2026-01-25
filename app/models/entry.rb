@@ -24,7 +24,7 @@ class Entry < ApplicationRecord
   acts_as_taggable_on :tags, :equipment, :locations, :styles
   acts_as_list scope: :blog
 
-  accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: lambda { |attributes| attributes['image'].blank? && attributes['id'].blank? }
+  accepts_nested_attributes_for :photos, allow_destroy: true, reject_if: ->(attributes) { attributes['image'].blank? && attributes['id'].blank? }
 
   settings index: { number_of_shards: 1 } do
     settings do

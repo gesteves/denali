@@ -37,9 +37,10 @@ RSpec.describe "Admin::Blogs", type: :request do
     end
 
     it "renders edit on invalid params" do
-      allow_any_instance_of(Blog).to receive(:update).and_return(false)
+      allow(Blog).to receive(:first).and_return(blog)
+      allow(blog).to receive(:update).and_return(false)
       patch admin_blog_path(blog), params: { blog: { name: '' } }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 
@@ -48,11 +49,12 @@ RSpec.describe "Admin::Blogs", type: :request do
 
     before do
       entry.photos.each { |p| attach_image_to_photo(p) }
-      allow_any_instance_of(Blog).to receive(:purge_from_cdn)
+      allow(Blog).to receive(:first).and_return(blog)
+      allow(blog).to receive(:purge_from_cdn)
     end
 
     it "purges the CDN cache" do
-      expect_any_instance_of(Blog).to receive(:purge_from_cdn)
+      expect(blog).to receive(:purge_from_cdn)
       # Use JS format to avoid redirect issues
       post flush_caches_admin_blog_path(blog), xhr: true
     end

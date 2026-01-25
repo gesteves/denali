@@ -2,7 +2,7 @@
   <div class="container">
     <% if @photoblog.header_logo_svg.present? %>
       <div class="navbar-brand">
-        <a href="<%= root_path %>" class="navbar-item logo" data-turbolinks="false">
+        <a href="<%= root_path %>" class="navbar-item logo" data-turbo="false">
           <%= @photoblog.header_logo_svg.html_safe %>
         </a>
         <a role="button" class="navbar-burger" data-action="click->nav#toggle" data-nav-target="burger">
@@ -52,7 +52,7 @@
         <% end %>
         <% if @photoblog.has_search? %>
         <div class="navbar-item">
-          <%= form_tag(admin_search_path, method: 'get' ) do %>
+          <%= form_with(url: admin_search_path, method: :get) do %>
             <div class="control has-icons-left">
               <%= text_field_tag :q, @query || '', placeholder: 'Search', class: 'input' %>
               <span class="icon is-small is-left">
@@ -78,7 +78,7 @@
             <%= link_to 'Sidekiq', sidekiq_web_path, class: 'navbar-item' %>
           </div>
         </div>
-        <a href="<%= signout_path %>" class="navbar-item" data-turbolinks="false">Sign out</a>
+        <a href="<%= signout_path %>" class="navbar-item" data-turbo="false">Sign out</a>
       </div>
     </div>
   </div>

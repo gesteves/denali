@@ -1,11 +1,11 @@
 <% content_for :head do %>
-  <meta name="turbolinks-visit-control" content="reload">
+  <meta name="turbo-visit-control" content="reload">
   <meta name="robots" content="noindex">
   <title><%= @page_title %></title>
 <% end %>
 
 <div class="signin">
-  <%= form_tag("/auth/google_oauth2", method: 'post') do %>
+  <%= form_with(url: "/auth/google_oauth2", method: :post) do %>
     <button type="submit" class="button button--centered">
       <%= inline_svg :google_brands_solid_full, class_name: 'button__icon' %>
       <span class="button__text">Sign in with Google</span>

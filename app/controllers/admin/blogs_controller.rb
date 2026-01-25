@@ -29,7 +29,7 @@ class Admin::BlogsController < AdminController
       else
         format.html {
           flash[:warning] = 'Your changes couldn’t be saved…'
-          render :edit
+          render :edit, status: :unprocessable_entity
         }
       end
     end

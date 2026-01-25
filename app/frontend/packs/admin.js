@@ -1,6 +1,6 @@
 import { Application } from '@hotwired/stimulus';
 import Rails from '@rails/ujs';
-import Turbolinks from 'turbolinks';
+import * as Turbo from '@hotwired/turbo';
 
 // Admin controllers
 import AltTextReviewController from '../controllers/admin/alt_text_review_controller';
@@ -55,4 +55,4 @@ application.register('tag-autocomplete', TagAutocompleteController);
 application.register('placeholder', PlaceholderController);
 
 Rails.start();
-Turbolinks.start();
+Turbo.start();

@@ -22,7 +22,7 @@ class Admin::WebhooksController < AdminController
         format.html { redirect_to admin_webhooks_path }
       else
         flash[:warning] = 'The webhook couldn’t be created…'
-        format.html { render :new }
+        format.html { render :new, status: :unprocessable_entity }
       end
     end
   end
@@ -42,7 +42,7 @@ class Admin::WebhooksController < AdminController
       else
         format.html {
           flash[:warning] = 'Your changes couldn’t be saved…'
-          render :edit
+          render :edit, status: :unprocessable_entity
         }
       end
     end

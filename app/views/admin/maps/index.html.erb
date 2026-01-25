@@ -1,10 +1,10 @@
 <% content_for :javascript do %>
-  <%= javascript_include_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js', defer: true, 'data-turbolinks-track': 'reload' %>
-  <%= javascript_include_tag 'vendor/map', defer: true, 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js', defer: true, 'data-turbo-track': 'reload' %>
+  <%= javascript_include_tag 'vendor/map', defer: true, 'data-turbo-track': 'reload' %>
 <% end %>
 
 <% content_for :stylesheets do %>
-  <%= stylesheet_link_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= stylesheet_link_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css', media: 'all', 'data-turbo-track': 'reload' %>
 <% end %>
 
 <% content_for :body_class do %>
@@ -12,7 +12,7 @@
 <% end %>
 
 <% content_for :meta do %>
-  <meta name="turbolinks-visit-control" content="reload">
+  <meta name="turbo-visit-control" content="reload">
 <% end %>
 
 <div class="map__container" data-controller="map" data-map-map-style-value="mapbox://styles/mapbox/outdoors-v11" data-map-api-token-value="<%= ENV['MAPBOX_API_TOKEN'] %>" data-map-markers-url-value="<%= admin_map_markers_path(format: 'json') %>">

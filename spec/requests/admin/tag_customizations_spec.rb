@@ -59,11 +59,13 @@ RSpec.describe "Admin::TagCustomizations", type: :request do
     end
 
     it "renders new on invalid params" do
-      allow_any_instance_of(TagCustomization).to receive(:save).and_return(false)
+      tc = TagCustomization.new
+      allow(TagCustomization).to receive(:new).and_return(tc)
+      allow(tc).to receive(:save).and_return(false)
       post admin_tag_customizations_path, params: {
         tag_customization: { tag_list: '' }
       }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 
@@ -99,11 +101,12 @@ RSpec.describe "Admin::TagCustomizations", type: :request do
     end
 
     it "renders edit on invalid params" do
-      allow_any_instance_of(TagCustomization).to receive(:update).and_return(false)
+      allow(blog).to receive_message_chain(:tag_customizations, :find).and_return(tag_customization)
+      allow(tag_customization).to receive(:update).and_return(false)
       patch admin_tag_customization_path(tag_customization), params: {
         tag_customization: { tag_list: '' }
       }
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 

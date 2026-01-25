@@ -63,11 +63,10 @@ RSpec.describe "Admin::Crops", type: :request do
     end
 
     it "returns error JSON on failure" do
-      allow_any_instance_of(Crop).to receive(:update).and_return(false)
       post create_or_update_admin_entry_photo_crops_path(entry, photo), params: {
         crop: {
           aspect_ratio: '1:1',
-          x: 0.1,
+          x: 2.0,  # Invalid: must be <= 1
           y: 0.1,
           width: 0.5,
           height: 0.5

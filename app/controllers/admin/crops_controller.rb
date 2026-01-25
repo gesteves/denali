@@ -11,7 +11,7 @@ class Admin::CropsController < AdminController
       code = 200
     else
       Rails.logger.error "Crop update failed for photo #{@photo.id}: #{crop.errors.full_messages.join(', ')}"
-      message = "The crop couldn't be updated."
+      message = "The crop couldn’t be updated."
       status = 'danger'
       code = 500
     end

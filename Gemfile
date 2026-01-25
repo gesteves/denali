@@ -21,7 +21,7 @@ gem 'dartsass-rails'
 gem 'autoprefixer-rails'
 gem 'uglifier', '>= 1.3.0'
 gem 'jsbundling-rails'
-gem 'turbolinks', '~> 5.2.1'
+gem 'turbo-rails'
 gem "sprockets-rails"
 
 # Images
