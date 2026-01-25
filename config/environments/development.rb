@@ -73,6 +73,6 @@ Rails.application.configure do
   config.action_controller.raise_on_missing_callback_actions = true
 
   config.time_zone = 'Eastern Time (US & Canada)'
-  config.action_controller.raise_on_open_redirects = false
+  config.action_controller.action_on_open_redirect = :log
   config.active_storage.variant_processor = :mini_magick
 end
