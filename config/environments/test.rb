@@ -59,6 +59,6 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
-  config.action_controller.raise_on_open_redirects = false
+  config.action_controller.action_on_open_redirect = :log
   config.active_storage.variant_processor = :mini_magick
 end
