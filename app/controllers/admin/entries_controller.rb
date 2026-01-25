@@ -362,211 +362,176 @@ class Admin::EntriesController < AdminController
   def instagram
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    if request.get?
-      @text = @entry.instagram_caption
-      respond_to do |format|
-        format.html {
-          if params[:modal]
-            render layout: nil
-          else
-            render
-          end
-        }
-      end
-    elsif request.post?
-      scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
-      scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      if scheduled
-        InstagramWorker.perform_at(scheduled_at, @entry.id, params[:text])
-        @message = "Your entry will be shared on Instagram at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
-      else
-        InstagramWorker.perform_inline(@entry.id, params[:text])
-        @entry.reload
-        @message = 'Your entry was shared on Instagram.'
-      end
+    scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+    scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      respond_to do |format|
-        format.html {
-          flash[:success] = @message
-          redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    if scheduled
+      InstagramWorker.perform_at(scheduled_at, @entry.id, params[:text])
+      @message = "Your entry will be shared on Instagram at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
+    else
+      InstagramWorker.perform_inline(@entry.id, params[:text])
+      @entry.reload
+      @message = 'Your entry was shared on Instagram.'
+    end
+
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render 'admin/shared/notify' }
+      format.json {
+        render json: {
+          status: 'success',
+          message: @message,
+          shares_count: @entry.instagram_shares_count,
+          last_shared_at: @entry.last_shared_on_instagram_at&.strftime('%B %-d, %Y at %-l:%M %p'),
+          scheduled: scheduled
         }
-        format.js { render 'admin/shared/notify' }
-        format.json {
-          render json: {
-            status: 'success',
-            message: @message,
-            shares_count: @entry.instagram_shares_count,
-            last_shared_at: @entry.last_shared_on_instagram_at&.strftime('%B %-d, %Y at %-l:%M %p'),
-            scheduled: scheduled
-          }
-        }
-      end
+      }
     end
   end
 
   def instagram_story
     @entry = @photoblog.entries.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    if request.get?
-      respond_to do |format|
-        format.html {
-          if params[:modal]
-            render layout: nil
-          else
-            render
-          end
-        }
-      end
-    elsif request.post?
-      crop = params[:crop] == 'true'
-      scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
-      scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      if scheduled
-        InstagramStoryWorker.perform_at(scheduled_at, @entry.id, crop)
-        @message = "Your entry will be shared on your Instagram Story at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
-      else
-        InstagramStoryWorker.perform_inline(@entry.id, crop)
-        @message = 'Your entry was shared on your Instagram Story.'
-      end
+    crop = params[:crop] == 'true'
+    scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+    scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      respond_to do |format|
-        format.html {
-          flash[:success] = @message
-          redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    if scheduled
+      InstagramStoryWorker.perform_at(scheduled_at, @entry.id, crop)
+      @message = "Your entry will be shared on your Instagram Story at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
+    else
+      InstagramStoryWorker.perform_inline(@entry.id, crop)
+      @message = 'Your entry was shared on your Instagram Story.'
+    end
+
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render 'admin/shared/notify' }
+      format.json {
+        render json: {
+          status: 'success',
+          message: @message,
+          scheduled: scheduled
         }
-        format.js { render 'admin/shared/notify' }
-        format.json {
-          render json: {
-            status: 'success',
-            message: @message,
-            scheduled: scheduled
-          }
-        }
-      end
+      }
     end
   end
 
   def threads
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    if request.get?
-      @text = @entry.threads_caption(utm_campaign: 'share')
-      respond_to do |format|
-        format.html {
-          if params[:modal]
-            render layout: nil
-          else
-            render
-          end
-        }
-      end
-    elsif request.post?
-      scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
-      scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      if scheduled
-        ThreadsWorker.perform_at(scheduled_at, @entry.id, params[:text])
-        @message = "Your entry will be shared on Threads at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
-      else
-        ThreadsWorker.perform_inline(@entry.id, params[:text])
-        @entry.reload
-        @message = 'Your entry was shared on Threads.'
-      end
+    scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+    scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      respond_to do |format|
-        format.html {
-          flash[:success] = @message
-          redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    if scheduled
+      ThreadsWorker.perform_at(scheduled_at, @entry.id, params[:text])
+      @message = "Your entry will be shared on Threads at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
+    else
+      ThreadsWorker.perform_inline(@entry.id, params[:text])
+      @entry.reload
+      @message = 'Your entry was shared on Threads.'
+    end
+
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render 'admin/shared/notify' }
+      format.json {
+        render json: {
+          status: 'success',
+          message: @message,
+          shares_count: @entry.threads_shares_count,
+          last_shared_at: @entry.last_shared_on_threads_at&.strftime('%B %-d, %Y at %-l:%M %p'),
+          scheduled: scheduled
         }
-        format.js { render 'admin/shared/notify' }
-        format.json {
-          render json: {
-            status: 'success',
-            message: @message,
-            shares_count: @entry.threads_shares_count,
-            last_shared_at: @entry.last_shared_on_threads_at&.strftime('%B %-d, %Y at %-l:%M %p'),
-            scheduled: scheduled
-          }
-        }
-      end
+      }
     end
   end
 
   def mastodon
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    if request.get?
-      @text = @entry.mastodon_caption(utm_campaign: 'share')
-      respond_to do |format|
-        format.html {
-          if params[:modal]
-            render layout: nil
-          else
-            render
-          end
-        }
-      end
-    elsif request.post?
-      scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
-      scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      if scheduled
-        MastodonWorker.perform_at(scheduled_at, @entry.id, params[:text])
-        @message = "Your entry will be shared on Mastodon at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
-      else
-        MastodonWorker.perform_inline(@entry.id, params[:text])
-        @entry.reload
-        @message = 'Your entry was shared on Mastodon.'
-      end
+    scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+    scheduled = scheduled_at.present? && scheduled_at > Time.current
 
-      respond_to do |format|
-        format.html {
-          flash[:success] = @message
-          redirect_to session[:redirect_url] || admin_entry_path(@entry)
+    if scheduled
+      MastodonWorker.perform_at(scheduled_at, @entry.id, params[:text])
+      @message = "Your entry will be shared on Mastodon at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
+    else
+      MastodonWorker.perform_inline(@entry.id, params[:text])
+      @entry.reload
+      @message = 'Your entry was shared on Mastodon.'
+    end
+
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render 'admin/shared/notify' }
+      format.json {
+        render json: {
+          status: 'success',
+          message: @message,
+          shares_count: @entry.mastodon_shares_count,
+          last_shared_at: @entry.last_shared_on_mastodon_at&.strftime('%B %-d, %Y at %-l:%M %p'),
+          scheduled: scheduled
         }
-        format.js { render 'admin/shared/notify' }
-        format.json {
-          render json: {
-            status: 'success',
-            message: @message,
-            shares_count: @entry.mastodon_shares_count,
-            last_shared_at: @entry.last_shared_on_mastodon_at&.strftime('%B %-d, %Y at %-l:%M %p'),
-            scheduled: scheduled
-          }
-        }
-      end
+      }
     end
   end
 
   def bluesky
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
-    if request.get?
-      @text = @entry.bluesky_caption(utm_campaign: 'share')
-      respond_to do |format|
-        format.html {
-          if params[:modal]
-            render layout: nil
-          else
-            render
-          end
+
+    scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
+    scheduled = scheduled_at.present? && scheduled_at > Time.current
+
+    if scheduled
+      BlueskyWorker.perform_at(scheduled_at, @entry.id, params[:text], params[:in_reply_to], params[:quote])
+      @message = "Your entry will be shared on Bluesky at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
+    else
+      BlueskyWorker.perform_inline(@entry.id, params[:text], params[:in_reply_to], params[:quote])
+      @entry.reload
+      @message = 'Your entry was shared on Bluesky.'
+    end
+
+    respond_to do |format|
+      format.html {
+        flash[:success] = @message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.js { render 'admin/shared/notify' }
+      format.json {
+        render json: {
+          status: 'success',
+          message: @message,
+          shares_count: @entry.bluesky_shares_count,
+          last_shared_at: @entry.last_shared_on_bluesky_at&.strftime('%B %-d, %Y at %-l:%M %p'),
+          scheduled: scheduled
         }
-      end
-    elsif request.post?
-      scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
-      scheduled = scheduled_at.present? && scheduled_at > Time.current
+      }
+    end
+  end
 
-      if scheduled
-        BlueskyWorker.perform_at(scheduled_at, @entry.id, params[:text], params[:in_reply_to], params[:quote])
-        @message = "Your entry will be shared on Bluesky at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
-      else
-        BlueskyWorker.perform_inline(@entry.id, params[:text], params[:in_reply_to], params[:quote])
-        @entry.reload
-        @message = 'Your entry was shared on Bluesky.'
-      end
+  def sharing_settings
+    @entry = @photoblog.entries.find(params[:id])
 
+    if @entry.update(sharing_settings_params)
+      @message = 'Sharing settings have been updated.'
       respond_to do |format|
         format.html {
           flash[:success] = @message
@@ -577,64 +542,29 @@ class Admin::EntriesController < AdminController
           render json: {
             status: 'success',
             message: @message,
-            shares_count: @entry.bluesky_shares_count,
-            last_shared_at: @entry.last_shared_on_bluesky_at&.strftime('%B %-d, %Y at %-l:%M %p'),
-            scheduled: scheduled
+            settings: {
+              post_to_bluesky: @entry.post_to_bluesky,
+              post_to_mastodon: @entry.post_to_mastodon,
+              post_to_instagram: @entry.post_to_instagram,
+              post_to_threads: @entry.post_to_threads
+            }
           }
         }
       end
-    end
-  end
-
-  def sharing_settings
-    @entry = @photoblog.entries.find(params[:id])
-    if request.get?
+    else
+      @message = 'Sharing settings could not be updated.'
       respond_to do |format|
         format.html {
-          if params[:modal]
-            render layout: nil
-          else
-            render
-          end
+          flash[:warning] = @message
+          redirect_to session[:redirect_url] || admin_entry_path(@entry)
         }
-      end
-    elsif request.post?
-      if @entry.update(sharing_settings_params)
-        @message = 'Sharing settings have been updated.'
-        respond_to do |format|
-          format.html {
-            flash[:success] = @message
-            redirect_to session[:redirect_url] || admin_entry_path(@entry)
+        format.js { render 'admin/shared/notify' }
+        format.json {
+          render json: {
+            status: 'danger',
+            message: @message
           }
-          format.js { render 'admin/shared/notify' }
-          format.json {
-            render json: {
-              status: 'success',
-              message: @message,
-              settings: {
-                post_to_bluesky: @entry.post_to_bluesky,
-                post_to_mastodon: @entry.post_to_mastodon,
-                post_to_instagram: @entry.post_to_instagram,
-                post_to_threads: @entry.post_to_threads
-              }
-            }
-          }
-        end
-      else
-        @message = 'Sharing settings could not be updated.'
-        respond_to do |format|
-          format.html {
-            flash[:warning] = @message
-            redirect_to session[:redirect_url] || admin_entry_path(@entry)
-          }
-          format.js { render 'admin/shared/notify' }
-          format.json {
-            render json: {
-              status: 'danger',
-              message: @message
-            }
-          }
-        end
+        }
       end
     end
   end
