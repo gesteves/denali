@@ -99,7 +99,7 @@ jobs:
             echo "BRANCH_URL=${{ github.server_url }}/${{ github.repository }}/pull/${{ github.event.pull_request.number }}" >> $GITHUB_ENV
           else
             echo "BRANCH_NAME=${{ github.ref_name }}" >> $GITHUB_ENV
-            echo "COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | head -n 1)" >> $GITHUB_ENV
+            echo "COMMIT_MESSAGE=$(echo "${{ env.COMMIT_MESSAGE }}" | head -n 1)" >> $GITHUB_ENV
             echo "BRANCH_URL=${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}" >> $GITHUB_ENV
           fi
 
@@ -141,8 +141,10 @@ jobs:
     if: github.ref == 'refs/heads/release' && github.event_name == 'push' && !contains(github.event.head_commit.message, '[skip deploy]') && !contains(github.event.head_commit.message, '[no deploy]')
 
     steps:
-      - name: Set short SHA
-        run: echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
+      - name: Set short SHA and commit message
+        run: |
+          echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(echo "${{ env.COMMIT_MESSAGE }}" | head -n 1 | sed 's/"/\&quot;/g')" >> $GITHUB_ENV
 
       - name: Notify Slack (deploy starting)
         continue-on-error: true
@@ -155,7 +157,7 @@ jobs:
             attachments:
               - color: "#439FE0"
                 fallback: "Deploy starting: https://fly.io/apps/denali/monitoring"
-                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
       - uses: actions/checkout@v4
@@ -179,7 +181,7 @@ jobs:
             attachments:
               - color: "good"
                 fallback: "Deploy successful: ${{ env.PRODUCTION_URL }}"
-                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
       - name: Notify Slack (deploy failed)
@@ -194,5 +196,5 @@ jobs:
             attachments:
               - color: "danger"
                 fallback: "Deploy failed: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ github.event.head_commit.message }}"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
