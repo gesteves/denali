@@ -11,13 +11,17 @@ RSpec.describe "Entries", type: :request do
 
   describe "GET /entries (index)" do
     it "renders successfully" do
-      create_list(:entry, 3, :published, blog: blog, user: user)
+      entries = create_list(:entry, 3, :published, :with_photo, blog: blog, user: user)
+      entries.each { |e| e.photos.each { |p| attach_image_to_photo(p) } }
 
       get entries_path
       expect(response).to have_http_status(:success)
     end
 
     it "redirects from unknown format" do
+      entries = create_list(:entry, 3, :published, :with_photo, blog: blog, user: user)
+      entries.each { |e| e.photos.each { |p| attach_image_to_photo(p) } }
+
       get entries_path(format: 'foo')
       expect(response).to redirect_to(entries_url)
     end
