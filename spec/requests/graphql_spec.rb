@@ -269,8 +269,10 @@ RSpec.describe "GraphQL", type: :request do
           e.photos.each { |p| attach_image_to_photo(p) }
         end
 
-        # Refresh Elasticsearch index
-        Entry.__elasticsearch__.refresh_index! if Entry.respond_to?(:__elasticsearch__)
+        # Refresh Elasticsearch index if available
+        if Entry.respond_to?(:__elasticsearch__)
+          Entry.__elasticsearch__.refresh_index! rescue nil
+        end
       end
 
       it "returns search results", :vcr do
