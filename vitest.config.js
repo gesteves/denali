@@ -6,6 +6,10 @@ export default defineConfig({
     globals: true,
     include: ['app/frontend/**/*.test.js'],
     setupFiles: ['app/frontend/test/setup.js'],
+    // Reduce test isolation overhead in CI
+    sequence: {
+      shuffle: true
+    },
     coverage: {
       provider: 'v8',
       include: ['app/frontend/controllers/**/*.js', 'app/frontend/lib/**/*.js'],

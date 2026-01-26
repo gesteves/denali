@@ -22,7 +22,7 @@ env:
   GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
 
 jobs:
-  test:
+  rspec:
     runs-on: ubuntu-latest
 
     services:
@@ -43,7 +43,6 @@ jobs:
     env:
       RAILS_ENV: test
       DATABASE_URL: postgres://rails:password@localhost:5432/rails_test
-      NODE_OPTIONS: "--openssl-legacy-provider"
 
     steps:
       - name: Checkout code
@@ -51,12 +50,6 @@ jobs:
 
       - name: Install ImageMagick
         run: sudo apt-get update && sudo apt-get install -y imagemagick
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version-file: '.nvmrc'
-          cache: 'yarn'
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -67,19 +60,40 @@ jobs:
         run: |
           gem install bundler
           bundle install --jobs 4 --retry 3
-          yarn install --frozen-lockfile
 
       - name: Set up database
         run: bin/rails db:schema:load
 
-      - name: Compile assets
-        run: bin/rails assets:precompile
+      - name: Run RSpec tests
+        run: bundle exec rspec --format progress --profile 10
 
-      - name: Run tests
-        run: bundle exec rspec
+  vitest:
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_OPTIONS: "--openssl-legacy-provider"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
 
       - name: Run JavaScript tests
         run: npm run test:run
+
+  test:
+    runs-on: ubuntu-latest
+    needs: [rspec, vitest]
+    steps:
+      - run: echo "All tests passed"
 
   notify-test:
     name: Notify test result
