@@ -22,8 +22,8 @@ export default class extends Controller {
    */
   add (event) {
     event.preventDefault();
-    const prompt = window.prompt(`Which tag do you want to add to entries tagged with “${this.nameValue}”?`);
-    if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
+    const prompt = window.prompt(`Which tag do you want to add to entries tagged with "${this.nameValue}"?`);
+    if (prompt === null || prompt.trim().length === 0) {
       return;
     }
     const link = event.target;
@@ -52,8 +52,8 @@ export default class extends Controller {
    */
   edit (event) {
     event.preventDefault();
-    const prompt = window.prompt(`What do you want to rename the “${this.nameValue}” tag to?`, this.nameValue);
-    if (prompt.replace(/\s/g, '').length === 0 || prompt === null) {
+    const prompt = window.prompt(`What do you want to rename the "${this.nameValue}" tag to?`, this.nameValue);
+    if (prompt === null || prompt.trim().length === 0) {
       return;
     }
     const link = event.target;

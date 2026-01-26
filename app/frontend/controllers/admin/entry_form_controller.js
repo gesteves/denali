@@ -16,6 +16,7 @@ export default class extends Controller {
    * Sets up the drag-and-drop of photos.
    */
   connect () {
+    this.csrfToken = document.querySelector('[name=csrf-token]').getAttribute('content');
     this.sortablePhotos = new Sortable(this.photosTarget, {
       delay: 100,
       classes: {

@@ -166,6 +166,9 @@ global.plausible = vi.fn();
 // Mock window.confirm
 window.confirm = vi.fn(() => true);
 
+// Mock window.prompt
+window.prompt = vi.fn(() => 'test input');
+
 // Export mocks for use in tests
 export {
   MockIntersectionObserver,
