@@ -1,0 +1,205 @@
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { Application } from '@hotwired/stimulus';
+
+// Track Masonry calls
+let masonryLayoutCalled = false;
+let masonryAppendedCalls = [];
+let masonryOptions = {};
+
+vi.mock('masonry-layout', () => ({
+  default: class MockMasonry {
+    constructor(element, options) {
+      this.element = element;
+      this.options = options;
+      masonryOptions = options;
+    }
+    layout() {
+      masonryLayoutCalled = true;
+    }
+    appended(nodes) {
+      masonryAppendedCalls.push(nodes);
+    }
+  }
+}));
+
+import GridController from './grid_controller';
+
+describe('GridController', () => {
+  let application;
+  let element;
+  let originalCSS;
+
+  beforeEach(() => {
+    masonryLayoutCalled = false;
+    masonryAppendedCalls = [];
+    masonryOptions = {};
+
+    // Save original CSS.supports
+    originalCSS = global.CSS;
+
+    // Mock CSS.supports to return false for grid-lanes (so Masonry is used)
+    global.CSS = {
+      supports: vi.fn(() => false)
+    };
+
+    // Mock ResizeObserver
+    global.ResizeObserver = class MockResizeObserver {
+      constructor(callback) {
+        this.callback = callback;
+      }
+      observe() {}
+      unobserve() {}
+      disconnect() {}
+    };
+
+    // Mock MutationObserver
+    global.MutationObserver = class MockMutationObserver {
+      constructor(callback) {
+        this.callback = callback;
+      }
+      observe() {}
+      disconnect() {}
+      takeRecords() { return []; }
+    };
+
+    document.body.innerHTML = `
+      <ul data-controller="grid" data-grid-item-selector-value=".grid-item">
+        <li class="grid-item">Item 1</li>
+        <li class="grid-item">Item 2</li>
+        <li class="grid-item">Item 3</li>
+      </ul>
+    `;
+
+    element = document.querySelector('[data-controller="grid"]');
+    application = Application.start();
+    application.register('grid', GridController);
+  });
+
+  afterEach(() => {
+    application.stop();
+    document.body.innerHTML = '';
+    vi.clearAllMocks();
+    global.CSS = originalCSS;
+  });
+
+  function getController() {
+    return application.getControllerForElementAndIdentifier(element, 'grid');
+  }
+
+  describe('connect', () => {
+    it('checks CSS.supports for native masonry', () => {
+      // The CSS.supports mock returns false, so Masonry is initialized
+      const controller = getController();
+      expect(controller.masonry).toBeDefined();
+      expect(global.CSS.supports).toHaveBeenCalled();
+    });
+
+    it('initializes Masonry with element', () => {
+      const controller = getController();
+      expect(controller.masonry).toBeDefined();
+    });
+
+    it('uses itemSelectorValue for Masonry itemSelector', () => {
+      expect(masonryOptions.itemSelector).toBe('.grid-item');
+    });
+
+    it('uses itemSelector from options', () => {
+      // Already initialized with '.grid-item' from beforeEach
+      expect(masonryOptions.itemSelector).toBe('.grid-item');
+    });
+
+    it('configures Masonry with percentPosition', () => {
+      expect(masonryOptions.percentPosition).toBe(true);
+    });
+
+    it('configures Masonry with no transition duration', () => {
+      expect(masonryOptions.transitionDuration).toBe(0);
+    });
+
+    it('calls layout after initialization', () => {
+      expect(masonryLayoutCalled).toBe(true);
+    });
+
+    it('sets up MutationObserver', () => {
+      const controller = getController();
+      expect(controller.mutationObserver).toBeDefined();
+    });
+
+    it('sets up ResizeObserver when available', () => {
+      const controller = getController();
+      expect(controller.resizeObserver).toBeDefined();
+    });
+  });
+
+  describe('handleMutations', () => {
+    it('appends added nodes to Masonry', () => {
+      const controller = getController();
+      masonryAppendedCalls = [];
+
+      const mutations = [
+        {
+          type: 'childList',
+          addedNodes: [document.createElement('li')]
+        }
+      ];
+
+      controller.handleMutations(mutations);
+
+      expect(masonryAppendedCalls.length).toBe(1);
+      expect(masonryAppendedCalls[0]).toBe(mutations[0].addedNodes);
+    });
+
+    it('ignores non-childList mutations', () => {
+      const controller = getController();
+      masonryAppendedCalls = [];
+
+      const mutations = [
+        {
+          type: 'attributes',
+          addedNodes: []
+        }
+      ];
+
+      controller.handleMutations(mutations);
+
+      expect(masonryAppendedCalls.length).toBe(0);
+    });
+
+    it('handles multiple childList mutations', () => {
+      const controller = getController();
+      masonryAppendedCalls = [];
+
+      const mutations = [
+        { type: 'childList', addedNodes: [document.createElement('li')] },
+        { type: 'childList', addedNodes: [document.createElement('li')] }
+      ];
+
+      controller.handleMutations(mutations);
+
+      expect(masonryAppendedCalls.length).toBe(2);
+    });
+
+    it('filters out non-childList mutations from mixed array', () => {
+      const controller = getController();
+      masonryAppendedCalls = [];
+
+      const mutations = [
+        { type: 'childList', addedNodes: [document.createElement('li')] },
+        { type: 'attributes', addedNodes: [] },
+        { type: 'childList', addedNodes: [document.createElement('li')] }
+      ];
+
+      controller.handleMutations(mutations);
+
+      expect(masonryAppendedCalls.length).toBe(2);
+    });
+  });
+
+  describe('with ResizeObserver', () => {
+    it('sets up ResizeObserver when available', () => {
+      const controller = getController();
+      // ResizeObserver is mocked in beforeEach, so it should be defined
+      expect(controller.resizeObserver).toBeDefined();
+    });
+  });
+});
