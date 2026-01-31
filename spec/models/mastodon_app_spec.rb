@@ -117,13 +117,22 @@ RSpec.describe MastodonApp, type: :model do
   end
 
   describe '.redirect_uri' do
-    it 'returns the callback URL' do
+    it 'returns the callback URL with localhost in non-production' do
+      uri = MastodonApp.redirect_uri
+      expect(uri).to include('localhost:3000')
+      expect(uri).to include('mastodon/callback')
+      expect(uri).to start_with('http://')
+    end
+
+    it 'returns the callback URL with DOMAIN_ADMIN in production' do
+      allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
       allow(ENV).to receive(:[]).and_call_original
-      allow(ENV).to receive(:[]).with('DOMAIN').and_return('example.com')
+      allow(ENV).to receive(:[]).with('DOMAIN_ADMIN').and_return('admin.example.com')
 
       uri = MastodonApp.redirect_uri
-      expect(uri).to include('example.com')
+      expect(uri).to include('admin.example.com')
       expect(uri).to include('mastodon/callback')
+      expect(uri).to start_with('https://')
     end
   end
 
