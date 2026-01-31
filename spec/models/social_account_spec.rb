@@ -24,6 +24,14 @@ RSpec.describe SocialAccount, type: :model do
         expect(SocialAccount.bluesky).to include(bluesky_account)
       end
     end
+
+    describe '.mastodon' do
+      let!(:mastodon_account) { create(:social_account, :mastodon) }
+
+      it 'returns only mastodon accounts' do
+        expect(SocialAccount.mastodon).to include(mastodon_account)
+      end
+    end
   end
 
   describe '#bluesky?' do
@@ -33,9 +41,20 @@ RSpec.describe SocialAccount, type: :model do
     end
 
     it 'returns false for other providers' do
-      account = build(:social_account, provider: 'bluesky')
-      account.provider = 'other'
+      account = build(:social_account, :mastodon)
       expect(account.bluesky?).to be false
+    end
+  end
+
+  describe '#mastodon?' do
+    it 'returns true for mastodon provider' do
+      account = build(:social_account, :mastodon)
+      expect(account.mastodon?).to be true
+    end
+
+    it 'returns false for other providers' do
+      account = build(:social_account, provider: 'bluesky')
+      expect(account.mastodon?).to be false
     end
   end
 

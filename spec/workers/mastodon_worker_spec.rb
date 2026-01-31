@@ -13,15 +13,13 @@ RSpec.describe MastodonWorker, type: :worker do
   describe '#perform' do
     let(:text) { 'Test caption for Mastodon' }
 
-    context 'in production environment with credentials' do
+    context 'in production environment with connected account' do
       let(:mastodon_instance) { instance_double(Mastodon) }
+      let!(:mastodon_account) { create(:social_account, :mastodon, user: user) }
 
       before do
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('MASTODON_BASE_URL').and_return('https://mastodon.social')
-        allow(ENV).to receive(:[]).with('MASTODON_ACCESS_TOKEN').and_return('test_token')
-        allow(Mastodon).to receive(:new).and_return(mastodon_instance)
+        allow(Mastodon).to receive(:from_social_account).with(mastodon_account).and_return(mastodon_instance)
         allow(mastodon_instance).to receive(:upload_media).and_return({ 'id' => '12345' })
         allow(mastodon_instance).to receive(:create_status)
       end
@@ -70,36 +68,32 @@ RSpec.describe MastodonWorker, type: :worker do
 
     context 'in non-production environment' do
       it 'returns early without calling Mastodon API' do
-        expect(Mastodon).not_to receive(:new)
+        expect(Mastodon).not_to receive(:from_social_account)
         described_class.new.perform(entry.id, text)
       end
     end
 
-    context 'without credentials' do
+    context 'without connected account' do
       before do
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('MASTODON_BASE_URL').and_return('')
       end
 
       it 'returns early without calling Mastodon API' do
-        expect(Mastodon).not_to receive(:new)
+        expect(Mastodon).not_to receive(:from_social_account)
         described_class.new.perform(entry.id, text)
       end
     end
 
     context 'with text entry (no photos)' do
       let(:text_entry) { create(:entry, :published, blog: blog, user: user, photos_count: 0) }
+      let!(:mastodon_account) { create(:social_account, :mastodon, user: user) }
 
       before do
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('MASTODON_BASE_URL').and_return('https://mastodon.social')
-        allow(ENV).to receive(:[]).with('MASTODON_ACCESS_TOKEN').and_return('test_token')
       end
 
       it 'returns early for non-photo entries' do
-        expect(Mastodon).not_to receive(:new)
+        expect(Mastodon).not_to receive(:from_social_account)
         described_class.new.perform(text_entry.id, text)
       end
     end

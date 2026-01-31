@@ -12,5 +12,12 @@ FactoryBot.define do
       provider { 'bluesky' }
       server_url { 'https://bsky.social' }
     end
+
+    trait :mastodon do
+      provider { 'mastodon' }
+      sequence(:uid) { |n| "#{n}" }
+      sequence(:handle) { |n| "user#{n}@mastodon.social" }
+      server_url { 'https://mastodon.social' }
+    end
   end
 end

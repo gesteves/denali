@@ -3,7 +3,7 @@ class SocialAccount < ApplicationRecord
 
   encrypts :access_token
 
-  PROVIDERS = %w[bluesky].freeze
+  PROVIDERS = %w[bluesky mastodon].freeze
 
   before_validation :normalize_handle
 
@@ -14,9 +14,14 @@ class SocialAccount < ApplicationRecord
   validates :server_url, presence: true
 
   scope :bluesky, -> { where(provider: 'bluesky') }
+  scope :mastodon, -> { where(provider: 'mastodon') }
 
   def bluesky?
     provider == 'bluesky'
+  end
+
+  def mastodon?
+    provider == 'mastodon'
   end
 
   private

@@ -6,6 +6,13 @@ class Mastodon
     @base_url = base_url
   end
 
+  def self.from_social_account(social_account)
+    new(
+      base_url: social_account.server_url,
+      bearer_token: social_account.access_token
+    )
+  end
+
   def create_status(text:, media_ids: [], sensitive: false, spoiler_text: nil, visibility: 'public', language: 'en', scheduled_at: nil)
     endpoint = "#{@base_url}/api/v1/statuses"
 

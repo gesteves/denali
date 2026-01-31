@@ -20,4 +20,8 @@ class User < ApplicationRecord
   def bluesky_account
     social_accounts.find_by(provider: 'bluesky')
   end
+
+  def mastodon_account
+    social_accounts.find_by(provider: 'mastodon')
+  end
 end

@@ -6,6 +6,7 @@ import { Controller } from '@hotwired/stimulus';
  */
 export default class extends Controller {
   static targets = ['template', 'placeholder', 'form'];
+  static values = { buttonText: { type: String, default: 'Add Account' } };
 
   /**
    * Shows the form by replacing the placeholder with the template content.
@@ -23,7 +24,7 @@ export default class extends Controller {
     placeholder.setAttribute('data-inline-form-target', 'placeholder');
     placeholder.innerHTML = `
       <button type="button" class="button is-info is-outlined" data-action="inline-form#show">
-        Add Bluesky Account
+        ${this.buttonTextValue}
       </button>
     `;
     this.formTarget.replaceWith(placeholder);

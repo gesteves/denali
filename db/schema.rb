@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_31_173606) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_31_220303) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -166,6 +166,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_31_173606) do
     t.string "model"
     t.string "slug"
     t.datetime "updated_at", precision: nil, null: false
+  end
+
+  create_table "mastodon_apps", force: :cascade do |t|
+    t.string "client_id", null: false
+    t.text "client_secret", null: false
+    t.datetime "created_at", null: false
+    t.string "instance_url", null: false
+    t.datetime "updated_at", null: false
+    t.index ["instance_url"], name: "index_mastodon_apps_on_instance_url", unique: true
   end
 
   create_table "parks", force: :cascade do |t|

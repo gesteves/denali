@@ -1,6 +1,7 @@
 class Admin::AccountsController < AdminController
   def index
     @bluesky_account = current_user.bluesky_account
+    @mastodon_account = current_user.mastodon_account
   end
 
   def create_bluesky
@@ -41,6 +42,120 @@ class Admin::AccountsController < AdminController
     end
   end
 
+  def initiate_mastodon
+    instance_url = params[:instance_url].to_s.strip
+    if instance_url.blank?
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-section", partial: "admin/accounts/mastodon_section", locals: { social_account: nil, error: "Please enter your Mastodon instance URL." }) }
+        format.html { redirect_to admin_accounts_path, alert: "Please enter your Mastodon instance URL." }
+      end
+      return
+    end
+
+    mastodon_app = MastodonApp.for_instance(instance_url)
+
+    # Store state for CSRF protection
+    state = SecureRandom.hex(32)
+    session[:mastodon_oauth_state] = state
+    session[:mastodon_instance_url] = mastodon_app.instance_url
+
+    authorize_url = "#{mastodon_app.instance_url}/oauth/authorize?" + {
+      client_id: mastodon_app.client_id,
+      redirect_uri: MastodonApp.redirect_uri,
+      response_type: 'code',
+      scope: 'read write:media write:statuses',
+      state: state
+    }.to_query
+
+    redirect_to authorize_url, allow_other_host: true
+  rescue => e
+    error_message = friendly_mastodon_error(e)
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-section", partial: "admin/accounts/mastodon_section", locals: { social_account: nil, error: error_message }) }
+      format.html { redirect_to admin_accounts_path, alert: error_message }
+    end
+  end
+
+  def mastodon_callback
+    # Verify state parameter
+    if params[:state] != session[:mastodon_oauth_state]
+      redirect_to admin_accounts_path, alert: "Invalid OAuth state. Please try again."
+      return
+    end
+
+    if params[:error].present?
+      redirect_to admin_accounts_path, alert: "Authorization was denied: #{params[:error_description] || params[:error]}"
+      return
+    end
+
+    instance_url = session[:mastodon_instance_url]
+    mastodon_app = MastodonApp.find_by!(instance_url: instance_url)
+
+    # Exchange code for access token
+    token_response = HTTParty.post("#{instance_url}/oauth/token", body: {
+      client_id: mastodon_app.client_id,
+      client_secret: mastodon_app.client_secret,
+      redirect_uri: MastodonApp.redirect_uri,
+      grant_type: 'authorization_code',
+      code: params[:code],
+      scope: 'read write:media write:statuses'
+    })
+
+    unless token_response.code == 200
+      Rails.logger.error("[Mastodon] Token exchange failed: #{token_response.body}")
+      redirect_to admin_accounts_path, alert: "Failed to complete authorization. Please try again."
+      return
+    end
+
+    token_data = JSON.parse(token_response.body)
+    access_token = token_data['access_token']
+
+    # Fetch user info
+    user_response = HTTParty.get("#{instance_url}/api/v1/accounts/verify_credentials", headers: {
+      'Authorization' => "Bearer #{access_token}"
+    })
+
+    unless user_response.code == 200
+      Rails.logger.error("[Mastodon] Failed to fetch user info: #{user_response.body}")
+      redirect_to admin_accounts_path, alert: "Failed to fetch account information. Please try again."
+      return
+    end
+
+    user_data = JSON.parse(user_response.body)
+
+    # Create or update the social account
+    @social_account = current_user.social_accounts.find_or_initialize_by(provider: 'mastodon')
+    @social_account.assign_attributes(
+      handle: user_data['acct'],
+      uid: user_data['id'],
+      access_token: access_token,
+      server_url: instance_url,
+      connected_at: Time.current
+    )
+    @social_account.save!
+
+    # Clean up session
+    session.delete(:mastodon_oauth_state)
+    session.delete(:mastodon_instance_url)
+
+    redirect_to admin_accounts_path, notice: "Mastodon account connected successfully!"
+  rescue => e
+    Rails.logger.error("[Mastodon] Callback error: #{e.message}")
+    session.delete(:mastodon_oauth_state)
+    session.delete(:mastodon_instance_url)
+    redirect_to admin_accounts_path, alert: "Failed to connect Mastodon account. Please try again."
+  end
+
+  def destroy_mastodon
+    @social_account = current_user.mastodon_account
+    @social_account&.destroy
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-section", partial: "admin/accounts/mastodon_section", locals: { social_account: nil, error: nil }) }
+      format.html { redirect_to admin_accounts_path, notice: "Mastodon account disconnected." }
+    end
+  end
+
   private
 
   def bluesky_params
@@ -57,6 +172,17 @@ class Admin::AccountsController < AdminController
       "Invalid handle or app password. Please check your credentials and try again."
     else
       "Could not connect to Bluesky: #{exception.message}"
+    end
+  end
+
+  def friendly_mastodon_error(exception)
+    case exception.message
+    when /getaddrinfo|connection refused|network|timeout/i
+      "Could not reach the Mastodon instance. Please check the URL and try again."
+    when /Failed to register app/i
+      "Could not register with this Mastodon instance. Please check the URL and try again."
+    else
+      "Could not connect to Mastodon: #{exception.message}"
     end
   end
 end
