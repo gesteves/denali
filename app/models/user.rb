@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_many :entries
+  has_many :social_accounts, dependent: :destroy
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_initialize.tap do |user|
@@ -14,5 +15,9 @@ class User < ApplicationRecord
       user.oauth_expires_at = Time.at(auth.credentials.expires_at)
       user.save!
     end
+  end
+
+  def bluesky_account
+    social_accounts.find_by(provider: 'bluesky')
   end
 end

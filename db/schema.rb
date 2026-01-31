@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_19_220406) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_31_173606) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -254,6 +254,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_220406) do
     t.index ["blog_id"], name: "index_push_subscriptions_on_blog_id"
   end
 
+  create_table "social_accounts", force: :cascade do |t|
+    t.text "access_token"
+    t.datetime "connected_at"
+    t.datetime "created_at", null: false
+    t.string "handle"
+    t.string "provider", null: false
+    t.string "server_url"
+    t.string "uid"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["provider", "uid"], name: "index_social_accounts_on_provider_and_uid", unique: true
+    t.index ["user_id", "provider"], name: "index_social_accounts_on_user_id_and_provider", unique: true
+    t.index ["user_id"], name: "index_social_accounts_on_user_id"
+  end
+
   create_table "tag_customizations", force: :cascade do |t|
     t.bigint "blog_id"
     t.text "bluesky_hashtags"
@@ -337,5 +352,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_19_220406) do
   add_foreign_key "photos", "films"
   add_foreign_key "photos", "lenses"
   add_foreign_key "push_subscriptions", "blogs"
+  add_foreign_key "social_accounts", "users"
   add_foreign_key "webhooks", "blogs"
 end

@@ -1,0 +1,46 @@
+<div id="bluesky-section">
+  <h2 class="subtitle is-size-5-mobile">Bluesky</h2>
+
+  <% if social_account&.persisted? %>
+    <div class="box">
+      <div class="level is-mobile">
+        <div class="level-left">
+          <div class="level-item">
+            <div>
+              <p class="has-text-weight-semibold"><%= social_account.handle.include?('@') ? social_account.handle : "@#{social_account.handle}" %></p>
+              <p class="is-size-7 has-text-grey"><%= social_account.server_url %></p>
+            </div>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <%= button_to 'Disconnect', bluesky_admin_accounts_path,
+                method: :delete,
+                form: { data: { turbo_confirm: 'Disconnect this Bluesky account?' } },
+                class: 'button is-danger is-outlined is-small' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <% social_account ||= SocialAccount.new(provider: 'bluesky', server_url: 'https://bsky.social') %>
+    <% show_form = error.present? || local_assigns[:show_form] %>
+
+    <div data-controller="inline-form">
+      <% if show_form %>
+        <%# Show form directly when there's an error %>
+        <%= render 'admin/accounts/bluesky_form', social_account: social_account, error: error %>
+      <% else %>
+        <div data-inline-form-target="placeholder">
+          <button type="button" class="button is-info is-outlined" data-action="inline-form#show">
+            Add Bluesky Account
+          </button>
+        </div>
+      <% end %>
+
+      <template data-inline-form-target="template">
+        <%= render 'admin/accounts/bluesky_form', social_account: social_account, error: nil %>
+      </template>
+    </div>
+  <% end %>
+</div>

@@ -94,6 +94,13 @@ Rails.application.routes.draw do
     resources :publish_schedules, only: [:create, :destroy]
     resources :tag_customizations, only: [:index, :new, :create, :edit, :update, :destroy]
     resources :webhooks, except: [:show]
+
+    resources :accounts, only: [:index] do
+      collection do
+        post 'bluesky', action: :create_bluesky
+        delete 'bluesky', action: :destroy_bluesky
+      end
+    end
   end
 
   # Entries

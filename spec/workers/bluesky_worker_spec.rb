@@ -13,16 +13,21 @@ RSpec.describe BlueskyWorker, type: :worker do
   describe '#perform' do
     let(:text) { 'Test caption for Bluesky' }
 
-    context 'in production environment with credentials' do
+    context 'in production environment with connected account' do
       let(:bluesky_instance) { instance_double(Bluesky) }
+      let!(:bluesky_account) do
+        create(:social_account,
+          user: user,
+          provider: 'bluesky',
+          handle: 'test.bsky.social',
+          access_token: 'app-password',
+          server_url: 'https://bsky.social'
+        )
+      end
 
       before do
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('BLUESKY_BASE_URL').and_return('https://bsky.social')
-        allow(ENV).to receive(:[]).with('BLUESKY_EMAIL').and_return('test@example.com')
-        allow(ENV).to receive(:[]).with('BLUESKY_PASSWORD').and_return('password')
-        allow(Bluesky).to receive(:new).and_return(bluesky_instance)
+        allow(Bluesky).to receive(:from_social_account).with(bluesky_account).and_return(bluesky_instance)
         allow(bluesky_instance).to receive(:skeet)
       end
 
@@ -74,20 +79,18 @@ RSpec.describe BlueskyWorker, type: :worker do
 
     context 'in non-production environment' do
       it 'returns early without calling Bluesky API' do
-        expect(Bluesky).not_to receive(:new)
+        expect(Bluesky).not_to receive(:from_social_account)
         described_class.new.perform(entry.id, text)
       end
     end
 
-    context 'without credentials' do
+    context 'without connected account' do
       before do
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('BLUESKY_BASE_URL').and_return('')
       end
 
       it 'returns early without calling Bluesky API' do
-        expect(Bluesky).not_to receive(:new)
+        expect(Bluesky).not_to receive(:from_social_account)
         described_class.new.perform(entry.id, text)
       end
     end

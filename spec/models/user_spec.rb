@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   describe 'associations' do
     it { should have_many(:entries) }
+    it { should have_many(:social_accounts).dependent(:destroy) }
   end
 
   describe 'factory' do
@@ -50,6 +51,24 @@ RSpec.describe User, type: :model do
       existing_user = create(:user, provider: 'google_oauth2', uid: '123456', name: 'Old Name')
       user = User.from_omniauth(auth)
       expect(user.name).to eq('Test User')
+    end
+  end
+
+  describe '#bluesky_account' do
+    let(:user) { create(:user) }
+
+    context 'when user has a bluesky account' do
+      let!(:bluesky_account) { create(:social_account, user: user, provider: 'bluesky') }
+
+      it 'returns the bluesky account' do
+        expect(user.bluesky_account).to eq(bluesky_account)
+      end
+    end
+
+    context 'when user has no bluesky account' do
+      it 'returns nil' do
+        expect(user.bluesky_account).to be_nil
+      end
     end
   end
 end

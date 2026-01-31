@@ -1,4 +1,16 @@
 class Bluesky
+  # Creates a Bluesky instance from a SocialAccount.
+  #
+  # @param social_account [SocialAccount] the social account to use.
+  # @return [Bluesky] a new Bluesky instance.
+  def self.from_social_account(social_account)
+    new(
+      base_url: social_account.server_url,
+      email: social_account.handle,
+      password: social_account.access_token
+    )
+  end
+
   # Verifies that the text of a post is equal to or less than 300 Unicode graphemes.
   # Class method for use without authentication (e.g., validation checks).
   #
