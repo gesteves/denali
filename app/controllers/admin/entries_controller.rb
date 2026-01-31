@@ -405,7 +405,7 @@ class Admin::EntriesController < AdminController
       InstagramStoryWorker.perform_at(scheduled_at, @entry.id, crop)
       @message = "Your entry will be shared on your Instagram Story at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
     else
-      InstagramStoryWorker.perform_inline(@entry.id, crop)
+      InstagramStoryWorker.perform_async(@entry.id, crop)
       @message = 'Your entry was shared on your Instagram Story.'
     end
 
