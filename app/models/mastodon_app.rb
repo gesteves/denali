@@ -40,7 +40,7 @@ class MastodonApp < ApplicationRecord
     end
 
     def redirect_uri
-      host = ENV['DOMAIN'] || 'localhost:3000'
+      host = Rails.env.production? ? ENV['DOMAIN_ADMIN'] : 'localhost:3000'
       protocol = Rails.env.production? ? 'https' : 'http'
       Rails.application.routes.url_helpers.mastodon_callback_admin_accounts_url(host: host, protocol: protocol)
     end
