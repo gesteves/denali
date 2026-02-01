@@ -8,11 +8,36 @@
           <div class="level-item">
             <div>
               <p class="has-text-weight-semibold mb-2">
-                <%= link_to "@#{social_account.handle}", "https://instagram.com/#{social_account.handle}", target: "_blank", rel: "noopener" %>
+                <span class="icon-text">
+                  <span class="icon"><i class="fa-brands fa-instagram"></i></span>
+                  <span><%= link_to "@#{social_account.handle}", "https://instagram.com/#{social_account.handle}", target: "_blank", rel: "noopener" %></span>
+                </span>
               </p>
-              <div class="tags has-addons">
-                <span class="tag is-success">Added</span>
-                <span class="tag"><%= time_ago_in_words(social_account.created_at) %> ago</span>
+              <div class="field is-grouped is-grouped-multiline">
+                <div class="control">
+                  <div class="tags has-addons">
+                    <span class="tag is-success">Added</span>
+                    <span class="tag"><%= time_ago_in_words(social_account.created_at) %> ago</span>
+                  </div>
+                </div>
+                <% if social_account.connected_at.present? %>
+                  <% token_expires_at = social_account.connected_at + 60.days %>
+                  <div class="control">
+                    <div class="tags has-addons">
+                      <span class="tag <%= token_expiration_status_class(social_account.connected_at) %>">Token expires</span>
+                      <span class="tag"><%= token_expires_at < Time.current ? 'Expired' : "in #{time_ago_in_words(token_expires_at)}" %></span>
+                    </div>
+                  </div>
+                <% end %>
+                <% last_shared = Entry.maximum(:last_shared_on_instagram_at) %>
+                <% if last_shared.present? %>
+                  <div class="control">
+                    <div class="tags has-addons">
+                      <span class="tag is-info">Last shared</span>
+                      <span class="tag"><%= time_ago_in_words(last_shared) %> ago</span>
+                    </div>
+                  </div>
+                <% end %>
               </div>
             </div>
           </div>

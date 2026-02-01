@@ -8,11 +8,33 @@
           <div class="level-item">
             <div>
               <p class="has-text-weight-semibold mb-2">
-                <%= link_to "@#{social_account.handle}", "https://bsky.app/profile/#{social_account.handle}", target: "_blank", rel: "noopener" %>
+                <span class="icon-text">
+                  <span class="icon"><i class="fa-brands fa-bluesky"></i></span>
+                  <span><%= link_to "@#{social_account.handle}", "https://bsky.app/profile/#{social_account.handle}", target: "_blank", rel: "noopener" %></span>
+                </span>
               </p>
-              <div class="tags has-addons">
-                <span class="tag is-success">Added</span>
-                <span class="tag"><%= time_ago_in_words(social_account.created_at) %> ago</span>
+              <div class="field is-grouped is-grouped-multiline">
+                <div class="control">
+                  <div class="tags has-addons">
+                    <span class="tag is-info">Server</span>
+                    <span class="tag"><%= social_account.server_url.sub(/\Ahttps?:\/\//, '') %></span>
+                  </div>
+                </div>
+                <div class="control">
+                  <div class="tags has-addons">
+                    <span class="tag is-success">Added</span>
+                    <span class="tag"><%= time_ago_in_words(social_account.created_at) %> ago</span>
+                  </div>
+                </div>
+                <% last_shared = Entry.maximum(:last_shared_on_bluesky_at) %>
+                <% if last_shared.present? %>
+                  <div class="control">
+                    <div class="tags has-addons">
+                      <span class="tag is-info">Last shared</span>
+                      <span class="tag"><%= time_ago_in_words(last_shared) %> ago</span>
+                    </div>
+                  </div>
+                <% end %>
               </div>
             </div>
           </div>

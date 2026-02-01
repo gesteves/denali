@@ -8,7 +8,10 @@
           <div class="level-item">
             <div>
               <p class="has-text-weight-semibold mb-2">
-                <%= link_to social_account.handle, "https://flickr.com/people/#{social_account.handle}", target: "_blank", rel: "noopener" %>
+                <span class="icon-text">
+                  <span class="icon"><i class="fa-brands fa-flickr"></i></span>
+                  <span><%= link_to social_account.handle, "https://flickr.com/people/#{social_account.handle}", target: "_blank", rel: "noopener" %></span>
+                </span>
               </p>
               <div class="tags has-addons">
                 <span class="tag is-success">Added</span>
