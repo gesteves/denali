@@ -7,10 +7,13 @@
         <div class="level-left">
           <div class="level-item">
             <div>
-              <p class="has-text-weight-semibold">
+              <p class="has-text-weight-semibold mb-2">
                 <%= link_to social_account.handle, "https://flickr.com/people/#{social_account.handle}", target: "_blank", rel: "noopener" %>
               </p>
-              <p class="is-size-7 has-text-grey">Added <%= time_ago_in_words(social_account.created_at) %> ago</p>
+              <div class="tags has-addons">
+                <span class="tag is-success">Added</span>
+                <span class="tag"><%= time_ago_in_words(social_account.created_at) %> ago</span>
+              </div>
             </div>
           </div>
         </div>
@@ -30,10 +33,13 @@
         <%= error %>
       </div>
     <% end %>
-    <%= button_to 'Connect with Flickr', flickr_admin_accounts_path,
+    <%= button_to flickr_admin_accounts_path,
         method: :post,
         form: { data: { turbo: false } },
-        class: 'button' %>
+        class: 'button' do %>
+      <span class="icon"><i class="fa-brands fa-flickr"></i></span>
+      <span>Connect with Flickr</span>
+    <% end %>
   <% else %>
     <p class="has-text-grey">Flickr API credentials are not configured.</p>
   <% end %>

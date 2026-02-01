@@ -60,22 +60,13 @@
             </button>
           </div>
           <div class="control <%= 'is-hidden' if photo.alt_text_needs_review? %>" data-alt-text-review-target="editButtonContainer">
-            <button class="button" data-action="click->alt-text-review#edit" data-alt-text-review-target="editButton">
-              <span class="icon"><i class="fas fa-pencil"></i></span>
-              <span>Edit</span>
-            </button>
+            <button class="button" data-action="click->alt-text-review#edit" data-alt-text-review-target="editButton">Edit</button>
           </div>
           <div class="control <%= 'is-hidden' unless photo.alt_text_needs_review? %>" data-alt-text-review-target="dismissButtonContainer">
-            <button class="button is-danger" data-action="click->alt-text-review#dismiss" data-alt-text-review-target="dismissButton">
-              <span class="icon"><i class="fas fa-times"></i></span>
-              <span>Dismiss</span>
-            </button>
+            <button class="button is-danger" data-action="click->alt-text-review#dismiss" data-alt-text-review-target="dismissButton">Dismiss</button>
           </div>
           <div class="control <%= 'is-hidden' unless photo.alt_text_needs_review? %>" data-alt-text-review-target="saveButtonContainer">
-            <button class="button is-success" data-action="click->alt-text-review#save" data-alt-text-review-target="saveButton">
-              <span class="icon"><i class="fas fa-check"></i></span>
-              <span>Save</span>
-            </button>
+            <button class="button is-success" data-action="click->alt-text-review#save" data-alt-text-review-target="saveButton">Save</button>
           </div>
         </div>
       </div>

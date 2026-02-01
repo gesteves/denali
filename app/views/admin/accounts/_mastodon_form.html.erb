@@ -8,14 +8,14 @@
   <div class="field">
     <label class="label">Instance URL</label>
     <div class="control">
-      <%= f.text_field :instance_url, name: 'instance_url', class: 'input', placeholder: 'mastodon.social' %>
+      <%= f.text_field :instance_url, name: 'instance_url', class: 'input', placeholder: 'mastodon.social', value: 'mastodon.social' %>
     </div>
     <p class="help">Enter your Mastodon instance URL (e.g., mastodon.social, hachyderm.io)</p>
   </div>
 
   <div class="field is-grouped">
     <div class="control">
-      <%= f.submit 'Connect with Mastodon', class: 'button is-success' %>
+      <%= f.submit 'Log In', class: 'button is-success' %>
     </div>
     <div class="control">
       <button type="button" class="button" data-action="inline-form#hide">Cancel</button>

@@ -7,10 +7,13 @@
         <div class="level-left">
           <div class="level-item">
             <div>
-              <p class="has-text-weight-semibold">
+              <p class="has-text-weight-semibold mb-2">
                 <%= link_to "@#{social_account.handle}", "https://instagram.com/#{social_account.handle}", target: "_blank", rel: "noopener" %>
               </p>
-              <p class="is-size-7 has-text-grey">Added <%= time_ago_in_words(social_account.created_at) %> ago</p>
+              <div class="tags has-addons">
+                <span class="tag is-success">Added</span>
+                <span class="tag"><%= time_ago_in_words(social_account.created_at) %> ago</span>
+              </div>
             </div>
           </div>
         </div>
@@ -30,10 +33,13 @@
         <%= error %>
       </div>
     <% end %>
-    <%= button_to 'Connect with Instagram', instagram_admin_accounts_path,
+    <%= button_to instagram_admin_accounts_path,
         method: :post,
         form: { data: { turbo: false } },
-        class: 'button' %>
+        class: 'button' do %>
+      <span class="icon"><i class="fa-brands fa-instagram"></i></span>
+      <span>Connect with Instagram</span>
+    <% end %>
   <% else %>
     <p class="has-text-grey">Instagram API credentials are not configured.</p>
   <% end %>

@@ -7,10 +7,13 @@
         <div class="level-left">
           <div class="level-item">
             <div>
-              <p class="has-text-weight-semibold">
+              <p class="has-text-weight-semibold mb-2">
                 <%= link_to "@#{social_account.handle}", "https://bsky.app/profile/#{social_account.handle}", target: "_blank", rel: "noopener" %>
               </p>
-              <p class="is-size-7 has-text-grey">Added <%= time_ago_in_words(social_account.created_at) %> ago</p>
+              <div class="tags has-addons">
+                <span class="tag is-success">Added</span>
+                <span class="tag"><%= time_ago_in_words(social_account.created_at) %> ago</span>
+              </div>
             </div>
           </div>
         </div>
@@ -35,7 +38,8 @@
       <% else %>
         <div data-inline-form-target="placeholder">
           <button type="button" class="button" data-action="inline-form#show">
-            Add Bluesky Account
+            <span class="icon"><i class="fa-brands fa-bluesky"></i></span>
+            <span>Connect with Bluesky</span>
           </button>
         </div>
       <% end %>
