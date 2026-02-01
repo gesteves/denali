@@ -13,7 +13,7 @@ class BlueskyWorker < ApplicationWorker
 
     bluesky = Bluesky.from_social_account(account)
 
-    photos = entry.photos.to_a[0..4].map do |p|
+    photos = entry.photos.take(Bluesky::MAX_PHOTOS).map do |p|
       { url: p.bluesky_url, alt_text: p.alt_text, width: p.width, height: p.height }
     end
 

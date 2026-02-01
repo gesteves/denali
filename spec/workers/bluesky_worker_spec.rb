@@ -94,6 +94,73 @@ RSpec.describe BlueskyWorker, type: :worker do
         described_class.new.perform(entry.id, text)
       end
     end
+
+    context 'when entry is not a photo' do
+      let(:non_photo_entry) { create(:entry, :published, blog: blog, user: user) }
+      let!(:bluesky_account) do
+        create(:social_account,
+          user: user,
+          provider: 'bluesky',
+          handle: 'test.bsky.social',
+          access_token: 'app-password',
+          server_url: 'https://bsky.social'
+        )
+      end
+
+      before do
+        allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
+      end
+
+      it 'returns early without calling Bluesky API' do
+        expect(Bluesky).not_to receive(:from_social_account)
+        described_class.new.perform(non_photo_entry.id, text)
+      end
+    end
+
+    context 'when entry does not exist' do
+      before do
+        allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
+      end
+
+      it 'raises ActiveRecord::RecordNotFound' do
+        expect(Bluesky).not_to receive(:from_social_account)
+        expect { described_class.new.perform(999999, text) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+
+    context 'with more than 4 photos' do
+      let(:entry_with_many_photos) { create(:entry, :published, blog: blog, user: user) }
+      let(:bluesky_instance) { instance_double(Bluesky) }
+      let!(:bluesky_account) do
+        create(:social_account,
+          user: user,
+          provider: 'bluesky',
+          handle: 'test.bsky.social',
+          access_token: 'app-password',
+          server_url: 'https://bsky.social'
+        )
+      end
+
+      before do
+        # Create 6 photos for the entry
+        6.times do
+          photo = create(:photo, entry: entry_with_many_photos)
+          attach_image_to_photo(photo)
+        end
+
+        allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
+        allow(Bluesky).to receive(:from_social_account).with(bluesky_account).and_return(bluesky_instance)
+        allow(bluesky_instance).to receive(:skeet)
+      end
+
+      it 'only includes first 4 photos' do
+        expect(bluesky_instance).to receive(:skeet).with(
+          hash_including(photos: satisfy { |photos| photos.size == 4 })
+        )
+
+        described_class.new.perform(entry_with_many_photos.id, text)
+      end
+    end
   end
 
   describe 'Sidekiq configuration' do

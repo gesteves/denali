@@ -1,4 +1,7 @@
 class Bluesky
+  MAX_POST_LENGTH = 300
+  MAX_PHOTOS = 4
+
   # Creates a Bluesky instance from a SocialAccount.
   #
   # @param social_account [SocialAccount] the social account to use.
@@ -19,7 +22,7 @@ class Bluesky
   def self.valid_post_length?(text)
     return false unless text.is_a?(String)
 
-    post_length(text) <= 300
+    post_length(text) <= MAX_POST_LENGTH
   end
 
   # Returns the length of the post text in Unicode graphemes.
@@ -41,19 +44,31 @@ class Bluesky
   # @param text [String] the text to process.
   # @return [Array] an array where the first element is nil (unused), and the second element is the plain text.
   def self.parse_urls_for_length(text)
-    # Step 1: Render Markdown to HTML
+    html = markdown_to_html(text)
+    plain_text = html_to_plain_text(html)
+    [nil, plain_text]
+  end
+
+  # Renders Markdown text to HTML with SmartyPants processing.
+  #
+  # @param text [String] the Markdown text to render.
+  # @return [String] the rendered HTML.
+  def self.markdown_to_html(text)
     renderer = Redcarpet::Render::HTML.new(hard_wrap: false)
     markdown = Redcarpet::Markdown.new(renderer, autolink: true, no_intra_emphasis: true, fenced_code_blocks: true)
-    html = Redcarpet::Render::SmartyPants.render(markdown.render(text))
+    Redcarpet::Render::SmartyPants.render(markdown.render(text))
+  end
 
-    # Step 2: Convert HTML to plain text
+  # Converts HTML to plain text, preserving line breaks and decoding entities.
+  #
+  # @param html [String] the HTML to convert.
+  # @return [String] the plain text.
+  def self.html_to_plain_text(html)
     fragment = Nokogiri::HTML.fragment(html)
     fragment.css('br').each { |br| br.replace("\n") }
     plain_text = Sanitize.fragment(fragment.to_html).strip
     plain_text = plain_text.gsub(/ *(\n+) */, '\1')
-    plain_text = HTMLEntities.new.decode(plain_text)
-
-    [nil, plain_text]
+    HTMLEntities.new.decode(plain_text)
   end
 
   # Initializes a new instance of the Bluesky class.
@@ -143,7 +158,7 @@ class Bluesky
   # @param text [String] the text to scan for mentions.
   # @return [Array<Hash>] an array of mention facets
   def parse_mentions(text)
-    mention_regex = /[$|\W](@([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)/
+    mention_regex = /(?:^|[$|\W])(@([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)/
     facets = []
 
     text.scan(mention_regex) do |m|
@@ -170,9 +185,7 @@ class Bluesky
     links = []
 
     # Step 1: Render Markdown to HTML
-    renderer = Redcarpet::Render::HTML.new(hard_wrap: false)
-    markdown = Redcarpet::Markdown.new(renderer, autolink: true, no_intra_emphasis: true, fenced_code_blocks: true)
-    html = Redcarpet::Render::SmartyPants.render(markdown.render(text))
+    html = self.class.markdown_to_html(text)
 
     # Step 2: Extract <a> tags using Nokogiri, store their labels and URLs
     doc = Nokogiri::HTML.fragment(html)
@@ -180,16 +193,8 @@ class Bluesky
       links << { label: link.text.strip, url: link['href'] }
     end
 
-    # Step 3: Convert HTML to plain text, by:
-    # - Converting <br> tags to newlines to preserve line breaks
-    # - Removing all HTML tags
-    # - Removing leading/trailing whitespace around line breaks
-    # - Decoding HTML entities (e.g. &amp; -> &)
-    fragment = Nokogiri::HTML.fragment(html)
-    fragment.css('br').each { |br| br.replace("\n") }
-    plain_text = Sanitize.fragment(fragment.to_html).strip
-    plain_text = plain_text.gsub(/ *(\n+) */, '\1')
-    plain_text = HTMLEntities.new.decode(plain_text)
+    # Step 3: Convert HTML to plain text
+    plain_text = self.class.html_to_plain_text(html)
 
     # Step 4: Find each link's label's position in the plain text, and construct facets
     facets = []
@@ -224,7 +229,7 @@ class Bluesky
   # @param text [String] the text to scan for hashtags.
   # @return [Array<Hash>] an array of tag facets.
   def parse_tags(text)
-    tag_regex = /[$|\W](#\w+)/
+    tag_regex = /(?:^|[$|\W])(#\w+)/
     facets = []
 
     text.scan(tag_regex) do |m|
@@ -288,9 +293,11 @@ class Bluesky
   # @return [String, nil] the DID if resolved successfully, or nil if the handle cannot be resolved.
   def resolve_handle(handle)
     response = HTTParty.get("#{@base_url}/xrpc/com.atproto.identity.resolveHandle", query: { "handle" => handle })
+    return nil unless response.success?
 
-    return nil if response.code == 400
     JSON.parse(response.body)["did"]
+  rescue JSON::ParserError
+    nil
   end
 
   # Retrieves the post thread from the Bluesky API for a given at-uri.
@@ -387,13 +394,17 @@ class Bluesky
   #
   # @param url [String] the URL of the photo to upload.
   # @return [Hash] the parsed response body from the photo upload request.
-  # @raise [RuntimeError] if the photo upload request fails.
+  # @raise [RuntimeError] if the photo fetch or upload request fails.
   def upload_photo(url)
-    image_data = HTTParty.get(url).body
+    image_response = HTTParty.get(url)
+    raise "Failed to fetch image from #{url}: #{image_response.code}" unless image_response.success?
+
+    image_data = image_response.body
+    content_type = image_response.content_type || 'image/jpeg'
 
     headers = {
       "Authorization" => "Bearer #{access_token}",
-      "Content-Type" => "image/jpeg"
+      "Content-Type" => content_type
     }
 
     response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.uploadBlob", body: image_data, headers: headers)
