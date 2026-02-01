@@ -910,4 +910,136 @@ RSpec.describe "Admin::Accounts", type: :request do
       end
     end
   end
+
+  describe "Instagram webhooks (no auth required)" do
+    # These tests don't use the sign_in_as from the parent before block
+    # because webhooks don't require authentication
+    let(:app_secret) { 'test_app_secret' }
+    let(:instagram_user_id) { '12345' }
+    let!(:instagram_account) { create(:social_account, :instagram, uid: instagram_user_id) }
+
+    def create_signed_request(user_id, secret)
+      payload_data = { 'algorithm' => 'HMAC-SHA256', 'user_id' => user_id, 'issued_at' => Time.now.to_i }
+      payload = Base64.urlsafe_encode64(payload_data.to_json, padding: false)
+      signature = OpenSSL::HMAC.digest('SHA256', secret, payload)
+      encoded_sig = Base64.urlsafe_encode64(signature, padding: false)
+      "#{encoded_sig}.#{payload}"
+    end
+
+    before do
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with('INSTAGRAM_APP_SECRET').and_return(app_secret)
+    end
+
+    describe "POST /admin/accounts/instagram/deauthorize" do
+      it "deletes the Instagram account when signed request is valid" do
+        signed_request = create_signed_request(instagram_user_id, app_secret)
+
+        expect {
+          post instagram_deauthorize_admin_accounts_path, params: { signed_request: signed_request }
+        }.to change(SocialAccount.instagram, :count).by(-1)
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "returns ok even with invalid signed request" do
+        post instagram_deauthorize_admin_accounts_path, params: { signed_request: 'invalid' }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "POST /admin/accounts/instagram/delete" do
+      it "deletes the Instagram account and returns confirmation" do
+        signed_request = create_signed_request(instagram_user_id, app_secret)
+
+        expect {
+          post instagram_delete_admin_accounts_path, params: { signed_request: signed_request }
+        }.to change(SocialAccount.instagram, :count).by(-1)
+
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['url']).to be_present
+        expect(json['confirmation_code']).to be_present
+      end
+
+      it "returns bad request with invalid signed request" do
+        post instagram_delete_admin_accounts_path, params: { signed_request: 'invalid' }
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    describe "GET /admin/accounts/instagram/deletion_status" do
+      it "displays confirmation message" do
+        get instagram_deletion_status_admin_accounts_path, params: { code: 'abc123' }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('abc123')
+      end
+    end
+  end
+
+  describe "Threads webhooks (no auth required)" do
+    # These tests don't use the sign_in_as from the parent before block
+    # because webhooks don't require authentication
+    let(:app_secret) { 'test_app_secret' }
+    let(:threads_user_id) { '67890' }
+    let!(:threads_account) { create(:social_account, :threads, uid: threads_user_id) }
+
+    def create_signed_request(user_id, secret)
+      payload_data = { 'algorithm' => 'HMAC-SHA256', 'user_id' => user_id, 'issued_at' => Time.now.to_i }
+      payload = Base64.urlsafe_encode64(payload_data.to_json, padding: false)
+      signature = OpenSSL::HMAC.digest('SHA256', secret, payload)
+      encoded_sig = Base64.urlsafe_encode64(signature, padding: false)
+      "#{encoded_sig}.#{payload}"
+    end
+
+    before do
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with('THREADS_APP_SECRET').and_return(app_secret)
+    end
+
+    describe "POST /admin/accounts/threads/deauthorize" do
+      it "deletes the Threads account when signed request is valid" do
+        signed_request = create_signed_request(threads_user_id, app_secret)
+
+        expect {
+          post threads_deauthorize_admin_accounts_path, params: { signed_request: signed_request }
+        }.to change(SocialAccount.threads, :count).by(-1)
+
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "returns ok even with invalid signed request" do
+        post threads_deauthorize_admin_accounts_path, params: { signed_request: 'invalid' }
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "POST /admin/accounts/threads/delete" do
+      it "deletes the Threads account and returns confirmation" do
+        signed_request = create_signed_request(threads_user_id, app_secret)
+
+        expect {
+          post threads_delete_admin_accounts_path, params: { signed_request: signed_request }
+        }.to change(SocialAccount.threads, :count).by(-1)
+
+        expect(response).to have_http_status(:ok)
+        json = JSON.parse(response.body)
+        expect(json['url']).to be_present
+        expect(json['confirmation_code']).to be_present
+      end
+
+      it "returns bad request with invalid signed request" do
+        post threads_delete_admin_accounts_path, params: { signed_request: 'invalid' }
+        expect(response).to have_http_status(:bad_request)
+      end
+    end
+
+    describe "GET /admin/accounts/threads/deletion_status" do
+      it "displays confirmation message" do
+        get threads_deletion_status_admin_accounts_path, params: { code: 'xyz789' }
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to include('xyz789')
+      end
+    end
+  end
 end

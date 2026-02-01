@@ -1,4 +1,7 @@
 class Admin::AccountsController < AdminController
+  skip_before_action :require_login, only: [:instagram_deauthorize, :instagram_delete, :instagram_deletion_status, :threads_deauthorize, :threads_delete, :threads_deletion_status]
+  skip_forgery_protection only: [:instagram_deauthorize, :instagram_delete, :threads_deauthorize, :threads_delete]
+
   def index
     @bluesky_account = current_user.bluesky_account
     @flickr_account = current_user.flickr_account
@@ -430,6 +433,86 @@ class Admin::AccountsController < AdminController
     end
   end
 
+  # Instagram webhook: called when user removes app from Instagram settings
+  def instagram_deauthorize
+    user_id = parse_signed_request(params[:signed_request], ENV['INSTAGRAM_APP_SECRET'])
+    if user_id
+      account = SocialAccount.find_by(provider: 'instagram', uid: user_id.to_s)
+      account&.destroy
+      Rails.logger.info("[Instagram] Deauthorized user #{user_id}")
+    end
+    head :ok
+  rescue => e
+    Rails.logger.error("[Instagram] Deauthorize error: #{e.message}")
+    head :ok
+  end
+
+  # Instagram webhook: called when user requests data deletion
+  def instagram_delete
+    user_id = parse_signed_request(params[:signed_request], ENV['INSTAGRAM_APP_SECRET'])
+    if user_id
+      account = SocialAccount.find_by(provider: 'instagram', uid: user_id.to_s)
+      account&.destroy
+      Rails.logger.info("[Instagram] Deleted data for user #{user_id}")
+
+      confirmation_code = SecureRandom.hex(16)
+      render json: {
+        url: instagram_deletion_status_admin_accounts_url(code: confirmation_code),
+        confirmation_code: confirmation_code
+      }
+    else
+      head :bad_request
+    end
+  rescue => e
+    Rails.logger.error("[Instagram] Delete error: #{e.message}")
+    head :bad_request
+  end
+
+  # Instagram: status page for data deletion confirmation
+  def instagram_deletion_status
+    render plain: "Data deletion request confirmed. Confirmation code: #{params[:code]}"
+  end
+
+  # Threads webhook: called when user removes app from Threads settings
+  def threads_deauthorize
+    user_id = parse_signed_request(params[:signed_request], ENV['THREADS_APP_SECRET'])
+    if user_id
+      account = SocialAccount.find_by(provider: 'threads', uid: user_id.to_s)
+      account&.destroy
+      Rails.logger.info("[Threads] Deauthorized user #{user_id}")
+    end
+    head :ok
+  rescue => e
+    Rails.logger.error("[Threads] Deauthorize error: #{e.message}")
+    head :ok
+  end
+
+  # Threads webhook: called when user requests data deletion
+  def threads_delete
+    user_id = parse_signed_request(params[:signed_request], ENV['THREADS_APP_SECRET'])
+    if user_id
+      account = SocialAccount.find_by(provider: 'threads', uid: user_id.to_s)
+      account&.destroy
+      Rails.logger.info("[Threads] Deleted data for user #{user_id}")
+
+      confirmation_code = SecureRandom.hex(16)
+      render json: {
+        url: threads_deletion_status_admin_accounts_url(code: confirmation_code),
+        confirmation_code: confirmation_code
+      }
+    else
+      head :bad_request
+    end
+  rescue => e
+    Rails.logger.error("[Threads] Delete error: #{e.message}")
+    head :bad_request
+  end
+
+  # Threads: status page for data deletion confirmation
+  def threads_deletion_status
+    render plain: "Data deletion request confirmed. Confirmation code: #{params[:code]}"
+  end
+
   private
 
   def bluesky_params
@@ -528,5 +611,38 @@ class Admin::AccountsController < AdminController
     else
       threads_callback_admin_accounts_url
     end
+  end
+
+  # Parses Meta's signed request format used in deauthorize/delete webhooks
+  # Format: {base64url_signature}.{base64url_payload}
+  # Returns user_id if valid, nil otherwise
+  def parse_signed_request(signed_request, app_secret)
+    return nil if signed_request.blank? || app_secret.blank?
+
+    encoded_sig, payload = signed_request.split('.', 2)
+    return nil if encoded_sig.blank? || payload.blank?
+
+    # Decode signature and payload (base64url encoding)
+    signature = base64_url_decode(encoded_sig)
+    data = JSON.parse(base64_url_decode(payload))
+
+    # Verify algorithm
+    return nil unless data['algorithm']&.upcase == 'HMAC-SHA256'
+
+    # Verify signature
+    expected_sig = OpenSSL::HMAC.digest('SHA256', app_secret, payload)
+    return nil unless ActiveSupport::SecurityUtils.secure_compare(signature, expected_sig)
+
+    data['user_id']
+  rescue JSON::ParserError, ArgumentError => e
+    Rails.logger.error("[Meta] Failed to parse signed request: #{e.message}")
+    nil
+  end
+
+  def base64_url_decode(str)
+    # Convert base64url to base64 and decode
+    str = str.tr('-_', '+/')
+    str += '=' * (4 - str.length % 4) if str.length % 4 != 0
+    Base64.decode64(str)
   end
 end

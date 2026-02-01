@@ -105,12 +105,18 @@ Rails.application.routes.draw do
         post 'instagram', action: :initiate_instagram
         get 'instagram/callback', action: :instagram_callback
         delete 'instagram', action: :destroy_instagram
+        post 'instagram/deauthorize', action: :instagram_deauthorize
+        post 'instagram/delete', action: :instagram_delete
+        get 'instagram/deletion_status', action: :instagram_deletion_status
         post 'mastodon', action: :initiate_mastodon
         get 'mastodon/callback', action: :mastodon_callback
         delete 'mastodon', action: :destroy_mastodon
         post 'threads', action: :initiate_threads
         get 'threads/callback', action: :threads_callback
         delete 'threads', action: :destroy_threads
+        post 'threads/deauthorize', action: :threads_deauthorize
+        post 'threads/delete', action: :threads_delete
+        get 'threads/deletion_status', action: :threads_deletion_status
       end
     end
   end
