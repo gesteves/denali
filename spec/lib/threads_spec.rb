@@ -32,8 +32,8 @@ RSpec.describe Threads do
       end
     end
 
-    context 'with an account connected more than 53 days ago' do
-      let(:old_social_account) { create(:social_account, :threads, user: user, uid: threads_user_id, access_token: access_token, connected_at: 54.days.ago) }
+    context 'with an account connected more than 30 days ago' do
+      let(:old_social_account) { create(:social_account, :threads, user: user, uid: threads_user_id, access_token: access_token, connected_at: 31.days.ago) }
 
       before { stub_token_refresh }
 
@@ -47,7 +47,7 @@ RSpec.describe Threads do
     end
 
     context 'when token refresh fails for old account' do
-      let(:old_social_account) { create(:social_account, :threads, user: user, uid: threads_user_id, access_token: access_token, connected_at: 54.days.ago) }
+      let(:old_social_account) { create(:social_account, :threads, user: user, uid: threads_user_id, access_token: access_token, connected_at: 31.days.ago) }
 
       before do
         stub_request(:get, "#{described_class::THREADS_BASIC_API_BASE}/refresh_access_token")

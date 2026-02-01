@@ -32,8 +32,8 @@ RSpec.describe Instagram do
       end
     end
 
-    context 'with expiring token (connected more than 53 days ago)' do
-      let(:social_account) { create(:social_account, :instagram, user: user, access_token: access_token, connected_at: 54.days.ago) }
+    context 'with expiring token (connected more than 30 days ago)' do
+      let(:social_account) { create(:social_account, :instagram, user: user, access_token: access_token, connected_at: 31.days.ago) }
 
       before { stub_token_refresh }
 
@@ -47,7 +47,7 @@ RSpec.describe Instagram do
     end
 
     context 'when token refresh fails' do
-      let(:social_account) { create(:social_account, :instagram, user: user, access_token: access_token, connected_at: 54.days.ago) }
+      let(:social_account) { create(:social_account, :instagram, user: user, access_token: access_token, connected_at: 31.days.ago) }
 
       before do
         stub_request(:get, "#{described_class::INSTAGRAM_BASIC_API_BASE}/refresh_access_token")
@@ -296,7 +296,7 @@ RSpec.describe Instagram do
     end
 
     it 'has token refresh threshold' do
-      expect(described_class::TOKEN_REFRESH_THRESHOLD_DAYS).to eq(53)
+      expect(described_class::TOKEN_REFRESH_THRESHOLD_DAYS).to eq(30)
     end
   end
 end

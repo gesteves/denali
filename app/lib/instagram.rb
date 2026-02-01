@@ -6,7 +6,7 @@ class Instagram
   INSTAGRAM_BASIC_API_BASE = 'https://graph.instagram.com'
 
   # Tokens expire after 60 days; refresh when older than this many days
-  TOKEN_REFRESH_THRESHOLD_DAYS = 53
+  TOKEN_REFRESH_THRESHOLD_DAYS = 30
 
   # Initializes a new instance of the Instagram class.
   # Refreshes the token if it's expiring soon.

@@ -4,7 +4,7 @@ require 'json'
 class Threads
   THREADS_API_BASE = 'https://graph.threads.net/v1.0'
   THREADS_BASIC_API_BASE = 'https://graph.threads.net'
-  TOKEN_REFRESH_THRESHOLD = 53.days
+  TOKEN_REFRESH_THRESHOLD = 30.days
 
   # Initializes a new instance of the Threads class.
   # Automatically refreshes the Threads access token if needed and persists to database.
