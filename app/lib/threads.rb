@@ -4,27 +4,22 @@ require 'json'
 class Threads
   THREADS_API_BASE = 'https://graph.threads.net/v1.0'
   THREADS_BASIC_API_BASE = 'https://graph.threads.net'
+  TOKEN_REFRESH_THRESHOLD = 53.days
 
   # Initializes a new instance of the Threads class.
-  # Automatically refreshes and caches the Threads access token on initialization.
+  # Automatically refreshes the Threads access token if needed and persists to database.
   #
   # @param app_id [String] the Threads App ID.
   # @param app_secret [String] the Threads App Secret.
-  # @param threads_user_id [String] the Threads User ID.
+  # @param social_account [SocialAccount] the SocialAccount record containing Threads credentials.
   # @raise [RuntimeError] if token refresh fails.
-  def initialize(app_id:, app_secret:, threads_user_id:)
+  def initialize(app_id:, app_secret:, social_account:)
     @app_id = app_id
     @app_secret = app_secret
-    @threads_user_id = threads_user_id
+    @social_account = social_account
+    @threads_user_id = social_account.uid
 
-    # Refresh and cache the token on initialization to ensure we have a fresh token
-    begin
-      refresh_and_cache_token
-    rescue => e
-      # If refresh fails, clear cache and raise exception
-      clear_cached_token
-      raise "Failed to initialize Threads: #{e.message}"
-    end
+    refresh_token_if_needed
   end
 
   # Posts one or more photos to Threads.
@@ -226,23 +221,36 @@ class Threads
     end
   end
 
-  # Returns the cache key for the access token.
+  # Returns the access token from the social account.
   #
-  # @return [String] the cache key for the access token.
-  def access_token_cache_key
-    "threads:#{@threads_user_id}:access_token"
+  # @return [String] the access token.
+  # @raise [RuntimeError] if no access token is found.
+  def access_token
+    token = @social_account.access_token&.strip&.presence
+    raise "Threads access token not found in social account." if token.blank?
+    token
   end
 
-  # Refreshes a long-lived Threads access token and caches it.
-  # Uses the cached token if available, otherwise uses the access token from ENV.
+  # Refreshes the token if it's older than the threshold (53 days).
+  # Threads tokens expire after 60 days, so refresh proactively at 53 days.
+  #
+  # @return [void]
+  def refresh_token_if_needed
+    return if @social_account.connected_at.blank?
+    return if @social_account.connected_at > TOKEN_REFRESH_THRESHOLD.ago
+
+    refresh_token
+  end
+
+  # Refreshes a long-lived Threads access token and persists it to the database.
   # Extends the token's validity for another 60 days.
   #
   # @return [Hash] a hash containing :access_token and :expires_in (seconds).
   # @raise [RuntimeError] if the token refresh fails or no token is available.
-  def refresh_and_cache_token
-    token_to_refresh = get_cached_token&.strip&.presence || ENV['THREADS_ACCESS_TOKEN']&.strip&.presence
+  def refresh_token
+    token_to_refresh = @social_account.access_token&.strip&.presence
 
-    raise "No access token found in cache or ENV['THREADS_ACCESS_TOKEN']" if token_to_refresh.blank?
+    raise "No access token found in social account" if token_to_refresh.blank?
 
     response = HTTParty.get(
       "#{THREADS_BASIC_API_BASE}/refresh_access_token",
@@ -262,47 +270,16 @@ class Threads
 
     raise "Refreshed token is blank" if refreshed_token.blank?
 
-    result = {
+    # Persist the refreshed token and update connected_at
+    @social_account.update!(
+      access_token: refreshed_token,
+      connected_at: Time.current
+    )
+
+    {
       access_token: refreshed_token,
       expires_in: parsed['expires_in']
     }
-
-    expires_in_seconds = result[:expires_in] || 60.days.to_i
-
-    # Cache the token with expiration
-    Rails.cache.write(access_token_cache_key, refreshed_token, expires_in: expires_in_seconds.seconds)
-
-    # Clear the memoized access token so it will be reloaded from cache
-    @access_token = nil
-
-    result
-  end
-
-  # Retrieves the access token from cache.
-  # The token should always be cached after initialization (via refresh_and_cache_token).
-  #
-  # @return [String] the access token.
-  # @raise [RuntimeError] if no access token is found in cache.
-  def access_token
-    @access_token ||= begin
-      token = get_cached_token&.strip&.presence
-      raise "Threads access token not found in cache. Token may not have been refreshed during initialization." if token.blank?
-      token
-    end
-  end
-
-  # Retrieves the access token from cache or returns nil if not found.
-  #
-  # @return [String, nil] the cached access token or nil if not found.
-  def get_cached_token
-    Rails.cache.read(access_token_cache_key)
-  end
-
-  # Removes the access token from cache.
-  #
-  # @return [void]
-  def clear_cached_token
-    Rails.cache.delete(access_token_cache_key)
   end
 
 end

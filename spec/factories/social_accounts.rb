@@ -34,5 +34,12 @@ FactoryBot.define do
       sequence(:handle) { |n| "user#{n}@mastodon.social" }
       server_url { 'https://mastodon.social' }
     end
+
+    trait :threads do
+      provider { 'threads' }
+      sequence(:uid) { |n| "#{n}" }
+      sequence(:handle) { |n| "threadsuser#{n}" }
+      server_url { nil }
+    end
   end
 end

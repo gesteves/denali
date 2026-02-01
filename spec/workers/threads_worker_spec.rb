@@ -4,6 +4,7 @@ RSpec.describe ThreadsWorker, type: :worker do
   let(:blog) { create(:blog) }
   let(:user) { create(:user) }
   let(:entry) { create(:entry, :published, :with_photo, blog: blog, user: user) }
+  let!(:threads_account) { create(:social_account, :threads, user: user) }
 
   before do
     entry.photos.each { |p| attach_image_to_photo(p) }
@@ -11,8 +12,6 @@ RSpec.describe ThreadsWorker, type: :worker do
     allow(ENV).to receive(:[]).and_call_original
     allow(ENV).to receive(:[]).with('THREADS_APP_ID').and_return('app_id')
     allow(ENV).to receive(:[]).with('THREADS_APP_SECRET').and_return('app_secret')
-    allow(ENV).to receive(:[]).with('THREADS_ACCESS_TOKEN').and_return('access_token')
-    allow(ENV).to receive(:[]).with('THREADS_USER_ID').and_return('user_id')
   end
 
   describe '#perform' do
@@ -34,12 +33,24 @@ RSpec.describe ThreadsWorker, type: :worker do
       described_class.new.perform(text_entry.id, 'Test caption')
     end
 
+    it 'returns early when user has no threads account' do
+      threads_account.destroy
+      expect(Threads).not_to receive(:new)
+      described_class.new.perform(entry.id, 'Test caption')
+    end
+
     it 'posts to Threads and updates entry' do
       threads = instance_double(Threads)
       allow(Threads).to receive(:new).and_return(threads)
       allow(threads).to receive(:post)
       allow_any_instance_of(Entry).to receive(:threads_topic).and_return(nil)
       allow_any_instance_of(Photo).to receive(:threads_location_id).and_return(nil)
+
+      expect(Threads).to receive(:new).with(
+        app_id: 'app_id',
+        app_secret: 'app_secret',
+        social_account: threads_account
+      ).and_return(threads)
 
       expect(threads).to receive(:post).with(
         hash_including(caption: 'Test caption')

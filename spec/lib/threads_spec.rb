@@ -6,6 +6,8 @@ RSpec.describe Threads do
   let(:threads_user_id) { '987654321' }
   let(:access_token) { 'test_access_token' }
   let(:refreshed_token) { 'refreshed_test_token' }
+  let(:user) { create(:user) }
+  let(:social_account) { create(:social_account, :threads, user: user, uid: threads_user_id, access_token: access_token, connected_at: Time.current) }
 
   # Helper to stub token refresh
   def stub_token_refresh(success: true)
@@ -22,53 +24,40 @@ RSpec.describe Threads do
     end
   end
 
-  before do
-    allow(ENV).to receive(:[]).and_call_original
-    allow(ENV).to receive(:[]).with('THREADS_ACCESS_TOKEN').and_return(access_token)
-    allow(Rails.cache).to receive(:read).and_return(nil)
-    allow(Rails.cache).to receive(:write)
-    allow(Rails.cache).to receive(:delete)
-  end
-
   describe '#initialize' do
-    context 'with successful token refresh' do
-      before { stub_token_refresh }
-
-      it 'refreshes and caches the token on initialization' do
-        expect(Rails.cache).to receive(:write).with(
-          "threads:#{threads_user_id}:access_token",
-          refreshed_token,
-          expires_in: 5184000.seconds
-        )
-
-        described_class.new(app_id: app_id, app_secret: app_secret, threads_user_id: threads_user_id)
+    context 'with a recently connected account' do
+      it 'does not refresh the token' do
+        expect_any_instance_of(described_class).not_to receive(:refresh_token)
+        described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account)
       end
     end
 
-    context 'when token refresh fails' do
+    context 'with an account connected more than 53 days ago' do
+      let(:old_social_account) { create(:social_account, :threads, user: user, uid: threads_user_id, access_token: access_token, connected_at: 54.days.ago) }
+
+      before { stub_token_refresh }
+
+      it 'refreshes the token and persists to database' do
+        described_class.new(app_id: app_id, app_secret: app_secret, social_account: old_social_account)
+
+        old_social_account.reload
+        expect(old_social_account.access_token).to eq(refreshed_token)
+        expect(old_social_account.connected_at).to be_within(1.second).of(Time.current)
+      end
+    end
+
+    context 'when token refresh fails for old account' do
+      let(:old_social_account) { create(:social_account, :threads, user: user, uid: threads_user_id, access_token: access_token, connected_at: 54.days.ago) }
+
       before do
         stub_request(:get, "#{described_class::THREADS_BASIC_API_BASE}/refresh_access_token")
           .to_return(status: 400, body: { error: 'invalid_token' }.to_json)
       end
 
-      it 'clears cache and raises an error' do
-        expect(Rails.cache).to receive(:delete).with("threads:#{threads_user_id}:access_token")
-
-        expect {
-          described_class.new(app_id: app_id, app_secret: app_secret, threads_user_id: threads_user_id)
-        }.to raise_error(RuntimeError, /Failed to initialize Threads/)
-      end
-    end
-
-    context 'when no token is available' do
-      before do
-        allow(ENV).to receive(:[]).with('THREADS_ACCESS_TOKEN').and_return(nil)
-      end
-
       it 'raises an error' do
         expect {
-          described_class.new(app_id: app_id, app_secret: app_secret, threads_user_id: threads_user_id)
-        }.to raise_error(RuntimeError, /No access token found/)
+          described_class.new(app_id: app_id, app_secret: app_secret, social_account: old_social_account)
+        }.to raise_error(RuntimeError, /Failed to refresh token/)
       end
     end
   end
@@ -79,25 +68,22 @@ RSpec.describe Threads do
     let(:container_id) { 'container_123' }
     let(:threads_endpoint) { "#{described_class::THREADS_API_BASE}/#{threads_user_id}/threads" }
     let(:publish_endpoint) { "#{described_class::THREADS_API_BASE}/#{threads_user_id}/threads_publish" }
-    let(:threads) { described_class.new(app_id: app_id, app_secret: app_secret, threads_user_id: threads_user_id) }
+    let(:threads) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
 
     before do
-      stub_token_refresh
-      allow(Rails.cache).to receive(:read).with("threads:#{threads_user_id}:access_token").and_return(refreshed_token)
-
       # Stub container creation - match any query params
       stub_request(:post, threads_endpoint)
-        .with(query: hash_including(access_token: refreshed_token))
+        .with(query: hash_including(access_token: access_token))
         .to_return(status: 200, body: { id: container_id }.to_json)
 
       # Stub container status check
       stub_request(:get, "#{described_class::THREADS_API_BASE}/#{container_id}")
-        .with(query: hash_including(access_token: refreshed_token))
+        .with(query: hash_including(access_token: access_token))
         .to_return(status: 200, body: { status: 'FINISHED' }.to_json)
 
       # Stub publish
       stub_request(:post, publish_endpoint)
-        .with(query: hash_including(access_token: refreshed_token))
+        .with(query: hash_including(access_token: access_token))
         .to_return(status: 200, body: { id: 'post_123' }.to_json)
     end
 
@@ -110,7 +96,7 @@ RSpec.describe Threads do
       it 'sends access_token as query parameter' do
         threads.post(photos: [photo], caption: caption)
         expect(WebMock).to have_requested(:post, threads_endpoint)
-          .with(query: hash_including(access_token: refreshed_token))
+          .with(query: hash_including(access_token: access_token))
       end
 
       it 'includes text in the request body' do
@@ -134,7 +120,7 @@ RSpec.describe Threads do
       before do
         # Stub individual container creations with multiple responses
         stub_request(:post, threads_endpoint)
-          .with(query: hash_including(access_token: refreshed_token))
+          .with(query: hash_including(access_token: access_token))
           .to_return(
             { status: 200, body: { id: container_id_1 }.to_json },
             { status: 200, body: { id: container_id_2 }.to_json },
@@ -144,7 +130,7 @@ RSpec.describe Threads do
         # Stub status checks for each container
         [container_id_1, container_id_2, carousel_container_id].each do |cid|
           stub_request(:get, "#{described_class::THREADS_API_BASE}/#{cid}")
-            .with(query: hash_including(access_token: refreshed_token))
+            .with(query: hash_including(access_token: access_token))
             .to_return(status: 200, body: { status: 'FINISHED' }.to_json)
         end
       end
@@ -188,25 +174,22 @@ RSpec.describe Threads do
     let(:container_id) { 'container_123' }
     let(:threads_endpoint) { "#{described_class::THREADS_API_BASE}/#{threads_user_id}/threads" }
     let(:publish_endpoint) { "#{described_class::THREADS_API_BASE}/#{threads_user_id}/threads_publish" }
-    let(:threads) { described_class.new(app_id: app_id, app_secret: app_secret, threads_user_id: threads_user_id) }
+    let(:threads) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
 
     before do
-      stub_token_refresh
-      allow(Rails.cache).to receive(:read).with("threads:#{threads_user_id}:access_token").and_return(refreshed_token)
-
       stub_request(:post, threads_endpoint)
-        .with(query: hash_including(access_token: refreshed_token))
+        .with(query: hash_including(access_token: access_token))
         .to_return(status: 200, body: { id: container_id }.to_json)
 
       stub_request(:post, publish_endpoint)
-        .with(query: hash_including(access_token: refreshed_token))
+        .with(query: hash_including(access_token: access_token))
         .to_return(status: 200, body: { id: 'post_123' }.to_json)
     end
 
     context 'when container status is ERROR' do
       before do
         stub_request(:get, "#{described_class::THREADS_API_BASE}/#{container_id}")
-          .with(query: hash_including(access_token: refreshed_token))
+          .with(query: hash_including(access_token: access_token))
           .to_return(status: 200, body: { status: 'ERROR' }.to_json)
       end
 
@@ -220,7 +203,7 @@ RSpec.describe Threads do
     context 'when container status is EXPIRED' do
       before do
         stub_request(:get, "#{described_class::THREADS_API_BASE}/#{container_id}")
-          .with(query: hash_including(access_token: refreshed_token))
+          .with(query: hash_including(access_token: access_token))
           .to_return(status: 200, body: { status: 'EXPIRED' }.to_json)
       end
 
@@ -234,7 +217,7 @@ RSpec.describe Threads do
     context 'when container status is PUBLISHED' do
       before do
         stub_request(:get, "#{described_class::THREADS_API_BASE}/#{container_id}")
-          .with(query: hash_including(access_token: refreshed_token))
+          .with(query: hash_including(access_token: access_token))
           .to_return(status: 200, body: { status: 'PUBLISHED' }.to_json)
       end
 

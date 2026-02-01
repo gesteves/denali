@@ -108,6 +108,9 @@ Rails.application.routes.draw do
         post 'mastodon', action: :initiate_mastodon
         get 'mastodon/callback', action: :mastodon_callback
         delete 'mastodon', action: :destroy_mastodon
+        post 'threads', action: :initiate_threads
+        get 'threads/callback', action: :threads_callback
+        delete 'threads', action: :destroy_threads
       end
     end
   end

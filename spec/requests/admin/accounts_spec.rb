@@ -21,6 +21,7 @@ RSpec.describe "Admin::Accounts", type: :request do
       expect(response.body).to include("Flickr")
       expect(response.body).to include("Instagram")
       expect(response.body).to include("Mastodon")
+      expect(response.body).to include("Threads")
     end
 
     context "when user has a connected Bluesky account" do
@@ -44,6 +45,8 @@ RSpec.describe "Admin::Accounts", type: :request do
         allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_SECRET').and_return('test_secret')
         allow(ENV).to receive(:[]).with('INSTAGRAM_APP_ID').and_return('test_app_id')
         allow(ENV).to receive(:[]).with('INSTAGRAM_APP_SECRET').and_return('test_app_secret')
+        allow(ENV).to receive(:[]).with('THREADS_APP_ID').and_return('test_app_id')
+        allow(ENV).to receive(:[]).with('THREADS_APP_SECRET').and_return('test_app_secret')
       end
 
       it "displays the add account buttons" do
@@ -52,6 +55,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         expect(response.body).to include("Connect with Flickr")
         expect(response.body).to include("Connect with Instagram")
         expect(response.body).to include("Connect Mastodon Account")
+        expect(response.body).to include("Connect with Threads")
       end
     end
 
@@ -92,6 +96,20 @@ RSpec.describe "Admin::Accounts", type: :request do
       end
 
       it "displays the disconnect button for Mastodon" do
+        get admin_accounts_path
+        expect(response.body).to include("Disconnect")
+      end
+    end
+
+    context "when user has a connected Threads account" do
+      let!(:threads_account) { create(:social_account, :threads, user: user, handle: 'mythreadsuser') }
+
+      it "displays the connected account" do
+        get admin_accounts_path
+        expect(response.body).to include("@mythreadsuser")
+      end
+
+      it "displays the disconnect button for Threads" do
         get admin_accounts_path
         expect(response.body).to include("Disconnect")
       end
@@ -706,6 +724,187 @@ RSpec.describe "Admin::Accounts", type: :request do
       it "handles gracefully" do
         expect {
           delete instagram_admin_accounts_path
+        }.not_to raise_error
+        expect(response).to redirect_to(admin_accounts_path)
+      end
+    end
+  end
+
+  describe "POST /admin/accounts/threads (initiate_threads)" do
+    context "with Threads credentials configured" do
+      before do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('THREADS_APP_ID').and_return('test_app_id')
+        allow(ENV).to receive(:[]).with('THREADS_APP_SECRET').and_return('test_app_secret')
+      end
+
+      it "redirects to Threads authorization page" do
+        post threads_admin_accounts_path
+        expect(response).to redirect_to(/threads\.net\/oauth\/authorize/)
+      end
+
+      it "includes required scopes in authorization URL" do
+        post threads_admin_accounts_path
+        expect(response.location).to include('threads_basic')
+        expect(response.location).to include('threads_content_publish')
+        expect(response.location).to include('threads_location_tagging')
+      end
+
+      it "stores OAuth state in session" do
+        post threads_admin_accounts_path
+        expect(session[:threads_oauth_state]).to be_present
+      end
+    end
+
+    context "without Threads credentials configured" do
+      before do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('THREADS_APP_ID').and_return(nil)
+        allow(ENV).to receive(:[]).with('THREADS_APP_SECRET').and_return(nil)
+      end
+
+      it "redirects with error message" do
+        post threads_admin_accounts_path
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:alert]).to include("not configured")
+      end
+    end
+  end
+
+  describe "GET /admin/accounts/threads/callback (threads_callback)" do
+    let(:oauth_state) { SecureRandom.hex(32) }
+
+    before do
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with('THREADS_APP_ID').and_return('test_app_id')
+      allow(ENV).to receive(:[]).with('THREADS_APP_SECRET').and_return('test_app_secret')
+      allow(ENV).to receive(:[]).with('DOMAIN_ADMIN').and_return(nil)
+    end
+
+    context "with valid callback" do
+      before do
+        # Initiate OAuth to set up session
+        post threads_admin_accounts_path
+
+        stub_request(:post, "https://graph.threads.net/oauth/access_token")
+          .to_return(
+            status: 200,
+            body: { access_token: 'short_lived_token', user_id: '12345' }.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+
+        stub_request(:get, "https://graph.threads.net/access_token")
+          .with(query: hash_including(grant_type: 'th_exchange_token'))
+          .to_return(
+            status: 200,
+            body: { access_token: 'long_lived_token', expires_in: 5184000 }.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+
+        stub_request(:get, "https://graph.threads.net/v1.0/me")
+          .with(query: hash_including(access_token: 'long_lived_token'))
+          .to_return(
+            status: 200,
+            body: { id: '12345', username: 'testthreadsuser' }.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+      end
+
+      it "creates a Threads social account" do
+        state = session[:threads_oauth_state]
+
+        expect {
+          get threads_callback_admin_accounts_path, params: { code: 'auth_code', state: state }
+        }.to change(SocialAccount, :count).by(1)
+
+        account = SocialAccount.last
+        expect(account.provider).to eq('threads')
+        expect(account.handle).to eq('testthreadsuser')
+        expect(account.uid).to eq('12345')
+      end
+
+      it "redirects to accounts page with success message" do
+        state = session[:threads_oauth_state]
+        get threads_callback_admin_accounts_path, params: { code: 'auth_code', state: state }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:notice]).to include("connected successfully")
+      end
+
+      it "clears OAuth session data" do
+        state = session[:threads_oauth_state]
+        get threads_callback_admin_accounts_path, params: { code: 'auth_code', state: state }
+
+        expect(session[:threads_oauth_state]).to be_nil
+      end
+    end
+
+    context "with invalid state" do
+      it "redirects with error" do
+        get threads_callback_admin_accounts_path, params: { code: 'auth_code', state: 'invalid_state' }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:alert]).to include("Invalid OAuth state")
+      end
+    end
+
+    context "when authorization is denied" do
+      before do
+        post threads_admin_accounts_path
+      end
+
+      it "redirects with error message" do
+        state = session[:threads_oauth_state]
+        get threads_callback_admin_accounts_path, params: { error: 'access_denied', error_description: 'User denied access', state: state }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:alert]).to include("Authorization was denied")
+      end
+    end
+
+    context "when token exchange fails" do
+      before do
+        post threads_admin_accounts_path
+
+        stub_request(:post, "https://graph.threads.net/oauth/access_token")
+          .to_return(status: 400, body: { error: 'invalid_code' }.to_json)
+      end
+
+      it "redirects with error message" do
+        state = session[:threads_oauth_state]
+        get threads_callback_admin_accounts_path, params: { code: 'invalid_code', state: state }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:alert]).to include("Failed to get access token")
+      end
+    end
+  end
+
+  describe "DELETE /admin/accounts/threads (destroy_threads)" do
+    let!(:threads_account) { create(:social_account, :threads, user: user) }
+
+    it "deletes the Threads account" do
+      expect {
+        delete threads_admin_accounts_path
+      }.to change(SocialAccount, :count).by(-1)
+    end
+
+    it "redirects to accounts page (HTML)" do
+      delete threads_admin_accounts_path
+      expect(response).to redirect_to(admin_accounts_path)
+    end
+
+    it "returns turbo_stream response" do
+      delete threads_admin_accounts_path, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+      expect(response.media_type).to eq('text/vnd.turbo-stream.html')
+    end
+
+    context "when user has no Threads account" do
+      before { threads_account.destroy }
+
+      it "handles gracefully" do
+        expect {
+          delete threads_admin_accounts_path
         }.not_to raise_error
         expect(response).to redirect_to(admin_accounts_path)
       end

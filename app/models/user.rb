@@ -32,4 +32,8 @@ class User < ApplicationRecord
   def mastodon_account
     social_accounts.find_by(provider: 'mastodon')
   end
+
+  def threads_account
+    social_accounts.find_by(provider: 'threads')
+  end
 end

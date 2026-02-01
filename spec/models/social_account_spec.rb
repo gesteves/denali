@@ -32,6 +32,15 @@ RSpec.describe SocialAccount, type: :model do
         expect(subject.server_url).to be_nil
       end
     end
+
+    context 'for threads provider' do
+      subject { build(:social_account, :threads) }
+
+      it 'does not require server_url' do
+        expect(subject).to be_valid
+        expect(subject.server_url).to be_nil
+      end
+    end
   end
 
   describe 'scopes' do
@@ -64,6 +73,14 @@ RSpec.describe SocialAccount, type: :model do
 
       it 'returns only mastodon accounts' do
         expect(SocialAccount.mastodon).to include(mastodon_account)
+      end
+    end
+
+    describe '.threads' do
+      let!(:threads_account) { create(:social_account, :threads) }
+
+      it 'returns only threads accounts' do
+        expect(SocialAccount.threads).to include(threads_account)
       end
     end
   end
@@ -113,6 +130,18 @@ RSpec.describe SocialAccount, type: :model do
     it 'returns false for other providers' do
       account = build(:social_account, provider: 'bluesky')
       expect(account.mastodon?).to be false
+    end
+  end
+
+  describe '#threads?' do
+    it 'returns true for threads provider' do
+      account = build(:social_account, :threads)
+      expect(account.threads?).to be true
+    end
+
+    it 'returns false for other providers' do
+      account = build(:social_account, provider: 'bluesky')
+      expect(account.threads?).to be false
     end
   end
 
