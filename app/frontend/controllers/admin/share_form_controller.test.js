@@ -8,6 +8,7 @@ describe('ShareFormController', () => {
 
   beforeEach(() => {
     global.fetch = vi.fn();
+    global.Turbo = { renderStreamMessage: vi.fn() };
 
     document.body.innerHTML = `
       <form data-controller="share-form"
@@ -21,7 +22,6 @@ describe('ShareFormController', () => {
           <option value="">Default</option>
           <option value="1:1">Square</option>
         </select>
-        <div data-share-form-target="stats"></div>
         <button data-share-form-target="submit" data-action="click->share-form#submit">Share</button>
       </form>
     `;
@@ -35,6 +35,7 @@ describe('ShareFormController', () => {
     application.stop();
     document.body.innerHTML = '';
     vi.clearAllMocks();
+    delete global.Turbo;
   });
 
   function getController() {
@@ -45,14 +46,23 @@ describe('ShareFormController', () => {
     return element.querySelector('[data-share-form-target="submit"]');
   }
 
-  function statsTarget() {
-    return element.querySelector('[data-share-form-target="stats"]');
-  }
-
-  function mockFetchSuccess(data) {
+  function mockFetchJsonSuccess(data) {
     global.fetch.mockResolvedValueOnce({
       ok: true,
+      headers: {
+        get: () => 'application/json'
+      },
       json: () => Promise.resolve(data)
+    });
+  }
+
+  function mockFetchTurboStreamSuccess(html) {
+    global.fetch.mockResolvedValueOnce({
+      ok: true,
+      headers: {
+        get: () => 'text/vnd.turbo-stream.html; charset=utf-8'
+      },
+      text: () => Promise.resolve(html)
     });
   }
 
@@ -62,7 +72,7 @@ describe('ShareFormController', () => {
 
   describe('submit', () => {
     it('prevents default event behavior', async () => {
-      mockFetchSuccess({ status: 'success', message: 'Shared!' });
+      mockFetchJsonSuccess({ status: 'success', message: 'Shared!' });
 
       const controller = getController();
       const event = { preventDefault: vi.fn() };
@@ -73,7 +83,7 @@ describe('ShareFormController', () => {
     });
 
     it('disables submit button during submission', async () => {
-      mockFetchSuccess({ status: 'success', message: 'Shared!' });
+      mockFetchJsonSuccess({ status: 'success', message: 'Shared!' });
 
       const controller = getController();
       const event = { preventDefault: vi.fn() };
@@ -84,8 +94,8 @@ describe('ShareFormController', () => {
       expect(submitTarget().classList.contains('is-loading')).toBe(true);
     });
 
-    it('sends POST request with form data', async () => {
-      mockFetchSuccess({ status: 'success', message: 'Shared!' });
+    it('sends POST request with turbo-stream and json Accept header', async () => {
+      mockFetchJsonSuccess({ status: 'success', message: 'Shared!' });
 
       const controller = getController();
       const event = { preventDefault: vi.fn() };
@@ -99,7 +109,7 @@ describe('ShareFormController', () => {
             method: 'POST',
             headers: expect.objectContaining({
               'Content-Type': 'application/json',
-              'Accept': 'application/json'
+              'Accept': 'text/vnd.turbo-stream.html, application/json'
             })
           })
         );
@@ -107,7 +117,7 @@ describe('ShareFormController', () => {
     });
 
     it('includes CSRF token in headers', async () => {
-      mockFetchSuccess({ status: 'success', message: 'Shared!' });
+      mockFetchJsonSuccess({ status: 'success', message: 'Shared!' });
 
       const controller = getController();
       const event = { preventDefault: vi.fn() };
@@ -119,8 +129,22 @@ describe('ShareFormController', () => {
       });
     });
 
-    it('sends notification on success', async () => {
-      mockFetchSuccess({ status: 'success', message: 'Successfully shared!' });
+    it('handles turbo stream response', async () => {
+      const turboHtml = '<turbo-stream action="replace" target="bluesky-stats"><template>Updated stats</template></turbo-stream>';
+      mockFetchTurboStreamSuccess(turboHtml);
+
+      const controller = getController();
+      const event = { preventDefault: vi.fn() };
+
+      controller.submit(event);
+
+      await vi.waitFor(() => {
+        expect(global.Turbo.renderStreamMessage).toHaveBeenCalledWith(turboHtml);
+      });
+    });
+
+    it('sends notification on JSON response', async () => {
+      mockFetchJsonSuccess({ status: 'success', message: 'Successfully shared!' });
       const dispatchSpy = vi.spyOn(document.body, 'dispatchEvent');
 
       const controller = getController();
@@ -136,8 +160,26 @@ describe('ShareFormController', () => {
       });
     });
 
+    it('does not send notification on turbo stream response', async () => {
+      const turboHtml = '<turbo-stream action="replace" target="bluesky-stats"><template>Updated stats</template></turbo-stream>';
+      mockFetchTurboStreamSuccess(turboHtml);
+      const dispatchSpy = vi.spyOn(document.body, 'dispatchEvent');
+
+      const controller = getController();
+      const event = { preventDefault: vi.fn() };
+
+      controller.submit(event);
+
+      await vi.waitFor(() => {
+        expect(global.Turbo.renderStreamMessage).toHaveBeenCalled();
+      });
+
+      const notifyEvent = dispatchSpy.mock.calls.find(call => call[0].type === 'notify');
+      expect(notifyEvent).toBeUndefined();
+    });
+
     it('re-enables submit button after completion', async () => {
-      mockFetchSuccess({ status: 'success', message: 'Shared!' });
+      mockFetchJsonSuccess({ status: 'success', message: 'Shared!' });
 
       const controller = getController();
       const event = { preventDefault: vi.fn() };
@@ -164,45 +206,6 @@ describe('ShareFormController', () => {
         expect(notifyEvent).toBeDefined();
         expect(notifyEvent[0].detail.status).toBe('danger');
         expect(notifyEvent[0].detail.message).toContain('Bluesky');
-      });
-    });
-
-    it('updates stats on success with last_shared_at', async () => {
-      mockFetchSuccess({
-        status: 'success',
-        message: 'Shared!',
-        last_shared_at: '2024-01-15T10:30:00Z',
-        shares_count: 5
-      });
-
-      const controller = getController();
-      const event = { preventDefault: vi.fn() };
-
-      controller.submit(event);
-
-      await vi.waitFor(() => {
-        expect(statsTarget().innerHTML).toContain('Last shared');
-        expect(statsTarget().innerHTML).toContain('just now');
-        expect(statsTarget().innerHTML).toContain('5');
-      });
-    });
-
-    it('does not update stats if scheduled', async () => {
-      mockFetchSuccess({
-        status: 'success',
-        message: 'Scheduled!',
-        last_shared_at: '2024-01-15T10:30:00Z',
-        shares_count: 5,
-        scheduled: true
-      });
-
-      const controller = getController();
-      const event = { preventDefault: vi.fn() };
-
-      controller.submit(event);
-
-      await vi.waitFor(() => {
-        expect(statsTarget().innerHTML).not.toContain('Last shared');
       });
     });
   });

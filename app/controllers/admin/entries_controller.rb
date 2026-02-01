@@ -380,6 +380,11 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
+      format.turbo_stream {
+        streams = [turbo_stream.prepend("notifications", partial: "admin/shared/notification", locals: { status: "success", message: @message })]
+        streams.unshift(turbo_stream.replace("instagram-stats", partial: "admin/entries/share_stats", locals: { entry: @entry, platform: "instagram" })) unless scheduled
+        render turbo_stream: streams
+      }
       format.js { render 'admin/shared/notify' }
       format.json {
         render json: {
@@ -446,6 +451,11 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
+      format.turbo_stream {
+        streams = [turbo_stream.prepend("notifications", partial: "admin/shared/notification", locals: { status: "success", message: @message })]
+        streams.unshift(turbo_stream.replace("threads-stats", partial: "admin/entries/share_stats", locals: { entry: @entry, platform: "threads" })) unless scheduled
+        render turbo_stream: streams
+      }
       format.js { render 'admin/shared/notify' }
       format.json {
         render json: {
@@ -480,6 +490,11 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
+      format.turbo_stream {
+        streams = [turbo_stream.prepend("notifications", partial: "admin/shared/notification", locals: { status: "success", message: @message })]
+        streams.unshift(turbo_stream.replace("mastodon-stats", partial: "admin/entries/share_stats", locals: { entry: @entry, platform: "mastodon" })) unless scheduled
+        render turbo_stream: streams
+      }
       format.js { render 'admin/shared/notify' }
       format.json {
         render json: {
@@ -513,6 +528,11 @@ class Admin::EntriesController < AdminController
       format.html {
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.turbo_stream {
+        streams = [turbo_stream.prepend("notifications", partial: "admin/shared/notification", locals: { status: "success", message: @message })]
+        streams.unshift(turbo_stream.replace("bluesky-stats", partial: "admin/entries/share_stats", locals: { entry: @entry, platform: "bluesky" })) unless scheduled
+        render turbo_stream: streams
       }
       format.js { render 'admin/shared/notify' }
       format.json {

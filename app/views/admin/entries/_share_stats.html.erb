@@ -1,0 +1,8 @@
+<div class="control">
+  <%= send("last_shared_on_#{platform}_tag", entry) %>
+</div>
+<% if entry.send("#{platform}_shares_count") > 0 %>
+  <div class="control">
+    <%= send("#{platform}_shares_count_tag", entry) %>
+  </div>
+<% end %>

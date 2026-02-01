@@ -12,6 +12,15 @@ export default class extends Controller {
   }
 
   /**
+   * Called when a notification target is connected (e.g., via Turbo Stream).
+   * @param {Element} target The newly connected notification element.
+   */
+  notificationTargetConnected (target) {
+    setTimeout(() => target.classList.remove('is-transparent'), 10);
+    setTimeout(() => target.classList.add('is-transparent', 'notification-closed'), 10000);
+  }
+
+  /**
    * Adds a new notification to the notifications container
    * @param {Event} event Custom `notify` event.
    */

@@ -65,15 +65,8 @@
     <div class="field is-horizontal">
       <div class="field-label"></div>
       <div class="field-body">
-        <div class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
-          <div class="control">
-            <%= last_shared_on_bluesky_tag(@entry) %>
-          </div>
-          <% if @entry.bluesky_shares_count > 0 %>
-            <div class="control">
-              <%= bluesky_shares_count_tag(@entry) %>
-            </div>
-          <% end %>
+        <div id="bluesky-stats" class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
+          <%= render 'admin/entries/share_stats', entry: @entry, platform: 'bluesky' %>
         </div>
       </div>
     </div>
@@ -123,15 +116,8 @@
     <div class="field is-horizontal">
       <div class="field-label"></div>
       <div class="field-body">
-        <div class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
-          <div class="control">
-            <%= last_shared_on_instagram_tag(@entry) %>
-          </div>
-          <% if @entry.instagram_shares_count > 0 %>
-            <div class="control">
-              <%= instagram_shares_count_tag(@entry) %>
-            </div>
-          <% end %>
+        <div id="instagram-stats" class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
+          <%= render 'admin/entries/share_stats', entry: @entry, platform: 'instagram' %>
         </div>
       </div>
     </div>
@@ -249,15 +235,8 @@
     <div class="field is-horizontal">
       <div class="field-label"></div>
       <div class="field-body">
-        <div class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
-          <div class="control">
-            <%= last_shared_on_mastodon_tag(@entry) %>
-          </div>
-          <% if @entry.mastodon_shares_count > 0 %>
-            <div class="control">
-              <%= mastodon_shares_count_tag(@entry) %>
-            </div>
-          <% end %>
+        <div id="mastodon-stats" class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
+          <%= render 'admin/entries/share_stats', entry: @entry, platform: 'mastodon' %>
         </div>
       </div>
     </div>
@@ -307,15 +286,8 @@
     <div class="field is-horizontal">
       <div class="field-label"></div>
       <div class="field-body">
-        <div class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
-          <div class="control">
-            <%= last_shared_on_threads_tag(@entry) %>
-          </div>
-          <% if @entry.threads_shares_count > 0 %>
-            <div class="control">
-              <%= threads_shares_count_tag(@entry) %>
-            </div>
-          <% end %>
+        <div id="threads-stats" class="field is-grouped is-grouped-multiline" data-share-form-target="stats">
+          <%= render 'admin/entries/share_stats', entry: @entry, platform: 'threads' %>
         </div>
       </div>
     </div>

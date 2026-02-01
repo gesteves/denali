@@ -5,7 +5,7 @@ import { Controller } from '@hotwired/stimulus';
  * @extends Controller
  */
 export default class extends Controller {
-  static targets = ['text', 'scheduledAt', 'submit', 'stats', 'inReplyTo', 'quote', 'crop'];
+  static targets = ['text', 'scheduledAt', 'submit', 'inReplyTo', 'quote', 'crop'];
   static values = {
     url: String,
     platform: String
@@ -29,18 +29,20 @@ export default class extends Controller {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          'Accept': 'text/vnd.turbo-stream.html, application/json',
           'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify(formData)
       });
 
-      const data = await response.json();
+      const contentType = response.headers.get('Content-Type') || '';
 
-      this.notify(data.status, data.message);
-
-      if (data.status === 'success' && this.hasStatsTarget) {
-        this.updateStats(data);
+      if (contentType.includes('text/vnd.turbo-stream.html')) {
+        const html = await response.text();
+        Turbo.renderStreamMessage(html);
+      } else {
+        const data = await response.json();
+        this.notify(data.status, data.message);
       }
     } catch (error) {
       this.notify('danger', `Failed to share on ${this.platformValue}. Please try again.`);
@@ -78,35 +80,6 @@ export default class extends Controller {
     }
 
     return data;
-  }
-
-  /**
-   * Updates the stats section after a successful share.
-   * @param {Object} data The response data from the server.
-   */
-  updateStats (data) {
-    if (!data.last_shared_at || data.scheduled) {
-      return;
-    }
-
-    // Build updated stats HTML
-    const lastSharedClass = 'tag is-danger';
-    const statsHtml = `
-      <div class="control">
-        <div class="tags has-addons">
-          <span class="${lastSharedClass}">Last shared</span>
-          <span class="tag" title="${data.last_shared_at}">just now</span>
-        </div>
-      </div>
-      <div class="control">
-        <div class="tags has-addons">
-          <span class="tag is-info">Shares</span>
-          <span class="tag">${data.shares_count}</span>
-        </div>
-      </div>
-    `;
-
-    this.statsTarget.innerHTML = statsHtml;
   }
 
   /**

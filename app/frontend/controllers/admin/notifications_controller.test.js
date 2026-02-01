@@ -218,6 +218,49 @@ describe('NotificationsController', () => {
     });
   });
 
+  describe('notificationTargetConnected', () => {
+    it('removes is-transparent class after short delay', async () => {
+      const controller = getController();
+
+      // Simulate a notification being added via Turbo Stream
+      const notification = document.createElement('div');
+      notification.className = 'notification is-success is-transparent';
+      notification.setAttribute('data-notifications-target', 'notification');
+      containerTarget().appendChild(notification);
+
+      // Manually trigger the callback (Stimulus would do this automatically)
+      controller.notificationTargetConnected(notification);
+
+      await new Promise(resolve => setTimeout(resolve, 20));
+
+      expect(notification.classList.contains('is-transparent')).toBe(false);
+    });
+
+    it('adds is-transparent and notification-closed after 10 seconds', async () => {
+      vi.useFakeTimers();
+
+      const controller = getController();
+
+      const notification = document.createElement('div');
+      notification.className = 'notification is-success is-transparent';
+      notification.setAttribute('data-notifications-target', 'notification');
+      containerTarget().appendChild(notification);
+
+      controller.notificationTargetConnected(notification);
+
+      // Fast forward past the show animation
+      vi.advanceTimersByTime(20);
+      expect(notification.classList.contains('is-transparent')).toBe(false);
+
+      // Fast forward to auto-close time
+      vi.advanceTimersByTime(10000);
+      expect(notification.classList.contains('is-transparent')).toBe(true);
+      expect(notification.classList.contains('notification-closed')).toBe(true);
+
+      vi.useRealTimers();
+    });
+  });
+
   describe('integration', () => {
     it('handles full notification lifecycle', async () => {
       const controller = getController();
