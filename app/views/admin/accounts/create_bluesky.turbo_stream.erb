@@ -1,3 +1,3 @@
-<%= turbo_stream.replace "bluesky-section" do %>
-  <%= render 'admin/accounts/bluesky_section', social_account: @social_account, error: nil %>
+<%= turbo_stream.replace "bluesky-card" do %>
+  <%= render 'admin/accounts/bluesky_card', social_account: @social_account, error: nil %>
 <% end %>

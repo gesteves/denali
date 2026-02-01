@@ -30,7 +30,7 @@ class Admin::AccountsController < AdminController
   rescue => e
     error_message = friendly_bluesky_error(e)
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("bluesky-section", partial: "admin/accounts/bluesky_section", locals: { social_account: @social_account, error: error_message }) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("bluesky-card", partial: "admin/accounts/bluesky_card", locals: { social_account: @social_account, error: error_message }) }
       format.html { redirect_to admin_accounts_path, alert: error_message }
     end
   end
@@ -40,7 +40,7 @@ class Admin::AccountsController < AdminController
     @social_account&.destroy
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("bluesky-section", partial: "admin/accounts/bluesky_section", locals: { social_account: nil, error: nil }) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("bluesky-card", partial: "admin/accounts/bluesky_card", locals: { social_account: nil, error: nil }) }
       format.html { redirect_to admin_accounts_path, notice: "Bluesky account disconnected." }
     end
   end
@@ -107,7 +107,7 @@ class Admin::AccountsController < AdminController
     @social_account&.destroy
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("flickr-section", partial: "admin/accounts/flickr_section", locals: { social_account: nil, error: nil }) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("flickr-card", partial: "admin/accounts/flickr_card", locals: { social_account: nil, error: nil }) }
       format.html { redirect_to admin_accounts_path, notice: "Flickr account disconnected." }
     end
   end
@@ -209,7 +209,7 @@ class Admin::AccountsController < AdminController
     @social_account&.destroy
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("instagram-section", partial: "admin/accounts/instagram_section", locals: { social_account: nil, error: nil }) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("instagram-card", partial: "admin/accounts/instagram_card", locals: { social_account: nil, error: nil }) }
       format.html { redirect_to admin_accounts_path, notice: "Instagram account disconnected." }
     end
   end
@@ -218,7 +218,7 @@ class Admin::AccountsController < AdminController
     instance_url = params[:instance_url].to_s.strip
     if instance_url.blank?
       respond_to do |format|
-        format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-section", partial: "admin/accounts/mastodon_section", locals: { social_account: nil, error: "Please enter your Mastodon instance URL." }) }
+        format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-card", partial: "admin/accounts/mastodon_card", locals: { social_account: nil, error: "Please enter your Mastodon instance URL." }) }
         format.html { redirect_to admin_accounts_path, alert: "Please enter your Mastodon instance URL." }
       end
       return
@@ -243,7 +243,7 @@ class Admin::AccountsController < AdminController
   rescue => e
     error_message = friendly_mastodon_error(e)
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-section", partial: "admin/accounts/mastodon_section", locals: { social_account: nil, error: error_message }) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-card", partial: "admin/accounts/mastodon_card", locals: { social_account: nil, error: error_message }) }
       format.html { redirect_to admin_accounts_path, alert: error_message }
     end
   end
@@ -323,7 +323,7 @@ class Admin::AccountsController < AdminController
     @social_account&.destroy
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-section", partial: "admin/accounts/mastodon_section", locals: { social_account: nil, error: nil }) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-card", partial: "admin/accounts/mastodon_card", locals: { social_account: nil, error: nil }) }
       format.html { redirect_to admin_accounts_path, notice: "Mastodon account disconnected." }
     end
   end
@@ -425,7 +425,7 @@ class Admin::AccountsController < AdminController
     @social_account&.destroy
 
     respond_to do |format|
-      format.turbo_stream { render turbo_stream: turbo_stream.replace("threads-section", partial: "admin/accounts/threads_section", locals: { social_account: nil, error: nil }) }
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("threads-card", partial: "admin/accounts/threads_card", locals: { social_account: nil, error: nil }) }
       format.html { redirect_to admin_accounts_path, notice: "Threads account disconnected." }
     end
   end

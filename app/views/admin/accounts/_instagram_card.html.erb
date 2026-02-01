@@ -1,4 +1,4 @@
-<div id="instagram-section">
+<div id="instagram-card">
   <h2 class="subtitle is-size-5-mobile">Instagram</h2>
 
   <% if social_account&.persisted? %>
@@ -7,8 +7,10 @@
         <div class="level-left">
           <div class="level-item">
             <div>
-              <p class="has-text-weight-semibold">@<%= social_account.handle %></p>
-              <p class="is-size-7 has-text-grey">Connected <%= time_ago_in_words(social_account.connected_at) %> ago</p>
+              <p class="has-text-weight-semibold">
+                <%= link_to "@#{social_account.handle}", "https://instagram.com/#{social_account.handle}", target: "_blank", rel: "noopener" %>
+              </p>
+              <p class="is-size-7 has-text-grey">Added <%= time_ago_in_words(social_account.created_at) %> ago</p>
             </div>
           </div>
         </div>
