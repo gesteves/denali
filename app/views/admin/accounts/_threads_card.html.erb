@@ -2,34 +2,31 @@
   <h2 class="subtitle is-size-5-mobile">Threads</h2>
 
   <% if social_account&.persisted? %>
-    <div class="box">
-      <div class="level is-mobile">
-        <div class="level-left">
-          <div class="level-item">
-            <div>
-              <p class="has-text-weight-semibold mb-2">
-                <span class="icon-text">
-                  <span class="icon"><i class="fa-brands fa-threads"></i></span>
-                  <span><%= link_to "@#{social_account.handle}", "https://threads.net/@#{social_account.handle}", target: "_blank", rel: "noopener" %></span>
-                </span>
-              </p>
-              <div class="field is-grouped is-grouped-multiline">
-                <div class="control">
-                  <div class="tags has-addons">
-                    <span class="tag is-success">Added</span>
-                    <span class="tag"><%= time_ago_in_words(social_account.created_at) %> ago</span>
-                  </div>
-                </div>
+    <div class="card">
+      <div class="card-content">
+        <p class="has-text-weight-semibold">
+          <span class="icon-text">
+            <span class="icon"><i class="fa-brands fa-threads"></i></span>
+            <span><%= link_to "@#{social_account.handle}", "https://threads.net/@#{social_account.handle}", target: "_blank", rel: "noopener" %></span>
+          </span>
+        </p>
+        <hr class="hr">
+        <div class="level is-mobile">
+          <div class="level-left">
+            <div class="level-item">
+              <div class="tags has-addons">
+                <span class="tag is-success">Added</span>
+                <span class="tag"><%= time_ago_in_words(social_account.created_at) %> ago</span>
               </div>
             </div>
           </div>
-        </div>
-        <div class="level-right">
-          <div class="level-item">
-            <%= button_to 'Disconnect', threads_admin_accounts_path,
-                method: :delete,
-                form: { data: { turbo_confirm: 'Disconnect this Threads account?' } },
-                class: 'button is-danger is-small' %>
+          <div class="level-right">
+            <div class="level-item">
+              <%= button_to 'Disconnect', threads_admin_accounts_path,
+                  method: :delete,
+                  form: { data: { turbo_confirm: 'Disconnect this Threads account?' } },
+                  class: 'button is-danger is-small' %>
+            </div>
           </div>
         </div>
       </div>

@@ -2,17 +2,18 @@
   <h2 class="subtitle is-size-5-mobile">Mastodon</h2>
 
   <% if social_account&.persisted? %>
-    <div class="box">
-      <div class="level is-mobile">
-        <div class="level-left">
-          <div class="level-item">
-            <div>
-              <p class="has-text-weight-semibold mb-2">
-                <span class="icon-text">
-                  <span class="icon"><i class="fa-brands fa-mastodon"></i></span>
-                  <span><%= link_to "@#{social_account.handle}", "#{social_account.server_url}/@#{social_account.handle.split('@').first}", target: "_blank", rel: "noopener" %></span>
-                </span>
-              </p>
+    <div class="card">
+      <div class="card-content">
+        <p class="has-text-weight-semibold">
+          <span class="icon-text">
+            <span class="icon"><i class="fa-brands fa-mastodon"></i></span>
+            <span><%= link_to "@#{social_account.handle}", "#{social_account.server_url}/@#{social_account.handle.split('@').first}", target: "_blank", rel: "noopener" %></span>
+          </span>
+        </p>
+        <hr class="hr">
+        <div class="level is-mobile">
+          <div class="level-left">
+            <div class="level-item">
               <div class="field is-grouped is-grouped-multiline">
                 <div class="control">
                   <div class="tags has-addons">
@@ -29,13 +30,13 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="level-right">
-          <div class="level-item">
-            <%= button_to 'Disconnect', mastodon_admin_accounts_path,
-                method: :delete,
-                form: { data: { turbo_confirm: 'Disconnect this Mastodon account?' } },
-                class: 'button is-danger is-small' %>
+          <div class="level-right">
+            <div class="level-item">
+              <%= button_to 'Disconnect', mastodon_admin_accounts_path,
+                  method: :delete,
+                  form: { data: { turbo_confirm: 'Disconnect this Mastodon account?' } },
+                  class: 'button is-danger is-small' %>
+            </div>
           </div>
         </div>
       </div>
@@ -43,7 +44,7 @@
   <% else %>
     <% show_form = error.present? || local_assigns[:show_form] %>
 
-    <div data-controller="inline-form" data-inline-form-button-text-value="Connect Mastodon Account">
+    <div data-controller="inline-form">
       <% if show_form %>
         <%# Show form directly when there's an error %>
         <%= render 'admin/accounts/mastodon_form', error: error %>

@@ -8,10 +8,11 @@ describe('InlineFormController', () => {
 
   beforeEach(() => {
     document.body.innerHTML = `
-      <div data-controller="inline-form" data-inline-form-button-text-value="Add Bluesky Account">
+      <div data-controller="inline-form">
         <div data-inline-form-target="placeholder">
-          <button type="button" class="button is-info is-outlined" data-action="inline-form#show">
-            Add Bluesky Account
+          <button type="button" class="button" data-action="inline-form#show">
+            <span class="icon"><i class="fa-brands fa-bluesky"></i></span>
+            <span>Connect with Bluesky</span>
           </button>
         </div>
 
@@ -95,13 +96,14 @@ describe('InlineFormController', () => {
       expect(element.querySelector('[data-inline-form-target="placeholder"]')).not.toBeNull();
     });
 
-    it('restores the add button with custom text from value', () => {
+    it('restores the original placeholder with button and icon', () => {
       const controller = getController();
       controller.hide();
 
       const button = element.querySelector('button[data-action="inline-form#show"]');
       expect(button).not.toBeNull();
-      expect(button.textContent).toContain('Add Bluesky Account');
+      expect(button.textContent).toContain('Connect with Bluesky');
+      expect(button.querySelector('.icon')).not.toBeNull();
     });
 
   });

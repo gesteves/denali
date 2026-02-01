@@ -54,7 +54,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         expect(response.body).to include("Connect with Bluesky")
         expect(response.body).to include("Connect with Flickr")
         expect(response.body).to include("Connect with Instagram")
-        expect(response.body).to include("Connect Mastodon Account")
+        expect(response.body).to include("Connect with Mastodon")
         expect(response.body).to include("Connect with Threads")
       end
     end
