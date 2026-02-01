@@ -28,13 +28,13 @@ class Admin::AccountsController < AdminController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to admin_accounts_path, notice: "Bluesky account connected!" }
+      format.html { redirect_to admin_accounts_path, flash: { success: "Bluesky account connected!" } }
     end
   rescue => e
     error_message = friendly_bluesky_error(e)
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("bluesky-card", partial: "admin/accounts/bluesky_card", locals: { social_account: @social_account, error: error_message }) }
-      format.html { redirect_to admin_accounts_path, alert: error_message }
+      format.html { redirect_to admin_accounts_path, flash: { danger: error_message } }
     end
   end
 
@@ -44,13 +44,13 @@ class Admin::AccountsController < AdminController
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("bluesky-card", partial: "admin/accounts/bluesky_card", locals: { social_account: nil, error: nil }) }
-      format.html { redirect_to admin_accounts_path, notice: "Bluesky account disconnected." }
+      format.html { redirect_to admin_accounts_path, flash: { success: "Bluesky account disconnected." } }
     end
   end
 
   def initiate_flickr
     if ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank?
-      redirect_to admin_accounts_path, alert: "Flickr API credentials are not configured."
+      redirect_to admin_accounts_path, flash: { danger: "Flickr API credentials are not configured." }
       return
     end
 
@@ -65,13 +65,13 @@ class Admin::AccountsController < AdminController
   rescue => e
     Rails.logger.error("[Flickr] OAuth initiation error: #{e.message}")
     cleanup_flickr_session
-    redirect_to admin_accounts_path, alert: friendly_flickr_error(e)
+    redirect_to admin_accounts_path, flash: { danger: friendly_flickr_error(e) }
   end
 
   def flickr_callback
     if params[:oauth_token] != session[:flickr_oauth_token]
       cleanup_flickr_session
-      redirect_to admin_accounts_path, alert: "Invalid OAuth token. Please try again."
+      redirect_to admin_accounts_path, flash: { danger: "Invalid OAuth token. Please try again." }
       return
     end
 
@@ -98,11 +98,11 @@ class Admin::AccountsController < AdminController
     @social_account.save!
 
     cleanup_flickr_session
-    redirect_to admin_accounts_path, notice: "Flickr account connected successfully!"
+    redirect_to admin_accounts_path, flash: { success: "Flickr account connected successfully!" }
   rescue => e
     Rails.logger.error("[Flickr] Callback error: #{e.message}")
     cleanup_flickr_session
-    redirect_to admin_accounts_path, alert: friendly_flickr_error(e)
+    redirect_to admin_accounts_path, flash: { danger: friendly_flickr_error(e) }
   end
 
   def destroy_flickr
@@ -111,13 +111,13 @@ class Admin::AccountsController < AdminController
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("flickr-card", partial: "admin/accounts/flickr_card", locals: { social_account: nil, error: nil }) }
-      format.html { redirect_to admin_accounts_path, notice: "Flickr account disconnected." }
+      format.html { redirect_to admin_accounts_path, flash: { success: "Flickr account disconnected." } }
     end
   end
 
   def initiate_instagram
     if ENV['INSTAGRAM_APP_ID'].blank? || ENV['INSTAGRAM_APP_SECRET'].blank?
-      redirect_to admin_accounts_path, alert: "Instagram API credentials are not configured."
+      redirect_to admin_accounts_path, flash: { danger: "Instagram API credentials are not configured." }
       return
     end
 
@@ -138,12 +138,12 @@ class Admin::AccountsController < AdminController
 
   def instagram_callback
     if params[:state] != session[:instagram_oauth_state]
-      redirect_to admin_accounts_path, alert: "Invalid OAuth state. Please try again."
+      redirect_to admin_accounts_path, flash: { danger: "Invalid OAuth state. Please try again." }
       return
     end
 
     if params[:error].present?
-      redirect_to admin_accounts_path, alert: "Authorization was denied: #{params[:error_description] || params[:error]}"
+      redirect_to admin_accounts_path, flash: { danger: "Authorization was denied: #{params[:error_description] || params[:error]}" }
       return
     end
 
@@ -158,7 +158,7 @@ class Admin::AccountsController < AdminController
 
     unless token_response.code == 200
       Rails.logger.error("[Instagram] Token exchange failed: #{token_response.body}")
-      redirect_to admin_accounts_path, alert: "Failed to get access token. Please try again."
+      redirect_to admin_accounts_path, flash: { danger: "Failed to get access token. Please try again." }
       return
     end
 
@@ -175,7 +175,7 @@ class Admin::AccountsController < AdminController
 
     unless long_lived_response.code == 200
       Rails.logger.error("[Instagram] Long-lived token exchange failed: #{long_lived_response.body}")
-      redirect_to admin_accounts_path, alert: "Failed to get long-lived token. Please try again."
+      redirect_to admin_accounts_path, flash: { danger: "Failed to get long-lived token. Please try again." }
       return
     end
 
@@ -200,11 +200,11 @@ class Admin::AccountsController < AdminController
     @social_account.save!
 
     cleanup_instagram_session
-    redirect_to admin_accounts_path, notice: "Instagram account connected successfully!"
+    redirect_to admin_accounts_path, flash: { success: "Instagram account connected successfully!" }
   rescue => e
     Rails.logger.error("[Instagram] Callback error: #{e.message}")
     cleanup_instagram_session
-    redirect_to admin_accounts_path, alert: friendly_instagram_error(e)
+    redirect_to admin_accounts_path, flash: { danger: friendly_instagram_error(e) }
   end
 
   def destroy_instagram
@@ -213,7 +213,7 @@ class Admin::AccountsController < AdminController
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("instagram-card", partial: "admin/accounts/instagram_card", locals: { social_account: nil, error: nil }) }
-      format.html { redirect_to admin_accounts_path, notice: "Instagram account disconnected." }
+      format.html { redirect_to admin_accounts_path, flash: { success: "Instagram account disconnected." } }
     end
   end
 
@@ -222,7 +222,7 @@ class Admin::AccountsController < AdminController
     if instance_url.blank?
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-card", partial: "admin/accounts/mastodon_card", locals: { social_account: nil, error: "Please enter your Mastodon instance URL." }) }
-        format.html { redirect_to admin_accounts_path, alert: "Please enter your Mastodon instance URL." }
+        format.html { redirect_to admin_accounts_path, flash: { danger: "Please enter your Mastodon instance URL." } }
       end
       return
     end
@@ -247,19 +247,19 @@ class Admin::AccountsController < AdminController
     error_message = friendly_mastodon_error(e)
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-card", partial: "admin/accounts/mastodon_card", locals: { social_account: nil, error: error_message }) }
-      format.html { redirect_to admin_accounts_path, alert: error_message }
+      format.html { redirect_to admin_accounts_path, flash: { danger: error_message } }
     end
   end
 
   def mastodon_callback
     # Verify state parameter
     if params[:state] != session[:mastodon_oauth_state]
-      redirect_to admin_accounts_path, alert: "Invalid OAuth state. Please try again."
+      redirect_to admin_accounts_path, flash: { danger: "Invalid OAuth state. Please try again." }
       return
     end
 
     if params[:error].present?
-      redirect_to admin_accounts_path, alert: "Authorization was denied: #{params[:error_description] || params[:error]}"
+      redirect_to admin_accounts_path, flash: { danger: "Authorization was denied: #{params[:error_description] || params[:error]}" }
       return
     end
 
@@ -278,7 +278,7 @@ class Admin::AccountsController < AdminController
 
     unless token_response.code == 200
       Rails.logger.error("[Mastodon] Token exchange failed: #{token_response.body}")
-      redirect_to admin_accounts_path, alert: "Failed to complete authorization. Please try again."
+      redirect_to admin_accounts_path, flash: { danger: "Failed to complete authorization. Please try again." }
       return
     end
 
@@ -292,7 +292,7 @@ class Admin::AccountsController < AdminController
 
     unless user_response.code == 200
       Rails.logger.error("[Mastodon] Failed to fetch user info: #{user_response.body}")
-      redirect_to admin_accounts_path, alert: "Failed to fetch account information. Please try again."
+      redirect_to admin_accounts_path, flash: { danger: "Failed to fetch account information. Please try again." }
       return
     end
 
@@ -313,12 +313,12 @@ class Admin::AccountsController < AdminController
     session.delete(:mastodon_oauth_state)
     session.delete(:mastodon_instance_url)
 
-    redirect_to admin_accounts_path, notice: "Mastodon account connected successfully!"
+    redirect_to admin_accounts_path, flash: { success: "Mastodon account connected successfully!" }
   rescue => e
     Rails.logger.error("[Mastodon] Callback error: #{e.message}")
     session.delete(:mastodon_oauth_state)
     session.delete(:mastodon_instance_url)
-    redirect_to admin_accounts_path, alert: "Failed to connect Mastodon account. Please try again."
+    redirect_to admin_accounts_path, flash: { danger: "Failed to connect Mastodon account. Please try again." }
   end
 
   def destroy_mastodon
@@ -327,13 +327,13 @@ class Admin::AccountsController < AdminController
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("mastodon-card", partial: "admin/accounts/mastodon_card", locals: { social_account: nil, error: nil }) }
-      format.html { redirect_to admin_accounts_path, notice: "Mastodon account disconnected." }
+      format.html { redirect_to admin_accounts_path, flash: { success: "Mastodon account disconnected." } }
     end
   end
 
   def initiate_threads
     if ENV['THREADS_APP_ID'].blank? || ENV['THREADS_APP_SECRET'].blank?
-      redirect_to admin_accounts_path, alert: "Threads API credentials are not configured."
+      redirect_to admin_accounts_path, flash: { danger: "Threads API credentials are not configured." }
       return
     end
 
@@ -354,12 +354,12 @@ class Admin::AccountsController < AdminController
 
   def threads_callback
     if params[:state] != session[:threads_oauth_state]
-      redirect_to admin_accounts_path, alert: "Invalid OAuth state. Please try again."
+      redirect_to admin_accounts_path, flash: { danger: "Invalid OAuth state. Please try again." }
       return
     end
 
     if params[:error].present?
-      redirect_to admin_accounts_path, alert: "Authorization was denied: #{params[:error_description] || params[:error]}"
+      redirect_to admin_accounts_path, flash: { danger: "Authorization was denied: #{params[:error_description] || params[:error]}" }
       return
     end
 
@@ -374,7 +374,7 @@ class Admin::AccountsController < AdminController
 
     unless token_response.code == 200
       Rails.logger.error("[Threads] Token exchange failed: #{token_response.body}")
-      redirect_to admin_accounts_path, alert: "Failed to get access token. Please try again."
+      redirect_to admin_accounts_path, flash: { danger: "Failed to get access token. Please try again." }
       return
     end
 
@@ -391,7 +391,7 @@ class Admin::AccountsController < AdminController
 
     unless long_lived_response.code == 200
       Rails.logger.error("[Threads] Long-lived token exchange failed: #{long_lived_response.body}")
-      redirect_to admin_accounts_path, alert: "Failed to get long-lived token. Please try again."
+      redirect_to admin_accounts_path, flash: { danger: "Failed to get long-lived token. Please try again." }
       return
     end
 
@@ -416,11 +416,11 @@ class Admin::AccountsController < AdminController
     @social_account.save!
 
     cleanup_threads_session
-    redirect_to admin_accounts_path, notice: "Threads account connected successfully!"
+    redirect_to admin_accounts_path, flash: { success: "Threads account connected successfully!" }
   rescue => e
     Rails.logger.error("[Threads] Callback error: #{e.message}")
     cleanup_threads_session
-    redirect_to admin_accounts_path, alert: friendly_threads_error(e)
+    redirect_to admin_accounts_path, flash: { danger: friendly_threads_error(e) }
   end
 
   def destroy_threads
@@ -429,7 +429,7 @@ class Admin::AccountsController < AdminController
 
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("threads-card", partial: "admin/accounts/threads_card", locals: { social_account: nil, error: nil }) }
-      format.html { redirect_to admin_accounts_path, notice: "Threads account disconnected." }
+      format.html { redirect_to admin_accounts_path, flash: { success: "Threads account disconnected." } }
     end
   end
 
