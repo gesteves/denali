@@ -59,16 +59,4 @@ module AdminHelper
     shares_count_tag(entry.threads_shares_count)
   end
 
-  def token_expiration_status_class(connected_at, expires_in: 60.days, warning_threshold: 7.days)
-    return 'is-info' if connected_at.blank?
-
-    expires_at = connected_at + expires_in
-    if expires_at < Time.current
-      'is-danger'
-    elsif expires_at < warning_threshold.from_now
-      'is-warning'
-    else
-      'is-success'
-    end
-  end
 end

@@ -26,15 +26,6 @@
                     <span class="tag"><%= time_ago_in_words(social_account.created_at) %> ago</span>
                   </div>
                 </div>
-                <% last_shared = Entry.maximum(:last_shared_on_mastodon_at) %>
-                <% if last_shared.present? %>
-                  <div class="control">
-                    <div class="tags has-addons">
-                      <span class="tag is-info">Last shared</span>
-                      <span class="tag"><%= time_ago_in_words(last_shared) %> ago</span>
-                    </div>
-                  </div>
-                <% end %>
               </div>
             </div>
           </div>
