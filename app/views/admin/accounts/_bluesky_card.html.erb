@@ -53,7 +53,7 @@
     <% social_account ||= SocialAccount.new(provider: 'bluesky', server_url: 'https://bsky.social') %>
     <% show_form = error.present? || local_assigns[:show_form] %>
 
-    <div data-controller="inline-form" data-inline-form-button-text-value="Add Bluesky Account">
+    <div data-controller="inline-form" data-inline-form-button-text-value="Save">
       <% if show_form %>
         <%# Show form directly when there's an error %>
         <%= render 'admin/accounts/bluesky_form', social_account: social_account, error: error %>

@@ -51,7 +51,7 @@ RSpec.describe "Admin::Accounts", type: :request do
 
       it "displays the add account buttons" do
         get admin_accounts_path
-        expect(response.body).to include("Add Bluesky Account")
+        expect(response.body).to include("Connect with Bluesky")
         expect(response.body).to include("Connect with Flickr")
         expect(response.body).to include("Connect with Instagram")
         expect(response.body).to include("Connect Mastodon Account")
@@ -182,7 +182,7 @@ RSpec.describe "Admin::Accounts", type: :request do
       it "redirects with friendly error message (HTML)" do
         post bluesky_admin_accounts_path, params: bluesky_params
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("check your handle and app password")
+        expect(flash[:danger]).to include("check your handle and app password")
       end
 
       it "shows friendly error with form visible (turbo_stream)" do
@@ -190,7 +190,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         expect(response.media_type).to eq('text/vnd.turbo-stream.html')
         expect(response.body).to include('notification is-danger')
         expect(response.body).to include('check your handle and app password')
-        expect(response.body).to include('Connect Account')
+        expect(response.body).to include('Save')
       end
     end
 
@@ -277,7 +277,7 @@ RSpec.describe "Admin::Accounts", type: :request do
       it "redirects with error message" do
         post flickr_admin_accounts_path
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("not configured")
+        expect(flash[:danger]).to include("not configured")
       end
     end
   end
@@ -328,7 +328,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get flickr_callback_admin_accounts_path, params: { oauth_token: 'request_token', oauth_verifier: 'verifier' }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:notice]).to include("connected successfully")
+        expect(flash[:success]).to include("connected successfully")
       end
 
       it "clears OAuth session data" do
@@ -355,7 +355,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get flickr_callback_admin_accounts_path, params: { oauth_token: 'wrong_token', oauth_verifier: 'verifier' }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("Invalid OAuth token")
+        expect(flash[:danger]).to include("Invalid OAuth token")
       end
     end
   end
@@ -415,7 +415,7 @@ RSpec.describe "Admin::Accounts", type: :request do
       it "shows an error (HTML)" do
         post mastodon_admin_accounts_path, params: { instance_url: '' }
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("enter your Mastodon instance URL")
+        expect(flash[:danger]).to include("enter your Mastodon instance URL")
       end
 
       it "shows an error (turbo_stream)" do
@@ -433,7 +433,7 @@ RSpec.describe "Admin::Accounts", type: :request do
       it "shows a friendly error message" do
         post mastodon_admin_accounts_path, params: { instance_url: 'unreachable.social' }
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("Could not reach")
+        expect(flash[:danger]).to include("Could not reach")
       end
     end
   end
@@ -482,7 +482,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get mastodon_callback_admin_accounts_path, params: { code: 'auth_code', state: state }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:notice]).to include("connected successfully")
+        expect(flash[:success]).to include("connected successfully")
       end
 
       it "clears OAuth session data" do
@@ -499,7 +499,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get mastodon_callback_admin_accounts_path, params: { code: 'auth_code', state: 'invalid_state' }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("Invalid OAuth state")
+        expect(flash[:danger]).to include("Invalid OAuth state")
       end
     end
 
@@ -514,7 +514,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get mastodon_callback_admin_accounts_path, params: { error: 'access_denied', error_description: 'User denied access', state: state }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("Authorization was denied")
+        expect(flash[:danger]).to include("Authorization was denied")
       end
     end
   end
@@ -585,7 +585,7 @@ RSpec.describe "Admin::Accounts", type: :request do
       it "redirects with error message" do
         post instagram_admin_accounts_path
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("not configured")
+        expect(flash[:danger]).to include("not configured")
       end
     end
   end
@@ -647,7 +647,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get instagram_callback_admin_accounts_path, params: { code: 'auth_code', state: state }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:notice]).to include("connected successfully")
+        expect(flash[:success]).to include("connected successfully")
       end
 
       it "clears OAuth session data" do
@@ -663,7 +663,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get instagram_callback_admin_accounts_path, params: { code: 'auth_code', state: 'invalid_state' }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("Invalid OAuth state")
+        expect(flash[:danger]).to include("Invalid OAuth state")
       end
     end
 
@@ -677,7 +677,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get instagram_callback_admin_accounts_path, params: { error: 'access_denied', error_description: 'User denied access', state: state }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("Authorization was denied")
+        expect(flash[:danger]).to include("Authorization was denied")
       end
     end
 
@@ -694,7 +694,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get instagram_callback_admin_accounts_path, params: { code: 'invalid_code', state: state }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("Failed to get access token")
+        expect(flash[:danger]).to include("Failed to get access token")
       end
     end
   end
@@ -766,7 +766,7 @@ RSpec.describe "Admin::Accounts", type: :request do
       it "redirects with error message" do
         post threads_admin_accounts_path
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("not configured")
+        expect(flash[:danger]).to include("not configured")
       end
     end
   end
@@ -828,7 +828,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get threads_callback_admin_accounts_path, params: { code: 'auth_code', state: state }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:notice]).to include("connected successfully")
+        expect(flash[:success]).to include("connected successfully")
       end
 
       it "clears OAuth session data" do
@@ -844,7 +844,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get threads_callback_admin_accounts_path, params: { code: 'auth_code', state: 'invalid_state' }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("Invalid OAuth state")
+        expect(flash[:danger]).to include("Invalid OAuth state")
       end
     end
 
@@ -858,7 +858,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get threads_callback_admin_accounts_path, params: { error: 'access_denied', error_description: 'User denied access', state: state }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("Authorization was denied")
+        expect(flash[:danger]).to include("Authorization was denied")
       end
     end
 
@@ -875,7 +875,7 @@ RSpec.describe "Admin::Accounts", type: :request do
         get threads_callback_admin_accounts_path, params: { code: 'invalid_code', state: state }
 
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:alert]).to include("Failed to get access token")
+        expect(flash[:danger]).to include("Failed to get access token")
       end
     end
   end
