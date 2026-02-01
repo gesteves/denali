@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_31_232427) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_01_201304) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,7 +68,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_31_232427) do
   end
 
   create_table "cameras", force: :cascade do |t|
-    t.string "amazon_url"
     t.datetime "created_at", precision: nil, null: false
     t.string "display_name"
     t.boolean "is_phone", default: false
@@ -149,7 +148,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_31_232427) do
   end
 
   create_table "films", force: :cascade do |t|
-    t.string "amazon_url"
     t.datetime "created_at", precision: nil, null: false
     t.string "display_name"
     t.string "make"
@@ -159,7 +157,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_31_232427) do
   end
 
   create_table "lenses", force: :cascade do |t|
-    t.string "amazon_url"
     t.datetime "created_at", precision: nil, null: false
     t.string "display_name"
     t.string "make"

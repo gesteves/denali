@@ -23,6 +23,6 @@ class Admin::FilmsController < AdminController
 
   private
   def film_params
-    params.require(:film).permit(:make, :model, :display_name, :amazon_url)
+    params.require(:film).permit(:make, :model, :display_name)
   end
 end

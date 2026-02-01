@@ -41,7 +41,7 @@ RSpec.describe Film, type: :model do
 
       it 'does not trigger callback when other attributes change' do
         expect(film).not_to receive(:update_entry_tags)
-        film.update!(amazon_url: 'https://amazon.com/film')
+        film.update!(make: 'Updated Make')
       end
     end
   end

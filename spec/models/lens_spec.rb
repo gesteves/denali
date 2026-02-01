@@ -41,7 +41,7 @@ RSpec.describe Lens, type: :model do
 
       it 'does not trigger callback when other attributes change' do
         expect(lens).not_to receive(:update_entry_tags)
-        lens.update!(amazon_url: 'https://amazon.com/lens')
+        lens.update!(make: 'Updated Make')
       end
     end
   end
