@@ -5,26 +5,24 @@ class Instagram
   INSTAGRAM_GRAPH_API_BASE = 'https://graph.instagram.com/v24.0'
   INSTAGRAM_BASIC_API_BASE = 'https://graph.instagram.com'
 
+  # Tokens expire after 60 days; refresh when older than this many days
+  TOKEN_REFRESH_THRESHOLD_DAYS = 53
+
   # Initializes a new instance of the Instagram class.
-  # Automatically refreshes and caches the Instagram User access token on initialization.
+  # Refreshes the token if it's expiring soon.
   #
   # @param app_id [String] the Instagram App ID.
   # @param app_secret [String] the Instagram App Secret.
-  # @param ig_account_id [String] the Instagram Business Account ID.
+  # @param social_account [SocialAccount] the social account with Instagram credentials.
   # @raise [RuntimeError] if token refresh fails.
-  def initialize(app_id:, app_secret:, ig_account_id:)
+  def initialize(app_id:, app_secret:, social_account:)
     @app_id = app_id
     @app_secret = app_secret
-    @ig_account_id = ig_account_id
+    @social_account = social_account
+    @ig_account_id = social_account.uid
 
-    # Refresh and cache the token on initialization to ensure we have a fresh token
-    begin
-      refresh_and_cache_token
-    rescue => e
-      # If refresh fails, clear cache and raise exception
-      clear_cached_token
-      raise "Failed to initialize Instagram: #{e.message}"
-    end
+    # Only refresh if token is expiring soon.
+    refresh_token_if_needed
   end
 
   # Posts one or more photos to the Instagram feed.
@@ -102,6 +100,53 @@ class Instagram
   end
 
   private
+
+  # Returns the access token from the social account.
+  #
+  # @return [String] the access token.
+  def access_token
+    @social_account.access_token
+  end
+
+  # Checks if the token needs to be refreshed and refreshes it if necessary.
+  # Tokens are refreshed if connected_at is more than TOKEN_REFRESH_THRESHOLD_DAYS days ago.
+  #
+  # @return [void]
+  def refresh_token_if_needed
+    return if @social_account.connected_at.blank?
+    return unless @social_account.connected_at < TOKEN_REFRESH_THRESHOLD_DAYS.days.ago
+
+    refresh_token
+  end
+
+  # Refreshes a long-lived Instagram User access token and persists it to the database.
+  # Extends the token's validity for another 60 days.
+  #
+  # @return [void]
+  # @raise [RuntimeError] if the token refresh fails.
+  def refresh_token
+    response = HTTParty.get(
+      "#{INSTAGRAM_BASIC_API_BASE}/refresh_access_token",
+      query: {
+        grant_type: 'ig_refresh_token',
+        access_token: @social_account.access_token
+      }
+    )
+
+    unless response.success?
+      parsed_body = JSON.parse(response.body) rescue response.body
+      Rails.logger.error("[Instagram] Token refresh failed: #{parsed_body}")
+      raise "Failed to refresh Instagram token: #{parsed_body}"
+    end
+
+    parsed = JSON.parse(response.body)
+    new_token = parsed['access_token'].to_s.strip
+
+    raise "Refreshed token is blank" if new_token.blank?
+
+    @social_account.update!(access_token: new_token, connected_at: Time.current)
+    Rails.logger.info("[Instagram] Token refreshed for account #{@ig_account_id}")
+  end
 
   # Creates a media container for multiple photos for the Instagram feed as a carousel.
   #
@@ -306,84 +351,4 @@ class Instagram
       raise "Failed to create media container: #{parsed_body}"
     end
   end
-
-  # Returns the cache key for the access token.
-  #
-  # @return [String] the cache key for the access token.
-  def access_token_cache_key
-    "instagram:#{@ig_account_id}:access_token"
-  end
-
-  # Refreshes a long-lived Instagram User access token and caches it.
-  # Uses the cached token if available, otherwise uses the access token from ENV.
-  # Extends the token's validity for another 60 days.
-  #
-  # @return [Hash] a hash containing :access_token and :expires_in (seconds).
-  # @raise [RuntimeError] if the token refresh fails or no token is available.
-  def refresh_and_cache_token
-    token_to_refresh = get_cached_token&.strip&.presence || ENV['INSTAGRAM_ACCESS_TOKEN']&.strip&.presence
-
-    raise "No access token found in cache or ENV['INSTAGRAM_ACCESS_TOKEN']" if token_to_refresh.blank?
-
-    response = HTTParty.get(
-      "#{INSTAGRAM_BASIC_API_BASE}/refresh_access_token",
-      query: {
-        grant_type: 'ig_refresh_token',
-        access_token: token_to_refresh
-      }
-    )
-
-    unless response.success?
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to refresh token: #{parsed_body}"
-    end
-
-    parsed = JSON.parse(response.body)
-    refreshed_token = parsed['access_token'].to_s.strip
-
-    raise "Refreshed token is blank" if refreshed_token.blank?
-
-    result = {
-      access_token: refreshed_token,
-      expires_in: parsed['expires_in']
-    }
-
-    expires_in_seconds = result[:expires_in] || 60.days.to_i
-
-    # Cache the token with expiration
-    Rails.cache.write(access_token_cache_key, refreshed_token, expires_in: expires_in_seconds.seconds)
-
-    # Clear the memoized access token so it will be reloaded from cache
-    @access_token = nil
-
-    result
-  end
-
-  # Retrieves the access token from cache.
-  # The token should always be cached after initialization (via refresh_and_cache_token).
-  #
-  # @return [String] the access token.
-  # @raise [RuntimeError] if no access token is found in cache.
-  def access_token
-    @access_token ||= begin
-      token = get_cached_token&.strip&.presence
-      raise "Instagram access token not found in cache. Token may not have been refreshed during initialization." if token.blank?
-      token
-    end
-  end
-
-  # Retrieves the access token from cache or returns nil if not found.
-  #
-  # @return [String, nil] the cached access token or nil if not found.
-  def get_cached_token
-    Rails.cache.read(access_token_cache_key)
-  end
-
-  # Removes the access token from cache.
-  #
-  # @return [void]
-  def clear_cached_token
-    Rails.cache.delete(access_token_cache_key)
-  end
 end
-

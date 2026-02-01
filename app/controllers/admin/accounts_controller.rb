@@ -2,6 +2,7 @@ class Admin::AccountsController < AdminController
   def index
     @bluesky_account = current_user.bluesky_account
     @flickr_account = current_user.flickr_account
+    @instagram_account = current_user.instagram_account
     @mastodon_account = current_user.mastodon_account
   end
 
@@ -107,6 +108,108 @@ class Admin::AccountsController < AdminController
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("flickr-section", partial: "admin/accounts/flickr_section", locals: { social_account: nil, error: nil }) }
       format.html { redirect_to admin_accounts_path, notice: "Flickr account disconnected." }
+    end
+  end
+
+  def initiate_instagram
+    if ENV['INSTAGRAM_APP_ID'].blank? || ENV['INSTAGRAM_APP_SECRET'].blank?
+      redirect_to admin_accounts_path, alert: "Instagram API credentials are not configured."
+      return
+    end
+
+    state = SecureRandom.hex(32)
+    session[:instagram_oauth_state] = state
+
+    scopes = 'instagram_business_basic,instagram_business_content_publish'
+    authorize_url = "https://www.instagram.com/oauth/authorize?" + {
+      client_id: ENV['INSTAGRAM_APP_ID'],
+      redirect_uri: instagram_callback_url,
+      response_type: 'code',
+      scope: scopes,
+      state: state
+    }.to_query
+
+    redirect_to authorize_url, allow_other_host: true
+  end
+
+  def instagram_callback
+    if params[:state] != session[:instagram_oauth_state]
+      redirect_to admin_accounts_path, alert: "Invalid OAuth state. Please try again."
+      return
+    end
+
+    if params[:error].present?
+      redirect_to admin_accounts_path, alert: "Authorization was denied: #{params[:error_description] || params[:error]}"
+      return
+    end
+
+    # Step 1: Exchange code for short-lived token
+    token_response = HTTParty.post("https://api.instagram.com/oauth/access_token", body: {
+      client_id: ENV['INSTAGRAM_APP_ID'],
+      client_secret: ENV['INSTAGRAM_APP_SECRET'],
+      grant_type: 'authorization_code',
+      redirect_uri: instagram_callback_url,
+      code: params[:code]
+    })
+
+    unless token_response.code == 200
+      Rails.logger.error("[Instagram] Token exchange failed: #{token_response.body}")
+      redirect_to admin_accounts_path, alert: "Failed to get access token. Please try again."
+      return
+    end
+
+    token_data = JSON.parse(token_response.body)
+    short_lived_token = token_data['access_token']
+    user_id = token_data['user_id']
+
+    # Step 2: Exchange for long-lived token
+    long_lived_response = HTTParty.get("https://graph.instagram.com/access_token", query: {
+      grant_type: 'ig_exchange_token',
+      client_secret: ENV['INSTAGRAM_APP_SECRET'],
+      access_token: short_lived_token
+    })
+
+    unless long_lived_response.code == 200
+      Rails.logger.error("[Instagram] Long-lived token exchange failed: #{long_lived_response.body}")
+      redirect_to admin_accounts_path, alert: "Failed to get long-lived token. Please try again."
+      return
+    end
+
+    long_lived_data = JSON.parse(long_lived_response.body)
+    access_token = long_lived_data['access_token']
+
+    # Step 3: Get user info (username)
+    user_response = HTTParty.get("https://graph.instagram.com/me", query: {
+      fields: 'user_id,username',
+      access_token: access_token
+    })
+    user_info = user_response.code == 200 ? JSON.parse(user_response.body) : {}
+
+    # Step 4: Save to database
+    @social_account = current_user.social_accounts.find_or_initialize_by(provider: 'instagram')
+    @social_account.assign_attributes(
+      uid: user_id.to_s,
+      handle: user_info['username'],
+      access_token: access_token,
+      connected_at: Time.current
+    )
+    @social_account.save!
+
+    cleanup_instagram_session
+    redirect_to admin_accounts_path, notice: "Instagram account connected successfully!"
+  rescue => e
+    Rails.logger.error("[Instagram] Callback error: #{e.message}")
+    cleanup_instagram_session
+    redirect_to admin_accounts_path, alert: friendly_instagram_error(e)
+  end
+
+  def destroy_instagram
+    @social_account = current_user.instagram_account
+    @social_account&.destroy
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("instagram-section", partial: "admin/accounts/instagram_section", locals: { social_account: nil, error: nil }) }
+      format.html { redirect_to admin_accounts_path, notice: "Instagram account disconnected." }
     end
   end
 
@@ -275,6 +378,29 @@ class Admin::AccountsController < AdminController
       "https://#{ENV['DOMAIN_ADMIN']}/admin/accounts/flickr/callback"
     else
       flickr_callback_admin_accounts_url
+    end
+  end
+
+  def cleanup_instagram_session
+    session.delete(:instagram_oauth_state)
+  end
+
+  def friendly_instagram_error(exception)
+    case exception.message
+    when /access_denied|user_denied/i
+      "Authorization was denied."
+    when /Invalid.*code|code.*expired/i
+      "Authorization code expired. Please try again."
+    else
+      "Could not connect to Instagram: #{exception.message}"
+    end
+  end
+
+  def instagram_callback_url
+    if Rails.env.production? && ENV['DOMAIN_ADMIN'].present?
+      "https://#{ENV['DOMAIN_ADMIN']}/admin/accounts/instagram/callback"
+    else
+      instagram_callback_admin_accounts_url
     end
   end
 end

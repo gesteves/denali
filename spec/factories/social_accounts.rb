@@ -21,6 +21,13 @@ FactoryBot.define do
       server_url { nil }
     end
 
+    trait :instagram do
+      provider { 'instagram' }
+      sequence(:uid) { |n| "#{n}" }
+      sequence(:handle) { |n| "instagramuser#{n}" }
+      server_url { nil }
+    end
+
     trait :mastodon do
       provider { 'mastodon' }
       sequence(:uid) { |n| "#{n}" }

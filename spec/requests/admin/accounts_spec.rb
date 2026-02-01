@@ -19,6 +19,7 @@ RSpec.describe "Admin::Accounts", type: :request do
       expect(response.body).to include("Connected Accounts")
       expect(response.body).to include("Bluesky")
       expect(response.body).to include("Flickr")
+      expect(response.body).to include("Instagram")
       expect(response.body).to include("Mastodon")
     end
 
@@ -41,13 +42,30 @@ RSpec.describe "Admin::Accounts", type: :request do
         allow(ENV).to receive(:[]).and_call_original
         allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_KEY').and_return('test_key')
         allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_SECRET').and_return('test_secret')
+        allow(ENV).to receive(:[]).with('INSTAGRAM_APP_ID').and_return('test_app_id')
+        allow(ENV).to receive(:[]).with('INSTAGRAM_APP_SECRET').and_return('test_app_secret')
       end
 
       it "displays the add account buttons" do
         get admin_accounts_path
         expect(response.body).to include("Add Bluesky Account")
         expect(response.body).to include("Connect with Flickr")
+        expect(response.body).to include("Connect with Instagram")
         expect(response.body).to include("Connect Mastodon Account")
+      end
+    end
+
+    context "when user has a connected Instagram account" do
+      let!(:instagram_account) { create(:social_account, :instagram, user: user, handle: 'myinstauser') }
+
+      it "displays the connected account" do
+        get admin_accounts_path
+        expect(response.body).to include("@myinstauser")
+      end
+
+      it "displays the disconnect button for Instagram" do
+        get admin_accounts_path
+        expect(response.body).to include("Disconnect")
       end
     end
 
@@ -508,6 +526,186 @@ RSpec.describe "Admin::Accounts", type: :request do
       it "handles gracefully" do
         expect {
           delete mastodon_admin_accounts_path
+        }.not_to raise_error
+        expect(response).to redirect_to(admin_accounts_path)
+      end
+    end
+  end
+
+  describe "POST /admin/accounts/instagram (initiate_instagram)" do
+    context "with Instagram credentials configured" do
+      before do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('INSTAGRAM_APP_ID').and_return('test_app_id')
+        allow(ENV).to receive(:[]).with('INSTAGRAM_APP_SECRET').and_return('test_app_secret')
+      end
+
+      it "redirects to Instagram authorization page" do
+        post instagram_admin_accounts_path
+        expect(response).to redirect_to(/instagram\.com\/oauth\/authorize/)
+      end
+
+      it "includes required scopes in authorization URL" do
+        post instagram_admin_accounts_path
+        expect(response.location).to include('instagram_business_basic')
+        expect(response.location).to include('instagram_business_content_publish')
+      end
+
+      it "stores OAuth state in session" do
+        post instagram_admin_accounts_path
+        expect(session[:instagram_oauth_state]).to be_present
+      end
+    end
+
+    context "without Instagram credentials configured" do
+      before do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('INSTAGRAM_APP_ID').and_return(nil)
+        allow(ENV).to receive(:[]).with('INSTAGRAM_APP_SECRET').and_return(nil)
+      end
+
+      it "redirects with error message" do
+        post instagram_admin_accounts_path
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:alert]).to include("not configured")
+      end
+    end
+  end
+
+  describe "GET /admin/accounts/instagram/callback (instagram_callback)" do
+    let(:oauth_state) { SecureRandom.hex(32) }
+
+    before do
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with('INSTAGRAM_APP_ID').and_return('test_app_id')
+      allow(ENV).to receive(:[]).with('INSTAGRAM_APP_SECRET').and_return('test_app_secret')
+      allow(ENV).to receive(:[]).with('DOMAIN_ADMIN').and_return(nil)
+    end
+
+    context "with valid callback" do
+      before do
+        # Initiate OAuth to set up session
+        post instagram_admin_accounts_path
+
+        stub_request(:post, "https://api.instagram.com/oauth/access_token")
+          .to_return(
+            status: 200,
+            body: { access_token: 'short_lived_token', user_id: '12345' }.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+
+        stub_request(:get, "https://graph.instagram.com/access_token")
+          .with(query: hash_including(grant_type: 'ig_exchange_token'))
+          .to_return(
+            status: 200,
+            body: { access_token: 'long_lived_token', expires_in: 5184000 }.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+
+        stub_request(:get, "https://graph.instagram.com/me")
+          .with(query: hash_including(access_token: 'long_lived_token'))
+          .to_return(
+            status: 200,
+            body: { user_id: '12345', username: 'testinstauser' }.to_json,
+            headers: { 'Content-Type' => 'application/json' }
+          )
+      end
+
+      it "creates an Instagram social account" do
+        state = session[:instagram_oauth_state]
+
+        expect {
+          get instagram_callback_admin_accounts_path, params: { code: 'auth_code', state: state }
+        }.to change(SocialAccount, :count).by(1)
+
+        account = SocialAccount.last
+        expect(account.provider).to eq('instagram')
+        expect(account.handle).to eq('testinstauser')
+        expect(account.uid).to eq('12345')
+      end
+
+      it "redirects to accounts page with success message" do
+        state = session[:instagram_oauth_state]
+        get instagram_callback_admin_accounts_path, params: { code: 'auth_code', state: state }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:notice]).to include("connected successfully")
+      end
+
+      it "clears OAuth session data" do
+        state = session[:instagram_oauth_state]
+        get instagram_callback_admin_accounts_path, params: { code: 'auth_code', state: state }
+
+        expect(session[:instagram_oauth_state]).to be_nil
+      end
+    end
+
+    context "with invalid state" do
+      it "redirects with error" do
+        get instagram_callback_admin_accounts_path, params: { code: 'auth_code', state: 'invalid_state' }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:alert]).to include("Invalid OAuth state")
+      end
+    end
+
+    context "when authorization is denied" do
+      before do
+        post instagram_admin_accounts_path
+      end
+
+      it "redirects with error message" do
+        state = session[:instagram_oauth_state]
+        get instagram_callback_admin_accounts_path, params: { error: 'access_denied', error_description: 'User denied access', state: state }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:alert]).to include("Authorization was denied")
+      end
+    end
+
+    context "when token exchange fails" do
+      before do
+        post instagram_admin_accounts_path
+
+        stub_request(:post, "https://api.instagram.com/oauth/access_token")
+          .to_return(status: 400, body: { error: 'invalid_code' }.to_json)
+      end
+
+      it "redirects with error message" do
+        state = session[:instagram_oauth_state]
+        get instagram_callback_admin_accounts_path, params: { code: 'invalid_code', state: state }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:alert]).to include("Failed to get access token")
+      end
+    end
+  end
+
+  describe "DELETE /admin/accounts/instagram (destroy_instagram)" do
+    let!(:instagram_account) { create(:social_account, :instagram, user: user) }
+
+    it "deletes the Instagram account" do
+      expect {
+        delete instagram_admin_accounts_path
+      }.to change(SocialAccount, :count).by(-1)
+    end
+
+    it "redirects to accounts page (HTML)" do
+      delete instagram_admin_accounts_path
+      expect(response).to redirect_to(admin_accounts_path)
+    end
+
+    it "returns turbo_stream response" do
+      delete instagram_admin_accounts_path, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+      expect(response.media_type).to eq('text/vnd.turbo-stream.html')
+    end
+
+    context "when user has no Instagram account" do
+      before { instagram_account.destroy }
+
+      it "handles gracefully" do
+        expect {
+          delete instagram_admin_accounts_path
         }.not_to raise_error
         expect(response).to redirect_to(admin_accounts_path)
       end

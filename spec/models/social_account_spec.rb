@@ -23,6 +23,15 @@ RSpec.describe SocialAccount, type: :model do
         expect(subject.server_url).to be_nil
       end
     end
+
+    context 'for instagram provider' do
+      subject { build(:social_account, :instagram) }
+
+      it 'does not require server_url' do
+        expect(subject).to be_valid
+        expect(subject.server_url).to be_nil
+      end
+    end
   end
 
   describe 'scopes' do
@@ -39,6 +48,14 @@ RSpec.describe SocialAccount, type: :model do
 
       it 'returns only flickr accounts' do
         expect(SocialAccount.flickr).to include(flickr_account)
+      end
+    end
+
+    describe '.instagram' do
+      let!(:instagram_account) { create(:social_account, :instagram) }
+
+      it 'returns only instagram accounts' do
+        expect(SocialAccount.instagram).to include(instagram_account)
       end
     end
 
@@ -72,6 +89,18 @@ RSpec.describe SocialAccount, type: :model do
     it 'returns false for other providers' do
       account = build(:social_account, provider: 'bluesky')
       expect(account.flickr?).to be false
+    end
+  end
+
+  describe '#instagram?' do
+    it 'returns true for instagram provider' do
+      account = build(:social_account, :instagram)
+      expect(account.instagram?).to be true
+    end
+
+    it 'returns false for other providers' do
+      account = build(:social_account, provider: 'bluesky')
+      expect(account.instagram?).to be false
     end
   end
 

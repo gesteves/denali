@@ -3,15 +3,19 @@ class InstagramWorker < ApplicationWorker
 
   def perform(entry_id, text)
     return if !Rails.env.production?
-    return if ENV['INSTAGRAM_APP_ID'].blank? || ENV['INSTAGRAM_APP_SECRET'].blank? || ENV['INSTAGRAM_ACCESS_TOKEN'].blank? || ENV['INSTAGRAM_ACCOUNT_ID'].blank?
+    return if ENV['INSTAGRAM_APP_ID'].blank? || ENV['INSTAGRAM_APP_SECRET'].blank?
+
     entry = Entry.published.find(entry_id)
     return if !entry.is_photo?
     raise UnprocessedPhotoError unless entry.photos_have_dimensions?
 
+    instagram_account = entry.user.instagram_account
+    return if instagram_account.blank?
+
     instagram = Instagram.new(
       app_id: ENV['INSTAGRAM_APP_ID'],
       app_secret: ENV['INSTAGRAM_APP_SECRET'],
-      ig_account_id: ENV['INSTAGRAM_ACCOUNT_ID']
+      social_account: instagram_account
     )
 
     photos = entry.photos.to_a[0..9].map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
@@ -31,4 +35,3 @@ class InstagramWorker < ApplicationWorker
     InstagramCommentWorker.perform_async(entry_id, instagram_post_id) if instagram_post_id.present? && entry.instagram_hashtags.present?
   end
 end
-

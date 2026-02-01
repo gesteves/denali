@@ -25,6 +25,10 @@ class User < ApplicationRecord
     social_accounts.find_by(provider: 'flickr')
   end
 
+  def instagram_account
+    social_accounts.find_by(provider: 'instagram')
+  end
+
   def mastodon_account
     social_accounts.find_by(provider: 'mastodon')
   end

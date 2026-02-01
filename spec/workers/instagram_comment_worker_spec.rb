@@ -4,14 +4,13 @@ RSpec.describe InstagramCommentWorker, type: :worker do
   let(:blog) { create(:blog) }
   let(:user) { create(:user) }
   let(:entry) { create(:entry, :published, blog: blog, user: user) }
+  let!(:instagram_account) { create(:social_account, :instagram, user: user) }
 
   before do
     allow(Rails.env).to receive(:production?).and_return(true)
     allow(ENV).to receive(:[]).and_call_original
     allow(ENV).to receive(:[]).with('INSTAGRAM_APP_ID').and_return('app_id')
     allow(ENV).to receive(:[]).with('INSTAGRAM_APP_SECRET').and_return('app_secret')
-    allow(ENV).to receive(:[]).with('INSTAGRAM_ACCESS_TOKEN').and_return('access_token')
-    allow(ENV).to receive(:[]).with('INSTAGRAM_ACCOUNT_ID').and_return('account_id')
   end
 
   describe '#perform' do
@@ -33,6 +32,13 @@ RSpec.describe InstagramCommentWorker, type: :worker do
       described_class.new.perform(entry.id, '12345')
     end
 
+    it 'returns early when user has no connected Instagram account' do
+      instagram_account.destroy
+      allow_any_instance_of(Entry).to receive(:instagram_hashtags).and_return('#nature #photo')
+      expect(Instagram).not_to receive(:new)
+      described_class.new.perform(entry.id, '12345')
+    end
+
     it 'posts comment to Instagram' do
       instagram = instance_double(Instagram)
       allow(Instagram).to receive(:new).and_return(instagram)
@@ -42,6 +48,20 @@ RSpec.describe InstagramCommentWorker, type: :worker do
         media_id: '12345',
         message: '#nature #photo'
       )
+
+      described_class.new.perform(entry.id, '12345')
+    end
+
+    it 'initializes Instagram with the connected social account' do
+      instagram = instance_double(Instagram)
+      allow(instagram).to receive(:post_comment)
+      allow_any_instance_of(Entry).to receive(:instagram_hashtags).and_return('#nature #photo')
+
+      expect(Instagram).to receive(:new).with(
+        app_id: 'app_id',
+        app_secret: 'app_secret',
+        social_account: instagram_account
+      ).and_return(instagram)
 
       described_class.new.perform(entry.id, '12345')
     end

@@ -3,9 +3,10 @@ require 'rails_helper'
 RSpec.describe Instagram do
   let(:app_id) { 'test_app_id' }
   let(:app_secret) { 'test_app_secret' }
-  let(:ig_account_id) { '123456789' }
   let(:access_token) { 'test_access_token' }
   let(:refreshed_token) { 'refreshed_test_token' }
+  let(:user) { create(:user) }
+  let(:social_account) { create(:social_account, :instagram, user: user, access_token: access_token, connected_at: Time.current) }
 
   # Helper to stub token refresh
   def stub_token_refresh(from_token: access_token, to_token: refreshed_token, success: true)
@@ -22,53 +23,41 @@ RSpec.describe Instagram do
     end
   end
 
-  before do
-    allow(ENV).to receive(:[]).and_call_original
-    allow(ENV).to receive(:[]).with('INSTAGRAM_ACCESS_TOKEN').and_return(access_token)
-    allow(Rails.cache).to receive(:read).and_return(nil)
-    allow(Rails.cache).to receive(:write)
-    allow(Rails.cache).to receive(:delete)
-  end
-
   describe '#initialize' do
-    context 'with successful token refresh' do
+    context 'with fresh token (connected recently)' do
+      it 'does not refresh the token' do
+        expect(HTTParty).not_to receive(:get).with(/refresh_access_token/, anything)
+
+        described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account)
+      end
+    end
+
+    context 'with expiring token (connected more than 53 days ago)' do
+      let(:social_account) { create(:social_account, :instagram, user: user, access_token: access_token, connected_at: 54.days.ago) }
+
       before { stub_token_refresh }
 
-      it 'refreshes and caches the token on initialization' do
-        expect(Rails.cache).to receive(:write).with(
-          "instagram:#{ig_account_id}:access_token",
-          refreshed_token,
-          expires_in: 5184000.seconds
-        )
+      it 'refreshes and persists the token' do
+        described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account)
 
-        described_class.new(app_id: app_id, app_secret: app_secret, ig_account_id: ig_account_id)
+        social_account.reload
+        expect(social_account.access_token).to eq(refreshed_token)
+        expect(social_account.connected_at).to be_within(1.second).of(Time.current)
       end
     end
 
     context 'when token refresh fails' do
+      let(:social_account) { create(:social_account, :instagram, user: user, access_token: access_token, connected_at: 54.days.ago) }
+
       before do
         stub_request(:get, "#{described_class::INSTAGRAM_BASIC_API_BASE}/refresh_access_token")
           .to_return(status: 400, body: { error: 'invalid_token' }.to_json)
       end
 
-      it 'clears cache and raises an error' do
-        expect(Rails.cache).to receive(:delete).with("instagram:#{ig_account_id}:access_token")
-
-        expect {
-          described_class.new(app_id: app_id, app_secret: app_secret, ig_account_id: ig_account_id)
-        }.to raise_error(RuntimeError, /Failed to initialize Instagram/)
-      end
-    end
-
-    context 'when no token is available' do
-      before do
-        allow(ENV).to receive(:[]).with('INSTAGRAM_ACCESS_TOKEN').and_return(nil)
-      end
-
       it 'raises an error' do
         expect {
-          described_class.new(app_id: app_id, app_secret: app_secret, ig_account_id: ig_account_id)
-        }.to raise_error(RuntimeError, /No access token found/)
+          described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account)
+        }.to raise_error(RuntimeError, /Failed to refresh Instagram token/)
       end
     end
   end
@@ -77,14 +66,12 @@ RSpec.describe Instagram do
     let(:photo) { { url: 'https://example.com/photo.jpg', alt_text: 'A test photo' } }
     let(:caption) { 'Test caption' }
     let(:container_id) { 'container_123' }
+    let(:ig_account_id) { social_account.uid }
     let(:media_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media" }
     let(:publish_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media_publish" }
-    let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, ig_account_id: ig_account_id) }
+    let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
 
     before do
-      stub_token_refresh
-      allow(Rails.cache).to receive(:read).with("instagram:#{ig_account_id}:access_token").and_return(refreshed_token)
-
       # Stub container creation
       stub_request(:post, media_endpoint)
         .to_return(status: 200, body: { id: container_id }.to_json)
@@ -108,7 +95,7 @@ RSpec.describe Instagram do
       it 'sends correct authorization header' do
         instagram.post(photos: [photo], caption: caption)
         expect(WebMock).to have_requested(:post, media_endpoint)
-          .with(headers: { 'Authorization' => "Bearer #{refreshed_token}" })
+          .with(headers: { 'Authorization' => "Bearer #{access_token}" })
       end
     end
 
@@ -174,14 +161,12 @@ RSpec.describe Instagram do
   describe '#post_story' do
     let(:photo_url) { 'https://example.com/story.jpg' }
     let(:story_container_id) { 'story_123' }
+    let(:ig_account_id) { social_account.uid }
     let(:media_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media" }
     let(:publish_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media_publish" }
-    let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, ig_account_id: ig_account_id) }
+    let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
 
     before do
-      stub_token_refresh
-      allow(Rails.cache).to receive(:read).with("instagram:#{ig_account_id}:access_token").and_return(refreshed_token)
-
       stub_request(:post, media_endpoint)
         .to_return(status: 200, body: { id: story_container_id }.to_json)
 
@@ -209,12 +194,7 @@ RSpec.describe Instagram do
     let(:media_id) { 'media_456' }
     let(:message) { 'Great photo!' }
     let(:comments_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{media_id}/comments" }
-    let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, ig_account_id: ig_account_id) }
-
-    before do
-      stub_token_refresh
-      allow(Rails.cache).to receive(:read).with("instagram:#{ig_account_id}:access_token").and_return(refreshed_token)
-    end
+    let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
 
     context 'with successful response' do
       before do
@@ -254,14 +234,12 @@ RSpec.describe Instagram do
   describe 'container status handling' do
     let(:photo) { { url: 'https://example.com/photo.jpg', alt_text: 'A test photo' } }
     let(:container_id) { 'container_123' }
+    let(:ig_account_id) { social_account.uid }
     let(:media_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media" }
     let(:publish_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media_publish" }
-    let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, ig_account_id: ig_account_id) }
+    let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
 
     before do
-      stub_token_refresh
-      allow(Rails.cache).to receive(:read).with("instagram:#{ig_account_id}:access_token").and_return(refreshed_token)
-
       stub_request(:post, media_endpoint)
         .to_return(status: 200, body: { id: container_id }.to_json)
 
@@ -315,6 +293,10 @@ RSpec.describe Instagram do
     it 'has correct API base URLs' do
       expect(described_class::INSTAGRAM_GRAPH_API_BASE).to eq('https://graph.instagram.com/v24.0')
       expect(described_class::INSTAGRAM_BASIC_API_BASE).to eq('https://graph.instagram.com')
+    end
+
+    it 'has token refresh threshold' do
+      expect(described_class::TOKEN_REFRESH_THRESHOLD_DAYS).to eq(53)
     end
   end
 end

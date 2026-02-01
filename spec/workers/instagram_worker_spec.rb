@@ -4,6 +4,7 @@ RSpec.describe InstagramWorker, type: :worker do
   let(:blog) { create(:blog) }
   let(:user) { create(:user) }
   let(:entry) { create(:entry, :published, :with_photo, blog: blog, user: user) }
+  let!(:instagram_account) { create(:social_account, :instagram, user: user) }
 
   before do
     entry.photos.each { |p| attach_image_to_photo(p) }
@@ -11,8 +12,6 @@ RSpec.describe InstagramWorker, type: :worker do
     allow(ENV).to receive(:[]).and_call_original
     allow(ENV).to receive(:[]).with('INSTAGRAM_APP_ID').and_return('app_id')
     allow(ENV).to receive(:[]).with('INSTAGRAM_APP_SECRET').and_return('app_secret')
-    allow(ENV).to receive(:[]).with('INSTAGRAM_ACCESS_TOKEN').and_return('access_token')
-    allow(ENV).to receive(:[]).with('INSTAGRAM_ACCOUNT_ID').and_return('account_id')
   end
 
   describe '#perform' do
@@ -34,6 +33,12 @@ RSpec.describe InstagramWorker, type: :worker do
       described_class.new.perform(text_entry.id, 'Test caption')
     end
 
+    it 'returns early when user has no connected Instagram account' do
+      instagram_account.destroy
+      expect(Instagram).not_to receive(:new)
+      described_class.new.perform(entry.id, 'Test caption')
+    end
+
     it 'posts to Instagram and updates entry' do
       instagram = instance_double(Instagram)
       allow(Instagram).to receive(:new).and_return(instagram)
@@ -48,6 +53,19 @@ RSpec.describe InstagramWorker, type: :worker do
       entry.reload
       expect(entry.last_shared_on_instagram_at).not_to be_nil
       expect(entry.instagram_shares_count).to eq(1)
+    end
+
+    it 'initializes Instagram with the connected social account' do
+      instagram = instance_double(Instagram)
+      allow(instagram).to receive(:post).and_return({ 'id' => '12345' })
+
+      expect(Instagram).to receive(:new).with(
+        app_id: 'app_id',
+        app_secret: 'app_secret',
+        social_account: instagram_account
+      ).and_return(instagram)
+
+      described_class.new.perform(entry.id, 'Test caption')
     end
 
     it 'enqueues comment worker when post has hashtags' do

@@ -102,6 +102,9 @@ Rails.application.routes.draw do
         post 'flickr', action: :initiate_flickr
         get 'flickr/callback', action: :flickr_callback
         delete 'flickr', action: :destroy_flickr
+        post 'instagram', action: :initiate_instagram
+        get 'instagram/callback', action: :instagram_callback
+        delete 'instagram', action: :destroy_instagram
         post 'mastodon', action: :initiate_mastodon
         get 'mastodon/callback', action: :mastodon_callback
         delete 'mastodon', action: :destroy_mastodon
