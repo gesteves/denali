@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe FlickrWorker, type: :worker do
   let(:blog) { create(:blog) }
   let(:user) { create(:user) }
+  let!(:flickr_account) { create(:social_account, :flickr, user: user) }
   let(:entry) { create(:entry, :published, :with_photo, blog: blog, user: user) }
   let(:photo) { entry.photos.first }
 
@@ -12,8 +13,6 @@ RSpec.describe FlickrWorker, type: :worker do
     allow(ENV).to receive(:[]).and_call_original
     allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_KEY').and_return('consumer_key')
     allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_SECRET').and_return('consumer_secret')
-    allow(ENV).to receive(:[]).with('FLICKR_ACCESS_TOKEN').and_return('access_token')
-    allow(ENV).to receive(:[]).with('FLICKR_ACCESS_TOKEN_SECRET').and_return('access_secret')
   end
 
   describe '#perform' do
@@ -23,13 +22,19 @@ RSpec.describe FlickrWorker, type: :worker do
       described_class.new.perform(photo.id)
     end
 
-    it 'returns early when credentials are missing' do
+    it 'returns early when consumer credentials are missing' do
       allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_KEY').and_return(nil)
       expect(FlickRaw::Flickr).not_to receive(:new)
       described_class.new.perform(photo.id)
     end
 
-    it 'uploads photo to Flickr' do
+    it 'returns early when user has no Flickr account' do
+      flickr_account.destroy
+      expect(FlickRaw::Flickr).not_to receive(:new)
+      described_class.new.perform(photo.id)
+    end
+
+    it 'uploads photo to Flickr using connected account' do
       flickr = instance_double(FlickRaw::Flickr)
       allow(FlickRaw::Flickr).to receive(:new).and_return(flickr)
       allow(flickr).to receive(:access_token=)
@@ -43,7 +48,7 @@ RSpec.describe FlickrWorker, type: :worker do
       described_class.new.perform(photo.id)
     end
 
-    it 'enqueues group and album workers after upload' do
+    it 'enqueues group and album workers with user_id after upload' do
       flickr = instance_double(FlickRaw::Flickr)
       allow(FlickRaw::Flickr).to receive(:new).and_return(flickr)
       allow(flickr).to receive(:access_token=)
@@ -56,7 +61,9 @@ RSpec.describe FlickrWorker, type: :worker do
       described_class.new.perform(photo.id)
 
       expect(FlickrGroupWorker.jobs.size).to eq(1)
+      expect(FlickrGroupWorker.jobs.first['args']).to eq(['123456', 'https://flickr.com/groups/test', user.id])
       expect(FlickrAlbumWorker.jobs.size).to eq(1)
+      expect(FlickrAlbumWorker.jobs.first['args']).to eq(['123456', 'https://flickr.com/albums/test', user.id])
     end
   end
 end

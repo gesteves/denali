@@ -14,6 +14,15 @@ RSpec.describe SocialAccount, type: :model do
     it { should validate_presence_of(:server_url) }
     it { should validate_inclusion_of(:provider).in_array(SocialAccount::PROVIDERS) }
     it { should validate_uniqueness_of(:provider).scoped_to(:user_id).with_message("account already connected") }
+
+    context 'for flickr provider' do
+      subject { build(:social_account, :flickr) }
+
+      it 'does not require server_url' do
+        expect(subject).to be_valid
+        expect(subject.server_url).to be_nil
+      end
+    end
   end
 
   describe 'scopes' do
@@ -22,6 +31,14 @@ RSpec.describe SocialAccount, type: :model do
 
       it 'returns only bluesky accounts' do
         expect(SocialAccount.bluesky).to include(bluesky_account)
+      end
+    end
+
+    describe '.flickr' do
+      let!(:flickr_account) { create(:social_account, :flickr) }
+
+      it 'returns only flickr accounts' do
+        expect(SocialAccount.flickr).to include(flickr_account)
       end
     end
 
@@ -43,6 +60,18 @@ RSpec.describe SocialAccount, type: :model do
     it 'returns false for other providers' do
       account = build(:social_account, :mastodon)
       expect(account.bluesky?).to be false
+    end
+  end
+
+  describe '#flickr?' do
+    it 'returns true for flickr provider' do
+      account = build(:social_account, :flickr)
+      expect(account.flickr?).to be true
+    end
+
+    it 'returns false for other providers' do
+      account = build(:social_account, provider: 'bluesky')
+      expect(account.flickr?).to be false
     end
   end
 

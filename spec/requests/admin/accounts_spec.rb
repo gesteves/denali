@@ -18,6 +18,7 @@ RSpec.describe "Admin::Accounts", type: :request do
       get admin_accounts_path
       expect(response.body).to include("Connected Accounts")
       expect(response.body).to include("Bluesky")
+      expect(response.body).to include("Flickr")
       expect(response.body).to include("Mastodon")
     end
 
@@ -36,10 +37,31 @@ RSpec.describe "Admin::Accounts", type: :request do
     end
 
     context "when user has no connected accounts" do
+      before do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_KEY').and_return('test_key')
+        allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_SECRET').and_return('test_secret')
+      end
+
       it "displays the add account buttons" do
         get admin_accounts_path
         expect(response.body).to include("Add Bluesky Account")
+        expect(response.body).to include("Connect with Flickr")
         expect(response.body).to include("Connect Mastodon Account")
+      end
+    end
+
+    context "when user has a connected Flickr account" do
+      let!(:flickr_account) { create(:social_account, :flickr, user: user, handle: 'myflickruser') }
+
+      it "displays the connected account" do
+        get admin_accounts_path
+        expect(response.body).to include("myflickruser")
+      end
+
+      it "displays the disconnect button for Flickr" do
+        get admin_accounts_path
+        expect(response.body).to include("Disconnect")
       end
     end
 
@@ -175,6 +197,158 @@ RSpec.describe "Admin::Accounts", type: :request do
       it "handles gracefully" do
         expect {
           delete bluesky_admin_accounts_path
+        }.not_to raise_error
+        expect(response).to redirect_to(admin_accounts_path)
+      end
+    end
+  end
+
+  describe "POST /admin/accounts/flickr (initiate_flickr)" do
+    context "with Flickr credentials configured" do
+      let(:flickr) { double('FlickRaw::Flickr') }
+
+      before do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_KEY').and_return('test_consumer_key')
+        allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_SECRET').and_return('test_consumer_secret')
+        allow(FlickRaw::Flickr).to receive(:new).and_return(flickr)
+        allow(flickr).to receive(:get_request_token).and_return({
+          'oauth_token' => 'request_token',
+          'oauth_token_secret' => 'request_secret'
+        })
+        allow(flickr).to receive(:get_authorize_url).and_return('https://www.flickr.com/services/oauth/authorize?oauth_token=request_token')
+      end
+
+      it "redirects to Flickr authorization page" do
+        post flickr_admin_accounts_path
+        expect(response).to redirect_to(/flickr\.com\/services\/oauth\/authorize/)
+      end
+
+      it "stores OAuth token in session" do
+        post flickr_admin_accounts_path
+        expect(session[:flickr_oauth_token]).to eq('request_token')
+        expect(session[:flickr_oauth_token_secret]).to eq('request_secret')
+      end
+    end
+
+    context "without Flickr credentials configured" do
+      before do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_KEY').and_return(nil)
+        allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_SECRET').and_return(nil)
+      end
+
+      it "redirects with error message" do
+        post flickr_admin_accounts_path
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:alert]).to include("not configured")
+      end
+    end
+  end
+
+  describe "GET /admin/accounts/flickr/callback (flickr_callback)" do
+    let(:flickr) { double('FlickRaw::Flickr') }
+    let(:login) { double('login', id: '12345@N00', username: 'testflickruser') }
+
+    before do
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_KEY').and_return('test_consumer_key')
+      allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_SECRET').and_return('test_consumer_secret')
+    end
+
+    context "with valid callback" do
+      before do
+        # Set up session
+        allow(FlickRaw::Flickr).to receive(:new).and_return(flickr)
+        allow(flickr).to receive(:get_request_token).and_return({
+          'oauth_token' => 'request_token',
+          'oauth_token_secret' => 'request_secret'
+        })
+        allow(flickr).to receive(:get_authorize_url).and_return('https://flickr.com/authorize')
+        post flickr_admin_accounts_path
+
+        # Set up callback mocks
+        allow(flickr).to receive(:get_access_token).and_return({
+          'oauth_token' => 'access_token',
+          'oauth_token_secret' => 'access_secret'
+        })
+        allow(flickr).to receive(:access_token=)
+        allow(flickr).to receive(:access_secret=)
+        allow(flickr).to receive_message_chain(:test, :login).and_return(login)
+      end
+
+      it "creates a Flickr social account" do
+        expect {
+          get flickr_callback_admin_accounts_path, params: { oauth_token: 'request_token', oauth_verifier: 'verifier' }
+        }.to change(SocialAccount, :count).by(1)
+
+        account = SocialAccount.last
+        expect(account.provider).to eq('flickr')
+        expect(account.handle).to eq('testflickruser')
+        expect(account.uid).to eq('12345@N00')
+      end
+
+      it "redirects to accounts page with success message" do
+        get flickr_callback_admin_accounts_path, params: { oauth_token: 'request_token', oauth_verifier: 'verifier' }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:notice]).to include("connected successfully")
+      end
+
+      it "clears OAuth session data" do
+        get flickr_callback_admin_accounts_path, params: { oauth_token: 'request_token', oauth_verifier: 'verifier' }
+
+        expect(session[:flickr_oauth_token]).to be_nil
+        expect(session[:flickr_oauth_token_secret]).to be_nil
+      end
+    end
+
+    context "with invalid oauth_token" do
+      before do
+        # Initiate OAuth to set up session
+        allow(FlickRaw::Flickr).to receive(:new).and_return(flickr)
+        allow(flickr).to receive(:get_request_token).and_return({
+          'oauth_token' => 'original_token',
+          'oauth_token_secret' => 'secret'
+        })
+        allow(flickr).to receive(:get_authorize_url).and_return('https://flickr.com/authorize')
+        post flickr_admin_accounts_path
+      end
+
+      it "redirects with error" do
+        get flickr_callback_admin_accounts_path, params: { oauth_token: 'wrong_token', oauth_verifier: 'verifier' }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:alert]).to include("Invalid OAuth token")
+      end
+    end
+  end
+
+  describe "DELETE /admin/accounts/flickr (destroy_flickr)" do
+    let!(:flickr_account) { create(:social_account, :flickr, user: user) }
+
+    it "deletes the Flickr account" do
+      expect {
+        delete flickr_admin_accounts_path
+      }.to change(SocialAccount, :count).by(-1)
+    end
+
+    it "redirects to accounts page (HTML)" do
+      delete flickr_admin_accounts_path
+      expect(response).to redirect_to(admin_accounts_path)
+    end
+
+    it "returns turbo_stream response" do
+      delete flickr_admin_accounts_path, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
+      expect(response.media_type).to eq('text/vnd.turbo-stream.html')
+    end
+
+    context "when user has no Flickr account" do
+      before { flickr_account.destroy }
+
+      it "handles gracefully" do
+        expect {
+          delete flickr_admin_accounts_path
         }.not_to raise_error
         expect(response).to redirect_to(admin_accounts_path)
       end

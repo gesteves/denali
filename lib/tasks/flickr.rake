@@ -1,20 +1,24 @@
 namespace :flickr do
   desc 'Update titles & descriptions of Flickr photos'
-  task :update_all => :environment do
-    next if ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank? || ENV['FLICKR_ACCESS_TOKEN'].blank? || ENV['FLICKR_ACCESS_TOKEN_SECRET'].blank?
+  task :update_all, [:user_id] => :environment do |_task, args|
+    next if ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank?
+
+    user = args[:user_id].present? ? User.find(args[:user_id]) : User.first
+    flickr_account = user.flickr_account
+    next if flickr_account.blank?
 
     flickr = FlickRaw::Flickr.new(ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET'])
-    flickr.access_token = ENV['FLICKR_ACCESS_TOKEN']
-    flickr.access_secret = ENV['FLICKR_ACCESS_TOKEN_SECRET']
+    flickr.access_token = flickr_account.access_token
+    flickr.access_secret = flickr_account.access_token_secret
 
-    user_id = flickr.auth.oauth.checkToken.user.nsid
-    user = flickr.people.getInfo(user_id: user_id)
-    pages = (user.photos.count/500.00).ceil
+    flickr_user_id = flickr.auth.oauth.checkToken.user.nsid
+    flickr_user = flickr.people.getInfo(user_id: flickr_user_id)
+    pages = (flickr_user.photos.count/500.00).ceil
     page = 1
 
     while page <= pages
       puts "Fetching page #{page} of Flickr photos, out of #{pages}"
-      photos = flickr.people.getPublicPhotos(user_id: user_id, extras: 'description', per_page: 500, page: page)
+      photos = flickr.people.getPublicPhotos(user_id: flickr_user_id, extras: 'description', per_page: 500, page: page)
       photos.select { |p| p.description.match? ENV['DOMAIN'] }.each do |p|
         flickr_id = p.id
         description = p.description

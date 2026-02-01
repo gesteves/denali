@@ -13,6 +13,14 @@ FactoryBot.define do
       server_url { 'https://bsky.social' }
     end
 
+    trait :flickr do
+      provider { 'flickr' }
+      sequence(:uid) { |n| "#{n}@N00" }
+      sequence(:handle) { |n| "flickruser#{n}" }
+      access_token_secret { SecureRandom.alphanumeric(32) }
+      server_url { nil }
+    end
+
     trait :mastodon do
       provider { 'mastodon' }
       sequence(:uid) { |n| "#{n}" }

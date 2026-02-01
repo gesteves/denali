@@ -1,6 +1,7 @@
 class Admin::AccountsController < AdminController
   def index
     @bluesky_account = current_user.bluesky_account
+    @flickr_account = current_user.flickr_account
     @mastodon_account = current_user.mastodon_account
   end
 
@@ -39,6 +40,73 @@ class Admin::AccountsController < AdminController
     respond_to do |format|
       format.turbo_stream { render turbo_stream: turbo_stream.replace("bluesky-section", partial: "admin/accounts/bluesky_section", locals: { social_account: nil, error: nil }) }
       format.html { redirect_to admin_accounts_path, notice: "Bluesky account disconnected." }
+    end
+  end
+
+  def initiate_flickr
+    if ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank?
+      redirect_to admin_accounts_path, alert: "Flickr API credentials are not configured."
+      return
+    end
+
+    flickr = FlickRaw::Flickr.new(ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET'])
+    token = flickr.get_request_token(oauth_callback: flickr_callback_url)
+
+    session[:flickr_oauth_token] = token['oauth_token']
+    session[:flickr_oauth_token_secret] = token['oauth_token_secret']
+
+    auth_url = flickr.get_authorize_url(token['oauth_token'], perms: 'delete')
+    redirect_to auth_url, allow_other_host: true
+  rescue => e
+    Rails.logger.error("[Flickr] OAuth initiation error: #{e.message}")
+    cleanup_flickr_session
+    redirect_to admin_accounts_path, alert: friendly_flickr_error(e)
+  end
+
+  def flickr_callback
+    if params[:oauth_token] != session[:flickr_oauth_token]
+      cleanup_flickr_session
+      redirect_to admin_accounts_path, alert: "Invalid OAuth token. Please try again."
+      return
+    end
+
+    flickr = FlickRaw::Flickr.new(ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET'])
+    access = flickr.get_access_token(
+      session[:flickr_oauth_token],
+      session[:flickr_oauth_token_secret],
+      params[:oauth_verifier]
+    )
+
+    flickr.access_token = access['oauth_token']
+    flickr.access_secret = access['oauth_token_secret']
+
+    login = flickr.test.login
+
+    @social_account = current_user.social_accounts.find_or_initialize_by(provider: 'flickr')
+    @social_account.assign_attributes(
+      handle: login.username,
+      uid: login.id,
+      access_token: access['oauth_token'],
+      access_token_secret: access['oauth_token_secret'],
+      connected_at: Time.current
+    )
+    @social_account.save!
+
+    cleanup_flickr_session
+    redirect_to admin_accounts_path, notice: "Flickr account connected successfully!"
+  rescue => e
+    Rails.logger.error("[Flickr] Callback error: #{e.message}")
+    cleanup_flickr_session
+    redirect_to admin_accounts_path, alert: friendly_flickr_error(e)
+  end
+
+  def destroy_flickr
+    @social_account = current_user.flickr_account
+    @social_account&.destroy
+
+    respond_to do |format|
+      format.turbo_stream { render turbo_stream: turbo_stream.replace("flickr-section", partial: "admin/accounts/flickr_section", locals: { social_account: nil, error: nil }) }
+      format.html { redirect_to admin_accounts_path, notice: "Flickr account disconnected." }
     end
   end
 
@@ -183,6 +251,30 @@ class Admin::AccountsController < AdminController
       "Could not register with this Mastodon instance. Please check the URL and try again."
     else
       "Could not connect to Mastodon: #{exception.message}"
+    end
+  end
+
+  def cleanup_flickr_session
+    session.delete(:flickr_oauth_token)
+    session.delete(:flickr_oauth_token_secret)
+  end
+
+  def friendly_flickr_error(exception)
+    case exception.message
+    when /getaddrinfo|connection refused|network|timeout/i
+      "Could not reach Flickr. Please try again later."
+    when /Invalid.*token|oauth.*invalid/i
+      "Authorization failed. Please try again."
+    else
+      "Could not connect to Flickr: #{exception.message}"
+    end
+  end
+
+  def flickr_callback_url
+    if Rails.env.production? && ENV['DOMAIN_ADMIN'].present?
+      "https://#{ENV['DOMAIN_ADMIN']}/admin/accounts/flickr/callback"
+    else
+      flickr_callback_admin_accounts_url
     end
   end
 end

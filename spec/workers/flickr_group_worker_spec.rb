@@ -1,24 +1,35 @@
 require 'rails_helper'
 
 RSpec.describe FlickrGroupWorker, type: :worker do
+  let(:user) { create(:user) }
+  let!(:flickr_account) { create(:social_account, :flickr, user: user) }
+
   before do
     allow(Rails.env).to receive(:production?).and_return(true)
     allow(ENV).to receive(:[]).and_call_original
     allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_KEY').and_return('consumer_key')
     allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_SECRET').and_return('consumer_secret')
-    allow(ENV).to receive(:[]).with('FLICKR_ACCESS_TOKEN').and_return('access_token')
-    allow(ENV).to receive(:[]).with('FLICKR_ACCESS_TOKEN_SECRET').and_return('access_secret')
   end
 
   describe '#perform' do
     it 'returns early in non-production environment' do
       allow(Rails.env).to receive(:production?).and_return(false)
       expect(FlickRaw::Flickr).not_to receive(:new)
+      described_class.new.perform('123456', 'https://flickr.com/groups/nature', user.id)
+    end
+
+    it 'returns early when user has no Flickr account' do
+      flickr_account.destroy
+      expect(FlickRaw::Flickr).not_to receive(:new)
+      described_class.new.perform('123456', 'https://flickr.com/groups/nature', user.id)
+    end
+
+    it 'returns early when user_id is not provided' do
+      expect(FlickRaw::Flickr).not_to receive(:new)
       described_class.new.perform('123456', 'https://flickr.com/groups/nature')
     end
 
     it 'adds photo to group using path alias' do
-      # Use double instead of instance_double since FlickRaw uses method_missing
       flickr = double('FlickRaw::Flickr')
       groups = double('groups')
       pools = double('pools')
@@ -31,7 +42,7 @@ RSpec.describe FlickrGroupWorker, type: :worker do
 
       expect(pools).to receive(:add).with(photo_id: '123456', group_id: '12345@N00')
 
-      described_class.new.perform('123456', 'https://flickr.com/groups/nature')
+      described_class.new.perform('123456', 'https://flickr.com/groups/nature', user.id)
     end
 
     it 'adds photo to group using NSID directly' do
@@ -47,7 +58,7 @@ RSpec.describe FlickrGroupWorker, type: :worker do
 
       expect(pools).to receive(:add).with(photo_id: '123456', group_id: '12345@N00')
 
-      described_class.new.perform('123456', 'https://flickr.com/groups/12345@N00')
+      described_class.new.perform('123456', 'https://flickr.com/groups/12345@N00', user.id)
     end
 
     it 'handles FlickRaw errors gracefully' do
@@ -57,10 +68,9 @@ RSpec.describe FlickrGroupWorker, type: :worker do
       allow(flickr).to receive(:access_token=)
       allow(flickr).to receive(:access_secret=)
       allow(flickr).to receive(:groups).and_return(groups)
-      # FlickRaw::FailedResponse takes 3 args: code, msg, and method
       allow(groups).to receive(:getInfo).and_raise(FlickRaw::FailedResponse.new(1, 'Error', 'groups.getInfo'))
 
-      expect { described_class.new.perform('123456', 'https://flickr.com/groups/nature') }.not_to raise_error
+      expect { described_class.new.perform('123456', 'https://flickr.com/groups/nature', user.id) }.not_to raise_error
     end
   end
 end

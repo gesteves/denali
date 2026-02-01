@@ -99,6 +99,9 @@ Rails.application.routes.draw do
       collection do
         post 'bluesky', action: :create_bluesky
         delete 'bluesky', action: :destroy_bluesky
+        post 'flickr', action: :initiate_flickr
+        get 'flickr/callback', action: :flickr_callback
+        delete 'flickr', action: :destroy_flickr
         post 'mastodon', action: :initiate_mastodon
         get 'mastodon/callback', action: :mastodon_callback
         delete 'mastodon', action: :destroy_mastodon

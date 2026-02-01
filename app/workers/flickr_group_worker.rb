@@ -1,12 +1,17 @@
 class FlickrGroupWorker < ApplicationWorker
   sidekiq_options queue: 'low'
 
-  def perform(photo_id, group_url)
-    return if !Rails.env.production?
+  def perform(photo_id, group_url, user_id = nil)
+    return unless Rails.env.production?
+    return if ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank?
+
+    flickr_account = user_id.present? ? User.find(user_id).flickr_account : nil
+    return if flickr_account.blank?
+
     begin
-      flickr = FlickRaw::Flickr.new ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET']
-      flickr.access_token = ENV['FLICKR_ACCESS_TOKEN']
-      flickr.access_secret = ENV['FLICKR_ACCESS_TOKEN_SECRET']
+      flickr = FlickRaw::Flickr.new(ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET'])
+      flickr.access_token = flickr_account.access_token
+      flickr.access_secret = flickr_account.access_token_secret
       slug = group_url.split('/').last
       group = if /\d+@N\d+/.match? slug
         flickr.groups.getInfo(group_id: slug)

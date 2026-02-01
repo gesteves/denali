@@ -1,0 +1,38 @@
+<div id="flickr-section">
+  <h2 class="subtitle is-size-5-mobile">Flickr</h2>
+
+  <% if social_account&.persisted? %>
+    <div class="box">
+      <div class="level is-mobile">
+        <div class="level-left">
+          <div class="level-item">
+            <div>
+              <p class="has-text-weight-semibold"><%= social_account.handle %></p>
+              <p class="is-size-7 has-text-grey">Connected <%= time_ago_in_words(social_account.connected_at) %> ago</p>
+            </div>
+          </div>
+        </div>
+        <div class="level-right">
+          <div class="level-item">
+            <%= button_to 'Disconnect', flickr_admin_accounts_path,
+                method: :delete,
+                form: { data: { turbo_confirm: 'Disconnect this Flickr account?' } },
+                class: 'button is-danger is-outlined is-small' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% elsif ENV['FLICKR_CONSUMER_KEY'].present? && ENV['FLICKR_CONSUMER_SECRET'].present? %>
+    <% if error.present? %>
+      <div class="notification is-danger is-light">
+        <%= error %>
+      </div>
+    <% end %>
+    <%= button_to 'Connect with Flickr', flickr_admin_accounts_path,
+        method: :post,
+        form: { data: { turbo: false } },
+        class: 'button is-info is-outlined' %>
+  <% else %>
+    <p class="has-text-grey">Flickr API credentials are not configured.</p>
+  <% end %>
+</div>

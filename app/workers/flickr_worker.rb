@@ -2,15 +2,18 @@ class FlickrWorker < ApplicationWorker
   sidekiq_options queue: 'high'
 
   def perform(photo_id)
-    return if !Rails.env.production?
-    return if ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank? || ENV['FLICKR_ACCESS_TOKEN'].blank? || ENV['FLICKR_ACCESS_TOKEN_SECRET'].blank?
+    return unless Rails.env.production?
+    return if ENV['FLICKR_CONSUMER_KEY'].blank? || ENV['FLICKR_CONSUMER_SECRET'].blank?
 
     photo = Photo.find(photo_id)
     raise UnprocessedPhotoError unless photo.has_dimensions?
 
-    flickr = FlickRaw::Flickr.new ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET']
-    flickr.access_token = ENV['FLICKR_ACCESS_TOKEN']
-    flickr.access_secret = ENV['FLICKR_ACCESS_TOKEN_SECRET']
+    flickr_account = photo.entry.user.flickr_account
+    return if flickr_account.blank?
+
+    flickr = FlickRaw::Flickr.new(ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET'])
+    flickr.access_token = flickr_account.access_token
+    flickr.access_secret = flickr_account.access_token_secret
 
     entry = photo.entry
     title = entry.plain_title
@@ -18,14 +21,14 @@ class FlickrWorker < ApplicationWorker
 
     tags = photo.flickr_tags
     photo_path = URI.open(photo.image.url).path
-    photo_id = flickr.upload_photo photo_path, title: title, description: caption, tags: tags
+    uploaded_photo_id = flickr.upload_photo photo_path, title: title, description: caption, tags: tags
 
-    if photo_id&.match?(/\d+/)
+    if uploaded_photo_id&.match?(/\d+/)
       entry.flickr_groups.each do |group_url|
-        FlickrGroupWorker.perform_async(photo_id, group_url)
+        FlickrGroupWorker.perform_async(uploaded_photo_id, group_url, entry.user_id)
       end
       entry.flickr_albums.each do |album_url|
-        FlickrAlbumWorker.perform_async(photo_id, album_url)
+        FlickrAlbumWorker.perform_async(uploaded_photo_id, album_url, entry.user_id)
       end
     end
   end
