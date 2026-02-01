@@ -97,6 +97,31 @@ RSpec.describe MastodonWorker, type: :worker do
         described_class.new.perform(text_entry.id, text)
       end
     end
+
+    context 'with more than 4 photos' do
+      let(:entry_with_many_photos) { create(:entry, :published, blog: blog, user: user) }
+      let(:mastodon_instance) { instance_double(Mastodon) }
+      let!(:mastodon_account) { create(:social_account, :mastodon, user: user) }
+
+      before do
+        # Create 6 photos for the entry
+        6.times do
+          photo = create(:photo, entry: entry_with_many_photos)
+          attach_image_to_photo(photo)
+        end
+
+        allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
+        allow(Mastodon).to receive(:from_social_account).with(mastodon_account).and_return(mastodon_instance)
+        allow(mastodon_instance).to receive(:upload_media).and_return({ 'id' => 'media_id' })
+        allow(mastodon_instance).to receive(:create_status)
+      end
+
+      it 'only uploads first 4 photos' do
+        expect(mastodon_instance).to receive(:upload_media).exactly(4).times
+
+        described_class.new.perform(entry_with_many_photos.id, text)
+      end
+    end
   end
 
   describe 'Sidekiq configuration' do

@@ -5,6 +5,12 @@ RSpec.describe Mastodon do
   let(:bearer_token) { 'test_token' }
   let(:mastodon) { described_class.new(base_url: base_url, bearer_token: bearer_token) }
 
+  describe 'constants' do
+    it 'defines MAX_MEDIA_ATTACHMENTS' do
+      expect(described_class::MAX_MEDIA_ATTACHMENTS).to eq(4)
+    end
+  end
+
   describe '#create_status' do
     let(:text) { 'Hello, Mastodon!' }
     let(:status_endpoint) { "#{base_url}/api/v1/statuses" }
@@ -127,6 +133,24 @@ RSpec.describe Mastodon do
         expect {
           mastodon.upload_media(url: image_url, alt_text: alt_text)
         }.to raise_error(RuntimeError, /Mastodon upload_media failed with status 422/)
+      end
+    end
+
+    context 'when image fetch fails' do
+      it 'raises an error for HTTP errors' do
+        stub_request(:get, image_url).to_return(status: 404, body: 'Not Found')
+
+        expect {
+          mastodon.upload_media(url: image_url, alt_text: alt_text)
+        }.to raise_error(RuntimeError, /Failed to fetch media from #{Regexp.escape(image_url)}/)
+      end
+
+      it 'raises an error for network errors' do
+        stub_request(:get, image_url).to_raise(SocketError.new('Connection refused'))
+
+        expect {
+          mastodon.upload_media(url: image_url, alt_text: alt_text)
+        }.to raise_error(RuntimeError, /Failed to fetch media from #{Regexp.escape(image_url)}/)
       end
     end
   end
