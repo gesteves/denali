@@ -19,7 +19,7 @@
             <%= button_to 'Disconnect', threads_admin_accounts_path,
                 method: :delete,
                 form: { data: { turbo_confirm: 'Disconnect this Threads account?' } },
-                class: 'button is-danger is-outlined is-small' %>
+                class: 'button is-danger is-small' %>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
     <%= button_to 'Connect with Threads', threads_admin_accounts_path,
         method: :post,
         form: { data: { turbo: false } },
-        class: 'button is-info is-outlined' %>
+        class: 'button' %>
   <% else %>
     <p class="has-text-grey">Threads API credentials are not configured.</p>
   <% end %>

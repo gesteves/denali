@@ -19,7 +19,7 @@
             <%= button_to 'Disconnect', mastodon_admin_accounts_path,
                 method: :delete,
                 form: { data: { turbo_confirm: 'Disconnect this Mastodon account?' } },
-                class: 'button is-danger is-outlined is-small' %>
+                class: 'button is-danger is-small' %>
           </div>
         </div>
       </div>
@@ -33,7 +33,7 @@
         <%= render 'admin/accounts/mastodon_form', error: error %>
       <% else %>
         <div data-inline-form-target="placeholder">
-          <button type="button" class="button is-info is-outlined" data-action="inline-form#show">
+          <button type="button" class="button" data-action="inline-form#show">
             Connect Mastodon Account
           </button>
         </div>
