@@ -2,7 +2,6 @@ class RandomShareWorker < ApplicationWorker
   def perform(tags, platforms, not_shared_in_months = 12, excluded_tags = [])
     return if !Rails.env.production?
     return if Entry.published.where('published_at > ?', 1.hour.ago).exists?
-    return if Entry.where('last_shared_on_bluesky_at > :time OR last_shared_on_mastodon_at > :time OR last_shared_on_instagram_at > :time OR last_shared_on_threads_at > :time', time: 1.hour.ago).exists?
     tags = Array(tags)
     platforms = Array(platforms)
     excluded_tags = Array(excluded_tags)
@@ -13,6 +12,7 @@ class RandomShareWorker < ApplicationWorker
     campaign = tags.empty? ? "random" : "random-#{tags.join(' ').parameterize}"
 
     platforms.each do |platform|
+      next if recently_shared_on?(platform)
       entry = find_eligible_entry(tags, excluded_tags, platform, not_shared_in_months)
       next if entry.blank?
       logger.info "[Social] Sharing \"#{entry.title}\" (#{entry.permalink_url}) on #{platform}."
@@ -30,6 +30,17 @@ class RandomShareWorker < ApplicationWorker
   end
 
   private
+
+  def recently_shared_on?(platform)
+    column = case platform
+    when 'Bluesky' then 'last_shared_on_bluesky_at'
+    when 'Mastodon' then 'last_shared_on_mastodon_at'
+    when 'Instagram' then 'last_shared_on_instagram_at'
+    when 'Threads' then 'last_shared_on_threads_at'
+    end
+    return false if column.nil?
+    Entry.where("#{column} > ?", 1.hour.ago).exists?
+  end
 
   def find_eligible_entry(tags, excluded_tags, platform, not_shared_in_months)
     photoblog = Blog.first
