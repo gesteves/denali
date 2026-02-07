@@ -21,9 +21,9 @@ RSpec.describe ColorDetectionWorker, type: :worker do
       mock_grayscale = double('MiniMagick::Image', path: '/tmp/photo_gray.jpg')
       allow(MiniMagick::Image).to receive(:open).and_return(mock_image, mock_grayscale)
 
-      # Use double since MiniMagick::Tool::Compare uses method_missing DSL
-      mock_compare = double('MiniMagick::Tool::Compare')
-      allow(MiniMagick::Tool::Compare).to receive(:new).and_return(mock_compare)
+      # Use double since MiniMagick::Tool uses method_missing DSL
+      mock_compare = double('MiniMagick::Tool')
+      allow(MiniMagick::Tool).to receive(:new).with("compare").and_return(mock_compare)
       allow(mock_compare).to receive(:metric).and_return(mock_compare)
       allow(mock_compare).to receive(:<<).and_return(mock_compare)
       # High mean error = color photo (format: "count mean_error" where mean_error > threshold)
@@ -41,8 +41,8 @@ RSpec.describe ColorDetectionWorker, type: :worker do
       mock_grayscale = double('MiniMagick::Image', path: '/tmp/photo_gray.jpg')
       allow(MiniMagick::Image).to receive(:open).and_return(mock_image, mock_grayscale)
 
-      mock_compare = double('MiniMagick::Tool::Compare')
-      allow(MiniMagick::Tool::Compare).to receive(:new).and_return(mock_compare)
+      mock_compare = double('MiniMagick::Tool')
+      allow(MiniMagick::Tool).to receive(:new).with("compare").and_return(mock_compare)
       allow(mock_compare).to receive(:metric).and_return(mock_compare)
       allow(mock_compare).to receive(:<<).and_return(mock_compare)
       # Low mean error = black and white photo (format: "count mean_error" where mean_error <= threshold)
