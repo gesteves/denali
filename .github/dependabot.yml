@@ -1,11 +1,5 @@
 version: 2
 
-registries:
-  docker-hub:
-    type: docker-registry
-    url: https://registry.hub.docker.com
-    replaces-base: true
-
 updates:
   # Ruby gems (Bundler)
   - package-ecosystem: "bundler"
@@ -66,8 +60,6 @@ updates:
       - "docker"
     commit-message:
       prefix: "chore(deps)"
-    registries:
-      - docker-hub
     groups:
       docker-dependencies:
         patterns:
