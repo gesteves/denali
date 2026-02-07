@@ -999,10 +999,10 @@ call-bind@^1.0.5:
     get-intrinsic "^1.2.4"
     set-function-length "^1.2.1"
 
-caniuse-lite@^1.0.30001766:
-  version "1.0.30001766"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001766.tgz"
-  integrity sha512-4C0lfJ0/YPjJQHagaE9x2Elb69CIqEPZeG0anQt9SIvIoOH4a4uaRl73IavyO+0qZh6MDLH//DrXThEYKHkmYA==
+caniuse-lite@^1.0.30001769:
+  version "1.0.30001769"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001769.tgz#1ad91594fad7dc233777c2781879ab5409f7d9c2"
+  integrity sha512-BCfFL1sHijQlBGWBMuJyhZUhzo7wer5sVj9hqekB/7xn0Ypy+pER/edCYQm4exbXj4WiySGp40P8UuTh6w1srg==
 
 chai@^6.2.1:
   version "6.2.2"
