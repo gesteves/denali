@@ -19,7 +19,7 @@
 
   .map__marker {
     align-items: center;
-    background-color: bulma.$primary;
+    background-color: bulma.$info;
     border-radius: 100%;
     color: white;
     display: flex;
@@ -28,14 +28,14 @@
     font-weight: bold;
     justify-content: center;
     text-align: center;
-    text-shadow: 0 -1px 0 fn.shade(bulma.$primary, 50%);
+    text-shadow: 0 -1px 0 fn.shade(bulma.$info, 50%);
 
     &.map__marker--cluster {
-      box-shadow: 0 0 0 2px fn.shade(bulma.$primary, 30%), 0 2px 4px 0 black;
+      box-shadow: 0 0 0 2px fn.shade(bulma.$info, 30%), 0 2px 4px 0 black;
     }
 
     &.map__marker--bloop {
-      box-shadow: 0 0 0 1px fn.shade(bulma.$primary, 30%), 0 2px 4px 0 black;
+      box-shadow: 0 0 0 1px fn.shade(bulma.$info, 30%), 0 2px 4px 0 black;
       font-size: 16px;
       font-weight: bold;
     }
@@ -43,9 +43,9 @@
 }
 
 .map__loading {
-  background-color: bulma.$primary;
+  background-color: bulma.$info;
   border-radius: 100%;
-  box-shadow: 0 0 0 2px fn.shade(bulma.$primary, 30%), 0 2px 4px 0 black;
+  box-shadow: 0 0 0 2px fn.shade(bulma.$info, 30%), 0 2px 4px 0 black;
   display: none;
   height: 50px;
   left: 50%;
