@@ -1,4 +1,5 @@
 class Admin::MapsController < AdminController
+  skip_before_action :no_cache, only: [:photos]
   before_action :set_map_link_headers, only: [:index]
 
   def index
@@ -10,9 +11,7 @@ class Admin::MapsController < AdminController
   end
 
   def photos
-    respond_to do |format|
-      format.json
-    end
+    fresh_when @photoblog
   end
 
   def photo
