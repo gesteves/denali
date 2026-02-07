@@ -30,7 +30,7 @@
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.18",
     "babel-eslint": "^10.1.0",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "gulp": "^5.0.1",
     "gulp-cheerio": "^1.0",
     "gulp-jshint": "^2.0",
