@@ -1,21 +1,22 @@
 <% photo = entry.photos.first %>
-<div class="card is-marginless">
-  <div class="card-image">
-    <a target="_blank" class="image image-container" href="<%= entry.permalink_url %>">
-      <%= responsive_image_tag(
-        photo: photo,
-        srcset: @srcset,
-        sizes: @sizes,
-        aspect_ratio: '1:1',
-        html_options: {
-          class: 'placeholder',
-          style: css_placeholder_background(photo),
-          'data-controller': 'placeholder',
-          'data-action': 'load->placeholder#removeBackground',
-        }) %>
-    </a>
-  </div>
-  <div class="card-content">
+
+<div class="block">
+  <a target="_blank" class="image image-container" href="<%= entry.permalink_url %>">
+    <%= responsive_image_tag(
+      photo: photo,
+      srcset: @srcset,
+      sizes: @sizes,
+      aspect_ratio: '1:1',
+      html_options: {
+        class: 'placeholder',
+        style: css_placeholder_background(photo),
+        'data-controller': 'placeholder',
+        'data-action': 'load->placeholder#removeBackground',
+      }) %>
+  </a>
+</div>
+<div class="block">
+  <div class="content">
     <h1 class="title is-size-7"><%= entry.plain_title %></h1>
   </div>
 </div>
