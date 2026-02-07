@@ -19,59 +19,9 @@ updates:
     commit-message:
       prefix: "chore(deps)"
     groups:
-      rails:
+      ruby-dependencies:
         patterns:
-          - "rails*"
-          - "actioncable"
-          - "actionmailbox"
-          - "actionmailer"
-          - "actionpack"
-          - "actiontext"
-          - "actionview"
-          - "activejob"
-          - "activemodel"
-          - "activerecord"
-          - "activestorage"
-          - "activesupport"
-      aws:
-        patterns:
-          - "aws-sdk*"
-      sidekiq:
-        patterns:
-          - "sidekiq*"
-          - "connection_pool"
-      elasticsearch:
-        patterns:
-          - "elasticsearch*"
-      omniauth:
-        patterns:
-          - "omniauth*"
-      image-processing:
-        patterns:
-          - "image_processing"
-          - "ruby-thumbor"
-          - "blurhash"
-          - "exifr"
-      development:
-        dependency-type: "development"
-        update-types:
-          - "minor"
-          - "patch"
-      minor-and-patch:
-        update-types:
-          - "minor"
-          - "patch"
-        exclude-patterns:
-          - "rails*"
-          - "aws-sdk*"
-          - "sidekiq*"
-          - "connection_pool"
-          - "elasticsearch*"
-          - "omniauth*"
-          - "image_processing"
-          - "ruby-thumbor"
-          - "blurhash"
-          - "exifr"
+          - "*"
 
   # JavaScript packages (npm/Yarn)
   - package-ecosystem: "npm"
@@ -85,47 +35,9 @@ updates:
     commit-message:
       prefix: "chore(deps)"
     groups:
-      babel:
+      npm-dependencies:
         patterns:
-          - "@babel/*"
-          - "babel-*"
-      webpack:
-        patterns:
-          - "webpack*"
-          - "@webpack-cli/*"
-      stimulus:
-        patterns:
-          - "@hotwired/*"
-          - "stimulus*"
-      gulp:
-        patterns:
-          - "gulp*"
-      eslint:
-        patterns:
-          - "eslint*"
-      leaflet:
-        patterns:
-          - "leaflet*"
-      development:
-        dependency-type: "development"
-        update-types:
-          - "minor"
-          - "patch"
-      minor-and-patch:
-        dependency-type: "production"
-        update-types:
-          - "minor"
-          - "patch"
-        exclude-patterns:
-          - "@babel/*"
-          - "babel-*"
-          - "webpack*"
-          - "@webpack-cli/*"
-          - "@hotwired/*"
-          - "stimulus*"
-          - "gulp*"
-          - "eslint*"
-          - "leaflet*"
+          - "*"
 
   # GitHub Actions
   - package-ecosystem: "github-actions"
@@ -139,7 +51,7 @@ updates:
     commit-message:
       prefix: "chore(deps)"
     groups:
-      actions:
+      github-actions-dependencies:
         patterns:
           - "*"
 
@@ -156,3 +68,7 @@ updates:
       prefix: "chore(deps)"
     registries:
       - docker-hub
+    groups:
+      docker-dependencies:
+        patterns:
+          - "*"
