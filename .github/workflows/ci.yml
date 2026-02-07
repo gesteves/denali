@@ -67,7 +67,7 @@ jobs:
         run: |
           gem install bundler
           bundle install --jobs 4 --retry 3
-          npm ci
+          npm install
 
       - name: Set up database
         run: bin/rails db:schema:load
