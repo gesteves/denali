@@ -261,7 +261,6 @@ class Admin::EntriesController < AdminController
           photo.detect_colors
           photo.encode_blurhash
         end
-        @photoblog.purge_from_cdn
         OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to admin_entry_path(@entry) }
@@ -274,7 +273,6 @@ class Admin::EntriesController < AdminController
 
   # DELETE /admin/entries/1
   def destroy
-    @photoblog.purge_from_cdn
     @entry.destroy
     respond_to do |format|
       flash[:danger] = 'Your entry was deleted forever.'

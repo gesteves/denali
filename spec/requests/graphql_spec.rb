@@ -433,44 +433,6 @@ RSpec.describe "GraphQL", type: :request do
   end
 
   describe "mutations" do
-    describe "expireBlogCache" do
-      let(:mutation) do
-        <<~GRAPHQL
-          mutation {
-            expireBlogCache(input: {}) {
-              blog {
-                id
-                name
-              }
-              errors
-            }
-          }
-        GRAPHQL
-      end
-
-      it "requires authorization" do
-        result = execute_query(mutation)
-
-        expect(response).to have_http_status(:success)
-        expect(result['errors']).to be_present
-        expect(result['errors'].first['message']).to include("permission")
-      end
-
-      it "expires cache when authorized" do
-        allow(ENV).to receive(:[]).and_call_original
-        allow(ENV).to receive(:[]).with('GRAPHQL_AUTH_TOKEN').and_return('test-token')
-
-        # Stub the purge_from_cdn method
-        allow_any_instance_of(Blog).to receive(:purge_from_cdn).and_return(true)
-
-        result = execute_query(mutation, auth_token: 'test-token')
-
-        expect(response).to have_http_status(:success)
-        expect(result['data']['expireBlogCache']['blog']).to be_present
-        expect(result['data']['expireBlogCache']['errors']).to be_empty
-      end
-    end
-
     describe "shareOnBluesky" do
       let!(:entry) do
         e = create(:entry, :published, :with_photo, blog: blog, user: user)

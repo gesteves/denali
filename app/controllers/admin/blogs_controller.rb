@@ -1,6 +1,4 @@
 class Admin::BlogsController < AdminController
-  skip_before_action :verify_authenticity_token, only: [:flush_caches]
-
   # GET /admin/blogs/1/edit
   def edit
     @page_title = 'Blog settings'
@@ -32,18 +30,6 @@ class Admin::BlogsController < AdminController
           render :edit, status: :unprocessable_entity
         }
       end
-    end
-  end
-
-  def flush_caches
-    @photoblog.purge_from_cdn
-    @message = 'Caches are being cleared. This may take a few moments.'
-    respond_to do |format|
-      format.html {
-        flash[:success] = @message
-        redirect_to session[:redirect_url] || admin_entry_path(@entry)
-      }
-      format.js { render 'admin/shared/notify' }
     end
   end
 

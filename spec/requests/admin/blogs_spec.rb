@@ -43,25 +43,4 @@ RSpec.describe "Admin::Blogs", type: :request do
       expect(response).to have_http_status(:unprocessable_entity)
     end
   end
-
-  describe "POST /admin/blogs/:id/flush_caches" do
-    let(:entry) { create(:entry, :published, :with_photo, blog: blog, user: user) }
-
-    before do
-      entry.photos.each { |p| attach_image_to_photo(p) }
-      allow(Blog).to receive(:first).and_return(blog)
-      allow(blog).to receive(:purge_from_cdn)
-    end
-
-    it "purges the CDN cache" do
-      expect(blog).to receive(:purge_from_cdn)
-      # Use JS format to avoid redirect issues
-      post flush_caches_admin_blog_path(blog), xhr: true
-    end
-
-    it "responds to JS format with success message" do
-      post flush_caches_admin_blog_path(blog), xhr: true
-      expect(response).to have_http_status(:success)
-    end
-  end
 end

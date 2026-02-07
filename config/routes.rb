@@ -81,11 +81,7 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :blogs, only: [:edit, :update] do
-      member do
-        post 'flush_caches'
-      end
-    end
+    resources :blogs, only: [:edit, :update]
 
     resources :cameras, only: [:edit, :update]
     resources :lenses, only: [:edit, :update]

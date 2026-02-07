@@ -5,7 +5,6 @@ namespace :tags do
       puts "Updating tags for entry #{entry.permalink_url}"
       entry.update_tags
     end
-    Blog.first.purge_from_cdn
   end
 
   desc 'Remove tag customizations that only have Instagram hashtags'

@@ -75,7 +75,6 @@
             <%= link_to 'Locations', admin_locations_path, class: 'navbar-item' %>
             <%= link_to 'Territories', admin_territories_path, class: 'navbar-item' %>
             <%= link_to 'Webhooks', admin_webhooks_path, class: 'navbar-item' %>
-            <%= link_to 'Expire caches', flush_caches_admin_blog_path(@photoblog), class: 'navbar-item', remote: true, method: :post, data: { confirm: "This will clear all caches. Do you want to proceed?" } %>
             <%= link_to 'Sidekiq', sidekiq_web_path, class: 'navbar-item' %>
           </div>
         </div>

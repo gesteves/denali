@@ -14,29 +14,7 @@ class Blog < ApplicationRecord
   has_one_attached :og_image
   has_one_attached :placeholder
 
-  after_commit :check_for_invalidation, if: :saved_changes?
-
   validates :name, :about, presence: true
-
-  INVALIDATION_PATHS = %w{
-    /
-    /1*
-    /2*
-    /3*
-    /4*
-    /5*
-    /6*
-    /7*
-    /8*
-    /9*
-    /p*
-    /ta*
-    /s*
-    /r*
-    /f*
-    /o*
-    /a*
-  }
 
   def formatted_about
     markdown_to_html(self.about)
@@ -124,38 +102,5 @@ class Blog < ApplicationRecord
   def time_to_publish_queued_entry?
     current_time = Time.current.in_time_zone(self.time_zone)
     self.publish_schedules.where(hour: current_time.hour).count > 0
-  end
-
-  def check_for_invalidation
-    attributes = %w{
-      additional_meta_tags
-      analytics_body
-      analytics_head
-      email
-      flickr
-      instagram
-      threads
-      header_logo_svg
-      bluesky
-      mastodon
-      meta_description
-      name
-      posts_per_page
-      show_related_entries
-      show_search
-      time_zone
-      hide_from_search_engines
-    }
-
-    if attributes.any? { |attr| saved_change_to_attribute? (attr) }
-      self.purge_from_cdn
-    elsif saved_change_to_about?
-      self.purge_from_cdn(paths: about_path)
-    end
-  end
-
-  def purge_from_cdn(paths: INVALIDATION_PATHS)
-    self.touch
-    CloudfrontInvalidationWorker.perform_async(paths)
   end
 end

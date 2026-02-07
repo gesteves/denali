@@ -3,8 +3,6 @@ Bugsnag.configure do |config|
   config.enabled_release_stages = %w[production]
   config.discard_classes += %w{
     ActiveRecord::RecordNotFound
-    Aws::CloudFront::Errors::ServiceUnavailable
-    Aws::CloudFront::Errors::TooManyInvalidationsInProgress
     UnprocessedPhotoError
   }
 end

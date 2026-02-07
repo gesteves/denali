@@ -552,7 +552,6 @@ class Entry < ApplicationRecord
     Webhook.deliver_all(self)
     PushSubscription.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
-    self.blog.purge_from_cdn
   end
 
   def send_photos_to_flickr
