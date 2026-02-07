@@ -1,6 +1,5 @@
 class Admin::MapsController < AdminController
   before_action :set_map_link_headers, only: [:index]
-  skip_before_action :verify_authenticity_token
 
   def index
     @page_title = 'Map'
@@ -19,7 +18,7 @@ class Admin::MapsController < AdminController
   def photo
     @srcset = PHOTOS[:map][:srcset]
     @sizes = PHOTOS[:map][:sizes].join(', ')
-    @photo = Photo.joins(:entry).where(photos: { id: params[:id] }).limit(1).first
+    @photo = Photo.joins(:entry).merge(Entry.mapped).find_by(photos: { id: params[:id] })
     raise ActiveRecord::RecordNotFound if @photo.nil?
     respond_to do |format|
       format.json

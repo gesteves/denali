@@ -4,8 +4,6 @@ import { Controller }             from '@hotwired/stimulus';
 
 /**
  * Controls the Map view, setting up the map, the markers, and the popups.
- * TODO: This is kinda messy, you should clean this shit up.
- * TODO: It'd also be nice to switch to Google Maps.
  * @extends Controller
  */
 export default class extends Controller {
@@ -13,7 +11,8 @@ export default class extends Controller {
   static values = {
     mapStyle: String,
     apiToken: String,
-    markersUrl: String
+    markersUrl: String,
+    photoUrl: String
   }
 
   connect () {
@@ -32,6 +31,17 @@ export default class extends Controller {
     let layer = L.mapbox.featureLayer();
     layer.on('layeradd', e => this.setUpMarker(e));
     layer.loadURL(this.markersUrlValue).on('ready', e => this.setUpMarkerClusters(e));
+  }
+
+  disconnect () {
+    if (this.hash) {
+      this.hash.remove();
+      this.hash = null;
+    }
+    if (this.map) {
+      this.map.remove();
+      this.map = null;
+    }
   }
 
   showLoadingSpinner () {
@@ -74,10 +84,12 @@ export default class extends Controller {
 
   requestPopup (e) {
     const marker = e.target;
-    fetch(`/admin/map/photo/${marker.photoId}.json`)
+    const url = this.photoUrlValue.replace(':id', marker.photoId);
+    fetch(url)
       .then(fetchStatus)
       .then(fetchJson)
-      .then(json => marker.setPopupContent(json.html));
+      .then(json => marker.setPopupContent(json.html))
+      .catch(() => marker.setPopupContent('Failed to load photo.'));
   }
 
   setUpMarkerClusters (e) {

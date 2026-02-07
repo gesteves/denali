@@ -14,7 +14,8 @@ describe('MapController', () => {
 
     // Reset mocks
     mockMap = {
-      addLayer: vi.fn().mockReturnThis()
+      addLayer: vi.fn().mockReturnThis(),
+      remove: vi.fn()
     };
 
     mockLayer = {
@@ -53,7 +54,7 @@ describe('MapController', () => {
       latLng: vi.fn((lat, lng) => ({ lat, lng })),
       latLngBounds: vi.fn((sw, ne) => ({ sw, ne })),
       divIcon: vi.fn(() => ({})),
-      hash: vi.fn(),
+      hash: vi.fn(function () { this.remove = vi.fn(); }),
       MarkerClusterGroup: MockMarkerClusterGroup,
       mapbox: {
         accessToken: null,
@@ -67,7 +68,8 @@ describe('MapController', () => {
       <div data-controller="map"
            data-map-map-style-value="mapbox://styles/test/style"
            data-map-api-token-value="test-api-token"
-           data-map-markers-url-value="/admin/map/markers.geojson">
+           data-map-markers-url-value="/admin/map/markers.geojson"
+           data-map-photo-url-value="/admin/map/photo/:id.json">
         <div id="map-container" data-map-target="container"></div>
         <div data-map-target="spinner" style="display: none;"></div>
       </div>
@@ -100,6 +102,13 @@ describe('MapController', () => {
     });
   }
 
+  function mockFetchFailure() {
+    global.fetch.mockResolvedValueOnce({
+      ok: false,
+      status: 500
+    });
+  }
+
   describe('connect', () => {
     it('sets default hash if not present', () => {
       // The hash is set by the controller's connect method
@@ -127,6 +136,44 @@ describe('MapController', () => {
 
     it('loads markers from URL', () => {
       expect(mockLayer.loadURL).toHaveBeenCalledWith('/admin/map/markers.geojson');
+    });
+  });
+
+  describe('disconnect', () => {
+    it('removes the map instance', () => {
+      const controller = getController();
+      // Simulate that setUpMarkerClusters has run to set this.hash
+      controller.hash = { remove: vi.fn() };
+
+      controller.disconnect();
+
+      expect(mockMap.remove).toHaveBeenCalled();
+      expect(controller.map).toBeNull();
+    });
+
+    it('removes the hash instance', () => {
+      const controller = getController();
+      const mockHashRemove = vi.fn();
+      controller.hash = { remove: mockHashRemove };
+
+      controller.disconnect();
+
+      expect(mockHashRemove).toHaveBeenCalled();
+      expect(controller.hash).toBeNull();
+    });
+
+    it('handles disconnect when hash is not set', () => {
+      const controller = getController();
+      controller.hash = null;
+
+      expect(() => controller.disconnect()).not.toThrow();
+    });
+
+    it('handles disconnect when map is not set', () => {
+      const controller = getController();
+      controller.map = null;
+
+      expect(() => controller.disconnect()).not.toThrow();
     });
   });
 
@@ -278,7 +325,7 @@ describe('MapController', () => {
   });
 
   describe('requestPopup', () => {
-    it('fetches popup content from API', async () => {
+    it('fetches popup content from the photo URL value', async () => {
       mockFetchSuccess({ html: '<div>Photo content</div>' });
 
       const controller = getController();
@@ -309,6 +356,40 @@ describe('MapController', () => {
 
       await vi.waitFor(() => {
         expect(marker.setPopupContent).toHaveBeenCalledWith('<div>Photo content</div>');
+      });
+    });
+
+    it('sets error message on fetch failure', async () => {
+      mockFetchFailure();
+
+      const controller = getController();
+      const marker = {
+        photoId: 42,
+        setPopupContent: vi.fn()
+      };
+      const event = { target: marker };
+
+      controller.requestPopup(event);
+
+      await vi.waitFor(() => {
+        expect(marker.setPopupContent).toHaveBeenCalledWith('Failed to load photo.');
+      });
+    });
+
+    it('sets error message on network error', async () => {
+      global.fetch.mockRejectedValueOnce(new Error('Network error'));
+
+      const controller = getController();
+      const marker = {
+        photoId: 42,
+        setPopupContent: vi.fn()
+      };
+      const event = { target: marker };
+
+      controller.requestPopup(event);
+
+      await vi.waitFor(() => {
+        expect(marker.setPopupContent).toHaveBeenCalledWith('Failed to load photo.');
       });
     });
   });

@@ -1,5 +1,6 @@
 json.cache! @photoblog do
-  json.array! @photoblog.entries.mapped.pluck('photos.id', 'photos.longitude', 'photos.latitude') do |e|
+  json.type 'FeatureCollection'
+  json.features @photoblog.entries.mapped.pluck('photos.id', 'photos.longitude', 'photos.latitude') do |e|
     json.type 'Feature'
     json.geometry do
       json.type 'Point'
