@@ -2,7 +2,7 @@
 
 FROM ruby:4.0.1
 
-# Install Node.js and Yarn
+# Install Node.js
 RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     gnupg \
@@ -11,18 +11,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" > /etc/apt/sources.list.d/nodesource.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends nodejs \
-    && npm install -g yarn \
     && rm -rf /var/lib/apt/lists/*
 
-RUN yarn global add gulp-cli
+RUN npm install -g gulp-cli
 
 WORKDIR /app
 
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
-COPY package.json yarn.lock ./
-RUN yarn install
+COPY package.json package-lock.json ./
+RUN npm install
 
 COPY . .
 

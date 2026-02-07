@@ -16,14 +16,12 @@ RUN apt-get update -qq && \
     libyaml-0-2 \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-# Install Node.js and Yarn
+# Install Node.js
 RUN mkdir -p /etc/apt/keyrings && \
     curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" > /etc/apt/sources.list.d/nodesource.list && \
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | gpg --dearmor -o /etc/apt/keyrings/yarn.gpg && \
-    echo "deb [signed-by=/etc/apt/keyrings/yarn.gpg] https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list && \
     apt-get update -qq && \
-    apt-get install -y --no-install-recommends nodejs yarn && \
+    apt-get install -y --no-install-recommends nodejs && \
     rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 ENV RAILS_ENV="production" \
@@ -45,20 +43,20 @@ RUN apt-get update -qq && \
     pkg-config \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
-RUN yarn global add gulp-cli
+RUN npm install -g gulp-cli
 
 COPY Gemfile Gemfile.lock ./
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --production=false
+COPY package.json package-lock.json ./
+RUN npm ci
 
 COPY . .
 
 RUN bundle exec bootsnap precompile app/ lib/
 
-# Precompile assets (jsbundling-rails runs yarn build automatically)
+# Precompile assets (jsbundling-rails runs npm run build automatically)
 RUN SECRET_KEY_BASE=dummy_key_for_asset_compilation \
     RAILS_SERVE_STATIC_FILES=true \
     bundle exec rails assets:precompile

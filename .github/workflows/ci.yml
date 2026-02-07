@@ -56,7 +56,7 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
-          cache: 'yarn'
+          cache: 'npm'
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -67,7 +67,7 @@ jobs:
         run: |
           gem install bundler
           bundle install --jobs 4 --retry 3
-          yarn install --frozen-lockfile
+          npm ci
 
       - name: Set up database
         run: bin/rails db:schema:load

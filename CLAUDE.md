@@ -38,7 +38,7 @@ docker compose logs -f app    # Follow app logs
 
 Do not attempt to run these commands directly on the host machine:
 - `rails`, `rake`, `bundle`, `ruby`
-- `yarn`, `npm`, `node` (for app-related tasks)
+- `npm`, `node` (for app-related tasks)
 
 The host machine may not have the correct Ruby version, gems, or database connectivity.
 

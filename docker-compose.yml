@@ -80,7 +80,7 @@ services:
 
   js:
     <<: *app
-    command: yarn build:watch
+    command: npm run build:watch
     environment:
       - NODE_ENV=development
       - RAILS_ENV=development
