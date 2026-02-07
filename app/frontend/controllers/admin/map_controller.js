@@ -1,4 +1,4 @@
-/* global L */
+import mapboxgl from 'mapbox-gl';
 import { fetchStatus, fetchJson } from '../../lib/utils';
 import { Controller }             from '@hotwired/stimulus';
 
@@ -16,67 +16,119 @@ export default class extends Controller {
   }
 
   connect () {
-    if (!window.location.hash) {
-      window.location.hash = '1/10.46/-66.96';
-    }
     this.showLoadingSpinner();
 
-    const southWest = L.latLng(-90, -180);
-    const northEast = L.latLng(90, 180);
-    const bounds = L.latLngBounds(southWest, northEast);
-    const zoom = this.getZoom();
-    const containerId = this.containerTarget.id;
-    L.mapbox.accessToken = this.apiTokenValue;
-    this.map = L.mapbox.map(containerId, null, { minZoom: zoom, maxZoom: 18, maxBounds: bounds }).addLayer(L.mapbox.styleLayer(this.mapStyleValue));
+    mapboxgl.accessToken = this.apiTokenValue;
+    this.map = new mapboxgl.Map({
+      container: this.containerTarget,
+      style: this.mapStyleValue,
+      center: [-66.96, 10.46],
+      zoom: 1,
+      minZoom: this.getMinZoom(),
+      maxZoom: 18,
+      hash: true
+    });
 
-    fetch(this.markersUrlValue)
-      .then(fetchStatus)
-      .then(fetchJson)
-      .then(geojson => this.loadMarkers(geojson))
-      .catch(() => this.hideLoadingSpinner());
+    this.map.on('load', () => this.loadMarkers());
   }
 
   disconnect () {
-    if (this.hash) {
-      this.hash.remove();
-      this.hash = null;
-    }
     if (this.map) {
       this.map.remove();
       this.map = null;
     }
   }
 
-  loadMarkers (geojson) {
-    const icon = L.divIcon({
-      className: 'map__marker map__marker--bloop',
-      html: '&bull;',
-      iconSize: [20, 20],
-      iconAnchor: [10, 10]
+  loadMarkers () {
+    this.map.addSource('photos', {
+      type: 'geojson',
+      data: this.markersUrlValue,
+      cluster: true,
+      clusterRadius: 45
     });
 
-    const geoJsonLayer = L.geoJson(geojson, {
-      pointToLayer: (feature, latlng) => {
-        const marker = L.marker(latlng, { icon });
-        marker.photoId = feature.properties.id;
-        marker.bindPopup('', { closeButton: true, minWidth: 300 });
-        marker.addOneTimeEventListener('popupopen', e => this.requestPopup(e));
-        return marker;
+    this.map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'photos',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': '#3e8ed0',
+        'circle-radius': 15,
+        'circle-stroke-width': 2,
+        'circle-stroke-color': '#2b74b1'
       }
     });
 
-    const clusterGroup = new L.MarkerClusterGroup({
-      showCoverageOnHover: false,
-      maxClusterRadius: 45,
-      spiderfyDistanceMultiplier: 3,
-      chunkedLoading: true,
-      iconCreateFunction: this.setUpClusterIcon
+    this.map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'photos',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': ['get', 'point_count_abbreviated'],
+        'text-size': 10
+      },
+      paint: {
+        'text-color': '#ffffff'
+      }
     });
-    clusterGroup.addLayers(geoJsonLayer.getLayers());
 
-    this.hash = new L.hash(this.map);
-    this.map.addLayer(clusterGroup);
+    this.map.addLayer({
+      id: 'unclustered-point',
+      type: 'circle',
+      source: 'photos',
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': '#3e8ed0',
+        'circle-radius': 7,
+        'circle-stroke-width': 1,
+        'circle-stroke-color': '#2b74b1'
+      }
+    });
+
+    this.map.on('click', 'clusters', (e) => {
+      const features = this.map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+      const clusterId = features[0].properties.cluster_id;
+      this.map.getSource('photos').getClusterExpansionZoom(clusterId, (err, zoom) => {
+        if (err) return;
+        this.map.easeTo({ center: features[0].geometry.coordinates, zoom });
+      });
+    });
+
+    this.map.on('click', 'unclustered-point', (e) => this.showPopup(e));
+
+    this.map.on('mouseenter', 'clusters', () => {
+      this.map.getCanvas().style.cursor = 'pointer';
+    });
+    this.map.on('mouseleave', 'clusters', () => {
+      this.map.getCanvas().style.cursor = '';
+    });
+    this.map.on('mouseenter', 'unclustered-point', () => {
+      this.map.getCanvas().style.cursor = 'pointer';
+    });
+    this.map.on('mouseleave', 'unclustered-point', () => {
+      this.map.getCanvas().style.cursor = '';
+    });
+
     this.hideLoadingSpinner();
+  }
+
+  showPopup (e) {
+    const coordinates = e.features[0].geometry.coordinates.slice();
+    const photoId = e.features[0].properties.id;
+    const url = this.photoUrlValue.replace(':id', photoId);
+
+    const popup = new mapboxgl.Popup({ closeButton: true, minWidth: 300 })
+      .setLngLat(coordinates)
+      .setHTML('Loading…')
+      .addTo(this.map);
+
+    fetch(url)
+      .then(fetchStatus)
+      .then(fetchJson)
+      .then(json => popup.setHTML(json.html))
+      .catch(() => popup.setHTML('Failed to load photo.'));
   }
 
   showLoadingSpinner () {
@@ -87,7 +139,7 @@ export default class extends Controller {
     this.spinnerTarget.style.display = 'none';
   }
 
-  getZoom () {
+  getMinZoom () {
     const height = document.documentElement.clientHeight;
     const width = document.documentElement.clientWidth;
 
@@ -98,24 +150,5 @@ export default class extends Controller {
     } else {
       return 2;
     }
-  }
-
-  requestPopup (e) {
-    const marker = e.target;
-    const url = this.photoUrlValue.replace(':id', marker.photoId);
-    fetch(url)
-      .then(fetchStatus)
-      .then(fetchJson)
-      .then(json => marker.setPopupContent(json.html))
-      .catch(() => marker.setPopupContent('Failed to load photo.'));
-  }
-
-  setUpClusterIcon (cluster) {
-    return L.divIcon({
-      className: 'map__marker map__marker--cluster',
-      html: cluster.getChildCount(),
-      iconSize: [30, 30],
-      iconAnchor: [15, 15]
-    });
   }
 }

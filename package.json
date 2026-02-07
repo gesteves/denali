@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
+    "@hotwired/turbo": "^8.0.23",
     "@rails/ujs": "^7.1",
     "@shopify/draggable": "1.2.1",
     "awesomplete": "^1.1.5",
@@ -21,11 +22,9 @@
     "croppr": "^2.3.1",
     "esbuild": "^0.27.3",
     "grapheme-splitter": "^1.0.4",
-    "leaflet-hash": "^0.2.1",
-    "leaflet.markercluster": "^0.5.0",
+    "mapbox-gl": "^3.18.1",
     "masonry-layout": "^4.2.2",
-    "moment-timezone": "^0.6.0",
-    "@hotwired/turbo": "^8.0.23"
+    "moment-timezone": "^0.6.0"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.0.18",

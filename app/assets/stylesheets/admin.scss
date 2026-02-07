@@ -22,6 +22,4 @@
 @use 'admin/blocks/crop';
 @use 'admin/blocks/instagram_story_preview';
 
-@use 'leaflet.markercluster/dist/MarkerCluster.Default' as MarkerClusterDefault;
-@use 'leaflet.markercluster/dist/MarkerCluster' as MarkerCluster;
 @use 'croppr/dist/croppr';

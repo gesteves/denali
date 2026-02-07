@@ -1,10 +1,5 @@
-<% content_for :javascript do %>
-  <%= javascript_include_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js', defer: true, 'data-turbo-track': 'reload' %>
-  <%= javascript_include_tag 'vendor/map', defer: true, 'data-turbo-track': 'reload' %>
-<% end %>
-
 <% content_for :stylesheets do %>
-  <%= stylesheet_link_tag 'https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css', media: 'all', 'data-turbo-track': 'reload' %>
+  <%= stylesheet_link_tag 'mapbox-gl/dist/mapbox-gl', media: 'all', 'data-turbo-track': 'reload' %>
 <% end %>
 
 <% content_for :body_class do %>
