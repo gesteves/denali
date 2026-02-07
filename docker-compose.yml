@@ -72,6 +72,12 @@ services:
       elasticsearch:
         condition: service_healthy
 
+  css:
+    <<: *app
+    command: rails dartsass:watch
+    environment:
+      - RAILS_ENV=development
+
   js:
     <<: *app
     command: yarn build:watch
