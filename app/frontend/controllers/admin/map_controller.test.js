@@ -2,33 +2,40 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
 import MapController from './map_controller';
 
+const EMPTY_GEOJSON = { type: 'FeatureCollection', features: [] };
+
+const SAMPLE_GEOJSON = {
+  type: 'FeatureCollection',
+  features: [
+    { type: 'Feature', geometry: { type: 'Point', coordinates: [-73.98, 40.75] }, properties: { id: 1 } },
+    { type: 'Feature', geometry: { type: 'Point', coordinates: [-118.24, 34.05] }, properties: { id: 2 } }
+  ]
+};
+
 describe('MapController', () => {
   let application;
   let element;
   let mockMap;
-  let mockLayer;
   let mockClusterGroup;
 
   beforeEach(() => {
-    global.fetch = vi.fn();
+    // Default fetch returns empty GeoJSON so connect() completes cleanly
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve(EMPTY_GEOJSON)
+    });
 
-    // Reset mocks
     mockMap = {
       addLayer: vi.fn().mockReturnThis(),
       remove: vi.fn()
     };
 
-    mockLayer = {
-      on: vi.fn().mockReturnThis(),
-      loadURL: vi.fn().mockReturnThis(),
-      eachLayer: vi.fn()
-    };
-
     mockClusterGroup = {
-      addLayer: vi.fn()
+      addLayer: vi.fn(),
+      addLayers: vi.fn()
     };
 
-    // Reset location hash - use a mutable object
+    // Reset location hash
     const locationMock = {
       href: 'http://localhost:3000/',
       origin: 'http://localhost:3000',
@@ -54,13 +61,25 @@ describe('MapController', () => {
       latLng: vi.fn((lat, lng) => ({ lat, lng })),
       latLngBounds: vi.fn((sw, ne) => ({ sw, ne })),
       divIcon: vi.fn(() => ({})),
+      marker: vi.fn(() => ({
+        photoId: null,
+        bindPopup: vi.fn(),
+        addOneTimeEventListener: vi.fn()
+      })),
+      geoJson: vi.fn((geojson, options) => {
+        const layers = (geojson.features || []).map(feature => {
+          const coords = feature.geometry.coordinates;
+          const latlng = { lat: coords[1], lng: coords[0] };
+          return options.pointToLayer(feature, latlng);
+        });
+        return { getLayers: () => layers };
+      }),
       hash: vi.fn(function () { this.remove = vi.fn(); }),
       MarkerClusterGroup: MockMarkerClusterGroup,
       mapbox: {
         accessToken: null,
         map: vi.fn(() => mockMap),
-        styleLayer: vi.fn(() => 'styleLayer'),
-        featureLayer: vi.fn(() => mockLayer)
+        styleLayer: vi.fn(() => 'styleLayer')
       }
     };
 
@@ -111,7 +130,6 @@ describe('MapController', () => {
 
   describe('connect', () => {
     it('sets default hash if not present', () => {
-      // The hash is set by the controller's connect method
       expect(window.location.hash).toContain('1/10.46/-66.96');
     });
 
@@ -134,15 +152,42 @@ describe('MapController', () => {
       );
     });
 
-    it('loads markers from URL', () => {
-      expect(mockLayer.loadURL).toHaveBeenCalledWith('/admin/map/markers.geojson');
+    it('fetches markers from URL', () => {
+      expect(global.fetch).toHaveBeenCalledWith('/admin/map/markers.geojson');
+    });
+
+    it('hides spinner on fetch failure', async () => {
+      // Reset and set up a fresh controller with a failing fetch
+      application.stop();
+      document.body.innerHTML = '';
+      vi.clearAllMocks();
+
+      global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500 });
+
+      document.body.innerHTML = `
+        <div data-controller="map"
+             data-map-map-style-value="mapbox://styles/test/style"
+             data-map-api-token-value="test-api-token"
+             data-map-markers-url-value="/admin/map/markers.geojson"
+             data-map-photo-url-value="/admin/map/photo/:id.json">
+          <div id="map-container" data-map-target="container"></div>
+          <div data-map-target="spinner" style="display: none;"></div>
+        </div>
+      `;
+      element = document.querySelector('[data-controller="map"]');
+      application = Application.start();
+      application.register('map', MapController);
+
+      const spinner = element.querySelector('[data-map-target="spinner"]');
+      await vi.waitFor(() => {
+        expect(spinner.style.display).toBe('none');
+      });
     });
   });
 
   describe('disconnect', () => {
     it('removes the map instance', () => {
       const controller = getController();
-      // Simulate that setUpMarkerClusters has run to set this.hash
       controller.hash = { remove: vi.fn() };
 
       controller.disconnect();
@@ -174,6 +219,124 @@ describe('MapController', () => {
       controller.map = null;
 
       expect(() => controller.disconnect()).not.toThrow();
+    });
+  });
+
+  describe('loadMarkers', () => {
+    it('creates a shared marker icon', () => {
+      const controller = getController();
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      expect(L.divIcon).toHaveBeenCalledWith({
+        className: 'map__marker map__marker--bloop',
+        html: '&bull;',
+        iconSize: [20, 20],
+        iconAnchor: [10, 10]
+      });
+    });
+
+    it('parses GeoJSON with pointToLayer', () => {
+      const controller = getController();
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      expect(L.geoJson).toHaveBeenCalledWith(
+        SAMPLE_GEOJSON,
+        expect.objectContaining({ pointToLayer: expect.any(Function) })
+      );
+    });
+
+    it('creates a marker for each feature', () => {
+      const controller = getController();
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      expect(L.marker).toHaveBeenCalledTimes(2);
+    });
+
+    it('sets photoId on each marker', () => {
+      const markers = [];
+      L.marker = vi.fn(() => {
+        const m = { photoId: null, bindPopup: vi.fn(), addOneTimeEventListener: vi.fn() };
+        markers.push(m);
+        return m;
+      });
+
+      const controller = getController();
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      expect(markers[0].photoId).toBe(1);
+      expect(markers[1].photoId).toBe(2);
+    });
+
+    it('binds popup to each marker', () => {
+      const markers = [];
+      L.marker = vi.fn(() => {
+        const m = { photoId: null, bindPopup: vi.fn(), addOneTimeEventListener: vi.fn() };
+        markers.push(m);
+        return m;
+      });
+
+      const controller = getController();
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      markers.forEach(m => {
+        expect(m.bindPopup).toHaveBeenCalledWith('', { closeButton: true, minWidth: 300 });
+      });
+    });
+
+    it('adds popupopen listener to each marker', () => {
+      const markers = [];
+      L.marker = vi.fn(() => {
+        const m = { photoId: null, bindPopup: vi.fn(), addOneTimeEventListener: vi.fn() };
+        markers.push(m);
+        return m;
+      });
+
+      const controller = getController();
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      markers.forEach(m => {
+        expect(m.addOneTimeEventListener).toHaveBeenCalledWith('popupopen', expect.any(Function));
+      });
+    });
+
+    it('bulk-adds markers to cluster group via addLayers', () => {
+      const controller = getController();
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      expect(mockClusterGroup.addLayers).toHaveBeenCalledTimes(1);
+      expect(mockClusterGroup.addLayers).toHaveBeenCalledWith(expect.any(Array));
+      expect(mockClusterGroup.addLayers.mock.calls[0][0]).toHaveLength(2);
+    });
+
+    it('enables chunkedLoading on the cluster group', () => {
+      const controller = getController();
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      const clusterGroupInstance = mockMap.addLayer.mock.calls[1][0];
+      expect(clusterGroupInstance.options.chunkedLoading).toBe(true);
+    });
+
+    it('adds cluster group to map', () => {
+      const controller = getController();
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      // Second addLayer call (first is styleLayer from connect)
+      expect(mockMap.addLayer).toHaveBeenCalledTimes(2);
+    });
+
+    it('creates hash for URL tracking', () => {
+      const controller = getController();
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      expect(L.hash).toHaveBeenCalledWith(mockMap);
+    });
+
+    it('hides loading spinner', () => {
+      const controller = getController();
+      spinnerTarget().style.display = 'block';
+      controller.loadMarkers(SAMPLE_GEOJSON);
+
+      expect(spinnerTarget().style.display).toBe('none');
     });
   });
 
@@ -238,89 +401,6 @@ describe('MapController', () => {
       controller.hideLoadingSpinner();
 
       expect(spinnerTarget().style.display).toBe('none');
-    });
-  });
-
-  describe('setUpMarker', () => {
-    it('sets marker photoId from feature properties', () => {
-      const controller = getController();
-      const marker = {
-        feature: { properties: { id: 42 } },
-        setIcon: vi.fn(),
-        addOneTimeEventListener: vi.fn()
-      };
-      const event = {
-        layer: marker,
-        target: { bindPopup: vi.fn() }
-      };
-
-      controller.setUpMarker(event);
-
-      expect(marker.photoId).toBe(42);
-    });
-
-    it('sets marker icon with correct configuration', () => {
-      const controller = getController();
-      const marker = {
-        feature: { properties: { id: 1 } },
-        setIcon: vi.fn(),
-        addOneTimeEventListener: vi.fn()
-      };
-      const event = {
-        layer: marker,
-        target: { bindPopup: vi.fn() }
-      };
-
-      controller.setUpMarker(event);
-
-      expect(L.divIcon).toHaveBeenCalledWith({
-        className: 'map__marker map__marker--bloop',
-        html: '&bull;',
-        iconSize: [20, 20],
-        iconAnchor: [10, 10]
-      });
-      expect(marker.setIcon).toHaveBeenCalled();
-    });
-
-    it('binds popup to marker', () => {
-      const controller = getController();
-      const marker = {
-        feature: { properties: { id: 1 } },
-        setIcon: vi.fn(),
-        addOneTimeEventListener: vi.fn()
-      };
-      const bindPopup = vi.fn();
-      const event = {
-        layer: marker,
-        target: { bindPopup }
-      };
-
-      controller.setUpMarker(event);
-
-      expect(bindPopup).toHaveBeenCalledWith('', {
-        closeButton: true,
-        minWidth: 300
-      });
-    });
-
-    it('adds popupopen event listener', () => {
-      const controller = getController();
-      const marker = {
-        feature: { properties: { id: 1 } },
-        setIcon: vi.fn(),
-        addOneTimeEventListener: vi.fn()
-      };
-      const event = {
-        layer: marker,
-        target: { bindPopup: vi.fn() }
-      };
-
-      controller.setUpMarker(event);
-
-      expect(marker.addOneTimeEventListener).toHaveBeenCalledWith(
-        'popupopen',
-        expect.any(Function)
-      );
     });
   });
 
@@ -391,72 +471,6 @@ describe('MapController', () => {
       await vi.waitFor(() => {
         expect(marker.setPopupContent).toHaveBeenCalledWith('Failed to load photo.');
       });
-    });
-  });
-
-  describe('setUpMarkerClusters', () => {
-    it('creates MarkerClusterGroup with correct options', () => {
-      const controller = getController();
-      const event = {
-        target: { eachLayer: vi.fn() }
-      };
-
-      controller.setUpMarkerClusters(event);
-
-      // Verify that the cluster was created by checking that it was added to the map
-      expect(mockMap.addLayer).toHaveBeenCalled();
-    });
-
-    it('adds layers to cluster group', () => {
-      const controller = getController();
-      const mockEachLayer = vi.fn((callback) => {
-        callback({ id: 'layer1' });
-        callback({ id: 'layer2' });
-      });
-      const event = {
-        target: { eachLayer: mockEachLayer }
-      };
-
-      controller.setUpMarkerClusters(event);
-
-      expect(mockClusterGroup.addLayer).toHaveBeenCalledTimes(2);
-    });
-
-    it('adds cluster group to map', () => {
-      const controller = getController();
-      const event = {
-        target: { eachLayer: vi.fn() }
-      };
-
-      controller.setUpMarkerClusters(event);
-
-      // Verify the second addLayer call (first is styleLayer)
-      expect(mockMap.addLayer).toHaveBeenCalledTimes(2);
-      const secondCall = mockMap.addLayer.mock.calls[1][0];
-      expect(secondCall).toHaveProperty('addLayer');
-    });
-
-    it('hides loading spinner', () => {
-      const controller = getController();
-      spinnerTarget().style.display = 'block';
-      const event = {
-        target: { eachLayer: vi.fn() }
-      };
-
-      controller.setUpMarkerClusters(event);
-
-      expect(spinnerTarget().style.display).toBe('none');
-    });
-
-    it('creates hash for URL tracking', () => {
-      const controller = getController();
-      const event = {
-        target: { eachLayer: vi.fn() }
-      };
-
-      controller.setUpMarkerClusters(event);
-
-      expect(L.hash).toHaveBeenCalledWith(mockMap);
     });
   });
 

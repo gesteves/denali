@@ -28,9 +28,12 @@ export default class extends Controller {
     const containerId = this.containerTarget.id;
     L.mapbox.accessToken = this.apiTokenValue;
     this.map = L.mapbox.map(containerId, null, { minZoom: zoom, maxZoom: 18, maxBounds: bounds }).addLayer(L.mapbox.styleLayer(this.mapStyleValue));
-    let layer = L.mapbox.featureLayer();
-    layer.on('layeradd', e => this.setUpMarker(e));
-    layer.loadURL(this.markersUrlValue).on('ready', e => this.setUpMarkerClusters(e));
+
+    fetch(this.markersUrlValue)
+      .then(fetchStatus)
+      .then(fetchJson)
+      .then(geojson => this.loadMarkers(geojson))
+      .catch(() => this.hideLoadingSpinner());
   }
 
   disconnect () {
@@ -42,6 +45,38 @@ export default class extends Controller {
       this.map.remove();
       this.map = null;
     }
+  }
+
+  loadMarkers (geojson) {
+    const icon = L.divIcon({
+      className: 'map__marker map__marker--bloop',
+      html: '&bull;',
+      iconSize: [20, 20],
+      iconAnchor: [10, 10]
+    });
+
+    const geoJsonLayer = L.geoJson(geojson, {
+      pointToLayer: (feature, latlng) => {
+        const marker = L.marker(latlng, { icon });
+        marker.photoId = feature.properties.id;
+        marker.bindPopup('', { closeButton: true, minWidth: 300 });
+        marker.addOneTimeEventListener('popupopen', e => this.requestPopup(e));
+        return marker;
+      }
+    });
+
+    const clusterGroup = new L.MarkerClusterGroup({
+      showCoverageOnHover: false,
+      maxClusterRadius: 45,
+      spiderfyDistanceMultiplier: 3,
+      chunkedLoading: true,
+      iconCreateFunction: this.setUpClusterIcon
+    });
+    clusterGroup.addLayers(geoJsonLayer.getLayers());
+
+    this.hash = new L.hash(this.map);
+    this.map.addLayer(clusterGroup);
+    this.hideLoadingSpinner();
   }
 
   showLoadingSpinner () {
@@ -65,23 +100,6 @@ export default class extends Controller {
     }
   }
 
-  setUpMarker (e) {
-    const marker = e.layer;
-    const feature = marker.feature;
-    marker.photoId = feature.properties.id;
-    marker.setIcon(L.divIcon({
-      className: 'map__marker map__marker--bloop',
-      html: '&bull;',
-      iconSize: [20, 20],
-      iconAnchor: [10, 10]
-    }));
-    e.target.bindPopup('', {
-      closeButton: true,
-      minWidth: 300
-    });
-    marker.addOneTimeEventListener('popupopen', e => this.requestPopup(e));
-  }
-
   requestPopup (e) {
     const marker = e.target;
     const url = this.photoUrlValue.replace(':id', marker.photoId);
@@ -90,20 +108,6 @@ export default class extends Controller {
       .then(fetchJson)
       .then(json => marker.setPopupContent(json.html))
       .catch(() => marker.setPopupContent('Failed to load photo.'));
-  }
-
-  setUpMarkerClusters (e) {
-    const clusterGroup = new L.MarkerClusterGroup({
-      showCoverageOnHover: false,
-      maxClusterRadius: 45,
-      spiderfyDistanceMultiplier: 3,
-      iconCreateFunction: this.setUpClusterIcon
-    });
-    e.target.eachLayer(layer => clusterGroup.addLayer(layer));
-
-    this.hash = new L.hash(this.map);
-    this.map.addLayer(clusterGroup);
-    this.hideLoadingSpinner();
   }
 
   setUpClusterIcon (cluster) {
