@@ -22,7 +22,7 @@ export default class extends Controller {
     this.map = new mapboxgl.Map({
       container: this.containerTarget,
       style: this.mapStyleValue,
-      center: [-66.96, 10.46],
+      center: [-98.583333, 39.833333],
       zoom: 1,
       minZoom: this.getMinZoom(),
       maxZoom: 18,
