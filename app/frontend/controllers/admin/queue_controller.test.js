@@ -22,17 +22,6 @@ vi.mock('@shopify/draggable', () => ({
   }
 }));
 
-// Mock moment-timezone
-vi.mock('moment-timezone', () => ({
-  default: () => ({
-    tz: () => ({
-      add: () => ({
-        format: (fmt) => 'Monday, January 27, 2025'
-      })
-    })
-  })
-}));
-
 describe('QueueController', () => {
   let application;
   let element;

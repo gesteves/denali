@@ -1,23 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
-
-// Track ClipboardJS calls
-let clipboardOnCalls = [];
-
-vi.mock('clipboard', () => ({
-  default: class MockClipboardJS {
-    constructor(element, options) {
-      this.element = element;
-      this.options = options;
-      clipboardOnCalls = [];
-    }
-    on(event, handler) {
-      clipboardOnCalls.push({ event, handler });
-      return this;
-    }
-  }
-}));
-
 import ClipboardController from './clipboard_controller';
 
 describe('ClipboardController', () => {
@@ -27,10 +9,16 @@ describe('ClipboardController', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
+    Object.assign(navigator, {
+      clipboard: {
+        writeText: vi.fn(() => Promise.resolve())
+      }
+    });
+
     document.body.innerHTML = `
       <div data-controller="clipboard">
         <input data-clipboard-target="source" value="Text to copy" readonly>
-        <button data-clipboard-target="button" data-action="click->clipboard#preventDefault">
+        <button data-clipboard-target="button">
           <i class="fa fa-clipboard" data-clipboard-target="icon"></i>
           <span data-clipboard-target="label">Copy</span>
         </button>
@@ -52,6 +40,10 @@ describe('ClipboardController', () => {
     return application.getControllerForElementAndIdentifier(element, 'clipboard');
   }
 
+  function buttonTarget() {
+    return element.querySelector('[data-clipboard-target="button"]');
+  }
+
   function iconTarget() {
     return element.querySelector('[data-clipboard-target="icon"]');
   }
@@ -61,78 +53,54 @@ describe('ClipboardController', () => {
   }
 
   describe('connect', () => {
-    it('sets up ClipboardJS with button target', () => {
+    it('adds a click handler to the button', () => {
       const controller = getController();
-      // ClipboardJS should be initialized and handlers registered
-      const successHandler = clipboardOnCalls.find(c => c.event === 'success');
-      const errorHandler = clipboardOnCalls.find(c => c.event === 'error');
-      expect(successHandler).toBeDefined();
-      expect(errorHandler).toBeDefined();
+      expect(controller).toBeDefined();
+      // The button should have a click listener attached
+      // We verify this indirectly through the copy tests
     });
   });
 
-  describe('preventDefault', () => {
-    it('prevents default event behavior', () => {
-      const controller = getController();
-      const event = { preventDefault: vi.fn() };
-
-      controller.preventDefault(event);
-
-      expect(event.preventDefault).toHaveBeenCalled();
-    });
-  });
-
-  describe('successfulCopy', () => {
-    it('clears selection from event', () => {
-      const controller = getController();
-      const event = { clearSelection: vi.fn() };
-
-      controller.successfulCopy(event);
-
-      expect(event.clearSelection).toHaveBeenCalled();
+  describe('copy via button click', () => {
+    it('calls navigator.clipboard.writeText with source value', async () => {
+      buttonTarget().click();
+      await vi.waitFor(() => {
+        expect(navigator.clipboard.writeText).toHaveBeenCalledWith('Text to copy');
+      });
     });
 
-    it('changes icon class from clipboard to clipboard-check', () => {
-      const controller = getController();
-      const icon = iconTarget();
-      const event = { clearSelection: vi.fn() };
-
-      controller.successfulCopy(event);
-
-      expect(icon.classList.contains('fa-clipboard')).toBe(false);
-      expect(icon.classList.contains('fa-clipboard-check')).toBe(true);
+    it('changes icon class on successful copy', async () => {
+      buttonTarget().click();
+      await vi.waitFor(() => {
+        expect(iconTarget().classList.contains('fa-clipboard')).toBe(false);
+        expect(iconTarget().classList.contains('fa-clipboard-check')).toBe(true);
+      });
     });
 
-    it('updates label text to success message', () => {
-      const controller = getController();
-      const label = labelTarget();
-      const event = { clearSelection: vi.fn() };
-
-      controller.successfulCopy(event);
-
-      expect(label.innerHTML).toBe('Copied to clipboard!');
+    it('updates label text on successful copy', async () => {
+      buttonTarget().click();
+      await vi.waitFor(() => {
+        expect(labelTarget().innerHTML).toBe('Copied to clipboard!');
+      });
     });
 
-    it('handles missing label target gracefully', () => {
-      // Remove label target
+    it('handles missing label target gracefully on success', async () => {
       labelTarget().remove();
-
-      const controller = getController();
-      const event = { clearSelection: vi.fn() };
-
-      // Should not throw - the hasLabelTarget check should prevent the error
-      expect(() => controller.successfulCopy(event)).not.toThrow();
+      buttonTarget().click();
+      await vi.waitFor(() => {
+        expect(navigator.clipboard.writeText).toHaveBeenCalledWith('Text to copy');
+      });
+      // Should not throw
     });
   });
 
   describe('unsuccessfulCopy', () => {
-    it('updates label text to fallback message', () => {
-      const controller = getController();
-      const label = labelTarget();
-
-      controller.unsuccessfulCopy();
-
-      expect(label.innerHTML).toBe('Press Ctrl+C to copy!');
+    it('updates label text to fallback message on failure', async () => {
+      navigator.clipboard.writeText = vi.fn(() => Promise.reject(new Error('fail')));
+      buttonTarget().click();
+      await vi.waitFor(() => {
+        expect(labelTarget().innerHTML).toBe('Press Ctrl+C to copy!');
+      });
     });
   });
 });

@@ -25,15 +25,23 @@
       <% end %>
       <hr class="dropdown-divider">
       <% if entry.is_queued? %>
-        <%= link_to icon('Send to drafts', 'fas fa-folder-open'), draft_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to send this entry to the drafts? It will lose its place in the queue.' }, class: 'dropdown-item' %>
+        <%= button_to draft_admin_entry_path(entry), method: :patch, class: 'dropdown-item', form: { data: { turbo_confirm: 'Are you sure you want to send this entry to the drafts? It will lose its place in the queue.' } } do %>
+          <%= icon('Send to drafts', 'fas fa-folder-open') %>
+        <% end %>
       <% elsif entry.is_draft? %>
-        <%= link_to icon('Send to queue', 'fas fa-clock'), queue_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to send this entry to the queue?' }, class: 'dropdown-item' %>
+        <%= button_to queue_admin_entry_path(entry), method: :patch, class: 'dropdown-item', form: { data: { turbo_confirm: 'Are you sure you want to send this entry to the queue?' } } do %>
+          <%= icon('Send to queue', 'fas fa-clock') %>
+        <% end %>
       <% end %>
       <% if !entry.is_published? %>
-        <%= link_to icon('Publish it!', 'fas fa-rocket'), publish_admin_entry_path(entry), method: :patch, data: { confirm: 'Are you sure you want to publish this entry? This can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
+        <%= button_to publish_admin_entry_path(entry), method: :patch, class: 'dropdown-item has-text-danger', form: { data: { turbo_confirm: "Are you sure you want to publish this entry? This can\u2019t be undone!" } } do %>
+          <%= icon('Publish it!', 'fas fa-rocket') %>
+        <% end %>
         <hr class="dropdown-divider">
       <% end %>
-      <%= link_to icon('Delete it forever', 'fas fa-trash-alt'), admin_entry_path(entry.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it forever? This can’t be undone!' }, class: 'dropdown-item has-text-danger' %>
+      <%= button_to admin_entry_path(entry.id), method: :delete, class: 'dropdown-item has-text-danger', form: { data: { turbo_confirm: "Are you absolutely sure you want to delete it forever? This can\u2019t be undone!" } } do %>
+        <%= icon('Delete it forever', 'fas fa-trash-alt') %>
+      <% end %>
     </div>
   </div>
 </div>

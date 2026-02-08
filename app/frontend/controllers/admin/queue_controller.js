@@ -1,7 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { fetchStatus, fetchJson, sendNotification } from '../../lib/utils';
 import { Sortable } from '@shopify/draggable';
-import moment from 'moment-timezone';
 
 /**
  * Controls the sorting of the queue.
@@ -84,7 +83,15 @@ export default class extends Controller {
         publish_date = 'TBD';
       } else {
         const days = Math.floor((position - 1 + this.pastPublishSchedulesTodayValue)/this.publishSchedulesCountValue);
-        publish_date = moment().tz(this.timeZoneValue).add(days, 'days').format('dddd, MMMM D, YYYY');
+        const date = new Date();
+        date.setDate(date.getDate() + days);
+        publish_date = new Intl.DateTimeFormat('en-US', {
+          timeZone: this.timeZoneValue,
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric',
+          year: 'numeric'
+        }).format(date);
       }
       card.setAttribute('data-entry-position', position);
       card.querySelector('[data-timestamp]').innerHTML = publish_date;

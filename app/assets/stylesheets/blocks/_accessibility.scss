@@ -32,10 +32,8 @@
     filter: invert(1);
   }
 
-  // scss-lint:disable ImportantRule
   * {
     box-shadow: none !important;
     text-shadow: none !important;
   }
-  // scss-lint:enable ImportantRule
 }

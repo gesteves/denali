@@ -69,25 +69,18 @@ describe('CharacterCounterController', () => {
     });
 
     it('counts emoji as single graphemes', () => {
-      setInput('hello \u{1F44D}'); // thumbs up emoji using unicode escape
-      // In jsdom, the emoji may render differently
-      const count = parseInt(characterCount().innerHTML);
-      expect(count).toBeGreaterThanOrEqual(6); // at least "hello "
+      setInput('hello \u{1F44D}'); // thumbs up emoji
+      expect(characterCount().innerHTML).toBe('7'); // "hello " + 1 emoji
     });
 
     it('counts complex emoji as single graphemes', () => {
-      // Family emoji (multiple code points) - may not render in jsdom
-      setInput('\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467}');
-      const count = parseInt(characterCount().innerHTML);
-      // GraphemeSplitter should count this as 1 or more depending on support
-      expect(count).toBeGreaterThanOrEqual(0);
+      setInput('\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467}'); // family emoji
+      expect(characterCount().innerHTML).toBe('1');
     });
 
     it('counts flag emoji correctly', () => {
-      setInput('\u{1F1FA}\u{1F1F8}'); // US flag using regional indicators
-      const count = parseInt(characterCount().innerHTML);
-      // GraphemeSplitter should count this as 1 or 2
-      expect(count).toBeGreaterThanOrEqual(0);
+      setInput('\u{1F1FA}\u{1F1F8}'); // US flag
+      expect(characterCount().innerHTML).toBe('1');
     });
 
     it('handles empty input', () => {

@@ -1,6 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-import GraphemeSplitter from 'grapheme-splitter';
-
 /**
  * Updates character counts for text fields, accounting for Markdown syntax and Unicode graphemes.
  * @extends Controller
@@ -20,9 +18,9 @@ export default class extends Controller {
    * Count characters in the input and updates the character count.
    */
   updateCharacterCount () {
-    const splitter = new GraphemeSplitter();
-    const plainText = this.stripMarkdown(this.inputTarget.value); // Strip Markdown
-    const count = splitter.countGraphemes(plainText); // Count Unicode graphemes
+    const plainText = this.stripMarkdown(this.inputTarget.value);
+    const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
+    const count = [...segmenter.segment(plainText)].length;
 
     this.characterCountTarget.innerHTML = count;
     if (count > (this.maxCharacters - 10)) {

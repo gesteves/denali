@@ -37,7 +37,7 @@
 <td>
   <div class="buttons is-pulled-right">
     <%= link_to 'Edit', edit_admin_tag_customization_path(tag_customization.id), class: 'button is-small' %>
-    <%= link_to 'Delete', admin_tag_customization_path(tag_customization.id), method: :delete, data: { confirm: 'Are you absolutely sure you want to delete it forever? This can’t be undone!' }, class: 'button is-danger is-small', 'data-action': 'click->tag#delete' %>
+    <%= button_to 'Delete', admin_tag_customization_path(tag_customization.id), method: :delete, class: 'button is-danger is-small', data: { action: 'click->tag#delete' }, form: { data: { turbo_confirm: "Are you absolutely sure you want to delete it forever? This can\u2019t be undone!" } } %>
   </div>
 </td>
 </tr>

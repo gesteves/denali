@@ -1,5 +1,4 @@
 import { Application } from '@hotwired/stimulus';
-import Rails from '@rails/ujs';
 import * as Turbo from '@hotwired/turbo';
 
 // Admin controllers
@@ -56,5 +55,4 @@ application.register('tag-autocomplete', TagAutocompleteController);
 // Register shared controllers
 application.register('placeholder', PlaceholderController);
 
-Rails.start();
 Turbo.start();

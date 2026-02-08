@@ -1,5 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-import ClipboardJS from 'clipboard';
 
 /**
  * Controls copy-to-clipboard functionality.
@@ -8,29 +7,26 @@ import ClipboardJS from 'clipboard';
 export default class extends Controller {
   static targets = ['source', 'button', 'icon', 'label'];
 
-  // Set up a clipboard.js instance
   connect () {
-    const clipboard = new ClipboardJS(this.buttonTarget, {
-      target: () => this.sourceTarget
+    this.buttonTarget.addEventListener('click', (e) => {
+      e.preventDefault();
+      this.copy();
     });
-    clipboard.on('success', e => this.successfulCopy(e));
-    clipboard.on('error',   e => this.unsuccessfulCopy(e));
   }
 
-  /**
-   * Convenience method to stop the button from doing its thing.
-   * @param  {Event} event Click event from the button.
-   */
-  preventDefault (event) {
-    event.preventDefault();
+  async copy () {
+    try {
+      await navigator.clipboard.writeText(this.sourceTarget.value);
+      this.successfulCopy();
+    } catch {
+      this.unsuccessfulCopy();
+    }
   }
 
   /**
    * Turn the button into a success message if the copy is successful
-   * @param  {Event} event Success event from the clipboard instance.
    */
-  successfulCopy (event) {
-    event.clearSelection();
+  successfulCopy () {
     this.iconTarget.classList.replace('fa-clipboard', 'fa-clipboard-check');
     if (this.hasLabelTarget) {
       this.labelTarget.innerHTML = 'Copied to clipboard!';
@@ -38,7 +34,7 @@ export default class extends Controller {
   }
 
   /**
-   * Turn the button into an error message if the copy is successful
+   * Turn the button into an error message if the copy is unsuccessful
    */
   unsuccessfulCopy () {
     this.labelTarget.innerHTML = 'Press Ctrl+C to copy!';

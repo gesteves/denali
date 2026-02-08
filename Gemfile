@@ -18,7 +18,6 @@ gem 'aws-sdk-s3', '~> 1'
 # Front-end things
 gem 'dartsass-rails'
 gem 'autoprefixer-rails'
-gem 'uglifier', '>= 1.3.0'
 gem 'jsbundling-rails'
 gem 'turbo-rails'
 gem "sprockets-rails"
@@ -29,7 +28,6 @@ gem 'blurhash', git: 'https://github.com/gesteves/blurhash', branch: 'master'
 
 # Misc
 gem 'jbuilder', '~> 2.14'
-gem 'sdoc', '~> 2.6', group: :doc
 gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
@@ -37,7 +35,6 @@ gem 'exifr', require: nil
 gem 'acts-as-taggable-on'
 gem 'httparty', '~> 0.24'
 gem 'kaminari'
-gem 'figaro'
 gem 'oauth'
 gem "image_processing", "~> 1.14"
 gem 'rack-brotli'
@@ -72,14 +69,9 @@ end
 group :development do
   # Access an interactive console on exception pages or by calling 'console' anywhere in the code.
   gem 'web-console', '>= 3.3.0'
-  gem 'listen', '>= 3.0.5', '< 3.11'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
-  gem 'spring-watcher-listen', '~> 2.1.0'
 end
 
 group :development, :test do
-  gem 'scss-lint'
   gem 'byebug'
   gem 'brakeman', require: nil
 end
