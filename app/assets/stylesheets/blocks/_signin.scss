@@ -6,4 +6,23 @@
   margin: 0 auto;
   max-width: 300px;
   padding: 20px;
+
+  &__flash {
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    margin-bottom: 16px;
+    padding: 10px 16px;
+    text-align: center;
+    width: 100%;
+
+    &--success {
+      background-color: #48c774;
+    }
+
+    &--warning {
+      background-color: #ffdd57;
+      color: #333;
+    }
+  }
 }

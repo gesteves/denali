@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   require 'sidekiq/web'
   require 'sidekiq-scheduler/web'
-  mount Sidekiq::Web => '/admin/sidekiq', constraints: ->(request) { request.session[:user_id].present? && User.find(request.session[:user_id]).present? }
+  mount Sidekiq::Web => '/admin/sidekiq', constraints: ->(request) { request.session[:user_id].present? && User.find_by(id: request.session[:user_id]).present? }
 
   match '/404', to: 'errors#file_not_found', via: :all
   match '/422', to: 'errors#unprocessable', via: :all
@@ -149,7 +149,7 @@ Rails.application.routes.draw do
 
   # Admin
   get '/admin'                         => 'admin#index',      as: :admin
-  get '/auth/:provider/callback'       => 'sessions#create'
+  match '/auth/:provider/callback'      => 'sessions#create', via: [:get, :post]
   get '/auth/failure'                  => 'sessions#failure'
   get '/signin'                        => 'sessions#new',     as: :signin
   get '/signout'                       => 'sessions#destroy', as: :signout

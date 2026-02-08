@@ -5,6 +5,11 @@
 <% end %>
 
 <div class="signin">
+  <% flash.each do |name, message| %>
+    <div class="signin__flash signin__flash--<%= name %>">
+      <%= message %>
+    </div>
+  <% end %>
   <%= form_with(url: "/auth/google_oauth2", method: :post) do %>
     <button type="submit" class="button button--centered">
       <%= inline_svg :google_brands_solid_full, class_name: 'button__icon' %>
