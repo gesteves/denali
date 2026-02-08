@@ -108,7 +108,7 @@ describe('MapController', () => {
       const options = mockMap._options;
       expect(options.container).toBe(element.querySelector('#map-container'));
       expect(options.style).toBe('mapbox://styles/test/style');
-      expect(options.center).toEqual([-66.96, 10.46]);
+      expect(options.center).toEqual([-98.57947729898336, 39.82834092754513]);
       expect(options.zoom).toBe(1);
       expect(options.minZoom).toEqual(expect.any(Number));
       expect(options.maxZoom).toBe(18);
