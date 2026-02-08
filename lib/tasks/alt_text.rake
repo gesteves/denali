@@ -5,7 +5,7 @@ namespace :alt_text do
     entry = Entry.find(ENV['ENTRY_ID'])
     entry.photos.each do |photo|
       puts "Updating alt text for photo #{photo.id}"
-      AltTextWorker.perform_async(photo.id)
+      AltTextJob.perform_async(photo.id)
     end
   end
 
@@ -23,7 +23,7 @@ namespace :alt_text do
       entries.each do |entry|
         puts "Updating alt text for entry #{entry.permalink_url}"
         entry.photos.each do |photo|
-          AltTextWorker.perform_async(photo.id)
+          AltTextJob.perform_async(photo.id)
         end
       end
     end

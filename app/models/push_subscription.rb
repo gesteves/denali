@@ -10,7 +10,7 @@ class PushSubscription < ApplicationRecord
 
   def self.deliver_all(entry)
     PushSubscription.where(blog: entry.blog).find_each do |push_subscription|
-      PushNotificationWorker.perform_async(push_subscription.id, entry.id)
+      PushNotificationJob.perform_async(push_subscription.id, entry.id)
     end
   end
 

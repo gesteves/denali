@@ -51,7 +51,7 @@ class Photo < ApplicationRecord
 
   def update_entry_caption_validity
     return if self.entry.nil? || self.entry.destroyed?
-    CaptionValidityWorker.perform_async(self.entry.id)
+    CaptionValidityJob.perform_async(self.entry.id)
   end
 
   def self.oldest
@@ -407,27 +407,27 @@ class Photo < ApplicationRecord
   end
 
   def extract_metadata
-    PhotoExifWorker.perform_async(self.id)
+    PhotoExifJob.perform_async(self.id)
   end
 
   def generate_alt_text
-    AltTextWorker.perform_async(self.id)
+    AltTextJob.perform_async(self.id)
   end
 
   def geocode
-    PhotoGeocodeWorker.perform_async(self.id)
+    PhotoGeocodeJob.perform_async(self.id)
   end
 
   def update_native_lands
-    NativeLandsWorker.perform_async(self.id)
+    NativeLandsJob.perform_async(self.id)
   end
 
   def detect_colors
-    ColorDetectionWorker.perform_async(self.id)
+    ColorDetectionJob.perform_async(self.id)
   end
 
   def encode_blurhash
-    BlurhashWorker.perform_async(self.id)
+    BlurhashJob.perform_async(self.id)
   end
 
   def blurhash_data_uri(w: 32)

@@ -117,13 +117,13 @@ RSpec.describe "Admin::Entries", type: :request do
 
     before do
       # Clear any jobs from previous setup
-      WebhookWorker.jobs.clear
-      FlickrWorker.jobs.clear
+      WebhookJob.jobs.clear
+      FlickrJob.jobs.clear
     end
 
     it "creates published entries" do
-      initial_webhook_count = WebhookWorker.jobs.size
-      initial_flickr_count = FlickrWorker.jobs.size
+      initial_webhook_count = WebhookJob.jobs.size
+      initial_flickr_count = FlickrJob.jobs.size
 
       expect {
         post admin_entries_path, params: {
@@ -136,8 +136,8 @@ RSpec.describe "Admin::Entries", type: :request do
         }
       }.to change(Entry, :count).by(1)
 
-      expect(FlickrWorker.jobs.size - initial_flickr_count).to eq(0)
-      expect(WebhookWorker.jobs.size - initial_webhook_count).to eq(2)
+      expect(FlickrJob.jobs.size - initial_flickr_count).to eq(0)
+      expect(WebhookJob.jobs.size - initial_webhook_count).to eq(2)
 
       new_entry = Entry.last
       expect(new_entry).to be_is_published
@@ -146,8 +146,8 @@ RSpec.describe "Admin::Entries", type: :request do
     end
 
     it "creates draft entries" do
-      initial_webhook_count = WebhookWorker.jobs.size
-      initial_flickr_count = FlickrWorker.jobs.size
+      initial_webhook_count = WebhookJob.jobs.size
+      initial_flickr_count = FlickrJob.jobs.size
 
       expect {
         post admin_entries_path, params: {
@@ -159,16 +159,16 @@ RSpec.describe "Admin::Entries", type: :request do
         }
       }.to change(Entry, :count).by(1)
 
-      expect(FlickrWorker.jobs.size - initial_flickr_count).to eq(0)
-      expect(WebhookWorker.jobs.size - initial_webhook_count).to eq(0)
+      expect(FlickrJob.jobs.size - initial_flickr_count).to eq(0)
+      expect(WebhookJob.jobs.size - initial_webhook_count).to eq(0)
 
       new_entry = Entry.last
       expect(new_entry).to be_is_draft
     end
 
     it "creates queued entries" do
-      initial_webhook_count = WebhookWorker.jobs.size
-      initial_flickr_count = FlickrWorker.jobs.size
+      initial_webhook_count = WebhookJob.jobs.size
+      initial_flickr_count = FlickrJob.jobs.size
 
       expect {
         post admin_entries_path, params: {
@@ -180,8 +180,8 @@ RSpec.describe "Admin::Entries", type: :request do
         }
       }.to change(Entry, :count).by(1)
 
-      expect(FlickrWorker.jobs.size - initial_flickr_count).to eq(0)
-      expect(WebhookWorker.jobs.size - initial_webhook_count).to eq(0)
+      expect(FlickrJob.jobs.size - initial_flickr_count).to eq(0)
+      expect(WebhookJob.jobs.size - initial_webhook_count).to eq(0)
 
       new_entry = Entry.last
       expect(new_entry).to be_is_queued

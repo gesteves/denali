@@ -34,7 +34,7 @@ namespace :locations do
 
       parks = JSON.parse(response.body)['data']
       parks.each do |park|
-        p = Park.find_by_code(park['parkCode'])
+        p = Park.find_by(code: park['parkCode'])
         if p.present?
           p.update(
             full_name: park['fullName'],

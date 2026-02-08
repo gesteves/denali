@@ -61,13 +61,13 @@ RSpec.describe Webhook, type: :model do
   end
 
   describe '.deliver_all' do
-    it 'enqueues WebhookWorker for each webhook' do
+    it 'enqueues WebhookJob for each webhook' do
       create_list(:webhook, 3, blog: blog)
       entry = create(:entry, blog: blog, user: user)
 
       expect {
         Webhook.deliver_all(entry)
-      }.to change(WebhookWorker.jobs, :size).by(3)
+      }.to change(WebhookJob.jobs, :size).by(3)
     end
   end
 end

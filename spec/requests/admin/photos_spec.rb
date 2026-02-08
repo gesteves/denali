@@ -43,12 +43,12 @@ RSpec.describe "Admin::Photos", type: :request do
 
   describe "POST /admin/photos/:id/generate_alt_text" do
     before do
-      allow(AltTextWorker).to receive(:perform_inline)
+      allow(AltTextJob).to receive(:perform_inline)
       photo.update!(auto_generated_alt_text: 'Generated description')
     end
 
-    it "calls AltTextWorker" do
-      expect(AltTextWorker).to receive(:perform_inline).with(photo.id.to_s)
+    it "calls AltTextJob" do
+      expect(AltTextJob).to receive(:perform_inline).with(photo.id.to_s)
       post generate_alt_text_admin_photo_path(photo), as: :json
     end
 

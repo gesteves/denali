@@ -4,6 +4,6 @@ module TagList
   def load_tags
     @tag_slug = params[:tag]
     @tags = ActsAsTaggableOn::Tag.where(slug: params[:tag])
-    @tag_list = @tags.map{ |t| t.name }
+    @tag_list = @tags.map(&:name)
   end
 end

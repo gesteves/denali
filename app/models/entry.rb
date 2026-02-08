@@ -73,15 +73,15 @@ class Entry < ApplicationRecord
   end
 
   after_commit on: [:create] do
-    ElasticsearchWorker.perform_async(self.id, 'create')
+    ElasticsearchJob.perform_async(self.id, 'create')
   end
 
   after_commit on: [:update] do
-    ElasticsearchWorker.perform_async(self.id, 'update')
+    ElasticsearchJob.perform_async(self.id, 'update')
   end
 
   after_commit on: [:destroy] do
-    ElasticsearchWorker.perform_async(self.id, 'destroy')
+    ElasticsearchJob.perform_async(self.id, 'destroy')
   end
 
   def as_indexed_json(opts = nil)
@@ -391,21 +391,10 @@ class Entry < ApplicationRecord
     raise ActiveRecord::RecordNotFound
   end
 
-  def is_photo?
-    !self.photos_count.blank? && self.photos_count > 0
-  end
-
-  def is_photoset?
-    !self.photos_count.blank? && self.photos_count > 1
-  end
-
-  def is_text?
-    self.photos_count.blank? || self.photos_count == 0
-  end
-
-  def is_single_photo?
-    !self.photos_count.blank? && self.photos_count == 1
-  end
+  def is_photo?     = photos_count.to_i > 0
+  def is_photoset?  = photos_count.to_i > 1
+  def is_text?      = photos_count.to_i.zero?
+  def is_single_photo? = photos_count.to_i == 1
 
   def is_queued?
     self.status == 'queued'
@@ -544,18 +533,18 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_publish_jobs
-    OpenGraphWorker.perform_async(self.id)
-    MastodonWorker.perform_async(self.id, self.mastodon_caption(utm_campaign: 'new-photo')) if self.post_to_mastodon
-    BlueskyWorker.perform_async(self.id, self.bluesky_caption(utm_campaign: 'new-photo')) if self.post_to_bluesky
-    InstagramWorker.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
-    ThreadsWorker.perform_async(self.id, self.threads_caption(utm_campaign: 'new-photo')) if self.post_to_threads
+    OpenGraphJob.perform_async(self.id)
+    MastodonJob.perform_async(self.id, self.mastodon_caption(utm_campaign: 'new-photo')) if self.post_to_mastodon
+    BlueskyJob.perform_async(self.id, self.bluesky_caption(utm_campaign: 'new-photo')) if self.post_to_bluesky
+    InstagramJob.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
+    ThreadsJob.perform_async(self.id, self.threads_caption(utm_campaign: 'new-photo')) if self.post_to_threads
     Webhook.deliver_all(self)
     PushSubscription.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
   end
 
   def send_photos_to_flickr
-    self.photos.each { |p| FlickrWorker.perform_async(p.id) }
+    self.photos.each { |p| FlickrJob.perform_async(p.id) }
   end
 
   def combined_tags
@@ -606,7 +595,7 @@ class Entry < ApplicationRecord
   end
 
   def es_alt_text
-    self.photos.map { |p| p.alt_text }.reject(&:blank?).join(' ')
+    self.photos.map(&:alt_text).reject(&:blank?).join(' ')
   end
 
   def es_territories
@@ -955,7 +944,7 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_caption_validity_job
-    CaptionValidityWorker.perform_async(self.id)
+    CaptionValidityJob.perform_async(self.id)
   end
 
   private

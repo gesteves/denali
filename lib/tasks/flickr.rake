@@ -35,7 +35,7 @@ namespace :flickr do
         next unless entry&.is_single_photo?
 
         photo_id = entry.photos.first.id
-        FlickrUpdateWorker.perform_async(photo_id, flickr_id)
+        FlickrUpdateJob.perform_async(photo_id, flickr_id)
       end
       page += 1
     end

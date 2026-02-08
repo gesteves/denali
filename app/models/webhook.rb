@@ -5,11 +5,11 @@ class Webhook < ApplicationRecord
 
   validates :url, presence: true
 
-  before_save :cleanup_url
+  normalizes :url, with: ->(url) { url.strip }
 
   def self.deliver_all(entry)
     Webhook.where(blog: entry.blog).each do |webhook|
-      WebhookWorker.perform_async(webhook.id, entry.id)
+      WebhookJob.perform_async(webhook.id, entry.id)
     end
   end
 
@@ -49,10 +49,6 @@ class Webhook < ApplicationRecord
 
   def to_discord(entry)
     { content: "#{title(entry)}: #{entry.permalink_url}" }.to_json
-  end
-
-  def cleanup_url
-    self.url = self.url.strip
   end
 
   private

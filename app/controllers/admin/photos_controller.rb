@@ -24,7 +24,7 @@ class Admin::PhotosController < AdminController
   end
 
   def generate_alt_text
-    AltTextWorker.perform_inline(params[:id])
+    AltTextJob.perform_inline(params[:id])
     @photo.reload
     respond_to do |format|
       format.json {

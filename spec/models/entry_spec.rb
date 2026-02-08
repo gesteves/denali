@@ -39,8 +39,8 @@ RSpec.describe Entry, type: :model do
       it 'should be draft' do
         entry = create(:entry, :draft, blog: blog, user: user)
         expect(entry).to be_is_draft
-        expect(FlickrWorker.jobs.size).to eq(0)
-        expect(WebhookWorker.jobs.size).to eq(0)
+        expect(FlickrJob.jobs.size).to eq(0)
+        expect(WebhookJob.jobs.size).to eq(0)
       end
     end
 
@@ -48,8 +48,8 @@ RSpec.describe Entry, type: :model do
       it 'should be queued' do
         entry = create(:entry, :queued, blog: blog, user: user)
         expect(entry).to be_is_queued
-        expect(FlickrWorker.jobs.size).to eq(0)
-        expect(WebhookWorker.jobs.size).to eq(0)
+        expect(FlickrJob.jobs.size).to eq(0)
+        expect(WebhookJob.jobs.size).to eq(0)
       end
     end
 
@@ -61,8 +61,8 @@ RSpec.describe Entry, type: :model do
       it 'should be published' do
         entry = create(:entry, status: 'published', blog: blog, user: user, post_to_flickr: false)
         expect(entry).to be_is_published
-        expect(FlickrWorker.jobs.size).to eq(0)
-        expect(WebhookWorker.jobs.size).to eq(2)
+        expect(FlickrJob.jobs.size).to eq(0)
+        expect(WebhookJob.jobs.size).to eq(2)
       end
     end
   end
@@ -151,25 +151,25 @@ RSpec.describe Entry, type: :model do
 
     it 'publish should enqueue webhook jobs' do
       entry = create(:entry, :queued, blog: blog, user: user, post_to_flickr: false)
-      expect(FlickrWorker.jobs.size).to eq(0)
-      expect(WebhookWorker.jobs.size).to eq(0)
+      expect(FlickrJob.jobs.size).to eq(0)
+      expect(WebhookJob.jobs.size).to eq(0)
       entry.publish
-      expect(FlickrWorker.jobs.size).to eq(0)
-      expect(WebhookWorker.jobs.size).to eq(2)
+      expect(FlickrJob.jobs.size).to eq(0)
+      expect(WebhookJob.jobs.size).to eq(2)
     end
 
     it 'changing drafts to queued should not enqueue jobs' do
       entry = create(:entry, :draft, blog: blog, user: user)
       entry.queue
-      expect(FlickrWorker.jobs.size).to eq(0)
-      expect(WebhookWorker.jobs.size).to eq(0)
+      expect(FlickrJob.jobs.size).to eq(0)
+      expect(WebhookJob.jobs.size).to eq(0)
     end
 
     it 'changing queued to draft should not enqueue jobs' do
       entry = create(:entry, :queued, blog: blog, user: user)
       entry.draft
-      expect(FlickrWorker.jobs.size).to eq(0)
-      expect(WebhookWorker.jobs.size).to eq(0)
+      expect(FlickrJob.jobs.size).to eq(0)
+      expect(WebhookJob.jobs.size).to eq(0)
     end
   end
 

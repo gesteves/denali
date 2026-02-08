@@ -83,7 +83,7 @@ class TagCustomization < ApplicationRecord
   end
 
   def cleanup_flickr_groups
-    UpdateTagCustomizationWorker.perform_async(self.id)
+    UpdateTagCustomizationJob.perform_async(self.id)
   end
 
   def cleanup_threads_topics

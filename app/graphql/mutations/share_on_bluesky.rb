@@ -8,7 +8,7 @@ module Mutations
     def resolve(url:)
       begin
         entry = Entry.find_by_url(url: url)
-        BlueskyWorker.perform_async(entry.id, entry.bluesky_caption)
+        BlueskyJob.perform_async(entry.id, entry.bluesky_caption)
         {
           entry: entry,
           errors: []

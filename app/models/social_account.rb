@@ -6,7 +6,7 @@ class SocialAccount < ApplicationRecord
 
   PROVIDERS = %w[bluesky flickr instagram mastodon threads].freeze
 
-  before_validation :normalize_handle
+  normalizes :handle, with: ->(handle) { handle.sub(/\A@/, '') }
 
   validates :provider, presence: true, inclusion: { in: PROVIDERS }
   validates :provider, uniqueness: { scope: :user_id, message: "account already connected" }
@@ -40,9 +40,4 @@ class SocialAccount < ApplicationRecord
     provider == 'threads'
   end
 
-  private
-
-  def normalize_handle
-    self.handle = handle.sub(/\A@/, '') if handle.present?
-  end
 end

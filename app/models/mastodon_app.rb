@@ -5,7 +5,7 @@ class MastodonApp < ApplicationRecord
   validates :client_id, presence: true
   validates :client_secret, presence: true
 
-  before_validation :normalize_instance_url
+  normalizes :instance_url, with: ->(url) { url.blank? ? url : MastodonApp.normalize_url(url) }
 
   class << self
     def for_instance(url)
@@ -54,9 +54,4 @@ class MastodonApp < ApplicationRecord
     end
   end
 
-  private
-
-  def normalize_instance_url
-    self.instance_url = self.class.normalize_url(instance_url) if instance_url.present?
-  end
 end

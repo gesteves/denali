@@ -42,12 +42,12 @@ RSpec.describe PushSubscription, type: :model do
     let(:user) { create(:user) }
     let(:entry) { create(:entry, blog: blog, user: user) }
 
-    it 'enqueues PushNotificationWorker for each subscription' do
+    it 'enqueues PushNotificationJob for each subscription' do
       create_list(:push_subscription, 3, blog: blog)
 
       expect {
         PushSubscription.deliver_all(entry)
-      }.to change(PushNotificationWorker.jobs, :size).by(3)
+      }.to change(PushNotificationJob.jobs, :size).by(3)
     end
   end
 end

@@ -467,14 +467,14 @@ RSpec.describe "GraphQL", type: :request do
         allow(ENV).to receive(:[]).with('GRAPHQL_AUTH_TOKEN').and_return('test-token')
 
         # Clear any previously queued jobs
-        BlueskyWorker.jobs.clear
+        BlueskyJob.jobs.clear
 
         result = execute_query(mutation, variables: { url: entry.permalink_url }, auth_token: 'test-token')
 
         expect(response).to have_http_status(:success)
         expect(result['data']['shareOnBluesky']['entry']).to be_present
         expect(result['data']['shareOnBluesky']['errors']).to be_empty
-        expect(BlueskyWorker.jobs.size).to eq(1)
+        expect(BlueskyJob.jobs.size).to eq(1)
       end
     end
   end

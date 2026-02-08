@@ -4,7 +4,7 @@ namespace :database do
   desc 'Create a database backup and upload to S3'
   task :backup => :environment do
     puts "Starting database backup..."
-    DatabaseBackupWorker.perform_inline
+    DatabaseBackupJob.perform_inline
     puts "Backup complete!"
   end
 

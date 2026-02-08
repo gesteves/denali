@@ -4,7 +4,7 @@ SimpleCov.start 'rails' do
   add_filter '/spec/'
   add_filter '/config/'
   add_filter '/vendor/'
-  add_group 'Workers', 'app/workers'
+  add_group 'Jobs', 'app/jobs'
   add_group 'Libraries', 'lib'
 end
 
@@ -92,7 +92,7 @@ RSpec.configure do |config|
   # Sidekiq testing mode
   config.before(:each) do
     Sidekiq::Testing.fake!
-    Sidekiq::Worker.clear_all
+    Sidekiq::Job.clear_all
   end
 
   # Set ActiveStorage URL options for tests

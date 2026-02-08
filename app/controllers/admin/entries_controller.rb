@@ -261,7 +261,7 @@ class Admin::EntriesController < AdminController
           photo.detect_colors
           photo.encode_blurhash
         end
-        OpenGraphWorker.perform_in(1.minute, @entry.id) if @entry.is_published?
+        OpenGraphJob.perform_in(1.minute, @entry.id) if @entry.is_published?
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to admin_entry_path(@entry) }
       else
@@ -365,10 +365,10 @@ class Admin::EntriesController < AdminController
     scheduled = scheduled_at.present? && scheduled_at > Time.current
 
     if scheduled
-      InstagramWorker.perform_at(scheduled_at, @entry.id, params[:text])
+      InstagramJob.perform_at(scheduled_at, @entry.id, params[:text])
       @message = "Your entry will be shared on Instagram at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
     else
-      InstagramWorker.perform_inline(@entry.id, params[:text])
+      InstagramJob.perform_inline(@entry.id, params[:text])
       @entry.reload
       @message = 'Your entry was shared on Instagram.'
     end
@@ -405,10 +405,10 @@ class Admin::EntriesController < AdminController
     scheduled = scheduled_at.present? && scheduled_at > Time.current
 
     if scheduled
-      InstagramStoryWorker.perform_at(scheduled_at, @entry.id, crop)
+      InstagramStoryJob.perform_at(scheduled_at, @entry.id, crop)
       @message = "Your entry will be shared on your Instagram Story at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
     else
-      InstagramStoryWorker.perform_async(@entry.id, crop)
+      InstagramStoryJob.perform_async(@entry.id, crop)
       @message = 'Your entry was shared on your Instagram Story.'
     end
 
@@ -436,10 +436,10 @@ class Admin::EntriesController < AdminController
     scheduled = scheduled_at.present? && scheduled_at > Time.current
 
     if scheduled
-      ThreadsWorker.perform_at(scheduled_at, @entry.id, params[:text])
+      ThreadsJob.perform_at(scheduled_at, @entry.id, params[:text])
       @message = "Your entry will be shared on Threads at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
     else
-      ThreadsWorker.perform_inline(@entry.id, params[:text])
+      ThreadsJob.perform_inline(@entry.id, params[:text])
       @entry.reload
       @message = 'Your entry was shared on Threads.'
     end
@@ -475,10 +475,10 @@ class Admin::EntriesController < AdminController
     scheduled = scheduled_at.present? && scheduled_at > Time.current
 
     if scheduled
-      MastodonWorker.perform_at(scheduled_at, @entry.id, params[:text])
+      MastodonJob.perform_at(scheduled_at, @entry.id, params[:text])
       @message = "Your entry will be shared on Mastodon at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
     else
-      MastodonWorker.perform_inline(@entry.id, params[:text])
+      MastodonJob.perform_inline(@entry.id, params[:text])
       @entry.reload
       @message = 'Your entry was shared on Mastodon.'
     end
@@ -514,10 +514,10 @@ class Admin::EntriesController < AdminController
     scheduled = scheduled_at.present? && scheduled_at > Time.current
 
     if scheduled
-      BlueskyWorker.perform_at(scheduled_at, @entry.id, params[:text], params[:in_reply_to], params[:quote])
+      BlueskyJob.perform_at(scheduled_at, @entry.id, params[:text], params[:in_reply_to], params[:quote])
       @message = "Your entry will be shared on Bluesky at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
     else
-      BlueskyWorker.perform_inline(@entry.id, params[:text], params[:in_reply_to], params[:quote])
+      BlueskyJob.perform_inline(@entry.id, params[:text], params[:in_reply_to], params[:quote])
       @entry.reload
       @message = 'Your entry was shared on Bluesky.'
     end
