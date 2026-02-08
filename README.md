@@ -6,40 +6,62 @@ A simple, fast photoblogging CMS built in Ruby on Rails which features responsiv
 
 ## Features
 
-### A simple, streamlined entry editor
-
-![](https://i.imgur.com/N42IOxI.png)
-
-### A customizable publishing schedule
-
-![](https://i.imgur.com/ax4Bs8X.png)
-
-### Drag-and-drop organization of queued entries
-
-![](https://i.imgur.com/lSiV4Ro.png)
-
-### Map view of entries
-
-![](https://i.imgur.com/enMdop1.png)
-
-### More features
-
+* Simple, streamlined entry editor
+* Customizable publishing schedule
+* Drag-and-drop organization of queued entries
 * Cross-posting of entries to Bluesky, Mastodon, Flickr, Instagram, and Threads
-* Auto-tagging of entries by location, equipment, and style
+* Auto-tagging of entries by location, camera, lens, film, and style
 * Automatic generation of [blurhashes](https://blurha.sh/) for image placeholders
+* AI-generated alt text for photos using Claude
+* Full-text search powered by Elasticsearch
 * Web push notifications
 * Webhooks
 * Automatic EXIF extraction and geotagging of photos
+* Location tagging via Google Maps, the National Park Service, and Native Land APIs
+* Admin map view powered by Mapbox GL JS
 * GraphQL API
+* Automated daily database backups to S3
+* Dynamic robots.txt via Dark Visitors
+* RSS/Atom feeds, sitemaps, and Open Graph tags
 * Did I mention it's fast as heck?
 
 ## Requirements
 
-[TODO]
+* [Docker](https://www.docker.com/) and Docker Compose (for local development)
+* An [AWS](https://aws.amazon.com/) account with an S3 bucket for image storage and a CloudFront distribution
+* A [Thumbor](https://www.thumbor.org/) image processing service
+* A [Google Cloud](https://console.cloud.google.com/) project with OAuth 2.0 credentials for admin authentication
+
+See `.env.example` for all required and optional environment variables.
 
 ## Installation & setup
 
-[TODO]
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/gesteves/denali.git
+   cd denali
+   ```
+
+2. Copy the example environment file and fill in the required values:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+3. Build and start the Docker containers:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+4. Set up the database:
+
+   ```bash
+   docker compose run --rm app rails db:setup
+   ```
+
+5. Visit [http://localhost:3000](http://localhost:3000).
 
 ## Common tasks
 
@@ -72,6 +94,20 @@ docker compose run --rm app bundle exec rspec             # Run tests
 docker compose run --rm app rake <task>                   # Run rake tasks
 docker compose run --rm app bundle install                # Install gems
 docker compose run --rm app bash                          # Interactive shell
+```
+
+#### Running tests
+
+```bash
+# Ruby/Rails (RSpec)
+docker compose run --rm app bundle exec rspec
+docker compose run --rm app bundle exec rspec spec/models/entry_spec.rb      # Specific file
+docker compose run --rm app bundle exec rspec spec/models/entry_spec.rb:42   # Specific line
+
+# JavaScript (Vitest)
+docker compose run --rm app npm run test:run              # Run all tests
+docker compose run --rm app npm test                      # Watch mode
+docker compose run --rm app npm run test:coverage         # With coverage
 ```
 
 #### Troubleshooting
