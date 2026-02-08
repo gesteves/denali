@@ -1,7 +1,7 @@
 <% photo = entry.photos.first %>
 
 <div class="block">
-  <a target="_blank" class="image image-container" href="<%= entry.permalink_url %>">
+  <a target="_blank" class="image" href="<%= entry.permalink_url %>">
     <%= responsive_image_tag(
       photo: photo,
       srcset: @srcset,
@@ -10,6 +10,8 @@
       html_options: {
         class: 'placeholder',
         style: css_placeholder_background(photo),
+        height: 232,
+        width: 232,
         'data-controller': 'placeholder',
         'data-action': 'load->placeholder#removeBackground',
       }) %>

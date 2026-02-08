@@ -109,12 +109,12 @@ admin_queue:
     - "calc((100vw - 3rem)/2 - 1.5rem)"
 map:
   srcset:
-    - 300
-    - 600
-    - 900
+    - 232
+    - 464
+    - 696
   sizes:
     - auto
-    - 300px
+    - 232px
 admin_modal:
   srcset:
     - 600
