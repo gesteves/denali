@@ -1,3 +1,5 @@
+@use '../base/variables' as *;
+
 .entry {
   margin: var(--margin-content);
   margin-bottom: 0;

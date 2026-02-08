@@ -1,3 +1,5 @@
+@use '../base/mixins' as *;
+
 .entry-list {
   @include clearfix;
   display: block;
@@ -52,13 +54,13 @@
   }
 
   &:focus .entry-list__photo-caption {
-    @media (-moz-touch-enabled: 0), (hover: hover) {
+    @media (hover: hover) {
       opacity: 1;
     }
   }
 
   &:hover .entry-list__photo-caption {
-    @media (-moz-touch-enabled: 0), (hover: hover) {
+    @media (hover: hover) {
       opacity: 1;
     }
   }

@@ -1,3 +1,5 @@
+@use '../base/mixins' as *;
+
 .tags {
   display: flex;
   flex-flow: row wrap;

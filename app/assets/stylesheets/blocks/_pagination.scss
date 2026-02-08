@@ -1,3 +1,5 @@
+@use '../base/mixins' as *;
+
 .pagination {
   display: flex;
   flex-flow: row nowrap;

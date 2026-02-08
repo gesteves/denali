@@ -1,3 +1,5 @@
+@use '../base/mixins' as *;
+
 .location {
   @include dotted-list;
 }
