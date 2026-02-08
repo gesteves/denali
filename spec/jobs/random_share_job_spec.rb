@@ -55,23 +55,29 @@ RSpec.describe RandomShareJob, type: :worker do
       end
 
       it 'enqueues BlueskyJob for Bluesky platform' do
-        # Clear any existing jobs
         BlueskyJob.jobs.clear
-
-        # Let real scopes work - old_entry should be eligible
         described_class.new.perform([], ['Bluesky'])
-
         expect(BlueskyJob.jobs.size).to eq(1)
       end
 
       it 'enqueues MastodonJob for Mastodon platform' do
-        # Clear any existing jobs
         MastodonJob.jobs.clear
-
-        # Let real scopes work - old_entry should be eligible
         described_class.new.perform([], ['Mastodon'])
-
         expect(MastodonJob.jobs.size).to eq(1)
+      end
+
+      it 'enqueues BlueskyJob immediately when share_immediately is true' do
+        BlueskyJob.jobs.clear
+        described_class.new.perform([], ['Bluesky'], 12, [], true)
+        expect(BlueskyJob.jobs.size).to eq(1)
+        expect(BlueskyJob.jobs.first['at']).to be_nil
+      end
+
+      it 'enqueues BlueskyJob with a delay when share_immediately is false' do
+        BlueskyJob.jobs.clear
+        described_class.new.perform([], ['Bluesky'], 12, [], false)
+        expect(BlueskyJob.jobs.size).to eq(1)
+        expect(BlueskyJob.jobs.first['at']).not_to be_nil
       end
     end
   end

@@ -1,5 +1,5 @@
 class RandomShareJob < ApplicationJob
-  def perform(tags, platforms, not_shared_in_months = 12, excluded_tags = [])
+  def perform(tags, platforms, not_shared_in_months = 12, excluded_tags = [], share_immediately = false)
     return if !Rails.env.production?
     return if Entry.published.where('published_at > ?', 1.hour.ago).exists?
     tags = Array(tags)
@@ -18,13 +18,13 @@ class RandomShareJob < ApplicationJob
       logger.info "[Social] Sharing \"#{entry.title}\" (#{entry.permalink_url}) on #{platform}."
       case platform
       when 'Bluesky'
-        BlueskyJob.perform_in(rand(1..60).minutes, entry.id, entry.bluesky_caption(utm_campaign: campaign))
+        share(BlueskyJob, entry.id, entry.bluesky_caption(utm_campaign: campaign), share_immediately)
       when 'Mastodon'
-        MastodonJob.perform_in(rand(1..60).minutes, entry.id, entry.mastodon_caption(utm_campaign: campaign))
+        share(MastodonJob, entry.id, entry.mastodon_caption(utm_campaign: campaign), share_immediately)
       when 'Instagram'
-        InstagramJob.perform_in(rand(1..60).minutes, entry.id, entry.instagram_caption)
+        share(InstagramJob, entry.id, entry.instagram_caption, share_immediately)
       when 'Threads'
-        ThreadsJob.perform_in(rand(1..60).minutes, entry.id, entry.threads_caption(utm_campaign: campaign))
+        share(ThreadsJob, entry.id, entry.threads_caption(utm_campaign: campaign), share_immediately)
       end
     end
   end
@@ -40,6 +40,14 @@ class RandomShareJob < ApplicationJob
     end
     return false if column.nil?
     Entry.where("#{column} > ?", 1.hour.ago).exists?
+  end
+
+  def share(job_class, entry_id, caption, share_immediately)
+    if share_immediately
+      job_class.perform_async(entry_id, caption)
+    else
+      job_class.perform_in(rand(1..60).minutes, entry_id, caption)
+    end
   end
 
   def find_eligible_entry(tags, excluded_tags, platform, not_shared_in_months)
