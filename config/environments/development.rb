@@ -72,6 +72,13 @@ Rails.application.configure do
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
 
+  # Detect N+1 queries and unused eager loading.
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.rails_logger = true
+    Bullet.add_footer = true
+  end
+
   config.time_zone = 'Eastern Time (US & Canada)'
   config.action_controller.action_on_open_redirect = :log
   config.active_storage.variant_processor = :mini_magick

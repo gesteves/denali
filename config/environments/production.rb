@@ -23,8 +23,7 @@ Rails.application.configure do
   # config.assets.css_compressor = :sass
 
   # Do not fallback to assets pipeline if a precompiled asset is missed.
-  # Needs to be enabled to allow inline assets.
-  config.assets.compile = true
+  config.assets.compile = false
 
   # Disable asset gzipping so it's handled by deflate & brotli middleware.
   config.assets.gzip = false
