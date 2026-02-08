@@ -1,5 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-import { fetchStatus, fetchText } from '../../lib/utils';
 
 /**
  * Controls the modals.
@@ -16,22 +15,18 @@ export default class extends Controller {
    * Fetches the button's destination and opens it in a modal window.
    * @param {Event} event A click event from the button.
    */
-  open (event) {
+  async open (event) {
     event.preventDefault();
     const url = this.element.href;
 
-    const fetchOpts = {
+    const response = await fetch(`${url}?modal=true`, {
       method: 'GET',
-      headers: new Headers({
-        'X-CSRF-Token': this.csrfToken
-      }),
+      headers: new Headers({ 'X-CSRF-Token': this.csrfToken }),
       credentials: 'include'
-    };
-
-    fetch(`${url}?modal=true`, fetchOpts)
-      .then(fetchStatus)
-      .then(fetchText)
-      .then(html => document.body.insertAdjacentHTML('beforeend', html));
+    });
+    if (!response.ok) return;
+    const html = await response.text();
+    document.body.insertAdjacentHTML('beforeend', html);
   }
 
   /**

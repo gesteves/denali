@@ -39,16 +39,13 @@ function observer () {
   * @param {IntersectionObserverEntry[]} entries An array of intersection observer entries
   */
 function handleIntersection (entries) {
-  const intersecting = entries.filter(entry => {
-    return (entry.intersectionRatio > 0 || entry.isIntersecting);
-  });
-  if (!intersecting.length) {
+  const entry = entries.find(e => e.intersectionRatio > 0 || e.isIntersecting);
+  if (!entry) {
     return;
   }
-  const entry = intersecting[0];
-  const previous_path = window.location.pathname;
+  const previousPath = window.location.pathname;
   window.history.replaceState(null, null, entry.target.getAttribute('data-pagination-page-url'));
-  if (previous_path !== window.location.pathname) {
+  if (previousPath !== window.location.pathname) {
     trackPageView();
   }
 }

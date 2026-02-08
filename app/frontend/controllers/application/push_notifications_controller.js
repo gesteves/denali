@@ -74,7 +74,7 @@ export default class extends Controller {
    * Removes the entire component from the DOM.
    */
   removeComponent() {
-    this.element.parentNode.removeChild(this.element);
+    this.element.remove();
   }
 
   /**

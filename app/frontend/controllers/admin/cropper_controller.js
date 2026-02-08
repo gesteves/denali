@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { fetchStatus, fetchJson, sendNotification } from '../../lib/utils';
+import { sendNotification } from '../../lib/utils';
 import Croppr from 'croppr';
 
 /**
@@ -48,7 +48,7 @@ export default class extends Controller {
    * Updates the crop in the backend.
    * @param {Object} value the crop data returned by the library.
    */
-  updateCrop (value) {
+  async updateCrop (value) {
     if (!this.initializedCropper) {
       return;
     }
@@ -58,7 +58,7 @@ export default class extends Controller {
     const width = Number.isNaN(value.width) ? 0 : value.width;
     const height = Number.isNaN(value.height) ? 0 : value.height;
 
-    let formData = new FormData();
+    const formData = new FormData();
     this.cropXValue = x;
     this.cropYValue = y;
     this.cropWidthValue = width;
@@ -69,19 +69,15 @@ export default class extends Controller {
     formData.append('crop[height]', height);
     formData.append('crop[aspect_ratio]', this.aspectRatioValue);
 
-    const fetchOpts = {
+    const response = await fetch(this.endpointValue, {
       method: 'POST',
-      headers: new Headers({
-        'X-CSRF-Token': this.csrfToken
-      }),
+      headers: new Headers({ 'X-CSRF-Token': this.csrfToken }),
       credentials: 'include',
       body: formData
-    };
-
-    fetch(this.endpointValue, fetchOpts)
-      .then(fetchStatus)
-      .then(fetchJson)
-      .then(json => sendNotification(json.message, json.status));
+    });
+    if (!response.ok) return;
+    const json = await response.json();
+    sendNotification(json.message, json.status);
   }
 
   /**
@@ -89,7 +85,7 @@ export default class extends Controller {
    * prevents the overlay from being visible.
    */
   fixCropperOverlay () {
-    let image = this.element.querySelector('.croppr-imageClipped');
+    const image = this.element.querySelector('.croppr-imageClipped');
     image.style.display = 'none';
     requestAnimationFrame(() => image.style.display = 'block');
   }
@@ -127,10 +123,10 @@ export default class extends Controller {
    * @returns Float
    */
   calculateAspectRatio(aspectRatio) {
-    let aspectRatioArray = aspectRatio.split(':');
+    const aspectRatioArray = aspectRatio.split(':');
     if (aspectRatioArray.length === 2) {
-      let width = aspectRatioArray[0];
-      let height = aspectRatioArray[1];
+      const width = aspectRatioArray[0];
+      const height = aspectRatioArray[1];
       return parseFloat(height)/parseFloat(width);
     } else {
       return parseFloat(aspectRatio);

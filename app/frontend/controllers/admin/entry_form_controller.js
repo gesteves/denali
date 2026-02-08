@@ -1,5 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-import { fetchStatus, fetchText } from '../../lib/utils';
 import { Sortable, Plugins } from '@shopify/draggable';
 
 /**
@@ -35,21 +34,17 @@ export default class extends Controller {
    * add appends it to the form.
    * @param {Event} event A click event from the add photo button.
    */
-  addPhoto (event) {
+  async addPhoto (event) {
     event.preventDefault();
 
-    const fetchOpts = {
+    const response = await fetch(this.photoEndpointValue, {
       method: 'GET',
-      headers: new Headers({
-        'X-CSRF-Token': this.csrfToken
-      }),
+      headers: new Headers({ 'X-CSRF-Token': this.csrfToken }),
       credentials: 'include'
-    };
-
-    fetch(this.photoEndpointValue, fetchOpts)
-      .then(fetchStatus)
-      .then(fetchText)
-      .then(html => this.photosTarget.insertAdjacentHTML('beforeend', html));
+    });
+    if (!response.ok) return;
+    const html = await response.text();
+    this.photosTarget.insertAdjacentHTML('beforeend', html);
   }
 
   /**
@@ -59,8 +54,8 @@ export default class extends Controller {
    * @param {Event} event A sortable:start event.
    */
   startSort (event) {
-    let mirror = event.data.mirror;
-    let originalWidth = event.data.source.clientWidth;
+    const mirror = event.data.mirror;
+    const originalWidth = event.data.source.clientWidth;
     mirror.style.width = `${originalWidth}px`;
   }
 

@@ -1,11 +1,8 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
 
-// Mock utils functions used by modal_controller
-vi.mock('../../lib/utils', () => ({
-  fetchStatus: (response) => response.ok ? Promise.resolve(response) : Promise.reject(),
-  fetchText: (response) => response.text()
-}));
+// No utils functions needed - modal_controller uses async/await directly
+vi.mock('../../lib/utils', () => ({}));
 
 import ModalController from './modal_controller';
 

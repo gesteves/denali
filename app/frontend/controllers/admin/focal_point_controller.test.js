@@ -3,8 +3,6 @@ import { Application } from '@hotwired/stimulus';
 
 // Mock utils functions used by focal_point_controller
 vi.mock('../../lib/utils', () => ({
-  fetchStatus: (response) => response.ok ? Promise.resolve(response) : Promise.reject(),
-  fetchJson: (response) => response.json(),
   sendNotification: (message, status) => {
     const event = new CustomEvent('notify', {
       detail: { message, status }

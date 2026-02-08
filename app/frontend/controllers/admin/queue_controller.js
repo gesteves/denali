@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { fetchStatus, fetchJson, sendNotification } from '../../lib/utils';
+import { sendNotification } from '../../lib/utils';
 import { Sortable } from '@shopify/draggable';
 
 /**
@@ -65,8 +65,8 @@ export default class extends Controller {
    * @param {Event} event A sortable:start event.
    */
   startSort (event) {
-    let mirror = event.data.mirror;
-    let originalWidth = event.data.source.clientWidth;
+    const mirror = event.data.mirror;
+    const originalWidth = event.data.source.clientWidth;
     mirror.style.width = `${originalWidth}px`;
   }
 
@@ -139,7 +139,7 @@ export default class extends Controller {
    * Saves the new queue order.
    * @param {Event} event A click event from the save button.
    */
-  save (event) {
+  async save (event) {
     event.preventDefault();
     if (!window.confirm('Are you sure you want to save the changes you’ve made?')) {
       return false;
@@ -148,27 +148,25 @@ export default class extends Controller {
     this.hideButtons();
     this.disableDrag();
     const entry_ids = this.cardTargets.map(card => parseInt(card.getAttribute('data-entry-id'), 10));
-    const fetchOpts = {
+
+    const firstWarning = setTimeout(() => sendNotification('Your changes are being saved, this will take a few seconds.', 'warning'), 1000);
+    const secondWarning = setTimeout(() => sendNotification('Hang tight, your changes are still being saved.', 'warning'), 5000);
+
+    const response = await fetch(`${this.endpointValue}.json`, {
       method: 'POST',
-      body: JSON.stringify({ entry_ids: entry_ids }),
+      body: JSON.stringify({ entry_ids }),
       headers: new Headers({
         'Content-Type': 'application/json',
         'X-CSRF-Token': this.csrfToken
       }),
       credentials: 'include'
-    };
-
-    const firstWarning = setTimeout(() => sendNotification('Your changes are being saved, this will take a few seconds.', 'warning'), 1000);
-    const secondWarning = setTimeout(() => sendNotification('Hang tight, your changes are still being saved.', 'warning'), 5000);
-    fetch(`${this.endpointValue}.json`, fetchOpts)
-      .then(fetchStatus)
-      .then(fetchJson)
-      .then(json => {
-        clearTimeout(firstWarning);
-        clearTimeout(secondWarning);
-        sendNotification(json.message, json.status);
-        this.updateCardPositions();
-        this.enableDrag();
-      });
+    });
+    if (!response.ok) return;
+    const json = await response.json();
+    clearTimeout(firstWarning);
+    clearTimeout(secondWarning);
+    sendNotification(json.message, json.status);
+    this.updateCardPositions();
+    this.enableDrag();
   }
 }

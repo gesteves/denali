@@ -21,7 +21,7 @@ export default class extends Controller {
         this.destroyTarget.value = 'true';
         this.element.style.display = 'none';
       } else {
-        this.element.parentNode.removeChild(this.element);
+        this.element.remove();
       }
     }
   }
@@ -50,7 +50,7 @@ export default class extends Controller {
       return;
     }
 
-    let reader = new FileReader();
+    const reader = new FileReader();
     reader.addEventListener('load', e => this.setThumbnail(e.target.result));
     reader.readAsDataURL(files[0]);
   }

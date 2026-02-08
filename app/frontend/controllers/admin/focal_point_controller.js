@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { fetchStatus, fetchJson, sendNotification } from '../../lib/utils';
+import { sendNotification } from '../../lib/utils';
 
 /**
  * Controls setting the focal point on photos.
@@ -63,24 +63,20 @@ export default class extends Controller {
   /**
    * Updates the focal point in the backend.
    */
-  updateFocalPoint () {
-    let formData = new FormData();
+  async updateFocalPoint () {
+    const formData = new FormData();
 
     formData.append('photo[focal_x]', this.focalXValue);
     formData.append('photo[focal_y]', this.focalYValue);
 
-    const fetchOpts = {
+    const response = await fetch(this.endpointValue, {
       method: 'POST',
-      headers: new Headers({
-        'X-CSRF-Token': this.csrfToken
-      }),
+      headers: new Headers({ 'X-CSRF-Token': this.csrfToken }),
       credentials: 'include',
       body: formData
-    };
-
-    fetch(this.endpointValue, fetchOpts)
-      .then(fetchStatus)
-      .then(fetchJson)
-      .then(json => sendNotification(json.message, json.status));
+    });
+    if (!response.ok) return;
+    const json = await response.json();
+    sendNotification(json.message, json.status);
   }
 }

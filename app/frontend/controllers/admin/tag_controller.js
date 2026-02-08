@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { fetchStatus, fetchText, fetchJson, sendNotification } from '../../lib/utils';
+import { sendNotification } from '../../lib/utils';
 
 /**
  * Controls editing and deleting tags.
@@ -20,16 +20,15 @@ export default class extends Controller {
    * server via Fetch, receives the updated tag's markup, and replaces it on the page.
    * @param {Event} event A click event from the add link.
    */
-  add (event) {
+  async add (event) {
     event.preventDefault();
     const prompt = window.prompt(`Which tag do you want to add to entries tagged with "${this.nameValue}"?`);
     if (prompt === null || prompt.trim().length === 0) {
       return;
     }
-    const link = event.target;
-    const url = link.href;
+    const url = event.target.href;
 
-    const fetchOpts = {
+    const response = await fetch(`${url}.json`, {
       method: 'POST',
       body: JSON.stringify({ tags: prompt }),
       headers: new Headers({
@@ -37,12 +36,10 @@ export default class extends Controller {
         'X-CSRF-Token': this.csrfToken
       }),
       credentials: 'include'
-    };
-
-    fetch(`${url}.json`, fetchOpts)
-      .then(fetchStatus)
-      .then(fetchJson)
-      .then(json => sendNotification(json.message, json.status));
+    });
+    if (!response.ok) return;
+    const json = await response.json();
+    sendNotification(json.message, json.status);
   }
 
   /**
@@ -50,16 +47,15 @@ export default class extends Controller {
    * the updated tag's markup, and replaces it on the page.
    * @param {Event} event A click event from the edit link.
    */
-  edit (event) {
+  async edit (event) {
     event.preventDefault();
     const prompt = window.prompt(`What do you want to rename the "${this.nameValue}" tag to?`, this.nameValue);
     if (prompt === null || prompt.trim().length === 0) {
       return;
     }
-    const link = event.target;
-    const url = link.href;
+    const url = event.target.href;
 
-    const fetchOpts = {
+    const response = await fetch(`${url}.json`, {
       method: 'PATCH',
       body: JSON.stringify({ name: prompt }),
       headers: new Headers({
@@ -67,15 +63,11 @@ export default class extends Controller {
         'X-CSRF-Token': this.csrfToken
       }),
       credentials: 'include'
-    };
-
-    fetch(`${url}.json`, fetchOpts)
-      .then(fetchStatus)
-      .then(fetchText)
-      .then(html => {
-        this.element.outerHTML = html;
-        sendNotification(`The “${this.nameValue}” tag has been renamed to “${prompt}”.`);
-      });
+    });
+    if (!response.ok) return;
+    const html = await response.text();
+    this.element.outerHTML = html;
+    sendNotification(`The "${this.nameValue}" tag has been renamed to "${prompt}".`);
   }
 
   /**
@@ -83,30 +75,25 @@ export default class extends Controller {
    * tag's element from the page.
    * @param {Event} event A click event from the delete link.
    */
-  delete (event) {
+  async delete (event) {
     event.preventDefault();
-    if (!window.confirm(`Are you sure you want to delete the “${this.nameValue}” tag?`)) {
+    if (!window.confirm(`Are you sure you want to delete the "${this.nameValue}" tag?`)) {
       return;
     }
 
-    const link = event.target;
-    const url = link.href;
+    const url = event.target.href;
 
-    const fetchOpts = {
+    const response = await fetch(`${url}.json`, {
       method: 'DELETE',
       headers: new Headers({
         'Content-Type': 'application/json',
         'X-CSRF-Token': this.csrfToken
       }),
       credentials: 'include'
-    };
-
-    fetch(`${url}.json`, fetchOpts)
-      .then(fetchStatus)
-      .then(fetchJson)
-      .then(json => {
-        this.element.parentNode.removeChild(this.element);
-        sendNotification(json.message, json.status);
-      });
+    });
+    if (!response.ok) return;
+    const json = await response.json();
+    this.element.remove();
+    sendNotification(json.message, json.status);
   }
 }

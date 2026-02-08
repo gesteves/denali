@@ -1,5 +1,4 @@
-import { fetchStatus, fetchText } from '../../lib/utils';
-import { Controller }             from '@hotwired/stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 /**
  * Controls the infinite loading of entries on the
@@ -50,10 +49,8 @@ export default class extends Controller {
    * bottom of the page. If it's visible, loads the next page.
    * @param {IntersectionObserverEntry[]} entries An array of intersection observer entries
    */
-  handleIntersect (entries) {
-    if (!entries.filter(entry => {
-      return (entry.intersectionRatio > 0 || entry.isIntersecting);
-    }).length) {
+  async handleIntersect (entries) {
+    if (!entries.some(entry => entry.intersectionRatio > 0 || entry.isIntersecting)) {
       return;
     }
     const nextPage = this.currentPageValue + 1;
@@ -68,15 +65,16 @@ export default class extends Controller {
       // For path-based URLs, use the existing format
       url = `${this.baseUrlValue}/page/${nextPage}.js`;
     }
-    fetch(url)
-      .then(fetchStatus)
-      .then(fetchText)
-      .then(text => {
-        this.stopSpinner();
-        this.currentPageValue = nextPage;
-        this.appendPage(text);
-      })
-      .catch(() => this.endInfiniteScroll());
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(response.status);
+      const text = await response.text();
+      this.stopSpinner();
+      this.currentPageValue = nextPage;
+      this.appendPage(text);
+    } catch {
+      this.endInfiniteScroll();
+    }
   }
 
   /**
@@ -99,7 +97,7 @@ export default class extends Controller {
     this.observer.unobserve(this.spinnerTarget);
     this.footer.style.display = 'block';
     this.footer.setAttribute('aria-hidden', false);
-    this.spinnerTarget.parentNode.removeChild(this.spinnerTarget);
+    this.spinnerTarget.remove();
     this.containerTarget.setAttribute('aria-busy', false);
   }
 

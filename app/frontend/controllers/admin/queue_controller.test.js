@@ -340,12 +340,12 @@ describe('QueueController', () => {
       expect(window.confirm).toHaveBeenCalled();
     });
 
-    it('does nothing when user cancels confirmation', () => {
+    it('does nothing when user cancels confirmation', async () => {
       window.confirm = vi.fn(() => false);
 
       const controller = getController();
       const event = { preventDefault: vi.fn() };
-      const result = controller.save(event);
+      const result = await controller.save(event);
 
       expect(result).toBe(false);
       expect(global.fetch).not.toHaveBeenCalled();

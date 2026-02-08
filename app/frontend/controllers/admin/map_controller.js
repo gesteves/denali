@@ -1,5 +1,4 @@
 import mapboxgl from 'mapbox-gl';
-import { fetchStatus, fetchJson } from '../../lib/utils';
 import { Controller }             from '@hotwired/stimulus';
 
 /**
@@ -114,7 +113,7 @@ export default class extends Controller {
     this.hideLoadingSpinner();
   }
 
-  showPopup (e) {
+  async showPopup (e) {
     const coordinates = e.features[0].geometry.coordinates.slice();
     const photoId = e.features[0].properties.id;
     const url = this.photoUrlValue.replace(':id', photoId);
@@ -124,11 +123,14 @@ export default class extends Controller {
       .setHTML('Loading…')
       .addTo(this.map);
 
-    fetch(url)
-      .then(fetchStatus)
-      .then(fetchJson)
-      .then(json => popup.setHTML(json.html))
-      .catch(() => popup.setHTML('Failed to load photo.'));
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(response.status);
+      const json = await response.json();
+      popup.setHTML(json.html);
+    } catch {
+      popup.setHTML('Failed to load photo.');
+    }
   }
 
   showLoadingSpinner () {

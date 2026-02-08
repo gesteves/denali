@@ -18,7 +18,7 @@ export default class extends Controller {
         return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
       },
       replace: function (text) {
-        var before = this.input.value.match(/^.+,\s*|/)[0];
+        const before = this.input.value.match(/^.+,\s*|/)[0];
         this.input.value = `${before}${text}, `;
       }
     });
