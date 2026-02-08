@@ -6,24 +6,24 @@ This project runs in Docker. **All Rails, Ruby, and Node commands must be run in
 
 ### Running Commands
 
-Use `docker compose run` to execute commands:
+Use `docker compose run --rm` to execute commands:
 
 ```bash
 # Rails commands
-docker compose run app rails db:migrate
-docker compose run app rails console
-docker compose run app bundle exec rspec
-docker compose run app rails generate model Foo name:string
-docker compose run app rails generate migration AddBarToFoo bar:integer
+docker compose run --rm app rails db:migrate
+docker compose run --rm app rails console
+docker compose run --rm app bundle exec rspec
+docker compose run --rm app rails generate model Foo name:string
+docker compose run --rm app rails generate migration AddBarToFoo bar:integer
 
 # Bundle install
-docker compose run app bundle install
+docker compose run --rm app bundle install
 
 # Rake tasks
-docker compose run app rake <task>
+docker compose run --rm app rake <task>
 
 # Interactive shell
-docker compose run app bash
+docker compose run --rm app bash
 ```
 
 ### Starting the Environment
@@ -47,7 +47,7 @@ The host machine may not have the correct Ruby version, gems, or database connec
 SVG icons are processed via a Rake task. To add or update icons:
 
 1. Place the source SVG in `app/assets/images/svg/`
-2. Run the rake task: `docker compose run app rake svg`
+2. Run the rake task: `docker compose run --rm app rake svg`
 3. This strips inline styles/fills/strokes, adds ERB template variables, and outputs to `app/views/partials/svg/` as a partial
 
 The resulting partial can be used with `<%= render 'partials/svg/icon_name', class_name: 'my-class', aria_hidden: true %>`.
@@ -59,9 +59,9 @@ The resulting partial can be used with `<%= render 'partials/svg/icon_name', cla
 ### Ruby/Rails Tests (RSpec)
 
 ```bash
-docker compose run app bundle exec rspec
-docker compose run app bundle exec rspec spec/models/entry_spec.rb  # specific file
-docker compose run app bundle exec rspec spec/models/entry_spec.rb:42  # specific line
+docker compose run --rm app bundle exec rspec
+docker compose run --rm app bundle exec rspec spec/models/entry_spec.rb  # specific file
+docker compose run --rm app bundle exec rspec spec/models/entry_spec.rb:42  # specific line
 ```
 
 ### JavaScript Tests (Vitest)
@@ -69,10 +69,10 @@ docker compose run app bundle exec rspec spec/models/entry_spec.rb:42  # specifi
 Stimulus controllers and utility functions are tested with Vitest. Test files are colocated with source files using the `.test.js` suffix.
 
 ```bash
-docker compose run app npm run test:run                                    # run all tests
-docker compose run app npm test                                            # run in watch mode
-docker compose run app npm run test:coverage                               # run with coverage
-docker compose run app npx vitest run app/frontend/lib/utils.test.js       # specific file
+docker compose run --rm app npm run test:run                                    # run all tests
+docker compose run --rm app npm test                                            # run in watch mode
+docker compose run --rm app npm run test:coverage                               # run with coverage
+docker compose run --rm app npx vitest run app/frontend/lib/utils.test.js       # specific file
 ```
 
 Test infrastructure:

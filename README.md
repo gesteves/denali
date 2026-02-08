@@ -66,22 +66,22 @@ docker compose up -d --build            # Rebuild and start
 #### Running commands
 
 ```bash
-docker compose run app rails console                 # Rails console
-docker compose run app rails db:migrate              # Run migrations
-docker compose run app bundle exec rspec             # Run tests
-docker compose run app rake <task>                   # Run rake tasks
-docker compose run app bundle install                # Install gems
-docker compose run app bash                          # Interactive shell
+docker compose run --rm app rails console                 # Rails console
+docker compose run --rm app rails db:migrate              # Run migrations
+docker compose run --rm app bundle exec rspec             # Run tests
+docker compose run --rm app rake <task>                   # Run rake tasks
+docker compose run --rm app bundle install                # Install gems
+docker compose run --rm app bash                          # Interactive shell
 ```
 
 #### Troubleshooting
 
 ```bash
 # Reset the database
-docker compose run app rails db:reset
+docker compose run --rm app rails db:reset
 
 # Clear Rails cache
-docker compose run app rails tmp:clear
+docker compose run --rm app rails tmp:clear
 
 # Recreate containers from scratch
 docker compose down
@@ -174,7 +174,7 @@ fly ssh console -C "rake database:backup"
 
 ```bash
 # Locally (downloads to project root, requires DB_BACKUP_BUCKET and AWS credentials)
-docker compose run app rake database:download
+docker compose run --rm app rake database:download
 ```
 
 **Restore a backup:**
