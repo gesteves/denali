@@ -1,0 +1,77 @@
+name: "Deploy Redis Sidekiq"
+
+on:
+  push:
+    branches: [release]
+    paths:
+      - 'fly-redis-sidekiq/**'
+
+concurrency:
+  group: deploy-redis-sidekiq
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy Redis Sidekiq
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip deploy]') && !contains(github.event.head_commit.message, '[no deploy]')"
+
+    env:
+      FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN_REDIS_SIDEKIQ }}
+
+    steps:
+      - name: Set short SHA and commit message
+        run: |
+          echo "SHORT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
+          echo "COMMIT_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | head -n 1 | sed 's/"/\\"/g')" >> $GITHUB_ENV
+
+      - name: Notify Slack (deploy starting)
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "Redis Sidekiq deploy <https://fly.io/apps/denali-redis-sidekiq/monitoring|starting> :hourglass_flowing_sand:"
+            attachments:
+              - color: "#439FE0"
+                fallback: "Redis Sidekiq deploy starting: https://fly.io/apps/denali-redis-sidekiq/monitoring"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}"
+                footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+
+      - uses: actions/checkout@v6
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Deploy to Fly.io
+        run: flyctl deploy
+        working-directory: fly-redis-sidekiq
+
+      - name: Notify Slack (deploy successful)
+        if: success()
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "Redis Sidekiq deploy <https://fly.io/apps/denali-redis-sidekiq/monitoring|successful> :rocket:"
+            attachments:
+              - color: "good"
+                fallback: "Redis Sidekiq deploy successful: https://fly.io/apps/denali-redis-sidekiq/monitoring"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}"
+                footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
+
+      - name: Notify Slack (deploy failed)
+        if: failure()
+        continue-on-error: true
+        uses: slackapi/slack-github-action@v2.1.1
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            text: "Redis Sidekiq deploy <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|failed> :warning:"
+            attachments:
+              - color: "danger"
+                fallback: "Redis Sidekiq deploy failed: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}"
+                footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"

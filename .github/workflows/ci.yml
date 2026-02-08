@@ -3,8 +3,20 @@ name: "CI"
 on:
   push:
     branches: ["*"]
+    paths-ignore:
+      - 'fly-thumbor/**'
+      - 'fly-redis-cache/**'
+      - 'fly-redis-sidekiq/**'
+      - 'fly-elasticsearch/**'
+      - 'fly-postgres/**'
   pull_request:
     branches: [release]
+    paths-ignore:
+      - 'fly-thumbor/**'
+      - 'fly-redis-cache/**'
+      - 'fly-redis-sidekiq/**'
+      - 'fly-elasticsearch/**'
+      - 'fly-postgres/**'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
