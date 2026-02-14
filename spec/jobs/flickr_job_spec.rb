@@ -40,7 +40,7 @@ RSpec.describe FlickrJob, type: :worker do
       allow(flickr).to receive(:access_token=)
       allow(flickr).to receive(:access_secret=)
       allow(flickr).to receive(:upload_photo).and_return('123456')
-      allow(URI).to receive(:open).and_return(double(path: '/tmp/photo.jpg'))
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
       allow_any_instance_of(Entry).to receive(:flickr_groups).and_return([])
       allow_any_instance_of(Entry).to receive(:flickr_albums).and_return([])
 
@@ -54,7 +54,7 @@ RSpec.describe FlickrJob, type: :worker do
       allow(flickr).to receive(:access_token=)
       allow(flickr).to receive(:access_secret=)
       allow(flickr).to receive(:upload_photo).and_return('123456')
-      allow(URI).to receive(:open).and_return(double(path: '/tmp/photo.jpg'))
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
       allow_any_instance_of(Entry).to receive(:flickr_groups).and_return(['https://flickr.com/groups/test'])
       allow_any_instance_of(Entry).to receive(:flickr_albums).and_return(['https://flickr.com/albums/test'])
 

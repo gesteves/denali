@@ -32,7 +32,7 @@ RSpec.describe PhotoExifJob, type: :worker do
     end
 
     it 'extracts EXIF data and saves to photo' do
-      allow(URI).to receive(:open).and_return(double(path: '/tmp/photo.jpg'))
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
       allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
 
       described_class.new.perform(photo.id)
@@ -47,7 +47,7 @@ RSpec.describe PhotoExifJob, type: :worker do
     it 'extracts GPS coordinates when present' do
       gps = double('GPS', latitude: 40.7128, longitude: -74.0060)
       allow(exif_data).to receive(:gps).and_return(gps)
-      allow(URI).to receive(:open).and_return(double(path: '/tmp/photo.jpg'))
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
       allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
 
       described_class.new.perform(photo.id)
@@ -59,7 +59,7 @@ RSpec.describe PhotoExifJob, type: :worker do
 
     it 'extracts film info from user comment' do
       allow(exif_data).to receive(:user_comment).and_return("Film Make: Kodak\nFilm Type: Portra 400")
-      allow(URI).to receive(:open).and_return(double(path: '/tmp/photo.jpg'))
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
       allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
 
       described_class.new.perform(photo.id)
@@ -70,7 +70,7 @@ RSpec.describe PhotoExifJob, type: :worker do
 
     it 'enqueues AltTextJob when no alt text present' do
       allow(exif_data).to receive(:image_description).and_return(nil)
-      allow(URI).to receive(:open).and_return(double(path: '/tmp/photo.jpg'))
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
       allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
       photo.update!(alt_text: nil)
 
@@ -81,7 +81,7 @@ RSpec.describe PhotoExifJob, type: :worker do
 
     it 'uses image_description for alt_text when present' do
       allow(exif_data).to receive(:image_description).and_return('A beautiful sunset')
-      allow(URI).to receive(:open).and_return(double(path: '/tmp/photo.jpg'))
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
       allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
       photo.update!(alt_text: nil)
 
@@ -94,7 +94,7 @@ RSpec.describe PhotoExifJob, type: :worker do
 
     it 'enqueues NationalParkJob when park code present' do
       allow(exif_data).to receive(:user_comment).and_return("Park: yose")
-      allow(URI).to receive(:open).and_return(double(path: '/tmp/photo.jpg'))
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
       allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
 
       described_class.new.perform(photo.id)
