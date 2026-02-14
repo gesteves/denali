@@ -22,23 +22,28 @@ class OembedController < ApplicationController
 
   def load_entry
     @entry = Entry.find_by_url(url: params[:url])
+    ActiveRecord::Associations::Preloader.new(
+      records: [@entry],
+      associations: [:photos, :user]
+    ).call
   end
 
   def get_photo(entry, width = 1200, maxwidth, maxheight)
     if entry.is_photo?
-      height = entry.photos.first.height_from_width(width)
+      photo = entry.photos[0]
+      height = photo.height_from_width(width)
 
       if maxwidth.present? && maxwidth.to_i < width
         width = maxwidth.to_i
-        height = entry.photos.first.height_from_width(width)
+        height = photo.height_from_width(width)
       end
 
       if maxheight.present? && maxheight.to_i < height
         height = maxheight.to_i
-        width = entry.photos.first.width_from_height(height)
+        width = photo.width_from_height(height)
       end
 
-      url = entry.photos.first.url(width: width, height: height)
+      url = photo.url(width: width, height: height)
     end
     return url, width, height
   end

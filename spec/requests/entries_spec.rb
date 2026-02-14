@@ -107,6 +107,14 @@ RSpec.describe "Entries", type: :request do
     end
   end
 
+  describe "GET /random" do
+    it "redirects to a random entry" do
+      create(:entry, :published, :with_photo, blog: blog, user: user)
+      get random_path
+      expect(response).to have_http_status(:redirect)
+    end
+  end
+
   describe "GET /tagged/:tag (tagged)" do
     let(:entry) { create(:entry, :published, :with_photo, blog: blog, user: user) }
 

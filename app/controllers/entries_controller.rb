@@ -48,7 +48,7 @@ class EntriesController < ApplicationController
   def tagged
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
+    @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops, :territories]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     preload_fonts
     @srcset = PHOTOS[:entry_list][:srcset]
@@ -165,7 +165,8 @@ class EntriesController < ApplicationController
   end
 
   def random
-    entry = Entry.find(Entry.published.where('published_at >= ?', 4.years.ago).pluck(:id).sample)
+    scope = Entry.published.where('published_at >= ?', 4.years.ago)
+    entry = scope.offset(rand(scope.count)).limit(1).first!
     response.headers['Cache-Control'] = "s-maxage=1, max-age=0, public"
     redirect_to entry.permalink_url, status: 302
   end
