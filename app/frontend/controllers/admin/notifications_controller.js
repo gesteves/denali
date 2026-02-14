@@ -8,7 +8,13 @@ export default class extends Controller {
   static targets = ['container', 'notification'];
 
   connect () {
+    this.timeouts = [];
     this.toggle();
+  }
+
+  disconnect () {
+    this.timeouts.forEach(id => clearTimeout(id));
+    this.timeouts = [];
   }
 
   /**
@@ -16,8 +22,8 @@ export default class extends Controller {
    * @param {Element} target The newly connected notification element.
    */
   notificationTargetConnected (target) {
-    setTimeout(() => target.classList.remove('is-transparent'), 10);
-    setTimeout(() => target.classList.add('is-transparent', 'notification-closed'), 10000);
+    this.timeouts.push(setTimeout(() => target.classList.remove('is-transparent'), 10));
+    this.timeouts.push(setTimeout(() => target.classList.add('is-transparent', 'notification-closed'), 10000));
   }
 
   /**
@@ -67,8 +73,8 @@ export default class extends Controller {
       .forEach(notification => notification.remove());
     this.notificationTargets
       .forEach(notification => {
-        setTimeout(() => notification.classList.remove('is-transparent'), 10);
-        setTimeout(() => notification.classList.add('is-transparent', 'notification-closed'), 10000);
+        this.timeouts.push(setTimeout(() => notification.classList.remove('is-transparent'), 10));
+        this.timeouts.push(setTimeout(() => notification.classList.add('is-transparent', 'notification-closed'), 10000));
       });
   }
 }

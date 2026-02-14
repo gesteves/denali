@@ -261,6 +261,58 @@ describe('NotificationsController', () => {
     });
   });
 
+  describe('disconnect', () => {
+    it('clears all pending timeouts', () => {
+      vi.useFakeTimers();
+
+      const controller = getController();
+
+      // Add a notification to create timeouts
+      controller.add({
+        detail: { status: 'success', message: 'Test' }
+      });
+
+      // Verify timeouts are tracked
+      expect(controller.timeouts.length).toBeGreaterThan(0);
+
+      const clearTimeoutSpy = vi.spyOn(global, 'clearTimeout');
+
+      controller.disconnect();
+
+      expect(clearTimeoutSpy).toHaveBeenCalled();
+
+      vi.useRealTimers();
+    });
+
+    it('prevents auto-close after disconnect', () => {
+      vi.useFakeTimers();
+
+      const controller = getController();
+
+      const notification = document.createElement('div');
+      notification.className = 'notification is-success is-transparent';
+      notification.setAttribute('data-notifications-target', 'notification');
+      containerTarget().appendChild(notification);
+
+      controller.notificationTargetConnected(notification);
+
+      // Show the notification
+      vi.advanceTimersByTime(20);
+      expect(notification.classList.contains('is-transparent')).toBe(false);
+
+      // Disconnect before auto-close fires
+      controller.disconnect();
+
+      // Advance past auto-close time
+      vi.advanceTimersByTime(10000);
+
+      // Notification should NOT have been auto-closed
+      expect(notification.classList.contains('notification-closed')).toBe(false);
+
+      vi.useRealTimers();
+    });
+  });
+
   describe('integration', () => {
     it('handles full notification lifecycle', async () => {
       const controller = getController();

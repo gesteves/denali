@@ -20,8 +20,9 @@ class FlickrJob < ApplicationJob
     caption = photo.flickr_caption
 
     tags = photo.flickr_tags
-    photo_path = URI.open(photo.image.url).path
-    uploaded_photo_id = flickr.upload_photo photo_path, title: title, description: caption, tags: tags
+    uploaded_photo_id = URI.open(photo.image.url) do |file|
+      flickr.upload_photo file.path, title: title, description: caption, tags: tags
+    end
 
     if uploaded_photo_id&.match?(/\d+/)
       entry.flickr_groups.each do |group_url|

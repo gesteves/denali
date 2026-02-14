@@ -454,6 +454,17 @@ describe('QueueController', () => {
     });
   });
 
+  describe('disconnect', () => {
+    it('destroys the Sortable instance', () => {
+      const controller = getController();
+      const destroySpy = vi.spyOn(controller.sortableQueue, 'destroy');
+
+      controller.disconnect();
+
+      expect(destroySpy).toHaveBeenCalled();
+    });
+  });
+
   describe('integration', () => {
     it('handles full reorder flow', async () => {
       const controller = getController();

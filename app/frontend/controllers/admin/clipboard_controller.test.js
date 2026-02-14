@@ -61,6 +61,28 @@ describe('ClipboardController', () => {
     });
   });
 
+  describe('disconnect', () => {
+    it('removes the click listener from the button', () => {
+      const controller = getController();
+      const button = buttonTarget();
+      const removeSpy = vi.spyOn(button, 'removeEventListener');
+
+      controller.disconnect();
+
+      expect(removeSpy).toHaveBeenCalledWith('click', controller.handleClick);
+    });
+
+    it('no longer triggers copy after disconnect', async () => {
+      const controller = getController();
+      controller.disconnect();
+
+      buttonTarget().click();
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      expect(navigator.clipboard.writeText).not.toHaveBeenCalled();
+    });
+  });
+
   describe('copy via button click', () => {
     it('calls navigator.clipboard.writeText with source value', async () => {
       buttonTarget().click();

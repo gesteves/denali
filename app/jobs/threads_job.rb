@@ -18,7 +18,7 @@ class ThreadsJob < ApplicationJob
       social_account: threads_account
     )
 
-    photos = entry.photos.to_a[0..19].map do |p|
+    photos = entry.photos.limit(20).map do |p|
       {
         url: p.threads_url,
         alt_text: p.alt_text

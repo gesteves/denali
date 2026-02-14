@@ -30,6 +30,10 @@ export default class extends Controller {
     this.updateCards();
   }
 
+  disconnect () {
+    this.sortableQueue.destroy();
+  }
+
   /**
    * Hides the discard and save buttons
    */

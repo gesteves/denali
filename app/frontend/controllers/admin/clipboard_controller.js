@@ -8,10 +8,12 @@ export default class extends Controller {
   static targets = ['source', 'button', 'icon', 'label'];
 
   connect () {
-    this.buttonTarget.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.copy();
-    });
+    this.handleClick = (e) => { e.preventDefault(); this.copy(); };
+    this.buttonTarget.addEventListener('click', this.handleClick);
+  }
+
+  disconnect () {
+    this.buttonTarget.removeEventListener('click', this.handleClick);
   }
 
   async copy () {

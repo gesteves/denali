@@ -18,7 +18,7 @@ class InstagramJob < ApplicationJob
       social_account: instagram_account
     )
 
-    photos = entry.photos.to_a[0..9].map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
+    photos = entry.photos.limit(10).map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
     location_id = entry.photos.first.instagram_location_id
 
     response = instagram.post(
