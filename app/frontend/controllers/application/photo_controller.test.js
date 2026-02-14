@@ -90,6 +90,24 @@ describe('PhotoController', () => {
       expect(photos[1].getAttribute('tabindex')).toBeNull();
     });
 
+    it('sets role="button" on zoomable photos', () => {
+      const photos = photoTargets();
+      expect(photos[0].getAttribute('role')).toBe('button');
+      expect(photos[1].getAttribute('role')).toBeNull();
+    });
+
+    it('sets aria-label on zoomable photos', () => {
+      const photos = photoTargets();
+      expect(photos[0].getAttribute('aria-label')).toBe('Zoom photo');
+      expect(photos[1].getAttribute('aria-label')).toBeNull();
+    });
+
+    it('sets aria-expanded="false" on zoomable photos', () => {
+      const photos = photoTargets();
+      expect(photos[0].getAttribute('aria-expanded')).toBe('false');
+      expect(photos[1].getAttribute('aria-expanded')).toBeNull();
+    });
+
     it('respects container max width value', () => {
       // Reset and test with smaller container
       application.stop();
@@ -197,6 +215,34 @@ describe('PhotoController', () => {
       controller.zoom(event);
 
       expect(event.preventDefault).toHaveBeenCalled();
+    });
+
+    it('sets aria-expanded="true" when zoomed in', () => {
+      const controller = getController();
+      const photos = photoTargets();
+      const event = {
+        type: 'click',
+        preventDefault: vi.fn()
+      };
+
+      controller.zoom(event);
+
+      expect(photos[0].getAttribute('aria-expanded')).toBe('true');
+    });
+
+    it('sets aria-expanded="false" when zoomed out', () => {
+      const controller = getController();
+      const photos = photoTargets();
+      const event = {
+        type: 'click',
+        preventDefault: vi.fn()
+      };
+
+      controller.zoom(event);
+      expect(photos[0].getAttribute('aria-expanded')).toBe('true');
+
+      controller.zoom(event);
+      expect(photos[0].getAttribute('aria-expanded')).toBe('false');
     });
 
     it('toggles zoom off when called again', () => {

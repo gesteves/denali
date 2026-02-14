@@ -58,14 +58,10 @@ describe('PaginationController', () => {
   });
 
   describe('disconnect', () => {
-    it('has unobserve method available', () => {
-      // Verify the Pagination module's unobserve is available
-      expect(Pagination.unobserve).toBeDefined();
-    });
-
-    it('controller has disconnect method', () => {
+    it('calls Pagination.unobserve with element on disconnect', () => {
       const controller = getController();
-      expect(controller.disconnect).toBeDefined();
+      controller.disconnect();
+      expect(Pagination.unobserve).toHaveBeenCalledWith(element);
     });
   });
 });

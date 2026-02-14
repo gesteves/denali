@@ -27,8 +27,8 @@ export default class extends Controller {
     const { clientWidth, clientHeight } = document.documentElement;
 
     // Get the full size of the original photo
-    const originalHeight = parseInt(photo.getAttribute('height'));
-    const originalWidth = parseInt(photo.getAttribute('width'));
+    const originalHeight = parseInt(photo.getAttribute('height'), 10);
+    const originalWidth = parseInt(photo.getAttribute('width'), 10);
 
     // Get the max width this photo can be rendered at; it is the smallest of:
     // `originalWidth`     (it can't be wider than the original)
@@ -46,6 +46,9 @@ export default class extends Controller {
       photo.classList.add('entry__photo--zoomable');
       photo.setAttribute('data-photo-zoomable', 1);
       photo.setAttribute('tabindex', 0);
+      photo.setAttribute('role', 'button');
+      photo.setAttribute('aria-label', 'Zoom photo');
+      photo.setAttribute('aria-expanded', 'false');
     }
   }
 
@@ -58,6 +61,8 @@ export default class extends Controller {
       this.photoTargets.forEach(photo => {
         if (photo.getAttribute('data-photo-zoomable') === '1') {
           photo.classList.toggle('entry__photo--zoom');
+          const isZoomed = photo.classList.contains('entry__photo--zoom');
+          photo.setAttribute('aria-expanded', String(isZoomed));
         }
       });
     }

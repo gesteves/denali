@@ -137,21 +137,58 @@ describe('GridController', () => {
   });
 
   describe('handleMutations', () => {
-    it('appends added nodes to Masonry', () => {
+    it('appends added element nodes to Masonry', () => {
       const controller = getController();
       masonryAppendedCalls = [];
 
+      const li = document.createElement('li');
       const mutations = [
         {
           type: 'childList',
-          addedNodes: [document.createElement('li')]
+          addedNodes: [li]
         }
       ];
 
       controller.handleMutations(mutations);
 
       expect(masonryAppendedCalls.length).toBe(1);
-      expect(masonryAppendedCalls[0]).toBe(mutations[0].addedNodes);
+      expect(masonryAppendedCalls[0]).toEqual([li]);
+    });
+
+    it('filters out text nodes from addedNodes', () => {
+      const controller = getController();
+      masonryAppendedCalls = [];
+
+      const textNode = document.createTextNode('  ');
+      const li = document.createElement('li');
+      const mutations = [
+        {
+          type: 'childList',
+          addedNodes: [textNode, li]
+        }
+      ];
+
+      controller.handleMutations(mutations);
+
+      expect(masonryAppendedCalls.length).toBe(1);
+      expect(masonryAppendedCalls[0]).toEqual([li]);
+    });
+
+    it('does not call appended when only text nodes are added', () => {
+      const controller = getController();
+      masonryAppendedCalls = [];
+
+      const textNode = document.createTextNode('\n');
+      const mutations = [
+        {
+          type: 'childList',
+          addedNodes: [textNode]
+        }
+      ];
+
+      controller.handleMutations(mutations);
+
+      expect(masonryAppendedCalls.length).toBe(0);
     });
 
     it('ignores non-childList mutations', () => {
@@ -227,6 +264,87 @@ describe('GridController', () => {
       const controller = getController();
       controller.disconnect();
       expect(masonryDestroyCalled).toBe(true);
+    });
+
+    it('does not throw when native CSS masonry was used (no observers)', async () => {
+      application.stop();
+
+      global.CSS = { supports: vi.fn(() => true) };
+
+      document.body.innerHTML = `
+        <ul data-controller="grid">
+          <li class="grid-item">Item 1</li>
+        </ul>
+      `;
+
+      element = document.querySelector('[data-controller="grid"]');
+      application = Application.start();
+      application.register('grid', GridController);
+
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      const controller = getController();
+      expect(() => controller.disconnect()).not.toThrow();
+    });
+  });
+
+  describe('native CSS masonry support', () => {
+    it('does not create Masonry instance when CSS supports grid-lanes', async () => {
+      application.stop();
+      masonryLayoutCalled = false;
+
+      global.CSS = { supports: vi.fn(() => true) };
+
+      document.body.innerHTML = `
+        <ul data-controller="grid">
+          <li class="grid-item">Item 1</li>
+        </ul>
+      `;
+
+      element = document.querySelector('[data-controller="grid"]');
+      application = Application.start();
+      application.register('grid', GridController);
+
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      const controller = getController();
+      expect(controller.masonry).toBeUndefined();
+      expect(controller.mutationObserver).toBeUndefined();
+      expect(controller.resizeObserver).toBeUndefined();
+      expect(masonryLayoutCalled).toBe(false);
+    });
+  });
+
+  describe('ResizeObserver callback', () => {
+    it('calls masonry.layout() when ResizeObserver fires', async () => {
+      let resizeCallback;
+      global.ResizeObserver = class {
+        constructor(callback) {
+          resizeCallback = callback;
+        }
+        observe() {}
+        unobserve() {}
+        disconnect() {}
+      };
+
+      application.stop();
+      document.body.innerHTML = `
+        <ul data-controller="grid">
+          <li class="grid-item">Item 1</li>
+        </ul>
+      `;
+
+      element = document.querySelector('[data-controller="grid"]');
+      application = Application.start();
+      application.register('grid', GridController);
+
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      // Reset after initial layout call
+      masonryLayoutCalled = false;
+
+      resizeCallback();
+      expect(masonryLayoutCalled).toBe(true);
     });
   });
 });

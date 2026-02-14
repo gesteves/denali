@@ -415,4 +415,110 @@ describe('InfiniteScrollController', () => {
       expect(footer().getAttribute('aria-hidden')).toBe('false');
     });
   });
+
+  describe('network error (fetch rejection)', () => {
+    it('calls endInfiniteScroll when fetch rejects', async () => {
+      global.fetch.mockRejectedValueOnce(new Error('Network error'));
+
+      const entry = createIntersectionEntry(spinner(), true, 1);
+      observerCallback([entry]);
+
+      await vi.waitFor(() => {
+        expect(footer().style.display).toBe('block');
+        expect(element.querySelector('[data-infinite-scroll-target="spinner"]')).toBeNull();
+      });
+    });
+  });
+
+  describe('concurrent fetch prevention', () => {
+    it('only fetches once when intersection fires twice while loading', async () => {
+      let resolveFirst;
+      global.fetch.mockReturnValueOnce(new Promise(resolve => {
+        resolveFirst = resolve;
+      }));
+
+      const entry = createIntersectionEntry(spinner(), true, 1);
+
+      // Fire two intersection callbacks
+      observerCallback([entry]);
+      observerCallback([entry]);
+
+      expect(global.fetch).toHaveBeenCalledTimes(1);
+
+      // Resolve to clean up
+      resolveFirst({ ok: true, text: () => Promise.resolve('<article>Entry 2</article>') });
+    });
+  });
+
+  describe('null footer handling', () => {
+    it('connects without throwing when footer is missing', () => {
+      application.stop();
+
+      document.body.innerHTML = `
+        <div data-controller="infinite-scroll"
+             data-infinite-scroll-current-page-value="1"
+             data-infinite-scroll-base-url-value="/entries">
+          <div data-infinite-scroll-target="container">
+            <article>Entry 1</article>
+          </div>
+          <nav data-infinite-scroll-target="paginator" style="display: block;">
+            <a href="/entries/page/2">Next</a>
+          </nav>
+          <div data-infinite-scroll-target="spinner" class="loading"></div>
+        </div>
+      `;
+
+      element = document.querySelector('[data-controller="infinite-scroll"]');
+      application = Application.start();
+      application.register('infinite-scroll', InfiniteScrollController);
+
+      // Should not throw
+      expect(getController()).toBeDefined();
+    });
+
+    it('endInfiniteScroll works without footer', async () => {
+      application.stop();
+
+      let newObserverCallback;
+      global.IntersectionObserver = class {
+        constructor(callback) {
+          newObserverCallback = callback;
+          this.elements = new Set();
+        }
+        observe(el) { this.elements.add(el); }
+        unobserve(el) { this.elements.delete(el); }
+        disconnect() { this.elements.clear(); }
+      };
+
+      document.body.innerHTML = `
+        <div data-controller="infinite-scroll"
+             data-infinite-scroll-current-page-value="1"
+             data-infinite-scroll-base-url-value="/entries">
+          <div data-infinite-scroll-target="container">
+            <article>Entry 1</article>
+          </div>
+          <nav data-infinite-scroll-target="paginator" style="display: block;">
+            <a href="/entries/page/2">Next</a>
+          </nav>
+          <div data-infinite-scroll-target="spinner" class="loading"></div>
+        </div>
+      `;
+
+      element = document.querySelector('[data-controller="infinite-scroll"]');
+      application = Application.start();
+      application.register('infinite-scroll', InfiniteScrollController);
+
+      await new Promise(resolve => setTimeout(resolve, 10));
+
+      global.fetch.mockResolvedValueOnce({ ok: false, status: 404 });
+
+      const spinnerEl = element.querySelector('[data-infinite-scroll-target="spinner"]');
+      const entry = createIntersectionEntry(spinnerEl, true, 1);
+      newObserverCallback([entry]);
+
+      await vi.waitFor(() => {
+        expect(element.querySelector('[data-infinite-scroll-target="spinner"]')).toBeNull();
+      });
+    });
+  });
 });

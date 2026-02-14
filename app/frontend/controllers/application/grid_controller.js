@@ -47,7 +47,7 @@ export default class extends Controller {
   }
 
   disconnect () {
-    this.mutationObserver.disconnect();
+    this.mutationObserver?.disconnect();
     this.resizeObserver?.disconnect();
     this.masonry?.destroy();
   }
@@ -60,6 +60,11 @@ export default class extends Controller {
   handleMutations (mutations) {
     mutations
       .filter(mutation => mutation.type === 'childList')
-      .forEach(mutation => this.masonry.appended(mutation.addedNodes));
+      .forEach(mutation => {
+        const elements = [...mutation.addedNodes].filter(node => node.nodeType === Node.ELEMENT_NODE);
+        if (elements.length > 0) {
+          this.masonry.appended(elements);
+        }
+      });
   }
 }

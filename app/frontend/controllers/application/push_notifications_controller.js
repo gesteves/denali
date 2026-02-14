@@ -140,7 +140,7 @@ export default class extends Controller {
         applicationServerKey: this.urlBase64ToUint8Array(this.vapidPublicKeyValue)
       });
 
-      this.sendSubscriptionToServer(subscription, 'POST');
+      await this.sendSubscriptionToServer(subscription, 'POST');
       this.setSubscribedState();
       trackEvent('push-notifications', { state: 'Subscribed' });
     } catch (error) {
@@ -159,7 +159,7 @@ export default class extends Controller {
 
       if (subscription) {
         await subscription.unsubscribe();
-        this.sendSubscriptionToServer(subscription, 'DELETE');
+        await this.sendSubscriptionToServer(subscription, 'DELETE');
         this.setUnsubscribedState();
         trackEvent('push-notifications', { state: 'Unsubscribed' });
       }
@@ -175,17 +175,14 @@ export default class extends Controller {
    * @returns {Promise}
    */
   async sendSubscriptionToServer(subscription, method) {
-    try {
-      const response = await fetch(this.endpointUrlValue, {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(subscription)
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    const response = await fetch(this.endpointUrlValue, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(subscription)
+    });
+    if (!response.ok) throw new Error(`Server responded with ${response.status}`);
   }
 
   /**

@@ -1,6 +1,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
+
+vi.mock('../../lib/analytics', () => ({
+  trackEvent: vi.fn()
+}));
+
 import PushNotificationsController from './push_notifications_controller';
+import { trackEvent } from '../../lib/analytics';
 
 describe('PushNotificationsController', () => {
   let application;
@@ -295,19 +301,19 @@ describe('PushNotificationsController', () => {
     });
 
     it('returns false when serviceWorker is missing', () => {
-      // Create a controller instance and test the method directly with a mocked check
       const controller = getController();
+      const descriptor = Object.getOwnPropertyDescriptor(navigator, 'serviceWorker');
+      delete navigator.serviceWorker;
+      expect(controller.isPushSupported()).toBe(false);
+      Object.defineProperty(navigator, 'serviceWorker', descriptor);
+    });
 
-      // Save original and mock the check
-      const originalIsPushSupported = controller.isPushSupported.bind(controller);
-
-      // Test by checking what the method actually checks
-      // serviceWorker in navigator should be true in our mock
-      expect('serviceWorker' in navigator).toBe(true);
-      expect('PushManager' in window).toBe(true);
-
-      // Now verify the method returns the right thing
-      expect(controller.isPushSupported()).toBe(true);
+    it('returns false when PushManager is missing', () => {
+      const controller = getController();
+      const original = window.PushManager;
+      delete window.PushManager;
+      expect(controller.isPushSupported()).toBe(false);
+      window.PushManager = original;
     });
   });
 
@@ -461,14 +467,14 @@ describe('PushNotificationsController', () => {
 
     it('handles URL-safe characters (- and _)', () => {
       const controller = getController();
-      // Use a valid base64 string with URL-safe characters
-      // Standard: "abc+def/gh==" -> URL-safe: "abc-def_gh"
-      const base64WithUrlChars = 'YWJjZGVm'; // "abcdef" in base64
+      // URL-safe base64: 'abc-def_gh' should be converted to standard base64: 'abc+def/gh=='
+      const urlSafeBase64 = 'abc-def_gh';
+      const standardBase64 = 'abc+def/gh==';
 
-      const result = controller.urlBase64ToUint8Array(base64WithUrlChars);
+      const urlSafeResult = controller.urlBase64ToUint8Array(urlSafeBase64);
+      const standardResult = controller.urlBase64ToUint8Array(standardBase64);
 
-      expect(result).toBeInstanceOf(Uint8Array);
-      expect(result.length).toBe(6);
+      expect(urlSafeResult).toEqual(standardResult);
     });
 
     it('adds proper padding', () => {
@@ -478,6 +484,118 @@ describe('PushNotificationsController', () => {
       const result = controller.urlBase64ToUint8Array(unpadded);
 
       expect(result).toBeInstanceOf(Uint8Array);
+    });
+  });
+
+  describe('analytics tracking', () => {
+    it('tracks Subscribed event after successful subscribe', async () => {
+      const controller = getController();
+      await controller.subscribeUser();
+
+      expect(trackEvent).toHaveBeenCalledWith('push-notifications', { state: 'Subscribed' });
+    });
+
+    it('tracks Unsubscribed event after successful unsubscribe', async () => {
+      mockPushManager.getSubscription = vi.fn(() => Promise.resolve(mockSubscription));
+
+      const controller = getController();
+      controller.isSubscribed = true;
+      await controller.unsubscribeUser();
+
+      expect(trackEvent).toHaveBeenCalledWith('push-notifications', { state: 'Unsubscribed' });
+    });
+
+    it('does not track event when server call fails on subscribe', async () => {
+      global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500 });
+      trackEvent.mockClear();
+
+      const controller = getController();
+      await controller.subscribeUser();
+
+      expect(trackEvent).not.toHaveBeenCalled();
+    });
+
+    it('does not track event when server call fails on unsubscribe', async () => {
+      global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500 });
+      mockPushManager.getSubscription = vi.fn(() => Promise.resolve(mockSubscription));
+      trackEvent.mockClear();
+
+      const controller = getController();
+      controller.isSubscribed = true;
+      await controller.unsubscribeUser();
+
+      expect(trackEvent).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('error paths', () => {
+    it('disables button when getSubscription rejects in setInitialState', async () => {
+      application.stop();
+
+      global.Notification = { permission: 'granted' };
+      mockPushManager.getSubscription = vi.fn(() => Promise.reject(new Error('getSubscription failed')));
+
+      document.body.innerHTML = `
+        <div data-controller="push-notifications"
+             data-push-notifications-endpoint-url-value="/push_subscriptions"
+             data-push-notifications-vapid-public-key-value="testkey"
+             data-push-notifications-text-on-value="On"
+             data-push-notifications-text-off-value="Off"
+             data-push-notifications-text-disabled-value="Disabled"
+             data-push-notifications-on-class="is-primary"
+             data-push-notifications-off-class="is-light"
+             data-push-notifications-disabled-class="is-disabled">
+          <button data-push-notifications-target="button">
+            <span data-push-notifications-target="buttonText">Loading</span>
+          </button>
+        </div>
+      `;
+
+      element = document.querySelector('[data-controller="push-notifications"]');
+      application = Application.start();
+      application.register('push-notifications', PushNotificationsController);
+
+      await vi.waitFor(() => {
+        expect(button().disabled).toBe(true);
+      });
+    });
+
+    it('stays unsubscribed when pushManager.subscribe rejects', async () => {
+      mockPushManager.subscribe = vi.fn(() => Promise.reject(new Error('subscribe failed')));
+
+      const controller = getController();
+      await controller.subscribeUser();
+
+      expect(controller.isSubscribed).toBe(false);
+    });
+
+    it('stays subscribed when subscription.unsubscribe rejects', async () => {
+      mockSubscription.unsubscribe = vi.fn(() => Promise.reject(new Error('unsubscribe failed')));
+      mockPushManager.getSubscription = vi.fn(() => Promise.resolve(mockSubscription));
+
+      const controller = getController();
+      controller.isSubscribed = true;
+      await controller.unsubscribeUser();
+
+      expect(controller.isSubscribed).toBe(true);
+    });
+  });
+
+  describe('sendSubscriptionToServer', () => {
+    it('throws when server responds with error status', async () => {
+      global.fetch = vi.fn().mockResolvedValue({ ok: false, status: 500 });
+
+      const controller = getController();
+      await expect(controller.sendSubscriptionToServer(mockSubscription, 'POST'))
+        .rejects.toThrow('Server responded with 500');
+    });
+
+    it('resolves when server responds with ok', async () => {
+      global.fetch = vi.fn().mockResolvedValue({ ok: true });
+
+      const controller = getController();
+      await expect(controller.sendSubscriptionToServer(mockSubscription, 'POST'))
+        .resolves.toBeUndefined();
     });
   });
 });

@@ -23,6 +23,7 @@ export default class extends Controller {
       return;
     }
 
+    this.loading = false;
     this.preparePage();
 
     // Set up an intersection observer to observe the loading spinner at the bottom.
@@ -35,7 +36,7 @@ export default class extends Controller {
     this.observer?.disconnect();
     if (this.footer) {
       this.footer.style.display = 'block';
-      this.footer.setAttribute('aria-hidden', false);
+      this.footer.setAttribute('aria-hidden', 'false');
     }
   }
 
@@ -46,10 +47,12 @@ export default class extends Controller {
   preparePage () {
     this.spinnerTarget.classList.add('loading--active');
     this.footer = document.querySelector('#footer');
-    this.footer.style.display = 'none';
-    this.footer.setAttribute('aria-hidden', true);
+    if (this.footer) {
+      this.footer.style.display = 'none';
+      this.footer.setAttribute('aria-hidden', 'true');
+    }
     this.paginatorTarget.style.display = 'none';
-    this.paginatorTarget.setAttribute('aria-hidden', true);
+    this.paginatorTarget.setAttribute('aria-hidden', 'true');
   }
 
   /**
@@ -61,6 +64,8 @@ export default class extends Controller {
     if (!entries.some(entry => entry.intersectionRatio > 0 || entry.isIntersecting)) {
       return;
     }
+    if (this.loading) return;
+    this.loading = true;
     const nextPage = this.currentPageValue + 1;
     this.animateSpinner();
     // Handle query-parameter-based URLs (e.g., /search?q=term) vs path-based URLs (e.g., /entries)
@@ -82,6 +87,8 @@ export default class extends Controller {
       this.appendPage(text);
     } catch {
       this.endInfiniteScroll();
+    } finally {
+      this.loading = false;
     }
   }
 
@@ -103,10 +110,12 @@ export default class extends Controller {
    */
   endInfiniteScroll () {
     this.observer.unobserve(this.spinnerTarget);
-    this.footer.style.display = 'block';
-    this.footer.setAttribute('aria-hidden', false);
+    if (this.footer) {
+      this.footer.style.display = 'block';
+      this.footer.setAttribute('aria-hidden', 'false');
+    }
     this.spinnerTarget.remove();
-    this.containerTarget.setAttribute('aria-busy', false);
+    this.containerTarget.setAttribute('aria-busy', 'false');
   }
 
   /**
@@ -114,8 +123,8 @@ export default class extends Controller {
    */
   animateSpinner () {
     this.spinnerTarget.classList.add('loading--visible');
-    this.spinnerTarget.setAttribute('aria-hidden', false);
-    this.containerTarget.setAttribute('aria-busy', true);
+    this.spinnerTarget.setAttribute('aria-hidden', 'false');
+    this.containerTarget.setAttribute('aria-busy', 'true');
   }
 
   /**
@@ -123,7 +132,7 @@ export default class extends Controller {
    */
   stopSpinner () {
     this.spinnerTarget.classList.remove('loading--visible');
-    this.spinnerTarget.setAttribute('aria-hidden', true);
-    this.containerTarget.setAttribute('aria-busy', false);
+    this.spinnerTarget.setAttribute('aria-hidden', 'true');
+    this.containerTarget.setAttribute('aria-busy', 'false');
   }
 }
