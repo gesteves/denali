@@ -46,6 +46,12 @@ export default class extends Controller {
     }
   }
 
+  disconnect () {
+    this.mutationObserver.disconnect();
+    this.resizeObserver?.disconnect();
+    this.masonry?.destroy();
+  }
+
   /**
    * Gets the `childList` mutations, and inserts the added nodes into the
    * Masonry layout.

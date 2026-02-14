@@ -393,4 +393,26 @@ describe('InfiniteScrollController', () => {
       expect(paginator().getAttribute('aria-hidden')).toBe('true');
     });
   });
+
+  describe('disconnect', () => {
+    it('disconnects the IntersectionObserver', () => {
+      const controller = getController();
+      controller.disconnect();
+      expect(controller.observer.elements.size).toBe(0);
+    });
+
+    it('restores footer visibility', () => {
+      expect(footer().style.display).toBe('none');
+      const controller = getController();
+      controller.disconnect();
+      expect(footer().style.display).toBe('block');
+    });
+
+    it('restores footer aria-hidden', () => {
+      expect(footer().getAttribute('aria-hidden')).toBe('true');
+      const controller = getController();
+      controller.disconnect();
+      expect(footer().getAttribute('aria-hidden')).toBe('false');
+    });
+  });
 });

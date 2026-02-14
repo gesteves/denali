@@ -5,6 +5,7 @@ import { Application } from '@hotwired/stimulus';
 let masonryLayoutCalled = false;
 let masonryAppendedCalls = [];
 let masonryOptions = {};
+let masonryDestroyCalled = false;
 
 vi.mock('masonry-layout', () => ({
   default: class MockMasonry {
@@ -18,6 +19,9 @@ vi.mock('masonry-layout', () => ({
     }
     appended(nodes) {
       masonryAppendedCalls.push(nodes);
+    }
+    destroy() {
+      masonryDestroyCalled = true;
     }
   }
 }));
@@ -33,6 +37,7 @@ describe('GridController', () => {
     masonryLayoutCalled = false;
     masonryAppendedCalls = [];
     masonryOptions = {};
+    masonryDestroyCalled = false;
 
     // Save original CSS.supports
     originalCSS = global.CSS;
@@ -49,7 +54,7 @@ describe('GridController', () => {
       }
       observe() {}
       unobserve() {}
-      disconnect() {}
+      disconnect() { this._disconnected = true; }
     };
 
     // Mock MutationObserver
@@ -58,7 +63,7 @@ describe('GridController', () => {
         this.callback = callback;
       }
       observe() {}
-      disconnect() {}
+      disconnect() { this._disconnected = true; }
       takeRecords() { return []; }
     };
 
@@ -200,6 +205,28 @@ describe('GridController', () => {
       const controller = getController();
       // ResizeObserver is mocked in beforeEach, so it should be defined
       expect(controller.resizeObserver).toBeDefined();
+    });
+  });
+
+  describe('disconnect', () => {
+    it('disconnects the MutationObserver', () => {
+      const controller = getController();
+      controller.disconnect();
+      expect(controller.mutationObserver._disconnected).toBe(true);
+    });
+
+    it('disconnects the ResizeObserver', () => {
+      const controller = getController();
+      controller.disconnect();
+      expect(controller.resizeObserver._disconnected).toBe(true);
+    });
+
+    it('destroys the Masonry instance', () => {
+      getController();
+      masonryDestroyCalled = false;
+      const controller = getController();
+      controller.disconnect();
+      expect(masonryDestroyCalled).toBe(true);
     });
   });
 });

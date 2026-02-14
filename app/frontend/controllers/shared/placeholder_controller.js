@@ -10,15 +10,19 @@ export default class extends Controller {
     this.removeBackground();
   }
 
+  disconnect () {
+    clearInterval(this.interval);
+  }
+
   /**
    * Removes the backgrounds when photos load.
    * Uses a setInterval to give the real photo a chance to render
    * before removing the background, to prevent annoying flashing.
    */
   removeBackground () {
-    const interval = setInterval(() => {
+    this.interval = setInterval(() => {
       if (this.element.complete && this.element.naturalWidth > 0 && this.element.naturalHeight > 0) {
-        clearInterval(interval);
+        clearInterval(this.interval);
         requestAnimationFrame(() => this.element.classList.remove('placeholder'));
       }
     }, 1000);

@@ -102,4 +102,52 @@ describe('PlaceholderController', () => {
       expect(global.requestAnimationFrame).toHaveBeenCalled();
     });
   });
+
+  describe('disconnect', () => {
+    it('clears the interval so no further checks run', async () => {
+      Object.defineProperty(element, 'complete', { value: false, configurable: true });
+      Object.defineProperty(element, 'naturalWidth', { value: 0, configurable: true });
+      Object.defineProperty(element, 'naturalHeight', { value: 0, configurable: true });
+
+      application = Application.start();
+      application.register('placeholder', PlaceholderController);
+
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      const controller = application.getControllerForElementAndIdentifier(element, 'placeholder');
+      const clearIntervalSpy = vi.spyOn(global, 'clearInterval');
+
+      controller.disconnect();
+
+      expect(clearIntervalSpy).toHaveBeenCalledWith(controller.interval);
+    });
+
+    it('stops interval callbacks after disconnect', async () => {
+      let checkCount = 0;
+
+      Object.defineProperty(element, 'complete', {
+        get: () => { checkCount++; return false; },
+        configurable: true
+      });
+      Object.defineProperty(element, 'naturalWidth', { value: 0, configurable: true });
+      Object.defineProperty(element, 'naturalHeight', { value: 0, configurable: true });
+
+      application = Application.start();
+      application.register('placeholder', PlaceholderController);
+
+      // Wait for one interval tick to fire
+      await new Promise(resolve => setTimeout(resolve, 1100));
+      const checksAfterOneTick = checkCount;
+      expect(checksAfterOneTick).toBeGreaterThan(0);
+
+      const controller = application.getControllerForElementAndIdentifier(element, 'placeholder');
+      controller.disconnect();
+
+      // Wait for several more ticks
+      await new Promise(resolve => setTimeout(resolve, 3100));
+
+      // No additional checks should have happened
+      expect(checkCount).toBe(checksAfterOneTick);
+    });
+  });
 });

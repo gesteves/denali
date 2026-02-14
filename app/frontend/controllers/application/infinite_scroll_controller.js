@@ -31,6 +31,14 @@ export default class extends Controller {
     this.observer.observe(this.spinnerTarget);
   }
 
+  disconnect () {
+    this.observer?.disconnect();
+    if (this.footer) {
+      this.footer.style.display = 'block';
+      this.footer.setAttribute('aria-hidden', false);
+    }
+  }
+
   /**
    * Sets up the bottom of the page for lazy loading: show the spinner,
    * hide the footer and the pagination links.
