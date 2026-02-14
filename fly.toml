@@ -17,11 +17,12 @@ console_command = '/app/bin/rails console'
   RAILS_LOG_TO_STDOUT = 'true'
   RAILS_SERVE_STATIC_FILES = 'true'
   RAILS_MAX_THREADS = '10'
-  WEB_CONCURRENCY = '1'
+  WEB_CONCURRENCY = '0'
   SIDEKIQ_CONCURRENCY = '5'
   CACHE_TTL = '300'
   SKYLIGHT_ENABLE_SIDEKIQ = 'true'
   SKYLIGHT_IGNORED_ENDPOINTS = 'HealthController#show'
+  RUBY_YJIT_ENABLE = '1'
   ELASTICSEARCH_TIMEOUT="1"
 
 [processes]
