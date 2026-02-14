@@ -11,20 +11,27 @@ export default class extends Controller {
   }
 
   disconnect () {
-    clearInterval(this.interval);
+    if (this.onLoad) {
+      this.element.removeEventListener('load', this.onLoad);
+      this.onLoad = null;
+    }
   }
 
   /**
    * Removes the backgrounds when photos load.
-   * Uses a setInterval to give the real photo a chance to render
-   * before removing the background, to prevent annoying flashing.
+   * If the image is already complete, removes the placeholder immediately via rAF.
+   * Otherwise, registers a one-time load listener.
    */
   removeBackground () {
-    this.interval = setInterval(() => {
-      if (this.element.complete && this.element.naturalWidth > 0 && this.element.naturalHeight > 0) {
-        clearInterval(this.interval);
-        requestAnimationFrame(() => this.element.classList.remove('placeholder'));
+    if (this.element.complete && this.element.naturalWidth > 0 && this.element.naturalHeight > 0) {
+      if (this.onLoad) {
+        this.element.removeEventListener('load', this.onLoad);
+        this.onLoad = null;
       }
-    }, 1000);
+      requestAnimationFrame(() => this.element.classList.remove('placeholder'));
+    } else if (!this.onLoad) {
+      this.onLoad = () => this.removeBackground();
+      this.element.addEventListener('load', this.onLoad, { once: true });
+    }
   }
 }

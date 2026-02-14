@@ -8,7 +8,6 @@ describe('PlaceholderController', () => {
   let rafCallback;
 
   beforeEach(() => {
-    // Mock requestAnimationFrame to capture the callback
     rafCallback = null;
     global.requestAnimationFrame = vi.fn(cb => {
       rafCallback = cb;
@@ -30,124 +29,124 @@ describe('PlaceholderController', () => {
     }
     document.body.innerHTML = '';
     vi.clearAllMocks();
-    vi.useRealTimers();
   });
 
-  describe('connect', () => {
-    it('starts checking for image load on connect', () => {
-      application = Application.start();
-      application.register('placeholder', PlaceholderController);
+  function markImageAsLoaded () {
+    Object.defineProperty(element, 'complete', { value: true, configurable: true });
+    Object.defineProperty(element, 'naturalWidth', { value: 100, configurable: true });
+    Object.defineProperty(element, 'naturalHeight', { value: 100, configurable: true });
+  }
 
-      // The controller should have started but placeholder is still there
-      expect(element.classList.contains('placeholder')).toBe(true);
-    });
-  });
+  function markImageAsNotLoaded () {
+    Object.defineProperty(element, 'complete', { value: false, configurable: true, writable: true });
+    Object.defineProperty(element, 'naturalWidth', { value: 0, configurable: true, writable: true });
+    Object.defineProperty(element, 'naturalHeight', { value: 0, configurable: true, writable: true });
+  }
 
-  describe('removeBackground', () => {
-    it('removes placeholder class when image is complete', async () => {
-      // Mock the image as loaded
-      Object.defineProperty(element, 'complete', { value: true, configurable: true });
-      Object.defineProperty(element, 'naturalWidth', { value: 100, configurable: true });
-      Object.defineProperty(element, 'naturalHeight', { value: 100, configurable: true });
+  function startApplication () {
+    application = Application.start();
+    application.register('placeholder', PlaceholderController);
+  }
 
-      application = Application.start();
-      application.register('placeholder', PlaceholderController);
-
-      // Wait for the interval to run
-      await new Promise(resolve => setTimeout(resolve, 1100));
-
-      // Execute the RAF callback if it was set
-      if (rafCallback) rafCallback();
-
-      expect(element.classList.contains('placeholder')).toBe(false);
-    });
-
-    it('keeps placeholder class when image is not complete', async () => {
-      Object.defineProperty(element, 'complete', { value: false, configurable: true });
-      Object.defineProperty(element, 'naturalWidth', { value: 0, configurable: true });
-      Object.defineProperty(element, 'naturalHeight', { value: 0, configurable: true });
-
-      application = Application.start();
-      application.register('placeholder', PlaceholderController);
-
-      // Wait for interval
-      await new Promise(resolve => setTimeout(resolve, 1100));
-
-      expect(element.classList.contains('placeholder')).toBe(true);
-    });
-
-    it('keeps placeholder class when image has no natural dimensions', async () => {
-      Object.defineProperty(element, 'complete', { value: true, configurable: true });
-      Object.defineProperty(element, 'naturalWidth', { value: 0, configurable: true });
-      Object.defineProperty(element, 'naturalHeight', { value: 0, configurable: true });
-
-      application = Application.start();
-      application.register('placeholder', PlaceholderController);
-
-      await new Promise(resolve => setTimeout(resolve, 1100));
-
-      expect(element.classList.contains('placeholder')).toBe(true);
-    });
-
-    it('uses requestAnimationFrame when removing class', async () => {
-      Object.defineProperty(element, 'complete', { value: true, configurable: true });
-      Object.defineProperty(element, 'naturalWidth', { value: 100, configurable: true });
-      Object.defineProperty(element, 'naturalHeight', { value: 100, configurable: true });
-
-      application = Application.start();
-      application.register('placeholder', PlaceholderController);
-
-      await new Promise(resolve => setTimeout(resolve, 1100));
+  describe('already-loaded image', () => {
+    it('removes placeholder class immediately via rAF on connect', async () => {
+      markImageAsLoaded();
+      startApplication();
+      await new Promise(resolve => setTimeout(resolve, 0));
 
       expect(global.requestAnimationFrame).toHaveBeenCalled();
+      expect(element.classList.contains('placeholder')).toBe(true);
+
+      rafCallback();
+      expect(element.classList.contains('placeholder')).toBe(false);
+    });
+  });
+
+  describe('not-yet-loaded image', () => {
+    it('removes placeholder class when load event fires', async () => {
+      markImageAsNotLoaded();
+      startApplication();
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      expect(element.classList.contains('placeholder')).toBe(true);
+      expect(global.requestAnimationFrame).not.toHaveBeenCalled();
+
+      markImageAsLoaded();
+      element.dispatchEvent(new Event('load'));
+
+      expect(global.requestAnimationFrame).toHaveBeenCalled();
+      rafCallback();
+      expect(element.classList.contains('placeholder')).toBe(false);
+    });
+  });
+
+  describe('zero natural dimensions', () => {
+    it('keeps placeholder class even if complete is true', async () => {
+      Object.defineProperty(element, 'complete', { value: true, configurable: true });
+      Object.defineProperty(element, 'naturalWidth', { value: 0, configurable: true });
+      Object.defineProperty(element, 'naturalHeight', { value: 0, configurable: true });
+
+      startApplication();
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      expect(element.classList.contains('placeholder')).toBe(true);
+      expect(global.requestAnimationFrame).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('rAF timing', () => {
+    it('class is still present before rAF fires, removed after', async () => {
+      markImageAsLoaded();
+      startApplication();
+      await new Promise(resolve => setTimeout(resolve, 0));
+
+      expect(element.classList.contains('placeholder')).toBe(true);
+      rafCallback();
+      expect(element.classList.contains('placeholder')).toBe(false);
     });
   });
 
   describe('disconnect', () => {
-    it('clears the interval so no further checks run', async () => {
-      Object.defineProperty(element, 'complete', { value: false, configurable: true });
-      Object.defineProperty(element, 'naturalWidth', { value: 0, configurable: true });
-      Object.defineProperty(element, 'naturalHeight', { value: 0, configurable: true });
-
-      application = Application.start();
-      application.register('placeholder', PlaceholderController);
-
+    it('removes load listener when image is not yet loaded', async () => {
+      markImageAsNotLoaded();
+      startApplication();
       await new Promise(resolve => setTimeout(resolve, 0));
 
       const controller = application.getControllerForElementAndIdentifier(element, 'placeholder');
-      const clearIntervalSpy = vi.spyOn(global, 'clearInterval');
+      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
 
       controller.disconnect();
 
-      expect(clearIntervalSpy).toHaveBeenCalledWith(controller.interval);
+      expect(removeEventListenerSpy).toHaveBeenCalledWith('load', expect.any(Function));
+      expect(controller.onLoad).toBeNull();
     });
 
-    it('stops interval callbacks after disconnect', async () => {
-      let checkCount = 0;
+    it('is a no-op when image was already loaded', async () => {
+      markImageAsLoaded();
+      startApplication();
+      await new Promise(resolve => setTimeout(resolve, 0));
 
-      Object.defineProperty(element, 'complete', {
-        get: () => { checkCount++; return false; },
-        configurable: true
-      });
-      Object.defineProperty(element, 'naturalWidth', { value: 0, configurable: true });
-      Object.defineProperty(element, 'naturalHeight', { value: 0, configurable: true });
+      const controller = application.getControllerForElementAndIdentifier(element, 'placeholder');
+      const removeEventListenerSpy = vi.spyOn(element, 'removeEventListener');
 
-      application = Application.start();
-      application.register('placeholder', PlaceholderController);
+      controller.disconnect();
 
-      // Wait for one interval tick to fire
-      await new Promise(resolve => setTimeout(resolve, 1100));
-      const checksAfterOneTick = checkCount;
-      expect(checksAfterOneTick).toBeGreaterThan(0);
+      expect(removeEventListenerSpy).not.toHaveBeenCalled();
+    });
+
+    it('load event after disconnect does not remove placeholder', async () => {
+      markImageAsNotLoaded();
+      startApplication();
+      await new Promise(resolve => setTimeout(resolve, 0));
 
       const controller = application.getControllerForElementAndIdentifier(element, 'placeholder');
       controller.disconnect();
 
-      // Wait for several more ticks
-      await new Promise(resolve => setTimeout(resolve, 3100));
+      markImageAsLoaded();
+      element.dispatchEvent(new Event('load'));
 
-      // No additional checks should have happened
-      expect(checkCount).toBe(checksAfterOneTick);
+      expect(global.requestAnimationFrame).not.toHaveBeenCalled();
+      expect(element.classList.contains('placeholder')).toBe(true);
     });
   });
 });

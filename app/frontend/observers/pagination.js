@@ -43,8 +43,12 @@ function handleIntersection (entries) {
   if (!entry) {
     return;
   }
+  const url = entry.target.getAttribute('data-pagination-page-url');
+  if (!url) {
+    return;
+  }
   const previousPath = window.location.pathname;
-  window.history.replaceState(null, null, entry.target.getAttribute('data-pagination-page-url'));
+  window.history.replaceState(null, null, url);
   if (previousPath !== window.location.pathname) {
     trackPageView();
   }
