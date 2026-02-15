@@ -33,7 +33,7 @@ RSpec.describe "Oembed", type: :request do
     it "renders XML with correct root element" do
       get "/oembed.xml", params: { url: entry_full_url }
       expect(response).to have_http_status(:success)
-      expect(response.content_type).to include("application/xml")
+      expect(response.content_type).to include("text/xml")
       expect(response.body).to include("<oembed>")
       expect(response.body).not_to include("<ombed>")
     end
@@ -65,6 +65,31 @@ RSpec.describe "Oembed", type: :request do
     it "returns 404 for an invalid URL" do
       get "/oembed.json", params: { url: "http://localhost:3000/nonexistent/path" }
       expect(response).to have_http_status(:not_found)
+    end
+
+    it "includes CORS header" do
+      get "/oembed.json", params: { url: entry_full_url }
+      expect(response.headers['Access-Control-Allow-Origin']).to eq('*')
+    end
+
+    it "includes ETag and Last-Modified headers" do
+      get "/oembed.json", params: { url: entry_full_url }
+      expect(response.headers['ETag']).to be_present
+      expect(response.headers['Last-Modified']).to be_present
+    end
+
+    it "returns 304 Not Modified for conditional request with matching ETag" do
+      get "/oembed.json", params: { url: entry_full_url }
+      etag = response.headers['ETag']
+
+      get "/oembed.json", params: { url: entry_full_url }, headers: { 'If-None-Match' => etag }
+      expect(response).to have_http_status(:not_modified)
+    end
+
+    it "renders XML with text/xml content type" do
+      get "/oembed.xml", params: { url: entry_full_url }
+      expect(response).to have_http_status(:success)
+      expect(response.content_type).to include("text/xml")
     end
   end
 end
