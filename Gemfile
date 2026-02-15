@@ -71,7 +71,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'byebug'
+  gem 'debug', require: nil
   gem 'brakeman', require: nil
   gem 'bullet'
 end
