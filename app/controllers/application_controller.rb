@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   before_action :get_photoblog
   before_action :domain_redirect
   before_action :set_referrer_policy
-  before_action :preload_fonts
+  before_action :preload_assets
   around_action :set_time_zone
 
   helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preconnect_link_header, :add_preload_link_header
@@ -98,8 +98,10 @@ class ApplicationController < ActionController::Base
     response.headers['Link'] = links.compact.join(', ')
   end
 
-  def preload_fonts
+  def preload_assets
     if request.format.html?
+      add_preload_link_header(ActionController::Base.helpers.stylesheet_path('application'), as: 'style')
+      add_preload_link_header(ActionController::Base.helpers.javascript_path('application'), as: 'script')
       add_preload_link_header(ActionController::Base.helpers.font_path('lato-v25-latin-300.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
       add_preload_link_header(ActionController::Base.helpers.font_path('lato-v25-latin-300italic.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)
       add_preload_link_header(ActionController::Base.helpers.font_path('lato-v25-latin-regular.woff2'), as: 'font', type: 'font/woff2', crossorigin: true)

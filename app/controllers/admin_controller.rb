@@ -4,6 +4,7 @@ class AdminController < ApplicationController
   before_action :no_cache
   before_action :require_login
   skip_before_action :domain_redirect
+  skip_before_action :preload_assets
   helper_method :is_admin?
 
   def default_url_options
