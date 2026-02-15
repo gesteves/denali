@@ -29,7 +29,7 @@ class NationalParkJob < ApplicationJob
   def fetch_park(code)
     return if code.blank?
     url = "https://developer.nps.gov/api/v1/parks?parkCode=#{code}&api_key=#{ENV['NPS_API_KEY']}"
-    response = HTTParty.get(url)
+    response = HTTParty.get(url, timeout: 15)
     raise if response.code >= 400
     data = JSON.parse(response.body)['data']
     data&.find { |p| p['parkCode'].downcase == code.downcase }

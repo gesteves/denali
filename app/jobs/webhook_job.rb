@@ -10,9 +10,9 @@ class WebhookJob < ApplicationJob
     payload = webhook.payload(entry)
 
     response = if payload.present?
-      HTTParty.post(webhook.url, body: payload, headers: { 'Content-Type': 'application/json' })
+      HTTParty.post(webhook.url, body: payload, headers: { 'Content-Type': 'application/json' }, timeout: 15)
     else
-      HTTParty.post(webhook.url)
+      HTTParty.post(webhook.url, timeout: 15)
     end
 
     if response.code >= 400

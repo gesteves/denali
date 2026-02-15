@@ -7,6 +7,6 @@ class PublishSchedule < ApplicationRecord
   before_destroy :touch_entries
   
   def touch_entries
-    self.blog.entries.queued.each(&:touch)
+    self.blog.entries.queued.touch_all
   end
 end

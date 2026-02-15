@@ -28,7 +28,7 @@ class NativeLandsJob < ApplicationJob
 
   def fetch_from_api(lat, lng)
     url = "https://native-land.ca/wp-json/nativeland/v1/api/index.php?maps=territories&position=#{lat},#{lng}&key=#{ENV['NATIVE_LAND_API_KEY']}"
-    response = HTTParty.get(url)
+    response = HTTParty.get(url, timeout: 15)
 
     if response.code >= 400
       raise "Native Lands API request failed: #{response.body}"

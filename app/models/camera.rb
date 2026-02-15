@@ -12,6 +12,6 @@ class Camera < ApplicationRecord
   end
 
   def update_entry_tags
-    self.photos.map { |p| p.entry.update_tags }
+    self.photos.includes(:entry).map(&:entry).uniq.each(&:update_tags)
   end
 end

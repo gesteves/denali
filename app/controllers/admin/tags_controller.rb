@@ -47,7 +47,7 @@ class Admin::TagsController < AdminController
     new_tags = params[:tags]
     tag = ActsAsTaggableOn::Tag.find(params[:id])
     entries = @photoblog.entries.tagged_with(tag.name)
-    entries.each { |e| e.add_tags(new_tags) }.each(&:touch)
+    entries.each { |e| e.add_tags(new_tags) }
     respond_to do |format|
       format.html { redirect_to admin_tags_path }
       format.json {

@@ -13,7 +13,7 @@ class OpenGraphJob < ApplicationJob
       access_token: "#{ENV['FACEBOOK_APP_ID']}|#{ENV['FACEBOOK_APP_SECRET']}"
     }
 
-    response = HTTParty.post('https://graph.facebook.com', query: params)
+    response = HTTParty.post('https://graph.facebook.com', query: params, timeout: 15)
     response = JSON.parse(response.body)
 
     if response['error'].present?

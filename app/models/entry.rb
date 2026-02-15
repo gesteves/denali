@@ -297,23 +297,15 @@ class Entry < ApplicationRecord
       # ES returns buckets ordered by doc_count (most common first)
       es_tag_names = es_results.response.aggregations.top_results.matching_tags.buckets.map { |b| b['key'] }
 
-      # Get tag IDs from 'tags' or 'locations' contexts
-      valid_tag_ids = ActsAsTaggableOn::Tagging
-        .where(context: ['tags', 'locations'])
-        .distinct
-        .pluck(:tag_id)
-
-      # Get tag IDs from 'equipment' or 'styles' contexts to exclude
       excluded_tag_ids = ActsAsTaggableOn::Tagging
         .where(context: ['equipment', 'styles'])
-        .distinct
-        .pluck(:tag_id)
-
-      # Subtract excluded from valid
-      filtered_tag_ids = valid_tag_ids - excluded_tag_ids
+        .distinct.select(:tag_id)
 
       tags_by_name = ActsAsTaggableOn::Tag
-        .where(name: es_tag_names, id: filtered_tag_ids)
+        .joins(:taggings)
+        .where(name: es_tag_names, taggings: { context: ['tags', 'locations'] })
+        .where.not(id: excluded_tag_ids)
+        .distinct
         .index_by(&:name)
 
       # Preserve ES frequency order, filter to valid tags, take top ones
@@ -324,47 +316,28 @@ class Entry < ApplicationRecord
   end
 
   def self.popular_tags(limit = 10)
-    # Get tag IDs from 'tags' or 'locations' contexts
-    valid_tag_ids = ActsAsTaggableOn::Tagging
-      .where(context: ['tags', 'locations'])
-      .distinct
-      .pluck(:tag_id)
-
-    # Get tag IDs from 'equipment' or 'styles' contexts to exclude
     excluded_tag_ids = ActsAsTaggableOn::Tagging
       .where(context: ['equipment', 'styles'])
-      .distinct
-      .pluck(:tag_id)
-
-    # Subtract excluded from valid
-    filtered_tag_ids = valid_tag_ids - excluded_tag_ids
+      .distinct.select(:tag_id)
 
     ActsAsTaggableOn::Tag
-      .where(id: filtered_tag_ids)
+      .joins(:taggings)
+      .where(taggings: { context: ['tags', 'locations'] })
+      .where.not(id: excluded_tag_ids)
+      .distinct
       .order(taggings_count: :desc)
       .limit(limit)
   end
 
   def self.most_recently_used_tags(limit = 10)
-    # Get tag IDs from 'tags' or 'locations' contexts
-    valid_tag_ids = ActsAsTaggableOn::Tagging
-      .where(context: ['tags', 'locations'])
-      .distinct
-      .pluck(:tag_id)
-
-    # Get tag IDs from 'equipment' or 'styles' contexts to exclude
     excluded_tag_ids = ActsAsTaggableOn::Tagging
       .where(context: ['equipment', 'styles'])
-      .distinct
-      .pluck(:tag_id)
+      .distinct.select(:tag_id)
 
-    # Subtract excluded from valid
-    filtered_tag_ids = valid_tag_ids - excluded_tag_ids
-
-    # Get the most recent tagging date for each tag
     ActsAsTaggableOn::Tag
-      .where(id: filtered_tag_ids)
       .joins(:taggings)
+      .where(taggings: { context: ['tags', 'locations'] })
+      .where.not(id: excluded_tag_ids)
       .group('tags.id')
       .order('MAX(taggings.created_at) DESC')
       .limit(limit)

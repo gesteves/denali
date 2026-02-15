@@ -166,7 +166,8 @@ class EntriesController < ApplicationController
 
   def random
     scope = Entry.published.where('published_at >= ?', 4.years.ago)
-    entry = scope.offset(rand(scope.count)).limit(1).first!
+    count = scope.count
+    entry = scope.offset(rand(count)).limit(1).first!
     response.headers['Cache-Control'] = "s-maxage=1, max-age=0, public"
     redirect_to entry.permalink_url, status: 302
   end
