@@ -3,13 +3,13 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_action :get_photoblog
+  before_action :set_photoblog
   before_action :domain_redirect
   before_action :set_referrer_policy
   before_action :preload_assets
   around_action :set_time_zone
 
-  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?, :add_preconnect_link_header, :add_preload_link_header
+  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?
 
   def default_url_options
     Rails.application.routes.default_url_options
@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
   end
 
-  def get_photoblog
+  def set_photoblog
     @photoblog = Blog.first
   end
 
