@@ -8,25 +8,34 @@ RSpec.describe "Oembed", type: :request do
 
   before do
     attach_image_to_photo(photo)
-    # The image dimensions come from the attached blob's metadata
-    # rusty.jpg fixture should provide the dimensions automatically
   end
 
   describe "GET /oembed" do
-    # Use full URL with host, as oEmbed clients typically provide
-    # Must use entry_long_path because find_by_url expects entries#show action
     let(:entry_full_url) { "http://localhost:3000#{entry_long_path(entry)}" }
 
-    it "renders JSON successfully" do
+    it "renders JSON with correct response body" do
       get "/oembed.json", params: { url: entry_full_url }
       expect(response).to have_http_status(:success)
       expect(response.content_type).to include("application/json")
+      json = JSON.parse(response.body)
+      expect(json["type"]).to eq("photo")
+      expect(json["version"]).to eq("1.0")
+      expect(json["title"]).to eq(entry.plain_title)
+      expect(json["author_name"]).to eq(user.name)
+      expect(json["url"]).to be_present
+      expect(json["width"]).to be_a(Integer)
+      expect(json["height"]).to be_a(Integer)
+      expect(json["thumbnail_url"]).to be_present
+      expect(json["thumbnail_width"]).to be_a(Integer)
+      expect(json["thumbnail_height"]).to be_a(Integer)
     end
 
-    it "renders XML successfully" do
+    it "renders XML with correct root element" do
       get "/oembed.xml", params: { url: entry_full_url }
       expect(response).to have_http_status(:success)
       expect(response.content_type).to include("application/xml")
+      expect(response.body).to include("<oembed>")
+      expect(response.body).not_to include("<ombed>")
     end
 
     it "defaults to JSON format" do
@@ -46,14 +55,16 @@ RSpec.describe "Oembed", type: :request do
       expect(json["height"]).to be <= 600
     end
 
-    it "handles entry without photos gracefully" do
-      # When photos are destroyed, photos_have_dimensions? returns true for empty array
-      # The controller may return empty response or 200 status
+    it "returns 404 for an entry without photos" do
       entry.photos.destroy_all
       entry.reload
       get "/oembed.json", params: { url: entry_full_url }
-      # Just verify we get a response (behavior depends on implementation)
-      expect([200, 404]).to include(response.status)
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for an invalid URL" do
+      get "/oembed.json", params: { url: "http://localhost:3000/nonexistent/path" }
+      expect(response).to have_http_status(:not_found)
     end
   end
 end

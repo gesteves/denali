@@ -1,5 +1,5 @@
 xml.instruct!
-xml.ombed do
+xml.oembed do
   xml.type @entry.is_photo? ? 'photo' : 'link'
   xml.version '1.0'
   xml.title @entry.plain_title

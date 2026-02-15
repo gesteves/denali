@@ -913,7 +913,7 @@ class Entry < ApplicationRecord
   end
 
   def photos_have_dimensions?
-    photos.all? { |p| p.has_dimensions? }
+    photos.any? && photos.all? { |p| p.has_dimensions? }
   end
 
   def enqueue_caption_validity_job
