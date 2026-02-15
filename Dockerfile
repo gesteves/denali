@@ -11,6 +11,7 @@ RUN apt-get update -qq && \
     curl \
     gnupg \
     imagemagick \
+    libjemalloc2 \
     libpq5 \
     libvips42 \
     libyaml-0-2 \
@@ -83,4 +84,5 @@ RUN groupadd --system --gid 1000 rails && \
 USER rails:rails
 
 EXPOSE 3000
+ENTRYPOINT ["/app/bin/docker-entrypoint"]
 CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]
