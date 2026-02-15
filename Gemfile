@@ -24,6 +24,7 @@ gem 'turbo-rails'
 # Images
 gem 'ruby-thumbor'
 gem 'blurhash', git: 'https://github.com/gesteves/blurhash', branch: 'master'
+gem 'mini_magick'
 
 # Misc
 gem 'jbuilder', '~> 2.14'
@@ -34,11 +35,8 @@ gem 'exifr', require: nil
 gem 'acts-as-taggable-on'
 gem 'httparty', '~> 0.24'
 gem 'kaminari'
-gem 'oauth'
-gem "image_processing", "~> 1.14"
 gem 'rack-brotli'
 gem 'htmlentities'
-gem 'public_suffix'
 gem 'web-push'
 
 # Monitoring
