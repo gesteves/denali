@@ -12,7 +12,6 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops, :territories]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
-    preload_fonts
     @srcset = PHOTOS[:entry_list][:srcset]
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
     @page_url = @page == 1 ? entries_url(page: nil) : entries_url(page: @page)
@@ -50,7 +49,6 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops, :territories]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
-    preload_fonts
     @srcset = PHOTOS[:entry_list][:srcset]
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
     @page_url = @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page)
@@ -145,7 +143,6 @@ class EntriesController < ApplicationController
     @srcset = PHOTOS[:entry][:srcset]
     @src = PHOTOS[:entry][:src]
     @sizes = PHOTOS[:entry][:sizes].join(', ')
-    preload_fonts
     respond_to do |format|
       format.html {
         redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path

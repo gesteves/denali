@@ -3,7 +3,6 @@ class BlogsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
   def about
-    preload_fonts
     @page_title = "About – #{@photoblog.name}"
     respond_to do |format|
       format.html
