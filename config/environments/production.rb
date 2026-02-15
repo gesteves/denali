@@ -19,18 +19,6 @@ Rails.application.configure do
   config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
   config.public_file_server.headers = { 'Cache-Control' => 'public, max-age=31536000, immutable' }
 
-  # Compress CSS using a preprocessor.
-  # config.assets.css_compressor = :sass
-
-  # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
-
-  # Disable asset gzipping so it's handled by deflate & brotli middleware.
-  config.assets.gzip = false
-
-  # Bump this to force assets to recompile
-  config.assets.version = '1'
-
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   config.action_controller.asset_host = ENV['ASSET_HOST'] if ENV['ASSET_HOST'].present?
 

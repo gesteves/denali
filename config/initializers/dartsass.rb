@@ -1,5 +1,5 @@
 Rails.application.config.dartsass.builds = {
-  "application.scss" => "main.css",
+  "application.scss" => "application.css",
   "admin.scss" => "admin.css",
   "print.scss" => "print.css"
 }

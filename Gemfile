@@ -16,11 +16,10 @@ gem 'omniauth-rails_csrf_protection'
 gem 'aws-sdk-s3', '~> 1'
 
 # Front-end things
+gem 'propshaft'
 gem 'dartsass-rails'
-gem 'autoprefixer-rails'
 gem 'jsbundling-rails'
 gem 'turbo-rails'
-gem "sprockets-rails"
 
 # Images
 gem 'ruby-thumbor'

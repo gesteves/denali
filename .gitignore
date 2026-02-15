@@ -35,6 +35,7 @@
 /public/packs
 /public/packs-test
 /app/assets/builds/*
+/public/assets
 !/app/assets/builds/.keep
 /node_modules
 *.dump

@@ -57,9 +57,6 @@ Rails.application.configure do
   # Use Sidekiq for Active Job (matches production)
   config.active_job.queue_adapter = :sidekiq
 
-  # Suppress logger output for asset requests.
-  config.assets.quiet = true
-
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
