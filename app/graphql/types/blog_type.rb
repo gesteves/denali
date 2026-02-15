@@ -16,7 +16,7 @@ module Types
     field :show_related_entries, Boolean, null: true, description: "Show related entries in entry pages"
     field :show_search, Boolean, null: true, description: "Enable search on the site"
     field :time_zone, String, null: true, description: "Time zone the blog publishes in"
-    field :entries, [Types::EntryType], null: true, description: "The list of published entries in this blog" do
+    field :entries, Types::EntryPageType, null: false, description: "The list of published entries in this blog" do
       argument :page, Integer, default_value: 1, required: false
       argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }
     end
@@ -30,7 +30,14 @@ module Types
     end
 
     def entries(page:, count:)
-      object.entries.includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film], taggings: :tag).published.page(page).per(count)
+      entries = object.entries.with_graphql_includes.published.page(page).per(count)
+      {
+        entries: entries,
+        total_count: entries.total_count,
+        page: page,
+        total_pages: entries.total_pages,
+        has_next_page: page < entries.total_pages
+      }
     end
   end
 end

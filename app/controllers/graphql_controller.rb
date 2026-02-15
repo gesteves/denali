@@ -1,6 +1,7 @@
 class GraphqlController < ApplicationController
   skip_before_action :verify_authenticity_token
   skip_before_action :domain_redirect
+  before_action :set_cors_headers
 
   def execute
     variables = ensure_hash(params[:variables])
@@ -11,9 +12,13 @@ class GraphqlController < ApplicationController
     }
     result = DenaliSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
-  rescue => e
-    raise e unless Rails.env.development?
-    handle_error_in_development e
+  rescue StandardError => e
+    if Rails.env.development?
+      handle_error_in_development(e)
+    else
+      Rails.logger.error("GraphQL error: #{e.message}")
+      render json: { errors: [{ message: "Internal server error" }] }, status: 500
+    end
   end
 
   def options

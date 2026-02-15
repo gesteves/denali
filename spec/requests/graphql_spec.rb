@@ -49,9 +49,15 @@ RSpec.describe "GraphQL", type: :request do
               id
               name
               entries(page: 1, count: 10) {
-                id
-                title
-                status
+                entries {
+                  id
+                  title
+                  status
+                }
+                totalCount
+                page
+                totalPages
+                hasNextPage
               }
             }
           }
@@ -60,7 +66,11 @@ RSpec.describe "GraphQL", type: :request do
         result = execute_query(query)
 
         expect(response).to have_http_status(:success)
-        expect(result['data']['blog']['entries'].length).to eq(3)
+        entries_data = result['data']['blog']['entries']
+        expect(entries_data['entries'].length).to eq(3)
+        expect(entries_data['totalCount']).to eq(3)
+        expect(entries_data['page']).to eq(1)
+        expect(entries_data['hasNextPage']).to eq(false)
       end
 
       it "limits entries count to maximum of 100" do
@@ -72,7 +82,9 @@ RSpec.describe "GraphQL", type: :request do
           query {
             blog {
               entries(count: 200) {
-                id
+                entries {
+                  id
+                }
               }
             }
           }
@@ -210,13 +222,19 @@ RSpec.describe "GraphQL", type: :request do
         end
       end
 
-      it "returns paginated entries" do
+      it "returns paginated entries with metadata" do
         query = <<~GRAPHQL
           query {
             entries(page: 1, count: 3) {
-              id
-              title
-              status
+              entries {
+                id
+                title
+                status
+              }
+              totalCount
+              page
+              totalPages
+              hasNextPage
             }
           }
         GRAPHQL
@@ -224,15 +242,23 @@ RSpec.describe "GraphQL", type: :request do
         result = execute_query(query)
 
         expect(response).to have_http_status(:success)
-        expect(result['data']['entries'].length).to eq(3)
+        page_data = result['data']['entries']
+        expect(page_data['entries'].length).to eq(3)
+        expect(page_data['totalCount']).to eq(5)
+        expect(page_data['page']).to eq(1)
+        expect(page_data['totalPages']).to eq(2)
+        expect(page_data['hasNextPage']).to eq(true)
       end
 
       it "returns second page of entries" do
         query = <<~GRAPHQL
           query {
             entries(page: 2, count: 3) {
-              id
-              title
+              entries {
+                id
+                title
+              }
+              hasNextPage
             }
           }
         GRAPHQL
@@ -240,14 +266,18 @@ RSpec.describe "GraphQL", type: :request do
         result = execute_query(query)
 
         expect(response).to have_http_status(:success)
-        expect(result['data']['entries'].length).to eq(2)
+        page_data = result['data']['entries']
+        expect(page_data['entries'].length).to eq(2)
+        expect(page_data['hasNextPage']).to eq(false)
       end
 
       it "limits count to maximum of 100" do
         query = <<~GRAPHQL
           query {
             entries(count: 150) {
-              id
+              entries {
+                id
+              }
             }
           }
         GRAPHQL
@@ -275,7 +305,7 @@ RSpec.describe "GraphQL", type: :request do
         end
       end
 
-      it "returns search results", :vcr do
+      it "returns search results with pagination metadata", :vcr do
         # Stub Elasticsearch search when not available (e.g., in CI)
         mock_results = double(
           results: double(total: 0),
@@ -286,8 +316,14 @@ RSpec.describe "GraphQL", type: :request do
         query = <<~GRAPHQL
           query($term: String!) {
             search(term: $term, page: 1, count: 10) {
-              id
-              title
+              entries {
+                id
+                title
+              }
+              totalCount
+              page
+              totalPages
+              hasNextPage
             }
           }
         GRAPHQL
@@ -295,7 +331,10 @@ RSpec.describe "GraphQL", type: :request do
         result = execute_query(query, variables: { term: 'Mountain' })
 
         expect(response).to have_http_status(:success)
-        expect(result['data']['search']).to be_an(Array)
+        page_data = result['data']['search']
+        expect(page_data['entries']).to be_an(Array)
+        expect(page_data['totalCount']).to be_a(Integer)
+        expect(page_data['page']).to eq(1)
       end
     end
 
@@ -476,6 +515,30 @@ RSpec.describe "GraphQL", type: :request do
         expect(result['data']['shareOnBluesky']['errors']).to be_empty
         expect(BlueskyJob.jobs.size).to eq(1)
       end
+
+      it "returns error for non-existent entry" do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('GRAPHQL_AUTH_TOKEN').and_return('test-token')
+
+        result = execute_query(mutation, variables: { url: 'https://example.com/nonexistent' }, auth_token: 'test-token')
+
+        expect(response).to have_http_status(:success)
+        expect(result['errors']).to be_present
+        expect(result['errors'].first['message']).to eq("Entry not found")
+      end
+
+      it "returns generic error when an unexpected error occurs" do
+        allow(ENV).to receive(:[]).and_call_original
+        allow(ENV).to receive(:[]).with('GRAPHQL_AUTH_TOKEN').and_return('test-token')
+        allow(BlueskyJob).to receive(:perform_async).and_raise(StandardError, "connection failed")
+
+        result = execute_query(mutation, variables: { url: entry.permalink_url }, auth_token: 'test-token')
+
+        expect(response).to have_http_status(:success)
+        mutation_data = result['data']['shareOnBluesky']
+        expect(mutation_data['entry']).to be_nil
+        expect(mutation_data['errors']).to eq(["Something went wrong"])
+      end
     end
   end
 
@@ -485,6 +548,25 @@ RSpec.describe "GraphQL", type: :request do
 
       expect(response).to have_http_status(:success)
       expect(response.body).to eq('OK')
+    end
+  end
+
+  describe "CORS headers" do
+    it "includes CORS headers on POST requests" do
+      execute_query("{ blog { id } }")
+
+      expect(response).to have_http_status(:success)
+      expect(response.headers['Access-Control-Allow-Origin']).to eq('*')
+      expect(response.headers['Access-Control-Allow-Methods']).to eq('POST')
+      expect(response.headers['Access-Control-Allow-Headers']).to include('content-type')
+    end
+
+    it "includes CORS headers on OPTIONS requests" do
+      process :options, graphql_path
+
+      expect(response).to have_http_status(:success)
+      expect(response.headers['Access-Control-Allow-Origin']).to eq('*')
+      expect(response.headers['Access-Control-Allow-Methods']).to eq('POST')
     end
   end
 
@@ -514,6 +596,20 @@ RSpec.describe "GraphQL", type: :request do
       expect(response).to have_http_status(:success)
       result = JSON.parse(response.body)
       expect(result['data']['blog']).to be_present
+    end
+
+    it "returns structured JSON error in production" do
+      allow(Rails.env).to receive(:development?).and_return(false)
+      allow(DenaliSchema).to receive(:execute).and_raise(StandardError, "unexpected error")
+
+      post graphql_path,
+           params: { query: "{ blog { id } }" }.to_json,
+           headers: { 'Content-Type' => 'application/json' }
+
+      expect(response).to have_http_status(:internal_server_error)
+      result = JSON.parse(response.body)
+      expect(result['errors']).to be_present
+      expect(result['errors'].first['message']).to eq("Internal server error")
     end
   end
 end

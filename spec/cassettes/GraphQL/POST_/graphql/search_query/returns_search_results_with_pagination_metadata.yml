@@ -1,0 +1,38 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: http://elasticsearch:9200/entries/_refresh
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - 'elasticsearch-ruby/8.19.3; elastic-transport-ruby/8.4.1; RUBY_VERSION: 4.0.1;
+        linux aarch64'
+      X-Elastic-Client-Meta:
+      - es=8.19.3,rb=4.0.1,t=8.4.1,fd=2.14.1,nh=0.9.1
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '0'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Elastic-Product:
+      - Elasticsearch
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '49'
+    body:
+      encoding: ASCII-8BIT
+      string: '{"_shards":{"total":2,"successful":1,"failed":0}}'
+  recorded_at: Sun, 15 Feb 2026 16:42:51 GMT
+recorded_with: VCR 6.4.0

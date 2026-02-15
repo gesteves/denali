@@ -103,6 +103,10 @@ class Entry < ApplicationRecord
                            :tag_slugs])
   end
 
+  scope :with_graphql_includes, -> {
+    includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :territories], taggings: :tag)
+  }
+
   def self.published(order = 'entries.published_at DESC')
     where(status: 'published').order(order)
   end
@@ -434,7 +438,7 @@ class Entry < ApplicationRecord
       results = Entry.search(related_query(count))
       # Preserve Elasticsearch score order by fetching IDs first, then reordering
       hit_ids = results.response.hits.hits.map { |h| h._id.to_i }
-      records_by_id = Entry.includes(photos: [:image_attachment, :image_blob, :crops]).where(id: hit_ids).index_by(&:id)
+      records_by_id = Entry.includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :territories, :crops], taggings: :tag).where(id: hit_ids).index_by(&:id)
       hit_ids.map { |id| records_by_id[id] }.compact
     rescue => e
       logger.error "Fetching related entries failed with the following error: #{e}"
