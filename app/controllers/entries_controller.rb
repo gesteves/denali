@@ -181,8 +181,7 @@ class EntriesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @entries.empty?
     respond_to do |format|
       format.atom
-      format.rss
-      format.all { redirect_to feed_url(format: 'atom') }
+      format.all { redirect_to feed_url(format: 'atom'), status: 301 }
     end
   end
 
@@ -192,8 +191,7 @@ class EntriesController < ApplicationController
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     respond_to do |format|
       format.atom
-      format.rss
-      format.all { redirect_to tag_feed_url(format: 'atom', tag: @tag_slug) }
+      format.all { redirect_to tag_feed_url(format: 'atom', tag: @tag_slug), status: 301 }
     end
   end
 

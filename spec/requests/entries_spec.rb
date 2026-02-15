@@ -43,12 +43,12 @@ RSpec.describe "Entries", type: :request do
       expect(response.media_type).to eq('application/atom+xml')
     end
 
-    it "generates rss feed" do
+    it "redirects rss to atom feed" do
       get feed_path(format: 'rss')
-      expect(response).to have_http_status(:success)
+      expect(response).to redirect_to(feed_url(format: 'atom', page: nil))
     end
 
-    it "redirects to atom feed from unknown format" do
+    it "redirects unknown format to atom feed" do
       get feed_path(format: 'foo')
       expect(response).to redirect_to(feed_url(format: 'atom', page: nil))
     end
@@ -149,12 +149,12 @@ RSpec.describe "Entries", type: :request do
       expect(response).to have_http_status(:success)
     end
 
-    it "renders rss feed" do
+    it "redirects rss to atom feed" do
       get tag_feed_path(tag: 'washington', format: 'rss')
-      expect(response).to have_http_status(:success)
+      expect(response).to redirect_to(tag_feed_url(format: 'atom', page: nil, tag: 'washington'))
     end
 
-    it "redirects from unknown format" do
+    it "redirects unknown format to atom feed" do
       get tag_feed_path(tag: 'washington', format: 'foo')
       expect(response).to redirect_to(tag_feed_url(format: 'atom', page: nil, tag: 'washington'))
     end
