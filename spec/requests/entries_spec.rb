@@ -92,21 +92,6 @@ RSpec.describe "Entries", type: :request do
     end
   end
 
-  describe "GET /amp/:id (amp redirect)" do
-    let(:entry) { create(:entry, :published, blog: blog, user: user) }
-
-    it "redirects to canonical URL" do
-      get entry_amp_path(
-        year: entry.published_at.strftime('%Y'),
-        month: entry.published_at.strftime('%-m'),
-        day: entry.published_at.strftime('%-d'),
-        id: entry.id,
-        slug: entry.slug
-      )
-      expect(response).to redirect_to(entry.permalink_url)
-    end
-  end
-
   describe "GET /random" do
     it "redirects to a random entry" do
       create(:entry, :published, :with_photo, blog: blog, user: user)

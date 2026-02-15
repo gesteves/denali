@@ -155,11 +155,10 @@ Rails.application.routes.draw do
   get '/signout'                       => 'sessions#destroy', as: :signout
 
   # Legacy routes & redirects
-  get '/archive(/:year)(/:month)'           => 'legacy#home'
-  get '/index.html'                         => 'legacy#home'
-  get '/rss'                                => 'legacy#feed'
-  get '/:year/:month/:day/:id(/:slug)'      => 'entries#show',   constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }
-  get '/amp/:year/:month/:day/:id(/:slug)'  => 'entries#amp',    constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }, defaults: { format: 'html' }, as: :entry_amp
+  get '/archive(/:year)(/:month)', to: redirect('/', status: 301)
+  get '/index.html',               to: redirect('/', status: 301)
+  get '/rss',                      to: redirect('/feed', status: 301)
+  get '(/amp)/:year/:month/:day/:id(/:slug)' => redirect('/%{id}/%{slug}', status: 301), constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }
 
   # Oembed
   get '/oembed.:format'                => 'oembed#show', as: :oembed
