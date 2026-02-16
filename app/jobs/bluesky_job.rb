@@ -20,7 +20,7 @@ class BlueskyJob < ApplicationJob
     bluesky.skeet(text: text, photos: photos, in_reply_to: in_reply_to, quote: quote)
 
     unless in_reply_to.present? || quote.present?
-      entry.update!(
+      entry.update_columns(
         last_shared_on_bluesky_at: Time.current,
         bluesky_shares_count: entry.bluesky_shares_count + 1
       )

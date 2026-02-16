@@ -32,7 +32,7 @@ class ThreadsJob < ApplicationJob
       location_id: entry.photos.first.threads_location_id
     )
 
-    entry.update!(
+    entry.update_columns(
       last_shared_on_threads_at: Time.current,
       threads_shares_count: entry.threads_shares_count + 1
     )

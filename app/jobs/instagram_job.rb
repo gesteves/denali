@@ -26,7 +26,7 @@ class InstagramJob < ApplicationJob
       caption: text,
       location_id: location_id
     )
-    entry.update!(
+    entry.update_columns(
       last_shared_on_instagram_at: Time.current,
       instagram_shares_count: entry.instagram_shares_count + 1
     )
