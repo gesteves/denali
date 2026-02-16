@@ -71,7 +71,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_referrer_policy
-    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Referrer-Policy'] = 'no-referrer-when-downgrade'
   end
 
   def set_time_zone(&block)
