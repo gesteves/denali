@@ -1,11 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe DarkVisitors do
+RSpec.describe KnownAgents do
   let(:access_token) { 'test_api_key' }
-  let(:dark_visitors) { described_class.new(access_token: access_token) }
+  let(:known_agents) { described_class.new(access_token: access_token) }
 
   describe '#robots_txt' do
-    let(:api_endpoint) { "#{described_class::DARK_VISITORS_API_URL}/robots-txts" }
+    let(:api_endpoint) { "#{described_class::API_URL}/robots-txts" }
     let(:robots_txt_response) do
       <<~ROBOTS
         User-agent: GPTBot
@@ -29,13 +29,13 @@ RSpec.describe DarkVisitors do
       end
 
       it 'returns the robots.txt content' do
-        result = dark_visitors.robots_txt
+        result = known_agents.robots_txt
         expect(result).to include('User-agent: GPTBot')
         expect(result).to include('Disallow: /')
       end
 
       it 'sends default agent types' do
-        dark_visitors.robots_txt
+        known_agents.robots_txt
         expect(WebMock).to have_requested(:post, api_endpoint)
           .with(body: hash_including(
             agent_types: ['AI Data Scraper', 'Undocumented AI Agent'],
@@ -44,7 +44,7 @@ RSpec.describe DarkVisitors do
       end
 
       it 'accepts custom agent types' do
-        dark_visitors.robots_txt(agent_types: ['AI Search Crawler'], disallow: '/private')
+        known_agents.robots_txt(agent_types: ['AI Search Crawler'], disallow: '/private')
         expect(WebMock).to have_requested(:post, api_endpoint)
           .with(body: hash_including(
             agent_types: ['AI Search Crawler'],
@@ -60,7 +60,7 @@ RSpec.describe DarkVisitors do
       end
 
       it 'returns nil' do
-        result = dark_visitors.robots_txt
+        result = known_agents.robots_txt
         expect(result).to be_nil
       end
     end
@@ -69,7 +69,7 @@ RSpec.describe DarkVisitors do
       let(:access_token) { '' }
 
       it 'returns nil without making a request' do
-        result = dark_visitors.robots_txt
+        result = known_agents.robots_txt
         expect(result).to be_nil
         expect(WebMock).not_to have_requested(:post, api_endpoint)
       end
@@ -79,7 +79,7 @@ RSpec.describe DarkVisitors do
       let(:access_token) { nil }
 
       it 'returns nil without making a request' do
-        result = dark_visitors.robots_txt
+        result = known_agents.robots_txt
         expect(result).to be_nil
         expect(WebMock).not_to have_requested(:post, api_endpoint)
       end
@@ -88,7 +88,7 @@ RSpec.describe DarkVisitors do
 
   describe 'constants' do
     it 'has correct API URL' do
-      expect(described_class::DARK_VISITORS_API_URL).to eq('https://api.darkvisitors.com')
+      expect(described_class::API_URL).to eq('https://api.knownagents.com')
     end
 
     it 'has correct default agent types' do
