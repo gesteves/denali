@@ -18,7 +18,6 @@ require 'rspec/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
 require 'webmock/rspec'
 require 'vcr'
-require 'sidekiq/testing'
 require 'rspec-sidekiq'
 
 # Configure OmniAuth for testing
@@ -91,7 +90,7 @@ RSpec.configure do |config|
 
   # Sidekiq testing mode
   config.before(:each) do
-    Sidekiq::Testing.fake!
+    Sidekiq.testing!(:fake)
     Sidekiq::Job.clear_all
   end
 
