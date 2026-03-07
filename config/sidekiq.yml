@@ -15,43 +15,43 @@
       class: RandomShareJob
       queue: high
       args: ['Cherry Blossoms', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 1, []]
-      description: "Share a random cherry blossom photo on Bluesky, Mastodon, Instagram and Threads once a day in April."
+      description: "Share a random cherry blossom photo once a day in April."
     random_landscape:
       cron: '0 14 * * *'  # Run at 2:00 PM ET every day
       class: RandomShareJob
       queue: high
       args: ['Landscapes', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 12, 'Cherry Blossoms']
-      description: "Shares a random landscape photo on Bluesky, Mastodon, Instagram and Threads once a day."
+      description: "Share a random landscape photo once a day."
     random_when_no_new_photo:
       cron: '1 10 * * *'  # Run at 10:01 AM ET every day
       class: RandomShareJob
       queue: high
       args: [[], ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 12, 'Cherry Blossoms']
-      description: "Share a random photo on Bluesky, Mastodon, Instagram and Threads once a day at 10:01 AM ET, unless a new photo was published."
+      description: "Share a random photo once a day, unless a new photo was published."
     random_once_a_day:
       cron: '0 16 * 4 *'  # Run at 4:00 PM ET every day
       class: RandomShareJob
       queue: high
       args: [[], ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 12, 'Cherry Blossoms']
-      description: "Share a random photo on Bluesky, Mastodon, Instagram and Threads once a day in April."
+      description: "Share a random photo once a day in April."
     random_twice_a_day:
       cron: '0 12,16 * 1,2,3,5,6,7,8,9,10,11,12 *'  # Run at 12:00 PM ET and 4:00 PM ET every day, except in April
       class: RandomShareJob
       queue: high
       args: [[], ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 12, 'Cherry Blossoms']
-      description: "Share a random photo on Bluesky, Mastodon, Instagram and Threads twice a day, except in April."
+      description: "Share a random photo twice a day, except in April."
     random_wildlife:
       cron: '0 18 * * *'  # Run at 6:00 PM ET every day
       class: RandomShareJob
       queue: high
       args: ['Wildlife', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 12, 'Cherry Blossoms']
-      description: "Shares a random wildlife photo on Bluesky, Mastodon, Instagram and Threads once a day."
+      description: "Shares a random wildlife photo once a day."
     superbowl:
       cron: '59 11,13,15,17 14 2 *'  # Run at 11:59 AM, 1:59 PM, 3:59 PM, and 5:59 PM ET on February 14
       class: RandomShareJob
       queue: high
       args: ['Great Gray Owls', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 1, [], true]
-      description: "Share a random Great Gray Owls photo immediately on Bluesky, Mastodon, Instagram and Threads during the Super Bowl."
+      description: "Share a random Great Gray Owls photo during the Super Bowl."
     database_backup:
       cron: '0 3 * * *'  # Run at 3:00 AM every day
       class: DatabaseBackupJob
