@@ -213,6 +213,28 @@ RSpec.describe "Admin::Entries", type: :request do
     end
   end
 
+  describe "GET /admin/entries/random/:platform/:schedule_name" do
+    it "renders successfully for a valid schedule and platform" do
+      get admin_randomly_shareable_path(platform: 'bluesky', schedule_name: 'random_landscape')
+      expect(response).to have_http_status(:success)
+    end
+
+    it "returns 404 for a nonexistent schedule name" do
+      get admin_randomly_shareable_path(platform: 'bluesky', schedule_name: 'nonexistent')
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for a schedule that is not a RandomShareJob" do
+      get admin_randomly_shareable_path(platform: 'bluesky', schedule_name: 'publish_queued_entries')
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns 404 for an invalid platform" do
+      get admin_randomly_shareable_path(platform: 'twitter', schedule_name: 'random_landscape')
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
   describe "POST /admin/entries/queued/update" do
     it "properly sorts queue" do
       entry1 = create(:entry, :queued, blog: blog, user: user, position: 1)

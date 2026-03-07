@@ -16,10 +16,7 @@ Rails.application.routes.draw do
   namespace :admin do
     get '/entries/tagged/:tag(/page/:page)'     => 'entries#tagged', constraints: { page: /\d+/ }, as: 'tagged_entries'
     get '/entries/review/alt-text(/page/:page)' => 'entries#alt_text_review_queue', constraints: { page: /\d+/ }, as: 'alt_text_review_queue'
-    get '/entries/bluesky(/page/:page)'            => 'entries#shareable_on_bluesky', constraints: { page: /\d+/ }, as: 'shareable_on_bluesky'
-    get '/entries/mastodon(/page/:page)'           => 'entries#shareable_on_mastodon', constraints: { page: /\d+/ }, as: 'shareable_on_mastodon'
-    get '/entries/threads(/page/:page)'            => 'entries#shareable_on_threads', constraints: { page: /\d+/ }, as: 'shareable_on_threads'
-    get '/entries/instagram(/page/:page)'          => 'entries#shareable_on_instagram', constraints: { page: /\d+/ }, as: 'shareable_on_instagram'
+    get '/entries/random/:platform/:schedule_name(/page/:page)' => 'entries#randomly_shareable', constraints: { page: /\d+/ }, as: 'randomly_shareable'
     get '/entries/unshareable(/page/:page)'        => 'entries#unshareable', constraints: { page: /\d+/ }, as: 'unshareable'
     get '/entries/search'             => 'entries#search', as: :search
     get '/entries/edit'               => 'entries#edit'

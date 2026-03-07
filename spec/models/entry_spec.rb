@@ -333,6 +333,79 @@ RSpec.describe Entry, type: :model do
     end
   end
 
+  describe '.eligible_for_random_share' do
+    let!(:shareable_entry) do
+      create(:entry, :published, blog: blog, user: user,
+             published_at: 2.years.ago,
+             post_to_bluesky: true,
+             post_to_mastodon: true,
+             post_to_instagram: true,
+             post_to_threads: true,
+             last_shared_on_bluesky_at: 2.years.ago,
+             last_shared_on_mastodon_at: 2.years.ago,
+             last_shared_on_instagram_at: 2.years.ago,
+             last_shared_on_threads_at: 2.years.ago,
+             bluesky_shares_count: 0,
+             mastodon_shares_count: 0,
+             instagram_shares_count: 0,
+             threads_shares_count: 0)
+    end
+
+    it 'returns published entries shareable on Bluesky' do
+      results = Entry.eligible_for_random_share(platform: 'Bluesky')
+      expect(results).to include(shareable_entry)
+    end
+
+    it 'returns published entries shareable on Mastodon' do
+      results = Entry.eligible_for_random_share(platform: 'Mastodon')
+      expect(results).to include(shareable_entry)
+    end
+
+    it 'returns published entries shareable on Instagram' do
+      results = Entry.eligible_for_random_share(platform: 'Instagram')
+      expect(results).to include(shareable_entry)
+    end
+
+    it 'returns published entries shareable on Threads' do
+      results = Entry.eligible_for_random_share(platform: 'Threads')
+      expect(results).to include(shareable_entry)
+    end
+
+    it 'excludes entries shared within not_shared_in period' do
+      shareable_entry.update!(last_shared_on_bluesky_at: 2.months.ago)
+      results = Entry.eligible_for_random_share(platform: 'Bluesky', not_shared_in: 1.month)
+      expect(results).to include(shareable_entry)
+
+      shareable_entry.update!(last_shared_on_bluesky_at: 1.day.ago)
+      results = Entry.eligible_for_random_share(platform: 'Bluesky', not_shared_in: 1.month)
+      expect(results).not_to include(shareable_entry)
+    end
+
+    it 'filters by tags when provided' do
+      shareable_entry.tag_list = 'Landscapes'
+      shareable_entry.save!
+
+      results = Entry.eligible_for_random_share(platform: 'Bluesky', tags: ['Landscapes'])
+      expect(results).to include(shareable_entry)
+
+      results = Entry.eligible_for_random_share(platform: 'Bluesky', tags: ['Wildlife'])
+      expect(results).not_to include(shareable_entry)
+    end
+
+    it 'excludes entries with excluded tags' do
+      shareable_entry.tag_list = 'Cherry Blossoms'
+      shareable_entry.save!
+
+      results = Entry.eligible_for_random_share(platform: 'Bluesky', excluded_tags: ['Cherry Blossoms'])
+      expect(results).not_to include(shareable_entry)
+    end
+
+    it 'returns nil for unknown platform' do
+      results = Entry.eligible_for_random_share(platform: 'Twitter')
+      expect(results).to be_nil
+    end
+  end
+
   describe 'territories' do
     let(:territory1) { create(:territory, name: 'Shoshone-Bannock') }
     let(:territory2) { create(:territory, name: 'Eastern Shoshone') }

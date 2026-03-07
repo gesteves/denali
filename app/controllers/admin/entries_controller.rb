@@ -70,61 +70,31 @@ class Admin::EntriesController < AdminController
     end
   end
 
-  def shareable_on_bluesky
-    set_srcset
-    @page = params[:page] || 1
-    @entries = @photoblog.entries.published
-      .shareable_on_bluesky
-      .with_minimum_bluesky_shares
-      .by_bluesky_share_priority
-      .includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag)
-      .page(@page)
-    @page_title = 'Shareable on Bluesky'
-    respond_to do |format|
-      format.html
-    end
-  end
+  def randomly_shareable
+    schedule = sidekiq_schedule[params[:schedule_name]]
+    raise ActiveRecord::RecordNotFound unless schedule && schedule['class'] == 'RandomShareJob'
 
-  def shareable_on_mastodon
-    set_srcset
-    @page = params[:page] || 1
-    @entries = @photoblog.entries.published
-      .shareable_on_mastodon
-      .with_minimum_mastodon_shares
-      .by_mastodon_share_priority
-      .includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag)
-      .page(@page)
-    @page_title = 'Shareable on Mastodon'
-    respond_to do |format|
-      format.html
-    end
-  end
+    platform = params[:platform]
+    raise ActiveRecord::RecordNotFound unless %w[bluesky mastodon threads instagram].include?(platform)
 
-  def shareable_on_threads
-    set_srcset
-    @page = params[:page] || 1
-    @entries = @photoblog.entries.published
-      .shareable_on_threads
-      .with_minimum_threads_shares
-      .by_threads_share_priority
-      .includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag)
-      .page(@page)
-    @page_title = 'Shareable on Threads'
-    respond_to do |format|
-      format.html
-    end
-  end
+    args = schedule['args'] || []
+    tags = Array(args[0])
+    platforms = Array(args[1])
+    not_shared_in_months = args[2]
+    excluded_tags = Array(args[3])
 
-  def shareable_on_instagram
+    platform_name = platform.capitalize
+    raise ActiveRecord::RecordNotFound unless platforms.include?(platform_name)
+
     set_srcset
     @page = params[:page] || 1
-    @entries = @photoblog.entries.published
-      .shareable_on_instagram
-      .with_minimum_instagram_shares
-      .by_instagram_share_priority
+    not_shared_in = (not_shared_in_months || 12).to_i.months
+    @entries = @photoblog.entries
+      .eligible_for_random_share(platform: platform_name, tags: tags, excluded_tags: excluded_tags, not_shared_in: not_shared_in)
+      .send("by_#{platform}_share_priority")
       .includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag)
       .page(@page)
-    @page_title = 'Shareable on Instagram'
+    @page_title = schedule['description'] || "Randomly shareable on #{platform_name}"
     respond_to do |format|
       format.html
     end
@@ -620,5 +590,12 @@ class Admin::EntriesController < AdminController
     def set_srcset
       @srcset = PHOTOS[:admin_entry][:srcset]
       @sizes = PHOTOS[:admin_entry][:sizes].join(', ')
+    end
+
+    def sidekiq_schedule
+      @sidekiq_schedule ||= YAML.safe_load(
+        ERB.new(File.read(Rails.root.join('config/sidekiq.yml'))).result,
+        permitted_classes: [Symbol]
+      ).dig(:scheduler, :schedule) || {}
     end
 end
