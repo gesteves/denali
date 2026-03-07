@@ -94,7 +94,8 @@ class Admin::EntriesController < AdminController
       .send("by_#{platform}_share_priority")
       .includes(:blog, photos: [:image_attachment, :image_blob], taggings: :tag)
       .page(@page)
-    @page_title = schedule['description'] || "Randomly shareable on #{platform_name}"
+    @page_title = "Randomly shareable on #{platform_name}"
+    @page_subtitle = schedule['description']
     respond_to do |format|
       format.html
     end
