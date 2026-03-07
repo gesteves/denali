@@ -47,7 +47,7 @@
       args: ['Wildlife', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 12, 'Cherry Blossoms']
       description: "Shares a random wildlife photo on Bluesky, Mastodon, Instagram and Threads once a day."
     superbowl:
-      cron: '59 11,13,15,17 8 2 *'  # Run at 11:59 AM, 1:59 PM, 3:59 PM, and 5:59 PM ET on February 8
+      cron: '59 11,13,15,17 14 2 *'  # Run at 11:59 AM, 1:59 PM, 3:59 PM, and 5:59 PM ET on February 14
       class: RandomShareJob
       queue: high
       args: ['Great Gray Owls', ['Bluesky', 'Mastodon', 'Instagram', 'Threads'], 1, [], true]
