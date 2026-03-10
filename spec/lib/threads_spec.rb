@@ -228,6 +228,45 @@ RSpec.describe Threads do
     end
   end
 
+  describe 'transient error handling' do
+    let(:threads_endpoint) { "#{described_class::THREADS_API_BASE}/#{threads_user_id}/threads" }
+    let(:threads) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
+
+    context 'when create_media_container returns a transient error' do
+      before do
+        stub_request(:post, threads_endpoint)
+          .with(query: hash_including(access_token: access_token))
+          .to_return(
+            status: 400,
+            body: { error: { message: 'An unexpected error has occurred.', type: 'OAuthException', is_transient: true, code: 2 } }.to_json
+          )
+      end
+
+      it 'raises MetaTransientError' do
+        expect {
+          threads.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'Test')
+        }.to raise_error(MetaTransientError, /Failed to create media container/)
+      end
+    end
+
+    context 'when create_media_container returns a non-transient error' do
+      before do
+        stub_request(:post, threads_endpoint)
+          .with(query: hash_including(access_token: access_token))
+          .to_return(
+            status: 400,
+            body: { error: { message: 'Invalid token', type: 'OAuthException', is_transient: false, code: 190 } }.to_json
+          )
+      end
+
+      it 'raises RuntimeError' do
+        expect {
+          threads.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'Test')
+        }.to raise_error(RuntimeError, /Failed to create media container/)
+      end
+    end
+  end
+
   describe 'constants' do
     it 'has correct API base URLs' do
       expect(described_class::THREADS_API_BASE).to eq('https://graph.threads.net/v1.0')

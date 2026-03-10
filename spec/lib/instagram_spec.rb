@@ -229,6 +229,23 @@ RSpec.describe Instagram do
         }.to raise_error(RuntimeError, /Failed to post comment/)
       end
     end
+
+    context 'with a transient error response' do
+      before do
+        stub_request(:post, comments_endpoint)
+          .with(query: { message: message })
+          .to_return(
+            status: 400,
+            body: { error: { message: 'An unexpected error has occurred.', type: 'OAuthException', is_transient: true, code: 2 } }.to_json
+          )
+      end
+
+      it 'raises MetaTransientError' do
+        expect {
+          instagram.post_comment(media_id: media_id, message: message)
+        }.to raise_error(MetaTransientError, /Failed to post comment/)
+      end
+    end
   end
 
   describe 'container status handling' do
@@ -285,6 +302,44 @@ RSpec.describe Instagram do
       it 'returns successfully' do
         response = instagram.post(photos: [photo], caption: 'Test')
         expect(response['id']).to eq('media_123')
+      end
+    end
+  end
+
+  describe 'transient error handling' do
+    let(:ig_account_id) { social_account.uid }
+    let(:media_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media" }
+    let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
+
+    context 'when create_media_container returns a transient error' do
+      before do
+        stub_request(:post, media_endpoint)
+          .to_return(
+            status: 400,
+            body: { error: { message: 'An unexpected error has occurred.', type: 'OAuthException', is_transient: true, code: 2 } }.to_json
+          )
+      end
+
+      it 'raises MetaTransientError' do
+        expect {
+          instagram.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'Test')
+        }.to raise_error(MetaTransientError, /Failed to create media container/)
+      end
+    end
+
+    context 'when create_media_container returns a non-transient error' do
+      before do
+        stub_request(:post, media_endpoint)
+          .to_return(
+            status: 400,
+            body: { error: { message: 'Invalid token', type: 'OAuthException', is_transient: false, code: 190 } }.to_json
+          )
+      end
+
+      it 'raises RuntimeError' do
+        expect {
+          instagram.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'Test')
+        }.to raise_error(RuntimeError, /Failed to create media container/)
       end
     end
   end

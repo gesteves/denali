@@ -1,0 +1,1 @@
+class MetaTransientError < StandardError; end
