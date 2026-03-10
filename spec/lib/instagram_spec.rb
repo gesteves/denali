@@ -233,6 +233,7 @@ RSpec.describe Instagram do
     context 'with a transient error response' do
       before do
         stub_request(:post, comments_endpoint)
+          .with(query: { message: message })
           .to_return(
             status: 400,
             body: { error: { message: 'An unexpected error has occurred.', type: 'OAuthException', is_transient: true, code: 2 } }.to_json
