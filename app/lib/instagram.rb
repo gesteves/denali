@@ -94,8 +94,7 @@ class Instagram
     if response.success?
       JSON.parse(response.body)
     else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to post comment: #{parsed_body}"
+      raise_api_error("Failed to post comment", response)
     end
   end
 
@@ -136,7 +135,7 @@ class Instagram
     unless response.success?
       parsed_body = JSON.parse(response.body) rescue response.body
       Rails.logger.error("[Instagram] Token refresh failed: #{parsed_body}")
-      raise "Failed to refresh Instagram token: #{parsed_body}"
+      raise_api_error("Failed to refresh Instagram token", response)
     end
 
     parsed = JSON.parse(response.body)
@@ -193,8 +192,7 @@ class Instagram
     if response.success?
       JSON.parse(response.body)['id']
     else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to create carousel container: #{parsed_body}"
+      raise_api_error("Failed to create carousel container", response)
     end
   end
 
@@ -224,8 +222,7 @@ class Instagram
     if response.success?
       JSON.parse(response.body)['id']
     else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to create story container: #{parsed_body}"
+      raise_api_error("Failed to create story container", response)
     end
   end
 
@@ -249,8 +246,7 @@ class Instagram
       parsed = JSON.parse(response.body)
       parsed['status_code']
     else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to check container status: #{parsed_body}"
+      raise_api_error("Failed to check container status", response)
     end
   end
 
@@ -279,8 +275,7 @@ class Instagram
     if response.success?
       JSON.parse(response.body)
     else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to publish media: #{parsed_body}"
+      raise_api_error("Failed to publish media", response)
     end
   end
 
@@ -347,8 +342,25 @@ class Instagram
     if response.success?
       JSON.parse(response.body)['id']
     else
-      parsed_body = JSON.parse(response.body) rescue response.body
-      raise "Failed to create media container: #{parsed_body}"
+      raise_api_error("Failed to create media container", response)
+    end
+  end
+
+  # Parses an API error response and raises the appropriate error class.
+  # Raises MetaTransientError for transient errors (which Sidekiq will retry silently)
+  # and RuntimeError for all other errors (which will be reported to Bugsnag).
+  #
+  # @param message [String] a description of the failed operation.
+  # @param response [HTTParty::Response] the failed HTTP response.
+  # @raise [MetaTransientError] if the error is transient.
+  # @raise [RuntimeError] if the error is not transient.
+  def raise_api_error(message, response)
+    parsed_body = JSON.parse(response.body) rescue response.body
+    is_transient = parsed_body.is_a?(Hash) && parsed_body.dig("error", "is_transient")
+    if is_transient
+      raise MetaTransientError, "#{message}: #{parsed_body}"
+    else
+      raise "#{message}: #{parsed_body}"
     end
   end
 end
