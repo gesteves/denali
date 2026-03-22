@@ -46,7 +46,7 @@ class RandomShareJob < ApplicationJob
     if share_immediately
       job_class.perform_async(entry_id, caption)
     else
-      job_class.perform_in(rand(0..59).minutes, entry_id, caption)
+      job_class.perform_in(rand(1..59).minutes, entry_id, caption)
     end
   end
 
