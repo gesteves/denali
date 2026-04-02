@@ -213,6 +213,8 @@ class Instagram
       'Authorization' => "Bearer #{access_token}"
     }
 
+    Rails.logger.info("[Instagram] Creating story container with image_url: #{photo_url}")
+
     response = HTTParty.post(
       "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media",
       body: body.to_json,
@@ -222,6 +224,7 @@ class Instagram
     if response.success?
       JSON.parse(response.body)['id']
     else
+      Rails.logger.error("[Instagram] Failed to create story container. image_url: #{photo_url}")
       raise_api_error("Failed to create story container", response)
     end
   end
@@ -333,6 +336,8 @@ class Instagram
       'Authorization' => "Bearer #{access_token}"
     }
 
+    Rails.logger.info("[Instagram] Creating media container with image_url: #{image_url}")
+
     response = HTTParty.post(
       "#{INSTAGRAM_GRAPH_API_BASE}/#{@ig_account_id}/media",
       body: body.to_json,
@@ -342,6 +347,7 @@ class Instagram
     if response.success?
       JSON.parse(response.body)['id']
     else
+      Rails.logger.error("[Instagram] Failed to create media container. image_url: #{image_url}")
       raise_api_error("Failed to create media container", response)
     end
   end

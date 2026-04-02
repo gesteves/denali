@@ -204,6 +204,8 @@ class Threads
       location_id: location_id
     }.compact
 
+    Rails.logger.info("[Threads] Creating media container with image_url: #{image_url}")
+
     response = HTTParty.post(
       "#{THREADS_API_BASE}/#{@threads_user_id}/threads",
       body: body,
@@ -213,6 +215,7 @@ class Threads
     if response.success?
       JSON.parse(response.body)['id']
     else
+      Rails.logger.error("[Threads] Failed to create media container. image_url: #{image_url}")
       raise_api_error("Failed to create media container", response)
     end
   end
