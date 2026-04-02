@@ -1,6 +1,5 @@
 class MediaController < ApplicationController
   skip_before_action :verify_authenticity_token
-  before_action :no_cache
 
   STYLES = {
     'instagram' => :instagram_url,
@@ -19,6 +18,8 @@ class MediaController < ApplicationController
       photo.send(style)
     end
 
-    redirect_to url, allow_other_host: true
+    image_response = HTTParty.get(url)
+    set_max_age
+    send_data image_response.body, type: image_response.content_type, disposition: 'inline'
   end
 end
