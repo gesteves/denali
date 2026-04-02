@@ -164,9 +164,6 @@ Rails.application.routes.draw do
   get '/about'                         => 'blogs#about', as: :about
   get '/elsewhere', to: redirect('/about', status: 301)
 
-  # Media redirects for social sharing
-  get '/photos/:photo_id/media/:style' => 'media#show', as: :photo_media
-
   # Miscellaneous
   get '/healthcheck'                   => 'health#show', as: :health_check
   get 'robots.:format'                 => 'robots#show', defaults: { format: 'txt' }

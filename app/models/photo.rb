@@ -154,18 +154,6 @@ class Photo < ApplicationRecord
     self.url(opts)
   end
 
-  def instagram_media_redirect_url
-    Rails.application.routes.url_helpers.photo_media_url(photo_id: self.id, style: 'instagram')
-  end
-
-  def instagram_story_media_redirect_url(crop: false)
-    Rails.application.routes.url_helpers.photo_media_url(photo_id: self.id, style: 'instagram_story', crop: crop)
-  end
-
-  def threads_media_redirect_url
-    Rails.application.routes.url_helpers.photo_media_url(photo_id: self.id, style: 'threads')
-  end
-
   def bluesky_url
     width = self.is_vertical? ? width_from_height(2000) : 2000
     opts = { width: width, format: 'jpeg', quality: 60 }
