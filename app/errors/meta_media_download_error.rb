@@ -1,0 +1,1 @@
+class MetaMediaDownloadError < StandardError; end
