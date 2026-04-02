@@ -42,10 +42,10 @@ RSpec.describe InstagramStoryJob, type: :worker do
     it 'posts story to Instagram' do
       instagram = instance_double(Instagram)
       allow(Instagram).to receive(:new).and_return(instagram)
-      allow_any_instance_of(Photo).to receive(:instagram_story_url).and_return('https://example.com/photo.jpg')
+      allow_any_instance_of(Photo).to receive(:instagram_story_media_redirect_url).and_return('https://example.com/photos/1/media/instagram_story')
 
       expect(instagram).to receive(:post_story).with(
-        hash_including(photo_url: 'https://example.com/photo.jpg')
+        hash_including(photo_url: 'https://example.com/photos/1/media/instagram_story')
       )
 
       described_class.new.perform(entry.id)
@@ -54,7 +54,7 @@ RSpec.describe InstagramStoryJob, type: :worker do
     it 'initializes Instagram with the connected social account' do
       instagram = instance_double(Instagram)
       allow(instagram).to receive(:post_story)
-      allow_any_instance_of(Photo).to receive(:instagram_story_url).and_return('https://example.com/photo.jpg')
+      allow_any_instance_of(Photo).to receive(:instagram_story_media_redirect_url).and_return('https://example.com/photos/1/media/instagram_story')
 
       expect(Instagram).to receive(:new).with(
         app_id: 'app_id',
@@ -70,7 +70,7 @@ RSpec.describe InstagramStoryJob, type: :worker do
       allow(Instagram).to receive(:new).and_return(instagram)
       allow(instagram).to receive(:post_story)
 
-      expect_any_instance_of(Photo).to receive(:instagram_story_url).with(crop: true)
+      expect_any_instance_of(Photo).to receive(:instagram_story_media_redirect_url).with(crop: true)
       described_class.new.perform(entry.id, true)
     end
   end

@@ -20,7 +20,7 @@ class ThreadsJob < ApplicationJob
 
     photos = entry.photos.limit(20).map do |p|
       {
-        url: p.threads_url,
+        url: p.threads_media_redirect_url,
         alt_text: p.alt_text
       }
     end
