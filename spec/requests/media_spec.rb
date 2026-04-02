@@ -49,15 +49,13 @@ RSpec.describe "Media", type: :request do
     end
 
     it "returns 404 for an invalid style" do
-      expect {
-        get photo_media_path(photo_id: photo.id, style: 'invalid')
-      }.to raise_error(ActionController::RoutingError)
+      get photo_media_path(photo_id: photo.id, style: 'invalid')
+      expect(response).to have_http_status(:not_found)
     end
 
     it "returns 404 for a non-existent photo" do
-      expect {
-        get photo_media_path(photo_id: 0, style: 'instagram')
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      get photo_media_path(photo_id: 0, style: 'instagram')
+      expect(response).to have_http_status(:not_found)
     end
   end
 end
