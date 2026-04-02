@@ -1,5 +1,5 @@
 class InstagramJob < ApplicationJob
-  sidekiq_options queue: 'high'
+  sidekiq_options queue: 'high', retry_for: 1.hour
 
   def perform(entry_id, text)
     return if !Rails.env.production?
