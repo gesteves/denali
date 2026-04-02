@@ -23,7 +23,7 @@ class InstagramStoryJob < ApplicationJob
     return if photo.blank?
 
     instagram.post_story(
-      photo_url: photo.instagram_story_media_redirect_url(crop: crop)
+      photo_url: photo.instagram_story_url(crop: crop)
     )
   end
 end
