@@ -353,18 +353,23 @@ class Instagram
   end
 
   # Parses an API error response and raises the appropriate error class.
-  # Raises MetaTransientError for transient errors (which Sidekiq will retry silently)
+  # Raises MetaTransientError for transient errors (which Sidekiq will retry silently),
+  # MetaMediaDownloadError for media download failures (error subcode 2207052),
   # and RuntimeError for all other errors (which will be reported to Bugsnag).
   #
   # @param message [String] a description of the failed operation.
   # @param response [HTTParty::Response] the failed HTTP response.
   # @raise [MetaTransientError] if the error is transient.
+  # @raise [MetaMediaDownloadError] if the error is a media download failure.
   # @raise [RuntimeError] if the error is not transient.
   def raise_api_error(message, response)
     parsed_body = JSON.parse(response.body) rescue response.body
     is_transient = parsed_body.is_a?(Hash) && parsed_body.dig("error", "is_transient")
+    error_subcode = parsed_body.is_a?(Hash) && parsed_body.dig("error", "error_subcode")
     if is_transient
       raise MetaTransientError, "#{message}: #{parsed_body}"
+    elsif error_subcode == 2207052
+      raise MetaMediaDownloadError, "#{message}: #{parsed_body}"
     else
       raise "#{message}: #{parsed_body}"
     end
