@@ -406,6 +406,19 @@ class Photo < ApplicationRecord
     meta.join("\n")
   end
 
+  # Fetches the given image URLs via HTTP HEAD to pre-warm the Thumbor cache,
+  # so they're ready when external APIs (Instagram, Threads, etc.) try to download them.
+  #
+  # @param urls [Array<String>] the image URLs to warm.
+  def warm_cache(*urls)
+    urls.each do |url|
+      Rails.logger.info("[CacheWarm] Warming image cache: #{url}")
+      HTTParty.head(url, timeout: 30)
+    rescue => e
+      Rails.logger.warn("[CacheWarm] Failed to warm cache for #{url}: #{e.message}")
+    end
+  end
+
   def extract_metadata
     PhotoExifJob.perform_async(self.id)
   end

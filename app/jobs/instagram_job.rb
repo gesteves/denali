@@ -21,6 +21,8 @@ class InstagramJob < ApplicationJob
     photos = entry.photos.limit(10).map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
     location_id = entry.photos.first.instagram_location_id
 
+    entry.photos.limit(10).each { |p| p.warm_cache(p.instagram_url) }
+
     response = instagram.post(
       photos: photos,
       caption: text,

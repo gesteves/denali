@@ -22,8 +22,11 @@ class InstagramStoryJob < ApplicationJob
     photo = entry.photos.first
     return if photo.blank?
 
+    story_url = photo.instagram_story_url(crop: crop)
+    photo.warm_cache(story_url)
+
     instagram.post_story(
-      photo_url: photo.instagram_story_url(crop: crop)
+      photo_url: story_url
     )
   end
 end

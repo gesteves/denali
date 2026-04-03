@@ -192,6 +192,29 @@ RSpec.describe Photo, type: :model do
     end
   end
 
+  describe '#warm_cache' do
+    it 'makes an HTTP HEAD request to the given URLs' do
+      photo = create(:photo, entry: entry)
+      url1 = 'https://example.com/image1.jpg'
+      url2 = 'https://example.com/image2.jpg'
+
+      expect(HTTParty).to receive(:head).with(url1, timeout: 30)
+      expect(HTTParty).to receive(:head).with(url2, timeout: 30)
+
+      photo.warm_cache(url1, url2)
+    end
+
+    it 'logs a warning and continues when a request fails' do
+      photo = create(:photo, entry: entry)
+      url = 'https://example.com/image.jpg'
+
+      allow(HTTParty).to receive(:head).and_raise(Net::ReadTimeout.new('timed out'))
+
+      expect(Rails.logger).to receive(:warn).with(/Failed to warm cache/)
+      expect { photo.warm_cache(url) }.not_to raise_error
+    end
+  end
+
   describe 'scopes' do
     describe '.needs_alt_text_review' do
       it 'returns photos with blank alt_text' do

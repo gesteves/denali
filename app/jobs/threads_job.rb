@@ -25,6 +25,8 @@ class ThreadsJob < ApplicationJob
       }
     end
 
+    entry.photos.limit(20).each { |p| p.warm_cache(p.threads_url) }
+
     threads.post(
       photos: photos,
       caption: text,
