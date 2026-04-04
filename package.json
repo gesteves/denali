@@ -11,15 +11,15 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@awesome.me/webawesome": "^3.4.0",
+    "@awesome.me/webawesome": "^3.5.0",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo": "^8.0.23",
     "@shopify/draggable": "1.2.1",
     "awesomplete": "^1.1.5",
     "bulma": "^1.0.0",
     "croppr": "^2.3.1",
-    "esbuild": "^0.27.4",
-    "mapbox-gl": "^3.20.0",
+    "esbuild": "^0.28.0",
+    "mapbox-gl": "^3.21.0",
     "masonry-layout": "^4.2.2"
   },
   "devDependencies": {
