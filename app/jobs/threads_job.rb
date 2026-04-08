@@ -1,5 +1,6 @@
 class ThreadsJob < ApplicationJob
   sidekiq_options queue: 'high', retry_for: 1.hour
+  discard_on MetaCaptionTooLongError
 
   def perform(entry_id, text)
     return if !Rails.env.production?
