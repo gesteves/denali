@@ -3,6 +3,7 @@ Bugsnag.configure do |config|
   config.enabled_release_stages = %w[production]
   config.discard_classes += %w{
     ActiveRecord::RecordNotFound
+    MetaCaptionTooLongError
     MetaMediaDownloadError
     MetaTransientError
     UnprocessedPhotoError

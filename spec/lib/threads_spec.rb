@@ -266,6 +266,23 @@ RSpec.describe Threads do
       end
     end
 
+    context 'when create_media_container returns a caption too long error' do
+      before do
+        stub_request(:post, threads_endpoint)
+          .with(query: hash_including(access_token: access_token))
+          .to_return(
+            status: 400,
+            body: { error: { message: 'Param text must be at most 500 characters long.', type: 'THApiException', code: 100 } }.to_json
+          )
+      end
+
+      it 'raises MetaCaptionTooLongError' do
+        expect {
+          threads.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'x' * 501)
+        }.to raise_error(MetaCaptionTooLongError, /Failed to create media container/)
+      end
+    end
+
     context 'when create_media_container returns a non-transient error' do
       before do
         stub_request(:post, threads_endpoint)

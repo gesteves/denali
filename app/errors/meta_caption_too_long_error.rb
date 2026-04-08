@@ -1,0 +1,1 @@
+class MetaCaptionTooLongError < StandardError; end

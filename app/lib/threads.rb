@@ -234,10 +234,13 @@ class Threads
     parsed_body = JSON.parse(response.body) rescue response.body
     is_transient = parsed_body.is_a?(Hash) && parsed_body.dig("error", "is_transient")
     error_subcode = parsed_body.is_a?(Hash) && parsed_body.dig("error", "error_subcode")
+    error_message = parsed_body.is_a?(Hash) && parsed_body.dig("error", "message").to_s
     if is_transient
       raise MetaTransientError, "#{message}: #{parsed_body}"
     elsif error_subcode == 2207052
       raise MetaMediaDownloadError, "#{message}: #{parsed_body}"
+    elsif error_message.match?(/must be at most \d+ characters long/i)
+      raise MetaCaptionTooLongError, "#{message}: #{parsed_body}"
     else
       raise "#{message}: #{parsed_body}"
     end
