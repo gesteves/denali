@@ -12,7 +12,6 @@ class RandomShareJob < ApplicationJob
     campaign = tags.empty? ? "random" : "random-#{tags.join(' ').parameterize}"
 
     platforms.each do |platform|
-      next if recently_shared_on?(platform)
       entry = find_eligible_entry(tags, excluded_tags, platform, not_shared_in_months)
       next if entry.blank?
       logger.info "[Social] Sharing \"#{entry.title}\" (#{entry.permalink_url}) on #{platform}."
@@ -31,22 +30,11 @@ class RandomShareJob < ApplicationJob
 
   private
 
-  def recently_shared_on?(platform)
-    column = case platform
-    when 'Bluesky' then 'last_shared_on_bluesky_at'
-    when 'Mastodon' then 'last_shared_on_mastodon_at'
-    when 'Instagram' then 'last_shared_on_instagram_at'
-    when 'Threads' then 'last_shared_on_threads_at'
-    end
-    return false if column.nil?
-    Entry.where("#{column} > ?", 1.hour.ago).exists?
-  end
-
   def share(job_class, entry_id, caption, share_immediately)
     if share_immediately
       job_class.perform_async(entry_id, caption)
     else
-      job_class.perform_in(rand(1..59).minutes, entry_id, caption)
+      job_class.perform_in(rand(0..60).minutes, entry_id, caption)
     end
   end
 

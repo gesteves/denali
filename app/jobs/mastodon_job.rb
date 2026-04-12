@@ -1,5 +1,5 @@
 class MastodonJob < ApplicationJob
-  sidekiq_options queue: 'high', retry_for: 1.hour
+  sidekiq_options queue: 'high'
 
   def perform(entry_id, text)
     return unless Rails.env.production?

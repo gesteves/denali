@@ -75,6 +75,7 @@ RSpec.describe RandomShareJob, type: :worker do
 
       it 'enqueues BlueskyJob with a delay when share_immediately is false' do
         BlueskyJob.jobs.clear
+        allow_any_instance_of(described_class).to receive(:rand).with(0..60).and_return(30)
         described_class.new.perform([], ['Bluesky'], 12, [], false)
         expect(BlueskyJob.jobs.size).to eq(1)
         expect(BlueskyJob.jobs.first['at']).not_to be_nil

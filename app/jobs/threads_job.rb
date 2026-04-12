@@ -1,5 +1,5 @@
 class ThreadsJob < ApplicationJob
-  sidekiq_options queue: 'high', retry_for: 1.hour
+  sidekiq_options queue: 'high'
 
   sidekiq_retry_in do |_count, exception|
     :discard if exception.is_a?(MetaCaptionTooLongError)

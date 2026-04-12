@@ -1,5 +1,5 @@
 class BlueskyJob < ApplicationJob
-  sidekiq_options queue: 'high', retry_for: 1.hour
+  sidekiq_options queue: 'high'
 
   def perform(entry_id, text, in_reply_to = nil, quote = nil)
     return unless Rails.env.production?
