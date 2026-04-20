@@ -976,8 +976,7 @@ class Entry < ApplicationRecord
 
   def set_preview_hash
     if self.preview_hash.blank?
-      md5 = Digest::MD5.new
-      self.preview_hash = md5.hexdigest(Time.current.to_i.to_s)
+      self.preview_hash = SecureRandom.hex(16)
     end
   end
 
