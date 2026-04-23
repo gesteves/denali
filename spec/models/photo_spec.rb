@@ -178,6 +178,56 @@ RSpec.describe Photo, type: :model do
     end
   end
 
+  describe '#bluesky_url' do
+    let(:photo) { create(:photo, entry: entry) }
+
+    it 'requests 4000px wide for a horizontal photo larger than 4000px' do
+      allow(photo).to receive(:width).and_return(6000)
+      allow(photo).to receive(:height).and_return(4000)
+      allow(photo).to receive(:has_dimensions?).and_return(true)
+
+      expect(photo).to receive(:url).with(hash_including(width: 4000, format: 'jpeg', quality: 60))
+      photo.bluesky_url
+    end
+
+    it 'does not upscale a horizontal photo smaller than 4000px' do
+      allow(photo).to receive(:width).and_return(3000)
+      allow(photo).to receive(:height).and_return(2000)
+      allow(photo).to receive(:has_dimensions?).and_return(true)
+
+      expect(photo).to receive(:url).with(hash_including(width: 3000, format: 'jpeg', quality: 60))
+      photo.bluesky_url
+    end
+
+    it 'scales a vertical photo taller than 4000px to fit 4000px height' do
+      allow(photo).to receive(:width).and_return(4000)
+      allow(photo).to receive(:height).and_return(6000)
+      allow(photo).to receive(:has_dimensions?).and_return(true)
+
+      expected_width = photo.width_from_height(4000)
+      expect(photo).to receive(:url).with(hash_including(width: expected_width, format: 'jpeg', quality: 60))
+      photo.bluesky_url
+    end
+
+    it 'does not upscale a vertical photo shorter than 4000px' do
+      allow(photo).to receive(:width).and_return(2000)
+      allow(photo).to receive(:height).and_return(3000)
+      allow(photo).to receive(:has_dimensions?).and_return(true)
+
+      expect(photo).to receive(:url).with(hash_including(width: 2000, format: 'jpeg', quality: 60))
+      photo.bluesky_url
+    end
+
+    it 'falls back to 4000px when dimensions are unknown' do
+      allow(photo).to receive(:width).and_return(nil)
+      allow(photo).to receive(:height).and_return(nil)
+      allow(photo).to receive(:has_dimensions?).and_return(false)
+
+      expect(photo).to receive(:url).with(hash_including(width: 4000, format: 'jpeg', quality: 60))
+      photo.bluesky_url
+    end
+  end
+
   describe 'location helpers' do
     describe '#has_location?' do
       it 'returns false when coordinates are missing' do
