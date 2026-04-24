@@ -164,7 +164,7 @@ GEM
       elasticsearch (~> 8)
       hashie
     elasticsearch-rails (8.0.1)
-    erb (6.0.2)
+    erb (6.0.4)
     erubi (1.13.1)
     et-orbi (1.4.0)
       tzinfo
