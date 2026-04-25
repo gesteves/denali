@@ -1,6 +1,6 @@
 # Development Dockerfile for docker-compose
 
-FROM ruby:4.0.2
+FROM ruby:4.0.3
 
 # Install Node.js
 RUN apt-get update && apt-get install -y --no-install-recommends \
