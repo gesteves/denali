@@ -120,7 +120,7 @@ GEM
     base64 (0.3.0)
     bigdecimal (4.1.2)
     bindex (0.8.1)
-    bootsnap (1.23.0)
+    bootsnap (1.24.1)
       msgpack (~> 1.2)
     brakeman (8.0.4)
       racc
@@ -191,7 +191,7 @@ GEM
     google-protobuf (4.33.5)
       bigdecimal
       rake (>= 13)
-    graphql (2.6.0)
+    graphql (2.6.1)
       base64
       fiber-storage
       logger
@@ -319,7 +319,7 @@ GEM
       date
       stringio
     public_suffix (7.0.5)
-    puma (8.0.0)
+    puma (8.0.1)
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
