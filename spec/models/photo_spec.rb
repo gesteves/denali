@@ -186,7 +186,7 @@ RSpec.describe Photo, type: :model do
       allow(photo).to receive(:height).and_return(4000)
       allow(photo).to receive(:has_dimensions?).and_return(true)
 
-      expect(photo).to receive(:url).with(hash_including(width: 4000, format: 'jpeg', quality: 80, max_bytes: 1_950_000))
+      expect(photo).to receive(:url).with(hash_including(width: 4000, format: 'jpeg', quality: 100, max_bytes: 1_950_000))
       photo.bluesky_url
     end
 
@@ -195,7 +195,7 @@ RSpec.describe Photo, type: :model do
       allow(photo).to receive(:height).and_return(2000)
       allow(photo).to receive(:has_dimensions?).and_return(true)
 
-      expect(photo).to receive(:url).with(hash_including(width: 3000, format: 'jpeg', quality: 80, max_bytes: 1_950_000))
+      expect(photo).to receive(:url).with(hash_including(width: 3000, format: 'jpeg', quality: 100, max_bytes: 1_950_000))
       photo.bluesky_url
     end
 
@@ -205,7 +205,7 @@ RSpec.describe Photo, type: :model do
       allow(photo).to receive(:has_dimensions?).and_return(true)
 
       expected_width = photo.width_from_height(4000)
-      expect(photo).to receive(:url).with(hash_including(width: expected_width, format: 'jpeg', quality: 80, max_bytes: 1_950_000))
+      expect(photo).to receive(:url).with(hash_including(width: expected_width, format: 'jpeg', quality: 100, max_bytes: 1_950_000))
       photo.bluesky_url
     end
 
@@ -214,7 +214,7 @@ RSpec.describe Photo, type: :model do
       allow(photo).to receive(:height).and_return(3000)
       allow(photo).to receive(:has_dimensions?).and_return(true)
 
-      expect(photo).to receive(:url).with(hash_including(width: 2000, format: 'jpeg', quality: 80, max_bytes: 1_950_000))
+      expect(photo).to receive(:url).with(hash_including(width: 2000, format: 'jpeg', quality: 100, max_bytes: 1_950_000))
       photo.bluesky_url
     end
 
@@ -223,7 +223,7 @@ RSpec.describe Photo, type: :model do
       allow(photo).to receive(:height).and_return(nil)
       allow(photo).to receive(:has_dimensions?).and_return(false)
 
-      expect(photo).to receive(:url).with(hash_including(width: 4000, format: 'jpeg', quality: 80, max_bytes: 1_950_000))
+      expect(photo).to receive(:url).with(hash_including(width: 4000, format: 'jpeg', quality: 100, max_bytes: 1_950_000))
       photo.bluesky_url
     end
   end
