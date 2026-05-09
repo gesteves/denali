@@ -19,7 +19,7 @@
     "bulma": "^1.0.0",
     "croppr": "^2.3.1",
     "esbuild": "^0.28.0",
-    "mapbox-gl": "^3.23.0",
+    "mapbox-gl": "^3.23.1",
     "masonry-layout": "^4.2.2"
   },
   "devDependencies": {
