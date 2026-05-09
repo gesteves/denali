@@ -163,7 +163,7 @@ class Photo < ApplicationRecord
     else
       max_dimension
     end
-    opts = { width: width, format: 'jpeg', quality: 80, max_bytes: 1_950_000 }
+    opts = { width: width, format: 'jpeg', quality: 100, max_bytes: 1_950_000 }
     self.url(opts)
   end
 
