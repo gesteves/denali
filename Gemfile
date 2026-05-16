@@ -27,7 +27,7 @@ gem 'blurhash', git: 'https://github.com/gesteves/blurhash', branch: 'master'
 gem 'mini_magick'
 
 # Misc
-gem 'jbuilder', '~> 2.14'
+gem 'jbuilder', '~> 2.15'
 gem 'acts_as_list'
 gem 'redcarpet'
 gem 'sanitize'
