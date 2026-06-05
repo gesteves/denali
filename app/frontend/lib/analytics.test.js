@@ -91,7 +91,7 @@ describe('analytics', () => {
       expect(window.history.replaceState).toHaveBeenCalled();
     });
 
-    it('initializes plausible with the proxied endpoint and manual pageviews', () => {
+    it('initializes plausible with manual pageviews', () => {
       setUrl('https://example.com/page');
       const initSpy = vi.fn();
       global.plausible.init = initSpy;
@@ -99,8 +99,7 @@ describe('analytics', () => {
       trackPageView();
 
       expect(initSpy).toHaveBeenCalledWith({
-        autoCapturePageviews: false,
-        endpoint: '/api/event'
+        autoCapturePageviews: false
       });
     });
   });

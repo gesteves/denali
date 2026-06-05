@@ -14,7 +14,7 @@ function setUpPlausible() {
     function (i) {
       window.plausible.o = i || {};
     };
-  window.plausible.init({ autoCapturePageviews: false, endpoint: '/api/event' });
+  window.plausible.init({ autoCapturePageviews: false });
 }
 
 /**
