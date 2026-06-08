@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for denali on 2025-11-29T15:20:42-07:00
+# fly.toml app configuration file generated for denali on 2026-06-08T04:11:22Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -36,10 +36,12 @@ kill_timeout = 30
 [http_service]
   internal_port = 3000
   force_https = true
-  auto_stop_machines = 'stop'
+  auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 1
   processes = ['web']
+  checks = [{ grace_period = '30s', interval = '1m0s', method = 'GET', path = '/healthcheck', timeout = '5s' }]
+  concurrency = { soft_limit = 5, type = 'requests' }
 
   [http_service.concurrency]
     type = 'requests'
@@ -56,12 +58,12 @@ kill_timeout = 30
   cpu_kind = 'shared'
   cpus = 1
   memory = '1gb'
-  swap_size_mb = 512
   processes = ['web']
 
 [[vm]]
   cpu_kind = 'shared'
   cpus = 1
-  memory = '1gb'
-  swap_size_mb = 512
+  memory = '2gb'
   processes = ['worker']
+  memory_mb = 2048
+  size = 'shared-cpu-1x'
