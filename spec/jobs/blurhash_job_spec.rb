@@ -35,5 +35,23 @@ RSpec.describe BlurhashJob, type: :worker do
 
       expect(photo.blurhash).to eq(original_blurhash)
     end
+
+    it 'ensures the photo is analyzed before processing' do
+      mock_image = instance_double(MiniMagick::Image, width: 100, height: 100)
+      allow(mock_image).to receive(:get_pixels).and_return([])
+      allow(MiniMagick::Image).to receive(:open).and_return(mock_image)
+      allow(Blurhash).to receive(:encode).and_return(nil)
+
+      expect_any_instance_of(Photo).to receive(:ensure_analyzed!)
+
+      described_class.new.perform(photo.id)
+    end
+
+    it 'raises UnprocessedPhotoError when dimensions cannot be determined' do
+      allow_any_instance_of(Photo).to receive(:ensure_analyzed!)
+      allow_any_instance_of(Photo).to receive(:has_dimensions?).and_return(false)
+
+      expect { described_class.new.perform(photo.id) }.to raise_error(UnprocessedPhotoError)
+    end
   end
 end

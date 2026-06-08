@@ -210,6 +210,20 @@ class Photo < ApplicationRecord
     self.width.present? && self.height.present?
   end
 
+  # Ensures the image's dimensions are recorded in its blob metadata.
+  #
+  # Photos are processed by asynchronous jobs that need the image's dimensions,
+  # but those jobs can run before ActiveStorage has analyzed the blob. Rather
+  # than passively failing and waiting for a retry to coincide with analysis,
+  # we trigger analysis here so the job can proceed. Idempotent: a no-op once
+  # dimensions are present.
+  def ensure_analyzed!
+    return if has_dimensions?
+    return unless image.attached?
+
+    image.analyze
+  end
+
   def width
     image&.metadata&.dig(:width)
   end

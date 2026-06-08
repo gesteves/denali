@@ -4,6 +4,7 @@ class PhotoExifJob < ApplicationJob
 
   def perform(photo_id)
     photo = Photo.find(photo_id)
+    photo.ensure_analyzed!
     raise UnprocessedPhotoError unless photo.has_dimensions?
 
     URI.open(photo.image.url) do |original|

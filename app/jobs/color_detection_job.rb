@@ -2,6 +2,7 @@ require 'mini_magick'
 class ColorDetectionJob < ApplicationJob
   def perform(photo_id)
     photo = Photo.find(photo_id)
+    photo.ensure_analyzed!
     raise UnprocessedPhotoError unless photo.has_dimensions?
 
     is_bw = is_black_and_white?(photo)

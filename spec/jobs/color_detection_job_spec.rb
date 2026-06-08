@@ -64,5 +64,13 @@ RSpec.describe ColorDetectionJob, type: :worker do
       expect(photo.color).to be true
       expect(photo.black_and_white).to be false
     end
+
+    it 'ensures the photo is analyzed before processing' do
+      allow(MiniMagick::Image).to receive(:open).and_raise(StandardError.new('Test error'))
+
+      expect_any_instance_of(Photo).to receive(:ensure_analyzed!)
+
+      described_class.new.perform(photo.id)
+    end
   end
 end

@@ -101,5 +101,21 @@ RSpec.describe PhotoExifJob, type: :worker do
 
       expect(NationalParkJob.jobs.size).to eq(1)
     end
+
+    it 'ensures the photo is analyzed before processing' do
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
+      allow(EXIFR::JPEG).to receive(:new).and_return(double(present?: true, exif?: false))
+
+      expect_any_instance_of(Photo).to receive(:ensure_analyzed!)
+
+      described_class.new.perform(photo.id)
+    end
+
+    it 'raises UnprocessedPhotoError when dimensions cannot be determined' do
+      allow_any_instance_of(Photo).to receive(:ensure_analyzed!)
+      allow_any_instance_of(Photo).to receive(:has_dimensions?).and_return(false)
+
+      expect { described_class.new.perform(photo.id) }.to raise_error(UnprocessedPhotoError)
+    end
   end
 end

@@ -147,6 +147,39 @@ RSpec.describe Photo, type: :model do
       end
     end
 
+    describe '#ensure_analyzed!' do
+      let(:photo) { create(:photo, entry: entry) }
+
+      it 'analyzes the image to populate dimensions when missing' do
+        # Attach without analyzing so the blob has no width/height metadata yet.
+        photo.image.attach(
+          io: File.open(Rails.root.join('spec/fixtures/images/rusty.jpg')),
+          filename: 'rusty.jpg'
+        )
+        expect(photo.has_dimensions?).to be false
+
+        photo.ensure_analyzed!
+        photo.reload
+
+        expect(photo.has_dimensions?).to be true
+        expect(photo.width).to be > 0
+        expect(photo.height).to be > 0
+      end
+
+      it 'is a no-op when dimensions are already present' do
+        attach_image_to_photo(photo)
+        expect(photo.has_dimensions?).to be true
+
+        expect(photo.image).not_to receive(:analyze)
+        photo.ensure_analyzed!
+      end
+
+      it 'does nothing when no image is attached' do
+        expect(photo.image).not_to be_attached
+        expect { photo.ensure_analyzed! }.not_to raise_error
+      end
+    end
+
     describe '#is_vertical?' do
       it 'returns true when height > width' do
         photo = create(:photo, entry: entry)
