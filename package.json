@@ -18,7 +18,7 @@
     "awesomplete": "^1.1.5",
     "bulma": "^1.0.0",
     "croppr": "^2.3.1",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.1",
     "mapbox-gl": "^3.24.0",
     "masonry-layout": "^4.2.2"
   },
