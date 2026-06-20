@@ -39,7 +39,7 @@ jobs:
                 text: "<${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ env.SHORT_SHA }}`> - ${{ env.COMMIT_MESSAGE }}"
                 footer: "<${{ github.server_url }}/${{ github.repository }}|${{ github.repository }}> · <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View workflow>"
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy to Fly.io
