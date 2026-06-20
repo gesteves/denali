@@ -11,7 +11,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@awesome.me/webawesome": "^3.8.0",
+    "@awesome.me/webawesome": "^3.9.0",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo": "^8.0.23",
     "@shopify/draggable": "1.2.1",
@@ -19,11 +19,11 @@
     "bulma": "^1.0.0",
     "croppr": "^2.3.1",
     "esbuild": "^0.28.1",
-    "mapbox-gl": "^3.24.1",
+    "mapbox-gl": "^3.25.0",
     "masonry-layout": "^4.2.2"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.8",
+    "@vitest/coverage-v8": "^4.1.9",
     "jsdom": "^29.1.1",
     "vitest": "^4.0.18"
   },
