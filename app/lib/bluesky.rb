@@ -2,6 +2,13 @@ class Bluesky
   MAX_POST_LENGTH = 300
   MAX_PHOTOS = 4
 
+  # Who's allowed to reply to a post. Only followers and people the account follows,
+  # to keep drive-by replies from the popular feeds out of the thread.
+  THREADGATE_ALLOW_RULES = [
+    { "$type" => "app.bsky.feed.threadgate#followerRule" },
+    { "$type" => "app.bsky.feed.threadgate#followingRule" }
+  ].freeze
+
   # Creates a Bluesky instance from a SocialAccount.
   #
   # @param social_account [SocialAccount] the social account to use.
@@ -136,6 +143,32 @@ class Bluesky
     }
 
     create_record(record)
+  end
+
+  # Creates a threadgate for a post, limiting who can reply to it to followers and
+  # people the account follows. Only applies to root posts; replies inherit the gate
+  # of the thread's root post.
+  #
+  # @param post_uri [String] the at-uri of the post to gate.
+  # @return [Hash] the parsed response body if successful.
+  # @raise [ArgumentError] if the at-uri is blank or malformed.
+  # @raise [RuntimeError] if the post request fails.
+  def create_threadgate(post_uri)
+    # The threadgate's rkey must match the post's rkey.
+    rkey = post_uri.to_s.split('/').last
+    raise ArgumentError, "Invalid post at-uri: #{post_uri.inspect}" if rkey.blank? || !post_uri.to_s.start_with?('at://')
+
+    create_record({
+      repo: did,
+      collection: "app.bsky.feed.threadgate",
+      rkey: rkey,
+      record: {
+        "$type" => "app.bsky.feed.threadgate",
+        post: post_uri,
+        allow: THREADGATE_ALLOW_RULES,
+        createdAt: Time.now.iso8601
+      }
+    })
   end
 
   private

@@ -157,6 +157,61 @@ RSpec.describe Bluesky do
       end
     end
 
+    describe '#create_threadgate' do
+      let(:post_uri) { 'at://did:plc:abcd1234/app.bsky.feed.post/123' }
+      let(:session_response) do
+        {
+          'did' => 'did:plc:abcd1234',
+          'accessJwt' => 'test_token'
+        }
+      end
+
+      before do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
+          .to_return(status: 200, body: session_response.to_json)
+
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.threadgate/123' }.to_json)
+      end
+
+      it 'allows replies only from followers and people the account follows' do
+        bluesky.create_threadgate(post_uri)
+
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          .with { |req|
+            body = JSON.parse(req.body)
+            body['collection'] == 'app.bsky.feed.threadgate' &&
+              body['record']['post'] == post_uri &&
+              body['record']['allow'] == [
+                { '$type' => 'app.bsky.feed.threadgate#followerRule' },
+                { '$type' => 'app.bsky.feed.threadgate#followingRule' }
+              ]
+          }
+      end
+
+      it 'reuses the post rkey so the gate attaches to the post' do
+        bluesky.create_threadgate(post_uri)
+
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          .with { |req| JSON.parse(req.body)['rkey'] == '123' }
+      end
+
+      it 'raises an ArgumentError for a blank at-uri' do
+        expect { bluesky.create_threadgate(nil) }.to raise_error(ArgumentError)
+      end
+
+      it 'raises an ArgumentError for a malformed at-uri' do
+        expect { bluesky.create_threadgate('https://bsky.app/profile/test/post/123') }.to raise_error(ArgumentError)
+      end
+
+      it 'raises when the API request fails, so the job can retry' do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          .to_return(status: 500, body: { error: 'InternalServerError' }.to_json)
+
+        expect { bluesky.create_threadgate(post_uri) }.to raise_error(/Failed to create/)
+      end
+    end
+
     describe '#valid_post_length?' do
       it 'delegates to class method' do
         expect(bluesky.valid_post_length?('test')).to be true

@@ -17,7 +17,10 @@ class BlueskyJob < ApplicationJob
       { url: p.bluesky_url, alt_text: p.alt_text, width: p.width, height: p.height }
     end
 
-    bluesky.skeet(text: text, photos: photos, in_reply_to: in_reply_to, quote: quote)
+    response = bluesky.skeet(text: text, photos: photos, in_reply_to: in_reply_to, quote: quote)
+
+    # Threadgates only apply to root posts; replies inherit the root post's gate.
+    BlueskyThreadgateJob.perform_async(entry_id, response["uri"]) if in_reply_to.blank? && response["uri"].present?
 
     unless in_reply_to.present? || quote.present?
       entry.update_columns(

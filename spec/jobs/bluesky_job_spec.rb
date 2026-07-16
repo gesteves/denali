@@ -12,6 +12,7 @@ RSpec.describe BlueskyJob, type: :worker do
 
   describe '#perform' do
     let(:text) { 'Test caption for Bluesky' }
+    let(:post_uri) { 'at://did:plc:abcd1234/app.bsky.feed.post/123' }
 
     context 'in production environment with connected account' do
       let(:bluesky_instance) { instance_double(Bluesky) }
@@ -28,7 +29,29 @@ RSpec.describe BlueskyJob, type: :worker do
       before do
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
         allow(Bluesky).to receive(:from_social_account).with(bluesky_account).and_return(bluesky_instance)
-        allow(bluesky_instance).to receive(:skeet)
+        allow(bluesky_instance).to receive(:skeet).and_return({ 'uri' => post_uri })
+      end
+
+      it 'enqueues a threadgate job to restrict replies on the new post' do
+        expect(BlueskyThreadgateJob).to receive(:perform_async).with(entry.id, post_uri)
+        described_class.new.perform(entry.id, text)
+      end
+
+      it 'enqueues a threadgate job for quote posts, which are root posts too' do
+        expect(BlueskyThreadgateJob).to receive(:perform_async).with(entry.id, post_uri)
+        described_class.new.perform(entry.id, text, nil, 'quote_uri')
+      end
+
+      it 'does not enqueue a threadgate job for replies, which inherit the root post gate' do
+        expect(BlueskyThreadgateJob).not_to receive(:perform_async)
+        described_class.new.perform(entry.id, text, 'reply_uri')
+      end
+
+      it 'does not enqueue a threadgate job when the post uri is missing' do
+        allow(bluesky_instance).to receive(:skeet).and_return({})
+
+        expect(BlueskyThreadgateJob).not_to receive(:perform_async)
+        described_class.new.perform(entry.id, text)
       end
 
       it 'creates a skeet with photos' do
@@ -150,7 +173,7 @@ RSpec.describe BlueskyJob, type: :worker do
 
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
         allow(Bluesky).to receive(:from_social_account).with(bluesky_account).and_return(bluesky_instance)
-        allow(bluesky_instance).to receive(:skeet)
+        allow(bluesky_instance).to receive(:skeet).and_return({ 'uri' => post_uri })
       end
 
       it 'only includes first 4 photos' do
