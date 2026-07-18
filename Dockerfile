@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 # Production Dockerfile for Fly.io
 
-FROM ruby:4.0.5-slim AS base
+FROM ruby:4.0.6-slim AS base
 
 WORKDIR /app
 
