@@ -4,7 +4,7 @@ export default defineConfig({
   test: {
     environment: 'jsdom',
     globals: true,
-    include: ['app/frontend/**/*.test.js'],
+    include: ['app/frontend/**/*.test.js', 'cloudflare/**/*.test.js'],
     setupFiles: ['app/frontend/test/setup.js'],
     coverage: {
       provider: 'v8',

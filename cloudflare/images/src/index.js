@@ -15,8 +15,8 @@
 //
 // Rails builds these URLs; see app/models/concerns/thumborizable.rb.
 
-const TRANSFORM_PATH = /^\/images\/(?:([^/]*=[^/]*)\/)?([A-Za-z0-9_-]+)$/;
-const INSTAGRAM_PATH = /^\/ig\/(\d{1,4})x(\d{1,4})\/(\d{1,4})x(\d{1,4})\/([A-Za-z0-9_-]+)$/;
+export const TRANSFORM_PATH = /^\/images\/(?:([^/]*=[^/]*)\/)?([A-Za-z0-9_-]+)$/;
+export const INSTAGRAM_PATH = /^\/ig\/(\d{1,4})x(\d{1,4})\/(\d{1,4})x(\d{1,4})\/([A-Za-z0-9_-]+)$/;
 
 const MAX_DIMENSION = 4096;
 const INSTAGRAM_BACKGROUND = '#ffffff';
@@ -120,7 +120,7 @@ const OPTIONS = {
 
 // Every option the app asks for is allowlisted explicitly, so the route can't
 // be used to run arbitrary transformations against the bucket.
-function parseOptions(raw) {
+export function parseOptions(raw) {
   if (raw === '') return {};
 
   const options = {};
@@ -139,11 +139,11 @@ function parseOptions(raw) {
   return options;
 }
 
-function dimension(value) {
+export function dimension(value) {
   return bounded(value, 0, MAX_DIMENSION * 4);
 }
 
-function bounded(value, min, max) {
+export function bounded(value, min, max) {
   if (!/^\d{1,5}$/.test(value ?? '')) return undefined;
   const number = Number(value);
   return number >= min && number <= max ? number : undefined;
@@ -153,7 +153,7 @@ function withinBounds(value) {
   return Number.isInteger(value) && value >= 1 && value <= MAX_DIMENSION;
 }
 
-function negotiateFormat(request) {
+export function negotiateFormat(request) {
   const accept = request.headers.get('Accept') ?? '';
   if (accept.includes('image/avif')) return 'avif';
   if (accept.includes('image/webp')) return 'webp';
