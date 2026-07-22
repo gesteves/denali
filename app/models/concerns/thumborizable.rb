@@ -7,21 +7,19 @@ module Thumborizable
   # source format, so PNG sources stay PNG.
   VALID_FORMATS = ['auto', 'jpeg', 'webp', 'avif']
 
+  # Builds a URL for an image, given its ActiveStorage key. These are served by
+  # the images worker (see cloudflare/images), which resolves the key against
+  # the R2 bucket — so the bucket's hostname never appears in a public URL.
   def thumbor_url(image, opts = {})
     return if image.blank?
 
-    url = build_image_url(image)
     options = build_options(opts)
-    return url if options.blank?
+    path = options.present? ? "#{options.join(',')}/#{image}" : image
 
-    "https://#{ENV['DOMAIN']}/cdn-cgi/image/#{options.join(',')}/#{url}"
+    "https://#{ENV['DOMAIN']}/images/#{path}"
   end
 
   private
-
-  def build_image_url(image)
-    image.start_with?('https://', 'http://') ? image : "https://#{ENV['IMAGES_ORIGIN_HOST']}/#{image}"
-  end
 
   def build_options(opts)
     options = []

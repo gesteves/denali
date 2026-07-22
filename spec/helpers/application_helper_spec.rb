@@ -9,7 +9,6 @@ RSpec.describe ApplicationHelper, type: :helper do
   before do
     allow(ENV).to receive(:[]).and_call_original
     allow(ENV).to receive(:[]).with('DOMAIN').and_return('www.example.com')
-    allow(ENV).to receive(:[]).with('IMAGES_ORIGIN_HOST').and_return('images.example.com')
     allow(photo).to receive(:width).and_return(3000)
     allow(photo).to receive(:height).and_return(2000)
     allow(photo).to receive(:image).and_return(double('image', key: 'abc123'))
@@ -27,14 +26,14 @@ RSpec.describe ApplicationHelper, type: :helper do
     it 'builds one srcset covering every width, negotiating format at the edge' do
       html = helper.responsive_image_tag(photo: photo, srcset: [300, 600])
 
-      expect(html).to include('/cdn-cgi/image/width=300,format=auto/https://images.example.com/abc123 300w')
-      expect(html).to include('/cdn-cgi/image/width=600,format=auto/https://images.example.com/abc123 600w')
+      expect(html).to include('/images/width=300,format=auto/abc123 300w')
+      expect(html).to include('/images/width=600,format=auto/abc123 600w')
     end
 
     it 'uses the requested width for the fallback src' do
       html = helper.responsive_image_tag(photo: photo, srcset: [300, 600, 1200], src: 1200)
 
-      expect(html).to include('src="https://www.example.com/cdn-cgi/image/width=1200,format=auto/https://images.example.com/abc123"')
+      expect(html).to include('src="https://www.example.com/images/width=1200,format=auto/abc123"')
     end
 
     it 'passes sizes through untouched' do

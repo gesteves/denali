@@ -44,3 +44,6 @@
 # Ignore SimpleCov coverage reports
 /coverage
 spec/examples.txt
+
+# Wrangler local state
+.wrangler/

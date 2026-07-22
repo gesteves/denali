@@ -122,9 +122,9 @@ class Photo < ApplicationRecord
   # The photo is padded onto an inner frame, inset on the axis it would
   # otherwise meet, and that result is padded onto the full frame — which
   # leaves white on all four sides. Cloudflare's URL transformations can't do
-  # this, because they can't be chained: a /cdn-cgi/image/ URL isn't fetchable
-  # as another transform's source. So it's rendered by the instagram-images
-  # worker, which chains the Images binding instead.
+  # this, because they can't be chained: a transform URL isn't fetchable as
+  # another transform's source. So it's rendered by the images worker's /ig/
+  # route, which chains the Images binding instead.
   def instagram_url
     if self.is_vertical?
       outer = [1440, 1800]

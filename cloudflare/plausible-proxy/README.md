@@ -22,7 +22,7 @@ Two things reference these paths:
 ## Deploying
 
 ```bash
-cd cloudflare-plausible-proxy
+cd cloudflare/plausible-proxy
 npx wrangler deploy
 ```
 

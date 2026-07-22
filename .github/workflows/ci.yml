@@ -4,8 +4,7 @@ on:
   push:
     branches: ["*"]
     paths-ignore:
-      - 'cloudflare-plausible-proxy/**'
-      - 'cloudflare-instagram-images/**'
+      - 'cloudflare/**'
       - 'fly-redis-cache/**'
       - 'fly-redis-sidekiq/**'
       - 'fly-elasticsearch/**'
@@ -13,8 +12,7 @@ on:
   pull_request:
     branches: [release]
     paths-ignore:
-      - 'cloudflare-plausible-proxy/**'
-      - 'cloudflare-instagram-images/**'
+      - 'cloudflare/**'
       - 'fly-redis-cache/**'
       - 'fly-redis-sidekiq/**'
       - 'fly-elasticsearch/**'

@@ -1,18 +1,23 @@
 {
-  "name": "denali-instagram-images",
+  "name": "denali-images",
   "main": "src/index.js",
   "compatibility_date": "2026-07-21",
   "routes": [
+    {
+      "pattern": "www.allencompassingtrip.com/images/*",
+      "zone_name": "allencompassingtrip.com"
+    },
     {
       "pattern": "www.allencompassingtrip.com/ig/*",
       "zone_name": "allencompassingtrip.com"
     }
   ],
-  // Chained transforms need the Images binding; the URL API can't do them.
+  // The Instagram variant chains two transforms, which only the binding can do.
   "images": {
     "binding": "IMAGES"
   },
-  // The R2 bucket's public custom domain, where the originals are served from.
+  // The R2 bucket's public custom domain. It lives here rather than in the app
+  // so it never appears in a public image URL.
   "vars": {
     "IMAGES_ORIGIN_HOST": "photos.allencompassingtrip.com"
   },
