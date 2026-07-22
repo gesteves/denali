@@ -28,6 +28,13 @@ curl -sSI https://www.allencompassingtrip.com/ | grep -i cf-cache-status
 `HIT` on a second request is what you want. `DYNAMIC` means the Cache Rule below
 is missing or not matching.
 
+Entry pages send both an `ETag` and a `Last-Modified` (see the `stale?` call in
+`EntriesController#show`), but Cloudflare strips the `ETag` from HTML on its way
+to the client — it recompresses the response, and weak validators don't survive
+that unless **Respect strong ETags** is enabled. Conditional GETs still work
+through `Last-Modified`, so this costs nothing; just don't go looking for an
+`ETag` on an HTML response and conclude something is broken.
+
 ### Cache Rule: "Cache HTML"
 
 - **Expression**: the site's hostnames, excluding the bypass paths below.
@@ -42,11 +49,18 @@ is missing or not matching.
 - **Cache TTL by status**: `200` respect origin, `404` 1 minute, `3xx` do not
   cache — defence in depth for the same redirects.
 
-### Cache Rule: bypass
+The rule's expression excludes the paths that must never be cached —
+`/admin*`, `/signin`, `/signout`, `/auth/*`, `/graphql`,
+`/push-notifications/*`, `/random`, `/healthcheck` — along with the Worker
+routes `/images/*`, `/ig/*` and `/pa/*`, which do their own caching. Excluded
+paths report `cf-cache-status: DYNAMIC` (not `BYPASS`, which would mean a rule
+matched and chose to bypass). The app also sends `no-store` on the sensitive
+ones, so this is belt and braces.
 
-Bypass cache for `/admin*`, `/signin`, `/signout`, `/auth*`, `/graphql`,
-`/push-notifications/*`, `/random` and `/healthcheck`. The app also sends
-`no-store` on all of these, so this is belt and braces.
+Short links (`/p/<id>`) are a deliberate casualty of the `3xx → no cache`
+setting: they 301 with a year-long `Cache-Control` but will always show
+`DYNAMIC`. They're low-volume, and narrowing that setting to catch them would
+reopen the redirect-caching hole.
 
 ### Tiered Cache
 
