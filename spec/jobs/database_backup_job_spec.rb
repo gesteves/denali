@@ -6,7 +6,9 @@ RSpec.describe DatabaseBackupJob, type: :worker do
     allow(ENV).to receive(:[]).and_call_original
     allow(ENV).to receive(:[]).with('DB_BACKUP_BUCKET').and_return('test-bucket')
     allow(ENV).to receive(:[]).with('DATABASE_URL').and_return('postgres://localhost/test')
-    allow(ENV).to receive(:[]).with('AWS_REGION').and_return('us-east-1')
+    allow(ENV).to receive(:[]).with('R2_ENDPOINT').and_return('https://account.r2.cloudflarestorage.com')
+    allow(ENV).to receive(:[]).with('R2_ACCESS_KEY_ID').and_return('key')
+    allow(ENV).to receive(:[]).with('R2_SECRET_ACCESS_KEY').and_return('secret')
   end
 
   describe '#perform' do
@@ -28,7 +30,7 @@ RSpec.describe DatabaseBackupJob, type: :worker do
       described_class.new.perform
     end
 
-    it 'creates database dump and uploads to S3' do
+    it 'creates database dump and uploads to R2' do
       s3_client = instance_double(Aws::S3::Client)
       allow(Aws::S3::Client).to receive(:new).and_return(s3_client)
       allow(s3_client).to receive(:put_object)

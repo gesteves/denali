@@ -122,12 +122,11 @@ The `fly-*` directories contain separate Fly.io applications that support the ma
 - `fly-elasticsearch/` - Elasticsearch service
 - `fly-redis-cache/` - Redis for caching
 - `fly-redis-sidekiq/` - Redis for Sidekiq job queue
-- `fly-thumbor/` - Thumbor image processing service
 
 To deploy or manage these services, `cd` into the respective directory and run Fly commands from there:
 
 ```bash
-cd fly-thumbor
+cd fly-elasticsearch
 fly deploy
 fly logs
 ```

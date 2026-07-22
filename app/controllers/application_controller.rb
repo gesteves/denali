@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
   before_action :preload_assets
   around_action :set_time_zone
 
-  helper_method :current_user, :logged_in?, :logged_out?, :is_cloudfront?, :is_admin?
+  helper_method :current_user, :logged_in?, :logged_out?, :behind_cdn?, :is_admin?
 
   def default_url_options
     Rails.application.routes.default_url_options
@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
     false
   end
 
-  def is_cloudfront?
+  def behind_cdn?
     request.headers['X-Denali-Secret'] == ENV['DENALI_SECRET']
   end
 
@@ -46,15 +46,15 @@ class ApplicationController < ActionController::Base
     @photoblog = Blog.first
   end
 
-  def block_cloudfront
-    if Rails.env.production? && is_cloudfront?
+  def block_cdn
+    if Rails.env.production? && behind_cdn?
       raise ActionController::RoutingError.new('Not Found')
     end
   end
 
   def domain_redirect
-    # Prevent people from bypassing CloudFront and hitting the app server directly.
-    if Rails.env.production? && ENV['AWS_CLOUDFRONT_DISTRIBUTION_ID'].present? && !is_cloudfront?
+    # Prevent people from bypassing the CDN and hitting the app server directly.
+    if Rails.env.production? && ENV['CDN_ORIGIN_PROTECTION'].present? && !behind_cdn?
       protocol = Rails.configuration.force_ssl ? 'https' : 'http'
       http_cache_forever(public: true) do
         redirect_to "#{protocol}://#{Rails.application.routes.default_url_options[:host]}#{request.fullpath}", status: 301

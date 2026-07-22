@@ -12,7 +12,7 @@ gem 'bootsnap', require: false
 gem 'omniauth-google-oauth2'
 gem 'omniauth-rails_csrf_protection'
 
-# AWS
+# S3-compatible storage (Cloudflare R2)
 gem 'aws-sdk-s3', '~> 1'
 
 # Front-end things
@@ -22,7 +22,6 @@ gem 'jsbundling-rails'
 gem 'turbo-rails'
 
 # Images
-gem 'ruby-thumbor'
 gem 'blurhash', git: 'https://github.com/gesteves/blurhash', branch: 'master'
 gem 'mini_magick'
 

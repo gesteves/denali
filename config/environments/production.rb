@@ -101,11 +101,11 @@ Rails.application.configure do
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 
   config.time_zone = 'Eastern Time (US & Canada)'
-  config.active_storage.service = :amazon
+  config.active_storage.service = :cloudflare
   config.action_controller.action_on_open_redirect = :log
   # Enables ActiveStorage's image analyzer (which records width/height into blob
-  # metadata). The app delivers all variants via Thumbor, not ActiveStorage, so
-  # this only affects analysis, not image generation. :disabled silently breaks
-  # analysis, leaving photos without dimensions.
+  # metadata). The app delivers all variants via Cloudflare Image Transformations,
+  # not ActiveStorage, so this only affects analysis, not image generation.
+  # :disabled silently breaks analysis, leaving photos without dimensions.
   config.active_storage.variant_processor = :mini_magick
 end
