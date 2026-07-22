@@ -20,7 +20,7 @@ A simple, fast photoblogging CMS built in Ruby on Rails which features responsiv
 * Location tagging via Google Maps, the National Park Service, and Native Land APIs
 * Admin map view powered by Mapbox GL JS
 * GraphQL API
-* Automated daily database backups to S3
+* Automated daily database backups to Cloudflare R2
 * Dynamic robots.txt via Known Agents
 * RSS/Atom feeds, sitemaps, and Open Graph tags
 * Did I mention it's fast as heck?
@@ -28,8 +28,7 @@ A simple, fast photoblogging CMS built in Ruby on Rails which features responsiv
 ## Requirements
 
 * [Docker](https://www.docker.com/) and Docker Compose (for local development)
-* An [AWS](https://aws.amazon.com/) account with an S3 bucket for image storage and a CloudFront distribution
-* A [Thumbor](https://www.thumbor.org/) image processing service
+* A [Cloudflare](https://www.cloudflare.com/) account with an R2 bucket for image storage, Image Transformations enabled on the zone, and the domain proxied through Cloudflare
 * A [Google Cloud](https://console.cloud.google.com/) project with OAuth 2.0 credentials for admin authentication
 
 See `.env.example` for all required and optional environment variables.
@@ -192,12 +191,12 @@ fly scale memory 1gb -a denali --process-group worker
 
 #### Backing up the database
 
-The app automatically creates daily database backups and uploads them to S3.
+The app automatically creates daily database backups and uploads them to Cloudflare R2.
 
 **Automated backups:**
 - Runs daily at 9:00 AM
 - Creates PostgreSQL custom format dumps (`.dump` files)
-- Uploads to the S3 bucket specified in `DB_BACKUP_BUCKET`
+- Uploads to the R2 bucket specified in `DB_BACKUP_BUCKET`
 - Only runs in production when `DB_BACKUP_BUCKET` and `DATABASE_URL` are set
 
 **Create a backup manually:**
@@ -209,7 +208,7 @@ fly ssh console -C "rake database:backup"
 **Download the most recent backup:**
 
 ```bash
-# Locally (downloads to project root, requires DB_BACKUP_BUCKET and AWS credentials)
+# Locally (downloads to project root, requires DB_BACKUP_BUCKET and R2 credentials)
 docker compose run --rm app rake database:download
 ```
 
@@ -220,7 +219,6 @@ pg_restore -d database_name denali_backup_YYYYMMDD_HHMMSS.dump
 ```
 
 **Required environment variables:**
-- `DB_BACKUP_BUCKET` - S3 bucket name for backups
+- `DB_BACKUP_BUCKET` - R2 bucket name for backups
 - `DATABASE_URL` - Postgres connection string (automatically set by Fly.io)
-- `AWS_REGION` - AWS region (optional, defaults to `us-east-1`)
-- AWS credentials (via `AWS_ACCESS_KEY_ID`/`AWS_SECRET_ACCESS_KEY` or IAM roles)
+- R2 credentials and endpoint (`R2_ACCESS_KEY_ID`/`R2_SECRET_ACCESS_KEY`/`R2_ENDPOINT`)

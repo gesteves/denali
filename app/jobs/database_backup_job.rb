@@ -24,10 +24,17 @@ class DatabaseBackupJob < ApplicationJob
         raise "Database dump failed with exit code #{$?.exitstatus}"
       end
 
-      # Upload to S3
-      logger.info "[Database Backup] Uploading to S3 bucket: #{ENV['DB_BACKUP_BUCKET']}"
+      # Upload to R2 via the S3-compatible API. The checksum options are
+      # required because aws-sdk-s3 >= 1.178 sends CRC32 checksums by default,
+      # which R2 doesn't fully support.
+      logger.info "[Database Backup] Uploading to R2 bucket: #{ENV['DB_BACKUP_BUCKET']}"
       s3_client = Aws::S3::Client.new(
-        region: ENV['AWS_REGION'] || 'us-east-1'
+        endpoint: ENV['R2_ENDPOINT'],
+        region: 'auto',
+        access_key_id: ENV['R2_ACCESS_KEY_ID'],
+        secret_access_key: ENV['R2_SECRET_ACCESS_KEY'],
+        request_checksum_calculation: 'when_required',
+        response_checksum_validation: 'when_required'
       )
 
       File.open(filepath, 'rb') do |file|

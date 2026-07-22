@@ -163,7 +163,9 @@ class Photo < ApplicationRecord
     else
       max_dimension
     end
-    opts = { width: width, format: 'jpeg', quality: 100, max_bytes: 1_950_000 }
+    # Cloudflare has no equivalent to Thumbor's max_bytes filter, so use a
+    # conservative fixed quality to stay under Bluesky's ~2 MB limit.
+    opts = { width: width, format: 'jpeg', quality: 80 }
     self.url(opts)
   end
 
@@ -427,7 +429,7 @@ class Photo < ApplicationRecord
     meta.join("\n")
   end
 
-  # Fetches the given image URLs via HTTP HEAD to pre-warm the Thumbor cache,
+  # Fetches the given image URLs via HTTP HEAD to pre-warm the CDN's image cache,
   # so they're ready when external APIs (Instagram, Threads, etc.) try to download them.
   #
   # @param urls [Array<String>] the image URLs to warm.

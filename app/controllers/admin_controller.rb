@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
   layout 'admin'
-  before_action :block_cloudfront
+  before_action :block_cdn
   before_action :no_cache
   before_action :require_login
   skip_before_action :domain_redirect

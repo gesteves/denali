@@ -4,7 +4,6 @@ on:
   push:
     branches: ["*"]
     paths-ignore:
-      - 'fly-thumbor/**'
       - 'cloudflare-plausible-proxy/**'
       - 'fly-redis-cache/**'
       - 'fly-redis-sidekiq/**'
@@ -13,7 +12,6 @@ on:
   pull_request:
     branches: [release]
     paths-ignore:
-      - 'fly-thumbor/**'
       - 'cloudflare-plausible-proxy/**'
       - 'fly-redis-cache/**'
       - 'fly-redis-sidekiq/**'
