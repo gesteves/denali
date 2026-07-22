@@ -1,6 +1,31 @@
+require 'mini_magick'
+
 class Bluesky
   MAX_POST_LENGTH = 300
   MAX_PHOTOS = 4
+
+  # Bluesky rejects any post embed whose image blob exceeds this many bytes,
+  # reported as "blob too big" at $.record.embed.images[].image when the record
+  # is created (uploadBlob itself accepts it, so the failure surfaces later).
+  MAX_BLOB_SIZE = 2_000_000
+
+  # When we have to recompress an oversized image, aim comfortably under the hard
+  # limit so we don't land right on the edge.
+  BLOB_SIZE_TARGET = 1_950_000
+
+  # Cloudflare has no equivalent to Thumbor's old max_bytes filter, so a
+  # transformed JPEG can still come back over the limit. When it does, walk it
+  # down these steps — dropping JPEG quality first, then scaling the image — and
+  # upload the first result that fits. Without this, an oversized photo produces
+  # the same too-big blob on every retry and can never be shared.
+  BLOB_COMPRESSION_STEPS = [
+    { quality: 70 },
+    { quality: 60 },
+    { quality: 50 },
+    { quality: 40, resize: '85%' },
+    { quality: 40, resize: '70%' },
+    { quality: 40, resize: '55%' }
+  ].freeze
 
   # Who's allowed to reply to a post. Only followers and people the account follows,
   # to keep drive-by replies from the popular feeds out of the thread.
@@ -435,6 +460,13 @@ class Bluesky
     image_data = image_response.body
     content_type = image_response.content_type || 'image/jpeg'
 
+    # If the image is over Bluesky's blob limit, recompress it to fit; otherwise
+    # createRecord rejects the post and every retry re-uploads the same too-big blob.
+    if image_data.bytesize > MAX_BLOB_SIZE
+      image_data = compress_under_blob_limit(image_data)
+      content_type = 'image/jpeg'
+    end
+
     headers = {
       "Authorization" => "Bearer #{access_token}",
       "Content-Type" => content_type
@@ -447,6 +479,40 @@ class Bluesky
     else
       raise "Failed to upload photo: #{response.body}"
     end
+  end
+
+  # Recompresses an oversized image so its blob fits under Bluesky's limit,
+  # returning JPEG data. Walks through BLOB_COMPRESSION_STEPS and returns the
+  # first attempt at or under the target size; if none fit, returns the smallest
+  # (last) attempt, which is still far smaller than the original.
+  #
+  # @param image_data [String] the raw (binary) image data to compress.
+  # @return [String] the recompressed JPEG data.
+  def compress_under_blob_limit(image_data)
+    candidate = image_data
+    BLOB_COMPRESSION_STEPS.each do |step|
+      candidate = recompress_image(image_data, **step)
+      return candidate if candidate.bytesize <= BLOB_SIZE_TARGET
+    end
+    candidate
+  end
+
+  # Recompresses an image as a JPEG at the given quality, optionally scaling it
+  # down first.
+  #
+  # @param image_data [String] the raw (binary) image data to recompress.
+  # @param quality [Integer] the JPEG quality to encode at.
+  # @param resize [String, nil] an optional ImageMagick geometry (e.g. '70%') to scale by.
+  # @return [String] the recompressed JPEG data.
+  def recompress_image(image_data, quality:, resize: nil)
+    image = MiniMagick::Image.read(image_data)
+    image.format('jpeg')
+    image.combine_options do |img|
+      img.resize(resize) if resize
+      img.quality(quality.to_s)
+      img.strip
+    end
+    image.to_blob
   end
 
   # Constructs the reply object for a given post URL.

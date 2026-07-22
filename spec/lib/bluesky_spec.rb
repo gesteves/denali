@@ -291,6 +291,82 @@ RSpec.describe Bluesky do
             .with(headers: { 'Content-Type' => 'image/png' })
         end
       end
+
+      context 'with an image over the blob size limit' do
+        let(:photos) do
+          [{ url: 'https://example.com/photo.jpg', alt_text: 'A photo', width: 4000, height: 3000 }]
+        end
+
+        # A body larger than Bluesky's 2,000,000-byte blob limit.
+        let(:oversized_body) { 'x' * (described_class::MAX_BLOB_SIZE + 1) }
+        # What recompression produces: comfortably under the limit.
+        let(:compressed_blob) { 'y' * 1_000_000 }
+
+        before do
+          stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
+            .to_return(status: 200, body: session_response.to_json)
+
+          stub_request(:get, 'https://example.com/photo.jpg')
+            .to_return(status: 200, body: oversized_body, headers: { 'Content-Type' => 'image/jpeg' })
+
+          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
+            .to_return(status: 200, body: { blob: { ref: 'blob123' } }.to_json)
+
+          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+            .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/123' }.to_json)
+
+          image = instance_double(MiniMagick::Image)
+          allow(MiniMagick::Image).to receive(:read).and_return(image)
+          allow(image).to receive(:format)
+          allow(image).to receive(:combine_options)
+          allow(image).to receive(:to_blob).and_return(compressed_blob)
+        end
+
+        it 'recompresses the image before uploading it' do
+          bluesky.skeet(text: text, photos: photos)
+
+          expect(MiniMagick::Image).to have_received(:read).with(oversized_body)
+          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
+            .with(body: compressed_blob, headers: { 'Content-Type' => 'image/jpeg' })
+        end
+
+        it 'does not upload the original oversized blob' do
+          bluesky.skeet(text: text, photos: photos)
+
+          expect(WebMock).not_to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
+            .with(body: oversized_body)
+        end
+      end
+
+      context 'with an image under the blob size limit' do
+        let(:photos) do
+          [{ url: 'https://example.com/photo.jpg', alt_text: 'A photo', width: 1920, height: 1080 }]
+        end
+
+        before do
+          stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
+            .to_return(status: 200, body: session_response.to_json)
+
+          stub_request(:get, 'https://example.com/photo.jpg')
+            .to_return(status: 200, body: 'small image data', headers: { 'Content-Type' => 'image/jpeg' })
+
+          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
+            .to_return(status: 200, body: { blob: { ref: 'blob123' } }.to_json)
+
+          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+            .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/123' }.to_json)
+
+          allow(MiniMagick::Image).to receive(:read)
+        end
+
+        it 'uploads the image as-is without recompressing it' do
+          bluesky.skeet(text: text, photos: photos)
+
+          expect(MiniMagick::Image).not_to have_received(:read)
+          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
+            .with(body: 'small image data')
+        end
+      end
     end
 
     describe 'resolve_handle error handling' do
