@@ -17,8 +17,7 @@ entry: &entry
     - 3360
   src: 1280
   sizes:
-    - auto
-    - "(min-width: 1696) 1680px"
+    - "(min-width: 1696px) 1680px"
     - calc(100vw - 16px)
 entry_list: &entry_list
   srcset:

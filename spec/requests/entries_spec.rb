@@ -70,6 +70,33 @@ RSpec.describe "Entries", type: :request do
       get entry_long_path(entry.id, entry.slug, format: 'foo')
       expect(response).to redirect_to(entry.permalink_url)
     end
+
+    context "with multiple photos" do
+      let(:entry) { create(:entry, :published, blog: blog, user: user) }
+
+      before do
+        2.times { |i| attach_image_to_photo(create(:photo, entry: entry, position: i + 1)) }
+      end
+
+      it "loads the first photo eagerly and the rest lazily" do
+        get entry_long_path(entry.id, entry.slug)
+
+        images = response.body.scan(/<img[^>]*entry__photo[^>]*>/)
+        expect(images.length).to eq(2)
+        expect(images.first).to include('loading="eager"').and include('fetchpriority="high"')
+        expect(images.last).to include('loading="lazy"')
+      end
+
+      it "sizes the lazy photos from the media conditions, not the 300px auto default" do
+        get entry_long_path(entry.id, entry.slug)
+
+        images = response.body.scan(/<img[^>]*entry__photo[^>]*>/)
+        images.each do |image|
+          expect(image).to include('sizes="(min-width: 1696px) 1680px, calc(100vw - 16px)"')
+          expect(image).not_to include('sizes="auto')
+        end
+      end
+    end
   end
 
   describe "GET /p/:preview_hash (preview)" do

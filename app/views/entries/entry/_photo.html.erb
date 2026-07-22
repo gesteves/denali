@@ -1,11 +1,15 @@
 <%= responsive_image_tag(
   photo: photo,
   srcset: @srcset,
+  src: @src,
   sizes: @sizes,
   html_options: {
     class: 'entry__photo placeholder',
     style: "#{css_placeholder_background(photo)}",
-    fetchpriority: 'high',
+    # The first photo is the entry's LCP element, so it loads eagerly. Later
+    # photos are below the fold and stay lazy.
+    loading: photo_counter.zero? ? 'eager' : 'lazy',
+    fetchpriority: photo_counter.zero? ? 'high' : 'auto',
     'data-controller': 'placeholder',
     'data-action': 'click->photo#zoom keydown->photo#zoom contextmenu->photo#disableContextMenu load->placeholder#removeBackground',
     'data-photo-target': 'photo'
