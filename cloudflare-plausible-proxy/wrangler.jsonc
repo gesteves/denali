@@ -1,0 +1,22 @@
+{
+  "name": "denali-plausible-proxy",
+  "main": "src/index.js",
+  "compatibility_date": "2026-07-21",
+  "routes": [
+    {
+      "pattern": "www.allencompassingtrip.com/pa/*",
+      "zone_name": "allencompassingtrip.com"
+    }
+  ],
+  // The site's personalized Plausible script. Public (it's referenced from the
+  // page source), so it lives here rather than in a secret.
+  "vars": {
+    "PLAUSIBLE_SCRIPT_URL": "https://plausible.io/js/pa-6otje_dcSAKuLSiW3Pffb.js"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "head_sampling_rate": 1
+    }
+  }
+}

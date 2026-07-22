@@ -100,7 +100,7 @@ describe('analytics', () => {
 
       expect(initSpy).toHaveBeenCalledWith({
         autoCapturePageviews: false,
-        endpoint: '/api/event'
+        endpoint: '/pa/event'
       });
     });
   });
