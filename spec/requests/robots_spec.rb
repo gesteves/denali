@@ -4,11 +4,6 @@ RSpec.describe "Robots", type: :request do
   let!(:blog) { Blog.first || create(:blog) }
 
   describe "GET /robots.txt" do
-    before do
-      allow(Rails.cache).to receive(:fetch).and_call_original
-      allow(Rails.cache).to receive(:fetch).with("known-agents", anything).and_return("User-agent: *\nDisallow: /admin/")
-    end
-
     it "renders successfully" do
       get '/robots.txt'
       expect(response).to have_http_status(:success)
@@ -22,6 +17,11 @@ RSpec.describe "Robots", type: :request do
     it "includes user-agent directives" do
       get '/robots.txt'
       expect(response.body).to include("User-agent")
+    end
+
+    it "points at the sitemap" do
+      get '/robots.txt'
+      expect(response.body).to include("Sitemap:")
     end
   end
 end

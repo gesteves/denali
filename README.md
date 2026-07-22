@@ -21,7 +21,6 @@ A simple, fast photoblogging CMS built in Ruby on Rails which features responsiv
 * Admin map view powered by Mapbox GL JS
 * GraphQL API
 * Automated daily database backups to Cloudflare R2
-* Dynamic robots.txt via Known Agents
 * RSS/Atom feeds, sitemaps, and Open Graph tags
 * Did I mention it's fast as heck?
 
