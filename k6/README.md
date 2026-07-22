@@ -1,6 +1,6 @@
 # Load Testing with k6
 
-This directory contains k6 load test scripts for performance testing the Denali application and its Thumbor image service.
+This directory contains k6 load test scripts for performance testing the Denali application.
 
 ## Prerequisites
 
@@ -18,7 +18,6 @@ brew install k6
 | Script | Purpose |
 |--------|---------|
 | `denali-load-test.js` | Load test the main Rails application |
-| `denali-thumbor-load-test.js` | Load test the Thumbor image processing service |
 
 ---
 
@@ -38,7 +37,7 @@ DENALI_SECRET=your_secret MAX_URLS=50 k6 run denali-load-test.js
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `DENALI_SECRET` | (required) | Value for X-Denali-Secret header to bypass CloudFront redirect |
+| `DENALI_SECRET` | (required) | Value for X-Denali-Secret header to bypass the CDN origin-protection redirect |
 | `TARGET_HOST` | `denali.fly.dev` | Target host to test against |
 | `SITEMAP_URL` | `https://www.allencompassingtrip.com/sitemap.xml` | Sitemap to crawl for URLs |
 | `MAX_URLS` | `0` (no limit) | Limit number of URLs to test (useful for quick tests) |
@@ -189,110 +188,6 @@ Set `soft_limit` equal to your total capacity if you want to maximize single-mac
 
 ---
 
-# Denali-Thumbor Load Testing
-
-## Quick Start
-
-```bash
-# Basic run
-k6 run denali-thumbor-load-test.js
-
-# With custom options
-MAX_URLS=100 k6 run denali-thumbor-load-test.js
-```
-
-## Environment Variables
-
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `TARGET_HOST` | `denali-thumbor.fly.dev` | Target host to test against |
-| `SITEMAP_URL` | `https://www.allencompassingtrip.com/sitemap.xml` | Sitemap to crawl for image URLs |
-| `MAX_URLS` | `0` (no limit) | Limit number of URLs to test |
-| `SLEEP_MIN` | `0.1` | Minimum sleep between requests (seconds) |
-| `SLEEP_MAX` | `0.5` | Maximum sleep between requests (seconds) |
-
-## Modifying the Load Profile
-
-Edit the `stages` array in `denali-thumbor-load-test.js`:
-
-```javascript
-stages: [
-  { duration: '30s', target: 5 },
-  { duration: '1m', target: 10 },
-  { duration: '2m', target: 10 },
-  { duration: '30s', target: 20 },
-  { duration: '1m', target: 20 },
-  { duration: '30s', target: 0 },
-],
-```
-
-## Understanding Thumbor Performance
-
-Thumbor is fundamentally different from the Rails app:
-
-1. **CPU-Intensive**: Image processing (resizing, format conversion) is CPU-bound
-2. **Memory-Intensive**: Large images require significant memory during processing
-3. **Caching**: Results are typically cached, so repeated requests are fast
-4. **Variable Load**: Processing a 10MB image takes much longer than a 100KB image
-
-### Key Metrics for Thumbor
-
-- **Response Time Distribution**: High variance is normal due to different image sizes
-- **CPU Usage**: Monitor via Fly.io dashboard during tests
-- **Memory Usage**: Watch for OOM errors in logs
-- **Cache Hit Rate**: If Thumbor has caching, subsequent requests should be faster
-
-## Determining Optimal `soft_limit`
-
-### Testing Methodology
-
-#### Step 1: Cold Cache Test
-
-Clear any caches and run the test. This simulates worst-case performance:
-
-```bash
-k6 run denali-thumbor-load-test.js
-```
-
-#### Step 2: Warm Cache Test
-
-Run the same test again immediately. Note the performance improvement.
-
-#### Step 3: Find the Breaking Point
-
-Increase VUs until:
-- p95 response time > 5 seconds
-- Error rate increases
-- CPU hits 100% on Fly.io dashboard
-
-#### Step 4: Set `soft_limit`
-
-For Thumbor, `soft_limit` should be based on:
-1. **CPU capacity**: How many concurrent image operations can run
-2. **Memory capacity**: How many images can be processed simultaneously
-3. **Acceptable response time**: What p95 latency is acceptable
-
-**General guidance:**
-- Start conservative (lower `soft_limit`)
-- Thumbor with 1 shared CPU can typically handle 10-20 concurrent requests
-- Monitor CPU during tests; if hitting 100%, lower the limit
-
-### Recommended Settings
-
-For a shared-cpu-1x with 1GB memory:
-
-```toml
-[http_service.concurrency]
-  type = 'requests'
-  soft_limit = 25  # Conservative starting point
-```
-
-Increase gradually based on test results:
-- If p95 < 3s and CPU < 80%, try `soft_limit = 40`
-- If p95 > 5s or errors occur, decrease to `soft_limit = 15`
-
----
-
 # Monitoring During Tests
 
 ## Fly.io Dashboard
@@ -308,11 +203,7 @@ Watch the Fly.io dashboard during tests for:
 In a separate terminal:
 
 ```bash
-# Main app
 fly logs -a denali
-
-# Thumbor
-fly logs -a denali-thumbor
 ```
 
 Look for:
@@ -326,14 +217,11 @@ Check machine status:
 
 ```bash
 fly status -a denali
-fly status -a denali-thumbor
 ```
 
 ---
 
 # Example Testing Session
-
-## Denali Rails App
 
 ```bash
 # 1. Ensure single machine
@@ -351,24 +239,6 @@ DENALI_SECRET=your_secret k6 run denali-load-test.js
 fly deploy
 
 # 6. Re-test to verify improvements
-```
-
-## Denali-Thumbor
-
-```bash
-# 1. Ensure single machine
-fly scale count 1 -a denali-thumbor
-
-# 2. Quick test
-MAX_URLS=50 k6 run denali-thumbor-load-test.js
-
-# 3. Full test
-k6 run denali-thumbor-load-test.js
-
-# 4. Adjust soft_limit in fly-thumbor/fly.toml based on results
-
-# 5. Re-deploy
-cd fly-thumbor && fly deploy
 ```
 
 ---
@@ -405,6 +275,5 @@ cd fly-thumbor && fly deploy
 
 After each test run, a JSON summary is saved:
 - `denali-load-test-summary.json`
-- `denali-thumbor-load-test-summary.json`
 
 These contain detailed metrics for analysis and comparison between runs.

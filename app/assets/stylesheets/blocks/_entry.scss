@@ -14,7 +14,7 @@
   text-align: center;
   width: 100%;
 
-  picture:not(:first-child) > .entry__photo {
+  .entry__photo:not(:first-child) {
     margin-top: var(--photo-container-padding);
   }
 }

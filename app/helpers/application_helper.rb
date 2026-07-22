@@ -2,24 +2,22 @@ module ApplicationHelper
 
   def responsive_image_tag(photo:, srcset: [3360], src: nil, sizes: '100vw', aspect_ratio: nil, html_options: {})
     return placeholder_image_tag(srcset: srcset, sizes: sizes, aspect_ratio: aspect_ratio, html_options: html_options) unless photo&.has_dimensions?
-    # Pre-calculate crop once and reuse for all formats to avoid repeated queries
+    # format=auto lets Cloudflare negotiate avif/webp/jpeg from the Accept
+    # header, so a single srcset replaces per-format <source> elements.
     crop = photo.calculate_crop({ aspect_ratio: aspect_ratio }.compact)
-    base_opts = { crop: crop }.compact
+    opts = { crop: crop, aspect_ratio: aspect_ratio, format: 'auto' }.compact
+    image_src, image_srcset = photo.srcset(srcset: srcset, src: src, opts: opts)
     html_options.reverse_merge!({
-      src: photo.sitemap_url,
+      src: image_src,
+      srcset: image_srcset,
+      sizes: sizes,
       width: photo.width,
       height: aspect_ratio.present? ? photo.height_from_aspect_ratio(aspect_ratio) : photo.height,
       alt: photo.alt_text,
       loading: 'lazy',
       decoding: 'async'
     })
-    tag.picture do
-      ['avif', 'webp', 'jpeg'].each do |format|
-        format_srcset = photo.srcset(srcset: srcset, opts: base_opts.merge(aspect_ratio: aspect_ratio, format: format).compact).last
-        concat(tag.source(sizes: sizes, srcset: format_srcset, type: "image/#{format}"))
-      end
-      concat(content_tag :img, nil, html_options)
-    end
+    content_tag :img, nil, html_options
   end
 
   def placeholder_image_tag(srcset: [3360], sizes: '100vw', aspect_ratio: nil, html_options: {})

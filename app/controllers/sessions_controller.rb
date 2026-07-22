@@ -1,5 +1,5 @@
 class SessionsController < ApplicationController
-  before_action :block_cloudfront
+  before_action :block_cdn
   before_action :no_cache
   skip_before_action :domain_redirect
 

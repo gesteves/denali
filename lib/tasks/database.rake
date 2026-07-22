@@ -1,14 +1,14 @@
 require 'aws-sdk-s3'
 
 namespace :database do
-  desc 'Create a database backup and upload to S3'
+  desc 'Create a database backup and upload to R2'
   task :backup => :environment do
     puts "Starting database backup..."
     DatabaseBackupJob.perform_inline
     puts "Backup complete!"
   end
 
-  desc 'Download the most recent database backup from S3'
+  desc 'Download the most recent database backup from R2'
   task :download => :environment do
     if ENV['DB_BACKUP_BUCKET'].blank?
       puts "Error: DB_BACKUP_BUCKET environment variable is not set"
@@ -16,9 +16,14 @@ namespace :database do
     end
 
     begin
-      puts "Connecting to S3 bucket: #{ENV['DB_BACKUP_BUCKET']}"
+      puts "Connecting to R2 bucket: #{ENV['DB_BACKUP_BUCKET']}"
       s3_client = Aws::S3::Client.new(
-        region: ENV['AWS_REGION'] || 'us-east-1'
+        endpoint: ENV['R2_ENDPOINT'],
+        region: 'auto',
+        access_key_id: ENV['R2_ACCESS_KEY_ID'],
+        secret_access_key: ENV['R2_SECRET_ACCESS_KEY'],
+        request_checksum_calculation: 'when_required',
+        response_checksum_validation: 'when_required'
       )
 
       # List all .dump files in the bucket
@@ -63,7 +68,7 @@ namespace :database do
       puts "\nTo restore this backup, run:"
       puts "  pg_restore -d database_name #{download_path}"
     rescue Aws::S3::Errors::ServiceError => e
-      puts "AWS S3 Error: #{e.message}"
+      puts "R2 Error: #{e.message}"
       exit 1
     rescue => e
       puts "Error: #{e.message}"

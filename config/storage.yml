@@ -6,13 +6,18 @@ local:
   service: Disk
   root: <%= Rails.root.join("storage") %>
 
-# Use rails credentials:edit to set the AWS secrets (as aws:access_key_id|secret_access_key)
-amazon:
+# Cloudflare R2, via the S3-compatible API. The checksum options are required
+# because aws-sdk-s3 >= 1.178 sends CRC32 checksums by default, which R2
+# doesn't fully support.
+cloudflare:
   service: S3
-  access_key_id: <%= ENV['AWS_ACCESS_KEY_ID'] %>
-  secret_access_key: <%= ENV['AWS_SECRET_ACCESS_KEY'] %>
-  region: <%= ENV['S3_REGION'] %>
-  bucket: <%= ENV['S3_BUCKET'] %>
+  access_key_id: <%= ENV['R2_ACCESS_KEY_ID'] %>
+  secret_access_key: <%= ENV['R2_SECRET_ACCESS_KEY'] %>
+  region: auto
+  bucket: <%= ENV['R2_BUCKET'] %>
+  endpoint: <%= ENV['R2_ENDPOINT'] %>
+  request_checksum_calculation: when_required
+  response_checksum_validation: when_required
   upload:
     cache_control: 'public, max-age=31536000, immutable'
 

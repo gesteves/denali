@@ -1,51 +1,49 @@
 module Thumborizable
   extend ActiveSupport::Concern
 
-  VALID_FORMATS = ['jpeg', 'webp', 'avif', 'png', 'gif']
+  # Formats that can be requested via Cloudflare's `format` option; `auto`
+  # negotiates avif/webp/jpeg from the request's Accept header. PNG (used for
+  # favicons) isn't a valid URL API value; omitting `format` preserves the
+  # source format, so PNG sources stay PNG.
+  VALID_FORMATS = ['auto', 'jpeg', 'webp', 'avif']
 
   def thumbor_url(image, opts = {})
     return if image.blank?
 
     url = build_image_url(image)
-    filters = build_filters(opts)
-    params = build_params(url, filters, opts)
+    options = build_options(opts)
+    return url if options.blank?
 
-    generate_thumbor_url(params)
+    "https://#{ENV['DOMAIN']}/cdn-cgi/image/#{options.join(',')}/#{url}"
   end
 
   private
 
   def build_image_url(image)
-    image.start_with?('https://', 'http://') ? image : "#{ENV['S3_BUCKET']}/#{image}"
+    image.start_with?('https://', 'http://') ? image : "https://#{ENV['IMAGES_ORIGIN_HOST']}/#{image}"
   end
 
-  def build_filters(opts)
-    filters = []
-    filters << "fill(#{opts[:fill]},true)" if opts[:fill].present?
-    filters << "quality(#{opts[:quality]})" if opts[:quality].present?
-    filters << "max_bytes(#{opts[:max_bytes]})" if opts[:max_bytes].present?
-    filters << "grayscale()" if opts[:grayscale].present?
-    filters << "format(#{opts[:format]})" if opts[:format].present? && VALID_FORMATS.include?(opts[:format])
-    filters
+  def build_options(opts)
+    options = []
+    options << "trim=#{crop_to_trim(opts[:crop])}" if opts[:crop].present?
+    options << "width=#{opts[:width]}" if opts[:width].present?
+    options << "height=#{opts[:height]}" if opts[:height].present? && opts[:crop].blank?
+    options << 'fit=pad' if opts[:fit_in].present?
+    options << "background=%23#{opts[:fill]}" if opts[:fill].present?
+    options << "quality=#{opts[:quality]}" if opts[:quality].present?
+    options << 'saturation=0' if opts[:grayscale].present?
+    options << "format=#{opts[:format]}" if opts[:format].present? && VALID_FORMATS.include?(opts[:format])
+    options
   end
 
-  def build_params(url, filters, opts)
-    params = {
-      image: url,
-      width: opts[:width],
-      crop: opts[:crop],
-      fit_in: opts[:fit_in]
-    }.compact
-
-    params[:height] = opts[:height] unless opts[:crop].present?
-    params[:filters] = filters if filters.present?
-    params
-  end
-
-  def generate_thumbor_url(params)
-    thumbor = Thumbor::CryptoURL.new(ENV['THUMBOR_SECURITY_KEY'])
-    path = thumbor.generate(params)
-    thumbor_path = ENV['THUMBOR_PATH'].presence ? "/#{ENV['THUMBOR_PATH']}" : ''
-    "https://#{ENV['THUMBOR_DOMAIN']}#{thumbor_path}#{path}"
+  # Converts a `[left, top, right, bottom]` crop rectangle (in source pixels)
+  # into Cloudflare's `trim=top;right;bottom;left` option, where each value is
+  # the number of pixels to shave off that side. Trim is applied before
+  # resizing, so this reproduces Thumbor's manual crop exactly. Crops are only
+  # ever passed by Photo callers, so `width`/`height` are the photo's
+  # dimensions.
+  def crop_to_trim(crop)
+    left, top, right, bottom = crop
+    [top, width - right, height - bottom, left].join(';')
   end
 end
