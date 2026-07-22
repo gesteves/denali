@@ -1,0 +1,25 @@
+{
+  "name": "denali-instagram-images",
+  "main": "src/index.js",
+  "compatibility_date": "2026-07-21",
+  "routes": [
+    {
+      "pattern": "www.allencompassingtrip.com/ig/*",
+      "zone_name": "allencompassingtrip.com"
+    }
+  ],
+  // Chained transforms need the Images binding; the URL API can't do them.
+  "images": {
+    "binding": "IMAGES"
+  },
+  // The R2 bucket's public custom domain, where the originals are served from.
+  "vars": {
+    "IMAGES_ORIGIN_HOST": "photos.allencompassingtrip.com"
+  },
+  "observability": {
+    "enabled": true,
+    "logs": {
+      "head_sampling_rate": 1
+    }
+  }
+}

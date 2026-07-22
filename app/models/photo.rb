@@ -14,6 +14,9 @@ class Photo < ApplicationRecord
 
   acts_as_list scope: :entry
 
+  # Total white space, in pixels, guaranteed around an Instagram feed image.
+  INSTAGRAM_MATTE = 100
+
   after_create_commit :extract_metadata, :detect_colors, :encode_blurhash
 
   after_commit :touch_entry
@@ -113,20 +116,25 @@ class Photo < ApplicationRecord
     [left, top, right, bottom].map(&:round)
   end
 
-  # Returns the url of the image, formatted & sized to fit into instagram's
-  # 5:4 ratio
+  # Returns the url of the image, matted on white to fit Instagram's frame:
+  # 4:5 for vertical photos, 1:1 for everything else.
+  #
+  # The photo is padded onto an inner frame, inset on the axis it would
+  # otherwise meet, and that result is padded onto the full frame — which
+  # leaves white on all four sides. Cloudflare's URL transformations can't do
+  # this, because they can't be chained: a /cdn-cgi/image/ URL isn't fetchable
+  # as another transform's source. So it's rendered by the instagram-images
+  # worker, which chains the Images binding instead.
   def instagram_url
-    opts = { fit_in: true, fill: 'fff', quality: 100, format: 'jpeg' }
-
-    new_url = if self.is_vertical?
-      width, height = 1440, 1800
-      self.url(opts.merge(width: width, height: (height - 100)))
+    if self.is_vertical?
+      outer = [1440, 1800]
+      inner = [outer.first, outer.last - INSTAGRAM_MATTE]
     else
-      width, height = 1440, 1440
-      self.url(opts.merge(width: (width - 100), height: height))
+      outer = [1440, 1440]
+      inner = [outer.first - INSTAGRAM_MATTE, outer.last]
     end
 
-    thumbor_url(new_url, opts.merge(width: width, height: height))
+    "https://#{ENV['DOMAIN']}/ig/#{inner.join('x')}/#{outer.join('x')}/#{self.image.key}"
   end
 
   # Returns the url of the image, formatted & sized to fit into instagram stories'

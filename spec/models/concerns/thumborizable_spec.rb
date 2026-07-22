@@ -99,12 +99,38 @@ RSpec.describe Thumborizable, type: :model do
       expect(url).to eq('https://www.example.com/cdn-cgi/image/trim=200;300;200;300,width=500/https://images.example.com/abc123')
     end
 
-    it 'chains transforms for the Instagram URL' do
-      url = photo.instagram_url
+    # Rendered by the instagram-images worker rather than /cdn-cgi/image/,
+    # because matting on all four sides needs two chained transforms.
+    it 'frames a horizontal photo onto a square, inset on the axis it would meet' do
+      expect(photo.instagram_url).to eq('https://www.example.com/ig/1340x1440/1440x1440/abc123')
+    end
 
-      # Horizontal photo: inner is padded to (1440-100)x1440, outer pads to 1440x1440.
-      inner = 'https://www.example.com/cdn-cgi/image/width=1340,height=1440,fit=pad,background=%23fff,quality=100,format=jpeg/https://images.example.com/abc123'
-      expect(url).to eq("https://www.example.com/cdn-cgi/image/width=1440,height=1440,fit=pad,background=%23fff,quality=100,format=jpeg/#{inner}")
+    it 'frames a vertical photo onto 4:5, inset on the axis it would meet' do
+      allow(photo).to receive(:width).and_return(2000)
+      allow(photo).to receive(:height).and_return(3000)
+
+      expect(photo.instagram_url).to eq('https://www.example.com/ig/1440x1700/1440x1800/abc123')
+    end
+
+    # Cloudflare cannot fetch a /cdn-cgi/image/ URL as the source of another
+    # transform; it fails with "ERROR 9404: Could not fetch the image".
+    it 'never nests one transform inside another' do
+      urls = [
+        photo.instagram_url,
+        photo.instagram_story_url,
+        photo.facebook_card_url,
+        photo.mastodon_url,
+        photo.threads_url,
+        photo.bluesky_url,
+        photo.sitemap_url,
+        photo.claude_url,
+        photo.iphone_wallpaper_url,
+        photo.url(width: 800)
+      ]
+
+      urls.each do |url|
+        expect(url.scan('/cdn-cgi/image/').length).to be <= 1, "nested transform: #{url}"
+      end
     end
   end
 end
