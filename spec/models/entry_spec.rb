@@ -458,4 +458,72 @@ RSpec.describe Entry, type: :model do
       expect(entry.territory_list).to eq('Shoshone-Bannock, Eastern Shoshone, and Cheyenne')
     end
   end
+
+  describe 'cache purging' do
+    describe '#cache_tags' do
+      it 'includes the shared tag for a published entry, which appears in lists' do
+        entry = create(:entry, :published, blog: blog, user: user)
+        expect(entry.cache_tags).to contain_exactly(CacheTags.entry(entry.id), CacheTags::ENTRIES)
+      end
+
+      it 'omits the shared tag for a draft, which appears in no list' do
+        entry = create(:entry, blog: blog, user: user)
+        expect(entry.cache_tags).to eq([CacheTags.entry(entry.id)])
+      end
+
+    end
+
+    it 'purges immediately on publish, so the post appears without waiting' do
+      entry = create(:entry, blog: blog, user: user)
+
+      expect(CachePurgeJob).to receive(:perform_async).with(CacheTags.entry(entry.id), CacheTags::ENTRIES)
+
+      entry.update(status: 'published')
+    end
+
+    it 'purges the lists on unpublish, even though the entry has left them' do
+      entry = create(:entry, :published, blog: blog, user: user)
+
+      expect(CachePurgeJob).to receive(:perform_async).with(CacheTags.entry(entry.id), CacheTags::ENTRIES)
+
+      entry.update(status: 'draft')
+    end
+
+    it 'purges on update' do
+      entry = create(:entry, :published, blog: blog, user: user)
+
+      expect(CachePurgeJob).to receive(:enqueue).with(CacheTags.entry(entry.id), CacheTags::ENTRIES)
+
+      entry.update(title: 'A new title')
+    end
+
+    it 'purges on destroy' do
+      entry = create(:entry, :published, blog: blog, user: user)
+
+      expect(CachePurgeJob).to receive(:enqueue).with(CacheTags.entry(entry.id), CacheTags::ENTRIES)
+
+      entry.destroy
+    end
+
+    it 'does not invalidate the whole site when a draft is edited' do
+      entry = create(:entry, blog: blog, user: user)
+
+      expect(CachePurgeJob).to receive(:enqueue).with(CacheTags.entry(entry.id))
+
+      entry.update(title: 'Still a draft')
+    end
+
+    it 'does not invalidate the whole site during the job storm after an upload' do
+      entry = create(:entry, blog: blog, user: user)
+      photo = create(:photo, entry: entry)
+
+      expect(CachePurgeJob).to receive(:enqueue).with(CacheTags.entry(entry.id)).at_least(:once)
+      expect(CachePurgeJob).not_to receive(:enqueue).with(anything, CacheTags::ENTRIES)
+
+      # Stands in for PhotoExifJob and friends, each of which saves a photo and
+      # touches its entry. The touch leaves the entry's saved_changes stale, so
+      # this would regress if cache_tags went back to dirty tracking.
+      photo.update(alt_text: 'A mountain')
+    end
+  end
 end

@@ -12,6 +12,7 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops, :territories]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
+    set_cache_tags(CacheTags::ENTRIES)
     @srcset = PHOTOS[:entry_list][:srcset]
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
     @page_url = @page == 1 ? entries_url(page: nil) : entries_url(page: @page)
@@ -49,6 +50,7 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops, :territories]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    set_cache_tags(CacheTags::ENTRIES, CacheTags.tag(@tag_slug))
     @srcset = PHOTOS[:entry_list][:srcset]
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
     @page_url = @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page)
@@ -85,6 +87,7 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @query = params[:q]
     @suggested_tags = []
+    set_cache_tags(CacheTags::ENTRIES)
 
     if @query.present?
       @srcset = PHOTOS[:entry_list][:srcset]
@@ -140,12 +143,21 @@ class EntriesController < ApplicationController
       ]
     ).call
     @photos = @entry.photos
+    # The pagination and related-entries sections change when any entry does, so
+    # this page carries the shared tag as well as its own.
+    set_cache_tags(CacheTags.entry(@entry.id), CacheTags::ENTRIES)
     @srcset = PHOTOS[:entry][:srcset]
     @src = PHOTOS[:entry][:src]
     @sizes = PHOTOS[:entry][:sizes].join(', ')
     respond_to do |format|
       format.html {
-        redirect_to @entry.permalink_url, status: 301 if request.path != @entry.permalink_path
+        next redirect_to(@entry.permalink_url, status: 301) if request.path != @entry.permalink_path
+        # Lets the edge revalidate with a 304 instead of a full re-render. Keyed
+        # on the entry alone, not the blog: photos touch their entry and entries
+        # touch the blog, so keying on @photoblog would reset every ETag on the
+        # site every time a background photo job runs. Blog-level changes are
+        # covered by purging the `blog` tag instead.
+        next unless stale?(@entry, public: true)
         @page_title = "#{@entry.plain_title} – #{@photoblog.name}"
         @has_territories = @entry.photos.any? { |p| p.territories.present? }
       }
@@ -165,7 +177,9 @@ class EntriesController < ApplicationController
     scope = Entry.published.where('published_at >= ?', 4.years.ago)
     count = scope.count
     entry = scope.offset(rand(count)).limit(1).first!
-    response.headers['Cache-Control'] = "s-maxage=1, max-age=0, public"
+    # A cached random entry isn't random. Cloudflare also bypasses this path by
+    # rule, but say so at the origin too rather than relying on a 1-second TTL.
+    no_store
     redirect_to entry.permalink_url, status: 302
   end
 
@@ -173,6 +187,7 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :territories]).published.photo_entries.page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
+    set_cache_tags(CacheTags::ENTRIES)
     respond_to do |format|
       format.atom
       format.all { redirect_to feed_url(format: 'atom'), status: 301 }
@@ -183,6 +198,7 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :territories]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
+    set_cache_tags(CacheTags::ENTRIES, CacheTags.tag(@tag_slug))
     respond_to do |format|
       format.atom
       format.all { redirect_to tag_feed_url(format: 'atom', tag: @tag_slug), status: 301 }

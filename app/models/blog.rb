@@ -103,4 +103,18 @@ class Blog < ApplicationRecord
     current_time = Time.current.in_time_zone(self.time_zone)
     self.publish_schedules.where(hour: current_time.hour).count > 0
   end
+
+  # The Cache-Tag values whose cached responses this blog's settings appear in.
+  # The name, tag line and posts-per-page render into list pages as well as the
+  # site chrome, so both tags go.
+  #
+  # Purged from Admin::BlogsController rather than an after_commit callback:
+  # entries belong_to :blog, touch: true, so a callback would have to tell a
+  # settings change from a touch, and dirty tracking can't — a touched record
+  # keeps the saved_changes of whatever its in-memory instance last really
+  # saved. Settings only ever change in the admin, so purge there, where the
+  # intent is unambiguous.
+  def cache_tags
+    [CacheTags::BLOG, CacheTags::ENTRIES]
+  end
 end

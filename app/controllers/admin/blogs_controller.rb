@@ -20,6 +20,7 @@ class Admin::BlogsController < AdminController
   def update
     respond_to do |format|
       if @photoblog.update(blog_params)
+        CachePurgeJob.enqueue(*@photoblog.cache_tags)
         format.html {
           flash[:success] = 'Your changes were saved!'
           redirect_to edit_admin_blog_path(@photoblog)

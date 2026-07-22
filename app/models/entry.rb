@@ -20,6 +20,7 @@ class Entry < ApplicationRecord
 
   after_commit :enqueue_caption_validity_job, if: :changed_caption_fields?
   after_commit :handle_status_change, if: :saved_change_to_status?
+  after_commit :purge_cache_later, on: [:update, :destroy]
 
   acts_as_taggable_on :tags, :equipment, :locations, :styles
   acts_as_list scope: :blog
@@ -931,6 +932,17 @@ class Entry < ApplicationRecord
     when 'queued'
       add_to_list
     end
+
+    # Not debounced: a status change happens once, and until the purge lands the
+    # entry is either missing from the edge's copy of the lists or still in it,
+    # so a debounce window would just delay the change becoming visible.
+    # purge_cache_later still schedules a trailing purge, which picks up
+    # whatever the publish jobs change.
+    #
+    # The shared tag is named here rather than taken from cache_tags: an entry
+    # that just stopped being published no longer claims it, but the lists it
+    # was in still need invalidating.
+    CachePurgeJob.perform_async(CacheTags.entry(self.id), CacheTags::ENTRIES)
   end
 
   def photos_have_dimensions?
@@ -939,6 +951,27 @@ class Entry < ApplicationRecord
 
   def enqueue_caption_validity_job
     CaptionValidityJob.perform_async(self.id)
+  end
+
+  # The Cache-Tag values whose cached responses this entry appears in. Mirrors
+  # what the controllers attach; see CacheTags.
+  #
+  # Reads current state rather than dirty tracking: photos touch their entry, and
+  # a touched record keeps the saved_changes of whatever its in-memory instance
+  # last really saved, so status_previously_changed? can't be trusted here. An
+  # entry leaving the lists is handled explicitly in handle_status_change.
+  def cache_tags
+    tags = [CacheTags.entry(self.id)]
+    # Lists, feeds and sitemaps only show published entries, so editing a draft
+    # must not invalidate them — and every upload edits a draft repeatedly, as
+    # the EXIF, alt text, color, geocoding and blurhash jobs each save a photo
+    # and touch this entry.
+    tags << CacheTags::ENTRIES if self.is_published?
+    tags
+  end
+
+  def purge_cache_later
+    CachePurgeJob.enqueue(*cache_tags)
   end
 
   private

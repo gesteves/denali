@@ -62,12 +62,24 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  # Admin, session and health responses must never be written to disk by a
+  # browser or an intermediary, so no-store rather than expires_now's no-cache.
   def no_cache
-    expires_now
+    no_store
   end
 
-  def set_max_age(seconds: ENV['CACHE_TTL'])
-    response.headers['Cache-Control'] = "s-maxage=#{seconds}, max-age=0, public"
+  # Browsers always revalidate (max-age=0), so a purge is never defeated by a
+  # stale copy we can't reach. Cloudflare holds the response until CachePurgeJob
+  # purges one of its tags; CACHE_TTL is only the backstop for a missed purge.
+  def set_max_age(seconds: ENV.fetch('CACHE_TTL', 1.day.to_i))
+    expires_in 0.seconds, public: true, 's-maxage' => seconds.to_i
+  end
+
+  # Cloudflare consumes and strips this header. Purging a tag invalidates every
+  # cached response carrying it; see app/jobs/cache_purge_job.rb for the
+  # vocabulary and who purges what.
+  def set_cache_tags(*tags)
+    response.headers['Cache-Tag'] = tags.flatten.compact.uniq.join(',')
   end
 
   def set_referrer_policy

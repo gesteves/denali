@@ -21,7 +21,8 @@ kill_timeout = 30
   RAILS_MAX_THREADS = '5'
   WEB_CONCURRENCY = '0'
   SIDEKIQ_CONCURRENCY = '5'
-  CACHE_TTL = '300'
+  # Backstop only: CachePurgeJob is what keeps cached pages fresh.
+  CACHE_TTL = '86400'
   RUBY_YJIT_ENABLE = '1'
   ELASTICSEARCH_TIMEOUT="1"
 

@@ -2,6 +2,7 @@ class SitemapsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :set_max_age
   before_action :set_sitemap_item_count
+  before_action -> { set_cache_tags(CacheTags::ENTRIES) }
 
   def index
     modified_dates = @photoblog.entries.indexable_in_search_engines.pluck(:modified_at)

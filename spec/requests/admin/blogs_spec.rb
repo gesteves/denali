@@ -42,5 +42,20 @@ RSpec.describe "Admin::Blogs", type: :request do
       patch admin_blog_path(blog), params: { blog: { name: '' } }
       expect(response).to have_http_status(:unprocessable_entity)
     end
+
+    it "purges cached pages, which render the blog's settings" do
+      expect(CachePurgeJob).to receive(:enqueue).with(CacheTags::BLOG, CacheTags::ENTRIES)
+
+      patch admin_blog_path(blog), params: { blog: { name: 'New Name' } }
+    end
+
+    it "does not purge when the update fails" do
+      allow(Blog).to receive(:first).and_return(blog)
+      allow(blog).to receive(:update).and_return(false)
+
+      expect(CachePurgeJob).not_to receive(:enqueue)
+
+      patch admin_blog_path(blog), params: { blog: { name: '' } }
+    end
   end
 end

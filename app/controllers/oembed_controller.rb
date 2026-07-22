@@ -7,6 +7,7 @@ class OembedController < ApplicationController
   def show
     raise ActiveRecord::RecordNotFound unless @entry.photos_have_dimensions?
 
+    set_cache_tags(CacheTags.entry(@entry.id))
     response.etag = [@entry, @entry.updated_at]
     response.last_modified = @entry.updated_at
     return head(:not_modified) if request.fresh?(response)

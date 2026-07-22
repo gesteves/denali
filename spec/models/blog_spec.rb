@@ -126,4 +126,18 @@ RSpec.describe Blog, type: :model do
       end
     end
   end
+
+  describe '#cache_tags' do
+    it 'claims the site chrome and the lists its settings render into' do
+      expect(blog.cache_tags).to eq([CacheTags::BLOG, CacheTags::ENTRIES])
+    end
+
+    it 'does not purge on save, since entries touch the blog constantly' do
+      blog # create it before setting the expectation
+      expect(CachePurgeJob).not_to receive(:enqueue)
+
+      blog.touch
+      blog.update(name: 'A new name')
+    end
+  end
 end

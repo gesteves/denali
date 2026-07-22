@@ -2,6 +2,9 @@ class GraphqlController < ApplicationController
   skip_before_action :verify_authenticity_token
   skip_before_action :domain_redirect
   before_action :set_cors_headers
+  # Responses depend on the Authorization header, and Cloudflare's cache key
+  # doesn't include it. Never cache them.
+  before_action :no_store
 
   def execute
     variables = ensure_hash(params[:variables])
