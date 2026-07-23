@@ -25,8 +25,8 @@ CloudFront, whose default behavior cached everything and honored the origin's
 curl -sSI https://www.allencompassingtrip.com/ | grep -i cf-cache-status
 ```
 
-`HIT` on a second request is what you want. `DYNAMIC` means the Cache Rule below
-is missing or not matching.
+`HIT` on a second request is what you want. `DYNAMIC` means "Cache HTML" below is
+missing or not matching.
 
 Entry pages send both an `ETag` and a `Last-Modified` (see the `stale?` call in
 `EntriesController#show`), but Cloudflare strips the `ETag` from HTML on its way
@@ -35,47 +35,78 @@ that unless **Respect strong ETags** is enabled. Conditional GETs still work
 through `Last-Modified`, so this costs nothing; just don't go looking for an
 `ETag` on an HTML response and conclude something is broken.
 
-### Cache Rule: "Cache HTML"
+### The Cache Rules
 
-- **Expression**: the site's hostnames, excluding the bypass paths below.
-- **Action**: *Eligible for cache*.
-- **Edge TTL**: *Respect origin* — the app sends its edge directives in
-  `Cloudflare-CDN-Cache-Control`, built from `CACHE_TTL`. See
-  [Serving stale](#serving-stale) for why they aren't in `s-maxage`.
-- **Vary**: `accept` → `normalize`. **This one is not optional.** Rails emits
-  `Vary: Accept` from `respond_to`, and several actions answer a non-HTML
-  `Accept` with a 301 (see the `format.all` branches in `EntriesController`).
-  Cloudflare [ignores `Vary` unless it is configured
+Three rules, and **the order is load-bearing**. Cache Rules are non-terminating:
+every matching rule contributes its settings, and [where two rules set the same
+one, the later rule
+wins](https://developers.cloudflare.com/rules/transform/request-header-modification/#execution-order).
+So each rule below narrows the one above it.
+
+#### 1. "Bypass dynamic endpoints" — *first*
+
+*Bypass cache* for `/graphql` and `/push-notifications/subscription`. Both are
+POST endpoints whose responses are per-request, and `/graphql`'s cache key would
+miss the `Authorization` header entirely. The app also sends `no-store` on both,
+so this is belt and braces.
+
+#### 2. "Cache HTML" — *after "Bypass dynamic endpoints"*
+
+- **Expression**: `http.host` in `allencompassingtrip.com` /
+  `www.allencompassingtrip.com`, minus the paths that must never be cached —
+  `/admin`, `/signin`, `/signout`, `/graphql`, `/random`, `/healthcheck`,
+  `/admin/*`, `/auth/*`, `/push-notifications/*` — and minus the Worker routes
+  `/images/*`, `/ig/*` and `/pa/*`, which [cache themselves](#caching-in-the-workers).
+  Excluded paths report `cf-cache-status: DYNAMIC` (not `BYPASS`, which would
+  mean a rule matched and chose to bypass).
+- **Cache eligibility**: *Eligible for cache*.
+- **Edge TTL**: *Use cache-control header if present, bypass cache if not* — the
+  app sends its edge directives in `Cloudflare-CDN-Cache-Control`, built from
+  `CACHE_TTL`. See [Serving stale](#serving-stale) for why they aren't in
+  `s-maxage`.
+- **Status code TTL**: `400–499` → 1 minute, so scanners are absorbed at the
+  edge. `300–308` → *No cache*, which is defence in depth for the redirects the
+  `Vary` setting below is really about.
+- **Vary**: *Normalize values*, with `accept` configured explicitly. **This one
+  is not optional.** Rails emits `Vary: Accept` from `respond_to`, and several
+  actions answer a non-HTML `Accept` with a 301 (see the `format.all` branches
+  in `EntriesController`). Cloudflare [ignores `Vary` unless it is configured
   here](https://developers.cloudflare.com/cache/concepts/vary/), so without it a
   bot's 301 can be cached at `/` and served to browsers.
-- **Cache TTL by status**: `200` respect origin, `404` 1 minute, `3xx` do not
-  cache — defence in depth for the same redirects.
+- **Serve stale content while revalidating**: leave unset. Unset means Cloudflare
+  *does* serve stale, which is what we want — the setting exists to turn that
+  off. Adding it disabled would undo half of [Serving stale](#serving-stale)
+  from the dashboard, invisibly to the app.
 
-The rule's expression excludes the paths that must never be cached —
-`/admin*`, `/signin`, `/signout`, `/auth/*`, `/graphql`,
-`/push-notifications/*`, `/random`, `/healthcheck` — along with the Worker
-routes `/images/*`, `/ig/*` and `/pa/*`, which do their own caching. Excluded
-paths report `cf-cache-status: DYNAMIC` (not `BYPASS`, which would mean a rule
-matched and chose to bypass). The app also sends `no-store` on the sensitive
-ones, so this is belt and braces.
+#### 3. "Cache short links" — *last*
 
-### Cache Rule: "Cache short links"
-
-Ordered **above** "Cache HTML", matching `/p/*` on both the canonical hostname
-and `aet.to`. *Eligible for cache*, Edge TTL *Respect origin*, and `301` →
-respect origin.
+- **Expression**: `http.host in {"allencompassingtrip.com"
+  "www.allencompassingtrip.com"} and starts_with(http.request.uri.path, "/p/")`
+- **Cache eligibility**: *Eligible for cache*.
+- **Edge TTL**: *Use cache-control header if present, bypass cache if not*, with
+  a **Status code TTL** of `300–308` → 1 year.
 
 Short links are the URLs that get shared, so they take the burst when a post
-goes anywhere. Without this rule the `3xx → do not cache` setting above catches
-them and every share-click reaches Fly for a redirect it could have answered at
-the edge — `cf-cache-status: MISS`, every time.
+goes anywhere. They match "Cache HTML", which marks them cacheable and then
+refuses to store them via its `300–308 → No cache` — so every share-click
+reaches Fly for a redirect the edge could have answered. `cf-cache-status: MISS`,
+every time. This rule runs last, so its status code TTL replaces that one.
 
-This doesn't reopen the redirect-caching hole that setting defends against.
+It doesn't reopen the redirect-caching hole the blanket setting defends against.
 That hole is the `format.all` branches in `EntriesController`, which answer a
-non-HTML `Accept` with a 301 to the same URL a browser asked for.
+non-HTML `Accept` with a 301 to the URL the browser already asked for.
 `EntriesController#short` has no `respond_to` at all: it 301s to the entry's
-permalink regardless of `Accept`, and already sends a year-long immutable
-`Cache-Control`. There is only one right answer to cache.
+permalink regardless of `Accept`, and already sends a year-long `immutable`
+`Cache-Control` of its own. There is only one right answer to cache.
+
+One caveat to know about: unlike every other cached page, this redirect carries
+no `Cache-Tag` — `EntriesController#short` calls neither `set_max_age` nor
+`set_cache_tags` — so `CachePurgeJob` can't reach it. If an entry's slug
+changes, the cached 301 points at the old one until it expires. That costs a
+second redirect rather than a broken link, since `EntriesController#show`
+redirects a non-canonical path to the permalink. Adding
+`set_cache_tags(CacheTags.entry(entry.id))` to `short` would make it purgeable
+and is worth doing if the year ever proves too long.
 
 ### Serving stale
 
