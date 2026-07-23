@@ -171,6 +171,12 @@ class EntriesController < ApplicationController
   def short
     entry_id = params[:id].to_i(36)
     entry = Entry.find(entry_id)
+    # This redirect is cached at the edge for a year — see the "Cache short links"
+    # rule in cloudflare/README.md — so it needs a tag CachePurgeJob can reach.
+    # The permalink it points at moves whenever the title does, and without this
+    # the redirect would keep naming the old slug until it expired. Outside the
+    # http_cache_forever block, whose body is skipped on a 304.
+    set_cache_tags(CacheTags.entry(entry.id))
     http_cache_forever(public: true) do
       redirect_to entry.permalink_url, status: 301
     end

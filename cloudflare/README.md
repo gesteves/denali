@@ -99,14 +99,12 @@ non-HTML `Accept` with a 301 to the URL the browser already asked for.
 permalink regardless of `Accept`, and already sends a year-long `immutable`
 `Cache-Control` of its own. There is only one right answer to cache.
 
-One caveat to know about: unlike every other cached page, this redirect carries
-no `Cache-Tag` — `EntriesController#short` calls neither `set_max_age` nor
-`set_cache_tags` — so `CachePurgeJob` can't reach it. If an entry's slug
-changes, the cached 301 points at the old one until it expires. That costs a
-second redirect rather than a broken link, since `EntriesController#show`
-redirects a non-canonical path to the permalink. Adding
-`set_cache_tags(CacheTags.entry(entry.id))` to `short` would make it purgeable
-and is worth doing if the year ever proves too long.
+A year is only safe because the redirect is purgeable. `EntriesController#short`
+attaches the entry's own `Cache-Tag` — it takes no `set_max_age`, since its TTL
+comes from `http_cache_forever`, but it does need the tag: the permalink it names
+moves whenever the title does, and `Entry#cache_tags` already purges
+`entry-<id>` on every edit. Without it the cached 301 would keep pointing at the
+old slug for a year.
 
 ### Serving stale
 
@@ -193,7 +191,7 @@ mechanism — `CachePurgeJob` is, and it purges by
 
 | Tag | Attached to | Purged when |
 |---|---|---|
-| `entry-<id>` | an entry's permalink and its oembed | that entry is published, edited or deleted |
+| `entry-<id>` | an entry's permalink, its short link and its oembed | that entry is published, edited or deleted |
 | `entries` | every list, feed and sitemap | any *published* entry changes |
 | `blog` | about page, manifest, robots.txt, service worker | blog settings are saved in the admin |
 

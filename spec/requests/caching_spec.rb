@@ -99,6 +99,16 @@ RSpec.describe "Caching", type: :request do
       expect(cache_tags).to eq([CacheTags::ENTRIES])
     end
 
+    # The short link's 301 is cached at the edge for a year and names a permalink
+    # that moves when the title does, so it has to be purgeable.
+    it "tags a short link with the entry it redirects to" do
+      entry = published_entry
+      get "/p/#{entry.id.to_s(36)}"
+
+      expect(response).to have_http_status(:moved_permanently)
+      expect(cache_tags).to eq([CacheTags.entry(entry.id)])
+    end
+
     it "tags oembed with the entry it describes" do
       entry = published_entry
       get oembed_path(format: 'json', url: entry.permalink_url)
