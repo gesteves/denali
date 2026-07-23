@@ -12,19 +12,22 @@ const EVENT_UPSTREAM = 'https://plausible.io/api/event';
 const SCRIPT_MAX_AGE = 21600; // 6 hours
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env) {
     const { pathname } = new URL(request.url);
 
     try {
       if (pathname === SCRIPT_PATH) {
-        return await serveScript(request, env, ctx);
+        return await serveScript(env);
       }
 
       if (pathname === EVENT_PATH) {
         return await forwardEvent(request);
       }
 
-      return new Response('Not found', { status: 404 });
+      return new Response('Not found', {
+        status: 404,
+        headers: { 'cache-control': 'no-store' }
+      });
     } catch (error) {
       console.log(JSON.stringify({
         message: 'Plausible proxy error',
@@ -37,26 +40,26 @@ export default {
       if (pathname === SCRIPT_PATH) {
         return new Response('', {
           status: 200,
-          headers: { 'content-type': 'application/javascript' }
+          headers: {
+            'content-type': 'application/javascript',
+            // Emphatically not cacheable: a stored empty script is six hours of
+            // analytics silently going nowhere.
+            'cache-control': 'no-store'
+          }
         });
       }
-      return new Response(null, { status: 202 });
+      return new Response(null, { status: 202, headers: { 'cache-control': 'no-store' } });
     }
   }
 };
 
-async function serveScript(request, env, ctx) {
-  const cache = caches.default;
-  const cacheable = request.method === 'GET';
-
-  if (cacheable) {
-    const cached = await cache.match(request);
-    if (cached) return cached;
-  }
-
+// Cached by Workers Caching (see the `cache` block in wrangler.jsonc), which
+// reads through before this Worker runs. The cache-control header below is the
+// whole of the caching logic.
+async function serveScript(env) {
   const upstream = await fetch(env.PLAUSIBLE_SCRIPT_URL);
   const response = new Response(upstream.body, upstream);
-  // cache.put rejects responses carrying cookies.
+  // A response carrying cookies is never cached.
   response.headers.delete('set-cookie');
   // Only pin a script that actually loaded: a 404 (e.g. after Plausible reissues the
   // script URL) would otherwise sit in every visitor's browser cache for six hours.
@@ -64,10 +67,6 @@ async function serveScript(request, env, ctx) {
     'cache-control',
     upstream.ok ? `public, max-age=${SCRIPT_MAX_AGE}` : 'no-store'
   );
-
-  if (cacheable && upstream.ok) {
-    ctx.waitUntil(cache.put(request, response.clone()));
-  }
 
   return response;
 }

@@ -23,8 +23,17 @@ so the route can't be used to run arbitrary transformations against the bucket.
 
 `format=auto` is resolved here rather than by Cloudflare, since `cf.image` has
 no `auto`. The Worker reads the request's `Accept` header, picks AVIF, WebP or
-JPEG, and includes the result in the cache key so one browser's capabilities
-don't decide the format everyone else is served.
+JPEG, and answers with `Vary: Accept` so one browser's capabilities don't decide
+the format everyone else is served. Only when it negotiated: an explicit
+`format=jpeg` is the same answer for every browser, and claiming it varies would
+split its cache entry for nothing.
+
+`Vary` values are compared verbatim, with no normalization, so each distinct
+browser `Accept` string is its own cache variant — realistically a handful of
+strings mapping onto three formats. If that fragmentation ever shows up in cache
+analytics, the fix is a request-phase Transform Rule on `/images/*` that
+canonicalizes `Accept` before the Worker runs. Write it down here if it comes to
+that.
 
 The Instagram variant is the exception, and the reason this Worker exists at
 all. It pads the photo onto an inset inner frame, then pads that result onto
@@ -42,6 +51,18 @@ So that route uses the [Images
 binding](https://developers.cloudflare.com/images/optimization/binding/), which
 does support chaining `.transform()` calls.
 
+## Caching
+
+There is no caching code in `src/index.js`. The `cache` block in
+`wrangler.jsonc` turns on [Workers
+Caching](https://developers.cloudflare.com/workers/cache/), which reads through
+before the Worker runs, collapses concurrent requests for the same URL, and is
+tiered — so a photo is transformed once for the network rather than once per
+data center, and a hit doesn't run this code at all. All the Worker does is set
+`cache-control`: a year and `immutable` on success, `no-store` on every error.
+See [the zone README](../README.md#caching-in-the-workers) for how this relates
+to the zone's own cache, which does not apply here.
+
 ## Deploying
 
 ```bash
@@ -50,8 +71,8 @@ npx wrangler deploy
 ```
 
 Requires an Images Paid plan for the binding. Responses are cached at the edge
-for a year; ActiveStorage keys change when a photo is replaced, so URLs change
-with it.
+for a year, which is safe because ActiveStorage keys change when a photo is
+replaced, so the URL changes with it.
 
 ## Local development
 

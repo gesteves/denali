@@ -14,6 +14,12 @@
 // another transform's source, and fails with "ERROR 9404".
 //
 // Rails builds these URLs; see app/models/concerns/thumborizable.rb.
+//
+// Caching is declarative: the `cache` block in wrangler.jsonc turns on Workers
+// Caching, which reads through before this code runs, collapses concurrent
+// requests for the same URL into one, and is tiered — so a photo is transformed
+// once for the whole network rather than once per data center. All this file
+// does is say what may be cached, in `cacheable` and `error` below.
 
 export const TRANSFORM_PATH = /^\/images\/(?:([^/]*=[^/]*)\/)?([A-Za-z0-9_-]+)$/;
 export const INSTAGRAM_PATH = /^\/ig\/(\d{1,4})x(\d{1,4})\/(\d{1,4})x(\d{1,4})\/([A-Za-z0-9_-]+)$/;
@@ -24,68 +30,63 @@ const INSTAGRAM_QUALITY = 100;
 const MAX_AGE = 31536000; // 1 year; a photo's key changes when the photo does
 
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request, env) {
     const url = new URL(request.url);
 
     try {
       const instagram = INSTAGRAM_PATH.exec(url.pathname);
-      if (instagram) return await serveInstagram(instagram, request, env, ctx);
+      if (instagram) return await serveInstagram(instagram, env);
 
       const transform = TRANSFORM_PATH.exec(url.pathname);
-      if (transform) return await serveTransform(transform, request, env, ctx);
+      if (transform) return await serveTransform(transform, request, env);
 
-      return new Response('Not found', { status: 404 });
-    } catch (error) {
+      return error('Not found', 404);
+    } catch (failure) {
       console.log(JSON.stringify({
         message: 'Image request failed',
         pathname: url.pathname,
-        error: error.message
+        error: failure.message
       }));
-      return new Response('Could not render image', { status: 502 });
+      return error('Could not render image', 502);
     }
   }
 };
 
-async function serveTransform([, rawOptions, key], request, env, ctx) {
+async function serveTransform([, rawOptions, key], request, env) {
   const options = parseOptions(rawOptions ?? '');
-  if (!options) return new Response('Unsupported options', { status: 400 });
+  if (!options) return error('Unsupported options', 400);
 
   // `auto` isn't a format cf.image understands, so negotiate it here. The
-  // chosen format goes into the cache key, otherwise the first browser to ask
-  // would pick the format everyone else gets.
-  if (options.format === 'auto') {
-    options.format = negotiateFormat(request);
-  }
-
-  const cached = await matchCache(request, options.format);
-  if (cached) return cached;
+  // response then varies on Accept, otherwise the first browser to ask would
+  // pick the format everyone else gets. Only when we actually negotiated: an
+  // explicit `format=jpeg` is the same answer for every browser, and saying it
+  // varies would split its cache entry for nothing.
+  const negotiated = options.format === 'auto';
+  if (negotiated) options.format = negotiateFormat(request);
 
   const response = await fetch(sourceUrl(env, key), { cf: { image: options } });
-  if (!response.ok) return new Response('Image not found', { status: 404 });
+  if (!response.ok) return error('Image not found', 404);
 
-  return cacheAndReturn(response, request, ctx, options.format);
+  return cacheable(response, negotiated);
 }
 
-async function serveInstagram([, innerWidth, innerHeight, outerWidth, outerHeight, key], request, env, ctx) {
+async function serveInstagram([, innerWidth, innerHeight, outerWidth, outerHeight, key], env) {
   const inner = { width: Number(innerWidth), height: Number(innerHeight) };
   const outer = { width: Number(outerWidth), height: Number(outerHeight) };
 
   if ([inner, outer].some((frame) => !withinBounds(frame.width) || !withinBounds(frame.height))) {
-    return new Response('Unsupported dimensions', { status: 400 });
+    return error('Unsupported dimensions', 400);
   }
 
-  const cached = await matchCache(request);
-  if (cached) return cached;
-
   const original = await fetch(sourceUrl(env, key));
-  if (!original.ok) return new Response('Image not found', { status: 404 });
+  if (!original.ok) return error('Image not found', 404);
 
   const result = await env.IMAGES.input(original.body)
     .transform({ ...inner, fit: 'pad', background: INSTAGRAM_BACKGROUND })
     .transform({ ...outer, fit: 'pad', background: INSTAGRAM_BACKGROUND })
     .output({ format: 'image/jpeg', quality: INSTAGRAM_QUALITY });
 
-  return cacheAndReturn(result.response(), request, ctx);
+  return cacheable(result.response());
 }
 
 function sourceUrl(env, key) {
@@ -160,24 +161,22 @@ export function negotiateFormat(request) {
   return 'jpeg';
 }
 
-// Cache under a GET, so the HEAD requests Photo#warm_cache sends populate the
-// cache that the eventual GET will hit.
-function cacheKey(request, format) {
-  const url = new URL(request.url);
-  if (format) url.searchParams.set('format', format);
-  return new Request(url.toString(), { method: 'GET' });
-}
-
-function matchCache(request, format) {
-  return caches.default.match(cacheKey(request, format));
-}
-
-function cacheAndReturn(upstream, request, ctx, format) {
+function cacheable(upstream, negotiated = false) {
   const response = new Response(upstream.body, upstream);
   response.headers.set('cache-control', `public, max-age=${MAX_AGE}, immutable`);
+  // A response carrying cookies is never cached, and R2 has no business setting
+  // one on an image anyway.
   response.headers.delete('set-cookie');
-  if (format) response.headers.set('vary', 'Accept');
-
-  ctx.waitUntil(caches.default.put(cacheKey(request, format), response.clone()));
+  if (negotiated) response.headers.set('vary', 'Accept');
   return response;
+}
+
+// Errors say so explicitly. Without a cache-control header the cache in front of
+// this Worker is free to pick a freshness window heuristically, and a 404 that
+// outlives whatever caused it is far worse than one we serve twice.
+function error(message, status) {
+  return new Response(message, {
+    status,
+    headers: { 'cache-control': 'no-store' }
+  });
 }

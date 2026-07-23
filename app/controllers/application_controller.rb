@@ -71,8 +71,20 @@ class ApplicationController < ActionController::Base
   # Browsers always revalidate (max-age=0), so a purge is never defeated by a
   # stale copy we can't reach. Cloudflare holds the response until CachePurgeJob
   # purges one of its tags; CACHE_TTL is only the backstop for a missed purge.
-  def set_max_age(seconds: ENV.fetch('CACHE_TTL', 1.day.to_i))
-    expires_in 0.seconds, public: true, 's-maxage' => seconds.to_i
+  #
+  # The edge directives go in Cloudflare-CDN-Cache-Control rather than s-maxage,
+  # which implies proxy-revalidate (RFC 9111 §4.2.4) and so would disable both
+  # stale directives below. Cloudflare consumes this header and strips it before
+  # the response reaches a client.
+  #
+  # Serving stale doesn't undermine purging: a purge deletes the entry outright,
+  # so a purged page is a true MISS. The stale window only ever covers a lapsed
+  # TTL — nobody waits on a re-render — and an origin failure, which is what
+  # keeps the site up through a Fly outage or a bad deploy.
+  def set_max_age(seconds: ENV.fetch('CACHE_TTL', 1.day.to_i), stale: 1.week.to_i)
+    expires_in 0.seconds, public: true
+    response.headers['Cloudflare-CDN-Cache-Control'] =
+      "public, max-age=#{seconds.to_i}, stale-while-revalidate=#{stale.to_i}, stale-if-error=#{stale.to_i}"
   end
 
   # Cloudflare consumes and strips this header. Purging a tag invalidates every

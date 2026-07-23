@@ -12,6 +12,14 @@ them:
 The `/pa/` prefix matches [Kona](https://github.com/gesteves/kona) and avoids
 `/js/` and `/api/`, which the zone's WAF rules block.
 
+The script is cached by [Workers
+Caching](https://developers.cloudflare.com/workers/cache/) — the `cache` block
+in `wrangler.jsonc` — so the `cache-control` header the Worker sets is the whole
+of the caching logic. Everything it must *not* store says `no-store` outright:
+an upstream 404, and the empty-script fallback, which would otherwise be six
+hours of analytics silently going nowhere. `/pa/event` is a POST and is never
+cached.
+
 Two things reference these paths:
 
 - `app/frontend/lib/analytics.js` posts events to `/pa/event`.

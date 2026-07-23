@@ -1,7 +1,13 @@
 {
   "name": "denali-plausible-proxy",
   "main": "src/index.js",
-  "compatibility_date": "2026-07-21",
+  "compatibility_date": "2026-07-23",
+  // Workers Caching: the script is cached by its cache-control header alone,
+  // read through before the Worker runs. /pa/event is a POST and is never cached.
+  "cache": {
+    "enabled": true,
+    "cross_version_cache": true
+  },
   "routes": [
     {
       "pattern": "www.allencompassingtrip.com/pa/*",

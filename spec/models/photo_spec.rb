@@ -276,13 +276,15 @@ RSpec.describe Photo, type: :model do
   end
 
   describe '#warm_cache' do
-    it 'makes an HTTP HEAD request to the given URLs' do
+    # GET, not HEAD: an HTTP cache won't store a HEAD response, so a HEAD would
+    # leave nothing behind for the download that follows to hit.
+    it 'makes an HTTP GET request to the given URLs' do
       photo = create(:photo, entry: entry)
       url1 = 'https://example.com/image1.jpg'
       url2 = 'https://example.com/image2.jpg'
 
-      expect(HTTParty).to receive(:head).with(url1, timeout: 30)
-      expect(HTTParty).to receive(:head).with(url2, timeout: 30)
+      expect(HTTParty).to receive(:get).with(url1, timeout: 30)
+      expect(HTTParty).to receive(:get).with(url2, timeout: 30)
 
       photo.warm_cache(url1, url2)
     end
@@ -291,7 +293,7 @@ RSpec.describe Photo, type: :model do
       photo = create(:photo, entry: entry)
       url = 'https://example.com/image.jpg'
 
-      allow(HTTParty).to receive(:head).and_raise(Net::ReadTimeout.new('timed out'))
+      allow(HTTParty).to receive(:get).and_raise(Net::ReadTimeout.new('timed out'))
 
       expect(Rails.logger).to receive(:warn).with(/Failed to warm cache/)
       expect { photo.warm_cache(url) }.not_to raise_error

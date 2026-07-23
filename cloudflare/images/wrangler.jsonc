@@ -1,7 +1,16 @@
 {
   "name": "denali-images",
   "main": "src/index.js",
-  "compatibility_date": "2026-07-21",
+  "compatibility_date": "2026-07-23",
+  // Workers Caching: read-through, request-collapsing and tiered, so a photo is
+  // transformed once for the network rather than once per data center. The
+  // Worker only sets cache-control; there is no cache code in src/index.js.
+  "cache": {
+    "enabled": true,
+    // Without this each deployed version caches separately, and a deploy would
+    // throw away a year of transformed images.
+    "cross_version_cache": true
+  },
   "routes": [
     {
       "pattern": "www.allencompassingtrip.com/images/*",

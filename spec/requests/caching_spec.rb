@@ -12,6 +12,12 @@ RSpec.describe "Caching", type: :request do
     response.headers['Cache-Control']
   end
 
+  # What Cloudflare caches on, as opposed to what browsers get. Cloudflare
+  # consumes and strips this before the response reaches a client.
+  def edge_cache_control
+    response.headers['Cloudflare-CDN-Cache-Control']
+  end
+
   def cache_tags
     response.headers['Cache-Tag'].to_s.split(',')
   end
@@ -29,7 +35,24 @@ RSpec.describe "Caching", type: :request do
 
       expect(cache_control).to include('public')
       expect(cache_control).to include('max-age=0')
-      expect(cache_control).to match(/s-maxage=\d+/)
+      expect(edge_cache_control).to match(/max-age=\d+/)
+    end
+
+    it "keeps s-maxage off the response, since it would disable serving stale" do
+      published_entry
+      get entries_path
+
+      expect(cache_control).not_to include('s-maxage')
+      expect(cache_control).not_to include('must-revalidate')
+      expect(cache_control).not_to include('proxy-revalidate')
+    end
+
+    it "lets the edge serve stale rather than block on the origin" do
+      published_entry
+      get entries_path
+
+      expect(edge_cache_control).to match(/stale-while-revalidate=\d+/)
+      expect(edge_cache_control).to match(/stale-if-error=\d+/)
     end
 
     it "takes the shared TTL from CACHE_TTL" do
@@ -39,7 +62,7 @@ RSpec.describe "Caching", type: :request do
       published_entry
       get entries_path
 
-      expect(cache_control).to include('s-maxage=600')
+      expect(edge_cache_control).to include('max-age=600')
     end
 
     it "tags the entry list so publishing invalidates it" do
@@ -196,7 +219,7 @@ RSpec.describe "Caching", type: :request do
       get '/nope-does-not-exist'
 
       expect(response).to have_http_status(:not_found)
-      expect(cache_control).to include('s-maxage=60')
+      expect(edge_cache_control).to include('max-age=60')
     end
   end
 end

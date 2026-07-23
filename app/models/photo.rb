@@ -437,14 +437,20 @@ class Photo < ApplicationRecord
     meta.join("\n")
   end
 
-  # Fetches the given image URLs via HTTP HEAD to pre-warm the CDN's image cache,
-  # so they're ready when external APIs (Instagram, Threads, etc.) try to download them.
+  # Fetches the given image URLs to pre-warm the CDN's image cache, so they're ready
+  # when external APIs (Instagram, Threads, etc.) try to download them.
+  #
+  # GET rather than HEAD, whose response an HTTP cache won't store — and won't use to
+  # answer the GET that follows. The body is discarded here; the point is the copy it
+  # leaves at the edge. Because the images Worker's cache is tiered, warming from Fly
+  # populates the upper tier, so this helps wherever the download comes from rather
+  # than only the data center nearest the app.
   #
   # @param urls [Array<String>] the image URLs to warm.
   def warm_cache(*urls)
     urls.each do |url|
       Rails.logger.info("[CacheWarm] Warming image cache: #{url}")
-      HTTParty.head(url, timeout: 30)
+      HTTParty.get(url, timeout: 30)
     rescue => e
       Rails.logger.warn("[CacheWarm] Failed to warm cache for #{url}: #{e.message}")
     end

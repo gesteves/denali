@@ -4,26 +4,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import worker from './index.js';
 
-// A minimal stand-in for the edge cache. `puts` records what the Worker chose to store,
-// which is the part worth asserting: a failed upstream must never be cached.
-const stubCache = () => {
-  const puts = [];
-  global.caches = {
-    default: {
-      match: vi.fn(async () => undefined),
-      put: vi.fn(async (request, response) => puts.push({ request, response }))
-    }
-  };
-  return puts;
-};
-
-// The Worker's ctx.waitUntil is fire-and-forget in production; here we await the promises so
-// assertions see the cache writes.
-const context = () => {
-  const pending = [];
-  return { ctx: { waitUntil: (p) => pending.push(p) }, settled: () => Promise.all(pending) };
-};
-
+// Caching is Workers Caching now (see the `cache` block in wrangler.jsonc), so there is no
+// cache to stub: what the Worker stores is decided entirely by the cache-control header it
+// returns, which is what these tests assert on.
 const env = { PLAUSIBLE_SCRIPT_URL: 'https://plausible.io/js/pa-test.js' };
 
 describe('/pa/event', () => {
@@ -44,8 +27,7 @@ describe('/pa/event', () => {
         headers,
         body: '{"n":"pageview"}'
       }),
-      env,
-      context().ctx
+      env
     );
 
   it('forwards to the Plausible event API', async () => {
@@ -93,49 +75,53 @@ describe('/pa/event', () => {
 describe('/pa/script.js', () => {
   const get = async (upstream) => {
     global.fetch = vi.fn(async () => upstream());
-    const puts = stubCache();
-    const { ctx, settled } = context();
-    const response = await worker.fetch(new Request('https://example.com/pa/script.js'), env, ctx);
-    await settled();
-    return { response, puts };
+    return worker.fetch(new Request('https://example.com/pa/script.js'), env);
   };
 
-  it('serves the script and caches it at the edge', async () => {
-    const { response, puts } = await get(() => new Response('window.plausible=1', { status: 200 }));
+  it('serves the script and lets the edge cache it', async () => {
+    const response = await get(() => new Response('window.plausible=1', { status: 200 }));
     expect(response.status).toBe(200);
     expect(response.headers.get('cache-control')).toBe('public, max-age=21600');
-    expect(puts).toHaveLength(1);
   });
 
   // A stale script URL 404s. Caching that for six hours would leave every visitor with a
   // broken script long after the URL is fixed.
   it('never pins a failed fetch', async () => {
-    const { response, puts } = await get(() => new Response('Not found', { status: 404 }));
+    const response = await get(() => new Response('Not found', { status: 404 }));
     expect(response.status).toBe(404);
     expect(response.headers.get('cache-control')).toBe('no-store');
-    expect(puts).toHaveLength(0);
   });
 
   it('drops cookies, which the edge cache refuses to store', async () => {
-    const { response } = await get(
+    const response = await get(
       () => new Response('window.plausible=1', { status: 200, headers: { 'Set-Cookie': 'a=b' } })
     );
     expect(response.headers.get('set-cookie')).toBeNull();
   });
 
   it('falls back to an empty script so the page never breaks', async () => {
-    const { response } = await get(() => {
+    const response = await get(() => {
       throw new Error('upstream down');
     });
     expect(response.status).toBe(200);
     expect(response.headers.get('content-type')).toBe('application/javascript');
     expect(await response.text()).toBe('');
   });
+
+  // The fallback above is the one response that must never be stored: six hours of a
+  // cached empty script is six hours of analytics going nowhere.
+  it('never lets the empty fallback be cached', async () => {
+    const response = await get(() => {
+      throw new Error('upstream down');
+    });
+    expect(response.headers.get('cache-control')).toBe('no-store');
+  });
 });
 
 describe('other paths', () => {
   it('are not proxied', async () => {
-    const response = await worker.fetch(new Request('https://example.com/pa/anything'), env, context().ctx);
+    const response = await worker.fetch(new Request('https://example.com/pa/anything'), env);
     expect(response.status).toBe(404);
+    expect(response.headers.get('cache-control')).toBe('no-store');
   });
 });
