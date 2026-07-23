@@ -58,7 +58,12 @@ async function serveScript(request, env, ctx) {
   const response = new Response(upstream.body, upstream);
   // cache.put rejects responses carrying cookies.
   response.headers.delete('set-cookie');
-  response.headers.set('cache-control', `public, max-age=${SCRIPT_MAX_AGE}`);
+  // Only pin a script that actually loaded: a 404 (e.g. after Plausible reissues the
+  // script URL) would otherwise sit in every visitor's browser cache for six hours.
+  response.headers.set(
+    'cache-control',
+    upstream.ok ? `public, max-age=${SCRIPT_MAX_AGE}` : 'no-store'
+  );
 
   if (cacheable && upstream.ok) {
     ctx.waitUntil(cache.put(request, response.clone()));
@@ -71,10 +76,17 @@ async function forwardEvent(request) {
   const forwarded = new Request(EVENT_UPSTREAM, request);
   forwarded.headers.delete('cookie');
 
-  // Plausible derives the visitor hash and country from the client IP, so pass
-  // the real one along instead of letting it see Cloudflare's egress address.
+  // Plausible derives the visitor hash and country from the client IP, which it reads
+  // from (in order) X-Plausible-IP, CF-Connecting-IP, B-Forwarded-For, X-Forwarded-For.
+  // Set the top-precedence header ourselves rather than leaning on the CF-Connecting-IP
+  // this subrequest inherits: that one is only the real visitor while plausible.io stays
+  // off Cloudflare. A cross-zone subrequest would replace it with a fixed Worker IP that
+  // still outranks X-Forwarded-For, silently geolocating every visitor to one address.
+  // Delete before setting, so a client-supplied value can't survive as a forged IP.
+  forwarded.headers.delete('x-plausible-ip');
   const clientIp = request.headers.get('CF-Connecting-IP');
   if (clientIp) {
+    forwarded.headers.set('X-Plausible-IP', clientIp);
     forwarded.headers.set('X-Forwarded-For', clientIp);
   }
 

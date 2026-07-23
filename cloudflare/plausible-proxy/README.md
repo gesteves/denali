@@ -19,6 +19,28 @@ Two things reference these paths:
   field (editable in the admin under blog settings), and should be
   `<script defer src="/pa/script.js"></script>`.
 
+## The visitor IP
+
+Plausible derives the visitor hash and the reported country/city from the client
+IP, which it reads from the first of these headers that is present:
+
+    X-Plausible-IP → CF-Connecting-IP → B-Forwarded-For → X-Forwarded-For → Forwarded
+
+The Worker sets **`X-Plausible-IP`** from `CF-Connecting-IP`. That's deliberate:
+it's the only one of those headers no proxy in the chain rewrites. `CF-Connecting-IP`
+looks like it would do the job — a Worker subrequest inherits the real visitor IP in
+it — but [only for subrequests to non-Cloudflare
+origins](https://developers.cloudflare.com/fundamentals/reference/http-headers/).
+`plausible.io` is served by BunnyCDN today (which is also why Plausible checks
+Bunny's `B-Forwarded-For`); if it ever moved behind Cloudflare, this would become a
+cross-zone subrequest and `CF-Connecting-IP` would be replaced with a fixed Worker
+IP that still outranks `X-Forwarded-For` — silently geolocating every visitor to the
+same place. `X-Forwarded-For` is set too, but it's the weakest of the three and
+can't be relied on alone.
+
+Any client-supplied `X-Plausible-IP` is deleted before ours is set — the forwarded
+request is built from the inbound one, so it carries every header the browser sent.
+
 ## Deploying
 
 ```bash
@@ -39,6 +61,17 @@ npx wrangler dev
 
 Then request `http://localhost:8787/pa/script.js`. Note that `/pa/event` will
 record real pageviews in Plausible, so avoid hammering it.
+
+`src/index.test.js` covers the routing, the IP headers, and the caching without
+touching the network:
+
+```bash
+docker compose run --rm app npx vitest run cloudflare/plausible-proxy
+```
+
+It runs in the `workers` vitest project, which uses the node environment rather
+than the frontend's jsdom — jsdom's `Request` drops the method and headers of a
+`Request` passed as init, which is how the Worker builds its upstream request.
 
 ## Logs
 
