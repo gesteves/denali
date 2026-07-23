@@ -152,12 +152,15 @@ class EntriesController < ApplicationController
     respond_to do |format|
       format.html {
         next redirect_to(@entry.permalink_url, status: 301) if request.path != @entry.permalink_path
-        # Lets the edge revalidate with a 304 instead of a full re-render. Keyed
-        # on the entry alone, not the blog: photos touch their entry and entries
-        # touch the blog, so keying on @photoblog would reset every ETag on the
-        # site every time a background photo job runs. Blog-level changes are
-        # covered by purging the `blog` tag instead.
-        next unless stale?(@entry, public: true)
+        # Lets a client revalidate with a 304 instead of a full re-render. Keyed
+        # on the entry plus the blog's settings timestamp, not @photoblog:
+        # photos touch their entry and entries touch the blog, so keying on the
+        # blog's updated_at would reset every validator on the site every time a
+        # background photo job runs. Purging the `entries` tag only clears the
+        # edge — a browser holding this page revalidates against these two
+        # validators, and the site chrome renders here too, so a settings change
+        # has to move them or the stale copy survives the purge.
+        next unless stale?(**entry_validators, public: true)
         @page_title = "#{@entry.plain_title} – #{@photoblog.name}"
         @has_territories = @entry.photos.any? { |p| p.territories.present? }
       }
@@ -209,5 +212,17 @@ class EntriesController < ApplicationController
 
   def set_entry
     @entry = Entry.find_by_url(url: request.path)
+  end
+
+  # The conditional-GET validators for an entry permalink: the entry itself and
+  # the last time the blog's settings changed, whichever moved most recently.
+  # Both have to be in the Last-Modified as well as the ETag — Cloudflare strips
+  # the ETag, so Last-Modified is the only validator a browser gets to use.
+  def entry_validators
+    settings_updated_at = @photoblog.settings_updated_at
+    {
+      etag: [@entry, settings_updated_at],
+      last_modified: [@entry.updated_at, settings_updated_at].compact.max
+    }
   end
 end

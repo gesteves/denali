@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_01_201304) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_23_091500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -60,6 +60,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_01_201304) do
     t.string "name"
     t.integer "posts_per_page", default: 10
     t.integer "publish_schedules_count"
+    t.datetime "settings_updated_at", precision: nil
     t.boolean "show_related_entries", default: true
     t.boolean "show_search", default: false
     t.string "threads"

@@ -49,6 +49,12 @@ RSpec.describe "Admin::Blogs", type: :request do
       patch admin_blog_path(blog), params: { blog: { name: 'New Name' } }
     end
 
+    it "records the settings change, so pages already in a browser stop revalidating to 304" do
+      expect {
+        patch admin_blog_path(blog), params: { blog: { name: 'New Name' } }
+      }.to change { blog.reload.settings_updated_at }
+    end
+
     it "does not purge when the update fails" do
       allow(Blog).to receive(:first).and_return(blog)
       allow(blog).to receive(:update).and_return(false)

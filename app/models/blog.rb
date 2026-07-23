@@ -117,4 +117,18 @@ class Blog < ApplicationRecord
   def cache_tags
     [CacheTags::BLOG, CacheTags::ENTRIES]
   end
+
+  # Records that the settings themselves changed, as opposed to updated_at,
+  # which entries move constantly through belongs_to :blog, touch: true.
+  #
+  # Conditional GETs need a validator that changes when the chrome does: an
+  # entry page's Last-Modified is its entry's, so purging the edge leaves every
+  # browser holding a copy that still revalidates to a 304. Keying that
+  # validator on updated_at instead would go too far the other way and expire
+  # every page whenever a background photo job touches an entry. Bumped from
+  # Admin::BlogsController for the same reason the purge lives there — that's
+  # the only place a settings change is unambiguous.
+  def settings_changed!
+    touch(:settings_updated_at)
+  end
 end

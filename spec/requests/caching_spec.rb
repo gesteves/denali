@@ -124,6 +124,37 @@ RSpec.describe "Caching", type: :request do
       expect(response).to have_http_status(:success)
     end
 
+    it "serves a fresh copy once the blog's settings change, which render here too" do
+      entry = published_entry
+      get entry.permalink_path
+      etag = response.headers['ETag']
+
+      blog.update_column(:settings_updated_at, entry.updated_at + 1.day)
+      get entry.permalink_path, headers: { 'HTTP_IF_NONE_MATCH' => etag }
+
+      expect(response).to have_http_status(:success)
+    end
+
+    it "moves Last-Modified when the settings change, since Cloudflare strips the ETag" do
+      entry = published_entry
+      get entry.permalink_path
+      last_modified = response.headers['Last-Modified']
+
+      blog.update_column(:settings_updated_at, entry.updated_at + 1.day)
+      get entry.permalink_path, headers: { 'HTTP_IF_MODIFIED_SINCE' => last_modified }
+
+      expect(response).to have_http_status(:success)
+      expect(response.headers['Last-Modified']).not_to eq(last_modified)
+    end
+
+    it "leaves the validators alone when only an entry is touched" do
+      entry = published_entry
+      blog.update_column(:settings_updated_at, entry.updated_at - 1.day)
+      get entry.permalink_path
+
+      expect(response.headers['Last-Modified']).to eq(entry.updated_at.httpdate)
+    end
+
     it "still redirects a non-canonical path rather than answering 304" do
       entry = published_entry
       get "/#{entry.id}/wrong-slug"
