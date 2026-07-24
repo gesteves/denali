@@ -226,12 +226,61 @@ different cache from the zone's, with a different configuration surface:
   being shared looks like — fills the cache once instead of once per request. On
   a hit the Worker doesn't run at all.
 - **`cross_version_cache` is on.** Without it each deployed version caches
-  separately and a deploy throws away a year of transformed images.
+  separately and a deploy throws away a year of transformed images. The cost is
+  that a deploy no longer invalidates anything — see [Purging the Workers'
+  caches](#purging-the-workers-caches).
 
 This replaced the Cache API (`caches.default`), which is local to one data
 center and does none of the above. It's also why `Photo#warm_cache` sends a GET
 rather than a HEAD: an HTTP cache won't store a HEAD response, and warming now
 populates the upper tier, so it helps wherever the download comes from.
+
+### Purging the Workers' caches
+
+`CachePurgeJob` and the cache tags in the table above purge the **zone's** cache.
+They do not reach either Worker's cache, which is a separate store keyed by the
+Worker's own path, entrypoint and version.
+
+For images that is almost always fine: a photo's key changes when the photo does,
+so a new key is a new URL and a cold cache. The case that isn't fine is a change
+to the *rendering* rather than the photo — `INSTAGRAM_MATTE` in
+`app/models/photo.rb`, `INSTAGRAM_QUALITY`, the `FITS`/`FORMATS` allowlists, the
+`quality` a social variant asks for. The URL doesn't change, `cross_version_cache`
+means the deploy doesn't clear it, and `max-age=31536000, immutable` means nothing
+lapses on its own. **Without a purge, the old rendering is served for up to a
+year.**
+
+So the images Worker tags every response, and the tags are the only handle on it:
+
+| Tag | Attached to |
+|---|---|
+| `images` | every response the Worker renders |
+| `images-<key>` | every variant of one blob key |
+
+Both go on every response, including the `/ig/` route, because Cloudflare purges
+all variants of a URL together — variants with mismatched tags purge
+inconsistently. Purging needs `ctx.cache.purge()` from inside the Worker; see
+[Workers cache purging](https://developers.cloudflare.com/workers/cache/purge/).
+After changing transform logic, purge `images`. There is no tag on the
+plausible-proxy: its script expires by itself in six hours, and the event
+endpoint is never cached.
+
+### Why the images Worker is fussy about option spellings
+
+`/images/<options>/<key>` rejects anything that isn't the one canonical spelling
+of a transform: no duplicate option names, no trailing junk after a second `=`,
+no leading zeros, no zero width or height, nothing above 4096 (the app's largest
+request is 4000, in `Photo#bluesky_url`). None of these are things Rails
+generates, and all of them render identically to something it does — but each
+distinct URL is its own cache entry, and each distinct set of options is a
+separately billed [unique
+transformation](https://developers.cloudflare.com/images/pricing/#images-transformed).
+
+This narrows the endpoint; it does not close it. Anyone can still walk `width`
+across its whole range against any key in the bucket and bill a transformation
+for each. Signing the URLs in Rails and verifying the signature here is the only
+thing that would actually close it, and it hasn't been done — it would change
+every image URL on the site and throw away the warm cache.
 
 ## Origin protection
 

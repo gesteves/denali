@@ -1,8 +1,14 @@
 // Runs in the `workers` project (node environment, see vitest.config.js). Under jsdom these
 // header assertions would pass vacuously: jsdom's Request drops the method and headers of a
 // Request passed as init, which is exactly how the Worker builds its upstream request.
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import worker from './index.js';
+
+// Several tests below spy on console.log and assert on what was logged, which only
+// works if the spy doesn't carry calls over from the previous test.
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 // Caching is Workers Caching now (see the `cache` block in wrangler.jsonc), so there is no
 // cache to stub: what the Worker stores is decided entirely by the cache-control header it
@@ -57,18 +63,54 @@ describe('/pa/event', () => {
     expect(forwarded.headers.get('x-plausible-ip')).toBeNull();
   });
 
+  // X-Plausible-IP was deleted unconditionally, but the other two were only overwritten —
+  // so with no CF-Connecting-IP they survived as a forged visitor IP. B-Forwarded-For
+  // outranks X-Forwarded-For in the order Plausible reads.
+  it('drops every IP header a client can set, not just the first one', async () => {
+    await post({
+      'X-Plausible-IP': '8.8.8.8',
+      'B-Forwarded-For': '8.8.8.8',
+      'X-Forwarded-For': '8.8.8.8'
+    });
+    expect(forwarded.headers.get('x-plausible-ip')).toBeNull();
+    expect(forwarded.headers.get('b-forwarded-for')).toBeNull();
+    expect(forwarded.headers.get('x-forwarded-for')).toBeNull();
+  });
+
+  it('does not let a forged B-Forwarded-For outrank the real IP', async () => {
+    await post({ 'CF-Connecting-IP': '203.0.113.7', 'B-Forwarded-For': '8.8.8.8' });
+    expect(forwarded.headers.get('b-forwarded-for')).toBeNull();
+    expect(forwarded.headers.get('x-plausible-ip')).toBe('203.0.113.7');
+  });
+
   it('strips cookies but keeps the content type', async () => {
     await post({ 'CF-Connecting-IP': '203.0.113.7', Cookie: 'session=secret', 'Content-Type': 'application/json' });
     expect(forwarded.headers.get('cookie')).toBeNull();
     expect(forwarded.headers.get('content-type')).toBe('application/json');
   });
 
+  // Plausible sends no cache-control of its own, and Workers Caching gives an unmarked
+  // response a heuristic freshness window. This was the one path here that didn't say.
+  it('says the forwarded response may not be cached', async () => {
+    const response = await post({ 'CF-Connecting-IP': '203.0.113.7' });
+    expect(response.headers.get('cache-control')).toBe('no-store');
+  });
+
   it('swallows an upstream failure — a dropped event beats a failed request', async () => {
     global.fetch = vi.fn(async () => {
       throw new Error('upstream down');
     });
+    vi.spyOn(console, 'log').mockImplementation(() => {});
     const response = await post({ 'CF-Connecting-IP': '203.0.113.7' });
     expect(response.status).toBe(202);
+  });
+
+  it('only forwards POSTs', async () => {
+    const response = await worker.fetch(new Request('https://example.com/pa/event'), env);
+    expect(response.status).toBe(405);
+    expect(response.headers.get('allow')).toBe('POST');
+    expect(response.headers.get('cache-control')).toBe('no-store');
+    expect(forwarded).toBeUndefined();
   });
 });
 
@@ -85,11 +127,24 @@ describe('/pa/script.js', () => {
   });
 
   // A stale script URL 404s. Caching that for six hours would leave every visitor with a
-  // broken script long after the URL is fixed.
+  // broken script long after the URL is fixed. The failure is passed through rather than
+  // hidden behind the empty script below: a script tag that 404s doesn't break the page
+  // either, and it's visible instead of silent.
   it('never pins a failed fetch', async () => {
+    vi.spyOn(console, 'log').mockImplementation(() => {});
     const response = await get(() => new Response('Not found', { status: 404 }));
     expect(response.status).toBe(404);
     expect(response.headers.get('cache-control')).toBe('no-store');
+  });
+
+  it('logs a failed fetch, so a stale script URL is not silent', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    await get(() => new Response('Not found', { status: 404 }));
+    expect(log).toHaveBeenCalledOnce();
+    expect(JSON.parse(log.mock.calls[0][0])).toMatchObject({
+      message: 'Plausible script fetch failed',
+      status: 404
+    });
   });
 
   it('drops cookies, which the edge cache refuses to store', async () => {
@@ -100,6 +155,7 @@ describe('/pa/script.js', () => {
   });
 
   it('falls back to an empty script so the page never breaks', async () => {
+    vi.spyOn(console, 'log').mockImplementation(() => {});
     const response = await get(() => {
       throw new Error('upstream down');
     });
@@ -111,10 +167,33 @@ describe('/pa/script.js', () => {
   // The fallback above is the one response that must never be stored: six hours of a
   // cached empty script is six hours of analytics going nowhere.
   it('never lets the empty fallback be cached', async () => {
+    vi.spyOn(console, 'log').mockImplementation(() => {});
     const response = await get(() => {
       throw new Error('upstream down');
     });
     expect(response.headers.get('cache-control')).toBe('no-store');
+  });
+
+  it('logs what was thrown, including a value that is not an Error', async () => {
+    const log = vi.spyOn(console, 'log').mockImplementation(() => {});
+    await get(() => {
+      throw 'just a string';
+    });
+    expect(JSON.parse(log.mock.calls[0][0])).toMatchObject({
+      message: 'Plausible proxy error',
+      error: 'just a string'
+    });
+  });
+
+  it('only serves GET and HEAD', async () => {
+    global.fetch = vi.fn(async () => new Response('window.plausible=1', { status: 200 }));
+    const response = await worker.fetch(
+      new Request('https://example.com/pa/script.js', { method: 'POST' }),
+      env
+    );
+    expect(response.status).toBe(405);
+    expect(response.headers.get('allow')).toBe('GET, HEAD');
+    expect(global.fetch).not.toHaveBeenCalled();
   });
 });
 
