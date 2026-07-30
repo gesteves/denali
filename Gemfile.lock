@@ -257,7 +257,7 @@ GEM
       prism (~> 1.5)
     mock_redis (0.55.0)
       redis (~> 5)
-    msgpack (1.8.1)
+    msgpack (1.8.2)
     multi_json (1.19.1)
     multi_xml (0.9.1)
       bigdecimal (>= 3.1, < 5)
