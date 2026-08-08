@@ -11,7 +11,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@awesome.me/webawesome": "^3.10.0",
+    "@awesome.me/webawesome": "^3.11.0",
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/turbo": "^8.0.23",
     "@shopify/draggable": "1.2.1",
@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^4.1.10",
-    "jsdom": "^30.0.0",
+    "jsdom": "^30.0.1",
     "vitest": "^4.0.18"
   },
   "repository": {
