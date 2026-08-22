@@ -23,7 +23,7 @@
     "masonry-layout": "^4.2.2"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/coverage-v8": "^4.1.11",
     "jsdom": "^30.0.1",
     "vitest": "^4.0.18"
   },
