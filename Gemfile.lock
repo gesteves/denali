@@ -124,7 +124,7 @@ GEM
     bindex (0.8.1)
     bootsnap (1.25.0)
       msgpack (~> 1.5)
-    brakeman (8.0.5)
+    brakeman (8.0.6)
       racc
     brotli (0.7.0)
     bugsnag (6.30.0)
@@ -192,7 +192,7 @@ GEM
     google-protobuf (4.33.5)
       bigdecimal
       rake (>= 13)
-    graphql (2.6.7)
+    graphql (2.6.9)
       base64
       fiber-storage
       logger
@@ -322,7 +322,7 @@ GEM
       nio4r (~> 2.0)
     raabro (1.4.0)
     racc (1.8.1)
-    rack (3.2.6)
+    rack (3.2.7)
     rack-brotli (2.0.0)
       brotli (>= 0.3)
       rack (>= 3)
@@ -384,7 +384,7 @@ GEM
     redcarpet (3.6.1)
     redis (5.4.1)
       redis-client (>= 0.22.0)
-    redis-client (0.29.0)
+    redis-client (0.30.1)
       connection_pool
     reline (0.7.0)
       io-console (~> 0.5)
@@ -427,7 +427,7 @@ GEM
     securerandom (0.4.1)
     shoulda-matchers (8.0.1)
       activesupport (>= 7.2)
-    sidekiq (8.1.6)
+    sidekiq (8.1.7)
       connection_pool (>= 3.0.0)
       json (>= 2.16.0)
       logger (>= 1.7.0)
@@ -436,7 +436,7 @@ GEM
     sidekiq-scheduler (6.0.2)
       rufus-scheduler (~> 3.2)
       sidekiq (>= 7.3, < 9)
-    simplecov (1.1.0)
+    simplecov (1.1.1)
     snaky_hash (2.0.7)
       hashie (>= 0.1.0, < 6)
       version_gem (~> 1.1, >= 1.1.14)
