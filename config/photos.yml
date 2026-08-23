@@ -1,41 +1,36 @@
+# The responsive images configuration. `sizes` describes the width of the element, and `srcset` is
+# the list of the candidates that Cloudflare Images renders.
+#
+# ⚠️ Each candidate is one transformation for each image. Keep each list small.
+#
+# The method for a new list, and for a change to a `sizes` value:
+#   1. Render the element at the logical width of each device below.
+#   2. Measure the element, and do not calculate it. Characteristics of the image (such as the zoom-in feature in `entry`) can make the true width different from the column arithmetic.
+#   3. Multiply by the scale factor of the device, and round up.
+#   4. Remove each duplicate, and add the desktop width at 1x and at 2x.
+#
+# The devices are the current iPhones, and a desktop at the widest breakpoint:
+#   390, 402, 420, 440 at 3x  — iPhone 17e, iPhone 17 and 17 Pro, iPhone Air, iPhone 17 Pro Max
 entry: &entry
   srcset:
-    - 608
-    - 304
-    - 716
-    - 1074
-    - 1122
-    - 1128
-    - 1158
-    - 1191
-    - 794
-    - 1209
-    - 1236
-    - 1239
-    - 1272
-    - 2908
+    - 1680
     - 3360
-  src: 1280
+    - 1122
+    - 1158
+    - 1212
+    - 1272
+  src: 1272
   sizes:
     - "(min-width: 1696px) 1680px"
     - calc(100vw - 16px)
 entry_list: &entry_list
   srcset:
-    - 148
-    - 254
-    - 296
-    - 352
-    - 369
-    - 381
-    - 387
-    - 396
-    - 399
-    - 408
-    - 528
-    - 549
-    - 555
-    - 716
+    - 410
     - 820
+    - 549
+    - 369
+    - 387
+    - 408
   sizes:
     - auto
     - "(min-width: 1678px) 410px"
@@ -46,19 +41,13 @@ entry_list_square:
   <<: *entry_list
 admin_entry:
   srcset:
-    - 544
-    - 654
-    - 1098
-    - 981
-    - 1440
-    - 1952
-    - 960
-    - 1920
-    - 1152
-    - 2304
-    - 1344
     - 2688
-    - 1140
+    - 2304
+    - 1920
+    - 1026
+    - 1062
+    - 1116
+    - 1176
   sizes:
     - auto
     - "(min-width: 1472px) 1344px"
@@ -67,17 +56,13 @@ admin_entry:
     - "calc(100vw - 3rem)"
 admin_edit:
   srcset:
-    - 544
-    - 654
-    - 1098
-    - 1440
-    - 780
-    - 1560
-    - 940
-    - 1880
-    - 1100
     - 2200
-    - 1140
+    - 1880
+    - 1560
+    - 1026
+    - 1062
+    - 1116
+    - 1176
   sizes:
     - auto
     - "(min-width: 1472px) 1100px"
@@ -87,18 +72,9 @@ admin_edit:
     - "calc(100vw - 3rem)"
 admin_queue:
   srcset:
-    - 224
-    - 280
-    - 477
-    - 672
-    - 440
-    - 168
-    - 336
-    - 207
-    - 414
-    - 245
     - 490
-    - 498
+    - 414
+    - 336
   sizes:
     - auto
     - "(min-width: 1472px) 245px"
@@ -114,18 +90,4 @@ map:
   sizes:
     - auto
     - 232px
-admin_modal:
-  srcset:
-    - 600
-    - 1200
-    - 1800
-    - 560
-    - 670
-    - 1005
-    - 1122
-    - 1164
-  sizes:
-    - auto
-    - "(min-width: 769px) 600px"
-    - "calc(100vw - 40px)"
 
