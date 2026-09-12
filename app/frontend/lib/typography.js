@@ -11,25 +11,42 @@
 // ⚠️ A URL passes through untouched, for the same reason as in the Ruby: `example.com/a--b` would
 // otherwise become an en dash, and that link is dead.
 
-// The bare-URL rule of `Bluesky::URL_PATTERN` and `Bluesky.trim_url`, together: everything up to
-// whitespace, then whatever at the end belongs to the sentence comes off.
+// The bare-URL rule of `Bluesky::URL_PATTERN`: everything up to whitespace, with `trimUrl` then
+// deciding where the address actually ends.
 const URL = /(?:^|[$|\W])(https?:\/\/\S+)/g;
-const URL_TRAILING_PUNCTUATION = /[.,;:!?]+$/;
-const URL_TRAILING_WRAPPERS = { ')': '(', ']': '[', '>': '<' };
+
+// `Bluesky::MENTION_PATTERN`. ⚠️ A mention is masked for the same reason as an address: an IDN
+// handle starts with `xn--`, which the dash rule would turn into an en dash and count one short.
+const MENTION = /(?:^|[$|\W])(@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)/g;
+
+// `Bluesky::URL_TERMINAL` and `Bluesky::URL_WRAPPERS`.
+const URL_TERMINAL = /[\p{Alphabetic}\p{Nd}\-_~/#@$&*+=%]/u;
+const URL_WRAPPERS = { ')': '(', ']': '[', '>': '<', '}': '{' };
+
+const countOf = (text, char) => text.split(char).length - 1;
 
 /**
- * Removes the punctuation of the sentence from the end of an address.
+ * Whether an address can stop at its last character.
+ * @param {string} url - The candidate address.
+ * @returns {boolean} True when the last character belongs to the address.
+ */
+function endsHere (url) {
+  const last = url.at(-1);
+  if (URL_TERMINAL.test(last)) return true;
+
+  // A closing bracket belongs to the address only when the address opened it.
+  const opener = URL_WRAPPERS[last];
+  return Boolean(opener) && countOf(url, opener) >= countOf(url, last);
+}
+
+/**
+ * Removes whatever at the end of a match belongs to the sentence rather than the address.
  * @param {string} url - The address as matched.
  * @returns {string} The address alone.
  */
 function trimUrl (url) {
-  let out = url.replace(URL_TRAILING_PUNCTUATION, '');
-
-  // A closing bracket comes off only when the address holds no opening one.
-  while (URL_TRAILING_WRAPPERS[out.at(-1)] && !out.includes(URL_TRAILING_WRAPPERS[out.at(-1)])) {
-    out = out.slice(0, -1).replace(URL_TRAILING_PUNCTUATION, '');
-  }
-
+  let out = String(url);
+  while (out !== '' && !endsHere(out)) out = out.slice(0, -1);
   return out;
 }
 
@@ -55,16 +72,23 @@ export function apply (text) {
   let source = String(text ?? '').replaceAll(PLACEHOLDER, '');
   if (source === '') return source;
 
-  const urls = [];
+  const masked = [];
   URL.lastIndex = 0;
   source = source.replace(URL, (whole, url) => {
     const trimmed = trimUrl(url);
     if (trimmed === '') return whole;
 
-    urls.push(trimmed);
+    masked.push(trimmed);
     // Keep whatever came before the address, and whatever the trim took off the end: the pattern
     // consumes one character of boundary, and the punctuation still needs its typography.
     return whole.slice(0, whole.length - url.length) + PLACEHOLDER + url.slice(trimmed.length);
+  });
+
+  // Mentions are masked after the addresses, so a handle inside a URL is already covered.
+  MENTION.lastIndex = 0;
+  source = source.replace(MENTION, (whole, handle) => {
+    masked.push(handle);
+    return whole.slice(0, whole.length - handle.length) + PLACEHOLDER;
   });
 
   let converted = source;
@@ -73,7 +97,7 @@ export function apply (text) {
   // Hand back the text unchanged if a mask went missing, as the Ruby does.
   let index = -1;
   const masks = converted.split(PLACEHOLDER).length - 1;
-  if (masks !== urls.length) return String(text ?? '');
+  if (masks !== masked.length) return String(text ?? '');
 
-  return converted.replaceAll(PLACEHOLDER, () => urls[++index]);
+  return converted.replaceAll(PLACEHOLDER, () => masked[++index]);
 }

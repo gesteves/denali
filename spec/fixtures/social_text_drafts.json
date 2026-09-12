@@ -100,6 +100,30 @@
     {
       "text": "x https://x.example/a?q=1&r=2, y",
       "length": 32
+    },
+    {
+      "text": "Hi @xn--caf-dma.example how are you",
+      "length": 35
+    },
+    {
+      "text": "Hi @me.bsky.social... ok",
+      "length": 22
+    },
+    {
+      "text": "Read \"https://example.com/a\" now",
+      "length": 32
+    },
+    {
+      "text": "Ask @me.bsky.social about https://x.example/a--b... ok",
+      "length": 52
+    },
+    {
+      "text": "Wiki https://en.wikipedia.org/wiki/Kona_(Hawaii)... nice",
+      "length": 54
+    },
+    {
+      "text": "Bracket https://example.com/a[b]--c... ok",
+      "length": 39
     }
   ]
 }

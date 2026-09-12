@@ -109,6 +109,25 @@ RSpec.describe Bluesky do
 
       expect(described_class.tid_time(described_class.new_tid)).to be_within(1).of(Time.now.utc)
     end
+
+    it 'gives two posts scheduled for the same minute different keys' do
+      # The schedule field is minute-granular, so both posts want the same microsecond. With
+      # putRecord a collision isn't an error, it's one post silently replacing the other.
+      at = 3.days.from_now
+      keys = Array.new(500) { described_class.new_tid(at: at) }
+
+      expect(keys.uniq.size).to eq(keys.size)
+      expect(keys).to eq(keys.sort)
+      expect(described_class.tid_time(keys.first)).to be_within(1).of(at.utc)
+    end
+
+    it 'keeps an earlier schedule sorting before a later one, whatever order they were made in' do
+      later = described_class.new_tid(at: 60.days.from_now)
+      sooner = described_class.new_tid(at: 2.days.from_now)
+
+      expect(sooner).to be < later
+      expect(described_class.tid_time(sooner)).to be_within(1).of(2.days.from_now.utc)
+    end
   end
 
   describe '.tid_time' do
@@ -183,6 +202,14 @@ RSpec.describe Bluesky do
 
           expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
             .with { |req| JSON.parse(req.body).dig('record', 'embed', 'images', 0, 'alt') == '' }
+        end
+
+        it 'refuses an empty body' do
+          stub_request(:get, 'https://example.com/photo.jpg')
+            .to_return(status: 200, body: '', headers: { 'Content-Type' => 'image/jpeg' })
+
+          expect { bluesky.skeet(rkey: rkey, text: text, photos: photos) }
+            .to raise_error(/came back empty/)
         end
 
         it 'refuses a body that is not an image' do

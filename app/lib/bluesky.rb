@@ -58,11 +58,15 @@ class Bluesky
   # character outside ASCII — `https://example.com/日本` — was cut back to `https://example.com/`.
   URL_PATTERN = %r{(?:^|[$|\W])(https?://\S+)}
 
-  # The punctuation of a sentence at the end of an address.
-  URL_TRAILING_PUNCTUATION = /[.,;:!?]+\z/
+  # The characters an address can legitimately end with. Anything after the last one of these
+  # belongs to the sentence rather than the address: a full stop, a comma, a closing quote.
+  #
+  # \p{Alnum} rather than a-z0-9, so a path outside ASCII ends where it should.
+  URL_TERMINAL = /[\p{Alnum}\-_~\/\#@$&*+=%]/
 
-  # Characters that close something the address is inside, rather than part of it.
-  URL_TRAILING_WRAPPERS = { ')' => '(', ']' => '[', '>' => '<' }.freeze
+  # Characters that close something the address sits inside. One of these ends an address only
+  # when the address opened it too.
+  URL_WRAPPERS = { ')' => '(', ']' => '[', '>' => '<', '}' => '{' }.freeze
 
   # An @handle, from the sample in the AT Protocol documentation.
   MENTION_PATTERN = /(?:^|[$|\W])(@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)/
@@ -104,6 +108,10 @@ class Bluesky
   # .new_tid has to return a value that rises on every call, and more than one thread can ask.
   TID_LOCK = Mutex.new
 
+  # How many scheduled moments to remember, so the table can't grow for the life of the process.
+  # One entry per distinct minute someone schedules for, and a handful is plenty.
+  SCHEDULED_TID_MEMORY = 64
+
   # The PDS rejected our token. The caller clears the cached session and tries once more.
   class UnauthorizedError < StandardError; end
 
@@ -112,6 +120,13 @@ class Bluesky
 
   # The PDS could not be reached at all.
   class ConnectionError < StandardError; end
+
+  # What "could not reach the PDS" actually looks like.
+  CONNECTION_ERRORS = [
+    SocketError, Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EHOSTUNREACH, Errno::ENETUNREACH,
+    Net::OpenTimeout, Net::ReadTimeout, OpenSSL::SSL::SSLError, HTTParty::Error, JSON::ParserError,
+    Timeout::Error
+  ].freeze
 
   # Creates a Bluesky instance from a SocialAccount.
   #
@@ -184,9 +199,29 @@ class Bluesky
   def self.new_tid(at: nil)
     # A scheduled share has to sort at the moment it goes out, not the moment it was queued: a post
     # scheduled for tomorrow would otherwise carry today's key and land below a day of newer posts.
-    # This path deliberately leaves the monotonic counter alone — one future-dated schedule would
-    # otherwise push every immediate key after it into the future.
-    return encode_tid((tid_micros(at) << 10) | SecureRandom.random_number(1 << 10)) if at.present?
+    #
+    # ⚠️ It needs a counter of its own, and it must not touch the one below. The admin's schedule
+    # field is minute-granular, so two posts scheduled for the same minute get identical
+    # microseconds and differ only in the 10 random bits — a 1-in-1024 chance of the same key. With
+    # putRecord that is not an error, it is one post silently replacing the other. And a
+    # future-dated schedule must not be allowed to push every immediate key after it forward.
+    if at.present?
+      return TID_LOCK.synchronize do
+        # The admin's schedule field is minute-granular, so the microseconds inside that minute are
+        # all free. Counting up through them keeps two posts scheduled for the same minute apart
+        # and still sorts them in the order they were made.
+        #
+        # ⚠️ The count is per moment, never global: a single counter would push a post scheduled
+        # for tomorrow past one already scheduled for next month, giving it that month's key and
+        # createdAt.
+        base = tid_micros(at)
+        bump = (@scheduled_tid_bumps ||= {}).delete(base).to_i
+        @scheduled_tid_bumps[base] = bump + 1
+        @scheduled_tid_bumps.shift while @scheduled_tid_bumps.size > SCHEDULED_TID_MEMORY
+
+        encode_tid(((base + bump) << 10) | SecureRandom.random_number(1 << 10))
+      end
+    end
 
     # The clock alone is not monotonic, and a caller can ask for several keys inside one
     # microsecond. The low bits are random, so without this the keys of a thread would sort in a
@@ -259,7 +294,9 @@ class Bluesky
     bare = []
 
     SocialText.url_ranges(text).each do |range|
-      next if taken.any? { |other| other.cover?(range.begin) }
+      # Compare the whole range, not just its start: in `https://example.com/[docs](url)` the bare
+      # URL runs into the link's words, and two link facets over one range render as a broken link.
+      next if taken.any? { |other| range.begin < other.end && other.begin < range.end }
 
       # SocialText.url_ranges has already trimmed the sentence punctuation off the end.
       bare << MarkdownLinks::Link.new(start: range.begin, finish: range.end, url: text[range])
@@ -277,16 +314,23 @@ class Bluesky
   # @param url [String] the address as matched.
   # @return [String] the address with any sentence punctuation removed.
   def self.trim_url(url)
-    url = url.to_s.sub(URL_TRAILING_PUNCTUATION, '')
-
-    # Strip a closing bracket only when the address holds no opening one, so
-    # `…/Kona_(Hawaii)` keeps its bracket and `(see …/a)` gives up the one that closes the aside.
-    while (opener = URL_TRAILING_WRAPPERS[url[-1]]) && !url.include?(opener)
-      url = url[0...-1]
-      url = url.sub(URL_TRAILING_PUNCTUATION, '')
-    end
-
+    url = url.to_s
+    url = url[0...-1] while url.present? && !url_ends_here?(url)
     url
+  end
+
+  # Whether an address can stop at its last character.
+  #
+  # @param url [String] the candidate address.
+  # @return [Boolean] true when the last character belongs to the address.
+  def self.url_ends_here?(url)
+    last = url[-1]
+    return true if URL_TERMINAL.match?(last)
+
+    # A closing bracket belongs to the address only when the address opened it, so
+    # `…/Kona_(Hawaii)` keeps its bracket and `(see …/a)` gives up the one that closes the aside.
+    opener = URL_WRAPPERS[last]
+    opener.present? && url.count(opener) >= url.count(last)
   end
 
   # Initializes a new instance of the Bluesky class.
@@ -414,11 +458,21 @@ class Bluesky
   # @param links [Array<MarkdownLinks::Link>] the links from the parse that made that text.
   # @return [Array<Hash>] the facets, sorted by where they start.
   def build_facets(text, links: [])
-    link_facets = self.class.link_ranges(text, links).map { |link| link_facet(text, link) }
-    inside_link = link_facets.map { |facet| facet["index"]["byteStart"]...facet["index"]["byteEnd"] }
+    facets = self.class.link_ranges(text, links).map { |link| link_facet(text, link) }
 
-    facets = link_facets + mention_facets(text, skip: inside_link) + tag_facets(text, skip: inside_link)
+    # Each kind yields to the ones before it, so no two facets can cover the same byte. A mention
+    # beats a tag because `#tag.@example.com` matches both patterns, and a mention is the more
+    # specific claim.
+    facets += mention_facets(text, skip: byte_ranges(facets))
+    facets += tag_facets(text, skip: byte_ranges(facets))
+
     facets.sort_by { |facet| facet["index"]["byteStart"] }
+  end
+
+  # @param facets [Array<Hash>] the facets built so far.
+  # @return [Array<Range>] their byte ranges.
+  def byte_ranges(facets)
+    facets.map { |facet| facet["index"]["byteStart"]...facet["index"]["byteEnd"] }
   end
 
   # Builds one app.bsky.richtext.facet#link.
@@ -776,9 +830,10 @@ class Bluesky
     @did = session["did"]
     @access_token = session["accessJwt"]
     session
-  rescue AuthenticationError, ConnectionError
-    raise
-  rescue StandardError => e
+  # Only the errors that really mean "the network or the PDS misbehaved" become a ConnectionError.
+  # Catching StandardError here would turn a NoMethodError in the parsing below into "check the
+  # server URL", and into a job that retries a code bug all day.
+  rescue *CONNECTION_ERRORS => e
     raise ConnectionError, "Could not reach the Bluesky PDS at #{@base_url}: #{e.message}"
   end
 
@@ -845,6 +900,8 @@ class Bluesky
       raise "Image at #{url} is over the #{MAX_SOURCE_IMAGE_BYTES} byte limit"
     end
     raise "Failed to fetch image from #{url}: #{response&.code}" unless response&.success?
+    # An empty 200 would go up as a zero-byte blob and fail against the record instead of the photo.
+    raise "Image at #{url} came back empty" if body.empty?
 
     content_type = content_type.to_s.split(';').first.to_s.strip
     unless content_type.start_with?('image/')
