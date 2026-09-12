@@ -45,12 +45,18 @@ class Bluesky
     { "$type" => "app.bsky.feed.threadgate#followingRule" }
   ].freeze
 
-  # A bare URL. It stops before a trailing period or bracket, which is nearly always punctuation of
-  # the sentence rather than part of the address.
+  # A bare URL.
   #
   # This is the source of truth for "what is an address": SocialText and Typography both read it,
   # so a string that gets a link facet here is treated as a URL everywhere else too.
-  URL_PATTERN = %r{(?:^|[$|\W])(https?://[a-zA-Z0-9\-._~:/?\#\[\]@!$&'()*+,;%=]*[a-zA-Z0-9\-_~/\#@$&*+=])}
+  #
+  # It takes a closing bracket and .trim_url decides whether to keep it. With the bracket outside
+  # the pattern, a link to `…/Kona_(Hawaii)` got a facet over `…/Kona_(Hawaii` alone, which goes
+  # nowhere.
+  URL_PATTERN = %r{(?:^|[$|\W])(https?://[a-zA-Z0-9\-._~:/?\#\[\]@!$&'()*+,;%=]*[a-zA-Z0-9\-_~/\#@$&*+=)])}
+
+  # The punctuation of a sentence at the end of an address.
+  URL_TRAILING_PUNCTUATION = /[.,;:!?]+\z/
 
   # An @handle, from the sample in the AT Protocol documentation.
   MENTION_PATTERN = /(?:^|[$|\W])(@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)/
@@ -249,10 +255,27 @@ class Bluesky
     SocialText.url_ranges(text).each do |range|
       next if taken.any? { |other| other.cover?(range.begin) }
 
-      bare << MarkdownLinks::Link.new(start: range.begin, finish: range.end, url: text[range])
+      url = trim_url(text[range])
+      next if url.blank?
+
+      bare << MarkdownLinks::Link.new(start: range.begin, finish: range.begin + url.length, url: url)
     end
 
     (markdown + bare).sort_by(&:start)
+  end
+
+  # Removes the punctuation of the sentence from the end of an address, the way the Bluesky client
+  # does.
+  #
+  # A closing bracket only comes off when the address holds no opening one, so
+  # `…/Kona_(Hawaii)` keeps its bracket and `(see …/a)` gives up the one that closes the aside.
+  #
+  # @param url [String] the address as matched.
+  # @return [String] the address with any sentence punctuation removed.
+  def self.trim_url(url)
+    url = url.to_s.sub(URL_TRAILING_PUNCTUATION, '')
+    url = url[0...-1] if url.end_with?(')') && !url.include?('(')
+    url
   end
 
   # Initializes a new instance of the Bluesky class.

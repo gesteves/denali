@@ -1072,6 +1072,22 @@ RSpec.describe Bluesky do
         expect(facets).to all(satisfy { |f| f['index']['byteEnd'] > f['index']['byteStart'] })
       end
 
+      it 'keeps the closing bracket of an address that holds an opening one' do
+        facets, = facets_for('Read https://en.wikipedia.org/wiki/Kona_(Hawaii) today')
+
+        expect(facets.size).to eq(1)
+        expect(facets[0]['features'][0]['uri']).to eq('https://en.wikipedia.org/wiki/Kona_(Hawaii)')
+      end
+
+      it 'gives up a closing bracket when the address holds no opening one' do
+        facets, plain_text = facets_for('An aside (see https://example.com/a) and more')
+
+        expect(facets[0]['features'][0]['uri']).to eq('https://example.com/a')
+        expect(plain_text.byteslice(facets[0]['index']['byteStart'],
+                                    facets[0]['index']['byteEnd'] - facets[0]['index']['byteStart']))
+          .to eq('https://example.com/a')
+      end
+
       it 'does not tag the fragment of a URL' do
         facets, = facets_for('Read https://example.com/#section')
 
