@@ -98,6 +98,14 @@ RSpec.describe Bluesky do
       expect(described_class.tid_time(described_class.new_tid)).to be_within(1).of(Time.now.utc)
     end
 
+    # 13 characters of base32 hold 65 bits and a TID holds 64 with its high bit zero, so the first
+    # character is one of the first eight of the alphabet. StandardSite.tid makes a key from a
+    # digest, which has no time in it at all, and .record_timestamp would otherwise write the
+    # meaningless Time that key decodes to into the record's createdAt.
+    it 'gives nil for a key whose high bit is not zero' do
+      expect(described_class.tid_time('z' + ('2' * 12))).to be_nil
+    end
+
     it 'takes the moment a scheduled post will go out' do
       at = 2.days.from_now
 
