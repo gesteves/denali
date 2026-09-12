@@ -335,6 +335,33 @@ RSpec.describe StandardSite do
     end
   end
 
+  # ⚠️ A backfill is thousands of jobs draining over hours. Without these lines there is no way to
+  # tell a run that is working from one that is quietly doing nothing.
+  describe 'logging' do
+    before { stub_put_record }
+
+    it 'names the record it wrote' do
+      expect(Rails.logger).to receive(:info).with(/document #{entry.id} synced as #{described_class.document_rkey(entry.id)}/)
+
+      service.sync_document(entry.id)
+    end
+
+    it 'says so when it skipped a record that had not changed' do
+      service.sync_document(entry.id)
+      expect(Rails.logger).to receive(:info).with(/document #{entry.id} unchanged/)
+
+      described_class.from_blog(blog.reload).sync_document(entry.id)
+    end
+
+    it 'names the record it deleted' do
+      stub_delete_record
+      entry.update_columns(status: 'draft')
+      expect(Rails.logger).to receive(:info).with(/document .* deleted/)
+
+      service.sync_document(entry.id)
+    end
+  end
+
   describe '#backfill' do
     let(:hidden) { create(:entry, :published, blog: blog, user: user, hide_from_search_engines: true) }
     let(:draft) { create(:entry, blog: blog, user: user) }

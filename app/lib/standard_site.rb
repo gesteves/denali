@@ -146,13 +146,13 @@ class StandardSite
   def sync_publication
     record = build_publication_record(icon: cover_source(publication_icon_url))
     fingerprint = fingerprint_of(record)
-    return :unchanged if fingerprint == @blog.standard_site_fingerprint
+    return log('publication unchanged; skipping', :unchanged) if fingerprint == @blog.standard_site_fingerprint
 
     record = build_publication_record(icon: upload_image(publication_icon_url))
     put_record(collection: PUBLICATION_COLLECTION, rkey: PUBLICATION_RKEY, record: record,
                validate: false)
     @blog.update_columns(standard_site_did: did, standard_site_fingerprint: fingerprint)
-    :synced
+    log("publication synced at #{self.class.publication_uri(did)}", :synced)
   end
 
   # Makes the repo agree with the blog: it publishes the publication, queues a sync for every entry
@@ -184,6 +184,7 @@ class StandardSite
       raise "The publication in this repo names another site. Refusing to prune #{stale.size} record(s)."
     end
 
+    log("backfill scheduling #{current.size} document sync(s), one every #{spacing.round(1)}s")
     current.each_with_index do |id, index|
       StandardSiteJob.perform_in((index * spacing).seconds, 'sync_document', id)
     end
@@ -297,6 +298,20 @@ class StandardSite
 
   private
 
+  # Writes one line about an operation at info level and returns the result, so a caller can write
+  # `return log('...', :deleted)`.
+  #
+  # ⚠️ Not decoration. A backfill is thousands of jobs draining over hours, and without these lines
+  # there is no way to tell a run that is working from one that is quietly doing nothing.
+  #
+  # @param message [String] what happened.
+  # @param result [Symbol, nil] what to return.
+  # @return [Symbol, nil] the result.
+  def log(message, result = nil)
+    Rails.logger.info("standard.site: #{message}")
+    result
+  end
+
   # Whether this repo's publication record names this site.
   #
   # ⚠️ PUBLICATION_RKEY is tid('self'), so every installation of this code writes its publication at
@@ -319,14 +334,16 @@ class StandardSite
   # @return [Symbol] :synced or :unchanged.
   def do_sync_document(entry)
     fingerprint = document_fingerprint(entry)
-    return :unchanged if fingerprint == entry.standard_site_fingerprint
+    if fingerprint == entry.standard_site_fingerprint
+      return log("document #{entry.id} unchanged; skipping", :unchanged)
+    end
 
     store_did!
     record = build_document_record(entry, cover_image: upload_image(cover_image_url(entry)))
     put_record(collection: DOCUMENT_COLLECTION, rkey: self.class.document_rkey(entry.id),
                record: record, validate: false)
     entry.update_columns(standard_site_fingerprint: fingerprint)
-    :synced
+    log("document #{entry.id} synced as #{self.class.document_rkey(entry.id)}", :synced)
   end
 
   # Deletes a document record and forgets its fingerprint.
@@ -345,7 +362,7 @@ class StandardSite
     end
 
     entry&.update_columns(standard_site_fingerprint: nil)
-    :deleted
+    log("document #{rkey} deleted", :deleted)
   end
 
   # Downloads an image, brings it under the blob limit and uploads it.
