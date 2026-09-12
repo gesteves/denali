@@ -485,10 +485,12 @@ class Admin::EntriesController < AdminController
     scheduled = scheduled_at.present? && scheduled_at > Time.current
 
     if scheduled
-      BlueskyJob.perform_at(scheduled_at, @entry.id, params[:text], params[:in_reply_to], params[:quote])
+      BlueskyJob.perform_at(scheduled_at, @entry.id, params[:text], params[:in_reply_to], params[:quote],
+                            Bluesky.new_tid(at: scheduled_at))
       @message = "Your entry will be shared on Bluesky at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
     else
-      BlueskyJob.perform_inline(@entry.id, params[:text], params[:in_reply_to], params[:quote])
+      BlueskyJob.perform_inline(@entry.id, params[:text], params[:in_reply_to], params[:quote],
+                                Bluesky.new_tid)
       @entry.reload
       @message = 'Your entry was shared on Bluesky.'
     end

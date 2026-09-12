@@ -17,7 +17,7 @@ class RandomShareJob < ApplicationJob
       logger.info "[Social] Sharing \"#{entry.title}\" (#{entry.permalink_url}) on #{platform}."
       case platform
       when 'Bluesky'
-        share(BlueskyJob, entry.id, entry.bluesky_caption(utm_campaign: campaign), share_immediately)
+        share_bluesky(entry, campaign, share_immediately)
       when 'Mastodon'
         share(MastodonJob, entry.id, entry.mastodon_caption(utm_campaign: campaign), share_immediately)
       when 'Instagram'
@@ -35,6 +35,21 @@ class RandomShareJob < ApplicationJob
       job_class.perform_async(entry_id, caption)
     else
       job_class.perform_in(rand(0..60).minutes, entry_id, caption)
+    end
+  end
+
+  # Bluesky needs its record key up front, so a retry replaces the post instead of adding another.
+  #
+  # The key is also the feed's sort key, so a delayed share takes the key of the moment it will
+  # actually go out. Otherwise it would sort at the moment it was queued, up to an hour earlier.
+  def share_bluesky(entry, campaign, share_immediately)
+    caption = entry.bluesky_caption(utm_campaign: campaign)
+
+    if share_immediately
+      BlueskyJob.perform_async(entry.id, caption, nil, nil, Bluesky.new_tid)
+    else
+      delay = rand(0..60).minutes
+      BlueskyJob.perform_in(delay, entry.id, caption, nil, nil, Bluesky.new_tid(at: delay.from_now))
     end
   end
 

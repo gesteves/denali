@@ -56,6 +56,7 @@ RSpec.describe BlueskyJob, type: :worker do
 
       it 'creates a skeet with photos' do
         expect(bluesky_instance).to receive(:skeet).with(
+          rkey: kind_of(String),
           text: text,
           photos: array_including(
             hash_including(:url, :alt_text, :width, :height)
@@ -63,6 +64,19 @@ RSpec.describe BlueskyJob, type: :worker do
           in_reply_to: nil,
           quote: nil
         )
+
+        described_class.new.perform(entry.id, text)
+      end
+
+      it 'writes at the record key it was given' do
+        expect(bluesky_instance).to receive(:skeet).with(hash_including(rkey: 'abc1234567890'))
+
+        described_class.new.perform(entry.id, text, nil, nil, 'abc1234567890')
+      end
+
+      it 'mints its own record key when called without one' do
+        # A job enqueued before that argument existed arrives with four, and must still post.
+        expect(bluesky_instance).to receive(:skeet).with(hash_including(rkey: kind_of(String)))
 
         described_class.new.perform(entry.id, text)
       end

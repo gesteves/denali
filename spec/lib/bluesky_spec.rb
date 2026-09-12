@@ -80,11 +80,51 @@ RSpec.describe Bluesky do
     end
   end
 
+  describe '.new_tid' do
+    it 'returns a 13-character sortable base32 key' do
+      expect(described_class.new_tid).to match(/\A[234567a-z]{13}\z/)
+    end
+
+    it 'always rises, so the posts of a thread sort in the order they were made' do
+      # The low bits are random and several keys can land in one microsecond, so without the
+      # monotonic bump a reply could sort above its own root.
+      tids = Array.new(1000) { described_class.new_tid }
+
+      expect(tids).to eq(tids.sort)
+      expect(tids.uniq.size).to eq(tids.size)
+    end
+
+    it 'round-trips through .tid_time' do
+      expect(described_class.tid_time(described_class.new_tid)).to be_within(1).of(Time.now.utc)
+    end
+
+    it 'takes the moment a scheduled post will go out' do
+      at = 2.days.from_now
+
+      expect(described_class.tid_time(described_class.new_tid(at: at))).to be_within(1).of(at.utc)
+    end
+
+    it 'does not let a future-dated key drag later keys forward' do
+      described_class.new_tid(at: 30.days.from_now)
+
+      expect(described_class.tid_time(described_class.new_tid)).to be_within(1).of(Time.now.utc)
+    end
+  end
+
+  describe '.tid_time' do
+    it 'returns nil for a value that is not a TID' do
+      expect(described_class.tid_time('not-a-tid')).to be_nil
+      expect(described_class.tid_time(nil)).to be_nil
+      expect(described_class.tid_time('')).to be_nil
+    end
+  end
+
   describe 'instance methods' do
     let(:base_url) { 'https://bsky.social' }
     let(:email) { 'test@example.com' }
     let(:password) { 'password123' }
     let(:bluesky) { described_class.new(base_url: base_url, email: email, password: password) }
+    let(:rkey) { described_class.new_tid }
 
     before do
       allow(Rails.cache).to receive(:read).and_return(nil)
@@ -104,17 +144,17 @@ RSpec.describe Bluesky do
         stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
           .to_return(status: 200, body: session_response.to_json)
 
-        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
-          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/123' }.to_json)
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/123', cid: 'postcid' }.to_json)
       end
 
       it 'creates a skeet successfully' do
-        response = bluesky.skeet(text: text)
+        response = bluesky.skeet(rkey: rkey, text: text)
         expect(response['uri']).to include('app.bsky.feed.post')
       end
 
       it 'creates session when not cached' do
-        bluesky.skeet(text: text)
+        bluesky.skeet(rkey: rkey, text: text)
         expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.server.createSession").at_least_once
       end
 
@@ -134,14 +174,14 @@ RSpec.describe Bluesky do
         end
 
         it 'uploads photos and includes them in the skeet' do
-          bluesky.skeet(text: text, photos: photos)
+          bluesky.skeet(rkey: rkey, text: text, photos: photos)
           expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
         end
 
         it 'sends alt text as a string even when the photo has none' do
-          bluesky.skeet(text: text, photos: [photos.first.merge(alt_text: nil)])
+          bluesky.skeet(rkey: rkey, text: text, photos: [photos.first.merge(alt_text: nil)])
 
-          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
             .with { |req| JSON.parse(req.body).dig('record', 'embed', 'images', 0, 'alt') == '' }
         end
 
@@ -149,15 +189,15 @@ RSpec.describe Bluesky do
           stub_request(:get, 'https://example.com/photo.jpg')
             .to_return(status: 200, body: '<html>nope</html>', headers: { 'Content-Type' => 'text/html' })
 
-          expect { bluesky.skeet(text: text, photos: photos) }
+          expect { bluesky.skeet(rkey: rkey, text: text, photos: photos) }
             .to raise_error(/Expected an image/)
         end
 
         it 'only embeds up to MAX_PHOTOS images' do
           many = Array.new(described_class::MAX_PHOTOS + 2) { photos.first }
-          bluesky.skeet(text: text, photos: many)
+          bluesky.skeet(rkey: rkey, text: text, photos: many)
 
-          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
             .with { |req| JSON.parse(req.body).dig('record', 'embed', 'images').size == described_class::MAX_PHOTOS }
         end
       end
@@ -184,8 +224,8 @@ RSpec.describe Bluesky do
         end
 
         it 'constructs reply object' do
-          bluesky.skeet(text: text, in_reply_to: reply_url)
-          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          bluesky.skeet(rkey: rkey, text: text, in_reply_to: reply_url)
+          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
         end
       end
     end
@@ -199,10 +239,10 @@ RSpec.describe Bluesky do
       end
 
       it 'creates only one session for a cold cache' do
-        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
-          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/1' }.to_json)
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/1', cid: 'postcid' }.to_json)
 
-        bluesky.skeet(text: text)
+        bluesky.skeet(rkey: rkey, text: text)
 
         expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.server.createSession").once
       end
@@ -210,19 +250,19 @@ RSpec.describe Bluesky do
       it 'authenticates again and retries once when the PDS rejects the token' do
         # A token can be revoked, or the app password changed, long before its cache entry
         # expires. Without the retry every attempt for the rest of the hour hits the dead token.
-        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
           .to_return({ status: 401, body: { error: 'ExpiredToken' }.to_json },
-                     { status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/1' }.to_json })
+                     { status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/1', cid: 'postcid' }.to_json })
 
-        expect(bluesky.skeet(text: text)['uri']).to include('app.bsky.feed.post')
+        expect(bluesky.skeet(rkey: rkey, text: text)['uri']).to include('app.bsky.feed.post')
         expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.server.createSession").twice
       end
 
       it 'gives up after a second rejection' do
-        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
           .to_return(status: 401, body: { error: 'ExpiredToken' }.to_json)
 
-        expect { bluesky.skeet(text: text) }.to raise_error(Bluesky::UnauthorizedError)
+        expect { bluesky.skeet(rkey: rkey, text: text) }.to raise_error(Bluesky::UnauthorizedError)
       end
 
       it 'raises AuthenticationError when Bluesky refuses the credentials' do
@@ -250,8 +290,8 @@ RSpec.describe Bluesky do
       before do
         stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
           .to_return(status: 200, body: { did: 'did:plc:abcd1234', accessJwt: 'token123' }.to_json)
-        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
-          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/1' }.to_json)
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/1', cid: 'postcid' }.to_json)
       end
 
       it 'asks for the post alone, not its whole thread' do
@@ -261,7 +301,7 @@ RSpec.describe Bluesky do
             thread: { post: { uri: 'at://did:plc:test123/app.bsky.feed.post/abc123', cid: 'cid123', record: {} } }
           }.to_json)
 
-        bluesky.skeet(text: text, in_reply_to: post_url)
+        bluesky.skeet(rkey: rkey, text: text, in_reply_to: post_url)
 
         expect(WebMock).to have_requested(:get, "#{base_url}/xrpc/app.bsky.feed.getPostThread")
           .with(query: hash_including('depth' => '0', 'parentHeight' => '0'))
@@ -281,9 +321,9 @@ RSpec.describe Bluesky do
             }
           }.to_json)
 
-        bluesky.skeet(text: text, in_reply_to: post_url)
+        bluesky.skeet(rkey: rkey, text: text, in_reply_to: post_url)
 
-        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
           .with { |req| JSON.parse(req.body).dig('record', 'reply', 'root') == root }
       end
 
@@ -296,13 +336,70 @@ RSpec.describe Bluesky do
                       post: { uri: 'at://did:plc:test123/app.bsky.feed.post/abc123', notFound: true } }
           }.to_json)
 
-        expect { bluesky.skeet(text: text, in_reply_to: post_url) }
+        expect { bluesky.skeet(rkey: rkey, text: text, in_reply_to: post_url) }
           .to raise_error(/Could not read the Bluesky post/)
       end
 
       it 'raises when the reply URL is not a Bluesky post URL' do
-        expect { bluesky.skeet(text: text, in_reply_to: 'https://example.com/hello') }
+        expect { bluesky.skeet(rkey: rkey, text: text, in_reply_to: 'https://example.com/hello') }
           .to raise_error(/is not a Bluesky post URL/)
+      end
+    end
+
+    describe 'idempotency' do
+      let(:text) { 'Hello Bluesky' }
+
+      before do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
+          .to_return(status: 200, body: { did: 'did:plc:abcd1234', accessJwt: 'token123' }.to_json)
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/1', cid: 'postcid' }.to_json)
+      end
+
+      it 'writes at the record key it was given' do
+        bluesky.skeet(rkey: rkey, text: text)
+
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .with { |req| JSON.parse(req.body)['rkey'] == rkey }
+      end
+
+      it 'sends byte-identical bytes on a second attempt with the same key' do
+        # This is the whole guarantee: a retry replaces the same record rather than adding a second
+        # post, and identical bytes mean the CID does not change either, so a published reply's
+        # parent keeps pointing at something that exists.
+        bodies = []
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .to_return do |req|
+            bodies << req.body
+            { status: 200, body: { uri: 'at://x/app.bsky.feed.post/1', cid: 'postcid' }.to_json }
+          end
+
+        bluesky.skeet(rkey: rkey, text: text)
+        described_class.new(base_url: base_url, email: email, password: password).skeet(rkey: rkey, text: text)
+
+        expect(bodies.size).to eq(2)
+        expect(bodies.first).to eq(bodies.last)
+      end
+
+      it 'takes createdAt from the record key, to the millisecond and in UTC' do
+        bluesky.skeet(rkey: rkey, text: text)
+
+        created_at = nil
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .with { |req| created_at = JSON.parse(req.body).dig('record', 'createdAt'); true }
+
+        # Whole seconds would give two posts of one thread the same createdAt, and the AppView
+        # sorts an author feed by it.
+        expect(created_at).to match(/\.\d{3}Z\z/)
+        expect(Time.parse(created_at)).to be_within(1).of(described_class.tid_time(rkey))
+      end
+
+      it 'raises when the write comes back with no cid' do
+        # A reply names its parent by uri and cid, so a ref with no cid would fail the next post.
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .to_return(status: 200, body: { uri: 'at://x/app.bsky.feed.post/1' }.to_json)
+
+        expect { bluesky.skeet(rkey: rkey, text: text) }.to raise_error(/returned no cid/)
       end
     end
 
@@ -319,14 +416,14 @@ RSpec.describe Bluesky do
         stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
           .to_return(status: 200, body: session_response.to_json)
 
-        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
-          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.threadgate/123' }.to_json)
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.threadgate/123', cid: 'gatecid' }.to_json)
       end
 
       it 'allows replies only from followers and people the account follows' do
         bluesky.create_threadgate(post_uri)
 
-        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
           .with { |req|
             body = JSON.parse(req.body)
             body['collection'] == 'app.bsky.feed.threadgate' &&
@@ -341,7 +438,7 @@ RSpec.describe Bluesky do
       it 'reuses the post rkey so the gate attaches to the post' do
         bluesky.create_threadgate(post_uri)
 
-        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
           .with { |req| JSON.parse(req.body)['rkey'] == '123' }
       end
 
@@ -354,10 +451,10 @@ RSpec.describe Bluesky do
       end
 
       it 'raises when the API request fails, so the job can retry' do
-        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
           .to_return(status: 500, body: { error: 'InternalServerError' }.to_json)
 
-        expect { bluesky.create_threadgate(post_uri) }.to raise_error(/Failed to create/)
+        expect { bluesky.create_threadgate(post_uri) }.to raise_error(/Failed to write/)
       end
     end
 
@@ -387,12 +484,12 @@ RSpec.describe Bluesky do
           stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
             .to_return(status: 200, body: session_response.to_json)
 
-          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
             .to_return(status: 500, body: { error: 'InternalServerError' }.to_json)
         end
 
         it 'raises an error with the response body' do
-          expect { bluesky.skeet(text: text) }.to raise_error(/Failed to create/)
+          expect { bluesky.skeet(rkey: rkey, text: text) }.to raise_error(/Failed to write/)
         end
       end
 
@@ -410,7 +507,7 @@ RSpec.describe Bluesky do
         end
 
         it 'raises an error when image fetch fails' do
-          expect { bluesky.skeet(text: text, photos: photos) }.to raise_error(/Failed to fetch image/)
+          expect { bluesky.skeet(rkey: rkey, text: text, photos: photos) }.to raise_error(/Failed to fetch image/)
         end
       end
 
@@ -430,12 +527,12 @@ RSpec.describe Bluesky do
             .with(headers: { 'Content-Type' => 'image/png' })
             .to_return(status: 200, body: { blob: { ref: 'blob123' } }.to_json)
 
-          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
-            .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/123' }.to_json)
+          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+            .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/123', cid: 'postcid' }.to_json)
         end
 
         it 'uses the correct content type from the image response' do
-          bluesky.skeet(text: text, photos: photos)
+          bluesky.skeet(rkey: rkey, text: text, photos: photos)
           expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
             .with(headers: { 'Content-Type' => 'image/png' })
         end
@@ -461,8 +558,8 @@ RSpec.describe Bluesky do
           stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
             .to_return(status: 200, body: { blob: { ref: 'blob123' } }.to_json)
 
-          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
-            .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/123' }.to_json)
+          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+            .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/123', cid: 'postcid' }.to_json)
 
           image = instance_double(MiniMagick::Image)
           allow(MiniMagick::Image).to receive(:read).and_return(image)
@@ -472,7 +569,7 @@ RSpec.describe Bluesky do
         end
 
         it 'recompresses the image before uploading it' do
-          bluesky.skeet(text: text, photos: photos)
+          bluesky.skeet(rkey: rkey, text: text, photos: photos)
 
           expect(MiniMagick::Image).to have_received(:read).with(oversized_body)
           expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
@@ -480,7 +577,7 @@ RSpec.describe Bluesky do
         end
 
         it 'does not upload the original oversized blob' do
-          bluesky.skeet(text: text, photos: photos)
+          bluesky.skeet(rkey: rkey, text: text, photos: photos)
 
           expect(WebMock).not_to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
             .with(body: oversized_body)
@@ -502,14 +599,14 @@ RSpec.describe Bluesky do
           stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
             .to_return(status: 200, body: { blob: { ref: 'blob123' } }.to_json)
 
-          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
-            .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/123' }.to_json)
+          stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+            .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/123', cid: 'postcid' }.to_json)
 
           allow(MiniMagick::Image).to receive(:read)
         end
 
         it 'uploads the image as-is without recompressing it' do
-          bluesky.skeet(text: text, photos: photos)
+          bluesky.skeet(rkey: rkey, text: text, photos: photos)
 
           expect(MiniMagick::Image).not_to have_received(:read)
           expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")

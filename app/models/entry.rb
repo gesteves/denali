@@ -530,7 +530,7 @@ class Entry < ApplicationRecord
   def enqueue_publish_jobs
     OpenGraphJob.perform_async(self.id)
     MastodonJob.perform_async(self.id, self.mastodon_caption(utm_campaign: 'new-photo')) if self.post_to_mastodon
-    BlueskyJob.perform_async(self.id, self.bluesky_caption(utm_campaign: 'new-photo')) if self.post_to_bluesky
+    BlueskyJob.perform_async(self.id, self.bluesky_caption(utm_campaign: 'new-photo'), nil, nil, Bluesky.new_tid) if self.post_to_bluesky
     InstagramJob.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
     ThreadsJob.perform_async(self.id, self.threads_caption(utm_campaign: 'new-photo')) if self.post_to_threads
     Webhook.deliver_all(self)

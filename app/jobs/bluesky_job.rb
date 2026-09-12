@@ -1,7 +1,11 @@
 class BlueskyJob < ApplicationJob
   sidekiq_options queue: 'high'
 
-  def perform(entry_id, text, in_reply_to = nil, quote = nil)
+  # @param rkey [String, nil] the record key the post is written at, made by the caller with
+  #   Bluesky.new_tid before it enqueued this job. It is what makes a retry replace the post
+  #   rather than add another one. A job enqueued before this argument existed arrives without it
+  #   and mints its own, which is the behaviour it already had.
+  def perform(entry_id, text, in_reply_to = nil, quote = nil, rkey = nil)
     return unless Rails.env.production?
 
     entry = Entry.published.find(entry_id)
@@ -17,7 +21,8 @@ class BlueskyJob < ApplicationJob
       { url: p.bluesky_url, alt_text: p.alt_text, width: p.width, height: p.height }
     end
 
-    response = bluesky.skeet(text: text, photos: photos, in_reply_to: in_reply_to, quote: quote)
+    response = bluesky.skeet(rkey: rkey.presence || Bluesky.new_tid, text: text, photos: photos,
+                             in_reply_to: in_reply_to, quote: quote)
 
     # Threadgates only apply to root posts; replies inherit the root post's gate.
     BlueskyThreadgateJob.perform_async(entry_id, response["uri"]) if in_reply_to.blank? && response["uri"].present?

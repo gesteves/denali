@@ -85,6 +85,13 @@ class Bluesky
   # of unbounded size read into a Sidekiq thread is still a way to lose the process.
   MAX_SOURCE_IMAGE_BYTES = 20 * 1024 * 1024
 
+  # The "sortable base32" alphabet of a record key.
+  # @see https://atproto.com/specs/tid
+  TID_ALPHABET = "234567abcdefghijklmnopqrstuvwxyz".freeze
+
+  # .new_tid has to return a value that rises on every call, and more than one thread can ask.
+  TID_LOCK = Mutex.new
+
   # The PDS rejected our token. The caller clears the cached session and tries once more.
   class UnauthorizedError < StandardError; end
 
@@ -151,6 +158,81 @@ class Bluesky
     length.positive? && length <= MAX_POST_LENGTH && plain.bytesize <= MAX_POST_BYTES
   end
 
+  # Makes a record key for a new post.
+  #
+  # The caller makes this *before* it enqueues the job, and the job writes with putRecord. A second
+  # attempt then replaces the same record instead of adding a second post — createRecord mints its
+  # own key each time, so every retry there is another post in the feed.
+  #
+  # The shape is a TID: a zero bit, 53 bits of microseconds, and 10 bits of a random clock id, so a
+  # later record sorts after an earlier one, which is what a feed needs.
+  #
+  # @param at [Time, nil] the moment the post should sort at. Nil means now.
+  # @return [String] a 13-character TID.
+  def self.new_tid(at: nil)
+    # A scheduled share has to sort at the moment it goes out, not the moment it was queued: a post
+    # scheduled for tomorrow would otherwise carry today's key and land below a day of newer posts.
+    # This path deliberately leaves the monotonic counter alone — one future-dated schedule would
+    # otherwise push every immediate key after it into the future.
+    return encode_tid((tid_micros(at) << 10) | SecureRandom.random_number(1 << 10)) if at.present?
+
+    # The clock alone is not monotonic, and a caller can ask for several keys inside one
+    # microsecond. The low bits are random, so without this the keys of a thread would sort in a
+    # random order and a reply could come out above its own root.
+    TID_LOCK.synchronize do
+      micros = tid_micros(Time.now)
+      @last_tid_micros = @last_tid_micros.to_i >= micros ? @last_tid_micros + 1 : micros
+      encode_tid((@last_tid_micros << 10) | SecureRandom.random_number(1 << 10))
+    end
+  end
+
+  # Encodes a 64-bit value as a 13-character TID.
+  #
+  # @param value [Integer] the value to encode.
+  # @return [String] the TID.
+  def self.encode_tid(value)
+    encoded = +""
+    while value.positive?
+      encoded = TID_ALPHABET[value % 32] + encoded
+      value /= 32
+    end
+    encoded.rjust(13, TID_ALPHABET[0])
+  end
+
+  # Reads the time back out of a TID that .new_tid made.
+  #
+  # @param tid [String] a 13-character TID.
+  # @return [Time, nil] the time, or nil for a value of another shape.
+  def self.tid_time(tid)
+    return unless tid.to_s.match?(/\A[#{TID_ALPHABET}]{13}\z/)
+
+    value = tid.each_char.reduce(0) { |acc, char| (acc * 32) + TID_ALPHABET.index(char) }
+    Time.at(Rational(value >> 10, 1_000_000)).utc
+  end
+
+  # The createdAt a record carries.
+  #
+  # It comes from the record key, so every attempt of a job writes byte-identical bytes and the CID
+  # doesn't change. A new CID would leave a published reply's parent pointing at a version that is
+  # gone.
+  #
+  # Milliseconds matter on their own: two posts of a thread go out inside the same second, and the
+  # AppView sorts an author feed by this value. With whole seconds a root could sort below its own
+  # reply and disappear from the Posts tab while the reply stayed.
+  #
+  # @param rkey [String] the record key.
+  # @return [String] an ISO 8601 timestamp in UTC, to the millisecond.
+  def self.record_timestamp(rkey)
+    (tid_time(rkey) || Time.now).utc.iso8601(3)
+  end
+
+  # @param time [Time] the moment to encode.
+  # @return [Integer] its microseconds, in the 53 bits a TID holds.
+  def self.tid_micros(time)
+    (time.to_r * 1_000_000).to_i & ((1 << 53) - 1)
+  end
+  private_class_method :tid_micros
+
   # Every link in a post, in order, as character offsets into the plain text.
   #
   # A bare URL inside a Markdown link's words is not a second link. `[https://a](https://b)` would
@@ -210,7 +292,7 @@ class Bluesky
   # @param in_reply_to [String, nil] the public URL of a post to reply to. Optional.
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
-  def skeet(text:, photos: [], in_reply_to: nil, quote: nil)
+  def skeet(rkey:, text:, photos: [], in_reply_to: nil, quote: nil)
     # One parse gives both the text the record holds and the offsets its facets need. Rendering
     # twice would let the two disagree.
     post = self.class.render(text)
@@ -226,7 +308,7 @@ class Bluesky
       "$type" => "app.bsky.feed.post",
       text: post.text,
       langs: ["en-US"],
-      createdAt: Time.now.iso8601
+      createdAt: self.class.record_timestamp(rkey)
     }
 
     facets = build_facets(post.text, links: post.links)
@@ -234,13 +316,7 @@ class Bluesky
     record_data[:embed] = embed if embed.present?
     record_data[:reply] = reply if reply.present?
 
-    record = {
-      repo: did,
-      collection: "app.bsky.feed.post",
-      record: record_data
-    }
-
-    create_record(record)
+    put_record(collection: "app.bsky.feed.post", rkey: rkey, record: record_data)
   end
 
   # Opens a session and returns the account's DID, so the admin can check a handle and app password
@@ -266,17 +342,18 @@ class Bluesky
     rkey = post_uri.to_s.split('/').last
     raise ArgumentError, "Invalid post at-uri: #{post_uri.inspect}" if rkey.blank? || !post_uri.to_s.start_with?('at://')
 
-    create_record({
-      repo: did,
+    put_record(
       collection: "app.bsky.feed.threadgate",
       rkey: rkey,
       record: {
         "$type" => "app.bsky.feed.threadgate",
         post: post_uri,
         allow: THREADGATE_ALLOW_RULES,
-        createdAt: Time.now.iso8601
+        # The gate's key is the post's key, so this is the post's own timestamp. Every attempt then
+        # writes the same bytes.
+        createdAt: self.class.record_timestamp(rkey)
       }
-    })
+    )
   end
 
   private
@@ -526,26 +603,43 @@ class Bluesky
     post
   end
 
-  # Creates a record in the Bluesky API for the specified collection.
-  # @param record [Hash] the record data to send to the API.
-  # @return [Hash] the parsed response body if successful.
-  # @raise [RuntimeError] if the post request fails.
-  def create_record(record)
+  # Writes a record, replacing whatever is already at that key.
+  #
+  # putRecord is what makes a retry safe: the repo, the collection and the rkey identify the
+  # record, so a second attempt replaces it rather than adding a second post. createRecord mints
+  # its own key each time, which means every Sidekiq retry after a successful write would put
+  # another copy of the post in the feed.
+  #
+  # It deliberately doesn't send validate: false. The PDS knows the app.bsky.* lexicons, so its own
+  # check catches a bad record before it reaches a feed.
+  #
+  # @param collection [String] the lexicon id.
+  # @param rkey [String] the record key.
+  # @param record [Hash] the record data.
+  # @return [Hash] the parsed response body, holding the record's uri and cid.
+  # @raise [RuntimeError] if the write fails.
+  def put_record(collection:, rkey:, record:)
     with_valid_session do
       headers = {
         "Authorization" => "Bearer #{access_token}",
         "Content-Type" => "application/json"
       }
+      body = { repo: did, collection: collection, rkey: rkey, record: record }
 
-      response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
-                               body: record.to_json,
+      response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.putRecord",
+                               body: body.to_json,
                                headers: headers,
                                timeout: REQUEST_TIMEOUT)
 
       raise UnauthorizedError, "Bluesky rejected the access token" if response.code == 401
-      raise "Failed to create #{record[:collection]} record: #{response.body}" unless response.success?
+      raise "Failed to write #{collection} record: #{response.body}" unless response.success?
 
-      JSON.parse(response.body)
+      written = JSON.parse(response.body)
+      # A reply names its parent by uri *and* cid, so a response with no cid would make the next
+      # post of a thread invalid, with a message naming that post rather than this one.
+      raise "Bluesky wrote #{collection}/#{rkey} but returned no cid" if written["cid"].blank?
+
+      written
     end
   end
 
