@@ -886,10 +886,16 @@ class Entry < ApplicationRecord
     entry_albums.flatten.compact.uniq
   end
 
+  # ⚠️ The standard.site sync is enqueued here rather than left to the after_commit at the top of
+  # this class. That callback is guarded on STANDARD_SITE_FIELDS, which are columns on entries, and
+  # tags live in taggings — so a tag change touches nothing it watches. The entry form looks like it
+  # works only because it sets modified_at, and even there the callback fires on the update that
+  # precedes this call, so the record would carry the tags as they were before it.
   def update_tags
     self.update_equipment_tags
     self.update_location_tags
     self.update_style_tags
+    self.sync_standard_site_later
   end
 
   def update_equipment_tags
@@ -941,6 +947,7 @@ class Entry < ApplicationRecord
     self.tag_list.add(new_tags, parse: true)
     self.tag_list.remove(self.equipment_list + self.location_list + ['Color', 'Black and White', 'Film', 'Mobile'])
     self.save!
+    self.sync_standard_site_later
   end
 
   def handle_status_change

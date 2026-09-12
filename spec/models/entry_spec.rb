@@ -613,5 +613,36 @@ RSpec.describe Entry, type: :model do
 
       expect(StandardSiteJob.jobs).to be_empty
     end
+
+    # ⚠️ STANDARD_SITE_FIELDS are columns on entries and tags live in taggings, so the after_commit
+    # never sees a tag change. Without these enqueues a camera rename, a bulk tag edit, or the
+    # update_tags that follows an entry form save would leave the record's tags as they were.
+    it 'queues a sync when the auto-generated tags are rebuilt' do
+      entry = create(:entry, :published, blog: blog, user: user)
+      StandardSiteJob.jobs.clear
+
+      entry.update_tags
+
+      expect(standard_site_args).to include(['sync_document', entry.id])
+    end
+
+    it 'queues a sync when tags are added' do
+      entry = create(:entry, :published, blog: blog, user: user)
+      StandardSiteJob.jobs.clear
+
+      entry.add_tags('Landscapes')
+
+      expect(standard_site_args).to include(['sync_document', entry.id])
+    end
+
+    it 'queues nothing for a tag change on a blog that names no account' do
+      plain = create(:blog)
+      entry = create(:entry, :published, blog: plain, user: user)
+      StandardSiteJob.jobs.clear
+
+      entry.add_tags('Landscapes')
+
+      expect(StandardSiteJob.jobs).to be_empty
+    end
   end
 end

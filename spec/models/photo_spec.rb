@@ -261,6 +261,67 @@ RSpec.describe Photo, type: :model do
     end
   end
 
+  describe '#standard_site_url' do
+    let(:photo) { create(:photo, entry: entry) }
+
+    def with_dimensions(width, height)
+      allow(photo).to receive(:width).and_return(width)
+      allow(photo).to receive(:height).and_return(height)
+      allow(photo).to receive(:has_dimensions?).and_return(!width.nil?)
+    end
+
+    it 'caps a horizontal photo at 1600px wide' do
+      with_dimensions(6000, 4000)
+
+      expect(photo).to receive(:url).with(hash_including(width: 1600, format: 'jpeg', quality: 85))
+      photo.standard_site_url
+    end
+
+    it 'does not upscale a horizontal photo smaller than 1600px' do
+      with_dimensions(1200, 800)
+
+      expect(photo).to receive(:url).with(hash_including(width: 1200, format: 'jpeg', quality: 85))
+      photo.standard_site_url
+    end
+
+    it 'caps a vertical photo at 1600px tall' do
+      with_dimensions(4000, 6000)
+
+      expect(photo).to receive(:url).with(hash_including(width: photo.width_from_height(1600), format: 'jpeg', quality: 85))
+      photo.standard_site_url
+    end
+
+    it 'does not upscale a vertical photo shorter than 1600px' do
+      with_dimensions(800, 1200)
+
+      expect(photo).to receive(:url).with(hash_including(width: 800, format: 'jpeg', quality: 85))
+      photo.standard_site_url
+    end
+
+    it 'falls back to 1600px when dimensions are unknown' do
+      with_dimensions(nil, nil)
+
+      expect(photo).to receive(:url).with(hash_including(width: 1600, format: 'jpeg', quality: 85))
+      photo.standard_site_url
+    end
+
+    # The lexicon puts no shape on coverImage, so the photo keeps its own. The exact hash matters
+    # here: an aspect_ratio anywhere in it would make #calculate_crop work out a crop.
+    it 'asks for no crop, so the photo keeps its own aspect ratio' do
+      with_dimensions(6000, 4000)
+
+      expect(photo).to receive(:url).with({ width: 1600, format: 'jpeg', quality: 85 })
+      photo.standard_site_url
+    end
+
+    it 'is unlike the Facebook card, which does ask for a crop' do
+      with_dimensions(6000, 4000)
+
+      expect(photo).to receive(:url).with(hash_including(aspect_ratio: '1200:630'))
+      photo.facebook_card_url
+    end
+  end
+
   describe 'location helpers' do
     describe '#has_location?' do
       it 'returns false when coordinates are missing' do

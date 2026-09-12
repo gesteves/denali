@@ -26,8 +26,8 @@ class Photo < ApplicationRecord
   after_commit :update_entry_location_tags, if: :changed_location?
   after_commit :update_entry_style_tags, if: :changed_style?
   after_commit :update_entry_caption_validity, if: :changed_caption_attributes?
-  # The first photo is the entry's standard.site cover image, and replacing it doesn't change any
-  # column the entry's own callback watches.
+  # The first photo is the entry's standard.site cover image, and its camera, exposure and place are
+  # in the record's textContent. None of that changes a column the entry's own callback watches.
   after_commit :sync_entry_standard_site
 
   scope :needs_alt_text_review, -> { where(alt_text: [nil, ""]).or(where(alt_text_needs_review: true)) }
@@ -182,6 +182,29 @@ class Photo < ApplicationRecord
 
   def sitemap_url
     opts = { width: 1200, format: 'jpeg' }
+    self.url(opts)
+  end
+
+  # The cover image of a standard.site document record, in the photo's own aspect ratio.
+  #
+  # ⚠️ Deliberately not #facebook_card_url. The site.standard.document lexicon declares coverImage as
+  # a blob that accepts image/* under 1MB and says nothing about its shape, so there is no reason to
+  # hand a reader a 1200x630 slice of a photograph.
+  #
+  # The cap is on the long edge rather than the width, so a vertical and a horizontal cost about the
+  # same bytes.
+  def standard_site_url
+    max_dimension = 1600
+    width = if self.is_vertical?
+      width_from_height([self.height, max_dimension].min)
+    elsif has_dimensions?
+      [self.width, max_dimension].min
+    else
+      max_dimension
+    end
+    # The image service takes a size in pixels and promises nothing in bytes, so use a conservative
+    # fixed quality; StandardSite#upload_image recompresses anything still over the limit.
+    opts = { width: width, format: 'jpeg', quality: 85 }
     self.url(opts)
   end
 

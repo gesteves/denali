@@ -106,14 +106,108 @@ RSpec.describe StandardSite do
       expect(record['textContent']).to eq('The body text.')
     end
 
+    it 'keeps the breaks between the body\'s paragraphs' do
+      entry.update!(body: "First para.\n\nSecond para.")
+
+      expect(service.build_document_record(entry.reload)['textContent'])
+        .to eq("First para.\n\nSecond para.")
+    end
+
+    # The same camera, exposure and place the Atom feed lists under a single photo, read through
+    # the feed's own helpers so the two can't drift.
+    describe 'the camera, the exposure and the place' do
+      let(:camera) { create(:camera, make: 'Canon', model: 'EOS R5') }
+      let(:entry) do
+        create(:entry, :published, blog: blog, user: user, title: 'A Title', body: 'The body text.').tap do |e|
+          create(:photo, :with_exif, :with_location, entry: e, camera: camera)
+          e.reload
+        end
+      end
+
+      it 'follows the body, after a blank line' do
+        text = service.build_document_record(entry)['textContent']
+
+        expect(text).to start_with("The body text.\n\n")
+      end
+
+      it 'names the camera' do
+        expect(service.build_document_record(entry)['textContent'])
+          .to include("Photographed with #{camera.article} #{camera.display_name}")
+      end
+
+      it 'gives the exposure without the markup the feed wraps it in' do
+        text = service.build_document_record(entry)['textContent']
+
+        expect(text).to include('focal length', '1/250', 'ISO 400')
+        expect(text).not_to include('<i>', '<br>')
+      end
+
+      it 'gives the location' do
+        expect(service.build_document_record(entry)['textContent'])
+          .to include('Washington')
+      end
+
+      it 'puts each of them on its own line' do
+        details = service.build_document_record(entry)['textContent'].split("\n\n").last
+
+        expect(details.split("\n").length).to eq(3)
+      end
+
+      it 'leaves the location out when the entry hides it' do
+        entry.update!(show_location: false)
+
+        expect(service.build_document_record(entry.reload)['textContent']).not_to include('Washington')
+      end
+
+      it 'says nothing about a photo an entry has several of' do
+        create(:photo, :with_exif, :with_location, entry: entry, camera: camera, position: 2)
+
+        expect(service.build_document_record(entry.reload)['textContent']).to eq('The body text.')
+      end
+    end
+
+    it 'omits the text content for an entry with no body and no photo details' do
+      entry.update!(body: nil)
+
+      expect(service.build_document_record(entry.reload)).not_to have_key('textContent')
+    end
+
     it 'cuts a tag to the limit of the lexicon and drops one that is empty' do
-      allow(entry).to receive(:tag_list).and_return(['é' * 140, '  ', 'landscape'])
+      allow(entry).to receive(:combined_tag_list).and_return(['é' * 140, '  ', 'landscape'])
 
       tags = service.build_document_record(entry)['tags']
 
       expect(tags.length).to eq(2)
-      expect(tags.first.scan(/\X/).length).to eq(described_class::MAX_TAG_GRAPHEMES)
-      expect(tags.last).to eq('landscape')
+      expect(tags.first).to eq('landscape')
+      expect(tags.last.scan(/\X/).length).to eq(described_class::MAX_TAG_GRAPHEMES)
+    end
+
+    # tag_list is only the :tags context, and the auto-tagging callbacks strip the other three back
+    # out of it, so a record built from it carried a handful of leftovers instead of the list the
+    # entry's own page shows.
+    it 'carries every tag context, not just the :tags one' do
+      entry.tag_list = ['Landscapes']
+      entry.equipment_list = ['Canon EOS R5']
+      entry.location_list = ['Colorado']
+      entry.style_list = ['Black and White']
+      entry.save!
+
+      expect(service.build_document_record(entry.reload)['tags'])
+        .to contain_exactly('Landscapes', 'Canon EOS R5', 'Colorado', 'Black and White')
+    end
+
+    # The fingerprint is taken over this array, so an order that follows the taggings rows would
+    # rewrite the record on the PDS for no change.
+    it 'sorts the tags' do
+      allow(entry).to receive(:combined_tag_list).and_return(%w[zebra apple mango])
+
+      expect(service.build_document_record(entry)['tags']).to eq(%w[apple mango zebra])
+    end
+
+    it 'omits the tags entirely when the entry has none' do
+      allow(entry).to receive(:combined_tag_list).and_return([])
+
+      expect(service.build_document_record(entry)).not_to have_key('tags')
     end
 
     it 'omits the cover image when no blob is supplied' do
@@ -288,10 +382,27 @@ RSpec.describe StandardSite do
     end
   end
 
+  describe '#cover_image_url' do
+    let(:entry) do
+      create(:entry, :published, :with_photo, blog: blog, user: user, title: 'A Title')
+    end
+    let(:photo) { entry.photos.first }
+
+    # The lexicon's coverImage takes any image under 1MB and says nothing about its shape, so a
+    # photoblog has no reason to hand a reader a 1200x630 slice of a photograph.
+    it 'is the photo in its own aspect ratio, not the Facebook card' do
+      allow(photo).to receive(:has_dimensions?).and_return(true)
+      allow(photo).to receive(:standard_site_url).and_return('https://example.com/native.jpg')
+      allow(entry).to receive(:photos).and_return([photo])
+
+      expect(service.cover_image_url(entry)).to eq('https://example.com/native.jpg')
+    end
+  end
+
   # ⚠️ A photo's width and height live in its blob metadata and an asynchronous job fills them in,
-  # so a freshly published entry has neither for a moment. facebook_card_url works a crop out of
-  # them and raises NoMethodError without them, and that call sits inside #document_fingerprint,
-  # which runs before anything that could rescue it. The job backed off 25 times on a NoMethodError.
+  # so a freshly published entry has neither for a moment. standard_site_url caps the long edge from
+  # them, and that call sits inside #document_fingerprint, which runs before anything that could
+  # rescue it. The job once backed off 25 times on a NoMethodError from the crop this used to take.
   describe 'an entry whose cover photo has not been analysed yet' do
     let(:entry) do
       create(:entry, :published, :with_photo, blog: blog, user: user, title: 'A Title')

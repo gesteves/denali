@@ -34,6 +34,9 @@ class StandardSite
 
   # The text limits of the two lexicons, in grapheme clusters. A field past one of them makes the
   # whole record invalid, so one long tag would take the document down with it.
+  #
+  # The tags array itself has no maxLength in site.standard.document — only its items do — so the
+  # count is deliberately not capped here.
   MAX_NAME_GRAPHEMES = 500
   MAX_DESCRIPTION_GRAPHEMES = 3_000
   MAX_TAG_GRAPHEMES = 128
@@ -261,10 +264,20 @@ class StandardSite
     description = plain_text(entry.meta_description(entry.photos.first))
     record['description'] = truncate_graphemes(description, MAX_DESCRIPTION_GRAPHEMES) if description.present?
 
-    text = plain_text(entry.body)
+    text = document_text(entry)
     record['textContent'] = text if text.present?
 
-    tags = Array(entry.tag_list).map { |tag| truncate_graphemes(tag.to_s, MAX_TAG_GRAPHEMES) }.compact_blank
+    # combined_tag_list, not tag_list: tag_list is only the :tags context, and the auto-tagging
+    # callbacks strip the equipment, location and style names back out of it, so it is the residue
+    # rather than the list. combined_tag_list is the union of all four contexts, which is what the
+    # entry's page and its Atom feed show.
+    #
+    # ⚠️ Sorted because the fingerprint is taken over this array. combined_tags reads the taggings
+    # in whatever order they come back, and an order that wobbles would rewrite the record on the
+    # PDS for no change.
+    tags = Array(entry.combined_tag_list).sort
+                                         .map { |tag| truncate_graphemes(tag.to_s, MAX_TAG_GRAPHEMES) }
+                                         .compact_blank
     record['tags'] = tags if tags.present?
 
     record['coverImage'] = cover_image if cover_image.present?
@@ -284,10 +297,11 @@ class StandardSite
   #
   # ⚠️ The dimensions guard is not optional. A photo's width and height live in its blob metadata
   # and an asynchronous job fills them in, so a freshly published entry has neither for a moment.
-  # #facebook_card_url works out a crop from them and raises NoMethodError without them — and this
-  # is reached through #document_fingerprint, which runs before anything that could rescue it.
+  # #standard_site_url caps the long edge from them, and without them it falls back to a width,
+  # which for a vertical photo is a different picture and so a different fingerprint — a record
+  # written now and rewritten the moment the dimensions land, for two writes against the PDS budget.
   #
-  # It returns nil rather than raising, so a photo that never gets analysed costs the record its
+  # It returns nil rather than guessing, so a photo that never gets analysed costs the record its
   # picture and not its existence. StandardSiteJob backs off for the ordinary case, where the
   # dimensions are seconds away.
   #
@@ -297,7 +311,7 @@ class StandardSite
     photo = entry.photos.first
     return unless photo&.has_dimensions?
 
-    photo.facebook_card_url
+    photo.standard_site_url
   end
 
   private
@@ -439,11 +453,75 @@ class StandardSite
   # @param text [String, nil] the Markdown.
   # @return [String, nil] the plain text, or nil when blank.
   def plain_text(text)
+    markdown_to_text(text)&.gsub(/\s+/, ' ')&.strip.presence
+  end
+
+  # The same, keeping the breaks between blocks. For textContent, where a body flattened onto one
+  # line would be a worse copy of the page than the page.
+  #
+  # @param text [String, nil] markdown.
+  # @return [String, nil]
+  def plain_text_blocks(text)
+    markdown_to_text(text)
+      &.gsub(/[^\S\n]+/, ' ')   # runs of spaces and tabs, but not the newlines
+      &.gsub(/ ?\n ?/, "\n")
+      &.gsub(/\n{3,}/, "\n\n")
+      &.strip.presence
+  end
+
+  # @param text [String, nil] markdown.
+  # @return [String, nil] its text, with the markup rendered and then taken back off.
+  def markdown_to_text(text)
     return if text.blank?
 
     html = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new, autolink: true, no_intra_emphasis: true)
                               .render(text.to_s)
-    HTMLEntities.new.decode(Sanitize.fragment(html)).gsub(/\s+/, ' ').strip.presence
+    HTMLEntities.new.decode(Sanitize.fragment(html))
+  end
+
+  # The plain-text body of a document record: the entry's own words, then the camera, the exposure
+  # and the place, the way the Atom feed lists them under a single photo.
+  #
+  # ⚠️ Read through the feed's own helpers rather than written out again here. They are the wording
+  # a reader already sees, and two copies of it would drift.
+  #
+  # @param entry [Entry] the entry.
+  # @return [String, nil]
+  def document_text(entry)
+    [plain_text_blocks(entry.body), photo_details(entry)].compact_blank.join("\n\n").presence
+  end
+
+  # The camera, exposure and location lines for an entry, or nil when it has none to give.
+  #
+  # Single-photo entries only, matching entries/feed/_feed_entry_body: on an entry with several
+  # photos the details of the first one would be captioning all of them.
+  #
+  # @param entry [Entry] the entry.
+  # @return [String, nil]
+  def photo_details(entry)
+    return unless entry.is_single_photo?
+
+    photo = entry.photos.first
+    return if photo.blank?
+
+    helpers = ApplicationController.helpers
+    lines = []
+    if photo.camera.present?
+      lines << helpers.feed_camera_details(photo)
+      lines << helpers.feed_exif(photo)
+    end
+    lines << helpers.feed_location(photo) if entry.show_location?
+
+    lines.map { |line| html_to_text(line) }.compact_blank.join("\n").presence
+  end
+
+  # @param html [String, nil] a fragment of HTML.
+  # @return [String, nil] its text, with each <br> left as a line of its own.
+  def html_to_text(html)
+    return if html.blank?
+
+    text = HTMLEntities.new.decode(Sanitize.fragment(html.to_s.gsub(%r{<br\s*/?>}i, "\n")))
+    text.split("\n").map { |line| line.gsub(/\s+/, ' ').strip }.compact_blank.join("\n").presence
   end
 
   # @param value [Time, String, nil] a timestamp.
