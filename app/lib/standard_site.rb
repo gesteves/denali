@@ -179,10 +179,14 @@ class StandardSite
 
     return report.merge(dry_run: true) if dry_run
 
-    sync_publication
+    # ⚠️ The check comes FIRST, before anything writes. #sync_publication stamps this site's own URL
+    # into the publication record, so a check after it reads back what we just wrote and can never
+    # fail — and by then the other site's publication is already overwritten.
     unless own_repo?
-      raise "The publication in this repo names another site. Refusing to prune #{stale.size} record(s)."
+      raise "The publication in this repo names another site. Refusing to touch #{stale.size} record(s)."
     end
+
+    sync_publication
 
     log("backfill scheduling #{current.size} document sync(s), one every #{spacing.round(1)}s")
     current.each_with_index do |id, index|

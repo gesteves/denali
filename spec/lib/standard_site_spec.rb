@@ -428,12 +428,19 @@ RSpec.describe StandardSite do
     # ⚠️ PUBLICATION_RKEY is tid('self'), so every installation writes its publication at the same
     # key. Two sites pointed at one account would delete each other's documents as orphans, and a
     # document carries no field naming the site that wrote it.
-    it 'refuses to prune a repo whose publication names another site' do
+    # ⚠️ The check has to come BEFORE sync_publication, which stamps this site's own URL into the
+    # publication record. A check after it reads back what we just wrote, so it can never fail —
+    # and by then the other site's publication is already overwritten.
+    it 'stops before writing anything when the repo belongs to another site' do
       stub_own_publication('https://someone-else.example')
       stub_list(['3446ygrm3x4bk'])
+      StandardSiteJob.jobs.clear
 
       expect { service.backfill }.to raise_error(/names another site/)
+
+      expect(a_request(:post, 'https://bsky.social/xrpc/com.atproto.repo.putRecord')).not_to have_been_made
       expect(a_request(:post, 'https://bsky.social/xrpc/com.atproto.repo.deleteRecord')).not_to have_been_made
+      expect(StandardSiteJob.jobs).to be_empty
     end
   end
 end
