@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_23_091500) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_12_164040) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -63,9 +63,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_091500) do
     t.datetime "settings_updated_at", precision: nil
     t.boolean "show_related_entries", default: true
     t.boolean "show_search", default: false
+    t.string "standard_site_did"
+    t.string "standard_site_fingerprint"
+    t.integer "standard_site_social_account_id"
     t.string "threads"
     t.string "time_zone", default: "UTC"
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["standard_site_social_account_id"], name: "index_blogs_on_standard_site_social_account_id"
   end
 
   create_table "cameras", force: :cascade do |t|
@@ -121,6 +125,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_23_091500) do
     t.datetime "published_at", precision: nil
     t.boolean "show_location", default: true
     t.string "slug"
+    t.string "standard_site_fingerprint"
     t.string "status"
     t.integer "threads_shares_count", default: 0, null: false
     t.text "threads_text"

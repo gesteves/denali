@@ -99,9 +99,8 @@ RSpec.describe Bluesky do
     end
 
     # 13 characters of base32 hold 65 bits and a TID holds 64 with its high bit zero, so the first
-    # character is one of the first eight of the alphabet. StandardSite.tid makes a key from a
-    # digest, which has no time in it at all, and .record_timestamp would otherwise write the
-    # meaningless Time that key decodes to into the record's createdAt.
+    # character is one of the first eight of the alphabet. A string of 13 alphabet characters that
+    # fails that is not a TID at all.
     it 'gives nil for a key whose high bit is not zero' do
       expect(described_class.tid_time('z' + ('2' * 12))).to be_nil
     end

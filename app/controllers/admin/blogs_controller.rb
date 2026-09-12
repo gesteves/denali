@@ -22,6 +22,11 @@ class Admin::BlogsController < AdminController
       if @photoblog.update(blog_params)
         @photoblog.settings_changed!
         CachePurgeJob.enqueue(*@photoblog.cache_tags)
+        # The publication record carries the blog's name, description, icon and discovery
+        # preference, so saving settings is exactly when it needs rewriting. It lives here rather
+        # than in a model callback because `belongs_to :blog, touch: true` updates a blog row every
+        # time an entry is saved, and a callback there can't tell that apart from a real edit.
+        StandardSiteJob.perform_async('sync_publication') if @photoblog.standard_site_enabled?
         format.html {
           flash[:success] = 'Your changes were saved!'
           redirect_to edit_admin_blog_path(@photoblog)
@@ -43,6 +48,6 @@ class Admin::BlogsController < AdminController
                                  :email, :flickr, :mastodon, :bluesky, :instagram, :threads,
                                  :header_logo_svg, :additional_meta_tags,
                                  :favicon, :touch_icon, :logo, :og_image, :placeholder, :time_zone, :meta_description,
-                                 :show_search, :hide_from_search_engines)
+                                 :show_search, :hide_from_search_engines, :standard_site_social_account_id)
   end
 end

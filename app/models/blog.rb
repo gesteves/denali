@@ -14,7 +14,46 @@ class Blog < ApplicationRecord
   has_one_attached :og_image
   has_one_attached :placeholder
 
+  belongs_to :standard_site_social_account, class_name: 'SocialAccount', optional: true
+
   validates :name, :about, presence: true
+
+  # Pointing the blog at a different Bluesky account makes what we know about the old repo wrong.
+  #
+  # ⚠️ The document records name the publication by an at:// URI that holds the DID, so they each
+  # become invalid on their own when the account changes. The publication's own fingerprint does
+  # not: left in place it would report "unchanged" forever and never sync to the new repo.
+  #
+  # ⚠️ This is before_update, not after_commit. `belongs_to :blog, touch: true` on Entry means a
+  # blog row is updated whenever an entry is saved, and an after_commit there sees the dirty
+  # tracking of whatever the in-memory blog was last really saved with — for a freshly built blog,
+  # its create. Dirty tracking *before* a save is not confused by a touch.
+  before_update :forget_standard_site_repo, if: :will_save_change_to_standard_site_social_account_id?
+
+  # The Bluesky account whose repo holds this blog's standard.site records.
+  #
+  # ⚠️ One repo per blog, whoever wrote the entry. A standard.site document names its publication
+  # by URI, so documents scattered across authors' repos would each point at a publication that
+  # isn't in their own repo, and verification would fail for all of them.
+  #
+  # @return [SocialAccount, nil] the account, or nil when it can't be used.
+  def standard_site_account
+    account = standard_site_social_account
+    return if account.nil? || account.provider != 'bluesky'
+    return if account.handle.blank? || account.access_token.blank? || account.server_url.blank?
+
+    account
+  end
+
+  # @return [Boolean] whether this blog publishes to standard.site.
+  def standard_site_enabled?
+    standard_site_account.present?
+  end
+
+  # @return [String, nil] the at:// URI of this blog's publication record.
+  def standard_site_publication_uri
+    StandardSite.publication_uri(standard_site_did)
+  end
 
   def formatted_about
     markdown_to_html(self.about)
@@ -130,5 +169,13 @@ class Blog < ApplicationRecord
   # the only place a settings change is unambiguous.
   def settings_changed!
     touch(:settings_updated_at)
+  end
+
+  private
+
+  # @return [void]
+  def forget_standard_site_repo
+    self.standard_site_did = nil
+    self.standard_site_fingerprint = nil
   end
 end

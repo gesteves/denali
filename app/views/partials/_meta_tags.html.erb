@@ -19,4 +19,9 @@
     <link rel="apple-touch-icon" href="<%= @photoblog.touch_icon_url(width: 76) %>" sizes="76x76">
   <% end %>
   <meta name="bingbot" content="noarchive">
+  <%# standard.site: the publication this site claims. /.well-known/site.standard.publication is
+      the other half of the check. %>
+  <% if @photoblog.standard_site_publication_uri.present? %>
+    <link rel="site.standard.publication" href="<%= @photoblog.standard_site_publication_uri %>">
+  <% end %>
 <% end %>

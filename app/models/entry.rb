@@ -22,6 +22,16 @@ class Entry < ApplicationRecord
   after_commit :handle_status_change, if: :saved_change_to_status?
   after_commit :purge_cache_later, on: [:update, :destroy]
 
+  # standard.site mirrors this entry as a site.standard.document. The sync decides publish against
+  # delete from the reloaded row, so one callback covers a publish, an unpublish, a change to the
+  # search-engine setting in either direction, and an edit to what the record carries.
+  #
+  # ⚠️ Guarded on the fields the record actually holds. The photo jobs touch an entry row for
+  # reasons a reader would never call an edit, and a callback with no guard would queue a job for
+  # every one of them.
+  after_commit :sync_standard_site_later, on: [:create, :update], if: :standard_site_fields_changed?
+  after_commit :delete_standard_site_document, on: :destroy
+
   acts_as_taggable_on :tags, :equipment, :locations, :styles
   acts_as_list scope: :blog
 
@@ -958,6 +968,27 @@ class Entry < ApplicationRecord
 
   def photos_have_dimensions?
     photos.any? && photos.all? { |p| p.has_dimensions? }
+  end
+
+  # Fields the site.standard.document record carries, plus the two that decide whether it exists at
+  # all. `hide_from_search_engines` is the reason this is here: a hidden entry says noindex on its
+  # own page, so it must not have a machine-readable copy on the PDS either.
+  STANDARD_SITE_FIELDS = %w[status hide_from_search_engines title body slug published_at
+                            modified_at].freeze
+
+  # @return [Boolean] whether this save touched anything standard.site publishes.
+  def standard_site_fields_changed?
+    saved_changes.keys.intersect?(STANDARD_SITE_FIELDS)
+  end
+
+  # @return [void]
+  def sync_standard_site_later
+    StandardSiteJob.perform_async('sync_document', self.id) if self.blog&.standard_site_enabled?
+  end
+
+  # @return [void]
+  def delete_standard_site_document
+    StandardSiteJob.perform_async('delete_document', self.id) if self.blog&.standard_site_enabled?
   end
 
   def enqueue_caption_validity_job

@@ -26,6 +26,9 @@ class Photo < ApplicationRecord
   after_commit :update_entry_location_tags, if: :changed_location?
   after_commit :update_entry_style_tags, if: :changed_style?
   after_commit :update_entry_caption_validity, if: :changed_caption_attributes?
+  # The first photo is the entry's standard.site cover image, and replacing it doesn't change any
+  # column the entry's own callback watches.
+  after_commit :sync_entry_standard_site
 
   scope :needs_alt_text_review, -> { where(alt_text: [nil, ""]).or(where(alt_text_needs_review: true)) }
 
@@ -542,5 +545,12 @@ class Photo < ApplicationRecord
 
   def changed_caption_attributes?
     changed_location? || changed_equipment?
+  end
+
+  # @return [void]
+  def sync_entry_standard_site
+    return if self.entry.blank? || !self.entry.blog&.standard_site_enabled?
+
+    StandardSiteJob.perform_async('sync_document', self.entry_id)
   end
 end

@@ -552,4 +552,66 @@ RSpec.describe Entry, type: :model do
       photo.update(alt_text: 'A mountain')
     end
   end
+
+  describe 'standard.site' do
+    let(:blog) { create(:blog, :on_standard_site) }
+    let(:user) { create(:user) }
+
+    def standard_site_args
+      StandardSiteJob.jobs.map { |job| job['args'] }
+    end
+
+    it 'queues a sync when an entry is published' do
+      entry = create(:entry, blog: blog, user: user)
+      StandardSiteJob.jobs.clear
+
+      entry.publish
+
+      expect(standard_site_args).to include(['sync_document', entry.id])
+    end
+
+    # ⚠️ The point of the whole feature: flipping the setting has to publish or unpublish the
+    # record right away, not wait for a backfill. sync_document decides which from the reloaded
+    # row, so one operation covers both directions.
+    it 'queues a sync when the search-engine setting changes, either way' do
+      entry = create(:entry, :published, blog: blog, user: user)
+
+      StandardSiteJob.jobs.clear
+      entry.update!(hide_from_search_engines: true)
+      expect(standard_site_args).to include(['sync_document', entry.id])
+
+      StandardSiteJob.jobs.clear
+      entry.update!(hide_from_search_engines: false)
+      expect(standard_site_args).to include(['sync_document', entry.id])
+    end
+
+    it 'queues a delete when an entry is destroyed' do
+      entry = create(:entry, :published, blog: blog, user: user)
+      id = entry.id
+      StandardSiteJob.jobs.clear
+
+      entry.destroy
+
+      expect(standard_site_args).to include(['delete_document', id])
+    end
+
+    # The photo jobs touch an entry row for reasons no reader would call an edit.
+    it 'queues nothing for a save that changes nothing the record carries' do
+      entry = create(:entry, :published, blog: blog, user: user)
+      StandardSiteJob.jobs.clear
+
+      entry.update!(bluesky_text: 'A different caption')
+
+      expect(StandardSiteJob.jobs).to be_empty
+    end
+
+    it 'queues nothing for a blog that names no account' do
+      plain = create(:blog)
+      StandardSiteJob.jobs.clear
+
+      create(:entry, :published, blog: plain, user: user)
+
+      expect(StandardSiteJob.jobs).to be_empty
+    end
+  end
 end

@@ -62,6 +62,40 @@ module AtProto
   # The PDS could not be reached at all.
   class ConnectionError < StandardError; end
 
+  # The PDS is refusing writes for now. It carries the moment it will accept them again, so a job
+  # can wait exactly that long instead of guessing.
+  class RateLimitedError < StandardError
+    # @return [Integer] seconds to wait before trying again.
+    attr_reader :retry_after
+
+    def initialize(message, retry_after:)
+      @retry_after = retry_after
+      super(message)
+    end
+  end
+
+  # A PDS budgets writes in points, per account: 3 for a create, 2 for an update, 1 for a delete,
+  # against 5,000 an hour and 35,000 a day. That is at most 1,666 records written an hour.
+  #
+  # ⚠️ A bulk reconciliation has to be spread out to stay under it. Sidekiq runs this app's jobs ten
+  # at a time, so an unthrottled backfill of a few hundred entries hits the ceiling within minutes,
+  # and every job past it gets a 429.
+  # @see https://docs.bsky.app/docs/advanced-guides/rate-limits
+  WRITE_POINTS_PER_HOUR = 5_000
+  # What one putRecord costs. It's 2 for a record that already exists, but budget for the worse of
+  # the two, because a backfill of a repo that is empty is all creates.
+  WRITE_POINTS_PER_RECORD = 3
+  # Leave room for the posts and the threadgates the app writes while a backfill is draining.
+  WRITE_BUDGET_FRACTION = 0.5
+
+  # How long to leave between two record writes to stay inside the budget.
+  #
+  # @return [Float] seconds.
+  def self.seconds_between_writes
+    writes_per_hour = (WRITE_POINTS_PER_HOUR / WRITE_POINTS_PER_RECORD) * WRITE_BUDGET_FRACTION
+    3600.0 / writes_per_hour
+  end
+
   # What "could not reach the PDS" actually looks like.
   CONNECTION_ERRORS = [
     SocketError, Errno::ECONNREFUSED, Errno::ECONNRESET, Errno::EHOSTUNREACH, Errno::ENETUNREACH,
@@ -134,11 +168,14 @@ module AtProto
 
     # Reads the time back out of a TID that .new_tid made.
     #
-    # ⚠️ 13 characters of base32 hold 65 bits and a TID holds 64 with its high bit zero, so the
-    # value is below 2**63 and the first character is one of the first EIGHT of the alphabet.
-    # Without that check a content-addressed key — StandardSite.tid, which comes from a digest and
-    # has no time in it at all — decodes to a Time that means nothing, and .record_timestamp would
-    # write that meaningless Time into the record's createdAt.
+    # 13 characters of base32 hold 65 bits and a TID holds 64 with its high bit zero, so the value
+    # is below 2**63 and the first character is one of the first EIGHT of the alphabet. A string
+    # of 13 alphabet characters that fails that is not a TID at all.
+    #
+    # ⚠️ It does NOT tell a time-ordered key from a content-addressed one. StandardSite.tid masks
+    # its digest to the low 63 bits, so its high bit is zero too and it decodes here to a Time that
+    # means nothing — measured, not assumed. Nothing calls .record_timestamp with a standard.site
+    # key today; don't start, because no check here could catch it.
     #
     # @param tid [String] a 13-character TID.
     # @return [Time, nil] the time, or nil for a value of another shape.
@@ -206,6 +243,7 @@ module AtProto
                                timeout: REQUEST_TIMEOUT)
 
       raise UnauthorizedError, "#{at_proto_label} rejected the access token" if response.code == 401
+      raise_if_rate_limited(response, "writing #{collection}/#{rkey}")
       raise "Failed to write #{collection} record: #{response.body}" unless response.success?
 
       written = JSON.parse(response.body)
@@ -234,6 +272,9 @@ module AtProto
                                timeout: REQUEST_TIMEOUT)
 
       raise UnauthorizedError, "#{at_proto_label} rejected the access token" if response.code == 401
+      # ⚠️ Raised, not swallowed. A 429 means "come back later", and reporting it as a failed delete
+      # would leave the caller thinking the record is still there for a reason that won't change.
+      raise_if_rate_limited(response, "deleting #{collection}/#{rkey}")
 
       unless response.success?
         Rails.logger.warn("#{at_proto_label}: failed to delete #{collection}/#{rkey} (HTTP #{response.code}: #{response.body})")
@@ -328,10 +369,32 @@ module AtProto
                                timeout: UPLOAD_TIMEOUT)
 
       raise UnauthorizedError, "#{at_proto_label} rejected the access token" if response.code == 401
+      raise_if_rate_limited(response, 'uploading a blob')
       raise "Failed to upload blob: #{response.body}" unless response.success?
 
       JSON.parse(response.body)
     end
+  end
+
+  # Turns a 429 into an error that carries how long to wait.
+  #
+  # The PDS sends `ratelimit-reset` as a unix timestamp. Using it means a job waits exactly as long
+  # as it has to, rather than burning retries against a limit that hasn't lifted yet.
+  #
+  # @param response [HTTParty::Response] the response.
+  # @param doing [String] what we were doing, for the message.
+  # @return [void]
+  # @raise [RateLimitedError] if the PDS answered 429.
+  def raise_if_rate_limited(response, doing)
+    return unless response.code == 429
+
+    reset = response.headers['ratelimit-reset'].to_i
+    wait = reset.positive? ? (Time.at(reset) - Time.now).ceil : 0
+    # A minute at least, an hour at most: a header that is missing, in the past, or absurd must
+    # still give a sane delay.
+    wait = wait.clamp(60, 3600)
+
+    raise RateLimitedError.new("#{at_proto_label} is rate limiting us #{doing}; waiting #{wait}s", retry_after: wait)
   end
 
   # @return [Hash] the JSON request headers with the bearer token.

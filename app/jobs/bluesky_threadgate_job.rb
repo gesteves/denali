@@ -7,6 +7,10 @@ class BlueskyThreadgateJob < ApplicationJob
     case exception
     when BlueskyPermanentError, Bluesky::AuthenticationError
       :discard
+    when AtProto::RateLimitedError
+      # The PDS told us when it will accept writes again, so wait that long rather than burning
+      # retries against a limit that hasn't lifted.
+      exception.retry_after
     when UnprocessedPhotoError
       count + 1
     end

@@ -130,6 +130,10 @@ Rails.application.routes.draw do
   get '/feed(.:format)'                  => 'entries#feed', defaults: { format: 'atom' }, as: :feed
   get '/tagged/:tag/feed(.:format)'      => 'entries#tag_feed', defaults: { format: 'atom' }, as: :tag_feed
 
+  # standard.site verification. A reader compares the at:// URI here with the publication record it
+  # found on the PDS.
+  get '/.well-known/site.standard.publication' => 'standard_site#show', as: :standard_site_publication, format: false
+
   # Sitemaps
   get '/sitemap.:format'               => 'sitemaps#index', defaults: { format: 'xml' }, as: :sitemap
   get '/sitemap/entries/:page.:format' => 'sitemaps#entries', constraints: { page: /\d+/ }, defaults: { format: 'xml' }, as: :entries_sitemap
