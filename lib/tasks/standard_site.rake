@@ -19,7 +19,7 @@ namespace :standard_site do
 
     # The syncs are spaced out to stay inside the PDS write budget, so a big backfill takes hours.
     # Say so, rather than leaving someone watching an empty queue wondering.
-    pace = "one every #{result[:spacing].round(1)}s, finishing in about " \
+    pace = "one every #{result[:spacing].round(1)}s, finishing in " \
            "#{ActionController::Base.helpers.distance_of_time_in_words(result[:duration])}"
 
     if dry_run
