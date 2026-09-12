@@ -1,6 +1,6 @@
 require 'mini_magick'
 class Photo < ApplicationRecord
-  include Thumborizable
+  include Transformable
 
   belongs_to :entry, touch: true, counter_cache: true, optional: true
   belongs_to :camera, optional: true
@@ -65,8 +65,8 @@ class Photo < ApplicationRecord
   end
 
   def url(opts = {})
-    opts[:crop] = calculate_crop(opts) unless opts[:fit_in]
-    thumbor_url(self.image.key, opts.compact)
+    opts[:crop] = calculate_crop(opts) unless opts[:contain]
+    transformed_image_url(self.image.key, opts.compact)
   end
 
   def srcset(srcset:, src: nil, opts: {})
@@ -74,9 +74,9 @@ class Photo < ApplicationRecord
     widths = widths.uniq.sort
     src_width = src || widths.first
 
-    opts[:crop] = calculate_crop(opts) unless opts[:fit_in]
-    src = thumbor_url(self.image.key, opts.merge(width: src_width).compact)
-    srcset = widths.map { |w| "#{thumbor_url(self.image.key, opts.merge(width: w).compact)} #{w}w" }.join(', ')
+    opts[:crop] = calculate_crop(opts) unless opts[:contain]
+    src = transformed_image_url(self.image.key, opts.merge(width: src_width).compact)
+    srcset = widths.map { |w| "#{transformed_image_url(self.image.key, opts.merge(width: w).compact)} #{w}w" }.join(', ')
     return src, srcset
   end
 
@@ -146,7 +146,7 @@ class Photo < ApplicationRecord
     opts = if crop
       { width: 2160, aspect_ratio: '9:16', quality: 100, format: 'jpeg' }
     else
-      { width: 2160, height: 3840, fit_in: true, fill: '000', quality: 100, format: 'jpeg' }
+      { width: 2160, height: 3840, contain: true, background: '000', quality: 100, format: 'jpeg' }
     end
     self.url(opts)
   end
@@ -174,7 +174,7 @@ class Photo < ApplicationRecord
     else
       max_dimension
     end
-    # Cloudflare has no equivalent to Thumbor's max_bytes filter, so use a
+    # The image service takes a size in pixels and promises nothing in bytes, so use a
     # conservative fixed quality to stay under Bluesky's ~2 MB limit.
     opts = { width: width, format: 'jpeg', quality: 80 }
     self.url(opts)

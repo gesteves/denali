@@ -1,7 +1,7 @@
 class Blog < ApplicationRecord
   include Rails.application.routes.url_helpers
   include Formattable
-  include Thumborizable
+  include Transformable
 
   has_many :entries, dependent: :destroy
   has_many :webhooks, dependent: :destroy
@@ -65,34 +65,34 @@ class Blog < ApplicationRecord
 
   def favicon_url(opts = {})
     opts.reverse_merge!(width: 16, format: 'png')
-    thumbor_url(self.favicon.key, opts)
+    transformed_image_url(self.favicon.key, opts)
   end
 
   def touch_icon_url(opts = {})
     opts.reverse_merge!(width: 32, format: 'png')
-    thumbor_url(self.touch_icon.key, opts)
+    transformed_image_url(self.touch_icon.key, opts)
   end
 
   def logo_url(opts = {})
     opts.reverse_merge!(height: 60, format: 'png')
-    thumbor_url(self.logo.key, opts)
+    transformed_image_url(self.logo.key, opts)
   end
 
   def og_image_url(opts = {})
     opts.reverse_merge!(width: 1200, height: 630, format: 'jpeg')
-    thumbor_url(self.og_image.key, opts)
+    transformed_image_url(self.og_image.key, opts)
   end
 
   def placeholder_url(opts = {})
-    thumbor_url(self.placeholder.key, opts)
+    transformed_image_url(self.placeholder.key, opts)
   end
 
   def placeholder_srcset(srcset:, opts: {})
     opts.reverse_merge!(format: 'jpeg')
     widths = srcset.reject { |width| width > self.placeholder.metadata[:width] }
     src_width = widths.first
-    src = thumbor_url(self.placeholder.key, opts.merge(width: src_width).compact)
-    srcset = widths.map { |w| "#{thumbor_url(self.placeholder.key, opts.merge(width: w).compact)} #{w}w" }.join(', ')
+    src = transformed_image_url(self.placeholder.key, opts.merge(width: src_width).compact)
+    srcset = widths.map { |w| "#{transformed_image_url(self.placeholder.key, opts.merge(width: w).compact)} #{w}w" }.join(', ')
     return src, srcset
   end
 

@@ -36,8 +36,8 @@ module AtProto
   # of unbounded size read into a Sidekiq thread is still a way to lose the process.
   MAX_SOURCE_IMAGE_BYTES = 20 * 1024 * 1024
 
-  # Cloudflare has no equivalent to Thumbor's old max_bytes filter, so a transformed JPEG can still
-  # come back over whatever limit the lexicon sets. When it does, walk it down these steps —
+  # The image service takes a size in pixels and promises nothing in bytes, so a transformed JPEG
+  # can still come back over whatever limit the lexicon sets. When it does, walk it down these steps —
   # dropping JPEG quality first, then scaling the image — and take the first result that fits.
   # Without this, an oversized photo produces the same too-big blob on every retry.
   BLOB_COMPRESSION_STEPS = [

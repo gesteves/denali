@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Thumborizable, type: :model do
+RSpec.describe Transformable, type: :model do
   let(:user) { create(:user) }
   let(:blog) { create(:blog) }
   let(:entry) { create(:entry, blog: blog, user: user) }
@@ -11,58 +11,58 @@ RSpec.describe Thumborizable, type: :model do
     allow(ENV).to receive(:[]).with('DOMAIN').and_return('www.example.com')
   end
 
-  describe '#thumbor_url' do
+  describe '#transformed_image_url' do
     it 'returns nil for a blank image' do
-      expect(photo.thumbor_url(nil)).to be_nil
-      expect(photo.thumbor_url('')).to be_nil
+      expect(photo.transformed_image_url(nil)).to be_nil
+      expect(photo.transformed_image_url('')).to be_nil
     end
 
     # The bucket is resolved by the worker, so its hostname never appears here.
     it 'addresses a blob by key, without exposing the bucket' do
-      expect(photo.thumbor_url('abc123', width: 500)).to eq('https://www.example.com/images/width=500/abc123')
+      expect(photo.transformed_image_url('abc123', width: 500)).to eq('https://www.example.com/images/width=500/abc123')
     end
 
     it 'serves the original when no options apply' do
-      expect(photo.thumbor_url('abc123')).to eq('https://www.example.com/images/abc123')
+      expect(photo.transformed_image_url('abc123')).to eq('https://www.example.com/images/abc123')
     end
 
     it 'includes width and height' do
-      expect(photo.thumbor_url('abc123', width: 500, height: 300)).to eq('https://www.example.com/images/width=500,height=300/abc123')
+      expect(photo.transformed_image_url('abc123', width: 500, height: 300)).to eq('https://www.example.com/images/width=500,height=300/abc123')
     end
 
     it 'translates a crop rect into a trim option and omits height' do
       allow(photo).to receive(:width).and_return(1000)
       allow(photo).to receive(:height).and_return(1500)
 
-      url = photo.thumbor_url('abc123', crop: [100, 200, 900, 1300], width: 500, height: 750)
+      url = photo.transformed_image_url('abc123', crop: [100, 200, 900, 1300], width: 500, height: 750)
       expect(url).to eq('https://www.example.com/images/trim=200;100;200;100,width=500/abc123')
     end
 
-    it 'translates fit_in and fill into fit=pad and background' do
-      url = photo.thumbor_url('abc123', width: 500, height: 300, fit_in: true, fill: 'fff')
+    it 'translates contain and background into the service options' do
+      url = photo.transformed_image_url('abc123', width: 500, height: 300, contain: true, background: 'fff')
       expect(url).to eq('https://www.example.com/images/width=500,height=300,fit=pad,background=%23fff/abc123')
     end
 
     it 'translates grayscale into saturation=0' do
-      expect(photo.thumbor_url('abc123', width: 300, grayscale: true)).to eq('https://www.example.com/images/width=300,saturation=0/abc123')
+      expect(photo.transformed_image_url('abc123', width: 300, grayscale: true)).to eq('https://www.example.com/images/width=300,saturation=0/abc123')
     end
 
     it 'includes quality' do
-      expect(photo.thumbor_url('abc123', width: 300, quality: 80)).to eq('https://www.example.com/images/width=300,quality=80/abc123')
+      expect(photo.transformed_image_url('abc123', width: 300, quality: 80)).to eq('https://www.example.com/images/width=300,quality=80/abc123')
     end
 
     ['auto', 'jpeg', 'webp', 'avif'].each do |format|
       it "includes format=#{format}" do
-        expect(photo.thumbor_url('abc123', width: 300, format: format)).to include("format=#{format}")
+        expect(photo.transformed_image_url('abc123', width: 300, format: format)).to include("format=#{format}")
       end
     end
 
     it 'omits the format option for png, preserving the source format' do
-      expect(photo.thumbor_url('abc123', width: 16, format: 'png')).to eq('https://www.example.com/images/width=16/abc123')
+      expect(photo.transformed_image_url('abc123', width: 16, format: 'png')).to eq('https://www.example.com/images/width=16/abc123')
     end
 
     it 'omits unsupported formats' do
-      expect(photo.thumbor_url('abc123', width: 300, format: 'bmp')).not_to include('format=')
+      expect(photo.transformed_image_url('abc123', width: 300, format: 'bmp')).not_to include('format=')
     end
   end
 
