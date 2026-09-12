@@ -42,6 +42,26 @@ RSpec.describe SocialText do
       expect(text[ranges.first]).to eq('https://example.com/a')
     end
 
+    it 'keeps a path that is not ASCII' do
+      # An allowlist of characters cut this back to "https://example.com/", which is a link to the
+      # wrong page rather than a short one.
+      text = 'See https://example.com/日本 now'
+
+      expect(text[described_class.url_ranges(text).first]).to eq('https://example.com/日本')
+    end
+
+    it 'keeps a bracket that the address itself opened' do
+      text = 'Read https://en.wikipedia.org/wiki/Kona_(Hawaii) today'
+
+      expect(text[described_class.url_ranges(text).first]).to eq('https://en.wikipedia.org/wiki/Kona_(Hawaii)')
+    end
+
+    it 'gives up a bracket that closes an aside' do
+      text = 'An aside (see https://example.com/a) and more'
+
+      expect(text[described_class.url_ranges(text).first]).to eq('https://example.com/a')
+    end
+
     it 'returns nothing for text with no URL' do
       expect(described_class.url_ranges('Just words')).to be_empty
     end

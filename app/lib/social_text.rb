@@ -7,17 +7,27 @@ module SocialText
 
   # Finds every bare URL in the text and returns their character ranges.
   #
-  # This uses Bluesky::URL_PATTERN, which is what decides whether a link facet gets created, so a
-  # string that becomes a link on Bluesky is treated as an address everywhere else too.
+  # This uses Bluesky::URL_PATTERN and Bluesky.trim_url, which together decide whether a link facet
+  # gets created, so a string that becomes a link on Bluesky is treated as an address everywhere
+  # else too — masked by Typography, and skipped when looking for mentions.
+  #
+  # The ranges are trimmed, so the sentence punctuation after a URL is outside them and still gets
+  # its typography.
   #
   # @param text [String, nil] the text to scan.
   # @return [Array<Range>] one character range per URL, in the order they appear.
   def url_ranges(text)
+    text = text.to_s
     ranges = []
-    text.to_s.scan(Bluesky::URL_PATTERN) do
+
+    text.scan(Bluesky::URL_PATTERN) do
       start_char, end_char = Regexp.last_match.offset(1)
-      ranges << (start_char...end_char)
+      url = Bluesky.trim_url(text[start_char...end_char])
+      next if url.blank?
+
+      ranges << (start_char...(start_char + url.length))
     end
+
     ranges
   end
 

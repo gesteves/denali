@@ -11,8 +11,27 @@
 // ⚠️ A URL passes through untouched, for the same reason as in the Ruby: `example.com/a--b` would
 // otherwise become an en dash, and that link is dead.
 
-// The bare-URL rule of `Bluesky::URL_PATTERN`. Only the address itself, as a global match.
-const URL = /(?:^|[$|\W])(https?:\/\/[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;%=]*[a-zA-Z0-9\-_~/#@$&*+=)])/g;
+// The bare-URL rule of `Bluesky::URL_PATTERN` and `Bluesky.trim_url`, together: everything up to
+// whitespace, then whatever at the end belongs to the sentence comes off.
+const URL = /(?:^|[$|\W])(https?:\/\/\S+)/g;
+const URL_TRAILING_PUNCTUATION = /[.,;:!?]+$/;
+const URL_TRAILING_WRAPPERS = { ')': '(', ']': '[', '>': '<' };
+
+/**
+ * Removes the punctuation of the sentence from the end of an address.
+ * @param {string} url - The address as matched.
+ * @returns {string} The address alone.
+ */
+function trimUrl (url) {
+  let out = url.replace(URL_TRAILING_PUNCTUATION, '');
+
+  // A closing bracket comes off only when the address holds no opening one.
+  while (URL_TRAILING_WRAPPERS[out.at(-1)] && !out.includes(URL_TRAILING_WRAPPERS[out.at(-1)])) {
+    out = out.slice(0, -1).replace(URL_TRAILING_PUNCTUATION, '');
+  }
+
+  return out;
+}
 
 // One character standing in for an address while the rules run. U+FFFC is OBJECT REPLACEMENT
 // CHARACTER, and it is one grapheme, so a mask can't change a count either.
@@ -39,9 +58,13 @@ export function apply (text) {
   const urls = [];
   URL.lastIndex = 0;
   source = source.replace(URL, (whole, url) => {
-    urls.push(url);
-    // Keep whatever came before the address: the pattern consumes one character of boundary.
-    return whole.slice(0, whole.length - url.length) + PLACEHOLDER;
+    const trimmed = trimUrl(url);
+    if (trimmed === '') return whole;
+
+    urls.push(trimmed);
+    // Keep whatever came before the address, and whatever the trim took off the end: the pattern
+    // consumes one character of boundary, and the punctuation still needs its typography.
+    return whole.slice(0, whole.length - url.length) + PLACEHOLDER + url.slice(trimmed.length);
   });
 
   let converted = source;

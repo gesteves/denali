@@ -50,13 +50,19 @@ class Bluesky
   # This is the source of truth for "what is an address": SocialText and Typography both read it,
   # so a string that gets a link facet here is treated as a URL everywhere else too.
   #
-  # It takes a closing bracket and .trim_url decides whether to keep it. With the bracket outside
-  # the pattern, a link to `…/Kona_(Hawaii)` got a facet over `…/Kona_(Hawaii` alone, which goes
-  # nowhere.
-  URL_PATTERN = %r{(?:^|[$|\W])(https?://[a-zA-Z0-9\-._~:/?\#\[\]@!$&'()*+,;%=]*[a-zA-Z0-9\-_~/\#@$&*+=)])}
+  # It takes everything up to whitespace and .trim_url decides what at the end belongs to the
+  # sentence rather than the address, which is what the Bluesky client does.
+  #
+  # An allowlist of characters here got two cases wrong, and both produced a link to the WRONG
+  # page rather than a short one: `…/Kona_(Hawaii)` lost its closing bracket, and a path with any
+  # character outside ASCII — `https://example.com/日本` — was cut back to `https://example.com/`.
+  URL_PATTERN = %r{(?:^|[$|\W])(https?://\S+)}
 
   # The punctuation of a sentence at the end of an address.
   URL_TRAILING_PUNCTUATION = /[.,;:!?]+\z/
+
+  # Characters that close something the address is inside, rather than part of it.
+  URL_TRAILING_WRAPPERS = { ')' => '(', ']' => '[', '>' => '<' }.freeze
 
   # An @handle, from the sample in the AT Protocol documentation.
   MENTION_PATTERN = /(?:^|[$|\W])(@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)/
@@ -255,10 +261,8 @@ class Bluesky
     SocialText.url_ranges(text).each do |range|
       next if taken.any? { |other| other.cover?(range.begin) }
 
-      url = trim_url(text[range])
-      next if url.blank?
-
-      bare << MarkdownLinks::Link.new(start: range.begin, finish: range.begin + url.length, url: url)
+      # SocialText.url_ranges has already trimmed the sentence punctuation off the end.
+      bare << MarkdownLinks::Link.new(start: range.begin, finish: range.end, url: text[range])
     end
 
     (markdown + bare).sort_by(&:start)
@@ -274,7 +278,14 @@ class Bluesky
   # @return [String] the address with any sentence punctuation removed.
   def self.trim_url(url)
     url = url.to_s.sub(URL_TRAILING_PUNCTUATION, '')
-    url = url[0...-1] if url.end_with?(')') && !url.include?('(')
+
+    # Strip a closing bracket only when the address holds no opening one, so
+    # `…/Kona_(Hawaii)` keeps its bracket and `(see …/a)` gives up the one that closes the aside.
+    while (opener = URL_TRAILING_WRAPPERS[url[-1]]) && !url.include?(opener)
+      url = url[0...-1]
+      url = url.sub(URL_TRAILING_PUNCTUATION, '')
+    end
+
     url
   end
 
