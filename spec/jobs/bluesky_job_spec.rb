@@ -56,6 +56,7 @@ RSpec.describe BlueskyJob, type: :worker do
 
       it 'creates a skeet with photos' do
         expect(bluesky_instance).to receive(:skeet).with(
+          rkey: kind_of(String),
           text: text,
           photos: array_including(
             hash_including(:url, :alt_text, :width, :height)
@@ -63,6 +64,19 @@ RSpec.describe BlueskyJob, type: :worker do
           in_reply_to: nil,
           quote: nil
         )
+
+        described_class.new.perform(entry.id, text)
+      end
+
+      it 'writes at the record key it was given' do
+        expect(bluesky_instance).to receive(:skeet).with(hash_including(rkey: 'abc1234567890'))
+
+        described_class.new.perform(entry.id, text, nil, nil, 'abc1234567890')
+      end
+
+      it 'mints its own record key when called without one' do
+        # A job enqueued before that argument existed arrives with four, and must still post.
+        expect(bluesky_instance).to receive(:skeet).with(hash_including(rkey: kind_of(String)))
 
         described_class.new.perform(entry.id, text)
       end
@@ -183,6 +197,30 @@ RSpec.describe BlueskyJob, type: :worker do
 
         described_class.new.perform(entry_with_many_photos.id, text)
       end
+    end
+  end
+
+  describe 'retry policy' do
+    # sidekiq_retry_in lives in sidekiq_options, so a subclass block replaces the parent's rather
+    # than adding to it. Both branches have to survive.
+    def retry_in(exception, count = 0)
+      described_class.sidekiq_retry_in_block.call(count, exception)
+    end
+
+    it 'discards a post that can never succeed' do
+      expect(retry_in(BlueskyPermanentError.new)).to eq(:discard)
+    end
+
+    it 'discards credentials Bluesky refuses' do
+      expect(retry_in(Bluesky::AuthenticationError.new)).to eq(:discard)
+    end
+
+    it 'still backs off for an unprocessed photo' do
+      expect(retry_in(UnprocessedPhotoError.new, 3)).to eq(4)
+    end
+
+    it 'leaves everything else to Sidekiq' do
+      expect(retry_in(StandardError.new)).to be_nil
     end
   end
 

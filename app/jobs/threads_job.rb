@@ -1,8 +1,15 @@
 class ThreadsJob < ApplicationJob
   sidekiq_options queue: 'high'
 
-  sidekiq_retry_in do |_count, exception|
-    :discard if exception.is_a?(MetaCaptionTooLongError)
+  # ⚠️ This block replaces ApplicationJob's rather than adding to it, so it has to restate the
+  # UnprocessedPhotoError branch as well.
+  sidekiq_retry_in do |count, exception|
+    case exception
+    when MetaCaptionTooLongError
+      :discard
+    when UnprocessedPhotoError
+      count + 1
+    end
   end
 
   def perform(entry_id, text)

@@ -322,4 +322,27 @@ RSpec.describe Photo, type: :model do
       end
     end
   end
+
+  describe 'standard.site' do
+    # The first photo is the entry's cover image, and replacing it changes no column the entry's
+    # own callback watches.
+    it 'queues a document sync when a photo changes' do
+      blog = create(:blog, :on_standard_site)
+      entry = create(:entry, :published, blog: blog, user: create(:user))
+      StandardSiteJob.jobs.clear
+
+      create(:photo, entry: entry)
+
+      expect(StandardSiteJob.jobs.map { |job| job['args'] }).to include(['sync_document', entry.id])
+    end
+
+    it 'queues nothing for a blog that names no account' do
+      entry = create(:entry, :published, blog: create(:blog), user: create(:user))
+      StandardSiteJob.jobs.clear
+
+      create(:photo, entry: entry)
+
+      expect(StandardSiteJob.jobs).to be_empty
+    end
+  end
 end

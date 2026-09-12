@@ -207,6 +207,29 @@
     </div>
   </div>
 
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
+      <%= f.label :standard_site_social_account_id, 'Publish to standard.site', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="select">
+            <%= f.collection_select :standard_site_social_account_id, SocialAccount.where(provider: 'bluesky'), :id, :handle, include_blank: 'Don\'t publish' %>
+          </div>
+        </div>
+        <p class="help">
+          Mirrors every entry search engines are allowed to index as a
+          <a href="https://standard.site">standard.site</a> record, in this Bluesky account's repo.
+          An entry hidden from search engines is not published here either.
+          <% if @photoblog.standard_site_did.present? %>
+            <br>Publication: <code><%= @photoblog.standard_site_publication_uri %></code>
+          <% end %>
+        </p>
+      </div>
+    </div>
+  </div>
+
   <hr class="hr">
   <h2 class="subtitle is-size-5-mobile">Logos & icons</h2>
 

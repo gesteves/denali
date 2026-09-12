@@ -245,6 +245,32 @@ RSpec.describe Entry, type: :model do
     end
   end
 
+  describe '#bluesky_caption' do
+    it 'turns square brackets in the title into parentheses' do
+      # The caption wraps the title in a Markdown link, and MarkdownLinks can't cross a bracket,
+      # so a title holding one would leave the raw "[...](...)" in the post.
+      entry = Entry.new(title: 'Sunset [Redux]', body: 'Body', status: 'queued', blog: blog, user: user)
+      entry.save
+
+      caption = entry.bluesky_caption
+
+      expect(caption).to start_with('[Sunset (Redux)](')
+      expect(Bluesky.plain_text(caption)).to start_with('Sunset (Redux)')
+      expect(Bluesky.render(caption).links).not_to be_empty
+    end
+
+    it 'produces a caption whose link covers the title' do
+      entry = Entry.new(title: 'A Good Day', body: 'Body', status: 'queued', blog: blog, user: user)
+      entry.save
+
+      post = Bluesky.render(entry.bluesky_caption)
+
+      expect(post.text).to start_with('A Good Day')
+      expect(post.links.first.start).to eq(0)
+      expect(post.links.first.finish).to eq('A Good Day'.length)
+    end
+  end
+
   describe 'tag customizations' do
     describe 'flickr_groups' do
       it 'returns groups when all tags match' do
@@ -524,6 +550,68 @@ RSpec.describe Entry, type: :model do
       # touches its entry. The touch leaves the entry's saved_changes stale, so
       # this would regress if cache_tags went back to dirty tracking.
       photo.update(alt_text: 'A mountain')
+    end
+  end
+
+  describe 'standard.site' do
+    let(:blog) { create(:blog, :on_standard_site) }
+    let(:user) { create(:user) }
+
+    def standard_site_args
+      StandardSiteJob.jobs.map { |job| job['args'] }
+    end
+
+    it 'queues a sync when an entry is published' do
+      entry = create(:entry, blog: blog, user: user)
+      StandardSiteJob.jobs.clear
+
+      entry.publish
+
+      expect(standard_site_args).to include(['sync_document', entry.id])
+    end
+
+    # ⚠️ The point of the whole feature: flipping the setting has to publish or unpublish the
+    # record right away, not wait for a backfill. sync_document decides which from the reloaded
+    # row, so one operation covers both directions.
+    it 'queues a sync when the search-engine setting changes, either way' do
+      entry = create(:entry, :published, blog: blog, user: user)
+
+      StandardSiteJob.jobs.clear
+      entry.update!(hide_from_search_engines: true)
+      expect(standard_site_args).to include(['sync_document', entry.id])
+
+      StandardSiteJob.jobs.clear
+      entry.update!(hide_from_search_engines: false)
+      expect(standard_site_args).to include(['sync_document', entry.id])
+    end
+
+    it 'queues a delete when an entry is destroyed' do
+      entry = create(:entry, :published, blog: blog, user: user)
+      id = entry.id
+      StandardSiteJob.jobs.clear
+
+      entry.destroy
+
+      expect(standard_site_args).to include(['delete_document', id])
+    end
+
+    # The photo jobs touch an entry row for reasons no reader would call an edit.
+    it 'queues nothing for a save that changes nothing the record carries' do
+      entry = create(:entry, :published, blog: blog, user: user)
+      StandardSiteJob.jobs.clear
+
+      entry.update!(bluesky_text: 'A different caption')
+
+      expect(StandardSiteJob.jobs).to be_empty
+    end
+
+    it 'queues nothing for a blog that names no account' do
+      plain = create(:blog)
+      StandardSiteJob.jobs.clear
+
+      create(:entry, :published, blog: plain, user: user)
+
+      expect(StandardSiteJob.jobs).to be_empty
     end
   end
 end

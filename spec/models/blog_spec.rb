@@ -140,4 +140,63 @@ RSpec.describe Blog, type: :model do
       blog.update(name: 'A new name')
     end
   end
+
+  describe 'standard.site' do
+    let(:account) { create(:social_account, provider: 'bluesky') }
+
+    it 'names the account whose repo holds the records' do
+      blog = create(:blog, standard_site_social_account: account)
+
+      expect(blog.standard_site_account).to eq(account)
+      expect(blog).to be_standard_site_enabled
+    end
+
+    it 'names none when the blog picked no account' do
+      blog = create(:blog)
+
+      expect(blog.standard_site_account).to be_nil
+      expect(blog).not_to be_standard_site_enabled
+    end
+
+    it 'names none when the account is for another network' do
+      blog = create(:blog, standard_site_social_account: create(:social_account, provider: 'mastodon'))
+
+      expect(blog.standard_site_account).to be_nil
+    end
+
+    it 'names none when the account has no credentials' do
+      account.update_columns(access_token: nil)
+
+      expect(create(:blog, standard_site_social_account: account).standard_site_account).to be_nil
+    end
+
+    # ⚠️ Each document names the publication by an at:// URI holding the DID, so they go invalid on
+    # their own when the account changes. The publication's own fingerprint doesn't: left in place
+    # it would report "unchanged" forever and never sync to the new repo.
+    it 'forgets the old repo when the account changes' do
+      blog = create(:blog, :on_standard_site, standard_site_fingerprint: 'stale')
+
+      blog.update!(standard_site_social_account: account)
+
+      expect(blog.standard_site_did).to be_nil
+      expect(blog.standard_site_fingerprint).to be_nil
+    end
+
+    # ⚠️ `belongs_to :blog, touch: true` on Entry updates a blog row every time an entry is saved.
+    # A callback reading the blog's dirty tracking there sees whatever the in-memory blog was last
+    # really saved with, which for a freshly built one is its create — so this cleared the DID on
+    # an unrelated save until the check moved to before_update.
+    it 'keeps the repo when an entry save touches the blog' do
+      blog = create(:blog, :on_standard_site, standard_site_fingerprint: 'current')
+
+      create(:entry, :published, blog: blog, user: create(:user))
+
+      expect(blog.reload.standard_site_did).to be_present
+      expect(blog.standard_site_fingerprint).to eq('current')
+    end
+
+    it 'has no publication URI before it has ever synced' do
+      expect(create(:blog).standard_site_publication_uri).to be_nil
+    end
+  end
 end

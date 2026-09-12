@@ -1,0 +1,129 @@
+{
+  "_comment": "Shared contract between app/lib/bluesky.rb and app/frontend/lib/*.js. The admin's character counter disables the submit button, so a browser that counts differently from the server either refuses a draft Bluesky would take or accepts one it won't. spec/lib/social_text_contract_spec.rb and app/frontend/lib/social_text_contract.test.js both read this file. Add a row for every rule you add.",
+  "drafts": [
+    {
+      "text": "Hello, world!",
+      "length": 13
+    },
+    {
+      "text": "",
+      "length": 0
+    },
+    {
+      "text": "[my post](https://example.com/a/very/long/path)",
+      "length": 7
+    },
+    {
+      "text": "Read [a][ref] today\n\n[ref]: https://example.com/a",
+      "length": 12
+    },
+    {
+      "text": "Read [ref] today\n\n[ref]: https://example.com/a",
+      "length": 14
+    },
+    {
+      "text": "I ate [a lot](really)",
+      "length": 21
+    },
+    {
+      "text": "Something [wild] happened",
+      "length": 25
+    },
+    {
+      "text": "[](https://example.com/a) hi",
+      "length": 28
+    },
+    {
+      "text": "[docs](https://a.example) and [docs](https://b.example)",
+      "length": 13
+    },
+    {
+      "text": "Wait for it...",
+      "length": 12
+    },
+    {
+      "text": "a -- b",
+      "length": 5
+    },
+    {
+      "text": "a --- b",
+      "length": 5
+    },
+    {
+      "text": "See https://example.com/a--b...c now",
+      "length": 36
+    },
+    {
+      "text": "#hashtag at the start",
+      "length": 21
+    },
+    {
+      "text": "*not emphasis* and _not either_",
+      "length": 31
+    },
+    {
+      "text": "Visit https://example.com",
+      "length": 25
+    },
+    {
+      "text": "café",
+      "length": 4
+    },
+    {
+      "text": "👨‍👩‍👧‍👦 family",
+      "length": 8
+    },
+    {
+      "text": "Read https://en.wikipedia.org/wiki/Kona_(Hawaii) today",
+      "length": 54
+    },
+    {
+      "text": "See https://example.com/日本 now",
+      "length": 30
+    },
+    {
+      "text": "Read https://x.example/a... Then",
+      "length": 30
+    },
+    {
+      "text": "An aside (see https://x.example/a) ok",
+      "length": 37
+    },
+    {
+      "text": "Wiki https://en.wikipedia.org/wiki/Kona_(Hawaii) yes",
+      "length": 52
+    },
+    {
+      "text": "Read https://x.example/a. Then",
+      "length": 30
+    },
+    {
+      "text": "x https://x.example/a?q=1&r=2, y",
+      "length": 32
+    },
+    {
+      "text": "Hi @xn--caf-dma.example how are you",
+      "length": 35
+    },
+    {
+      "text": "Hi @me.bsky.social... ok",
+      "length": 22
+    },
+    {
+      "text": "Read \"https://example.com/a\" now",
+      "length": 32
+    },
+    {
+      "text": "Ask @me.bsky.social about https://x.example/a--b... ok",
+      "length": 52
+    },
+    {
+      "text": "Wiki https://en.wikipedia.org/wiki/Kona_(Hawaii)... nice",
+      "length": 54
+    },
+    {
+      "text": "Bracket https://example.com/a[b]--c... ok",
+      "length": 39
+    }
+  ]
+}

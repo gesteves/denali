@@ -7,7 +7,12 @@ module Mutations
 
     def resolve(url:)
       entry = Entry.find_by_url(url: url)
-      BlueskyJob.perform_async(entry.id, entry.bluesky_caption)
+      caption = entry.bluesky_caption
+      unless Bluesky.valid_post_length?(caption)
+        return { entry: nil, errors: ["The caption is empty or too long for Bluesky"] }
+      end
+
+      BlueskyJob.perform_async(entry.id, caption, nil, nil, Bluesky.new_tid)
       { entry: entry, errors: [] }
     rescue ActiveRecord::RecordNotFound
       raise GraphQL::ExecutionError, "Entry not found"

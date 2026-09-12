@@ -2,6 +2,13 @@
 <% cache [@photoblog, entry] do %>
   <% if !entry.is_published? || entry.hide_from_search_engines %>
     <meta name="robots" content="noindex">
+  <% elsif @photoblog.standard_site_did.present? %>
+    <%# standard.site: the machine-readable copy of this page.
+
+        ⚠️ This is the `else` of the noindex above, and it has to stay that way. A page that tells
+        crawlers not to index it while pointing at a standard.site document would be saying two
+        different things about the same entry. %>
+    <link rel="site.standard.document" href="at://<%= @photoblog.standard_site_did %>/<%= StandardSite::DOCUMENT_COLLECTION %>/<%= StandardSite.document_rkey(entry.id) %>">
   <% end %>
 
   <% photo = @photos&.first %>

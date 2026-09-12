@@ -23,7 +23,7 @@ class Admin::AccountsController < AdminController
       email: @social_account.handle,
       password: @social_account.access_token
     )
-    @social_account.uid = bluesky.send(:did)
+    @social_account.uid = bluesky.verify_credentials!
     @social_account.save!
 
     respond_to do |format|
@@ -520,13 +520,11 @@ class Admin::AccountsController < AdminController
   end
 
   def friendly_bluesky_error(exception)
-    case exception.message
-    when /Unable to create a new session/i
-      "Could not connect to Bluesky. Please check your handle and app password are correct."
-    when /getaddrinfo|connection refused|network|timeout/i
-      "Could not reach the Bluesky server. Please check the server URL and try again."
-    when /Invalid identifier or password/i
+    case exception
+    when Bluesky::AuthenticationError
       "Invalid handle or app password. Please check your credentials and try again."
+    when Bluesky::ConnectionError
+      "Could not reach the Bluesky server. Please check the server URL and try again."
     else
       "Could not connect to Bluesky: #{exception.message}"
     end

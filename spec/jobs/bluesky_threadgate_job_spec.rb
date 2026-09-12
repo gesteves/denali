@@ -76,6 +76,16 @@ RSpec.describe BlueskyThreadgateJob, type: :worker do
     end
   end
 
+  describe 'retry policy' do
+    it 'discards a malformed at-uri rather than retrying it for a day' do
+      expect(described_class.sidekiq_retry_in_block.call(0, BlueskyPermanentError.new)).to eq(:discard)
+    end
+
+    it 'still backs off for an unprocessed photo' do
+      expect(described_class.sidekiq_retry_in_block.call(3, UnprocessedPhotoError.new)).to eq(4)
+    end
+  end
+
   describe 'Sidekiq configuration' do
     it 'uses the high queue' do
       expect(described_class.sidekiq_options['queue']).to eq('high')
