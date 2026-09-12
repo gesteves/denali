@@ -2,7 +2,18 @@ require 'mini_magick'
 
 class Bluesky
   MAX_POST_LENGTH = 300
+
+  # app.bsky.feed.post#text is capped in graphemes *and* in bytes. 300 family emoji is 300
+  # graphemes but about 7,500 bytes, and the PDS rejects that record, so counting graphemes alone
+  # lets through a post that can never be created — and the job then retries it forever.
+  MAX_POST_BYTES = 3_000
+
   MAX_PHOTOS = 4
+
+  # app.bsky.richtext.facet#tag limits. A tag past either one makes the whole record invalid, so an
+  # over-long hashtag would take the post down with it.
+  MAX_TAG_GRAPHEMES = 64
+  MAX_TAG_BYTES = 640
 
   # Bluesky rejects any post embed whose image blob exceeds this many bytes,
   # reported as "blob too big" at $.record.embed.images[].image when the record
@@ -34,6 +45,33 @@ class Bluesky
     { "$type" => "app.bsky.feed.threadgate#followingRule" }
   ].freeze
 
+  # A bare URL. It stops before a trailing period or bracket, which is nearly always punctuation of
+  # the sentence rather than part of the address.
+  #
+  # This is the source of truth for "what is an address": SocialText and Typography both read it,
+  # so a string that gets a link facet here is treated as a URL everywhere else too.
+  URL_PATTERN = %r{(?:^|[$|\W])(https?://[a-zA-Z0-9\-._~:/?\#\[\]@!$&'()*+,;%=]*[a-zA-Z0-9\-_~/\#@$&*+=])}
+
+  # An @handle, from the sample in the AT Protocol documentation.
+  MENTION_PATTERN = /(?:^|[$|\W])(@(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)/
+
+  # Zero-width and formatting characters a hashtag can't contain, from the Bluesky client's own tag
+  # rule.
+  TAG_EXCLUDED = "\u00AD\u2060\u200A\u200B\u200C\u200D\u20E2".freeze
+
+  # A #hashtag, ported from the Bluesky client so a facet covers exactly what a reader sees tagged.
+  #
+  # It needs at least one character that is neither a digit nor punctuation, which is what keeps
+  # "#1" a number rather than a tag. It starts at whitespace or the start of the text, as the
+  # client does. And it deliberately avoids `\w`: Ruby's `\w` is ASCII-only, so "#café" would be
+  # tagged "caf" with a facet highlighting only part of the word.
+  TAG_PATTERN = /(?:^|\s)([#＃](?!\uFE0F)[^\s#{TAG_EXCLUDED}]*[^\d\s\p{P}#{TAG_EXCLUDED}]+[^\s#{TAG_EXCLUDED}]*)/
+
+  TAG_PREFIX = /\A[#＃]/
+
+  # The client trims trailing punctuation off a tag, so "#trail." tags "trail".
+  TRAILING_PUNCTUATION = /\p{P}+\z/
+
   # Creates a Bluesky instance from a SocialAccount.
   #
   # @param social_account [SocialAccount] the social account to use.
@@ -46,61 +84,71 @@ class Bluesky
     )
   end
 
-  # Verifies that the text of a post is equal to or less than 300 Unicode graphemes.
-  # Class method for use without authentication (e.g., validation checks).
+  # Renders a post the way the record will hold it: typography applied, Markdown links reduced to
+  # their words, and the position of each of those words recorded.
   #
-  # @param text [String] the raw text of the post with Markdown syntax.
-  # @return [Boolean] true if the plain text is valid, false otherwise.
-  def self.valid_post_length?(text)
-    return false unless text.is_a?(String)
+  # The order is load-bearing. Typography runs first because MarkdownLinks produces the character
+  # offsets that become facet byte offsets, so a `...` collapsed to `…` afterwards would shift
+  # every facet after it.
+  #
+  # @param text [String, nil] the raw text of the post, with Markdown syntax in it.
+  # @return [MarkdownLinks::Result] the plain text, and a Link for each link in it.
+  def self.render(text)
+    MarkdownLinks.parse(Typography.apply(text))
+  end
 
-    post_length(text) <= MAX_POST_LENGTH
+  # @param text [String, nil] the raw text of the post, with Markdown syntax in it.
+  # @return [String] the plain text the post will hold.
+  def self.plain_text(text)
+    render(text).text
   end
 
   # Returns the length of the post text in Unicode graphemes.
-  # Class method for use without authentication (e.g., validation checks).
   #
-  # @param text [String] the raw text of the post with Markdown syntax.
+  # This measures what the *record* will hold, so it renders first: the address of a link lives in
+  # a facet rather than in the text, which makes `[my post](https://example.com)` 7 characters and
+  # not 30. Counting the raw words would reject a post that Bluesky accepts.
+  #
+  # @param text [String, nil] the raw text of the post with Markdown syntax.
   # @return [Integer] the length in Unicode graphemes.
   def self.post_length(text)
-    # Parse URLs and remove Markdown, leaving only the plain text
-    _, plain_text = parse_urls_for_length(text)
-
-    # Count the Unicode graphemes in the plain text
-    plain_text.each_grapheme_cluster.to_a.size
+    SocialText.graphemes(plain_text(text))
   end
 
-  # Parses URLs in text for length calculation purposes (class method).
-  # Lighter-weight version that only extracts plain text.
+  # Verifies that a post fits in one skeet: not empty, within 300 graphemes, and within the 3,000
+  # bytes the lexicon also allows for. Both limits are real, and emoji-heavy text can pass the
+  # first and fail the second.
   #
-  # @param text [String] the text to process.
-  # @return [Array] an array where the first element is nil (unused), and the second element is the plain text.
-  def self.parse_urls_for_length(text)
-    html = markdown_to_html(text)
-    plain_text = html_to_plain_text(html)
-    [nil, plain_text]
+  # @param text [String] the raw text of the post with Markdown syntax.
+  # @return [Boolean] true if the post can be created, false otherwise.
+  def self.valid_post_length?(text)
+    return false unless text.is_a?(String)
+
+    plain = plain_text(text)
+    length = SocialText.graphemes(plain)
+    length.positive? && length <= MAX_POST_LENGTH && plain.bytesize <= MAX_POST_BYTES
   end
 
-  # Renders Markdown text to HTML with SmartyPants processing.
+  # Every link in a post, in order, as character offsets into the plain text.
   #
-  # @param text [String] the Markdown text to render.
-  # @return [String] the rendered HTML.
-  def self.markdown_to_html(text)
-    renderer = Redcarpet::Render::HTML.new(hard_wrap: false)
-    markdown = Redcarpet::Markdown.new(renderer, autolink: true, no_intra_emphasis: true, fenced_code_blocks: true)
-    Redcarpet::Render::SmartyPants.render(markdown.render(text))
-  end
+  # A bare URL inside a Markdown link's words is not a second link. `[https://a](https://b)` would
+  # otherwise get two facets over one range, which clients render as a broken link.
+  #
+  # @param text [String, nil] the plain text, as MarkdownLinks rendered it.
+  # @param markdown [Array<MarkdownLinks::Link>] the links from that same parse.
+  # @return [Array<MarkdownLinks::Link>] every link, sorted by where it starts.
+  def self.link_ranges(text, markdown = [])
+    text = text.to_s
+    taken = markdown.map { |link| link.start...link.finish }
+    bare = []
 
-  # Converts HTML to plain text, preserving line breaks and decoding entities.
-  #
-  # @param html [String] the HTML to convert.
-  # @return [String] the plain text.
-  def self.html_to_plain_text(html)
-    fragment = Nokogiri::HTML.fragment(html)
-    fragment.css('br').each { |br| br.replace("\n") }
-    plain_text = Sanitize.fragment(fragment.to_html).strip
-    plain_text = plain_text.gsub(/ *(\n+) */, '\1')
-    HTMLEntities.new.decode(plain_text)
+    SocialText.url_ranges(text).each do |range|
+      next if taken.any? { |other| other.cover?(range.begin) }
+
+      bare << MarkdownLinks::Link.new(start: range.begin, finish: range.end, url: text[range])
+    end
+
+    (markdown + bare).sort_by(&:start)
   end
 
   # Initializes a new instance of the Bluesky class.
@@ -141,8 +189,9 @@ class Bluesky
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
   def skeet(text:, photos: [], in_reply_to: nil, quote: nil)
-    # Extract facets from the rich text provided and return them, and the plain text
-    facets, plain_text = parse_facets(text)
+    # One parse gives both the text the record holds and the offsets its facets need. Rendering
+    # twice would let the two disagree.
+    post = self.class.render(text)
 
     # Construct the reply object for the post, if provided
     reply = construct_reply(in_reply_to)
@@ -152,12 +201,14 @@ class Bluesky
 
     # Construct the record data for the skeet
     record_data = {
-      text: plain_text,
+      "$type" => "app.bsky.feed.post",
+      text: post.text,
       langs: ["en-US"],
-      createdAt: Time.now.iso8601,
-      facets: facets
+      createdAt: Time.now.iso8601
     }
 
+    facets = build_facets(post.text, links: post.links)
+    record_data[:facets] = facets if facets.any?
     record_data[:embed] = embed if embed.present?
     record_data[:reply] = reply if reply.present?
 
@@ -198,36 +249,94 @@ class Bluesky
 
   private
 
-  # Calculates byte offsets for a match found in a string.
+  # Builds the rich-text facets for a post: every link, every @mention and every #hashtag.
   #
-  # @param match_data [MatchData] the match data object.
-  # @param original_text [String] the original text string where the match was found.
-  # @return [Array<Integer>] the byte offsets [start_byte, end_byte].
-  def byte_offsets_for_match(match_data, original_text)
-    start_char_index = match_data.offset(1)[0]
-    end_char_index = match_data.offset(1)[1]
-    byte_start = original_text[0...start_char_index].bytesize
-    byte_end = original_text[0...end_char_index].bytesize
-    [byte_start, byte_end]
+  # Every offset comes from the plain text the record holds, never from the raw text the author
+  # typed, and #skeet renders that text once and hands this method the links from the same parse.
+  #
+  # Links come first, and a mention or hashtag inside a link does not get a facet of its own: a URL
+  # like `…/profile/@me.bsky.social` or `…/#section` would otherwise get two facets over one range,
+  # which clients render as a broken link.
+  #
+  # @param text [String] the plain text of the post.
+  # @param links [Array<MarkdownLinks::Link>] the links from the parse that made that text.
+  # @return [Array<Hash>] the facets, sorted by where they start.
+  def build_facets(text, links: [])
+    link_facets = self.class.link_ranges(text, links).map { |link| link_facet(text, link) }
+    inside_link = link_facets.map { |facet| facet["index"]["byteStart"]...facet["index"]["byteEnd"] }
+
+    facets = link_facets + mention_facets(text, skip: inside_link) + tag_facets(text, skip: inside_link)
+    facets.sort_by { |facet| facet["index"]["byteStart"] }
   end
 
-  # Parses @mentions in the text and returns an array of app.bsky.richtext.facet#mention facets.
+  # Builds one app.bsky.richtext.facet#link.
   #
-  # @param text [String] the text to scan for mentions.
-  # @return [Array<Hash>] an array of mention facets
-  def parse_mentions(text)
-    mention_regex = /(?:^|[$|\W])(@([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)/
+  # A facet's offsets are in bytes of the UTF-8 text and MarkdownLinks::Link holds characters. One
+  # accented letter is 1 character and 2 bytes, so a character offset would shift the highlight of
+  # every facet after it.
+  #
+  # @param text [String] the plain text of the post.
+  # @param link [MarkdownLinks::Link] the link to build a facet for.
+  # @return [Hash] the facet.
+  def link_facet(text, link)
+    {
+      "index" => {
+        "byteStart" => text[0...link.start].bytesize,
+        "byteEnd" => text[0...link.finish].bytesize
+      },
+      "features" => [
+        { "$type" => "app.bsky.richtext.facet#link", "uri" => link.url }
+      ]
+    }
+  end
+
+  # Builds an app.bsky.richtext.facet#mention for each @handle the PDS can resolve.
+  #
+  # A handle it can't resolve is dropped: a mention facet with no DID makes the whole record
+  # invalid, which would take the post down with it.
+  #
+  # @param text [String] the plain text of the post.
+  # @param skip [Array<Range>] byte ranges already covered by a link.
+  # @return [Array<Hash>] the mention facets.
+  def mention_facets(text, skip: [])
+    scan_facets(text, MENTION_PATTERN, skip: skip) do |match|
+      did = resolve_handle(match.delete_prefix("@"))
+      next if did.blank?
+
+      { "$type" => "app.bsky.richtext.facet#mention", "did" => did }
+    end
+  end
+
+  # Builds an app.bsky.richtext.facet#tag for each #hashtag.
+  #
+  # This doesn't use #scan_facets, because a tag's facet can be shorter than its match: the client
+  # trims trailing punctuation, so "#trail." tags "trail" and the facet has to shrink with it or it
+  # would highlight a character the tag doesn't contain.
+  #
+  # @param text [String] the plain text of the post.
+  # @param skip [Array<Range>] byte ranges already covered by a link.
+  # @return [Array<Hash>] the tag facets.
+  def tag_facets(text, skip: [])
     facets = []
 
-    text.scan(mention_regex) do |m|
-      byte_start, byte_end = byte_offsets_for_match($~, text)
-      did = resolve_handle(m[0][1..])
-      next unless did
+    text.to_s.scan(TAG_PATTERN) do
+      match = Regexp.last_match
+      start_char, = match.offset(1)
+      byte_start = text[0...start_char].bytesize
+
+      tag = match[1].sub(TRAILING_PUNCTUATION, '')
+      byte_end = byte_start + tag.bytesize
+      next if overlaps?(byte_start, byte_end, skip)
+
+      # The facet covers the "#", and the tag itself doesn't.
+      name = tag.sub(TAG_PREFIX, '')
+      next if name.blank?
+      next if SocialText.graphemes(name) > MAX_TAG_GRAPHEMES || name.bytesize > MAX_TAG_BYTES
 
       facets << {
         "index" => { "byteStart" => byte_start, "byteEnd" => byte_end },
         "features" => [
-          { "$type" => "app.bsky.richtext.facet#mention", "did" => did }
+          { "$type" => "app.bsky.richtext.facet#tag", "tag" => name }
         ]
       }
     end
@@ -235,84 +344,50 @@ class Bluesky
     facets
   end
 
-  # Parses URLs in the text and returns an array of app.bsky.richtext.facet#link facets, and the text with Markdown removed.
+  # Finds each match of a pattern's first group and builds a facet from it.
   #
-  # @param text [String] the text to scan for URLs.
-  # @return [Array] an array where the first element is an array of URL facets, and the second element is the plain text with Markdown removed.
-  def parse_urls(text)
-    links = []
-
-    # Step 1: Render Markdown to HTML
-    html = self.class.markdown_to_html(text)
-
-    # Step 2: Extract <a> tags using Nokogiri, store their labels and URLs
-    doc = Nokogiri::HTML.fragment(html)
-    doc.css('a').each do |link|
-      links << { label: link.text.strip, url: link['href'] }
-    end
-
-    # Step 3: Convert HTML to plain text
-    plain_text = self.class.html_to_plain_text(html)
-
-    # Step 4: Find each link's label's position in the plain text, and construct facets
-    facets = []
-    links.each do |link|
-      label = link[:label]
-      url = link[:url]
-
-      # Use a match iterator to find all occurrences of the label
-      plain_text.enum_for(:scan, Regexp.new(Regexp.escape(label))).each do
-        match_start = Regexp.last_match.begin(0)
-        match_end = Regexp.last_match.end(0)
-
-        # Convert character offsets to byte offsets
-        byte_start = plain_text[0...match_start].bytesize
-        byte_end = plain_text[0...match_end].bytesize
-
-        # Add the facet to the array
-        facets << {
-          "index" => { "byteStart" => byte_start, "byteEnd" => byte_end },
-          "features" => [
-            { "$type" => "app.bsky.richtext.facet#link", "uri" => url }
-          ]
-        }
-      end
-    end
-
-    [facets, plain_text]
-  end
-
-  # Parses #hashtags in the text and returns an array of app.bsky.richtext.facet#tag facets.
+  # Offsets are in bytes of the UTF-8 text, not characters.
   #
-  # @param text [String] the text to scan for hashtags.
-  # @return [Array<Hash>] an array of tag facets.
-  def parse_tags(text)
-    tag_regex = /(?:^|[$|\W])(#\w+)/
+  # @param text [String] the plain text of the post.
+  # @param pattern [Regexp] a pattern whose first group is the span to mark.
+  # @param skip [Array<Range>] byte ranges to leave alone. A match touching one is not a facet, and
+  #   the block doesn't run for it.
+  # @yieldparam match [String] the matched span.
+  # @yieldreturn [Hash, nil] the feature, or nil to drop the facet.
+  # @return [Array<Hash>] the facets.
+  def scan_facets(text, pattern, skip: [])
     facets = []
 
-    text.scan(tag_regex) do |m|
-      byte_start, byte_end = byte_offsets_for_match($~, text)
+    text.to_s.scan(pattern) do
+      match = Regexp.last_match
+      start_char, end_char = match.offset(1)
+      byte_start = text[0...start_char].bytesize
+      byte_end = text[0...end_char].bytesize
+      next if overlaps?(byte_start, byte_end, skip)
+
+      feature = yield(match[1])
+      next if feature.blank?
+
       facets << {
         "index" => { "byteStart" => byte_start, "byteEnd" => byte_end },
-        "features" => [
-          { "$type" => "app.bsky.richtext.facet#tag", "tag" => m[0][1..] } # Strip leading #
-        ]
+        "features" => [feature]
       }
     end
 
     facets
   end
 
-  # Parses mentions, URLs, and hashtags in the text and returns their facets and plain text.
+  # Tests whether a byte range touches any of the ranges to skip.
   #
-  # @param text [String] the text to scan for facets.
-  # @return [Array] an array where the first element is all facets, and the second element is the plain text.
-  def parse_facets(text)
-    url_facets, plain_text = parse_urls(text)
-    mention_facets = parse_mentions(plain_text) # Mentions work with plain text
-    tag_facets = parse_tags(plain_text)         # Tags also work with plain text
-
-    [url_facets + mention_facets + tag_facets, plain_text]
+  # This compares the whole range rather than just its start, so a mention that begins before a
+  # link and runs into it is still suppressed.
+  #
+  # @param byte_start [Integer] the start of the range.
+  # @param byte_end [Integer] the end of the range, exclusive.
+  # @param skip [Array<Range>] the byte ranges to avoid.
+  # @return [Boolean] true if the range overlaps any of them.
+  def overlaps?(byte_start, byte_end, skip)
+    skip.any? { |range| byte_start < range.end && range.begin < byte_end }
   end
 
   # Converts a Bluesky post URL into an at-uri.
@@ -563,7 +638,9 @@ class Bluesky
     embedded_images = photos.take(4).map do |photo|
       {
         image: upload_photo(photo[:url])["blob"],
-        alt: photo[:alt_text],
+        # The lexicon requires alt to be a string, and a nil there fails validation at record
+        # creation with a message that names the embed rather than the photo.
+        alt: photo[:alt_text].to_s,
         aspectRatio: {
           width: photo[:width],
           height: photo[:height]

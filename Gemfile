@@ -28,6 +28,7 @@ gem 'mini_magick'
 # Misc
 gem 'jbuilder', '~> 2.15'
 gem 'acts_as_list'
+gem 'nokogiri'
 gem 'redcarpet'
 gem 'sanitize'
 gem 'exifr', require: nil

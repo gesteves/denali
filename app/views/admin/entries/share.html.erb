@@ -9,7 +9,7 @@
 <% if @entry.is_published? %>
   <%# Bluesky Section %>
   <h2 class="subtitle is-size-5-mobile">Bluesky</h2>
-  <div data-controller="share-form character-counter" data-share-form-url-value="<%= bluesky_admin_entry_path(@entry) %>" data-share-form-platform-value="Bluesky" data-character-counter-max-length-value="300">
+  <div data-controller="share-form character-counter" data-share-form-url-value="<%= bluesky_admin_entry_path(@entry) %>" data-share-form-platform-value="Bluesky" data-character-counter-max-length-value="<%= Bluesky::MAX_POST_LENGTH %>">
     <div class="field is-horizontal">
       <div class="field-label is-normal">
         <label class="label">Caption</label>

@@ -507,6 +507,7 @@ DEPENDENCIES
   lograge
   mini_magick
   mock_redis
+  nokogiri
   omniauth-google-oauth2
   omniauth-rails_csrf_protection
   pg (~> 1.6)

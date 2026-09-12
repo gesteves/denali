@@ -46,12 +46,22 @@ RSpec.describe Bluesky do
       expect(described_class.valid_post_length?(text)).to be false
     end
 
-    it 'handles empty strings' do
-      expect(described_class.valid_post_length?('')).to be true
+    it 'rejects empty strings' do
+      expect(described_class.valid_post_length?('')).to be false
     end
 
-    it 'handles strings with only whitespace' do
-      expect(described_class.valid_post_length?('   ')).to be true
+    it 'rejects strings with only whitespace' do
+      expect(described_class.valid_post_length?('   ')).to be false
+    end
+
+    it 'rejects text within the grapheme limit but over the byte limit' do
+      # A family emoji is one grapheme and 25 bytes. app.bsky.feed.post#text caps both, and only
+      # the byte limit catches this.
+      text = "\u{1F468}\u200D\u{1F469}\u200D\u{1F467}\u200D\u{1F466}" * 250
+
+      expect(described_class.post_length(text)).to be <= described_class::MAX_POST_LENGTH
+      expect(text.bytesize).to be > described_class::MAX_POST_BYTES
+      expect(described_class.valid_post_length?(text)).to be false
     end
   end
 
@@ -431,7 +441,79 @@ RSpec.describe Bluesky do
       end
     end
 
-    describe '#parse_mentions' do
+    describe '.render' do
+      it 'reduces a markdown link to its words' do
+        post = described_class.render('Check out [my website](https://example.com)!')
+
+        expect(post.text).to eq('Check out my website!')
+        expect(post.links.map(&:url)).to eq(['https://example.com'])
+      end
+
+      it 'leaves a span that is not a link exactly as written' do
+        expect(described_class.render('I ate [a lot](really)').text).to eq('I ate [a lot](really)')
+      end
+
+      it 'resolves a reference link and removes its definition line' do
+        post = described_class.render("Read [my post][ref]\n\n[ref]: https://example.com")
+
+        expect(post.text).to eq('Read my post')
+        expect(post.links.map(&:url)).to eq(['https://example.com'])
+      end
+
+      it 'resolves a collapsed reference link' do
+        post = described_class.render("Read [ref]\n\n[ref]: https://example.com")
+
+        expect(post.text).to eq('Read ref')
+        expect(post.links.map(&:url)).to eq(['https://example.com'])
+      end
+
+      it 'keeps characters that a markdown renderer would have eaten' do
+        # Redcarpet would read the leading "#" as a heading and drop it, and would eat the
+        # asterisks, underscores and backticks as emphasis and code.
+        text = "#hashtag at the start\n\n*not emphasis* and _not either_ and `code`"
+
+        expect(described_class.render(text).text).to eq(text)
+      end
+
+      it 'applies the site typography' do
+        expect(described_class.render(%q{It's a "big" day...}).text).to eq('It’s a “big” day…')
+      end
+
+      it 'leaves the characters of a URL alone' do
+        # SmartyPants reads "--", "..." and quotes in an address as punctuation, and every one of
+        # those makes a dead link.
+        text = 'See https://example.com/a--b...c?q="d" now'
+
+        expect(described_class.render(text).text).to eq(text)
+      end
+
+      it 'preserves line breaks' do
+        expect(described_class.render("Line 1\n\nLine 2").text).to eq("Line 1\n\nLine 2")
+      end
+
+      it 'decodes HTML entities' do
+        expect(described_class.render('Tom &amp; Jerry').text).to eq('Tom & Jerry')
+      end
+    end
+
+    describe '.link_ranges' do
+      it 'returns a markdown link and a bare URL, in order' do
+        post = described_class.render('Visit https://a.example or [b](https://b.example)')
+        links = described_class.link_ranges(post.text, post.links)
+
+        expect(links.map(&:url)).to eq(['https://a.example', 'https://b.example'])
+        expect(links.map(&:start)).to eq(links.map(&:start).sort)
+      end
+
+      it 'does not treat a bare URL inside a link label as a second link' do
+        post = described_class.render('[https://a.example](https://b.example)')
+        links = described_class.link_ranges(post.text, post.links)
+
+        expect(links.map(&:url)).to eq(['https://b.example'])
+      end
+    end
+
+    describe '#mention_facets' do
       before do
         stub_request(:get, "#{base_url}/xrpc/com.atproto.identity.resolveHandle")
           .with(query: { 'handle' => 'alice.bsky.social' })
@@ -443,8 +525,7 @@ RSpec.describe Bluesky do
       end
 
       it 'parses a single mention' do
-        text = 'Hello @alice.bsky.social!'
-        facets = bluesky.send(:parse_mentions, text)
+        facets = bluesky.send(:mention_facets, 'Hello @alice.bsky.social!')
 
         expect(facets.size).to eq(1)
         expect(facets[0]['features'][0]['$type']).to eq('app.bsky.richtext.facet#mention')
@@ -452,8 +533,7 @@ RSpec.describe Bluesky do
       end
 
       it 'parses multiple mentions' do
-        text = 'Hello @alice.bsky.social and @bob.bsky.social!'
-        facets = bluesky.send(:parse_mentions, text)
+        facets = bluesky.send(:mention_facets, 'Hello @alice.bsky.social and @bob.bsky.social!')
 
         expect(facets.size).to eq(2)
         expect(facets[0]['features'][0]['did']).to eq('did:plc:alice123')
@@ -461,8 +541,7 @@ RSpec.describe Bluesky do
       end
 
       it 'parses mention at the start of text' do
-        text = '@alice.bsky.social is great'
-        facets = bluesky.send(:parse_mentions, text)
+        facets = bluesky.send(:mention_facets, '@alice.bsky.social is great')
 
         expect(facets.size).to eq(1)
         expect(facets[0]['features'][0]['did']).to eq('did:plc:alice123')
@@ -473,20 +552,16 @@ RSpec.describe Bluesky do
           .with(query: { 'handle' => 'nonexistent.bsky.social' })
           .to_return(status: 400, body: { error: 'InvalidHandle' }.to_json)
 
-        text = 'Hello @nonexistent.bsky.social!'
-        facets = bluesky.send(:parse_mentions, text)
-
-        expect(facets).to be_empty
+        expect(bluesky.send(:mention_facets, 'Hello @nonexistent.bsky.social!')).to be_empty
       end
 
       it 'returns empty array for text without mentions' do
-        facets = bluesky.send(:parse_mentions, 'Hello world!')
-        expect(facets).to be_empty
+        expect(bluesky.send(:mention_facets, 'Hello world!')).to be_empty
       end
 
       it 'calculates correct byte offsets' do
         text = 'Hi @alice.bsky.social!'
-        facets = bluesky.send(:parse_mentions, text)
+        facets = bluesky.send(:mention_facets, text)
 
         byte_start = facets[0]['index']['byteStart']
         byte_end = facets[0]['index']['byteEnd']
@@ -496,99 +571,26 @@ RSpec.describe Bluesky do
 
       it 'handles mentions with unicode characters before them' do
         text = '🎉 @alice.bsky.social!'
-        facets = bluesky.send(:parse_mentions, text)
+        facets = bluesky.send(:mention_facets, text)
 
         expect(facets.size).to eq(1)
         byte_start = facets[0]['index']['byteStart']
         byte_end = facets[0]['index']['byteEnd']
         expect(text.byteslice(byte_start, byte_end - byte_start)).to eq('@alice.bsky.social')
       end
-    end
 
-    describe '#parse_urls' do
-      it 'parses markdown links' do
-        text = 'Check out [my website](https://example.com)!'
-        facets, plain_text = bluesky.send(:parse_urls, text)
+      it 'skips a mention that falls inside a link' do
+        text = 'https://bsky.app/profile/@me.bsky.social'
+        skip_ranges = [0...text.bytesize]
 
-        expect(plain_text).to eq('Check out my website!')
-        expect(facets.size).to eq(1)
-        expect(facets[0]['features'][0]['$type']).to eq('app.bsky.richtext.facet#link')
-        expect(facets[0]['features'][0]['uri']).to eq('https://example.com')
-      end
-
-      it 'parses multiple markdown links' do
-        text = 'Visit [Google](https://google.com) or [GitHub](https://github.com)'
-        facets, plain_text = bluesky.send(:parse_urls, text)
-
-        expect(plain_text).to eq('Visit Google or GitHub')
-        expect(facets.size).to eq(2)
-        expect(facets[0]['features'][0]['uri']).to eq('https://google.com')
-        expect(facets[1]['features'][0]['uri']).to eq('https://github.com')
-      end
-
-      it 'parses autolinked URLs' do
-        text = 'Check out https://example.com for more info'
-        facets, plain_text = bluesky.send(:parse_urls, text)
-
-        expect(plain_text).to eq('Check out https://example.com for more info')
-        expect(facets.size).to eq(1)
-        expect(facets[0]['features'][0]['uri']).to eq('https://example.com')
-      end
-
-      it 'returns empty facets for text without URLs' do
-        text = 'Just some plain text'
-        facets, plain_text = bluesky.send(:parse_urls, text)
-
-        expect(plain_text).to eq('Just some plain text')
-        expect(facets).to be_empty
-      end
-
-      it 'calculates correct byte offsets for link text' do
-        text = 'See [docs](https://docs.example.com) here'
-        facets, plain_text = bluesky.send(:parse_urls, text)
-
-        byte_start = facets[0]['index']['byteStart']
-        byte_end = facets[0]['index']['byteEnd']
-        expect(plain_text.byteslice(byte_start, byte_end - byte_start)).to eq('docs')
-      end
-
-      it 'handles unicode in link text' do
-        text = 'Check [日本語](https://example.jp)!'
-        facets, plain_text = bluesky.send(:parse_urls, text)
-
-        expect(plain_text).to eq('Check 日本語!')
-        byte_start = facets[0]['index']['byteStart']
-        byte_end = facets[0]['index']['byteEnd']
-        expect(plain_text.byteslice(byte_start, byte_end - byte_start)).to eq('日本語')
-      end
-
-      it 'preserves line breaks' do
-        text = "Line 1\n\nLine 2"
-        _, plain_text = bluesky.send(:parse_urls, text)
-
-        expect(plain_text).to eq("Line 1\n\nLine 2")
-      end
-
-      it 'decodes HTML entities' do
-        text = 'Tom & Jerry'
-        _, plain_text = bluesky.send(:parse_urls, text)
-
-        expect(plain_text).to eq('Tom & Jerry')
-      end
-
-      it 'handles smart quotes from SmartyPants' do
-        text = '"Hello" and \'world\''
-        _, plain_text = bluesky.send(:parse_urls, text)
-
-        expect(plain_text).to include('Hello')
-        expect(plain_text).to include('world')
+        expect(bluesky.send(:mention_facets, text, skip: skip_ranges)).to be_empty
+        expect(a_request(:get, "#{base_url}/xrpc/com.atproto.identity.resolveHandle")).not_to have_been_made
       end
     end
 
-    describe '#parse_tags' do
+    describe '#tag_facets' do
       it 'parses a single hashtag' do
-        text = 'Hello #world!'
-        facets = bluesky.send(:parse_tags, text)
+        facets = bluesky.send(:tag_facets, 'Hello #world!')
 
         expect(facets.size).to eq(1)
         expect(facets[0]['features'][0]['$type']).to eq('app.bsky.richtext.facet#tag')
@@ -596,47 +598,65 @@ RSpec.describe Bluesky do
       end
 
       it 'parses multiple hashtags' do
-        text = '#hello #world #test'
-        facets = bluesky.send(:parse_tags, text)
+        facets = bluesky.send(:tag_facets, '#hello #world #test')
 
         expect(facets.size).to eq(3)
-        expect(facets[0]['features'][0]['tag']).to eq('hello')
-        expect(facets[1]['features'][0]['tag']).to eq('world')
-        expect(facets[2]['features'][0]['tag']).to eq('test')
+        expect(facets.map { |f| f['features'][0]['tag'] }).to eq(%w[hello world test])
       end
 
       it 'parses hashtag at start of text' do
-        text = '#photography is fun'
-        facets = bluesky.send(:parse_tags, text)
+        facets = bluesky.send(:tag_facets, '#photography is fun')
 
         expect(facets.size).to eq(1)
         expect(facets[0]['features'][0]['tag']).to eq('photography')
       end
 
       it 'parses hashtags with numbers' do
-        text = 'Check out #photo123'
-        facets = bluesky.send(:parse_tags, text)
+        facets = bluesky.send(:tag_facets, 'Check out #photo123')
 
         expect(facets.size).to eq(1)
         expect(facets[0]['features'][0]['tag']).to eq('photo123')
       end
 
       it 'parses hashtags with underscores' do
-        text = 'Love #street_photography'
-        facets = bluesky.send(:parse_tags, text)
+        facets = bluesky.send(:tag_facets, 'Love #street_photography')
 
         expect(facets.size).to eq(1)
         expect(facets[0]['features'][0]['tag']).to eq('street_photography')
       end
 
+      it 'parses a hashtag with non-ASCII letters in full' do
+        # Ruby's \w is ASCII-only, which used to tag this "caf".
+        facets = bluesky.send(:tag_facets, 'Morning #café run')
+
+        expect(facets.size).to eq(1)
+        expect(facets[0]['features'][0]['tag']).to eq('café')
+      end
+
+      it 'keeps a hyphen inside a hashtag' do
+        facets = bluesky.send(:tag_facets, 'A #trail-run today')
+
+        expect(facets.size).to eq(1)
+        expect(facets[0]['features'][0]['tag']).to eq('trail-run')
+      end
+
+      it 'does not tag a number' do
+        expect(bluesky.send(:tag_facets, 'Ranked #1 today')).to be_empty
+      end
+
+      it 'drops a hashtag longer than the tag limit' do
+        long = 'a' * (described_class::MAX_TAG_GRAPHEMES + 1)
+
+        expect(bluesky.send(:tag_facets, "Hello ##{long}")).to be_empty
+      end
+
       it 'returns empty array for text without hashtags' do
-        facets = bluesky.send(:parse_tags, 'Hello world!')
-        expect(facets).to be_empty
+        expect(bluesky.send(:tag_facets, 'Hello world!')).to be_empty
       end
 
       it 'calculates correct byte offsets' do
         text = 'Hello #world!'
-        facets = bluesky.send(:parse_tags, text)
+        facets = bluesky.send(:tag_facets, text)
 
         byte_start = facets[0]['index']['byteStart']
         byte_end = facets[0]['index']['byteEnd']
@@ -645,25 +665,37 @@ RSpec.describe Bluesky do
 
       it 'handles hashtags with unicode before them' do
         text = '🎉 #celebration'
-        facets = bluesky.send(:parse_tags, text)
+        facets = bluesky.send(:tag_facets, text)
 
         expect(facets.size).to eq(1)
         byte_start = facets[0]['index']['byteStart']
         byte_end = facets[0]['index']['byteEnd']
         expect(text.byteslice(byte_start, byte_end - byte_start)).to eq('#celebration')
       end
+
+      it 'skips a hashtag that falls inside a link' do
+        text = 'https://example.com/#section'
+        skip_ranges = [0...text.bytesize]
+
+        expect(bluesky.send(:tag_facets, text, skip: skip_ranges)).to be_empty
+      end
     end
 
-    describe '#parse_facets' do
+    describe '#build_facets' do
       before do
         stub_request(:get, "#{base_url}/xrpc/com.atproto.identity.resolveHandle")
           .with(query: { 'handle' => 'alice.bsky.social' })
           .to_return(status: 200, body: { did: 'did:plc:alice123' }.to_json)
       end
 
+      # Renders the raw text the way #skeet does, then builds its facets from that same parse.
+      def facets_for(text)
+        post = described_class.render(text)
+        [bluesky.send(:build_facets, post.text, links: post.links), post.text]
+      end
+
       it 'combines mentions, URLs, and tags' do
-        text = 'Hey @alice.bsky.social, check [this](https://example.com) #cool'
-        facets, plain_text = bluesky.send(:parse_facets, text)
+        facets, plain_text = facets_for('Hey @alice.bsky.social, check [this](https://example.com) #cool')
 
         expect(plain_text).to eq('Hey @alice.bsky.social, check this #cool')
 
@@ -673,56 +705,50 @@ RSpec.describe Bluesky do
         expect(types).to include('app.bsky.richtext.facet#tag')
       end
 
-      it 'returns plain text with markdown stripped' do
-        text = '**Bold** and [link](https://example.com)'
-        _, plain_text = bluesky.send(:parse_facets, text)
+      it 'returns the facets sorted by where they start' do
+        facets, = facets_for('#early then [a link](https://example.com) and @alice.bsky.social')
 
-        expect(plain_text).to eq('Bold and link')
+        starts = facets.map { |f| f['index']['byteStart'] }
+        expect(starts).to eq(starts.sort)
       end
 
       it 'handles text with only mentions' do
-        text = 'Hello @alice.bsky.social!'
-        facets, _ = bluesky.send(:parse_facets, text)
+        facets, = facets_for('Hello @alice.bsky.social!')
 
         expect(facets.size).to eq(1)
         expect(facets[0]['features'][0]['$type']).to eq('app.bsky.richtext.facet#mention')
       end
 
       it 'handles text with only URLs' do
-        text = 'Visit https://example.com'
-        facets, _ = bluesky.send(:parse_facets, text)
+        facets, = facets_for('Visit https://example.com')
 
         expect(facets.size).to eq(1)
         expect(facets[0]['features'][0]['$type']).to eq('app.bsky.richtext.facet#link')
       end
 
       it 'handles text with only tags' do
-        text = 'Loving #photography'
-        facets, _ = bluesky.send(:parse_facets, text)
+        facets, = facets_for('Loving #photography')
 
         expect(facets.size).to eq(1)
         expect(facets[0]['features'][0]['$type']).to eq('app.bsky.richtext.facet#tag')
       end
 
       it 'handles empty text' do
-        text = ''
-        facets, plain_text = bluesky.send(:parse_facets, text)
+        facets, plain_text = facets_for('')
 
         expect(facets).to be_empty
         expect(plain_text).to eq('')
       end
 
       it 'handles text with no facets' do
-        text = 'Just plain text'
-        facets, plain_text = bluesky.send(:parse_facets, text)
+        facets, plain_text = facets_for('Just plain text')
 
         expect(facets).to be_empty
         expect(plain_text).to eq('Just plain text')
       end
 
-      it 'calculates correct byte offsets after markdown is stripped' do
-        text = 'Check [this link](https://example.com) out!'
-        facets, plain_text = bluesky.send(:parse_facets, text)
+      it 'calculates correct byte offsets after markdown is resolved' do
+        facets, plain_text = facets_for('Check [this link](https://example.com) out!')
 
         expect(plain_text).to eq('Check this link out!')
 
@@ -730,6 +756,65 @@ RSpec.describe Bluesky do
         byte_start = url_facet['index']['byteStart']
         byte_end = url_facet['index']['byteEnd']
         expect(plain_text.byteslice(byte_start, byte_end - byte_start)).to eq('this link')
+      end
+
+      it 'calculates correct byte offsets when multi-byte characters precede a link' do
+        facets, plain_text = facets_for('café [x](https://example.com)')
+
+        byte_start = facets[0]['index']['byteStart']
+        byte_end = facets[0]['index']['byteEnd']
+        expect(plain_text.byteslice(byte_start, byte_end - byte_start)).to eq('x')
+      end
+
+      it 'only links the words of the link, not an earlier copy of them' do
+        facets, plain_text = facets_for('Ada said hello. Read [hello](https://example.com).')
+
+        expect(facets.size).to eq(1)
+        byte_start = facets[0]['index']['byteStart']
+        expect(plain_text.byteslice(0, byte_start)).to eq('Ada said hello. Read ')
+      end
+
+      it 'gives two links with the same words their own ranges' do
+        facets, = facets_for('[docs](https://a.example) and [docs](https://b.example)')
+
+        expect(facets.size).to eq(2)
+        expect(facets.map { |f| f['features'][0]['uri'] }).to eq(['https://a.example', 'https://b.example'])
+        expect(facets[0]['index']['byteEnd']).to be <= facets[1]['index']['byteStart']
+      end
+
+      it 'leaves a link with no words alone and never emits an empty facet' do
+        facets, plain_text = facets_for('[](https://example.com) hi')
+
+        # The span has no words to tap, so it stays verbatim; the address is then a bare URL and
+        # gets one facet over the text a reader can actually see.
+        expect(plain_text).to eq('[](https://example.com) hi')
+        expect(facets.size).to eq(1)
+        expect(plain_text.byteslice(facets[0]['index']['byteStart'],
+                                    facets[0]['index']['byteEnd'] - facets[0]['index']['byteStart']))
+          .to eq('https://example.com')
+        expect(facets).to all(satisfy { |f| f['index']['byteEnd'] > f['index']['byteStart'] })
+      end
+
+      it 'does not tag the fragment of a URL' do
+        facets, = facets_for('Read https://example.com/#section')
+
+        expect(facets.size).to eq(1)
+        expect(facets[0]['features'][0]['$type']).to eq('app.bsky.richtext.facet#link')
+      end
+
+      it 'does not mention a handle inside a URL' do
+        facets, = facets_for('See https://bsky.app/profile/@me.bsky.social')
+
+        expect(facets.size).to eq(1)
+        expect(facets[0]['features'][0]['$type']).to eq('app.bsky.richtext.facet#link')
+      end
+
+      it 'tags a hashtag at the start of a line' do
+        facets, plain_text = facets_for('#hashtag at the start')
+
+        expect(plain_text).to eq('#hashtag at the start')
+        expect(facets.size).to eq(1)
+        expect(facets[0]['features'][0]['tag']).to eq('hashtag')
       end
     end
   end
