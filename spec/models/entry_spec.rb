@@ -245,6 +245,32 @@ RSpec.describe Entry, type: :model do
     end
   end
 
+  describe '#bluesky_caption' do
+    it 'turns square brackets in the title into parentheses' do
+      # The caption wraps the title in a Markdown link, and MarkdownLinks can't cross a bracket,
+      # so a title holding one would leave the raw "[...](...)" in the post.
+      entry = Entry.new(title: 'Sunset [Redux]', body: 'Body', status: 'queued', blog: blog, user: user)
+      entry.save
+
+      caption = entry.bluesky_caption
+
+      expect(caption).to start_with('[Sunset (Redux)](')
+      expect(Bluesky.plain_text(caption)).to start_with('Sunset (Redux)')
+      expect(Bluesky.render(caption).links).not_to be_empty
+    end
+
+    it 'produces a caption whose link covers the title' do
+      entry = Entry.new(title: 'A Good Day', body: 'Body', status: 'queued', blog: blog, user: user)
+      entry.save
+
+      post = Bluesky.render(entry.bluesky_caption)
+
+      expect(post.text).to start_with('A Good Day')
+      expect(post.links.first.start).to eq(0)
+      expect(post.links.first.finish).to eq('A Good Day'.length)
+    end
+  end
+
   describe 'tag customizations' do
     describe 'flickr_groups' do
       it 'returns groups when all tags match' do

@@ -718,10 +718,21 @@ class Entry < ApplicationRecord
     meta << "🏷️ #{bluesky_hashtags}" if bluesky_hashtags.present?
 
     caption = []
-    caption << "[#{self.plain_title}](#{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)})"
+    caption << "[#{bluesky_link_label}](#{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)})"
     caption << self.bluesky_text if self.bluesky_text.present?
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
+  end
+
+  # The title, safe to use as the words of a Markdown link.
+  #
+  # MarkdownLinks can't cross a bracket and has no escape rule, on purpose, so a title holding one
+  # would leave the raw "[...](...)" in the post with a bare link on the URL. Parentheses read
+  # the same to someone reading the post and can't break the span.
+  #
+  # @return [String] the title with its square brackets turned into parentheses.
+  def bluesky_link_label
+    self.plain_title.to_s.tr('[]', '()')
   end
 
   def instagram_caption

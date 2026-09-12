@@ -293,6 +293,13 @@ class Bluesky
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
   def skeet(rkey:, text:, photos: [], in_reply_to: nil, quote: nil)
+    # Check before anything touches the network. A post outside these limits is refused by the PDS
+    # every single time, so retrying it only wastes a day of a job's life.
+    unless self.class.valid_post_length?(text)
+      raise BlueskyPermanentError,
+            "The post is empty or longer than #{MAX_POST_LENGTH} characters"
+    end
+
     # One parse gives both the text the record holds and the offsets its facets need. Rendering
     # twice would let the two disagree.
     post = self.class.render(text)
@@ -340,7 +347,9 @@ class Bluesky
   def create_threadgate(post_uri)
     # The threadgate's rkey must match the post's rkey.
     rkey = post_uri.to_s.split('/').last
-    raise ArgumentError, "Invalid post at-uri: #{post_uri.inspect}" if rkey.blank? || !post_uri.to_s.start_with?('at://')
+    if rkey.blank? || !post_uri.to_s.start_with?('at://')
+      raise BlueskyPermanentError, "Invalid post at-uri: #{post_uri.inspect}"
+    end
 
     put_record(
       collection: "app.bsky.feed.threadgate",
@@ -597,7 +606,8 @@ class Bluesky
     post = thread&.dig("thread", "post")
 
     if post.blank? || post["uri"].blank? || post["cid"].blank?
-      raise "Could not read the Bluesky post at #{post_url}. It may be deleted, blocked or private."
+      raise BlueskyPermanentError,
+            "Could not read the Bluesky post at #{post_url}. It may be deleted, blocked or private."
     end
 
     post
@@ -716,8 +726,14 @@ class Bluesky
                              headers: { "Content-Type" => "application/json" },
                              timeout: SESSION_TIMEOUT)
 
+    # A 400 or a 401 is Bluesky refusing these credentials, and no number of retries will change
+    # that. Anything else — a 5xx, a 429 — means the PDS is having a bad day and it is worth
+    # trying again.
+    if [400, 401].include?(response.code)
+      raise AuthenticationError, "Bluesky refused the credentials: #{response.code} #{response.body}"
+    end
     unless response.success?
-      raise AuthenticationError, "Unable to create a new session: #{response.code} #{response.body}"
+      raise ConnectionError, "The Bluesky PDS answered #{response.code}: #{response.body}"
     end
 
     session = JSON.parse(response.body)
@@ -726,7 +742,7 @@ class Bluesky
     @did = session["did"]
     @access_token = session["accessJwt"]
     session
-  rescue AuthenticationError
+  rescue AuthenticationError, ConnectionError
     raise
   rescue StandardError => e
     raise ConnectionError, "Could not reach the Bluesky PDS at #{@base_url}: #{e.message}"
@@ -846,7 +862,7 @@ class Bluesky
     return if post_url.blank?
 
     at_uri = post_url_to_at_uri(post_url)
-    raise "#{post_url} is not a Bluesky post URL" if at_uri.blank?
+    raise BlueskyPermanentError, "#{post_url} is not a Bluesky post URL" if at_uri.blank?
 
     post = thread_post!(get_post_thread(at_uri), post_url)
     parent = { uri: post["uri"], cid: post["cid"] }
@@ -880,7 +896,7 @@ class Bluesky
     # Construct the quote object if a quote URL is provided
     quoted_record = if quote.present?
                       at_uri = post_url_to_at_uri(quote)
-                      raise "#{quote} is not a Bluesky post URL" if at_uri.blank?
+                      raise BlueskyPermanentError, "#{quote} is not a Bluesky post URL" if at_uri.blank?
 
                       post = thread_post!(get_post_thread(at_uri), quote)
                       { "cid" => post["cid"], "uri" => post["uri"] }

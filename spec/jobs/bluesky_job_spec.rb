@@ -200,6 +200,30 @@ RSpec.describe BlueskyJob, type: :worker do
     end
   end
 
+  describe 'retry policy' do
+    # sidekiq_retry_in lives in sidekiq_options, so a subclass block replaces the parent's rather
+    # than adding to it. Both branches have to survive.
+    def retry_in(exception, count = 0)
+      described_class.sidekiq_retry_in_block.call(count, exception)
+    end
+
+    it 'discards a post that can never succeed' do
+      expect(retry_in(BlueskyPermanentError.new)).to eq(:discard)
+    end
+
+    it 'discards credentials Bluesky refuses' do
+      expect(retry_in(Bluesky::AuthenticationError.new)).to eq(:discard)
+    end
+
+    it 'still backs off for an unprocessed photo' do
+      expect(retry_in(UnprocessedPhotoError.new, 3)).to eq(4)
+    end
+
+    it 'leaves everything else to Sidekiq' do
+      expect(retry_in(StandardError.new)).to be_nil
+    end
+  end
+
   describe 'Sidekiq configuration' do
     it 'uses the high queue' do
       expect(described_class.sidekiq_options['queue']).to eq('high')

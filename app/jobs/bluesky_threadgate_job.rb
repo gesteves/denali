@@ -1,6 +1,17 @@
 class BlueskyThreadgateJob < ApplicationJob
   sidekiq_options queue: 'high'
 
+  # Refer to the note in BlueskyJob: this block replaces ApplicationJob's, so it restates both
+  # branches.
+  sidekiq_retry_in do |count, exception|
+    case exception
+    when BlueskyPermanentError, Bluesky::AuthenticationError
+      :discard
+    when UnprocessedPhotoError
+      count + 1
+    end
+  end
+
   def perform(entry_id, post_uri)
     return unless Rails.env.production?
     return if post_uri.blank?

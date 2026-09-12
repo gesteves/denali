@@ -337,12 +337,31 @@ RSpec.describe Bluesky do
           }.to_json)
 
         expect { bluesky.skeet(rkey: rkey, text: text, in_reply_to: post_url) }
-          .to raise_error(/Could not read the Bluesky post/)
+          .to raise_error(BlueskyPermanentError, /Could not read the Bluesky post/)
       end
 
       it 'raises when the reply URL is not a Bluesky post URL' do
         expect { bluesky.skeet(rkey: rkey, text: text, in_reply_to: 'https://example.com/hello') }
-          .to raise_error(/is not a Bluesky post URL/)
+          .to raise_error(BlueskyPermanentError, /is not a Bluesky post URL/)
+      end
+    end
+
+    describe 'refusing a post that can never succeed' do
+      before do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
+          .to_return(status: 200, body: { did: 'did:plc:abcd1234', accessJwt: 'token123' }.to_json)
+      end
+
+      it 'refuses an over-long post before touching the network' do
+        expect { bluesky.skeet(rkey: rkey, text: 'a' * 301) }
+          .to raise_error(BlueskyPermanentError, /longer than/)
+
+        expect(a_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")).not_to have_been_made
+      end
+
+      it 'refuses an empty post' do
+        expect { bluesky.skeet(rkey: rkey, text: '   ') }
+          .to raise_error(BlueskyPermanentError, /empty/)
       end
     end
 
@@ -442,12 +461,12 @@ RSpec.describe Bluesky do
           .with { |req| JSON.parse(req.body)['rkey'] == '123' }
       end
 
-      it 'raises an ArgumentError for a blank at-uri' do
-        expect { bluesky.create_threadgate(nil) }.to raise_error(ArgumentError)
+      it 'raises a permanent error for a blank at-uri' do
+        expect { bluesky.create_threadgate(nil) }.to raise_error(BlueskyPermanentError)
       end
 
-      it 'raises an ArgumentError for a malformed at-uri' do
-        expect { bluesky.create_threadgate('https://bsky.app/profile/test/post/123') }.to raise_error(ArgumentError)
+      it 'raises a permanent error for a malformed at-uri' do
+        expect { bluesky.create_threadgate('https://bsky.app/profile/test/post/123') }.to raise_error(BlueskyPermanentError)
       end
 
       it 'raises when the API request fails, so the job can retry' do

@@ -1,6 +1,20 @@
 class BlueskyJob < ApplicationJob
   sidekiq_options queue: 'high'
 
+  # ⚠️ sidekiq_retry_in lives in sidekiq_options, so this block REPLACES ApplicationJob's rather
+  # than adding to it. Both branches have to be here, or the UnprocessedPhotoError backoff is
+  # silently lost.
+  sidekiq_retry_in do |count, exception|
+    case exception
+    when BlueskyPermanentError, Bluesky::AuthenticationError
+      # An empty or over-long post, a reply target we can't read, or credentials Bluesky refuses.
+      # None of those get better by trying again for a day.
+      :discard
+    when UnprocessedPhotoError
+      count + 1
+    end
+  end
+
   # @param rkey [String, nil] the record key the post is written at, made by the caller with
   #   Bluesky.new_tid before it enqueued this job. It is what makes a retry replace the post
   #   rather than add another one. A job enqueued before this argument existed arrives without it

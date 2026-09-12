@@ -481,6 +481,10 @@ class Admin::EntriesController < AdminController
     @entry = @photoblog.entries.published.find(params[:id])
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
 
+    unless Bluesky.valid_post_length?(params[:text].to_s)
+      return render_bluesky_error("Your post is empty or longer than #{Bluesky::MAX_POST_LENGTH} characters.")
+    end
+
     scheduled_at = params[:scheduled_at].present? ? ActiveSupport::TimeZone[@photoblog.time_zone].parse(params[:scheduled_at]) : nil
     scheduled = scheduled_at.present? && scheduled_at > Time.current
 
@@ -569,6 +573,31 @@ class Admin::EntriesController < AdminController
   end
 
   private
+
+  # Answers a share request we are refusing, in whichever format asked for it.
+  #
+  # @param message [String] what to tell the user.
+  # @return [void]
+  def render_bluesky_error(message)
+    respond_to do |format|
+      format.html {
+        flash[:danger] = message
+        redirect_to session[:redirect_url] || admin_entry_path(@entry)
+      }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.prepend(
+          "notifications",
+          partial: "admin/shared/notification",
+          locals: { status: "danger", message: message }
+        ), status: :unprocessable_entity
+      }
+      format.js {
+        @message = message
+        render 'admin/shared/notify', status: :unprocessable_entity
+      }
+      format.json { render json: { status: 'error', message: message }, status: :unprocessable_entity }
+    end
+  end
     # Use callbacks to share common setup or constraints between actions.
     def set_entry
       @entry = @photoblog.entries.find(params[:id])
