@@ -288,6 +288,33 @@ RSpec.describe StandardSite do
     end
   end
 
+  # ⚠️ A photo's width and height live in its blob metadata and an asynchronous job fills them in,
+  # so a freshly published entry has neither for a moment. facebook_card_url works a crop out of
+  # them and raises NoMethodError without them, and that call sits inside #document_fingerprint,
+  # which runs before anything that could rescue it. The job backed off 25 times on a NoMethodError.
+  describe 'an entry whose cover photo has not been analysed yet' do
+    let(:entry) do
+      create(:entry, :published, :with_photo, blog: blog, user: user, title: 'A Title')
+    end
+
+    before { stub_put_record }
+
+    it 'has no dimensions to crop with' do
+      expect(entry.photos.first.has_dimensions?).to be false
+    end
+
+    it 'builds the record without raising, and without a cover image' do
+      record = service.build_document_record(entry, cover_image: service.send(:cover_source, service.cover_image_url(entry)))
+
+      expect(record['title']).to eq('A Title')
+      expect(record).not_to have_key('coverImage')
+    end
+
+    it 'syncs rather than dying on a NoMethodError' do
+      expect(service.sync_document(entry.id)).to eq(:synced)
+    end
+  end
+
   describe '#sync_publication' do
     before { stub_put_record }
 

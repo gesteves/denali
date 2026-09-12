@@ -34,11 +34,27 @@ class StandardSiteJob < ApplicationJob
     return if service.nil?
 
     case operation
-    when 'sync_document'    then service.sync_document(entry_id)
+    when 'sync_document'    then sync_document(service, blog, entry_id)
     when 'delete_document'  then service.delete_document(entry_id)
     when 'sync_publication' then service.sync_publication
     else
       Rails.logger.warn("StandardSiteJob: unknown operation #{operation.inspect}; ignoring")
     end
+  end
+  private
+
+  # Syncs one document, waiting if the entry's cover image isn't ready yet.
+  #
+  # ⚠️ A photo's dimensions live in its blob metadata and an asynchronous job fills them in, so a
+  # freshly published entry has none for a moment. Writing now would publish a record with no
+  # picture and then rewrite it when the dimensions landed — two writes against the PDS budget for
+  # one entry. BlueskyJob waits for the same reason.
+  #
+  # @return [void]
+  def sync_document(service, blog, entry_id)
+    entry = blog.entries.find_by(id: entry_id)
+    raise UnprocessedPhotoError if entry&.is_photo? && !entry.photos_have_dimensions?
+
+    service.sync_document(entry_id)
   end
 end

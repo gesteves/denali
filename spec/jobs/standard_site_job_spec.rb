@@ -17,6 +17,24 @@ RSpec.describe StandardSiteJob, type: :worker do
     described_class.new.perform('sync_document', entry.id)
   end
 
+  # ⚠️ Writing now would publish a record with no picture and rewrite it when the dimensions
+  # landed — two writes against the PDS budget for one entry. BlueskyJob waits for the same reason.
+  it 'waits for a photo entry whose dimensions have not been recorded yet' do
+    photo_entry = create(:entry, :published, :with_photo, blog: blog, user: create(:user))
+    expect(service).not_to receive(:sync_document)
+
+    expect { described_class.new.perform('sync_document', photo_entry.id) }
+      .to raise_error(UnprocessedPhotoError)
+  end
+
+  it 'syncs a photo entry once its dimensions are recorded' do
+    photo_entry = create(:entry, :published, :with_photo, blog: blog, user: create(:user))
+    photo_entry.photos.each { |p| attach_image_to_photo(p) }
+    expect(service).to receive(:sync_document).with(photo_entry.id)
+
+    described_class.new.perform('sync_document', photo_entry.id)
+  end
+
   it 'deletes a document' do
     expect(service).to receive(:delete_document).with(entry.id)
     described_class.new.perform('delete_document', entry.id)

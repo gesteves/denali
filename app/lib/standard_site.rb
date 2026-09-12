@@ -275,12 +275,24 @@ class StandardSite
     fingerprint_of(build_document_record(entry, cover_image: cover_source(cover_image_url(entry))))
   end
 
-  # The URL of an entry's cover image, if it has one.
+  # The URL of an entry's cover image, if it has one that can be addressed yet.
+  #
+  # ⚠️ The dimensions guard is not optional. A photo's width and height live in its blob metadata
+  # and an asynchronous job fills them in, so a freshly published entry has neither for a moment.
+  # #facebook_card_url works out a crop from them and raises NoMethodError without them — and this
+  # is reached through #document_fingerprint, which runs before anything that could rescue it.
+  #
+  # It returns nil rather than raising, so a photo that never gets analysed costs the record its
+  # picture and not its existence. StandardSiteJob backs off for the ordinary case, where the
+  # dimensions are seconds away.
   #
   # @param entry [Entry] the entry.
   # @return [String, nil]
   def cover_image_url(entry)
-    entry.photos.first&.facebook_card_url
+    photo = entry.photos.first
+    return unless photo&.has_dimensions?
+
+    photo.facebook_card_url
   end
 
   private
