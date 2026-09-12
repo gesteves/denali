@@ -72,6 +72,28 @@ class Bluesky
   # The client trims trailing punctuation off a tag, so "#trail." tags "trail".
   TRAILING_PUNCTUATION = /\p{P}+\z/
 
+  # Every request here gets a timeout. Admin::EntriesController runs a share inline, inside the web
+  # request, so a PDS that hangs would otherwise hang Rails; in a job it would hold a Sidekiq
+  # thread until the process was killed.
+  SESSION_TIMEOUT = 10
+  RESOLVE_TIMEOUT = 5
+  REQUEST_TIMEOUT = 15
+  UPLOAD_TIMEOUT = 30
+  IMAGE_TIMEOUT = 15
+
+  # The most we will read from the photo CDN before giving up. These are our own URLs, but a body
+  # of unbounded size read into a Sidekiq thread is still a way to lose the process.
+  MAX_SOURCE_IMAGE_BYTES = 20 * 1024 * 1024
+
+  # The PDS rejected our token. The caller clears the cached session and tries once more.
+  class UnauthorizedError < StandardError; end
+
+  # Bluesky refused the handle and app password outright.
+  class AuthenticationError < StandardError; end
+
+  # The PDS could not be reached at all.
+  class ConnectionError < StandardError; end
+
   # Creates a Bluesky instance from a SocialAccount.
   #
   # @param social_account [SocialAccount] the social account to use.
@@ -219,6 +241,16 @@ class Bluesky
     }
 
     create_record(record)
+  end
+
+  # Opens a session and returns the account's DID, so the admin can check a handle and app password
+  # before it stores them.
+  #
+  # @return [String] the DID of the authenticated account.
+  # @raise [AuthenticationError] if Bluesky refuses the credentials.
+  # @raise [ConnectionError] if the PDS can't be reached.
+  def verify_credentials!
+    create_session["did"]
   end
 
   # Creates a threadgate for a post, limiting who can reply to it to followers and
@@ -390,34 +422,40 @@ class Bluesky
     skip.any? { |range| byte_start < range.end && range.begin < byte_end }
   end
 
+  # The hosts a Bluesky post URL can be on.
+  POST_URL_HOSTS = ['bsky.app', 'www.bsky.app'].freeze
+
   # Converts a Bluesky post URL into an at-uri.
   #
+  # This takes whatever someone pasted into the admin's reply and quote fields, so it has to
+  # tolerate anything: a URL that doesn't parse, a profile link with no post on it, a like rather
+  # than a post.
+  #
   # @param post_url [String] the public Bluesky post URL.
-  # @return [String] the at-uri for the post.
-  # @raise [ArgumentError] if the post URL is invalid.
+  # @return [String, nil] the at-uri for the post, or nil if the URL doesn't name one.
   def post_url_to_at_uri(post_url)
-    # Validate the URL
-    uri = URI.parse(post_url)
-    return unless uri.host == 'bsky.app' && uri.path.start_with?('/profile/')
+    uri = URI.parse(post_url.to_s.strip)
+    return unless POST_URL_HOSTS.include?(uri.host) && uri.path.to_s.start_with?('/profile/')
 
-    # Extract components from the URL
+    # /profile/<did or handle>/post/<rkey>
     path_parts = uri.path.split('/')
-    did_or_handle = path_parts[2] # The part after /profile/
-    post_id = path_parts[4]       # The part after /post/
+    did_or_handle = path_parts[2]
+    post_id = path_parts[4]
 
-    # Ensure we have a valid DID/handle and  post ID
     return if did_or_handle.blank? || post_id.blank?
+    # Anything else under /profile/ is a like, a feed or a list, not a post.
+    return unless path_parts[3] == 'post'
 
-    # If the profile path contains a DID, construct the at-uri directly
-    if did_or_handle.start_with?('did:plc:')
-      "at://#{did_or_handle}/app.bsky.feed.post/#{post_id}"
-    else
-      # Resolve the handle to a DID
-      did = resolve_handle(did_or_handle)
-      return if did.blank?
+    # A profile path can hold the DID itself, in any of its methods, or a handle we have to
+    # resolve.
+    return "at://#{did_or_handle}/app.bsky.feed.post/#{post_id}" if did_or_handle.start_with?('did:')
 
-      "at://#{did}/app.bsky.feed.post/#{post_id}"
-    end
+    did = resolve_handle(did_or_handle)
+    return if did.blank?
+
+    "at://#{did}/app.bsky.feed.post/#{post_id}"
+  rescue URI::InvalidURIError
+    nil
   end
 
   # Resolves a handle to its DID using the Bluesky API.
@@ -425,12 +463,20 @@ class Bluesky
   # @param handle [String] the handle to resolve.
   # @return [String, nil] the DID if resolved successfully, or nil if the handle cannot be resolved.
   def resolve_handle(handle)
-    response = HTTParty.get("#{@base_url}/xrpc/com.atproto.identity.resolveHandle", query: { "handle" => handle })
-    return nil unless response.success?
+    # A caption can name the same handle more than once, and there is no reason to ask twice.
+    @resolved_handles ||= {}
+    return @resolved_handles[handle] if @resolved_handles.key?(handle)
 
-    JSON.parse(response.body)["did"]
-  rescue JSON::ParserError
-    nil
+    @resolved_handles[handle] = begin
+      response = HTTParty.get("#{@base_url}/xrpc/com.atproto.identity.resolveHandle",
+                              query: { "handle" => handle },
+                              timeout: RESOLVE_TIMEOUT)
+      response.success? ? JSON.parse(response.body)["did"].presence : nil
+    rescue StandardError
+      # A handle the PDS can't resolve and a PDS that didn't answer both mean "no facet". Letting
+      # a network error escape would fail the whole post over one mention.
+      nil
+    end
   end
 
   # Retrieves the post thread from the Bluesky API for a given at-uri.
@@ -440,17 +486,44 @@ class Bluesky
   # @raise [RuntimeError] if the API request fails.
   def get_post_thread(at_uri)
     return if at_uri.blank?
-    response = HTTParty.get(
-      "#{@base_url}/xrpc/app.bsky.feed.getPostThread",
-      query: { "uri" => at_uri },
-      headers: { "Authorization" => "Bearer #{access_token}" }
-    )
 
-    if response.success?
+    with_valid_session do
+      response = HTTParty.get(
+        "#{@base_url}/xrpc/app.bsky.feed.getPostThread",
+        # We only need the post itself, so ask for neither its replies nor its ancestors. Without
+        # these a popular post drags its whole thread down the wire.
+        query: { "uri" => at_uri, "depth" => 0, "parentHeight" => 0 },
+        headers: { "Authorization" => "Bearer #{access_token}" },
+        timeout: REQUEST_TIMEOUT
+      )
+
+      raise UnauthorizedError, "Bluesky rejected the access token" if response.code == 401
+      raise "Failed to retrieve post thread: #{response.body}" unless response.success?
+
       JSON.parse(response.body)
-    else
-      raise "Failed to retrieve post thread: #{response.body}"
     end
+  end
+
+  # Returns the post a thread response is about, once we know the API actually found it.
+  #
+  # getPostThread answers 200 with a notFoundPost or a blockedPost for a post that is deleted,
+  # blocked or private, and neither of those carries a cid. Digging straight in gives a reply or
+  # quote with a nil uri and cid, and the failure then surfaces as an opaque "Failed to create"
+  # from the record write, naming the post we were trying to send rather than the one we couldn't
+  # read.
+  #
+  # @param thread [Hash, nil] the parsed getPostThread response.
+  # @param post_url [String] the URL the caller gave us, for the error message.
+  # @return [Hash] the post, with its uri and cid.
+  # @raise [RuntimeError] if the thread doesn't hold a readable post.
+  def thread_post!(thread, post_url)
+    post = thread&.dig("thread", "post")
+
+    if post.blank? || post["uri"].blank? || post["cid"].blank?
+      raise "Could not read the Bluesky post at #{post_url}. It may be deleted, blocked or private."
+    end
+
+    post
   end
 
   # Creates a record in the Bluesky API for the specified collection.
@@ -458,19 +531,21 @@ class Bluesky
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
   def create_record(record)
-    headers = {
-      "Authorization" => "Bearer #{access_token}",
-      "Content-Type" => "application/json"
-    }
+    with_valid_session do
+      headers = {
+        "Authorization" => "Bearer #{access_token}",
+        "Content-Type" => "application/json"
+      }
 
-    response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
-                             body: record.to_json,
-                             headers: headers)
+      response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.createRecord",
+                               body: record.to_json,
+                               headers: headers,
+                               timeout: REQUEST_TIMEOUT)
 
-    if response.success?
+      raise UnauthorizedError, "Bluesky rejected the access token" if response.code == 401
+      raise "Failed to create #{record[:collection]} record: #{response.body}" unless response.success?
+
       JSON.parse(response.body)
-    else
-      raise "Failed to create #{record[:collection]} record: #{response.body}"
     end
   end
 
@@ -490,37 +565,77 @@ class Bluesky
 
   # Retrieves the access token from the cache or creates a new session to get a token.
   #
+  # Memoizing on the instance is what keeps a cold cache down to a single createSession: the first
+  # call writes both cache keys, and everything after it reads them.
+  #
   # @return [String] the access token.
   def access_token
-    Rails.cache.read(access_token_key) || create_session["accessJwt"]
+    @access_token ||= Rails.cache.read(access_token_key) || create_session["accessJwt"]
   end
 
   # Retrieves the DID from the cache or creates a new session to get the DID.
   #
   # @return [String] the DID.
   def did
-    Rails.cache.read(did_key) || create_session["did"]
+    @did ||= Rails.cache.read(did_key) || create_session["did"]
+  end
+
+  # Runs a request that needs the access token, and runs it once more with a fresh session if the
+  # PDS says the token is no good.
+  #
+  # A token can stop working before its cache entry expires — it can be revoked, or the app
+  # password can be changed. Without this, every attempt for the rest of the hour fails against
+  # the same dead token, which is long enough to exhaust a job's retries.
+  #
+  # @yield the request to run.
+  # @return [Object] whatever the block returns.
+  def with_valid_session
+    yield
+  rescue UnauthorizedError
+    reset_session!
+    yield
+  end
+
+  # Forgets the cached session so the next request authenticates again.
+  #
+  # @return [void]
+  def reset_session!
+    Rails.cache.delete(access_token_key)
+    Rails.cache.delete(did_key)
+    @access_token = nil
+    @did = nil
   end
 
   # Creates a new session with the Bluesky API and caches the DID and access token.
   #
   # @return [Hash] the response from the session creation request.
-  # @raise [RuntimeError] if the session creation request fails.
+  # @raise [AuthenticationError] if Bluesky refuses the handle and app password.
+  # @raise [ConnectionError] if the PDS can't be reached.
   def create_session
     body = {
       identifier: @auth[:identifier],
       password: @auth[:password]
     }
 
-    response = HTTParty.post("#{@base_url}/xrpc/com.atproto.server.createSession", body: body.to_json, headers: { "Content-Type" => "application/json" })
-    if response.success?
-      response = JSON.parse(response.body)
-      Rails.cache.write(did_key, response["did"])
-      Rails.cache.write(access_token_key, response["accessJwt"], expires_in: 1.hour)
-      response
-    else
-      raise "Unable to create a new session."
+    response = HTTParty.post("#{@base_url}/xrpc/com.atproto.server.createSession",
+                             body: body.to_json,
+                             headers: { "Content-Type" => "application/json" },
+                             timeout: SESSION_TIMEOUT)
+
+    unless response.success?
+      raise AuthenticationError, "Unable to create a new session: #{response.code} #{response.body}"
     end
+
+    session = JSON.parse(response.body)
+    Rails.cache.write(did_key, session["did"])
+    Rails.cache.write(access_token_key, session["accessJwt"], expires_in: 1.hour)
+    @did = session["did"]
+    @access_token = session["accessJwt"]
+    session
+  rescue AuthenticationError
+    raise
+  rescue StandardError => e
+    raise ConnectionError, "Could not reach the Bluesky PDS at #{@base_url}: #{e.message}"
   end
 
   # Uploads a photo to the Bluesky API and returns the response blob.
@@ -529,11 +644,7 @@ class Bluesky
   # @return [Hash] the parsed response body from the photo upload request.
   # @raise [RuntimeError] if the photo fetch or upload request fails.
   def upload_photo(url)
-    image_response = HTTParty.get(url)
-    raise "Failed to fetch image from #{url}: #{image_response.code}" unless image_response.success?
-
-    image_data = image_response.body
-    content_type = image_response.content_type || 'image/jpeg'
+    image_data, content_type = fetch_image(url)
 
     # If the image is over Bluesky's blob limit, recompress it to fit; otherwise
     # createRecord rejects the post and every retry re-uploads the same too-big blob.
@@ -542,18 +653,61 @@ class Bluesky
       content_type = 'image/jpeg'
     end
 
-    headers = {
-      "Authorization" => "Bearer #{access_token}",
-      "Content-Type" => content_type
-    }
+    with_valid_session do
+      headers = {
+        "Authorization" => "Bearer #{access_token}",
+        "Content-Type" => content_type
+      }
 
-    response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.uploadBlob", body: image_data, headers: headers)
+      response = HTTParty.post("#{@base_url}/xrpc/com.atproto.repo.uploadBlob",
+                               body: image_data,
+                               headers: headers,
+                               timeout: UPLOAD_TIMEOUT)
 
-    if response.success?
+      raise UnauthorizedError, "Bluesky rejected the access token" if response.code == 401
+      raise "Failed to upload photo: #{response.body}" unless response.success?
+
       JSON.parse(response.body)
-    else
-      raise "Failed to upload photo: #{response.body}"
     end
+  end
+
+  # Downloads a photo, stopping if the body runs past MAX_SOURCE_IMAGE_BYTES.
+  #
+  # The content type is checked because a 200 that is really an HTML error page would otherwise be
+  # uploaded as a blob and fail later, against the record rather than the photo.
+  #
+  # @param url [String] the URL of the photo.
+  # @return [Array(String, String)] the image data and its content type.
+  # @raise [RuntimeError] if the fetch fails, the body is not an image, or it is too large.
+  def fetch_image(url)
+    body = String.new(encoding: Encoding::BINARY)
+    content_type = nil
+    response = nil
+
+    # Read in fragments and stop at the limit, rather than letting an unbounded body into a
+    # Sidekiq thread. Throwing leaves `response` nil, which is how the check below tells "too
+    # large" from "the fetch failed".
+    catch(:too_big) do
+      response = HTTParty.get(url, stream_body: true, timeout: IMAGE_TIMEOUT) do |fragment|
+        next unless (200..299).cover?(fragment.code.to_i)
+
+        content_type ||= fragment.http_response['content-type'].to_s
+        body << fragment.to_s.b
+        throw :too_big if body.bytesize > MAX_SOURCE_IMAGE_BYTES
+      end
+    end
+
+    if body.bytesize > MAX_SOURCE_IMAGE_BYTES
+      raise "Image at #{url} is over the #{MAX_SOURCE_IMAGE_BYTES} byte limit"
+    end
+    raise "Failed to fetch image from #{url}: #{response&.code}" unless response&.success?
+
+    content_type = content_type.to_s.split(';').first.to_s.strip
+    unless content_type.start_with?('image/')
+      raise "Expected an image from #{url}, got #{content_type.presence || 'no content type'}"
+    end
+
+    [body, content_type]
   end
 
   # Recompresses an oversized image so its blob fits under Bluesky's limit,
@@ -597,35 +751,16 @@ class Bluesky
   def construct_reply(post_url)
     return if post_url.blank?
 
-    # Convert the URL to an at-uri
     at_uri = post_url_to_at_uri(post_url)
-    return if at_uri.blank?
+    raise "#{post_url} is not a Bluesky post URL" if at_uri.blank?
 
-    # Fetch the post thread data
-    thread = get_post_thread(at_uri)
+    post = thread_post!(get_post_thread(at_uri), post_url)
+    parent = { uri: post["uri"], cid: post["cid"] }
 
-    # Check if the post has a reply object in its record
-    post_record = thread.dig("thread", "post", "record")
-    if post_record&.key?("reply")
-      {
-        root: post_record["reply"]["root"],
-        parent: {
-          uri: thread.dig("thread", "post", "uri"),
-          cid: thread.dig("thread", "post", "cid")
-        }
-      }
-    else
-      {
-        root: {
-          uri: thread.dig("thread", "post", "uri"),
-          cid: thread.dig("thread", "post", "cid")
-        },
-        parent: {
-          uri: thread.dig("thread", "post", "uri"),
-          cid: thread.dig("thread", "post", "cid")
-        }
-      }
-    end
+    # A reply to a reply keeps the thread's original root; a reply to a root post is its own root.
+    root = post.dig("record", "reply", "root") || parent
+
+    { root: root, parent: parent }
   end
 
   # Constructs the embed object for a post.
@@ -635,7 +770,7 @@ class Bluesky
   # @return [Hash, nil] the constructed embed object or nil if neither photos nor quote are provided.
   def construct_embed(photos, quote)
     # Prepare embedded images if photos are provided
-    embedded_images = photos.take(4).map do |photo|
+    embedded_images = Array(photos).take(MAX_PHOTOS).map do |photo|
       {
         image: upload_photo(photo[:url])["blob"],
         # The lexicon requires alt to be a string, and a nil there fails validation at record
@@ -650,15 +785,11 @@ class Bluesky
 
     # Construct the quote object if a quote URL is provided
     quoted_record = if quote.present?
-                      # Convert the quote URL to an at-uri
                       at_uri = post_url_to_at_uri(quote)
+                      raise "#{quote} is not a Bluesky post URL" if at_uri.blank?
 
-                      # Fetch the post thread and get the record's URI and CID
-                      thread = get_post_thread(at_uri)
-                      {
-                        "cid" => thread&.dig("thread", "post", "cid"),
-                        "uri" => thread&.dig("thread", "post", "uri")
-                      }.compact
+                      post = thread_post!(get_post_thread(at_uri), quote)
+                      { "cid" => post["cid"], "uri" => post["uri"] }
                     end
 
     # Construct the embed object based on the presence of photos and quote

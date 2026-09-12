@@ -127,7 +127,7 @@ RSpec.describe Bluesky do
 
         before do
           stub_request(:get, 'https://example.com/photo.jpg')
-            .to_return(status: 200, body: 'fake image data')
+            .to_return(status: 200, body: 'fake image data', headers: { 'Content-Type' => 'image/jpeg' })
 
           stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
             .to_return(status: 200, body: { blob: { ref: 'blob123' } }.to_json)
@@ -136,6 +136,29 @@ RSpec.describe Bluesky do
         it 'uploads photos and includes them in the skeet' do
           bluesky.skeet(text: text, photos: photos)
           expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.uploadBlob")
+        end
+
+        it 'sends alt text as a string even when the photo has none' do
+          bluesky.skeet(text: text, photos: [photos.first.merge(alt_text: nil)])
+
+          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+            .with { |req| JSON.parse(req.body).dig('record', 'embed', 'images', 0, 'alt') == '' }
+        end
+
+        it 'refuses a body that is not an image' do
+          stub_request(:get, 'https://example.com/photo.jpg')
+            .to_return(status: 200, body: '<html>nope</html>', headers: { 'Content-Type' => 'text/html' })
+
+          expect { bluesky.skeet(text: text, photos: photos) }
+            .to raise_error(/Expected an image/)
+        end
+
+        it 'only embeds up to MAX_PHOTOS images' do
+          many = Array.new(described_class::MAX_PHOTOS + 2) { photos.first }
+          bluesky.skeet(text: text, photos: many)
+
+          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+            .with { |req| JSON.parse(req.body).dig('record', 'embed', 'images').size == described_class::MAX_PHOTOS }
         end
       end
 
@@ -164,6 +187,122 @@ RSpec.describe Bluesky do
           bluesky.skeet(text: text, in_reply_to: reply_url)
           expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
         end
+      end
+    end
+
+    describe 'session handling' do
+      let(:text) { 'Hello Bluesky' }
+
+      before do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
+          .to_return(status: 200, body: { did: 'did:plc:abcd1234', accessJwt: 'token123' }.to_json)
+      end
+
+      it 'creates only one session for a cold cache' do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/1' }.to_json)
+
+        bluesky.skeet(text: text)
+
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.server.createSession").once
+      end
+
+      it 'authenticates again and retries once when the PDS rejects the token' do
+        # A token can be revoked, or the app password changed, long before its cache entry
+        # expires. Without the retry every attempt for the rest of the hour hits the dead token.
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          .to_return({ status: 401, body: { error: 'ExpiredToken' }.to_json },
+                     { status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/1' }.to_json })
+
+        expect(bluesky.skeet(text: text)['uri']).to include('app.bsky.feed.post')
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.server.createSession").twice
+      end
+
+      it 'gives up after a second rejection' do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          .to_return(status: 401, body: { error: 'ExpiredToken' }.to_json)
+
+        expect { bluesky.skeet(text: text) }.to raise_error(Bluesky::UnauthorizedError)
+      end
+
+      it 'raises AuthenticationError when Bluesky refuses the credentials' do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
+          .to_return(status: 401, body: { error: 'AuthenticationRequired' }.to_json)
+
+        expect { bluesky.verify_credentials! }.to raise_error(Bluesky::AuthenticationError)
+      end
+
+      it 'raises ConnectionError when the PDS cannot be reached' do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession").to_timeout
+
+        expect { bluesky.verify_credentials! }.to raise_error(Bluesky::ConnectionError)
+      end
+
+      it 'returns the DID from verify_credentials!' do
+        expect(bluesky.verify_credentials!).to eq('did:plc:abcd1234')
+      end
+    end
+
+    describe 'reply and quote targets' do
+      let(:text) { 'Hello Bluesky' }
+      let(:post_url) { 'https://bsky.app/profile/did:plc:test123/post/abc123' }
+
+      before do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
+          .to_return(status: 200, body: { did: 'did:plc:abcd1234', accessJwt: 'token123' }.to_json)
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.post/1' }.to_json)
+      end
+
+      it 'asks for the post alone, not its whole thread' do
+        stub_request(:get, "#{base_url}/xrpc/app.bsky.feed.getPostThread")
+          .with(query: hash_including('uri'))
+          .to_return(status: 200, body: {
+            thread: { post: { uri: 'at://did:plc:test123/app.bsky.feed.post/abc123', cid: 'cid123', record: {} } }
+          }.to_json)
+
+        bluesky.skeet(text: text, in_reply_to: post_url)
+
+        expect(WebMock).to have_requested(:get, "#{base_url}/xrpc/app.bsky.feed.getPostThread")
+          .with(query: hash_including('depth' => '0', 'parentHeight' => '0'))
+      end
+
+      it 'keeps the original root when replying to a reply' do
+        root = { 'uri' => 'at://did:plc:test123/app.bsky.feed.post/root1', 'cid' => 'rootcid' }
+        stub_request(:get, "#{base_url}/xrpc/app.bsky.feed.getPostThread")
+          .with(query: hash_including('uri'))
+          .to_return(status: 200, body: {
+            thread: {
+              post: {
+                uri: 'at://did:plc:test123/app.bsky.feed.post/abc123',
+                cid: 'cid123',
+                record: { reply: { root: root } }
+              }
+            }
+          }.to_json)
+
+        bluesky.skeet(text: text, in_reply_to: post_url)
+
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.createRecord")
+          .with { |req| JSON.parse(req.body).dig('record', 'reply', 'root') == root }
+      end
+
+      it 'raises a clear error when the post cannot be read' do
+        # getPostThread answers 200 with a notFoundPost, which carries no cid.
+        stub_request(:get, "#{base_url}/xrpc/app.bsky.feed.getPostThread")
+          .with(query: hash_including('uri'))
+          .to_return(status: 200, body: {
+            thread: { '$type': 'app.bsky.feed.defs#notFoundPost',
+                      post: { uri: 'at://did:plc:test123/app.bsky.feed.post/abc123', notFound: true } }
+          }.to_json)
+
+        expect { bluesky.skeet(text: text, in_reply_to: post_url) }
+          .to raise_error(/Could not read the Bluesky post/)
+      end
+
+      it 'raises when the reply URL is not a Bluesky post URL' do
+        expect { bluesky.skeet(text: text, in_reply_to: 'https://example.com/hello') }
+          .to raise_error(/is not a Bluesky post URL/)
       end
     end
 
@@ -438,6 +577,28 @@ RSpec.describe Bluesky do
       it 'handles URLs with DID directly' do
         result = bluesky.send(:post_url_to_at_uri, 'https://bsky.app/profile/did:plc:test123/post/abc123')
         expect(result).to eq('at://did:plc:test123/app.bsky.feed.post/abc123')
+      end
+
+      it 'accepts a DID method other than did:plc' do
+        result = bluesky.send(:post_url_to_at_uri, 'https://bsky.app/profile/did:web:example.com/post/abc123')
+        expect(result).to eq('at://did:web:example.com/app.bsky.feed.post/abc123')
+      end
+
+      it 'accepts the www host' do
+        result = bluesky.send(:post_url_to_at_uri, 'https://www.bsky.app/profile/did:plc:test123/post/abc123')
+        expect(result).to eq('at://did:plc:test123/app.bsky.feed.post/abc123')
+      end
+
+      it 'returns nil for a profile path that is not a post' do
+        result = bluesky.send(:post_url_to_at_uri, 'https://bsky.app/profile/did:plc:test123/like/abc123')
+        expect(result).to be_nil
+      end
+
+      it 'returns nil rather than raising for a URL that does not parse' do
+        # This field takes whatever someone pasted into the admin.
+        expect(bluesky.send(:post_url_to_at_uri, 'http://[not a url')).to be_nil
+        expect(bluesky.send(:post_url_to_at_uri, 'not a url at all')).to be_nil
+        expect(bluesky.send(:post_url_to_at_uri, nil)).to be_nil
       end
     end
 

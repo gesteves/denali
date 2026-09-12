@@ -182,15 +182,26 @@ RSpec.describe "Admin::Accounts", type: :request do
       it "redirects with friendly error message (HTML)" do
         post bluesky_admin_accounts_path, params: bluesky_params
         expect(response).to redirect_to(admin_accounts_path)
-        expect(flash[:danger]).to include("check your handle and app password")
+        expect(flash[:danger]).to include("Invalid handle or app password")
       end
 
       it "shows friendly error with form visible (turbo_stream)" do
         post bluesky_admin_accounts_path, params: bluesky_params, headers: { 'Accept' => 'text/vnd.turbo-stream.html' }
         expect(response.media_type).to eq('text/vnd.turbo-stream.html')
         expect(response.body).to include('notification is-danger')
-        expect(response.body).to include('check your handle and app password')
+        expect(response.body).to include('Invalid handle or app password')
         expect(response.body).to include('Save')
+      end
+    end
+
+    context "when the server cannot be reached" do
+      before do
+        stub_request(:post, "https://bsky.social/xrpc/com.atproto.server.createSession").to_timeout
+      end
+
+      it "tells the user to check the server URL rather than their password" do
+        post bluesky_admin_accounts_path, params: bluesky_params
+        expect(flash[:danger]).to include("Could not reach the Bluesky server")
       end
     end
 
