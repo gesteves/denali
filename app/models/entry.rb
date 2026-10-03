@@ -11,6 +11,14 @@ class Entry < ApplicationRecord
 
   STATUSES = %w[draft queued published].freeze
 
+  # The networks entries are shared on, by the names RandomShareJob's schedule uses.
+  SHARE_NETWORKS = %w[Bluesky Mastodon Instagram Threads].freeze
+
+  # The longest caption each network accepts. Bluesky counts graphemes and leaves out link URLs,
+  # so it has rules of its own (Bluesky.valid_post_length?). Instagram's hashtags go in a comment,
+  # not the caption.
+  CAPTION_LIMITS = { 'Mastodon' => 500, 'Instagram' => 2200, 'Threads' => 500 }.freeze
+
   validates :title, presence: true
   validates :status, inclusion: { in: STATUSES }
 
@@ -203,20 +211,29 @@ class Entry < ApplicationRecord
     reorder(:instagram_shares_count, Arel.sql("COALESCE(last_shared_on_instagram_at, published_at) ASC"))
   end
 
+  # The entries a random share on the network can pick from: the least shared of those not shared
+  # there recently.
+  #
+  # ⚠️ Only entries a share would actually post. One the share jobs refuse (no photos, a caption
+  # over the network's limit) is never recorded as shared, so it would stay in the least-shared
+  # tier while everything else moved past it, until it was all the tier held and every random
+  # share picked something that never went out.
   def self.eligible_for_random_share(platform:, tags: [], excluded_tags: [], not_shared_in: 1.year)
-    base_query = published
+    base_query = published.photo_entries
     base_query = base_query.tagged_with(tags) if tags.any?
     base_query = base_query.tagged_with(excluded_tags, exclude: true) if excluded_tags.any?
 
     case platform
     when 'Bluesky'
-      base_query.shareable_on_bluesky(not_shared_in: not_shared_in).with_minimum_bluesky_shares
+      base_query.where(valid_bluesky_caption: true).shareable_on_bluesky(not_shared_in: not_shared_in).with_minimum_bluesky_shares
     when 'Mastodon'
-      base_query.shareable_on_mastodon(not_shared_in: not_shared_in).with_minimum_mastodon_shares
+      base_query.where(valid_mastodon_caption: true).shareable_on_mastodon(not_shared_in: not_shared_in).with_minimum_mastodon_shares
     when 'Instagram'
-      base_query.shareable_on_instagram(not_shared_in: not_shared_in).with_minimum_instagram_shares
+      base_query.where(valid_instagram_caption: true).shareable_on_instagram(not_shared_in: not_shared_in).with_minimum_instagram_shares
     when 'Threads'
-      base_query.shareable_on_threads(not_shared_in: not_shared_in).with_minimum_threads_shares
+      base_query.where(valid_threads_caption: true).shareable_on_threads(not_shared_in: not_shared_in).with_minimum_threads_shares
+    else
+      none
     end
   end
 
@@ -675,7 +692,7 @@ class Entry < ApplicationRecord
     mastodon_tags.flatten.compact.uniq.take(count).shuffle(random: rng).join(' ')
   end
 
-  def mastodon_caption(utm_source: 'Mastodon', utm_medium: 'social', utm_campaign: nil)
+  def mastodon_caption
     meta = []
 
     if is_single_photo?
@@ -685,7 +702,7 @@ class Entry < ApplicationRecord
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
     end
 
-    meta << "🔗 #{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)}"
+    meta << "🔗 #{self.permalink_url}"
     hashtags = mastodon_hashtags
     meta << "\n#{hashtags}" if hashtags.present?
 
@@ -695,7 +712,7 @@ class Entry < ApplicationRecord
     caption.reject(&:blank?).join("\n\n")
   end
 
-  def bluesky_caption(utm_source: 'Bluesky', utm_medium: 'social', utm_campaign: nil)
+  def bluesky_caption
     meta = []
 
     if is_single_photo?
@@ -709,7 +726,7 @@ class Entry < ApplicationRecord
     meta << "🏷️ #{hashtags}" if hashtags.present?
 
     caption = []
-    caption << "[#{bluesky_link_label}](#{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)})"
+    caption << "[#{bluesky_link_label}](#{self.permalink_url})"
     caption << self.bluesky_text if self.bluesky_text.present?
     caption << meta.join("\n").strip
     caption.reject(&:blank?).join("\n\n")
@@ -780,7 +797,7 @@ class Entry < ApplicationRecord
     instagram_tags.flatten.compact.uniq.take(count).shuffle(random: rng).join(' ')
   end
 
-  def threads_caption(utm_source: 'Threads', utm_medium: 'social', utm_campaign: nil)
+  def threads_caption
     meta = []
 
     if is_single_photo?
@@ -796,7 +813,7 @@ class Entry < ApplicationRecord
       meta << "📍 #{location.join(' – ')}" if location.present? && self.show_location?
     end
 
-    meta << "🔗 #{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)}"
+    meta << "🔗 #{self.permalink_url}"
 
     caption = [self.plain_title]
     caption << self.threads_text if self.threads_text.present?
@@ -1019,6 +1036,33 @@ class Entry < ApplicationRecord
 
   def enqueue_caption_validity_job
     CaptionValidityJob.perform_async(self.id)
+  end
+
+  # @param network [String] one of SHARE_NETWORKS.
+  # @return [String] the caption a share on that network posts.
+  def caption_for(network)
+    case network
+    when 'Bluesky' then bluesky_caption
+    when 'Mastodon' then mastodon_caption
+    when 'Instagram' then instagram_caption
+    when 'Threads' then threads_caption
+    else raise ArgumentError, "Unknown network: #{network.inspect}"
+    end
+  end
+
+  # @param network [String] one of SHARE_NETWORKS.
+  # @return [Boolean] whether the caption fits within what the network accepts.
+  def valid_caption_for?(network)
+    caption = caption_for(network)
+    network == 'Bluesky' ? Bluesky.valid_post_length?(caption) : caption.length <= CAPTION_LIMITS.fetch(network)
+  end
+
+  # Records whether each network's caption fits, which the admin flags and the random shares
+  # filter on. Without callbacks: it's a cache of the captions, not an edit.
+  #
+  # @return [void]
+  def update_caption_validity
+    update_columns(SHARE_NETWORKS.to_h { |network| [:"valid_#{network.downcase}_caption", valid_caption_for?(network)] })
   end
 
   # The Cache-Tag values whose cached responses this entry appears in. Mirrors

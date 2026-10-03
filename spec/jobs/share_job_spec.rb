@@ -16,6 +16,48 @@ RSpec.describe ShareJob do
     expect(MastodonJob.get_sidekiq_options['queue']).to eq('high')
   end
 
+  describe '.available_for?' do
+    it 'needs every network to say' do
+      expect { described_class.available_for?(user) }.to raise_error(NotImplementedError)
+    end
+
+    {
+      BlueskyJob => :bluesky,
+      MastodonJob => :mastodon,
+      InstagramJob => :instagram,
+      ThreadsJob => :threads
+    }.each do |job_class, provider|
+      describe job_class do
+        before do
+          allow(ENV).to receive(:[]).and_call_original
+          %w[INSTAGRAM_APP_ID INSTAGRAM_APP_SECRET THREADS_APP_ID THREADS_APP_SECRET].each do |key|
+            allow(ENV).to receive(:[]).with(key).and_return('set')
+          end
+        end
+
+        it "is available with a #{provider} account" do
+          create(:social_account, provider, user:)
+          expect(job_class.available_for?(user)).to be true
+        end
+
+        it "isn't without one" do
+          expect(job_class.available_for?(user)).to be false
+          expect(job_class.available_for?(nil)).to be false
+        end
+      end
+    end
+
+    it "isn't available on Meta's networks without the app's credentials" do
+      allow(ENV).to receive(:[]).and_call_original
+      %w[INSTAGRAM_APP_ID THREADS_APP_ID].each { |key| allow(ENV).to receive(:[]).with(key).and_return(nil) }
+      create(:social_account, :instagram, user:)
+      create(:social_account, :threads, user:)
+
+      expect(InstagramJob.available_for?(user)).to be false
+      expect(ThreadsJob.available_for?(user)).to be false
+    end
+  end
+
   describe '#shareable_entry' do
     it 'returns nothing outside production' do
       allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('test'))

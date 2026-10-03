@@ -21,6 +21,10 @@ class Bluesky
 
   MAX_PHOTOS = 4
 
+  # The self-label for a post whose photos need a warning: Bluesky's label for disturbing imagery,
+  # which apps blur or hide according to each reader's moderation settings.
+  SENSITIVE_LABEL = 'graphic-media'
+
   # app.bsky.richtext.facet#tag limits. A tag past either one makes the whole record invalid, so an
   # over-long hashtag would take the post down with it.
   MAX_TAG_GRAPHEMES = 64
@@ -236,9 +240,10 @@ class Bluesky
   # @param photos [Array<Hash>] an optional array of hashes representing photos.
   #   Each hash should include :url, :alt_text, :width, and :height.
   # @param in_reply_to [String, nil] the public URL of a post to reply to. Optional.
+  # @param labels [Array<String>] self-labels for the post, such as SENSITIVE_LABEL. Optional.
   # @return [Hash] the parsed response body if successful.
   # @raise [RuntimeError] if the post request fails.
-  def skeet(rkey:, text:, photos: [], in_reply_to: nil, quote: nil)
+  def skeet(rkey:, text:, photos: [], in_reply_to: nil, quote: nil, labels: [])
     # Check before anything touches the network. A post outside these limits is refused by the PDS
     # every single time, so retrying it only wastes a day of a job's life.
     unless self.class.valid_post_length?(text)
@@ -268,6 +273,12 @@ class Bluesky
     record_data[:facets] = facets if facets.any?
     record_data[:embed] = embed if embed.present?
     record_data[:reply] = reply if reply.present?
+    if labels.any?
+      record_data[:labels] = {
+        "$type" => "com.atproto.label.defs#selfLabels",
+        values: labels.map { |label| { val: label } }
+      }
+    end
 
     put_record(collection: "app.bsky.feed.post", rkey: rkey, record: record_data)
   end

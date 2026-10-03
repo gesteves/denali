@@ -322,9 +322,9 @@ class Admin::EntriesController < AdminController
     raise ActiveRecord::RecordNotFound unless @entry.is_photo?
     set_srcset
     @page_title = "Share “#{@entry.title}”"
-    @bluesky_text = @entry.bluesky_caption(utm_campaign: 'share')
-    @mastodon_text = @entry.mastodon_caption(utm_campaign: 'share')
-    @threads_text = @entry.threads_caption(utm_campaign: 'share')
+    @bluesky_text = @entry.bluesky_caption
+    @mastodon_text = @entry.mastodon_caption
+    @threads_text = @entry.threads_caption
     @instagram_text = @entry.instagram_caption
     respond_to do |format|
       format.html

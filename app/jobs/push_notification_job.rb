@@ -28,7 +28,7 @@ class PushNotificationJob < ApplicationJob
       body: entry.plain_title,
       icon: entry.blog.touch_icon_url(width: 512),
       image: entry.photos.first&.url(width: 1920),
-      url: entry.permalink_url(utm_source: 'Push Notification', utm_medium: 'push', utm_campaign: 'new-photo')
+      url: entry.permalink_url
     }.compact
 
     begin

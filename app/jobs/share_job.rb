@@ -6,6 +6,13 @@ class ShareJob < ApplicationJob
   # reported to Bugsnag (see JobDeathReporter).
   sidekiq_options queue: 'high', retry_for: 6.hours.to_i
 
+  # @param user [User, nil] the entry's author, whose accounts shares post from.
+  # @return [Boolean] whether this network can be shared to at all: the app is set up for it and
+  #   the user has an account there. RandomNetworkShareJob asks before picking an entry for it.
+  def self.available_for?(user)
+    raise NotImplementedError, "#{name} must say whether it can share for a user"
+  end
+
   private
 
   # The entry to share, or nil when there's nothing to do: not in production, or

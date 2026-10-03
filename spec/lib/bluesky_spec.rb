@@ -184,6 +184,25 @@ RSpec.describe Bluesky do
         expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.server.createSession").at_least_once
       end
 
+      it 'self-labels the post when asked' do
+        bluesky.skeet(rkey: rkey, text: text, labels: [Bluesky::SENSITIVE_LABEL])
+
+        expect(WebMock).to(have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord").with do |request|
+          JSON.parse(request.body).dig('record', 'labels') == {
+            '$type' => 'com.atproto.label.defs#selfLabels',
+            'values' => [{ 'val' => 'graphic-media' }]
+          }
+        end)
+      end
+
+      it 'leaves labels off a post that has none' do
+        bluesky.skeet(rkey: rkey, text: text)
+
+        expect(WebMock).to(have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord").with do |request|
+          !JSON.parse(request.body)['record'].key?('labels')
+        end)
+      end
+
       context 'with photos' do
         let(:photos) do
           [

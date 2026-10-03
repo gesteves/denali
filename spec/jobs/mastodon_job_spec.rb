@@ -39,7 +39,7 @@ RSpec.describe MastodonJob, type: :worker do
 
       it 'builds the caption when the job runs if none was passed' do
         expect(mastodon_instance).to receive(:create_status)
-          .with(hash_including(text: entry.mastodon_caption(utm_campaign: 'new-photo')))
+          .with(hash_including(text: entry.mastodon_caption))
 
         described_class.new.perform(entry.id, nil)
       end

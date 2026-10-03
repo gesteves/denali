@@ -62,7 +62,8 @@ RSpec.describe BlueskyJob, type: :worker do
             hash_including(:url, :alt_text, :width, :height)
           ),
           in_reply_to: nil,
-          quote: nil
+          quote: nil,
+          labels: []
         )
 
         described_class.new.perform(entry.id, text)
@@ -72,6 +73,14 @@ RSpec.describe BlueskyJob, type: :worker do
         expect(bluesky_instance).to receive(:skeet).with(hash_including(rkey: 'abc1234567890'))
 
         described_class.new.perform(entry.id, text, nil, nil, 'abc1234567890')
+      end
+
+      # Bluesky has no free-text content warning; readers' apps act on the label instead.
+      it 'labels a sensitive entry’s post' do
+        entry.update!(content_warning: 'A dead elk')
+        expect(bluesky_instance).to receive(:skeet).with(hash_including(labels: [Bluesky::SENSITIVE_LABEL]))
+
+        described_class.new.perform(entry.id, text)
       end
 
       it 'mints its own record key when called without one' do

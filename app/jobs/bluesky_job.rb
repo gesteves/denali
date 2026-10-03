@@ -14,8 +14,12 @@ class BlueskyJob < ShareJob
     end
   end
 
+  def self.available_for?(user)
+    user&.bluesky_account.present?
+  end
+
   # @param text [String, nil] the caption. Without one, the job builds the entry's
-  #   new-photo caption when it runs rather than when it was enqueued, so an entry
+  #   caption when it runs rather than when it was enqueued, so an entry
   #   published straight from the form gets the tags and EXIF details that are
   #   only filled in after it's saved.
   # @param rkey [String, nil] the record key the post is written at, made by the caller with
@@ -24,20 +28,20 @@ class BlueskyJob < ShareJob
   #   and mints its own, which is the behaviour it already had.
   def perform(entry_id, text, in_reply_to = nil, quote = nil, rkey = nil)
     entry = shareable_entry(entry_id)
-    return if entry.nil?
+    return if entry.nil? || !self.class.available_for?(entry.user)
 
-    account = entry.user&.bluesky_account
-    return if account.nil?
-
-    text ||= entry.bluesky_caption(utm_campaign: 'new-photo')
-    bluesky = Bluesky.from_social_account(account)
+    text ||= entry.bluesky_caption
+    bluesky = Bluesky.from_social_account(entry.user.bluesky_account)
 
     photos = entry.photos.take(Bluesky::MAX_PHOTOS).map do |p|
       { url: p.bluesky_url, alt_text: p.alt_text, width: p.width, height: p.height }
     end
 
+    # Mastodon gets the entry's content warning as its own; Bluesky has no free-text warning, only
+    # labels that readers' apps act on.
+    labels = entry.is_sensitive? ? [Bluesky::SENSITIVE_LABEL] : []
     response = bluesky.skeet(rkey: rkey.presence || Bluesky.new_tid, text: text, photos: photos,
-                             in_reply_to: in_reply_to, quote: quote)
+                             in_reply_to: in_reply_to, quote: quote, labels: labels)
 
     # Threadgates only apply to root posts; replies inherit the root post's gate.
     BlueskyThreadgateJob.perform_async(entry_id, response["uri"]) if in_reply_to.blank? && response["uri"].present?

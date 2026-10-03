@@ -468,7 +468,7 @@ RSpec.describe Entry, type: :model do
 
   describe '.eligible_for_random_share' do
     let!(:shareable_entry) do
-      create(:entry, :published, blog: blog, user: user,
+      create(:entry, :published, :with_photo, blog: blog, user: user,
              published_at: 2.years.ago,
              post_to_bluesky: true,
              post_to_mastodon: true,
@@ -533,9 +533,73 @@ RSpec.describe Entry, type: :model do
       expect(results).not_to include(shareable_entry)
     end
 
-    it 'returns nil for unknown platform' do
+    it 'returns nothing for an unknown platform' do
       results = Entry.eligible_for_random_share(platform: 'Twitter')
-      expect(results).to be_nil
+      expect(results).to be_empty
+    end
+
+    # ⚠️ An entry a share can't post is never recorded as shared, so it would stay among the least
+    # shared forever, until it was all that was left to pick.
+    it 'leaves out entries with no photos' do
+      text_only = create(:entry, :published, blog: blog, user: user, published_at: 2.years.ago)
+
+      expect(Entry.eligible_for_random_share(platform: 'Bluesky')).not_to include(text_only)
+    end
+
+    it "leaves out an entry whose caption is too long for the platform, on that platform only" do
+      shareable_entry.update_columns(valid_threads_caption: false)
+
+      expect(Entry.eligible_for_random_share(platform: 'Threads')).not_to include(shareable_entry)
+      expect(Entry.eligible_for_random_share(platform: 'Mastodon')).to include(shareable_entry)
+    end
+
+    it 'picks the least shared among the entries it can actually post' do
+      shareable_entry.update_columns(bluesky_shares_count: 3)
+      never_shared_text_only = create(:entry, :published, blog: blog, user: user, published_at: 2.years.ago)
+
+      results = Entry.eligible_for_random_share(platform: 'Bluesky')
+
+      expect(results).to include(shareable_entry)
+      expect(results).not_to include(never_shared_text_only)
+    end
+  end
+
+  describe 'captions' do
+    let(:entry) { create(:entry, :published, :with_photo, blog: blog, user: user) }
+
+    # Tracking parameters made every network's link different and longer, and the stored validity
+    # flags were measured without them.
+    it 'link to the entry without tracking parameters' do
+      %w[Bluesky Mastodon Threads].each do |network|
+        expect(entry.caption_for(network)).to include(entry.permalink_url)
+        expect(entry.caption_for(network)).not_to include('utm_')
+      end
+    end
+
+    describe '#valid_caption_for?' do
+      it 'holds a caption within the limit' do
+        Entry::SHARE_NETWORKS.each { |network| expect(entry.valid_caption_for?(network)).to be true }
+      end
+
+      it 'refuses one over the limit' do
+        entry.update!(threads_text: 'x' * 500, instagram_text: 'x' * 2200, mastodon_text: 'x' * 500, bluesky_text: 'x' * 300)
+
+        Entry::SHARE_NETWORKS.each { |network| expect(entry.valid_caption_for?(network)).to be false }
+      end
+
+      it 'refuses an unknown network' do
+        expect { entry.valid_caption_for?('Twitter') }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '#update_caption_validity' do
+      it 'records each network’s check' do
+        entry.update_columns(threads_text: 'x' * 500, valid_threads_caption: true, valid_mastodon_caption: false)
+
+        entry.reload.update_caption_validity
+
+        expect(entry.reload).to have_attributes(valid_threads_caption: false, valid_mastodon_caption: true)
+      end
     end
   end
 

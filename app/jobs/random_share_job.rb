@@ -1,74 +1,30 @@
+# Shares a random entry on each of the given networks, on the schedule in config/sidekiq.yml.
+#
+# Each network gets a job of its own (RandomNetworkShareJob) that picks the entry and enqueues the
+# share; this one only decides whether to share at all. That way a failure partway through can't
+# be retried into a second share on the networks it had already handled.
 class RandomShareJob < ApplicationJob
+  # A retry would enqueue every network again, including the ones the failed run already had.
+  # Missing one run out of several a day is the better failure, and Bugsnag still hears about it.
+  sidekiq_options retry: false
+
+  # @param tags [String, Array<String>] tags the entry must have.
+  # @param platforms [Array<String>] the networks to share on (see Entry::SHARE_NETWORKS).
+  # @param not_shared_in_months [Integer] how long since the entry was last shared on a network.
+  # @param excluded_tags [String, Array<String>] tags the entry mustn't have.
+  # @param share_immediately [Boolean] share now, rather than at a random moment in the next hour.
   def perform(tags, platforms, not_shared_in_months = 12, excluded_tags = [], share_immediately = false)
     return if !Rails.env.production?
+    # A new photo is out, and its own shares take precedence.
     return if Entry.published.where('published_at > ?', 1.hour.ago).exists?
-    tags = Array(tags)
-    platforms = Array(platforms)
-    excluded_tags = Array(excluded_tags)
-    not_shared_in_months = not_shared_in_months.to_i
-    return if platforms.empty?
-    logger.info "[Social] Attempting to share a random entry#{tags.any? ? " with tags #{tags.join(', ')}" : ""}#{excluded_tags.any? ? " excluding tags #{excluded_tags.join(', ')}" : ""} on #{platforms.join(', ')}."
 
-    campaign = tags.empty? ? "random" : "random-#{tags.join(' ').parameterize}"
-
-    platforms.each do |platform|
-      entry = find_eligible_entry(tags, excluded_tags, platform, not_shared_in_months)
-      next if entry.blank?
-      logger.info "[Social] Sharing \"#{entry.title}\" (#{entry.permalink_url}) on #{platform}."
-      case platform
-      when 'Bluesky'
-        share_bluesky(entry, campaign, share_immediately)
-      when 'Mastodon'
-        share(MastodonJob, entry.id, entry.mastodon_caption(utm_campaign: campaign), share_immediately)
-      when 'Instagram'
-        share(InstagramJob, entry.id, entry.instagram_caption, share_immediately)
-      when 'Threads'
-        share(ThreadsJob, entry.id, entry.threads_caption(utm_campaign: campaign), share_immediately)
+    Array(platforms).each do |network|
+      unless Entry::SHARE_NETWORKS.include?(network)
+        logger.warn "[Social] Not sharing on #{network.inspect}, which isn't one of #{Entry::SHARE_NETWORKS.join(', ')}."
+        next
       end
+
+      RandomNetworkShareJob.perform_async(network, Array(tags), not_shared_in_months.to_i, Array(excluded_tags), share_immediately)
     end
-  end
-
-  private
-
-  def share(job_class, entry_id, caption, share_immediately)
-    if share_immediately
-      job_class.perform_async(entry_id, caption)
-    else
-      job_class.perform_in(rand(0..60).minutes, entry_id, caption)
-    end
-  end
-
-  # Bluesky needs its record key up front, so a retry replaces the post instead of adding another.
-  #
-  # The key is also the feed's sort key, so a delayed share takes the key of the moment it will
-  # actually go out. Otherwise it would sort at the moment it was queued, up to an hour earlier.
-  def share_bluesky(entry, campaign, share_immediately)
-    caption = entry.bluesky_caption(utm_campaign: campaign)
-
-    if share_immediately
-      BlueskyJob.perform_async(entry.id, caption, nil, nil, Bluesky.new_tid)
-    else
-      delay = rand(0..60).minutes
-      BlueskyJob.perform_in(delay, entry.id, caption, nil, nil, Bluesky.new_tid(at: delay.from_now))
-    end
-  end
-
-  def find_eligible_entry(tags, excluded_tags, platform, not_shared_in_months)
-    photoblog = Blog.first
-    not_shared_in = not_shared_in_months.months
-
-    eligible_entries = photoblog.entries.eligible_for_random_share(
-      platform: platform,
-      tags: tags,
-      excluded_tags: excluded_tags,
-      not_shared_in: not_shared_in
-    )
-
-    # Picked by the database: sample would load every eligible entry to keep one.
-    entry = eligible_entries.reorder(Arel.sql('RANDOM()')).first
-    return if entry.nil?
-
-    logger.info "[Social] There are #{eligible_entries.count} entries#{tags.any? ? " tagged with #{tags.join(', ')}" : ""}#{excluded_tags.any? ? " excluding #{excluded_tags.join(', ')}" : ""} eligible to be shared on #{platform}."
-    entry
   end
 end
