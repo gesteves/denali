@@ -69,7 +69,7 @@ class Admin::AccountsController < AdminController
   end
 
   def flickr_callback
-    if params[:oauth_token] != session[:flickr_oauth_token]
+    unless valid_oauth_state?(session[:flickr_oauth_token], params[:oauth_token])
       cleanup_flickr_session
       redirect_to admin_accounts_path, flash: { danger: "Invalid OAuth token. Please try again." }
       return
@@ -137,7 +137,8 @@ class Admin::AccountsController < AdminController
   end
 
   def instagram_callback
-    if params[:state] != session[:instagram_oauth_state]
+    unless valid_oauth_state?(session[:instagram_oauth_state], params[:state])
+      cleanup_instagram_session
       redirect_to admin_accounts_path, flash: { danger: "Invalid OAuth state. Please try again." }
       return
     end
@@ -253,7 +254,9 @@ class Admin::AccountsController < AdminController
 
   def mastodon_callback
     # Verify state parameter
-    if params[:state] != session[:mastodon_oauth_state]
+    unless valid_oauth_state?(session[:mastodon_oauth_state], params[:state])
+      session.delete(:mastodon_oauth_state)
+      session.delete(:mastodon_instance_url)
       redirect_to admin_accounts_path, flash: { danger: "Invalid OAuth state. Please try again." }
       return
     end
@@ -353,7 +356,8 @@ class Admin::AccountsController < AdminController
   end
 
   def threads_callback
-    if params[:state] != session[:threads_oauth_state]
+    unless valid_oauth_state?(session[:threads_oauth_state], params[:state])
+      cleanup_threads_session
       redirect_to admin_accounts_path, flash: { danger: "Invalid OAuth state. Please try again." }
       return
     end
@@ -539,6 +543,13 @@ class Admin::AccountsController < AdminController
     else
       "Could not connect to Mastodon: #{exception.message}"
     end
+  end
+
+  # Compares the state (or OAuth 1 request token) the provider echoed back with
+  # the one stored when the flow began. Fails closed when no flow is in progress,
+  # so a callback with no state can't slip through as nil == nil.
+  def valid_oauth_state?(expected, actual)
+    expected.present? && ActiveSupport::SecurityUtils.secure_compare(expected.to_s, actual.to_s)
   end
 
   def cleanup_flickr_session

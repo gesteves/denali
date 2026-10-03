@@ -53,6 +53,17 @@ describe('NotificationsController', () => {
       expect(notifications[0].textContent).toBe('Operation completed!');
     });
 
+    it('renders the message as text, not HTML', () => {
+      const controller = getController();
+      const message = '<img src=x onerror="alert(1)">';
+
+      controller.add({ detail: { status: 'success', message } });
+
+      const notification = notificationTargets()[0];
+      expect(notification.textContent).toBe(message);
+      expect(notification.querySelector('img')).toBeNull();
+    });
+
     it('applies correct status class', () => {
       const controller = getController();
       const event = {

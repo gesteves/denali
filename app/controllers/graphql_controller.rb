@@ -5,13 +5,16 @@ class GraphqlController < ApplicationController
   # Responses depend on the Authorization header, and Cloudflare's cache key
   # doesn't include it. Never cache them.
   before_action :no_store
+  # The endpoint is public and uncacheable, so every query reaches the database
+  # (and often Elasticsearch). Authorized clients are trusted and exempt.
+  rate_limit to: 300, within: 1.minute, by: -> { client_ip }, only: :execute, unless: :authorized?
 
   def execute
     variables = ensure_hash(params[:variables])
     query = params[:query]
     operation_name = params[:operationName]
     context = {
-      is_authorized: ENV['GRAPHQL_AUTH_TOKEN'].present? && request.headers['Authorization'] == "Bearer #{ENV['GRAPHQL_AUTH_TOKEN']}",
+      is_authorized: authorized?,
     }
     result = DenaliSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
@@ -29,6 +32,11 @@ class GraphqlController < ApplicationController
   end
 
   private
+
+  def authorized?
+    token = ENV['GRAPHQL_AUTH_TOKEN']
+    token.present? && ActiveSupport::SecurityUtils.secure_compare(request.headers['Authorization'].to_s, "Bearer #{token}")
+  end
 
   # Handle form data, JSON body, or a blank value
   def ensure_hash(ambiguous_param)

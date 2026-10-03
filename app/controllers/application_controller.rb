@@ -5,7 +5,6 @@ class ApplicationController < ActionController::Base
 
   before_action :set_photoblog
   before_action :domain_redirect
-  before_action :set_referrer_policy
   before_action :preload_assets
   around_action :set_time_zone
 
@@ -35,7 +34,15 @@ class ApplicationController < ActionController::Base
   end
 
   def behind_cdn?
-    request.headers['X-Denali-Secret'] == ENV['DENALI_SECRET']
+    ENV['DENALI_SECRET'].present? &&
+      ActiveSupport::SecurityUtils.secure_compare(request.headers['X-Denali-Secret'].to_s, ENV['DENALI_SECRET'])
+  end
+
+  # Behind Cloudflare, remote_ip is the edge's address, which many visitors
+  # share. The visitor's own is in CF-Connecting-IP, but that header can only be
+  # trusted when the request proves it came through Cloudflare.
+  def client_ip
+    (behind_cdn? && request.headers['CF-Connecting-IP'].presence) || request.remote_ip
   end
 
   def current_user
@@ -92,10 +99,6 @@ class ApplicationController < ActionController::Base
   # vocabulary and who purges what.
   def set_cache_tags(*tags)
     response.headers['Cache-Tag'] = tags.flatten.compact.uniq.join(',')
-  end
-
-  def set_referrer_policy
-    response.headers['Referrer-Policy'] = 'no-referrer-when-downgrade'
   end
 
   def set_time_zone(&block)

@@ -54,3 +54,6 @@ vendor/bundle
 # Built assets (will be rebuilt)
 public/packs*
 public/assets
+
+# Local database dumps
+*.dump

@@ -18,7 +18,7 @@ RSpec.describe "Sessions", type: :request do
     it "displays flash messages" do
       get signin_path, params: {}, headers: {}
       # Set a flash and follow redirect to verify rendering
-      get signout_path
+      delete signout_path
       follow_redirect!
       expect(response.body).to include("signed out")
     end
@@ -57,6 +57,23 @@ RSpec.describe "Sessions", type: :request do
         get '/auth/google_oauth2/callback'
         expect(response).to redirect_to(admin_entries_path)
         expect(flash[:success]).to be_present
+      end
+
+      it "issues a new session on sign-in" do
+        get admin_tags_path # writes original_url, so the session has an ID
+        session_id_before = session.id.to_s
+        expect(session_id_before).to be_present
+
+        get '/auth/google_oauth2/callback'
+
+        expect(session[:user_id]).to eq(user.id)
+        expect(session.id.to_s).not_to eq(session_id_before)
+      end
+
+      it "still returns to the page that required sign-in" do
+        get admin_tags_path
+        get '/auth/google_oauth2/callback'
+        expect(response).to redirect_to('http://www.example.com/admin/tags')
       end
     end
 
@@ -102,12 +119,19 @@ RSpec.describe "Sessions", type: :request do
     end
   end
 
-  describe "GET /signout (destroy)" do
+  describe "DELETE /signout (destroy)" do
     it "signs out the user" do
       sign_in_as(user)
-      get signout_path
+      delete signout_path
       expect(response).to redirect_to(signin_path)
       expect(flash[:success]).to include("signed out")
+    end
+
+    # A GET would let any page sign the admin out with an <img> tag.
+    it "isn't routable with GET" do
+      sign_in_as(user)
+      get '/signout'
+      expect(response).not_to redirect_to(signin_path)
     end
   end
 end

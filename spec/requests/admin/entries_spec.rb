@@ -24,6 +24,20 @@ RSpec.describe "Admin::Entries", type: :request do
     end
   end
 
+  describe "post-action redirect" do
+    it "returns to a same-host referer" do
+      get admin_entry_path(entry), headers: { 'Referer' => 'http://www.example.com/admin/entries/drafts' }
+      delete admin_entry_path(entry)
+      expect(response).to redirect_to('http://www.example.com/admin/entries/drafts')
+    end
+
+    it "ignores a referer from another host" do
+      get admin_entry_path(entry), headers: { 'Referer' => 'https://evil.example.org/phish' }
+      delete admin_entry_path(entry)
+      expect(response).to redirect_to(admin_entries_path)
+    end
+  end
+
   describe "GET /admin/entries/queued" do
     it "renders successfully" do
       get queued_admin_entries_path

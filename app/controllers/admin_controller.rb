@@ -5,7 +5,29 @@ class AdminController < ApplicationController
   before_action :require_login
   skip_before_action :domain_redirect
   skip_before_action :preload_assets
+  before_action :set_referrer_policy
   helper_method :is_admin?
+
+  # Report-only for now: violations show up in the browser console without
+  # blocking anything. Once the admin runs clean, drop the report_only line.
+  # form-action is left out on purpose: Chrome applies it to the redirects after
+  # a submit, which would block the OAuth flows that redirect to the providers.
+  content_security_policy do |policy|
+    policy.default_src :self
+    policy.base_uri    :self
+    policy.object_src  :none
+    policy.frame_ancestors :none
+    policy.script_src  :self, 'https://kit.fontawesome.com'
+    # Mapbox, Font Awesome and Turbo's progress bar all inject inline styles.
+    policy.style_src   :self, :unsafe_inline
+    policy.font_src    :self, :data, 'https://ka-f.fontawesome.com'
+    # Photos are served from the public domain's image transformations, and the
+    # map's tiles from Mapbox.
+    policy.img_src     :self, :data, :blob, :https
+    policy.connect_src :self, 'https://*.mapbox.com', 'https://ka-f.fontawesome.com'
+    policy.worker_src  :self, :blob
+  end
+  content_security_policy_report_only
 
   def default_url_options
     if Rails.env.production?

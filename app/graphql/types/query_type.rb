@@ -5,13 +5,13 @@ module Types
       argument :url, String, required: true
     end
     field :entries, Types::EntryPageType, null: false do
-      argument :page, Integer, default_value: 1, required: false
-      argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }
+      argument :page, Integer, default_value: 1, required: false, prepare: PREPARE_PAGE
+      argument :count, Integer, default_value: 10, required: false, prepare: PREPARE_COUNT
     end
     field :search, Types::EntryPageType, null: false do
       argument :term, String, required: true
-      argument :page, Integer, default_value: 1, required: false
-      argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }
+      argument :page, Integer, default_value: 1, required: false, prepare: PREPARE_PAGE
+      argument :count, Integer, default_value: 10, required: false, prepare: PREPARE_COUNT
     end
 
     def blog

@@ -53,6 +53,21 @@ RSpec.describe DatabaseBackupJob, type: :worker do
       described_class.new.perform
     end
 
+    it 'runs pg_dump without a shell, passing the URL as its own argument' do
+      allow(Aws::S3::Client).to receive(:new).and_return(instance_double(Aws::S3::Client, put_object: true))
+      allow(ENV).to receive(:[]).with('DATABASE_URL').and_return('postgres://u:p@host/db?sslmode=require&foo=bar')
+      allow(File).to receive(:open).and_yield(StringIO.new('backup data'))
+      allow(File).to receive(:exist?).and_return(true)
+      allow(File).to receive(:delete)
+      `true`
+
+      expect_any_instance_of(described_class).to receive(:system)
+        .with('pg_dump', '-Fc', '--no-acl', '--no-owner', '-f', a_string_ending_with('.dump'), 'postgres://u:p@host/db?sslmode=require&foo=bar')
+        .and_return(true)
+
+      described_class.new.perform
+    end
+
     it 'raises error when pg_dump fails' do
       # Run a failing command to set $? to failure state before stubbing system
       system('exit 1')

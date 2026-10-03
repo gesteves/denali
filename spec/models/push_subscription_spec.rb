@@ -19,14 +19,34 @@ RSpec.describe PushSubscription, type: :model do
       expect(subscription.errors[:endpoint]).to include('is not a valid URL')
     end
 
-    it 'accepts valid HTTP URLs' do
-      subscription = build(:push_subscription, endpoint: 'http://example.com/push')
-      expect(subscription).to be_valid
+    it 'rejects plain HTTP URLs' do
+      subscription = build(:push_subscription, endpoint: 'http://fcm.googleapis.com/fcm/send/abc')
+      expect(subscription).not_to be_valid
+      expect(subscription.errors[:endpoint]).to include('is not a valid URL')
     end
 
-    it 'accepts valid HTTPS URLs' do
-      subscription = build(:push_subscription, endpoint: 'https://example.com/push')
-      expect(subscription).to be_valid
+    %w[
+      https://fcm.googleapis.com/fcm/send/abc
+      https://updates.push.services.mozilla.com/wpush/v2/abc
+      https://web.push.apple.com/abc
+      https://wns2-by3p.notify.windows.com/w/?token=abc
+    ].each do |endpoint|
+      it "accepts push service endpoint #{endpoint}" do
+        expect(build(:push_subscription, endpoint: endpoint)).to be_valid
+      end
+    end
+
+    %w[
+      https://example.com/push
+      https://fcm.googleapis.com.evil.com/push
+      https://169.254.169.254/latest/meta-data
+      https://my-app.internal/push
+    ].each do |endpoint|
+      it "rejects non-push-service endpoint #{endpoint}" do
+        subscription = build(:push_subscription, endpoint: endpoint)
+        expect(subscription).not_to be_valid
+        expect(subscription.errors[:endpoint]).to include('is not a known push service')
+      end
     end
   end
 

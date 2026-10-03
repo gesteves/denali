@@ -678,6 +678,27 @@ RSpec.describe "Admin::Accounts", type: :request do
       end
     end
 
+    # Before any flow starts the session has no state, so a callback without one
+    # used to pass (nil == nil) and reflect error_description into the flash.
+    context "with no flow in progress and no state" do
+      it "rejects the callback without reflecting the error description" do
+        get instagram_callback_admin_accounts_path, params: { error: 'x', error_description: '<img src=x onerror=alert(1)>' }
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:danger]).to eq("Invalid OAuth state. Please try again.")
+      end
+    end
+
+    it "escapes flash messages when the admin layout renders them" do
+      post instagram_admin_accounts_path
+      state = session[:instagram_oauth_state]
+      get instagram_callback_admin_accounts_path, params: { error: 'x', error_description: '<img src=x onerror=alert(1)>', state: state }
+      follow_redirect!
+
+      expect(response.body).not_to include('<img src=x onerror=alert(1)>')
+      expect(response.body).to include('&lt;img src=x onerror=alert(1)&gt;')
+    end
+
     context "when authorization is denied" do
       before do
         post instagram_admin_accounts_path
@@ -706,6 +727,24 @@ RSpec.describe "Admin::Accounts", type: :request do
 
         expect(response).to redirect_to(admin_accounts_path)
         expect(flash[:danger]).to include("Failed to get access token")
+      end
+    end
+  end
+
+  describe "OAuth callbacks with no flow in progress" do
+    {
+      flickr: "Invalid OAuth token",
+      instagram: "Invalid OAuth state",
+      mastodon: "Invalid OAuth state",
+      threads: "Invalid OAuth state"
+    }.each do |provider, message|
+      it "rejects a #{provider} callback that carries no state" do
+        expect {
+          get public_send("#{provider}_callback_admin_accounts_path"), params: { code: 'auth_code' }
+        }.not_to change(SocialAccount, :count)
+
+        expect(response).to redirect_to(admin_accounts_path)
+        expect(flash[:danger]).to include(message)
       end
     end
   end

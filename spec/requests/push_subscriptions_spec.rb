@@ -38,6 +38,25 @@ RSpec.describe "PushSubscriptions", type: :request do
       }.not_to change(PushSubscription, :count)
     end
 
+    it "updates the keys when an existing endpoint resubscribes" do
+      post push_subscribe_path, params: valid_params, as: :json
+      post push_subscribe_path, params: valid_params.deep_merge(keys: { auth: 'rotated-auth' }), as: :json
+
+      expect(response).to have_http_status(:created)
+      expect(PushSubscription.last.auth).to eq('rotated-auth')
+    end
+
+    it "returns 422 instead of crashing when keys are missing" do
+      post push_subscribe_path, params: { endpoint: valid_params[:endpoint] }, as: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+    end
+
+    it "rejects endpoints that aren't push services" do
+      post push_subscribe_path, params: valid_params.merge(endpoint: 'https://my-app.internal/steal'), as: :json
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(PushSubscription.count).to eq(0)
+    end
+
     it "returns error for invalid params" do
       # The controller requires keys parameter to be present
       invalid_params = {

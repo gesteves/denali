@@ -153,7 +153,7 @@ Rails.application.routes.draw do
   match '/auth/:provider/callback'      => 'sessions#create', via: [:get, :post]
   get '/auth/failure'                  => 'sessions#failure'
   get '/signin'                        => 'sessions#new',     as: :signin
-  get '/signout'                       => 'sessions#destroy', as: :signout
+  delete '/signout'                    => 'sessions#destroy', as: :signout
 
   # Legacy routes & redirects
   get '/archive(/:year)(/:month)', to: redirect('/', status: 301)

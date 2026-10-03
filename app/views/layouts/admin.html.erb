@@ -32,7 +32,7 @@
   <div id="notifications" class="notifications" data-notifications-target="container" data-action="transitionend->notifications#toggle" data-turbo-permanent>
     <% flash.each do |name, message| -%>
       <div class="notification is-<%= name %> is-transparent" data-notifications-target="notification" data-action="click->notifications#close">
-        <%= message.html_safe %>
+        <%= message %>
       </div>
     <% end %>
   </div>

@@ -17,8 +17,8 @@ module Types
     field :show_search, Boolean, null: true, description: "Enable search on the site"
     field :time_zone, String, null: true, description: "Time zone the blog publishes in"
     field :entries, Types::EntryPageType, null: false, description: "The list of published entries in this blog" do
-      argument :page, Integer, default_value: 1, required: false
-      argument :count, Integer, default_value: 10, required: false, prepare: -> (count, ctx) { [count, 100].min }
+      argument :page, Integer, default_value: 1, required: false, prepare: PREPARE_PAGE
+      argument :count, Integer, default_value: 10, required: false, prepare: PREPARE_COUNT
     end
 
     def copyright

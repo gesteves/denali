@@ -31,14 +31,19 @@ export default class extends Controller {
    * @param {Event} event Custom `notify` event.
    */
   add (event) {
-    const status = event.detail.status;
-    const message = event.detail.message;
-    const notificationHtml = `<div class="notification is-${status} is-transparent" data-notifications-target="notification" data-action="click->notifications#close">${message}</div>`;
+    const { status, message } = event.detail;
+    // Messages can carry user input (tag names, prompt replies), so they're set
+    // as text, never parsed as HTML.
+    const notification = document.createElement('div');
+    notification.className = `notification is-${status} is-transparent`;
+    notification.dataset.notificationsTarget = 'notification';
+    notification.dataset.action = 'click->notifications#close';
+    notification.textContent = message;
     if (this.hasNotificationTarget) {
       this.closeAll();
-      this.containerTarget.insertAdjacentHTML('afterbegin', notificationHtml);
+      this.containerTarget.prepend(notification);
     } else {
-      this.containerTarget.insertAdjacentHTML('afterbegin', notificationHtml);
+      this.containerTarget.prepend(notification);
       this.toggle();
     }
   }

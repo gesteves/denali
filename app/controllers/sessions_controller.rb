@@ -24,10 +24,12 @@ class SessionsController < ApplicationController
           oauth_token: auth_hash['credentials']['token'],
           oauth_expires_at: Time.at(auth_hash['credentials']['expires_at'])
         )
-        flash[:success] = "Welcome back, #{user.first_name}!"
-        session[:user_id] = user.id
         url = session[:original_url] || admin_entries_path
-        session[:original_url] = nil
+        # A fresh session ID on sign-in, so one planted before it (session
+        # fixation) never becomes an authenticated session.
+        reset_session
+        session[:user_id] = user.id
+        flash[:success] = "Welcome back, #{user.first_name}!"
         redirect_to url
       else
         logger.tagged('Auth') { logger.warn { "Rejected sign-in from unknown email: #{auth_hash['info']['email']}" } }

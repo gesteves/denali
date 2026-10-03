@@ -17,7 +17,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control is-expanded">
-            <textarea class="textarea" rows="6" placeholder="Your Bluesky caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @bluesky_text.html_safe %></textarea>
+            <textarea class="textarea" rows="6" placeholder="Your Bluesky caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @bluesky_text %></textarea>
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/300</p>
         </div>
@@ -94,7 +94,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control is-expanded">
-            <textarea class="textarea" rows="6" placeholder="Your Instagram caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @instagram_text.html_safe %></textarea>
+            <textarea class="textarea" rows="6" placeholder="Your Instagram caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @instagram_text %></textarea>
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/2000</p>
         </div>
@@ -213,7 +213,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control is-expanded">
-            <textarea class="textarea" rows="6" placeholder="Your Mastodon caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @mastodon_text.html_safe %></textarea>
+            <textarea class="textarea" rows="6" placeholder="Your Mastodon caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @mastodon_text %></textarea>
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/500</p>
         </div>
@@ -264,7 +264,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control is-expanded">
-            <textarea class="textarea" rows="6" placeholder="Your Threads caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @threads_text.html_safe %></textarea>
+            <textarea class="textarea" rows="6" placeholder="Your Threads caption..." data-share-form-target="text" data-character-counter-target="input" data-action="input->character-counter#updateCharacterCount"><%= @threads_text %></textarea>
           </div>
           <p class="help"><span data-character-counter-target="characterCount">0</span>/500</p>
         </div>

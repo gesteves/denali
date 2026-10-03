@@ -119,6 +119,24 @@ RSpec.describe "Entries", type: :request do
     end
   end
 
+  describe "GET /p/:id (short link)" do
+    it "redirects published entries to their permalink" do
+      entry = create(:entry, :published, blog: blog, user: user)
+      get "/p/#{entry.id.to_s(36)}"
+      expect(response).to redirect_to(entry.permalink_url)
+    end
+
+    # Unpublished permalinks are preview URLs; IDs are sequential, so a short link
+    # for an unpublished entry would let anyone walk the queue's previews.
+    %i[queued draft].each do |status|
+      it "returns 404 for #{status} entries" do
+        entry = create(:entry, status, blog: blog, user: user)
+        get "/p/#{entry.id.to_s(36)}"
+        expect(response).to have_http_status(:not_found)
+      end
+    end
+  end
+
   describe "GET /random" do
     it "redirects to a random entry" do
       create(:entry, :published, :with_photo, blog: blog, user: user)

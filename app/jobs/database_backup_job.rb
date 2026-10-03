@@ -18,7 +18,10 @@ class DatabaseBackupJob < ApplicationJob
 
       # Create database dump
       logger.info "[Database Backup] Creating database dump: #{filename}"
-      system("pg_dump -Fc --no-acl --no-owner -f #{filepath} #{ENV['DATABASE_URL']}")
+      # Argument list, not a shell string: the URL can hold characters the shell
+      # would interpret (& in its query string), and the command never passes
+      # through a shell at all.
+      system('pg_dump', '-Fc', '--no-acl', '--no-owner', '-f', filepath.to_s, ENV['DATABASE_URL'])
 
       unless $?.success?
         raise "Database dump failed with exit code #{$?.exitstatus}"

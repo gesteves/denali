@@ -28,8 +28,25 @@ module Types
     field :related, [Types::EntryType], null: true, description: "A list of additional entries related to the entry"
     field :blog, Types::BlogType, null: false, description: "The blog this entry was published in"
 
+    # Each related lookup costs an Elasticsearch query plus a database query, and
+    # max_complexity doesn't scale with list sizes, so a single request could fan
+    # out into thousands of them by nesting related inside related or aliasing it
+    # many times. Related entries can't have related entries of their own, and a
+    # request gets a fixed budget of lookups.
+    MAX_RELATED_LOOKUPS = 20
+
     def tags
       object.combined_tags
+    end
+
+    def related
+      related_entries = context[:related_entries] ||= Set.new.compare_by_identity
+      raise GraphQL::ExecutionError, "Related entries can't be nested" if related_entries.include?(object)
+
+      context[:related_lookups] = context[:related_lookups].to_i + 1
+      raise GraphQL::ExecutionError, "Too many related entry lookups" if context[:related_lookups] > MAX_RELATED_LOOKUPS
+
+      object.related&.tap { |entries| related_entries.merge(entries) }
     end
   end
 end

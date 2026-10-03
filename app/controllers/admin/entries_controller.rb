@@ -615,8 +615,10 @@ class Admin::EntriesController < AdminController
       params.require(:entry).permit(:post_to_bluesky, :post_to_mastodon, :post_to_instagram, :post_to_threads)
     end
 
+    # url_from drops referers from other hosts, so a link from elsewhere can't
+    # turn the post-action redirect into an open redirect.
     def set_redirect_url
-      session[:redirect_url] = request.referer
+      session[:redirect_url] = url_from(request.referer)
     end
 
     def set_srcset

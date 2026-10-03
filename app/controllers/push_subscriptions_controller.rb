@@ -1,13 +1,16 @@
 class PushSubscriptionsController < ApplicationController
   skip_before_action :verify_authenticity_token
+  rate_limit to: 10, within: 1.minute, by: -> { client_ip }
 
   def create
     subscription = push_subscription_params
-    push_subscription = PushSubscription.find_or_create_by(endpoint: subscription[:endpoint]) do |ps|
-      ps.blog = @photoblog
-      ps.p256dh = subscription[:keys][:p256dh]
-      ps.auth = subscription[:keys][:auth]
-    end
+    # A browser that resubscribes keeps its endpoint but may rotate its keys.
+    push_subscription = PushSubscription.find_or_initialize_by(endpoint: subscription[:endpoint])
+    push_subscription.assign_attributes(
+      blog: @photoblog,
+      p256dh: subscription.dig(:keys, :p256dh),
+      auth: subscription.dig(:keys, :auth)
+    )
 
     if push_subscription.save
       render json: { status: 'success' }, status: :created

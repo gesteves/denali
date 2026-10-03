@@ -78,7 +78,7 @@
             <%= link_to 'Sidekiq', sidekiq_web_path, class: 'navbar-item' %>
           </div>
         </div>
-        <a href="<%= signout_path %>" class="navbar-item" data-turbo="false">Sign out</a>
+        <%= link_to 'Sign out', signout_path, class: 'navbar-item', data: { turbo_method: :delete } %>
       </div>
     </div>
   </div>

@@ -287,6 +287,71 @@ RSpec.describe "GraphQL", type: :request do
         expect(response).to have_http_status(:success)
         expect(result['errors']).to be_nil
       end
+
+      it "clamps zero and negative pagination arguments" do
+        create(:entry, :published, blog: blog, user: user)
+        query = <<~GRAPHQL
+          query {
+            entries(page: -3, count: 0) {
+              page
+              entries { id }
+            }
+          }
+        GRAPHQL
+
+        result = execute_query(query)
+
+        expect(result['errors']).to be_nil
+        expect(result['data']['entries']['page']).to eq(1)
+        expect(result['data']['entries']['entries'].length).to eq(1)
+      end
+    end
+
+    describe "related entries" do
+      let!(:entry) { create(:entry, :published, blog: blog, user: user) }
+      let(:related_entry) { create(:entry, :published, blog: blog, user: user) }
+
+      before do
+        allow_any_instance_of(Entry).to receive(:related) { [Entry.find(related_entry.id)] }
+      end
+
+      it "returns related entries" do
+        query = <<~GRAPHQL
+          query($url: String!) {
+            entry(url: $url) { related { id } }
+          }
+        GRAPHQL
+
+        result = execute_query(query, variables: { url: entry.permalink_url })
+
+        expect(result['errors']).to be_nil
+        expect(result['data']['entry']['related']).to eq([{ 'id' => related_entry.id.to_s }])
+      end
+
+      it "refuses to nest related inside related, even through an alias" do
+        query = <<~GRAPHQL
+          query($url: String!) {
+            entry(url: $url) { related { id more: related { id } } }
+          }
+        GRAPHQL
+
+        result = execute_query(query, variables: { url: entry.permalink_url })
+
+        expect(result['errors'].map { |e| e['message'] }).to include("Related entries can't be nested")
+      end
+
+      it "caps the number of related lookups per request" do
+        aliases = (1..(Types::EntryType::MAX_RELATED_LOOKUPS + 1)).map { |i| "r#{i}: related { id }" }.join(' ')
+        query = <<~GRAPHQL
+          query($url: String!) {
+            entry(url: $url) { #{aliases} }
+          }
+        GRAPHQL
+
+        result = execute_query(query, variables: { url: entry.permalink_url })
+
+        expect(result['errors'].map { |e| e['message'] }).to include("Too many related entry lookups")
+      end
     end
 
     describe "search query" do
@@ -382,6 +447,24 @@ RSpec.describe "GraphQL", type: :request do
         expect(response).to have_http_status(:success)
         urls = result['data']['entry']['photos'].first['thumbnailUrls']
         expect(urls.length).to eq(2)
+      end
+
+      it "drops out-of-range widths and caps how many can be requested" do
+        widths = [0, -100, 99_999] + (1..30).map { |i| i * 100 }
+        query = <<~GRAPHQL
+          query($url: String!) {
+            entry(url: $url) {
+              photos {
+                urls(widths: #{widths.to_json})
+              }
+            }
+          }
+        GRAPHQL
+
+        result = execute_query(query, variables: { url: entry.permalink_url })
+
+        urls = result['data']['entry']['photos'].first['urls']
+        expect(urls.length).to eq(Types::PhotoType::MAX_WIDTHS)
       end
 
       it "does not return location data without authorization" do

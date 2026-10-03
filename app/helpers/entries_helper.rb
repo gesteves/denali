@@ -18,7 +18,7 @@ module EntriesHelper
     details << "+ #{photo.lens.display_name}" if photo.lens.present? && !photo.camera.is_phone?
     details << "on #{photo.film.display_name}" if photo.film.present?
 
-    "📷 #{details.join(' ')}<br>".html_safe
+    safe_join(["📷 #{details.join(' ')}", tag.br])
   end
 
   # Generates a paragraph with EXIF details like focal length, exposure, aperture, and ISO
@@ -28,7 +28,7 @@ module EntriesHelper
     details = []
     details << "#{photo.focal_length_with_unit} focal length" if photo.focal_length.present?
     if photo.exposure.present? && photo.f_number.present?
-      details << "#{photo.formatted_exposure} at #{photo.formatted_aperture.gsub('f', "<i>f</i>")}"
+      details << safe_join([photo.formatted_exposure, ' at ', tag.i('f'), photo.formatted_aperture.delete_prefix('f')])
     elsif photo.exposure.present?
       details << photo.formatted_exposure
     elsif photo.f_number.present?
@@ -36,7 +36,7 @@ module EntriesHelper
     end
     details << "ISO #{photo.iso}" if photo.iso.present?
 
-    "🎞️ #{details.join(' – ')}<br>".html_safe
+    safe_join(['🎞️ ', safe_join(details, ' – '), tag.br])
   end
 
   # Generates a paragraph with location and territories details
@@ -47,6 +47,6 @@ module EntriesHelper
     details << photo.formatted_location if photo.formatted_location.present?
     details << "#{photo.territory_list} land" if photo.territories.any?
 
-    "📍 #{details.join(' – ')}".html_safe
+    "📍 #{details.join(' – ')}"
   end
 end

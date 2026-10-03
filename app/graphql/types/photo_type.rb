@@ -1,6 +1,10 @@
 module Types
   class PhotoType < Types::BaseObject
     MAX_WIDTH = 3360
+    # Every width is a URL to build, so a query can't ask for an unbounded list.
+    MAX_WIDTHS = 20
+    PREPARE_WIDTHS = ->(widths, _ctx) { widths.select { |w| w.between?(1, MAX_WIDTH) }.uniq.first(MAX_WIDTHS) }
+    PREPARE_DIMENSION = ->(value, _ctx) { value.clamp(1, MAX_WIDTH) }
 
     field :id, ID, null: false
     field :alt_text, String, null: true, description: "Text description of the image"
@@ -39,14 +43,14 @@ module Types
     field :width, Integer, null: false, description: "Width of the original image"
     field :crops, [Types::CropType], null: true, description: "The crops available for this photo"
     field :urls, [String], null: false, description: "List of URLs for the photo in different widths" do
-      argument :widths, [Integer], required: false, default_value: [1280], prepare: -> (widths, ctx) { widths.reject { |w| w > MAX_WIDTH } }
+      argument :widths, [Integer], required: false, default_value: [1280], prepare: PREPARE_WIDTHS
     end
     field :thumbnail_urls, [String], null: false, description: "List of URLs for the photo's square thumbnail in different widths" do
-      argument :widths, [Integer], required: false, default_value: [640], prepare: -> (widths, ctx) { widths.reject { |w| w > MAX_WIDTH } }
+      argument :widths, [Integer], required: false, default_value: [640], prepare: PREPARE_WIDTHS
     end
     field :crop_url, String, null: false, description: "URL for the photo, cropped at the given width and height" do
-      argument :width, Integer, required: true, prepare: -> (width, ctx) { [MAX_WIDTH, width].min }
-      argument :height, Integer, required: true, prepare: -> (height, ctx) { [MAX_WIDTH, height].min }
+      argument :width, Integer, required: true, prepare: PREPARE_DIMENSION
+      argument :height, Integer, required: true, prepare: PREPARE_DIMENSION
     end
     field :instagram_story_url, String, null: false, description: "URL of a version of the photo optimized for Instagram Stories" do
       argument :crop, Boolean, required: false, default_value: false
