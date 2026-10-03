@@ -109,13 +109,6 @@ RSpec.describe "Caching", type: :request do
       expect(cache_tags).to eq([CacheTags.entry(entry.id)])
     end
 
-    it "tags oembed with the entry it describes" do
-      entry = published_entry
-      get oembed_path(format: 'json', url: entry.permalink_url)
-
-      expect(cache_tags).to eq([CacheTags.entry(entry.id)])
-    end
-
     it "tags blog-driven pages so settings changes reach them" do
       get about_path
       expect(cache_tags).to eq([CacheTags::BLOG])

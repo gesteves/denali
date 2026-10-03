@@ -191,7 +191,7 @@ mechanism — `CachePurgeJob` is, and it purges by
 
 | Tag | Attached to | Purged when |
 |---|---|---|
-| `entry-<id>` | an entry's permalink, its short link and its oembed | that entry is published, edited or deleted |
+| `entry-<id>` | an entry's permalink and its short link | that entry is published, edited or deleted |
 | `entries` | every list, feed and sitemap | any *published* entry changes |
 | `blog` | about page, manifest, robots.txt, service worker | blog settings are saved in the admin |
 
