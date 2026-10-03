@@ -55,6 +55,15 @@ RSpec.describe "Oembed", type: :request do
       expect(json["height"]).to be <= 600
     end
 
+    %w[0 -100 abc 800px].each do |value|
+      it "ignores maxwidth=#{value}" do
+        get "/oembed.json", params: { url: entry_full_url, maxwidth: value, maxheight: value }
+        json = JSON.parse(response.body)
+        expect(json["width"]).to eq(1200)
+        expect(json["height"]).to be > 0
+      end
+    end
+
     it "returns 404 for an entry without photos" do
       entry.photos.destroy_all
       entry.reload

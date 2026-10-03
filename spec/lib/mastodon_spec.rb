@@ -39,6 +39,26 @@ RSpec.describe Mastodon do
           .with { |req| req.headers.key?('Idempotency-Key') }
       end
 
+      # A retry re-uploads the media, so the key can't depend on the media IDs.
+      it 'uses the same default key when only the media IDs change' do
+        keys = []
+        stub_request(:post, status_endpoint).to_return do |req|
+          keys << req.headers['Idempotency-Key']
+          { status: 200, body: { id: '12345' }.to_json }
+        end
+
+        mastodon.create_status(text: text, media_ids: ['1'])
+        mastodon.create_status(text: text, media_ids: ['2'])
+
+        expect(keys.uniq.size).to eq(1)
+      end
+
+      it 'sends the idempotency key it is given' do
+        mastodon.create_status(text: text, idempotency_key: 'denali-1-abc')
+        expect(WebMock).to have_requested(:post, status_endpoint)
+          .with(headers: { 'Idempotency-Key' => 'denali-1-abc' })
+      end
+
       it 'handles HTML entities in text' do
         text_with_entities = 'Test &amp; more'
         stub_request(:post, status_endpoint)
@@ -100,20 +120,45 @@ RSpec.describe Mastodon do
         expect(response['id']).to eq('media_123')
       end
 
-      it 'handles 202 accepted response' do
-        stub_request(:post, media_endpoint)
-          .to_return(
-            status: 202,
-            body: { id: 'media_456' }.to_json
-          )
+      context 'when the server is still processing the upload' do
+        before do
+          allow(mastodon).to receive(:sleep)
+          stub_request(:post, media_endpoint).to_return(status: 202, body: { id: 'media_456', url: nil }.to_json)
+        end
 
-        response = mastodon.upload_media(url: image_url, alt_text: alt_text)
-        expect(response['id']).to eq('media_456')
+        it 'waits until the media is ready' do
+          stub_request(:get, "#{base_url}/api/v1/media/media_456")
+            .to_return({ status: 206, body: { id: 'media_456', url: nil }.to_json },
+                       { status: 200, body: { id: 'media_456', url: 'https://files.example/1.jpg' }.to_json })
+
+          response = mastodon.upload_media(url: image_url, alt_text: alt_text)
+
+          expect(response['url']).to eq('https://files.example/1.jpg')
+          expect(WebMock).to have_requested(:get, "#{base_url}/api/v1/media/media_456").twice
+        end
+
+        it 'gives up if processing never finishes' do
+          stub_request(:get, "#{base_url}/api/v1/media/media_456").to_return(status: 206, body: { id: 'media_456' }.to_json)
+
+          expect { mastodon.upload_media(url: image_url, alt_text: alt_text) }.to raise_error(/still processing/)
+        end
+
+        it 'raises if processing fails' do
+          stub_request(:get, "#{base_url}/api/v1/media/media_456").to_return(status: 422, body: '{}')
+
+          expect { mastodon.upload_media(url: image_url, alt_text: alt_text) }.to raise_error(/failed processing/)
+        end
       end
 
-      it 'transliterates alt text' do
-        mastodon.upload_media(url: image_url, alt_text: 'Caf\u00e9 image')
-        # Should not raise an error
+      it 'keeps non-Latin alt text as written' do
+        mastodon.upload_media(url: image_url, alt_text: 'Café in 東京')
+        expect(WebMock).to have_requested(:post, media_endpoint).with { |req| req.body.b.include?('Café in 東京'.b) }
+      end
+
+      # Alt text stays nil until it's reviewed, which used to crash the upload.
+      it 'uploads photos without alt text' do
+        expect { mastodon.upload_media(url: image_url, alt_text: nil) }.not_to raise_error
+        expect(WebMock).to have_requested(:post, media_endpoint).with { |req| !req.body.include?('name="description"') }
       end
 
       it 'includes focal point when provided' do

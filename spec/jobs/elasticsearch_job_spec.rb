@@ -27,9 +27,24 @@ RSpec.describe ElasticsearchJob, type: :worker do
     end
 
     context 'with delete operation' do
-      it 'deletes the document' do
-        expect(es_proxy).to receive(:delete_document)
-        described_class.new.perform(entry.id, 'delete')
+      let(:client) { double('elasticsearch_client') }
+
+      before do
+        allow(Entry.__elasticsearch__).to receive(:client).and_return(client)
+      end
+
+      # The job runs after the row is destroyed, so it can't load the record.
+      it 'deletes the document by ID once the entry is gone' do
+        entry_id = entry.id
+        entry.destroy!
+
+        expect(client).to receive(:delete).with(index: Entry.index_name, id: entry_id, ignore: 404)
+        described_class.new.perform(entry_id, 'delete')
+      end
+
+      it "accepts 'destroy' from jobs enqueued before the rename" do
+        expect(client).to receive(:delete).with(index: Entry.index_name, id: 123, ignore: 404)
+        described_class.new.perform(123, 'destroy')
       end
     end
 

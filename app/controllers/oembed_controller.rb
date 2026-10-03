@@ -13,8 +13,10 @@ class OembedController < ApplicationController
     return head(:not_modified) if request.fresh?(response)
 
     logger.tagged('oEmbed') { logger.info { "oEmbed requested for url: #{params[:url]}, maxwidth: #{params[:maxwidth] || 'none'}, maxheight: #{params[:maxheight] || 'none'}, format: #{request.format}" } }
-    @url, @width, @height = get_photo(@entry, 1200, params[:maxwidth], params[:maxheight])
-    @thumb_url, @thumb_width, @thumb_height = get_photo(@entry, 300, params[:maxwidth], params[:maxheight])
+    maxwidth = dimension_param(params[:maxwidth])
+    maxheight = dimension_param(params[:maxheight])
+    @url, @width, @height = get_photo(@entry, 1200, maxwidth, maxheight)
+    @thumb_url, @thumb_width, @thumb_height = get_photo(@entry, 300, maxwidth, maxheight)
     respond_to do |format|
       format.json
       format.xml { render content_type: 'text/xml' }
@@ -39,18 +41,26 @@ class OembedController < ApplicationController
     ).call
   end
 
+  # maxwidth and maxheight that aren't positive integers ("0", "-5", "abc") are
+  # ignored, as if they hadn't been sent, rather than producing zero or negative
+  # image sizes.
+  def dimension_param(value)
+    number = Integer(value.to_s, 10, exception: false)
+    number if number&.positive?
+  end
+
   def get_photo(entry, width = 1200, maxwidth, maxheight)
     if entry.is_photo?
       photo = entry.photos[0]
       height = photo.height_from_width(width)
 
-      if maxwidth.present? && maxwidth.to_i < width
-        width = maxwidth.to_i
+      if maxwidth.present? && maxwidth < width
+        width = maxwidth
         height = photo.height_from_width(width)
       end
 
-      if maxheight.present? && maxheight.to_i < height
-        height = maxheight.to_i
+      if maxheight.present? && maxheight < height
+        height = maxheight
         width = photo.width_from_height(height)
       end
 

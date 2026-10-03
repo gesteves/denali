@@ -1,7 +1,9 @@
 class PushNotificationJob < ApplicationJob
   def perform(push_subscription_id, entry_id)
-    push_subscription = PushSubscription.find(push_subscription_id)
-    entry = Entry.published.find(entry_id)
+    # The subscription may have been removed, or the entry unpublished, since
+    # this was enqueued.
+    push_subscription = PushSubscription.find_by(id: push_subscription_id)
+    entry = Entry.published.find_by(id: entry_id)
 
     return if push_subscription.blank? || entry.blank?
 
@@ -23,9 +25,9 @@ class PushNotificationJob < ApplicationJob
       title: title,
       body: entry.plain_title,
       icon: entry.blog.touch_icon_url(width: 512),
-      image: entry.photos.first.url(width: 1920),
+      image: entry.photos.first&.url(width: 1920),
       url: entry.permalink_url(utm_source: 'Push Notification', utm_medium: 'push', utm_campaign: 'new-photo')
-    }
+    }.compact
 
     begin
       WebPush.payload_send(

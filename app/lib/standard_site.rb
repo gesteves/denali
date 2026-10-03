@@ -121,7 +121,9 @@ class StandardSite
   #
   # It reloads the entry rather than trusting what the caller knew, so one job argument covers a
   # publish, an unpublish and a change to the search-engine setting in either direction. An entry
-  # that is gone, a draft, queued, or hidden from search engines takes the delete path.
+  # that is gone, a draft, queued, or hidden from search engines takes the delete path, unless it
+  # has no fingerprint: then no record was ever written (or it was already deleted), and a delete
+  # would only spend a point of the PDS budget. Every photo save on a draft lands here.
   #
   # @param entry_id [Integer] the entry's id.
   # @return [Symbol] :synced, :unchanged, :deleted or :skipped.
@@ -129,6 +131,9 @@ class StandardSite
     entry = @blog.entries.find_by(id: entry_id)
 
     if entry.nil? || !publishable?(entry)
+      if entry.present? && entry.standard_site_fingerprint.blank?
+        return log("document #{entry_id} was never written; skipping", :skipped)
+      end
       return remove_document!(self.class.document_rkey(entry_id), entry)
     end
 
@@ -147,14 +152,19 @@ class StandardSite
   #
   # @return [Symbol] :synced or :unchanged.
   def sync_publication
-    record = build_publication_record(icon: cover_source(publication_icon_url))
+    icon_url = publication_icon_url
+    record = build_publication_record(icon: cover_source(icon_url))
     fingerprint = fingerprint_of(record)
     return log('publication unchanged; skipping', :unchanged) if fingerprint == @blog.standard_site_fingerprint
 
-    record = build_publication_record(icon: upload_image(publication_icon_url))
+    icon = upload_image(icon_url)
+    record = build_publication_record(icon: icon)
     put_record(collection: PUBLICATION_COLLECTION, rkey: PUBLICATION_RKEY, record: record,
                validate: false)
-    @blog.update_columns(standard_site_did: did, standard_site_fingerprint: fingerprint)
+    # Same as a document's cover: a failed icon upload stores the fingerprint of what was written,
+    # so the next sync tries again.
+    written = icon_url.present? && icon.nil? ? fingerprint_of(build_publication_record) : fingerprint
+    @blog.update_columns(standard_site_did: did, standard_site_fingerprint: written)
     log("publication synced at #{self.class.publication_uri(did)}", :synced)
   end
 
@@ -357,10 +367,17 @@ class StandardSite
     end
 
     store_did!
-    record = build_document_record(entry, cover_image: upload_image(cover_image_url(entry)))
+    cover_url = cover_image_url(entry)
+    cover_image = upload_image(cover_url)
+    record = build_document_record(entry, cover_image: cover_image)
     put_record(collection: DOCUMENT_COLLECTION, rkey: self.class.document_rkey(entry.id),
                record: record, validate: false)
-    entry.update_columns(standard_site_fingerprint: fingerprint)
+    # When the cover failed to upload, the record went out without one. Storing the fingerprint of
+    # what was written (no cover) rather than the full one makes the next sync see a difference and
+    # try the upload again; the full one would mark it done forever. Not nil, though: nil means "no
+    # record", and an unpublish would then skip the delete.
+    written = cover_url.present? && cover_image.nil? ? fingerprint_of(build_document_record(entry)) : fingerprint
+    entry.update_columns(standard_site_fingerprint: written)
     log("document #{entry.id} synced as #{self.class.document_rkey(entry.id)}", :synced)
   end
 

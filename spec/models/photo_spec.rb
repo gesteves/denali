@@ -27,6 +27,18 @@ RSpec.describe Photo, type: :model do
 
       expect(entry.updated_at).not_to eq(original_updated_at)
     end
+
+    # The entry association is optional.
+    it 'saves a photo without an entry' do
+      photo = create(:photo, entry: nil)
+      expect { photo.update!(alt_text: 'Foo', camera: create(:camera), latitude: 1, longitude: 1) }.not_to raise_error
+    end
+
+    it 'destroys an entry along with its photos' do
+      photo = create(:photo, entry: entry, camera: create(:camera))
+      expect { entry.destroy! }.not_to raise_error
+      expect(Photo.exists?(photo.id)).to be false
+    end
   end
 
   describe 'territory_list' do
@@ -334,6 +346,13 @@ RSpec.describe Photo, type: :model do
         expect(photo.has_location?).to be true
       end
     end
+
+    describe '#formatted_location' do
+      it 'uses a typographic apostrophe' do
+        photo = build(:photo, entry: entry, location: "Martha's Vineyard", country: 'United States')
+        expect(photo.formatted_location).to start_with("Martha’s Vineyard")
+      end
+    end
   end
 
   describe '#warm_cache' do
@@ -395,6 +414,18 @@ RSpec.describe Photo, type: :model do
       create(:photo, entry: entry)
 
       expect(StandardSiteJob.jobs.map { |job| job['args'] }).to include(['sync_document', entry.id])
+    end
+
+    # A draft has no record to update, and each sync it caused used to cost a delete.
+    it "doesn't sync a draft entry's record when one of its photos changes" do
+      blog = create(:blog, :on_standard_site)
+      entry = create(:entry, :draft, blog: blog, user: create(:user))
+      photo = create(:photo, entry: entry)
+      StandardSiteJob.jobs.clear
+
+      photo.update!(alt_text: 'A different description')
+
+      expect(StandardSiteJob.jobs).to be_empty
     end
 
     it 'queues nothing for a blog that names no account' do

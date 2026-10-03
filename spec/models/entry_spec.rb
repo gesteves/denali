@@ -245,6 +245,32 @@ RSpec.describe Entry, type: :model do
     end
   end
 
+  describe 'hashtag selection' do
+    let(:entry) { create(:entry, :published, blog: blog, user: user, tag_list: 'mountains') }
+
+    before do
+      # More matching hashtags than fit, so a different draw gives a different caption.
+      12.times do |i|
+        create(:tag_customization, blog: blog, tag_list: 'mountains',
+               mastodon_hashtags: "#Tag#{i}A #Tag#{i}B", bluesky_hashtags: "#Sky#{i}A #Sky#{i}B")
+      end
+    end
+
+    # CaptionValidityJob checks one caption and the share job builds another, so
+    # they have to agree on which hashtags go in.
+    it 'picks the same hashtags every time for the same entry' do
+      draws = 5.times.map { Entry.find(entry.id).mastodon_hashtags }
+      expect(draws.uniq.size).to eq(1)
+
+      draws = 5.times.map { Entry.find(entry.id).bluesky_hashtags }
+      expect(draws.uniq.size).to eq(1)
+    end
+
+    it 'still limits the number of hashtags' do
+      expect(entry.mastodon_hashtags.split.size).to eq(5)
+    end
+  end
+
   describe '#bluesky_caption' do
     it 'turns square brackets in the title into parentheses' do
       # The caption wraps the title in a Markdown link, and MarkdownLinks can't cross a bracket,

@@ -55,14 +55,16 @@ RSpec.describe ColorDetectionJob, type: :worker do
       expect(photo.black_and_white).to be true
     end
 
-    it 'defaults to color when error occurs' do
+    # A failed comparison used to save the photo as color, and nothing retried it.
+    it 'raises for a retry when the comparison fails, leaving the photo unchanged' do
+      photo.update_columns(color: false, black_and_white: true)
       allow(MiniMagick::Image).to receive(:open).and_raise(StandardError.new('Test error'))
 
-      described_class.new.perform(photo.id)
+      expect { described_class.new.perform(photo.id) }.to raise_error(StandardError, 'Test error')
       photo.reload
 
-      expect(photo.color).to be true
-      expect(photo.black_and_white).to be false
+      expect(photo.color).to be false
+      expect(photo.black_and_white).to be true
     end
 
     it 'ensures the photo is analyzed before processing' do
@@ -70,7 +72,7 @@ RSpec.describe ColorDetectionJob, type: :worker do
 
       expect_any_instance_of(Photo).to receive(:ensure_analyzed!)
 
-      described_class.new.perform(photo.id)
+      expect { described_class.new.perform(photo.id) }.to raise_error(StandardError)
     end
   end
 end

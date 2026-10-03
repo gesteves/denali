@@ -355,6 +355,12 @@ RSpec.describe "GraphQL", type: :request do
     end
 
     describe "search query" do
+      it "refuses pages past what Elasticsearch can return" do
+        expect(Entry).not_to receive(:published_search)
+        result = execute_query('query { search(term: "x", page: 101, count: 100) { totalCount } }')
+        expect(result['errors'].first['message']).to include("can't go past")
+      end
+
       before do
         # Create entries with searchable content
         create(:entry, :published, :with_photo, title: "Mountain Photography", blog: blog, user: user).tap do |e|

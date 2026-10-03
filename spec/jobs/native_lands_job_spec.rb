@@ -48,6 +48,23 @@ RSpec.describe NativeLandsJob, type: :worker do
       expect(photo.territories.first.name).to eq('Lenape')
     end
 
+    # Replacing the join rows doesn't save the photo, so nothing downstream
+    # (the entry's search document, its cached pages) would hear about it.
+    it 'touches the photo so its entry is refreshed' do
+      stub_request(:get, /native-land.ca/).to_return(status: 200, body: [].to_json)
+
+      expect { described_class.new.perform(photo.id) }.to(change { photo.reload.updated_at })
+    end
+
+    it 'clears territories when the new location has none' do
+      photo.territories << create(:territory)
+      stub_request(:get, /native-land.ca/).to_return(status: 200, body: [].to_json)
+
+      described_class.new.perform(photo.id)
+
+      expect(photo.reload.territories).to be_empty
+    end
+
     it 'creates new territories if not found' do
       response_body = [
         {

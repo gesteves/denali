@@ -101,8 +101,14 @@ class ApplicationController < ActionController::Base
     response.headers['Cache-Tag'] = tags.flatten.compact.uniq.join(',')
   end
 
+  # Without a blog (none set up yet, or a controller that skips loading it) the
+  # action still has to run, in the app's default zone.
   def set_time_zone(&block)
-    Time.use_zone(@photoblog.time_zone, &block) if @photoblog.present?
+    if @photoblog.present?
+      Time.use_zone(@photoblog.time_zone, &block)
+    else
+      yield
+    end
   end
 
   def add_preload_link_header(url, opts = {})

@@ -5,6 +5,8 @@ class ColorDetectionJob < ApplicationJob
     photo.ensure_analyzed!
     raise UnprocessedPhotoError unless photo.has_dimensions?
 
+    # Raises if the comparison can't run (a fetch or ImageMagick failure), so
+    # Sidekiq retries it rather than the photo being recorded as color.
     is_bw = is_black_and_white?(photo)
     photo.black_and_white = is_bw
     photo.color = !is_bw
@@ -34,7 +36,5 @@ class ColorDetectionJob < ApplicationJob
 
     # Return true if the mean error per pixel is below the threshold
     mean_error_per_pixel <= threshold
-  rescue StandardError => e
-    false
   end
 end

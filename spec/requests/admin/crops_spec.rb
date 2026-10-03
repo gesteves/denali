@@ -73,6 +73,7 @@ RSpec.describe "Admin::Crops", type: :request do
         }
       }, as: :json
       json = JSON.parse(response.body)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(json['status']).to eq('danger')
     end
   end

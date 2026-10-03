@@ -211,12 +211,59 @@ RSpec.describe "Admin::Entries", type: :request do
       expect(entry.title).to eq('Updated Title')
     end
 
+    # Re-running them on every edit is wasted work, and used to overwrite the
+    # park chosen in the form with the one in the file.
+    it "doesn't reprocess photos whose image didn't change" do
+      Sidekiq::Worker.clear_all
+      patch admin_entry_path(entry), params: { entry: { title: 'Updated Title' } }
+
+      expect(PhotoExifJob.jobs).to be_empty
+      expect(ColorDetectionJob.jobs).to be_empty
+      expect(BlurhashJob.jobs).to be_empty
+    end
+
+    it "reprocesses a photo whose image was replaced" do
+      photo = entry.photos.first
+      Sidekiq::Worker.clear_all
+      patch admin_entry_path(entry), params: { entry: { photos_attributes: { '0' => {
+        id: photo.id, image: fixture_file_upload(Rails.root.join('spec/fixtures/images/rusty.jpg'), 'image/jpeg')
+      } } } }
+
+      expect(PhotoExifJob.jobs.map { |j| j['args'] }).to eq([[photo.id]])
+    end
+
     it "updates modified_at" do
       original_modified_at = entry.modified_at
       sleep(0.01)
       patch admin_entry_path(entry), params: { entry: { title: 'Updated' } }
       entry.reload
       expect(entry.modified_at).not_to eq(original_modified_at)
+    end
+  end
+
+  describe "POST /admin/entries/queued/update" do
+    let!(:first) { create(:entry, :queued, blog: blog, user: user) }
+    let!(:second) { create(:entry, :queued, blog: blog, user: user) }
+
+    it "reorders the queue" do
+      post '/admin/entries/queued/update', params: { entry_ids: [second.id, first.id] }, as: :json
+
+      expect(response).to have_http_status(:success)
+      expect(second.reload.position).to eq(1)
+      expect(first.reload.position).to eq(2)
+    end
+
+    it "skips IDs that are no longer in the queue" do
+      post '/admin/entries/queued/update', params: { entry_ids: [entry.id, 999_999, second.id, first.id] }, as: :json
+
+      expect(response).to have_http_status(:success)
+      expect(second.reload.position).to eq(1)
+      expect(first.reload.position).to eq(2)
+    end
+
+    it "doesn't crash without entry IDs" do
+      post '/admin/entries/queued/update', params: {}, as: :json
+      expect(response).to have_http_status(:success)
     end
   end
 

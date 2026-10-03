@@ -19,6 +19,10 @@ class BlueskyJob < ApplicationJob
     end
   end
 
+  # @param text [String, nil] the caption. Without one, the job builds the entry's
+  #   new-photo caption when it runs rather than when it was enqueued, so an entry
+  #   published straight from the form gets the tags and EXIF details that are
+  #   only filled in after it's saved.
   # @param rkey [String, nil] the record key the post is written at, made by the caller with
   #   Bluesky.new_tid before it enqueued this job. It is what makes a retry replace the post
   #   rather than add another one. A job enqueued before this argument existed arrives without it
@@ -33,6 +37,7 @@ class BlueskyJob < ApplicationJob
     account = entry.user&.bluesky_account
     return if account.nil?
 
+    text ||= entry.bluesky_caption(utm_campaign: 'new-photo')
     bluesky = Bluesky.from_social_account(account)
 
     photos = entry.photos.take(Bluesky::MAX_PHOTOS).map do |p|

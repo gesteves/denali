@@ -21,8 +21,8 @@ class NationalParkJob < ApplicationJob
       p.url = data['url']
       p.slug = data['fullName'].parameterize
     end
-    photo.park = park
-    photo.save!
+    # The park may have been chosen in the admin while this job waited.
+    photo.update!(park: park) if photo.park.blank?
   end
 
   private

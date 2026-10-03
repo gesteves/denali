@@ -30,10 +30,29 @@ RSpec.describe MastodonJob, type: :worker do
           text: text,
           media_ids: ['12345'],
           sensitive: false,
-          spoiler_text: nil
+          spoiler_text: nil,
+          idempotency_key: nil
         )
 
         described_class.new.perform(entry.id, text)
+      end
+
+      it 'builds the caption when the job runs if none was passed' do
+        expect(mastodon_instance).to receive(:create_status)
+          .with(hash_including(text: entry.mastodon_caption(utm_campaign: 'new-photo')))
+
+        described_class.new.perform(entry.id, nil)
+      end
+
+      # The jid is stable across Sidekiq retries, unlike the media IDs.
+      it 'keys the post by job so a retry cannot post twice' do
+        job = described_class.new
+        job.jid = 'abc123'
+
+        expect(mastodon_instance).to receive(:create_status)
+          .with(hash_including(idempotency_key: "denali-#{entry.id}-abc123"))
+
+        job.perform(entry.id, text)
       end
 
       it 'updates entry with share tracking' do
@@ -51,7 +70,8 @@ RSpec.describe MastodonJob, type: :worker do
           text: text,
           media_ids: ['12345'],
           sensitive: true,
-          spoiler_text: 'Sensitive content'
+          spoiler_text: 'Sensitive content',
+          idempotency_key: nil
         )
 
         described_class.new.perform(entry.id, text)

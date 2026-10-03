@@ -1,9 +1,7 @@
 class Admin::PublishSchedulesController < AdminController
 
   def index
-    @schedules = @photoblog.publish_schedules
-    @page_title = 'Queue schedule'
-    @queued_entries = @photoblog.entries.queued.count
+    load_index
     @new_schedule = PublishSchedule.new
     respond_to do |format|
       format.html
@@ -18,8 +16,10 @@ class Admin::PublishSchedulesController < AdminController
         flash[:success] = "Publishing schedule updated!"
         format.html { redirect_to admin_entries_queued_schedule_path }
       else
-        flash[:warning] = 'The publishing schedule couldn’t be updated…'
-        format.html { render :index }
+        flash.now[:warning] = 'The publishing schedule couldn’t be updated…'
+        load_index
+        @new_schedule = @schedule
+        format.html { render :index, status: :unprocessable_content }
       end
     end
   end
@@ -33,6 +33,12 @@ class Admin::PublishSchedulesController < AdminController
   end
 
   private
+  def load_index
+    @schedules = @photoblog.publish_schedules
+    @page_title = 'Queue schedule'
+    @queued_entries = @photoblog.entries.queued.count
+  end
+
   def schedule_params
     params.require(:publish_schedule).permit(:hour)
   end

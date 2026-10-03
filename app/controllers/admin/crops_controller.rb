@@ -8,12 +8,12 @@ class Admin::CropsController < AdminController
     if crop.update(crop_params)
       message = "The crop has been updated."
       status = 'success'
-      code = 200
+      code = :ok
     else
       Rails.logger.error "Crop update failed for photo #{@photo.id}: #{crop.errors.full_messages.join(', ')}"
       message = "The crop couldn’t be updated."
       status = 'danger'
-      code = 500
+      code = :unprocessable_content
     end
     respond_to do |format|
       format.json {
@@ -21,7 +21,7 @@ class Admin::CropsController < AdminController
           status: status,
           message: message
         }
-        render json: response, code: code
+        render json: response, status: code
       }
     end
   end

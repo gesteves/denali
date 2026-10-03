@@ -12,7 +12,11 @@ class ThreadsJob < ApplicationJob
     end
   end
 
-  def perform(entry_id, text)
+  # @param text [String, nil] the caption. Without one, the job builds the entry's
+  #   new-photo caption when it runs rather than when it was enqueued, so an entry
+  #   published straight from the form gets the tags and EXIF details that are
+  #   only filled in after it's saved.
+  def perform(entry_id, text = nil)
     return if !Rails.env.production?
     return if ENV['THREADS_APP_ID'].blank? || ENV['THREADS_APP_SECRET'].blank?
 
@@ -23,6 +27,7 @@ class ThreadsJob < ApplicationJob
     threads_account = entry.user.threads_account
     return if threads_account.blank?
 
+    text ||= entry.threads_caption(utm_campaign: 'new-photo')
     threads = Threads.new(
       app_id: ENV['THREADS_APP_ID'],
       app_secret: ENV['THREADS_APP_SECRET'],

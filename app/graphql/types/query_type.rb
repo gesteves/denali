@@ -30,6 +30,7 @@ module Types
     end
 
     def search(term:, page:, count:)
+      raise GraphQL::ExecutionError, "Search can't go past #{Entry::MAX_SEARCH_RESULTS} results" unless Entry.search_page_in_range?(page, count)
       results = Entry.published_search(term, page, count)
       total_count = results.results.total
       entries = Kaminari.paginate_array(results.records, total_count: total_count).page(page).per(count)

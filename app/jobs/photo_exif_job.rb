@@ -41,7 +41,9 @@ class PhotoExifJob < ApplicationJob
           photo.location = location if photo.location.blank? && location.present?
 
           park_code = comment_array.find { |c| c =~ /^park:/i }&.gsub(/^park:/i, '')&.strip&.downcase
-          if park_code.present?
+          # The park can also be chosen in the admin, and that choice wins over
+          # the one recorded in the file.
+          if park_code.present? && photo.park.blank?
             park = Park.find_by(code: park_code)
             if park.present?
               photo.park = park

@@ -75,8 +75,9 @@ export default class extends Controller {
       credentials: 'include',
       body: formData
     });
-    if (!response.ok) return;
-    const json = await response.json();
+    // Failures come back as JSON with their own message; anything else (a 500
+    // page, a dropped connection mid-body) gets a generic one.
+    const json = await response.json().catch(() => ({ message: 'The crop couldn’t be updated.', status: 'danger' }));
     sendNotification(json.message, json.status);
   }
 

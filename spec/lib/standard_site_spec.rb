@@ -295,6 +295,19 @@ RSpec.describe StandardSite do
         .to have_been_made.once
     end
 
+    # The upload fails soft, so the record goes out without a cover; the next sync has to try again
+    # rather than see the fingerprint and call it done.
+    it 'tries the cover again on the next sync after its upload failed' do
+      allow_any_instance_of(described_class).to receive(:cover_image_url).and_return('https://example.com/cover.jpg')
+      allow_any_instance_of(described_class).to receive(:upload_image).and_return(nil)
+      expect(service.sync_document(entry.id)).to eq(:synced)
+      expect(entry.reload.standard_site_fingerprint).to be_present
+
+      allow_any_instance_of(described_class).to receive(:upload_image).and_return({ 'ref' => 'blob' })
+      expect(described_class.from_blog(blog.reload).sync_document(entry.id)).to eq(:synced)
+      expect(described_class.from_blog(blog.reload).sync_document(entry.id)).to eq(:unchanged)
+    end
+
     it 'writes again when the entry changed' do
       service.sync_document(entry.id)
       entry.update!(title: 'Another Title')
@@ -326,9 +339,18 @@ RSpec.describe StandardSite do
 
     it 'deletes the record when the entry is unpublished' do
       stub_delete_record
-      entry.update_columns(status: 'draft')
+      entry.update_columns(status: 'draft', standard_site_fingerprint: 'written')
 
       expect(service.sync_document(entry.id)).to eq(:deleted)
+      expect(entry.reload.standard_site_fingerprint).to be_nil
+    end
+
+    # Every photo save on a draft syncs it, and each delete costs a point of the PDS budget.
+    it 'skips the delete for an unpublished entry that never had a record' do
+      entry.update_columns(status: 'draft', standard_site_fingerprint: nil)
+
+      expect(service.sync_document(entry.id)).to eq(:skipped)
+      expect(WebMock).not_to have_requested(:post, 'https://bsky.social/xrpc/com.atproto.repo.deleteRecord')
     end
 
     it 'deletes the record for an entry that is gone' do
@@ -376,7 +398,7 @@ RSpec.describe StandardSite do
     it 'raises rather than reporting a delete that simply failed' do
       stub_request(:post, 'https://bsky.social/xrpc/com.atproto.repo.deleteRecord')
         .to_return(status: 429, body: 'slow down', headers: { 'ratelimit-reset' => reset.to_s })
-      entry.update_columns(status: 'draft')
+      entry.update_columns(status: 'draft', standard_site_fingerprint: 'written')
 
       expect { service.sync_document(entry.id) }.to raise_error(AtProto::RateLimitedError)
     end
@@ -466,7 +488,7 @@ RSpec.describe StandardSite do
 
     it 'names the record it deleted' do
       stub_delete_record
-      entry.update_columns(status: 'draft')
+      entry.update_columns(status: 'draft', standard_site_fingerprint: 'written')
       expect(Rails.logger).to receive(:info).with(/document .* deleted/)
 
       service.sync_document(entry.id)

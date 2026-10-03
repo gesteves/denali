@@ -20,6 +20,14 @@ RSpec.describe PublishJob, type: :worker do
       end
     end
 
+    context 'when nothing has been published yet' do
+      it 'publishes the first queued entry' do
+        expect(blog).to receive(:publish_queued_entry!)
+        allow(Blog).to receive(:first).and_return(blog)
+        described_class.new.perform
+      end
+    end
+
     context 'when an entry was published in last 10 minutes' do
       let!(:recent_entry) { create(:entry, :published, blog: blog, user: user, published_at: 5.minutes.ago) }
 

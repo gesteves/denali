@@ -221,6 +221,42 @@ describe('CropperController', () => {
         expect(notifyEvent[0].detail.message).toBe('Crop saved successfully');
       });
     });
+
+    it('shows the server’s message when the crop is rejected', async () => {
+      global.fetch.mockResolvedValueOnce({
+        ok: false,
+        status: 422,
+        json: () => Promise.resolve({ message: 'The crop couldn’t be updated.', status: 'danger' })
+      });
+      const dispatchSpy = vi.spyOn(document.body, 'dispatchEvent');
+
+      const controller = getController();
+      controller.initializedCropper = true;
+      controller.updateCrop({ x: 0.1, y: 0.2, width: 0.5, height: 0.3 });
+
+      await vi.waitFor(() => {
+        const notifyEvent = dispatchSpy.mock.calls.find(call => call[0].type === 'notify');
+        expect(notifyEvent[0].detail.status).toBe('danger');
+      });
+    });
+
+    it('shows a generic error when the response isn’t JSON', async () => {
+      global.fetch.mockResolvedValueOnce({
+        ok: false,
+        status: 500,
+        json: () => Promise.reject(new SyntaxError('Unexpected token <'))
+      });
+      const dispatchSpy = vi.spyOn(document.body, 'dispatchEvent');
+
+      const controller = getController();
+      controller.initializedCropper = true;
+      controller.updateCrop({ x: 0.1, y: 0.2, width: 0.5, height: 0.3 });
+
+      await vi.waitFor(() => {
+        const notifyEvent = dispatchSpy.mock.calls.find(call => call[0].type === 'notify');
+        expect(notifyEvent[0].detail.message).toBe('The crop couldn’t be updated.');
+      });
+    });
   });
 
   describe('fixCropperOverlay', () => {

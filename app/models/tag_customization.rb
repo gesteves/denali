@@ -4,11 +4,14 @@ class TagCustomization < ApplicationRecord
   belongs_to :blog, touch: true, optional: true
   acts_as_taggable_on :tags
 
+  # Merging comes first so the cleanups below also sort and dedupe what it
+  # brings in. (A before_create would run after every before_save.)
+  before_save :merge_existing_tag_customization, if: :new_record?
   before_save :cleanup_hashtags
   before_save :cleanup_flickr_albums
   before_save :cleanup_threads_topics
-  after_save :cleanup_flickr_groups, if: :saved_change_to_flickr_groups?
-  before_create :merge_existing_tag_customization
+  # After commit, so the job can't run before the row it loads is visible.
+  after_commit :cleanup_flickr_groups, on: [:create, :update], if: :saved_change_to_flickr_groups?
 
   def bluesky_hashtags_to_a
     return [] if self.bluesky_hashtags.blank?
@@ -98,7 +101,7 @@ class TagCustomization < ApplicationRecord
   private
 
   def merge_existing_tag_customization
-    existing = TagCustomization.where.not(id: self.id).tagged_with(self.tag_list, match_all: true).first
+    existing = TagCustomization.where(blog_id: self.blog_id).where.not(id: self.id).tagged_with(self.tag_list, match_all: true).first
     return unless existing
 
     # Merge hashtags
@@ -118,8 +121,11 @@ class TagCustomization < ApplicationRecord
     end
   end
 
+  # Keeps letters and digits from any script (#Montaña, #東京), since every
+  # platform the hashtags go to supports Unicode ones.
   def convert_to_hashtag(text)
     return if text.blank?
-    "##{text.gsub(/[^a-zA-Z0-9]/, '')}"
+    tag = text.unicode_normalize(:nfc).gsub(/[^\p{L}\p{M}\p{N}]/, '')
+    "##{tag}" if tag.present?
   end
 end

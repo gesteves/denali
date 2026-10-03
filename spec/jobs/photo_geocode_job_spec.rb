@@ -50,8 +50,17 @@ RSpec.describe PhotoGeocodeJob, type: :worker do
       expect(photo.administrative_area).to eq('New York')
     end
 
+    # Out at sea there's nothing to find, and retrying for weeks won't change that.
+    it 'leaves the photo alone when there are no results' do
+      stub_request(:get, /maps.googleapis.com/)
+        .to_return(status: 200, body: { 'status' => 'ZERO_RESULTS', 'results' => [] }.to_json)
+
+      expect { described_class.new.perform(photo.id) }.not_to raise_error
+      expect(photo.reload.country).to be_nil
+    end
+
     it 'raises error when geocode request fails' do
-      response_body = { 'status' => 'ZERO_RESULTS' }.to_json
+      response_body = { 'status' => 'OVER_QUERY_LIMIT' }.to_json
 
       stub_request(:get, /maps.googleapis.com/)
         .to_return(status: 200, body: response_body)

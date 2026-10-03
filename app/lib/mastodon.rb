@@ -3,6 +3,8 @@ require 'json'
 
 class Mastodon
   MAX_MEDIA_ATTACHMENTS = 4
+  MEDIA_POLL_ATTEMPTS = 15
+  MEDIA_POLL_INTERVAL = 2 # seconds
 
   # Initializes a new Mastodon API client.
   #
@@ -33,9 +35,12 @@ class Mastodon
   # @param visibility [String] the visibility level ('public', 'unlisted', 'private', 'direct').
   # @param language [String] the ISO 639-1 language code.
   # @param scheduled_at [String, nil] ISO 8601 datetime for scheduling.
+  # @param idempotency_key [String, nil] identifies this post across retries, so the
+  #   server returns the original status instead of posting it twice. Mastodon
+  #   remembers keys for an hour. Defaults to a digest of the text.
   # @return [Hash] the parsed response from the API.
   # @raise [RuntimeError] if the API request fails.
-  def create_status(text:, media_ids: [], sensitive: false, spoiler_text: nil, visibility: 'public', language: 'en', scheduled_at: nil)
+  def create_status(text:, media_ids: [], sensitive: false, spoiler_text: nil, visibility: 'public', language: 'en', scheduled_at: nil, idempotency_key: nil)
     endpoint = "#{@base_url}/api/v1/statuses"
 
     body = {
@@ -48,10 +53,9 @@ class Mastodon
       scheduled_at: scheduled_at
     }.compact
 
-    headers = {
-      'Authorization': "Bearer #{@bearer_token}",
-      'Idempotency-Key': Digest::SHA256.base64digest(body.to_s)
-    }
+    # Not a digest of the whole body: a retry re-uploads the media and gets new
+    # media IDs, which would change the key and post a duplicate.
+    headers = auth_headers.merge('Idempotency-Key': idempotency_key || Digest::SHA256.base64digest(body[:status]))
 
     response = HTTParty.post(endpoint, body: body, headers: headers)
 
@@ -67,10 +71,11 @@ class Mastodon
   # Uploads media to Mastodon for later attachment to a status.
   #
   # @param url [String] the URL of the media file to upload.
-  # @param alt_text [String] the alt text description for the media.
+  # @param alt_text [String, nil] the alt text description for the media.
   # @param focal_point [Array<Float>, nil] the focal point as [x, y] coordinates (-1.0 to 1.0).
-  # @return [Hash] the parsed response from the API containing the media ID.
-  # @raise [RuntimeError] if the media fetch or upload fails.
+  # @return [Hash] the parsed response from the API containing the media ID. If the
+  #   server is still processing the file, waits until it's ready to attach.
+  # @raise [RuntimeError] if the media fetch, upload, or processing fails.
   def upload_media(url:, alt_text:, focal_point: nil)
     endpoint = "#{@base_url}/api/v2/media"
 
@@ -80,24 +85,43 @@ class Mastodon
       raise "Failed to fetch media from #{url}: #{e.message}"
     end
 
+    # Mastodon takes UTF-8 descriptions; photos whose alt text hasn't been
+    # written yet go up without one.
     body = {
       file: file,
-      description: HTMLEntities.new.decode(ActiveSupport::Inflector.transliterate(alt_text)),
+      description: HTMLEntities.new.decode(alt_text.to_s).presence,
       focus: focal_point&.join(',')
     }.compact
 
-    headers = {
-      'Authorization': "Bearer #{@bearer_token}"
-    }
+    response = HTTParty.post(endpoint, body: body, headers: auth_headers, stream_body: false)
 
-    response = HTTParty.post(endpoint, body: body, headers: headers, stream_body: false)
-
-    if response.code == 200 || response.code == 202
+    if response.code == 200
       JSON.parse(response.body)
+    elsif response.code == 202
+      wait_for_media_processing(JSON.parse(response.body)['id'])
     else
       Rails.logger.error("[Mastodon] upload_media failed: status=#{response.code}, url=#{url}")
       Rails.logger.error("[Mastodon] Response body: #{response.body.truncate(500)}")
       raise "Mastodon upload_media failed with status #{response.code}"
     end
+  end
+
+  private
+
+  def auth_headers
+    { 'Authorization': "Bearer #{@bearer_token}" }
+  end
+
+  # A 202 from the upload means the server accepted the file but hasn't finished
+  # processing it, and a status can't attach media until it has. The media
+  # endpoint answers 206 while processing and 200 once it's ready.
+  def wait_for_media_processing(id)
+    MEDIA_POLL_ATTEMPTS.times do
+      sleep MEDIA_POLL_INTERVAL
+      response = HTTParty.get("#{@base_url}/api/v1/media/#{id}", headers: auth_headers)
+      return JSON.parse(response.body) if response.code == 200
+      raise "Mastodon media #{id} failed processing with status #{response.code}" unless response.code == 206
+    end
+    raise "Mastodon media #{id} was still processing after #{MEDIA_POLL_ATTEMPTS * MEDIA_POLL_INTERVAL} seconds"
   end
 end

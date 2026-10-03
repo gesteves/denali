@@ -102,6 +102,32 @@ RSpec.describe PhotoExifJob, type: :worker do
       expect(NationalParkJob.jobs.size).to eq(1)
     end
 
+    it 'sets the park from the park code' do
+      park = create(:park, code: 'yose')
+      allow(exif_data).to receive(:user_comment).and_return("Park: yose")
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
+      allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
+
+      described_class.new.perform(photo.id)
+
+      expect(photo.reload.park).to eq(park)
+    end
+
+    # Every edit used to re-run this job, which put back the park from the file.
+    it 'keeps a park chosen in the admin' do
+      create(:park, code: 'yose')
+      chosen = create(:park, code: 'seki')
+      photo.update!(park: chosen)
+      allow(exif_data).to receive(:user_comment).and_return("Park: yose")
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
+      allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
+
+      described_class.new.perform(photo.id)
+
+      expect(photo.reload.park).to eq(chosen)
+      expect(NationalParkJob.jobs.size).to eq(0)
+    end
+
     it 'ensures the photo is analyzed before processing' do
       allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
       allow(EXIFR::JPEG).to receive(:new).and_return(double(present?: true, exif?: false))

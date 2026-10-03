@@ -40,24 +40,29 @@ class Photo < ApplicationRecord
   end
 
   def touch_entry
-    self.entry.touch unless self.entry.destroyed?
+    self.entry.touch if has_live_entry?
   end
 
   def update_entry_equipment_tags
-    self.entry.update_equipment_tags
+    self.entry.update_equipment_tags if has_live_entry?
   end
 
   def update_entry_location_tags
-    self.entry.update_location_tags
+    self.entry.update_location_tags if has_live_entry?
   end
 
   def update_entry_style_tags
-    self.entry.update_style_tags
+    self.entry.update_style_tags if has_live_entry?
   end
 
   def update_entry_caption_validity
-    return if self.entry.nil? || self.entry.destroyed?
-    CaptionValidityJob.perform_async(self.entry.id)
+    CaptionValidityJob.perform_async(self.entry.id) if has_live_entry?
+  end
+
+  # The entry is optional, and when it's destroyed its photos' callbacks run
+  # after it's gone, so the callbacks that reach into it check first.
+  def has_live_entry?
+    self.entry.present? && !self.entry.destroyed?
   end
 
   def self.oldest
@@ -340,7 +345,7 @@ class Photo < ApplicationRecord
 
   def formatted_location
     parts = location_parts
-    parts.reject(&:blank?).uniq.join(', ').gsub("'", "'")
+    parts.reject(&:blank?).uniq.join(', ').gsub("'", "’")
   end
 
   def location_parts
@@ -572,7 +577,9 @@ class Photo < ApplicationRecord
 
   # @return [void]
   def sync_entry_standard_site
-    return if self.entry.blank? || !self.entry.blog&.standard_site_enabled?
+    # Only a published entry can have a record to update; unpublishing is the
+    # entry's own callback's job.
+    return if self.entry.blank? || !self.entry.is_published? || !self.entry.blog&.standard_site_enabled?
 
     StandardSiteJob.perform_async('sync_document', self.entry_id)
   end

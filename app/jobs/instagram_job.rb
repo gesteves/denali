@@ -1,7 +1,11 @@
 class InstagramJob < ApplicationJob
   sidekiq_options queue: 'high'
 
-  def perform(entry_id, text)
+  # @param text [String, nil] the caption. Without one, the job builds the entry's
+  #   caption when it runs rather than when it was enqueued, so an entry
+  #   published straight from the form gets the tags and EXIF details that are
+  #   only filled in after it's saved.
+  def perform(entry_id, text = nil)
     return if !Rails.env.production?
     return if ENV['INSTAGRAM_APP_ID'].blank? || ENV['INSTAGRAM_APP_SECRET'].blank?
 
@@ -12,6 +16,7 @@ class InstagramJob < ApplicationJob
     instagram_account = entry.user.instagram_account
     return if instagram_account.blank?
 
+    text ||= entry.instagram_caption
     instagram = Instagram.new(
       app_id: ENV['INSTAGRAM_APP_ID'],
       app_secret: ENV['INSTAGRAM_APP_SECRET'],

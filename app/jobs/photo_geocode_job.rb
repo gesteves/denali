@@ -6,6 +6,10 @@ class PhotoGeocodeJob < ApplicationJob
     raise UnprocessedPhotoError unless photo.has_dimensions?
     url = "https://maps.googleapis.com/maps/api/geocode/json?result_type=political&latlng=#{photo.latitude},#{photo.longitude}&key=#{ENV['GOOGLE_API_KEY']}"
     response = JSON.parse(HTTParty.get(url, timeout: 15).body)
+    # Coordinates out at sea (or anywhere without a political area) have nothing
+    # to geocode, and retrying won't change that.
+    return if response['status'] == 'ZERO_RESULTS'
+
     if response['status'] != 'OK'
       raise "Geocode request failed: #{response.to_s}"
     else

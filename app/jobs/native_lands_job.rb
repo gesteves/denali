@@ -8,19 +8,19 @@ class NativeLandsJob < ApplicationJob
 
     lat = photo.latitude.round(2)
     lng = photo.longitude.round(2)
-    cache_key = "native_lands/#{lat}/#{lng}"
 
-    response_data = fetch_from_api(lat, lng)
-
-    return if response_data.blank?
-
-    territories = response_data.map do |data|
+    # An empty list is an answer too: photo moved somewhere with no territories,
+    # and the ones from its old coordinates have to go.
+    territories = fetch_from_api(lat, lng).map do |data|
       territory = Territory.find_or_initialize_by(slug: data[:slug])
       territory.update!(name: data[:name], url: data[:url])
       territory
     end
 
     photo.territories = territories
+    # Replacing the join rows saves nothing on the photo itself, so without this
+    # its entry's search document and cached pages would keep the old territories.
+    photo.touch
     CaptionValidityJob.perform_async(photo.entry_id) if photo.entry_id.present?
   end
 

@@ -146,6 +146,7 @@ class Admin::EntriesController < AdminController
     set_srcset
     @page = (params[:page] || 1).to_i
     @count = 10
+    raise ActiveRecord::RecordNotFound unless Entry.search_page_in_range?(@page, @count)
     @query = params[:q]
     @page_title = "Search"
 
@@ -225,9 +226,13 @@ class Admin::EntriesController < AdminController
   def update
     respond_to do |format|
       @entry.modified_at = Time.current if @entry.is_published?
+      blob_ids_before = @entry.photos.to_h { |photo| [photo.id, photo.image.blob&.id] }
       if @entry.update(entry_params)
         @entry.update_tags
+        # Only photos whose image was replaced need their metadata extracted
+        # again; new photos get theirs from Photo's after_create_commit.
         @entry.photos.each do |photo|
+          next unless blob_ids_before.key?(photo.id) && blob_ids_before[photo.id] != photo.image.blob&.id
           photo.extract_metadata
           photo.detect_colors
           photo.encode_blurhash
@@ -262,15 +267,13 @@ class Admin::EntriesController < AdminController
   end
 
   def update_queue
-    entry_ids = params[:entry_ids].map(&:to_i)
-    entries = Entry.where(id: entry_ids)
-    position = 1
-    entry_ids.each do |id|
-      entry = entries.find { |e| e.id == id }
-      if entry.is_queued?
-        entry.position = position
-        entry.save
-        position += 1
+    entry_ids = Array(params[:entry_ids]).map(&:to_i)
+    # IDs that aren't in this blog's queue (published or deleted since the page
+    # loaded) are skipped rather than crashing the save.
+    entries = @photoblog.entries.queued.where(id: entry_ids).index_by(&:id)
+    Entry.transaction do
+      entry_ids.filter_map { |id| entries[id] }.each.with_index(1) do |entry, position|
+        entry.update!(position: position)
       end
     end
     respond_to do |format|
@@ -305,7 +308,7 @@ class Admin::EntriesController < AdminController
 
   def prints
     set_srcset
-    @page_title = "Print options for "#{@entry.title}""
+    @page_title = "Print options for “#{@entry.title}”"
     @color_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['color']
     @bw_print_sizes = YAML.load_file(Rails.root.join('config/prints.yml'))['blackandwhite']
     respond_to do |format|
@@ -566,7 +569,7 @@ class Admin::EntriesController < AdminController
 
   def review_alt_text
     set_srcset
-    @page_title = "Review alt text for "#{@entry.title}""
+    @page_title = "Review alt text for “#{@entry.title}”"
     respond_to do |format|
       format.html
     end

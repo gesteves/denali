@@ -53,7 +53,9 @@ class StandardSiteJob < ApplicationJob
   # @return [void]
   def sync_document(service, blog, entry_id)
     entry = blog.entries.find_by(id: entry_id)
-    raise UnprocessedPhotoError if entry&.is_photo? && !entry.photos_have_dimensions?
+    # Only a record about to be written needs the cover; a draft takes the delete path and
+    # waiting on it would just burn retries.
+    raise UnprocessedPhotoError if entry&.is_published? && entry.is_photo? && !entry.photos_have_dimensions?
 
     service.sync_document(entry_id)
   end

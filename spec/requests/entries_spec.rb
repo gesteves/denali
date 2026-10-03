@@ -27,6 +27,48 @@ RSpec.describe "Entries", type: :request do
     end
   end
 
+  describe "pagination bounds" do
+    before do
+      create(:entry, :published, :with_photo, blog: blog, user: user).photos.each { |p| attach_image_to_photo(p) }
+    end
+
+    # Kaminari treats page 0 as page 1, which put a duplicate of the home page at /page/0.
+    it "returns 404 for page 0" do
+      get '/page/0'
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
+  describe "GET /search" do
+    before do
+      blog.update!(show_search: true)
+      allow_any_instance_of(Blog).to receive(:has_search?).and_return(true)
+    end
+
+    it "returns 404 for pages before the first" do
+      get search_path, params: { q: 'mountains', page: -1 }
+      expect(response).to have_http_status(:not_found)
+    end
+
+    # Elasticsearch rejects from + size past 10,000 with an error.
+    it "returns 404 for pages past what Elasticsearch can return" do
+      expect(Entry).not_to receive(:search_with_tag_suggestions)
+      get search_path, params: { q: 'mountains', page: (Entry::MAX_SEARCH_RESULTS / blog.posts_per_page) + 1 }
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "returns an uncached 503 when Elasticsearch is down" do
+      allow(Entry).to receive(:search_with_tag_suggestions).and_raise(Faraday::ConnectionFailed.new('connection refused'))
+      allow(Bugsnag).to receive(:notify)
+
+      get search_path, params: { q: 'mountains' }
+
+      expect(response).to have_http_status(:service_unavailable)
+      expect(response.headers['Cache-Control']).to include('no-store')
+      expect(response.headers['Cloudflare-CDN-Cache-Control']).to be_nil
+    end
+  end
+
   describe "GET /feed" do
     let!(:entries) { create_list(:entry, 2, :published, :with_photo, blog: blog, user: user) }
 

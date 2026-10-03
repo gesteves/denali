@@ -92,7 +92,7 @@ class Entry < ApplicationRecord
   end
 
   after_commit on: [:destroy] do
-    ElasticsearchJob.perform_async(self.id, 'destroy')
+    ElasticsearchJob.perform_async(self.id, 'delete')
   end
 
   def as_indexed_json(opts = nil)
@@ -218,6 +218,14 @@ class Entry < ApplicationRecord
     when 'Threads'
       base_query.shareable_on_threads(not_shared_in: not_shared_in).with_minimum_threads_shares
     end
+  end
+
+  # Elasticsearch refuses requests past from + size = 10,000
+  # (index.max_result_window), so later pages can't be fetched at all.
+  MAX_SEARCH_RESULTS = 10_000
+
+  def self.search_page_in_range?(page, per_page)
+    page.to_i >= 1 && page.to_i * per_page <= MAX_SEARCH_RESULTS
   end
 
   def self.full_search(query, page = 1, per_page = 10)
@@ -539,10 +547,12 @@ class Entry < ApplicationRecord
 
   def enqueue_publish_jobs
     OpenGraphJob.perform_async(self.id)
-    MastodonJob.perform_async(self.id, self.mastodon_caption(utm_campaign: 'new-photo')) if self.post_to_mastodon
-    BlueskyJob.perform_async(self.id, self.bluesky_caption(utm_campaign: 'new-photo'), nil, nil, Bluesky.new_tid) if self.post_to_bluesky
-    InstagramJob.perform_async(self.id, self.instagram_caption) if self.post_to_instagram
-    ThreadsJob.perform_async(self.id, self.threads_caption(utm_campaign: 'new-photo')) if self.post_to_threads
+    # No captions: the jobs build them when they run, after the tags and EXIF data
+    # that are filled in once the entry is saved.
+    MastodonJob.perform_async(self.id, nil) if self.post_to_mastodon
+    BlueskyJob.perform_async(self.id, nil, nil, nil, Bluesky.new_tid) if self.post_to_bluesky
+    InstagramJob.perform_async(self.id, nil) if self.post_to_instagram
+    ThreadsJob.perform_async(self.id, nil) if self.post_to_threads
     Webhook.deliver_all(self)
     PushSubscription.deliver_all(self)
     self.send_photos_to_flickr if self.post_to_flickr
@@ -635,6 +645,7 @@ class Entry < ApplicationRecord
   end
 
   def bluesky_hashtags(count = 5)
+    rng = hashtag_random
     entry_tags = tags_for_context('tags')
     entry_locations = tags_for_context('locations')
     entry_equipment = tags_for_context('equipment')
@@ -661,11 +672,12 @@ class Entry < ApplicationRecord
       end
     end
 
-    bluesky_tags = ['#Photography'] + more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
-    bluesky_tags.flatten.compact.uniq.take(count).shuffle.join(' ')
+    bluesky_tags = ['#Photography'] + more_tags.shuffle(random: rng) + tags.shuffle(random: rng) + location_tags.shuffle(random: rng) + equipment_tags.shuffle(random: rng) + style_tags.shuffle(random: rng)
+    bluesky_tags.flatten.compact.uniq.take(count).shuffle(random: rng).join(' ')
   end
 
   def mastodon_hashtags(count = 5)
+    rng = hashtag_random
     entry_tags = tags_for_context('tags')
     entry_locations = tags_for_context('locations')
     entry_equipment = tags_for_context('equipment')
@@ -692,8 +704,8 @@ class Entry < ApplicationRecord
       end
     end
 
-    mastodon_tags = ['#Photography'] + more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
-    mastodon_tags.flatten.compact.uniq.take(count).shuffle.join(' ')
+    mastodon_tags = ['#Photography'] + more_tags.shuffle(random: rng) + tags.shuffle(random: rng) + location_tags.shuffle(random: rng) + equipment_tags.shuffle(random: rng) + style_tags.shuffle(random: rng)
+    mastodon_tags.flatten.compact.uniq.take(count).shuffle(random: rng).join(' ')
   end
 
   def mastodon_caption(utm_source: 'Mastodon', utm_medium: 'social', utm_campaign: nil)
@@ -707,7 +719,8 @@ class Entry < ApplicationRecord
     end
 
     meta << "🔗 #{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)}"
-    meta << "\n#{mastodon_hashtags}" if mastodon_hashtags.present?
+    hashtags = mastodon_hashtags
+    meta << "\n#{hashtags}" if hashtags.present?
 
     caption = [self.plain_title]
     caption << self.mastodon_text if self.mastodon_text.present?
@@ -725,7 +738,8 @@ class Entry < ApplicationRecord
       meta << "🎞 #{photo.film.display_name}" if photo.film.present?
     end
 
-    meta << "🏷️ #{bluesky_hashtags}" if bluesky_hashtags.present?
+    hashtags = bluesky_hashtags
+    meta << "🏷️ #{hashtags}" if hashtags.present?
 
     caption = []
     caption << "[#{bluesky_link_label}](#{self.permalink_url(utm_source: utm_source, utm_medium: utm_medium, utm_campaign: utm_campaign)})"
@@ -768,6 +782,7 @@ class Entry < ApplicationRecord
   end
 
   def instagram_hashtags(count = 5)
+    rng = hashtag_random
     entry_tags = tags_for_context('tags')
     entry_locations = tags_for_context('locations')
     entry_equipment = tags_for_context('equipment')
@@ -794,8 +809,8 @@ class Entry < ApplicationRecord
       end
     end
 
-    instagram_tags = more_tags.shuffle + tags.shuffle + location_tags.shuffle + equipment_tags.shuffle + style_tags.shuffle
-    instagram_tags.flatten.compact.uniq.take(count).shuffle.join(' ')
+    instagram_tags = more_tags.shuffle(random: rng) + tags.shuffle(random: rng) + location_tags.shuffle(random: rng) + equipment_tags.shuffle(random: rng) + style_tags.shuffle(random: rng)
+    instagram_tags.flatten.compact.uniq.take(count).shuffle(random: rng).join(' ')
   end
 
   def threads_caption(utm_source: 'Threads', utm_medium: 'social', utm_campaign: nil)
@@ -850,7 +865,7 @@ class Entry < ApplicationRecord
     end
 
     all_topics = ['Photographers of Threads'] + more_topics + topics + location_topics + equipment_topics + style_topics
-    all_topics.uniq.sample.presence
+    all_topics.uniq.sample(random: hashtag_random).presence
   end
 
   def plain_caption
@@ -1024,6 +1039,14 @@ class Entry < ApplicationRecord
   end
 
   private
+
+  # Hashtags and topics are picked at random from the matching customizations,
+  # but seeded by the entry, so every caption built for it picks the same ones.
+  # Otherwise CaptionValidityJob would check the length of one draw and the
+  # share job would post another, which could be over the limit.
+  def hashtag_random
+    Random.new(self.id.to_i)
+  end
 
   def url_opts(opts)
     if Rails.env.production?

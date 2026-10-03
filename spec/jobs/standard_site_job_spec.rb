@@ -27,6 +27,14 @@ RSpec.describe StandardSiteJob, type: :worker do
       .to raise_error(UnprocessedPhotoError)
   end
 
+  # A draft takes the delete path and has no cover to wait for.
+  it "doesn't wait for the dimensions of a draft" do
+    draft = create(:entry, :draft, :with_photo, blog: blog, user: create(:user))
+    expect(service).to receive(:sync_document).with(draft.id)
+
+    described_class.new.perform('sync_document', draft.id)
+  end
+
   it 'syncs a photo entry once its dimensions are recorded' do
     photo_entry = create(:entry, :published, :with_photo, blog: blog, user: create(:user))
     photo_entry.photos.each { |p| attach_image_to_photo(p) }

@@ -81,11 +81,27 @@ RSpec.describe PushNotificationJob, type: :worker do
       end
     end
 
-    it 'raises error when push_subscription_id is invalid' do
+    it 'does nothing when the subscription is gone' do
       expect(WebPush).not_to receive(:payload_send)
-      expect {
-        described_class.new.perform(-1, entry.id)
-      }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { described_class.new.perform(-1, entry.id) }.not_to raise_error
+    end
+
+    it 'does nothing when the entry is no longer published' do
+      entry.update!(status: 'draft')
+      expect(WebPush).not_to receive(:payload_send)
+      expect { described_class.new.perform(push_subscription.id, entry.id) }.not_to raise_error
+    end
+
+    it 'sends text entries without an image' do
+      text_entry = create(:entry, :published, blog: blog, user: user)
+
+      expect(WebPush).to receive(:payload_send) do |args|
+        message = JSON.parse(args[:message])
+        expect(message['title']).to eq('New entry published')
+        expect(message).not_to have_key('image')
+      end
+
+      described_class.new.perform(push_subscription.id, text_entry.id)
     end
   end
 end

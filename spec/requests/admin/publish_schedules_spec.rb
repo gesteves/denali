@@ -39,6 +39,17 @@ RSpec.describe "Admin::PublishSchedules", type: :request do
       expect(PublishSchedule.last.blog).to eq(blog)
     end
 
+    it "re-renders the page when the schedule is invalid" do
+      create(:publish_schedule, blog: blog, hour: 14)
+
+      expect {
+        post admin_publish_schedules_path, params: { publish_schedule: { hour: 14 } }
+      }.not_to change(PublishSchedule, :count)
+
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to include('couldn’t be updated')
+    end
+
     it "validates uniqueness of hour" do
       # The schedule factory already creates a schedule with a unique hour
       # Just verify the validation is present on the model

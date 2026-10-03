@@ -9,6 +9,7 @@ class EntriesController < ApplicationController
 
   def index
     @page = (params[:page] || 1).to_i
+    raise ActiveRecord::RecordNotFound if @page < 1
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops, :territories]).published.photo_entries.page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
@@ -47,6 +48,7 @@ class EntriesController < ApplicationController
 
   def tagged
     @page = (params[:page] || 1).to_i
+    raise ActiveRecord::RecordNotFound if @page < 1
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops, :territories]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
@@ -85,6 +87,7 @@ class EntriesController < ApplicationController
     raise ActionController::RoutingError.new('Not Found') unless @photoblog.show_search? && @photoblog.has_search?
     @page = (params[:page] || 1).to_i
     @count = @photoblog.posts_per_page
+    raise ActiveRecord::RecordNotFound unless Entry.search_page_in_range?(@page, @count)
     @query = params[:q]
     @suggested_tags = []
     set_cache_tags(CacheTags::ENTRIES)
@@ -129,6 +132,19 @@ class EntriesController < ApplicationController
         format.html
         format.all { redirect_to search_path, status: 301 }
       end
+    end
+  rescue Elastic::Transport::Transport::Error, Faraday::Error => e
+    # Rendered as "no results" this would sit in Cloudflare's cache for the whole
+    # TTL, so it's a 503 that's never stored.
+    logger.error "Search failed: #{e.class}: #{e.message}"
+    Bugsnag.notify(e)
+    no_store
+    response.headers.delete('Cloudflare-CDN-Cache-Control')
+    @errors = [{ status: 503, message: 'Search is temporarily unavailable' }]
+    @page_title = "#{@errors.first[:message]} – #{@photoblog.name}"
+    respond_to do |format|
+      format.html { render 'errors/error', status: :service_unavailable }
+      format.all { head :service_unavailable }
     end
   end
 

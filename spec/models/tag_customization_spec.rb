@@ -95,6 +95,47 @@ RSpec.describe TagCustomization, type: :model do
     end
   end
 
+  describe 'hashtag cleanup' do
+    it 'keeps letters from any script' do
+      tc = create(:tag_customization, blog: blog, mastodon_hashtags: 'Montaña #東京 Café!')
+      expect(tc.mastodon_hashtags_to_a).to contain_exactly('#Montaña', '#東京', '#Café')
+    end
+
+    it 'drops entries that are only punctuation' do
+      tc = create(:tag_customization, blog: blog, mastodon_hashtags: '#Nature !!! #')
+      expect(tc.mastodon_hashtags_to_a).to eq(['#Nature'])
+    end
+  end
+
+  describe 'merging into an existing customization for the same tags' do
+    let!(:existing) { create(:tag_customization, blog: blog, tag_list: 'landscape', mastodon_hashtags: '#Zebra #Nature') }
+
+    it 'replaces it with one whose hashtags are sorted and deduplicated' do
+      merged = create(:tag_customization, blog: blog, tag_list: 'landscape', mastodon_hashtags: '#Nature #Apple')
+
+      expect(TagCustomization.exists?(existing.id)).to be false
+      expect(merged.reload.mastodon_hashtags_to_a).to eq(['#Apple', '#Nature', '#Zebra'])
+    end
+
+    it "leaves other blogs' customizations alone" do
+      other = create(:tag_customization, blog: create(:blog), tag_list: 'landscape', mastodon_hashtags: '#Other')
+
+      expect(TagCustomization.exists?(existing.id)).to be true
+      expect(other.reload.mastodon_hashtags_to_a).to eq(['#Other'])
+    end
+  end
+
+  describe 'flickr group cleanup' do
+    it 'enqueues the cleanup job after the record is committed' do
+      tc = nil
+      TagCustomization.transaction do
+        tc = create(:tag_customization, blog: blog, flickr_groups: 'https://www.flickr.com/groups/landscapes/')
+        expect(UpdateTagCustomizationJob.jobs).to be_empty
+      end
+      expect(UpdateTagCustomizationJob.jobs.map { |j| j['args'] }).to eq([[tc.id]])
+    end
+  end
+
   describe '#matches_tags?' do
     let(:tag_customization) { create(:tag_customization, blog: blog) }
 
