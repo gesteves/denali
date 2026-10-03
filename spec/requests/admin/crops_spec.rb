@@ -46,6 +46,21 @@ RSpec.describe "Admin::Crops", type: :request do
       expect(crop.y).to eq(0.2)
     end
 
+    # Two saves from the editor at once: the other request created the crop
+    # between this one's lookup and its insert.
+    it "updates the crop another request just created instead of failing" do
+      existing = create(:crop, photo: photo, aspect_ratio: '1:1')
+      allow_any_instance_of(ActiveRecord::Associations::CollectionProxy).to receive(:find_or_create_by).and_raise(ActiveRecord::RecordNotUnique)
+
+      post create_or_update_admin_entry_photo_crops_path(entry, photo), params: {
+        crop: { aspect_ratio: '1:1', x: 0.2, y: 0.2, width: 0.5, height: 0.5 }
+      }, as: :json
+
+      expect(response).to have_http_status(:success)
+      expect(existing.reload.x).to eq(0.2)
+      expect(photo.crops.count).to eq(1)
+    end
+
     it "returns success JSON response" do
       post create_or_update_admin_entry_photo_crops_path(entry, photo), params: {
         crop: {

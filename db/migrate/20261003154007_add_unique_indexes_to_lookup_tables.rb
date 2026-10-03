@@ -11,6 +11,7 @@ class AddUniqueIndexesToLookupTables < ActiveRecord::Migration[8.1]
   }.freeze
 
   def up
+    remove_duplicate_crops!
     abort_on_duplicates!
 
     UNIQUE.each do |table, columns|
@@ -39,8 +40,30 @@ class AddUniqueIndexesToLookupTables < ActiveRecord::Migration[8.1]
 
   private
 
-  # Duplicates have to be merged by hand (photos point at one of them), so the
-  # migration stops and says which, rather than picking a winner.
+  # Two requests from the crop editor can both miss a photo's crop for an aspect
+  # ratio and both create one. Nothing references a crop by id, so unlike the
+  # tables below the extras can simply go. The one kept is the one edited last:
+  # edits land on whichever row the lookup finds, and that's the row the site has
+  # been rendering.
+  def remove_duplicate_crops!
+    say_with_time 'Removing duplicate crops' do
+      delete(<<~SQL)
+        DELETE FROM crops WHERE id IN (
+          SELECT id FROM (
+            SELECT id, ROW_NUMBER() OVER (
+              PARTITION BY photo_id, aspect_ratio ORDER BY updated_at DESC, id DESC
+            ) AS position
+            FROM crops
+            WHERE photo_id IS NOT NULL AND aspect_ratio IS NOT NULL
+          ) ranked
+          WHERE position > 1
+        )
+      SQL
+    end
+  end
+
+  # Duplicates in the other tables have to be merged by hand (photos point at one
+  # of them), so the migration stops and says which, rather than picking a winner.
   def abort_on_duplicates!
     checks = UNIQUE.flat_map { |table, columns| columns.map { |column| [table, [column]] } } + [[:crops, [:photo_id, :aspect_ratio]]]
     found = checks.filter_map do |table, columns|
