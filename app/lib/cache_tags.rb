@@ -16,7 +16,7 @@ module CacheTags
   # and the service worker.
   BLOG = 'blog'
 
-  # A single entry's permalink and its oembed representation.
+  # A single entry's permalink and its short link.
   def self.entry(entry_id)
     "entry-#{entry_id}"
   end

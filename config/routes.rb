@@ -156,9 +156,6 @@ Rails.application.routes.draw do
   get '/rss',                      to: redirect('/feed', status: 301)
   get '(/amp)/:year/:month/:day/:id(/:slug)' => redirect(status: 301) { |params, _| params[:slug].present? ? "/#{params[:id]}/#{params[:slug]}" : "/#{params[:id]}" }, constraints: { id: /\d+/, year: /\d{1,4}/, month: /\d{1,2}/, day: /\d{1,2}/ }
 
-  # Oembed
-  get '/oembed.:format'                => 'oembed#show', as: :oembed
-
   # Pages
   get '/about'                         => 'blogs#about', as: :about
   get '/elsewhere', to: redirect('/about', status: 301)
