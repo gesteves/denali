@@ -482,6 +482,9 @@ module AtProto
     if [400, 401].include?(response.code)
       raise AuthenticationError, "#{at_proto_label} refused the credentials: #{response.code} #{response.body}"
     end
+    # Sessions have a limit of their own, and a session that's refused for it should wait the
+    # limit out like any other write, not retry at Sidekiq's pace.
+    raise_if_rate_limited(response, 'opening a session')
     unless response.success?
       raise ConnectionError, "The #{at_proto_label} PDS answered #{response.code}: #{response.body}"
     end

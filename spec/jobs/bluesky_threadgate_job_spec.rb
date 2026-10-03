@@ -69,9 +69,10 @@ RSpec.describe BlueskyThreadgateJob, type: :worker do
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
       end
 
-      it 'raises ActiveRecord::RecordNotFound' do
+      # Deleted since the post went up: there's nothing left to gate, and retrying won't bring it back.
+      it 'does nothing' do
         expect(Bluesky).not_to receive(:from_social_account)
-        expect { described_class.new.perform(999999, post_uri) }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { described_class.new.perform(999999, post_uri) }.not_to raise_error
       end
     end
   end
@@ -89,6 +90,10 @@ RSpec.describe BlueskyThreadgateJob, type: :worker do
   describe 'Sidekiq configuration' do
     it 'uses the high queue' do
       expect(described_class.sidekiq_options['queue']).to eq('high')
+    end
+
+    it 'gives up after six hours rather than retrying for weeks' do
+      expect(described_class.sidekiq_options['retry_for']).to eq(6.hours.to_i)
     end
   end
 end

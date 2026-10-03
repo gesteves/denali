@@ -65,5 +65,21 @@ RSpec.describe InstagramCommentJob, type: :worker do
 
       described_class.new.perform(entry.id, '12345')
     end
+
+    it 'does nothing for an entry that was deleted' do
+      expect(Instagram).not_to receive(:new)
+      expect { described_class.new.perform(999_999, '12345') }.not_to raise_error
+    end
+  end
+
+  describe 'retries' do
+    it 'gives up after six hours rather than retrying for weeks' do
+      expect(described_class.get_sidekiq_options['retry_for']).to eq(6.hours.to_i)
+    end
+
+    # Until the account is reconnected, every attempt gets the same answer.
+    it 'gives up on a token Meta refuses' do
+      expect(described_class.retry_delay(1, MetaAuthError.new)).to eq(:discard)
+    end
   end
 end

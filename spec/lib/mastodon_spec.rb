@@ -91,6 +91,14 @@ RSpec.describe Mastodon do
           mastodon.create_status(text: text)
         }.to raise_error(RuntimeError, /Mastodon create_status failed with status 500/)
       end
+
+      it 'raises PermanentError for a status the server won’t accept' do
+        stub_request(:post, status_endpoint).to_return(status: 422, body: '{"error":"Validation failed: Text character limit of 500 exceeded"}')
+
+        expect {
+          mastodon.create_status(text: text)
+        }.to raise_error(Mastodon::PermanentError, /character limit/)
+      end
     end
   end
 
@@ -171,13 +179,32 @@ RSpec.describe Mastodon do
     context 'with failed response' do
       before do
         stub_request(:post, media_endpoint)
-          .to_return(status: 422, body: 'Unprocessable Entity')
+          .to_return(status: 500, body: 'Internal Server Error')
       end
 
-      it 'raises an error' do
+      it 'raises an error, with what the server said' do
         expect {
           mastodon.upload_media(url: image_url, alt_text: alt_text)
-        }.to raise_error(RuntimeError, /Mastodon upload_media failed with status 422/)
+        }.to raise_error(RuntimeError, /Mastodon upload_media failed with status 500: Internal Server Error/)
+      end
+    end
+
+    # It will refuse them the same way however many times it's asked.
+    context 'when the server refuses the request for good' do
+      it 'raises AuthenticationError for a refused token' do
+        stub_request(:post, media_endpoint).to_return(status: 401, body: '{"error":"The access token is invalid"}')
+
+        expect {
+          mastodon.upload_media(url: image_url, alt_text: alt_text)
+        }.to raise_error(Mastodon::AuthenticationError, /access token is invalid/)
+      end
+
+      it 'raises PermanentError for a request it can’t process' do
+        stub_request(:post, media_endpoint).to_return(status: 422, body: '{"error":"File type not supported"}')
+
+        expect {
+          mastodon.upload_media(url: image_url, alt_text: alt_text)
+        }.to raise_error(Mastodon::PermanentError, /File type not supported/)
       end
     end
 

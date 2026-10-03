@@ -19,6 +19,7 @@ RSpec.describe Instagram do
         )
     else
       stub_request(:get, "#{described_class::INSTAGRAM_BASIC_API_BASE}/refresh_access_token")
+        .with(query: hash_including(grant_type: 'ig_refresh_token'))
         .to_return(status: 400, body: { error: 'invalid_token' }.to_json)
     end
   end
@@ -46,114 +47,96 @@ RSpec.describe Instagram do
       end
     end
 
+    # The token still works for weeks after it's due a refresh, so a failed one mustn't stop a post.
     context 'when token refresh fails' do
       let(:social_account) { create(:social_account, :instagram, user: user, access_token: access_token, connected_at: 31.days.ago) }
 
       before do
         stub_request(:get, "#{described_class::INSTAGRAM_BASIC_API_BASE}/refresh_access_token")
+          .with(query: hash_including(grant_type: 'ig_refresh_token'))
           .to_return(status: 400, body: { error: 'invalid_token' }.to_json)
       end
 
-      it 'raises an error' do
+      it 'keeps the current token and reports the failure' do
+        expect(Bugsnag).to receive(:notify).with(an_instance_of(RuntimeError))
+
         expect {
           described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account)
-        }.to raise_error(RuntimeError, /Failed to refresh Instagram token/)
+        }.not_to raise_error
+        expect(social_account.reload.access_token).to eq(access_token)
       end
     end
   end
 
-  describe '#post' do
-    let(:photo) { { url: 'https://example.com/photo.jpg', alt_text: 'A test photo' } }
-    let(:caption) { 'Test caption' }
-    let(:container_id) { 'container_123' }
+  describe 'feed post steps' do
     let(:ig_account_id) { social_account.uid }
     let(:media_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media" }
     let(:publish_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media_publish" }
     let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
 
-    before do
-      # Stub container creation
-      stub_request(:post, media_endpoint)
-        .to_return(status: 200, body: { id: container_id }.to_json)
-
-      # Stub container status check
-      stub_request(:get, "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{container_id}")
-        .with(query: { fields: 'status_code' })
-        .to_return(status: 200, body: { status_code: 'FINISHED' }.to_json)
-
-      # Stub publish
-      stub_request(:post, publish_endpoint)
-        .to_return(status: 200, body: { id: 'media_123' }.to_json)
-    end
-
-    context 'with a single photo' do
-      it 'creates a media container and publishes it' do
-        response = instagram.post(photos: [photo], caption: caption)
-        expect(response['id']).to eq('media_123')
+    describe '#create_media_container' do
+      before do
+        stub_request(:post, media_endpoint).to_return(status: 200, body: { id: 'container_123' }.to_json)
       end
 
-      it 'sends correct authorization header' do
-        instagram.post(photos: [photo], caption: caption)
+      it 'creates a container and returns its ID' do
+        id = instagram.create_media_container(image_url: 'https://example.com/photo.jpg', caption: 'Test caption', alt_text: 'A photo')
+
+        expect(id).to eq('container_123')
         expect(WebMock).to have_requested(:post, media_endpoint)
-          .with(headers: { 'Authorization' => "Bearer #{access_token}" })
+          .with(headers: { 'Authorization' => "Bearer #{access_token}" },
+                body: hash_including('image_url' => 'https://example.com/photo.jpg', 'caption' => 'Test caption', 'alt_text' => 'A photo'))
       end
     end
 
-    context 'with multiple photos (carousel)' do
-      let(:photos) do
-        [
-          { url: 'https://example.com/photo1.jpg', alt_text: 'Photo 1' },
-          { url: 'https://example.com/photo2.jpg', alt_text: 'Photo 2' }
-        ]
-      end
-      let(:container_id_1) { 'container_1' }
-      let(:container_id_2) { 'container_2' }
-      let(:carousel_container_id) { 'carousel_123' }
+    describe '#create_carousel_items' do
+      let(:photos) { [{ url: 'https://example.com/1.jpg', alt_text: 'One' }, { url: 'https://example.com/2.jpg', alt_text: 'Two' }] }
 
       before do
-        # Stub individual container creations
-        stub_request(:post, media_endpoint)
-          .to_return(
-            { status: 200, body: { id: container_id_1 }.to_json },
-            { status: 200, body: { id: container_id_2 }.to_json },
-            { status: 200, body: { id: carousel_container_id }.to_json }
-          )
-
-        # Stub status checks
-        stub_request(:get, "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{container_id_1}")
-          .with(query: { fields: 'status_code' })
-          .to_return(status: 200, body: { status_code: 'FINISHED' }.to_json)
-
-        stub_request(:get, "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{container_id_2}")
-          .with(query: { fields: 'status_code' })
-          .to_return(status: 200, body: { status_code: 'FINISHED' }.to_json)
-
-        stub_request(:get, "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{carousel_container_id}")
-          .with(query: { fields: 'status_code' })
-          .to_return(status: 200, body: { status_code: 'FINISHED' }.to_json)
+        stub_request(:post, media_endpoint).to_return(
+          { status: 200, body: { id: 'item_1' }.to_json },
+          { status: 200, body: { id: 'item_2' }.to_json }
+        )
       end
 
-      it 'creates a carousel container with children' do
-        response = instagram.post(photos: photos, caption: caption)
-        expect(response['id']).to eq('media_123')
+      # The carousel's own container can only be made once Meta has processed these.
+      it 'creates a container per photo, without waiting for them' do
+        expect(instagram.create_carousel_items(photos)).to eq(%w[item_1 item_2])
+        expect(WebMock).not_to have_requested(:get, /graph\.instagram\.com/)
+      end
+
+      it 'needs between 2 and 10 photos' do
+        expect { instagram.create_carousel_items(photos.take(1)) }.to raise_error(ArgumentError)
+        expect { instagram.create_carousel_items(photos * 6) }.to raise_error(ArgumentError)
       end
     end
 
-    context 'with empty photos array' do
-      it 'raises ArgumentError' do
-        expect {
-          instagram.post(photos: [], caption: caption)
-        }.to raise_error(ArgumentError, /Photos array cannot be empty/)
+    describe '#create_carousel_container' do
+      it 'creates a carousel holding the given containers' do
+        stub_request(:post, media_endpoint).to_return(status: 200, body: { id: 'carousel_123' }.to_json)
+
+        expect(instagram.create_carousel_container(children: %w[item_1 item_2], caption: 'Test caption')).to eq('carousel_123')
+        expect(WebMock).to have_requested(:post, media_endpoint)
+          .with(body: hash_including('media_type' => 'CAROUSEL', 'children' => 'item_1,item_2', 'caption' => 'Test caption'))
       end
     end
 
-    context 'with more than 10 photos' do
-      let(:photos) { 11.times.map { |i| { url: "https://example.com/photo#{i}.jpg", alt_text: "Photo #{i}" } } }
+    describe '#container_status' do
+      it "returns the container's status code and Meta's explanation" do
+        stub_request(:get, "#{described_class::INSTAGRAM_GRAPH_API_BASE}/container_123")
+          .with(query: { fields: 'status_code,status' })
+          .to_return(status: 200, body: { status_code: 'ERROR', status: 'Error: image could not be fetched' }.to_json)
 
-      it 'raises ArgumentError' do
-        expect {
-          instagram.post(photos: photos, caption: caption)
-        }.to raise_error(ArgumentError, /Photos array cannot exceed 10 photos/)
+        expect(instagram.container_status('container_123')).to eq('code' => 'ERROR', 'error' => 'Error: image could not be fetched')
+      end
+    end
+
+    describe '#publish_container' do
+      it 'publishes the container and returns the media ID' do
+        stub_request(:post, publish_endpoint).to_return(status: 200, body: { id: 'media_123' }.to_json)
+
+        expect(instagram.publish_container('container_123')['id']).to eq('media_123')
+        expect(WebMock).to have_requested(:post, publish_endpoint).with(body: { creation_id: 'container_123' }.to_json)
       end
     end
   end
@@ -171,7 +154,7 @@ RSpec.describe Instagram do
         .to_return(status: 200, body: { id: story_container_id }.to_json)
 
       stub_request(:get, "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{story_container_id}")
-        .with(query: { fields: 'status_code' })
+        .with(query: { fields: 'status_code,status' })
         .to_return(status: 200, body: { status_code: 'FINISHED' }.to_json)
 
       stub_request(:post, publish_endpoint)
@@ -220,7 +203,8 @@ RSpec.describe Instagram do
     context 'with failed response' do
       before do
         stub_request(:post, comments_endpoint)
-          .to_return(status: 400, body: { error: 'Invalid request' }.to_json)
+          .with(query: { message: message })
+          .to_return(status: 400, body: { error: { message: 'Invalid request', type: 'OAuthException', code: 100 } }.to_json)
       end
 
       it 'raises an error' do
@@ -248,64 +232,6 @@ RSpec.describe Instagram do
     end
   end
 
-  describe 'container status handling' do
-    let(:photo) { { url: 'https://example.com/photo.jpg', alt_text: 'A test photo' } }
-    let(:container_id) { 'container_123' }
-    let(:ig_account_id) { social_account.uid }
-    let(:media_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media" }
-    let(:publish_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media_publish" }
-    let(:instagram) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
-
-    before do
-      stub_request(:post, media_endpoint)
-        .to_return(status: 200, body: { id: container_id }.to_json)
-
-      stub_request(:post, publish_endpoint)
-        .to_return(status: 200, body: { id: 'media_123' }.to_json)
-    end
-
-    context 'when container status is ERROR' do
-      before do
-        stub_request(:get, "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{container_id}")
-          .with(query: { fields: 'status_code' })
-          .to_return(status: 200, body: { status_code: 'ERROR' }.to_json)
-      end
-
-      it 'raises an error' do
-        expect {
-          instagram.post(photos: [photo], caption: 'Test')
-        }.to raise_error(RuntimeError, /failed with ERROR status/)
-      end
-    end
-
-    context 'when container status is EXPIRED' do
-      before do
-        stub_request(:get, "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{container_id}")
-          .with(query: { fields: 'status_code' })
-          .to_return(status: 200, body: { status_code: 'EXPIRED' }.to_json)
-      end
-
-      it 'raises an error' do
-        expect {
-          instagram.post(photos: [photo], caption: 'Test')
-        }.to raise_error(RuntimeError, /expired before it could be published/)
-      end
-    end
-
-    context 'when container status is PUBLISHED' do
-      before do
-        stub_request(:get, "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{container_id}")
-          .with(query: { fields: 'status_code' })
-          .to_return(status: 200, body: { status_code: 'PUBLISHED' }.to_json)
-      end
-
-      it 'returns successfully' do
-        response = instagram.post(photos: [photo], caption: 'Test')
-        expect(response['id']).to eq('media_123')
-      end
-    end
-  end
-
   describe 'transient error handling' do
     let(:ig_account_id) { social_account.uid }
     let(:media_endpoint) { "#{described_class::INSTAGRAM_GRAPH_API_BASE}/#{ig_account_id}/media" }
@@ -322,7 +248,7 @@ RSpec.describe Instagram do
 
       it 'raises MetaTransientError' do
         expect {
-          instagram.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'Test')
+          instagram.create_media_container(image_url: 'https://example.com/photo.jpg', alt_text: 'Test', caption: 'Test')
         }.to raise_error(MetaTransientError, /Failed to create media container/)
       end
     end
@@ -338,12 +264,13 @@ RSpec.describe Instagram do
 
       it 'raises MetaMediaDownloadError' do
         expect {
-          instagram.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'Test')
+          instagram.create_media_container(image_url: 'https://example.com/photo.jpg', alt_text: 'Test', caption: 'Test')
         }.to raise_error(MetaMediaDownloadError, /Failed to create media container/)
       end
     end
 
-    context 'when create_media_container returns a non-transient error' do
+    # Until the account is reconnected, every attempt gets the same answer.
+    context 'when Meta refuses the access token' do
       before do
         stub_request(:post, media_endpoint)
           .to_return(
@@ -352,9 +279,41 @@ RSpec.describe Instagram do
           )
       end
 
+      it 'raises MetaAuthError' do
+        expect {
+          instagram.create_media_container(image_url: 'https://example.com/photo.jpg', alt_text: 'Test', caption: 'Test')
+        }.to raise_error(MetaAuthError, /Failed to create media container/)
+      end
+    end
+
+    context 'when the caption is too long' do
+      before do
+        stub_request(:post, media_endpoint)
+          .to_return(
+            status: 400,
+            body: { error: { message: 'The caption must be at most 2200 characters long.', type: 'OAuthException', code: 100 } }.to_json
+          )
+      end
+
+      it 'raises MetaCaptionTooLongError' do
+        expect {
+          instagram.create_media_container(image_url: 'https://example.com/photo.jpg', alt_text: 'Test', caption: 'Test')
+        }.to raise_error(MetaCaptionTooLongError)
+      end
+    end
+
+    context 'when create_media_container returns a non-transient error' do
+      before do
+        stub_request(:post, media_endpoint)
+          .to_return(
+            status: 400,
+            body: { error: { message: 'Invalid parameter', type: 'OAuthException', is_transient: false, code: 100 } }.to_json
+          )
+      end
+
       it 'raises RuntimeError' do
         expect {
-          instagram.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'Test')
+          instagram.create_media_container(image_url: 'https://example.com/photo.jpg', alt_text: 'Test', caption: 'Test')
         }.to raise_error(RuntimeError, /Failed to create media container/)
       end
     end

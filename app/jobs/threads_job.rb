@@ -1,49 +1,36 @@
-class ThreadsJob < ShareJob
+# Posts an entry to Threads. See MetaShareJob for how the post is made.
+class ThreadsJob < MetaShareJob
+  MAX_PHOTOS = Threads::MAX_CAROUSEL_PHOTOS
+
   def self.available_for?(user)
     ENV['THREADS_APP_ID'].present? && ENV['THREADS_APP_SECRET'].present? && user&.threads_account.present?
   end
 
-  def self.retry_delay(count, exception)
-    case exception
-    when MetaCaptionTooLongError
-      :discard
-    else
-      super
-    end
+  private
+
+  def network
+    'Threads'
   end
 
-  # @param text [String, nil] the caption. Without one, the job builds the entry's
-  #   caption when it runs rather than when it was enqueued, so an entry
-  #   published straight from the form gets the tags and EXIF details that are
-  #   only filled in after it's saved.
-  def perform(entry_id, text = nil)
-    entry = shareable_entry(entry_id)
-    return if entry.nil? || !self.class.available_for?(entry.user)
-
-    text ||= entry.threads_caption
-    threads = Threads.new(
+  def build_client(user)
+    Threads.new(
       app_id: ENV['THREADS_APP_ID'],
       app_secret: ENV['THREADS_APP_SECRET'],
-      social_account: entry.user.threads_account
+      social_account: user.threads_account
     )
+  end
 
-    photos = entry.photos.limit(20).map do |p|
-      {
-        url: p.threads_url,
-        alt_text: p.alt_text
-      }
-    end
+  def photo_url(photo)
+    photo.threads_url
+  end
 
-    entry.photos.limit(20).each { |p| p.warm_cache(p.threads_url) }
+  def create_single_container(client, entry, photo, text)
+    client.create_media_container(image_url: photo_url(photo), caption: text, alt_text: photo.alt_text,
+                                  topic_tag: entry.threads_topic, location_id: photo.threads_location_id)
+  end
 
-    threads.post(
-      photos: photos,
-      caption: text,
-      topic_tag: entry.threads_topic,
-      location_id: entry.photos.first.threads_location_id
-    )
-
-    record_share(entry, 'threads')
+  def create_carousel_container(client, entry, children, text)
+    client.create_carousel_container(children: children, caption: text, topic_tag: entry.threads_topic,
+                                     location_id: entry.photos.first.threads_location_id)
   end
 end
-

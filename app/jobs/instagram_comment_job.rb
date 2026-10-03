@@ -1,11 +1,19 @@
+# Posts an Instagram post's hashtags as its first comment.
 class InstagramCommentJob < ApplicationJob
-  sidekiq_options queue: 'high'
+  # A comment is about a post that just went up; one still failing after six hours is better
+  # dropped than posted weeks late, which is where Sidekiq's default retries would take it.
+  sidekiq_options queue: 'high', retry_for: 6.hours.to_i
+
+  def self.retry_delay(count, exception)
+    exception.is_a?(MetaAuthError) ? :discard : super
+  end
 
   def perform(entry_id, instagram_post_id)
     return if !Rails.env.production?
     return if ENV['INSTAGRAM_APP_ID'].blank? || ENV['INSTAGRAM_APP_SECRET'].blank?
 
-    entry = Entry.find(entry_id)
+    entry = Entry.find_by(id: entry_id)
+    return if entry.nil?
 
     comment = entry.instagram_hashtags
     return if comment.blank?

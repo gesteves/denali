@@ -1,5 +1,8 @@
+# Limits who can reply to a new Bluesky post (see Bluesky::THREADGATE_ALLOW_RULES).
 class BlueskyThreadgateJob < ApplicationJob
-  sidekiq_options queue: 'high'
+  # The gate matters most while the post is new; one still failing after six hours is better
+  # dropped than retried for weeks.
+  sidekiq_options queue: 'high', retry_for: 6.hours.to_i
 
   def self.retry_delay(count, exception)
     case exception
@@ -18,7 +21,8 @@ class BlueskyThreadgateJob < ApplicationJob
     return unless Rails.env.production?
     return if post_uri.blank?
 
-    entry = Entry.find(entry_id)
+    entry = Entry.find_by(id: entry_id)
+    return if entry.nil?
 
     account = entry.user&.bluesky_account
     return if account.nil?

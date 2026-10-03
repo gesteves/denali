@@ -6,6 +6,14 @@ class Mastodon
   MEDIA_POLL_ATTEMPTS = 15
   MEDIA_POLL_INTERVAL = 2 # seconds
 
+  # The server refused the access token (401) or the account may not do this (403). Retrying won't
+  # help until the account is reconnected in the admin.
+  class AuthenticationError < StandardError; end
+
+  # The server refused the request itself (422), such as a status over the instance's length
+  # limit. It will refuse it the same way every time.
+  class PermanentError < StandardError; end
+
   # Initializes a new Mastodon API client.
   #
   # @param base_url [String] the base URL of the Mastodon instance (e.g., 'https://mastodon.social').
@@ -39,7 +47,8 @@ class Mastodon
   #   server returns the original status instead of posting it twice. Mastodon
   #   remembers keys for an hour. Defaults to a digest of the text.
   # @return [Hash] the parsed response from the API.
-  # @raise [RuntimeError] if the API request fails.
+  # @raise [AuthenticationError, PermanentError] if the server refuses it for good.
+  # @raise [RuntimeError] if the API request fails otherwise.
   def create_status(text:, media_ids: [], sensitive: false, spoiler_text: nil, visibility: 'public', language: 'en', scheduled_at: nil, idempotency_key: nil)
     endpoint = "#{@base_url}/api/v1/statuses"
 
@@ -62,9 +71,7 @@ class Mastodon
     if response.code == 200
       JSON.parse(response.body)
     else
-      Rails.logger.error("[Mastodon] create_status failed: status=#{response.code}")
-      Rails.logger.error("[Mastodon] Response body: #{response.body.truncate(500)}")
-      raise "Mastodon create_status failed with status #{response.code}"
+      raise_api_error('create_status', response)
     end
   end
 
@@ -75,7 +82,8 @@ class Mastodon
   # @param focal_point [Array<Float>, nil] the focal point as [x, y] coordinates (-1.0 to 1.0).
   # @return [Hash] the parsed response from the API containing the media ID. If the
   #   server is still processing the file, waits until it's ready to attach.
-  # @raise [RuntimeError] if the media fetch, upload, or processing fails.
+  # @raise [AuthenticationError, PermanentError] if the server refuses it for good.
+  # @raise [RuntimeError] if the media fetch, upload, or processing fails otherwise.
   def upload_media(url:, alt_text:, focal_point: nil)
     endpoint = "#{@base_url}/api/v2/media"
 
@@ -100,13 +108,24 @@ class Mastodon
     elsif response.code == 202
       wait_for_media_processing(JSON.parse(response.body)['id'])
     else
-      Rails.logger.error("[Mastodon] upload_media failed: status=#{response.code}, url=#{url}")
-      Rails.logger.error("[Mastodon] Response body: #{response.body.truncate(500)}")
-      raise "Mastodon upload_media failed with status #{response.code}"
+      raise_api_error('upload_media', response, url: url)
     end
   end
 
   private
+
+  # Raises the error that says whether trying again could help, with what the server said: the
+  # status code alone doesn't say why.
+  def raise_api_error(doing, response, url: nil)
+    message = "Mastodon #{doing} failed with status #{response.code}: #{response.body.to_s.truncate(500)}"
+    Rails.logger.error("[Mastodon] #{message}#{" (#{url})" if url}")
+
+    case response.code
+    when 401, 403 then raise AuthenticationError, message
+    when 422 then raise PermanentError, message
+    else raise message
+    end
+  end
 
   def auth_headers
     { 'Authorization': "Bearer #{@bearer_token}" }

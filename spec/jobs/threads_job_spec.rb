@@ -39,27 +39,54 @@ RSpec.describe ThreadsJob, type: :worker do
       described_class.new.perform(entry.id, 'Test caption')
     end
 
-    it 'posts to Threads and updates entry' do
-      threads = instance_double(Threads)
-      allow(Threads).to receive(:new).and_return(threads)
-      allow(threads).to receive(:post)
-      allow_any_instance_of(Entry).to receive(:threads_topic).and_return(nil)
-      allow_any_instance_of(Photo).to receive(:threads_location_id).and_return(nil)
+    # See instagram_job_spec.rb for the steps they share (MetaShareJob); these are what's Threads'.
+    context 'posting' do
+      let(:client) { instance_double(Threads) }
 
-      expect(Threads).to receive(:new).with(
-        app_id: 'app_id',
-        app_secret: 'app_secret',
-        social_account: threads_account
-      ).and_return(threads)
+      around do |example|
+        original = Rails.cache
+        Rails.cache = ActiveSupport::Cache::MemoryStore.new
+        example.run
+      ensure
+        Rails.cache = original
+      end
 
-      expect(threads).to receive(:post).with(
-        hash_including(caption: 'Test caption')
-      )
+      before do
+        allow(Threads).to receive(:new).and_return(client)
+        allow_any_instance_of(Photo).to receive(:warm_cache)
+        allow_any_instance_of(Entry).to receive(:threads_topic).and_return('Photography')
+        allow_any_instance_of(Photo).to receive(:threads_location_id).and_return('loc_1')
+        allow(client).to receive(:create_media_container).and_return('c1')
+        allow(client).to receive(:publish_container).with('c1').and_return('id' => 't1')
+      end
 
-      described_class.new.perform(entry.id, 'Test caption')
-      entry.reload
-      expect(entry.last_shared_on_threads_at).not_to be_nil
-      expect(entry.threads_shares_count).to eq(1)
+      def attempt(text = 'Test caption')
+        job = described_class.new
+        job.jid = 'jid-1'
+        job.perform(entry.id, text)
+      end
+
+      it 'posts with the topic and location, once Meta has processed the container' do
+        expect(Threads).to receive(:new).with(app_id: 'app_id', app_secret: 'app_secret', social_account: threads_account)
+
+        expect { attempt }.to raise_error(MetaContainerPendingError)
+        expect(client).to have_received(:create_media_container)
+          .with(hash_including(caption: 'Test caption', topic_tag: 'Photography', location_id: 'loc_1'))
+
+        allow(client).to receive(:container_status).with('c1').and_return('code' => 'FINISHED', 'error' => nil)
+        attempt
+
+        expect(client).to have_received(:publish_container).once
+        entry.reload
+        expect(entry.last_shared_on_threads_at).not_to be_nil
+        expect(entry.threads_shares_count).to eq(1)
+      end
+
+      it "refuses a caption over Threads' 500 characters without calling Threads" do
+        expect(Threads).not_to receive(:new)
+
+        expect { attempt('x' * 501) }.to raise_error(MetaCaptionTooLongError)
+      end
     end
   end
 end

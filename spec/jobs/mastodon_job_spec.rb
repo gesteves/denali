@@ -149,4 +149,16 @@ RSpec.describe MastodonJob, type: :worker do
       expect(described_class.sidekiq_options['queue']).to eq('high')
     end
   end
+
+  describe '.retry_delay' do
+    # Each retry would upload every photo again, to the same answer.
+    it 'gives up on a refused token or a status the server won’t accept' do
+      expect(described_class.retry_delay(1, Mastodon::AuthenticationError.new)).to eq(:discard)
+      expect(described_class.retry_delay(1, Mastodon::PermanentError.new)).to eq(:discard)
+    end
+
+    it 'leaves anything else to the usual backoff' do
+      expect(described_class.retry_delay(1, RuntimeError.new)).to be_nil
+    end
+  end
 end

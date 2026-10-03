@@ -4,6 +4,7 @@ Bugsnag.configure do |config|
   config.discard_classes += %w{
     ActiveRecord::RecordNotFound
     MetaCaptionTooLongError
+    MetaContainerPendingError
     MetaMediaDownloadError
     MetaTransientError
     UnprocessedPhotoError

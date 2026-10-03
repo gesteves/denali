@@ -20,6 +20,7 @@ RSpec.describe Threads do
         )
     else
       stub_request(:get, "#{described_class::THREADS_BASIC_API_BASE}/refresh_access_token")
+        .with(query: hash_including(grant_type: 'th_refresh_token'))
         .to_return(status: 400, body: { error: 'invalid_token' }.to_json)
     end
   end
@@ -46,184 +47,98 @@ RSpec.describe Threads do
       end
     end
 
+    # The token still works for weeks after it's due a refresh, so a failed one mustn't stop a post.
     context 'when token refresh fails for old account' do
       let(:old_social_account) { create(:social_account, :threads, user: user, uid: threads_user_id, access_token: access_token, connected_at: 31.days.ago) }
 
-      before do
-        stub_request(:get, "#{described_class::THREADS_BASIC_API_BASE}/refresh_access_token")
-          .to_return(status: 400, body: { error: 'invalid_token' }.to_json)
-      end
+      before { stub_token_refresh(success: false) }
 
-      it 'raises an error' do
+      it 'keeps the current token and reports the failure' do
+        expect(Bugsnag).to receive(:notify).with(an_instance_of(RuntimeError))
+
         expect {
           described_class.new(app_id: app_id, app_secret: app_secret, social_account: old_social_account)
-        }.to raise_error(RuntimeError, /Failed to refresh token/)
+        }.not_to raise_error
+        expect(old_social_account.reload.access_token).to eq(access_token)
       end
     end
   end
 
-  describe '#post' do
-    let(:photo) { { url: 'https://example.com/photo.jpg', alt_text: 'A test photo' } }
-    let(:caption) { 'Test caption' }
-    let(:container_id) { 'container_123' }
+  describe 'post steps' do
     let(:threads_endpoint) { "#{described_class::THREADS_API_BASE}/#{threads_user_id}/threads" }
     let(:publish_endpoint) { "#{described_class::THREADS_API_BASE}/#{threads_user_id}/threads_publish" }
     let(:threads) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
 
-    before do
-      # Stub container creation - match any query params
-      stub_request(:post, threads_endpoint)
-        .with(query: hash_including(access_token: access_token))
-        .to_return(status: 200, body: { id: container_id }.to_json)
-
-      # Stub container status check
-      stub_request(:get, "#{described_class::THREADS_API_BASE}/#{container_id}")
-        .with(query: hash_including(access_token: access_token))
-        .to_return(status: 200, body: { status: 'FINISHED' }.to_json)
-
-      # Stub publish
-      stub_request(:post, publish_endpoint)
-        .with(query: hash_including(access_token: access_token))
-        .to_return(status: 200, body: { id: 'post_123' }.to_json)
-    end
-
-    context 'with a single photo' do
-      it 'creates a media container and publishes it' do
-        response = threads.post(photos: [photo], caption: caption)
-        expect(response['id']).to eq('post_123')
-      end
-
-      it 'sends access_token as query parameter' do
-        threads.post(photos: [photo], caption: caption)
-        expect(WebMock).to have_requested(:post, threads_endpoint)
-          .with(query: hash_including(access_token: access_token))
-      end
-
-      it 'includes text in the request body' do
-        threads.post(photos: [photo], caption: caption)
-        expect(WebMock).to have_requested(:post, /#{threads_endpoint}/)
-          .with { |req| req.body.include?('text=Test') }
-      end
-    end
-
-    context 'with multiple photos (carousel)' do
-      let(:photos) do
-        [
-          { url: 'https://example.com/photo1.jpg', alt_text: 'Photo 1' },
-          { url: 'https://example.com/photo2.jpg', alt_text: 'Photo 2' }
-        ]
-      end
-      let(:container_id_1) { 'container_1' }
-      let(:container_id_2) { 'container_2' }
-      let(:carousel_container_id) { 'carousel_123' }
-
+    describe '#create_media_container' do
       before do
-        # Stub individual container creations with multiple responses
         stub_request(:post, threads_endpoint)
           .with(query: hash_including(access_token: access_token))
-          .to_return(
-            { status: 200, body: { id: container_id_1 }.to_json },
-            { status: 200, body: { id: container_id_2 }.to_json },
-            { status: 200, body: { id: carousel_container_id }.to_json }
-          )
-
-        # Stub status checks for each container
-        [container_id_1, container_id_2, carousel_container_id].each do |cid|
-          stub_request(:get, "#{described_class::THREADS_API_BASE}/#{cid}")
-            .with(query: hash_including(access_token: access_token))
-            .to_return(status: 200, body: { status: 'FINISHED' }.to_json)
-        end
+          .to_return(status: 200, body: { id: 'container_123' }.to_json)
       end
 
-      it 'creates a carousel container with children' do
-        response = threads.post(photos: photos, caption: caption)
-        expect(response['id']).to eq('post_123')
+      it 'creates a container and returns its ID' do
+        id = threads.create_media_container(image_url: 'https://example.com/photo.jpg', caption: 'Test caption',
+                                            topic_tag: 'photography', location_id: 'loc_123')
+
+        expect(id).to eq('container_123')
+        expect(WebMock).to(have_requested(:post, /#{threads_endpoint}/).with do |req|
+          req.body.include?('text=Test') && req.body.include?('topic_tag=photography') && req.body.include?('location_id=loc_123')
+        end)
       end
     end
 
-    context 'with topic_tag and location_id' do
-      it 'includes optional parameters' do
-        threads.post(photos: [photo], caption: caption, topic_tag: 'photography', location_id: 'loc_123')
-        # Check that topic_tag and location_id are included in the request
-        expect(WebMock).to have_requested(:post, /#{threads_endpoint}/)
-          .with { |req| req.body.include?('topic_tag=photography') && req.body.include?('location_id=loc_123') }
-      end
-    end
+    describe '#create_carousel_items' do
+      let(:photos) { [{ url: 'https://example.com/1.jpg', alt_text: 'One' }, { url: 'https://example.com/2.jpg', alt_text: 'Two' }] }
 
-    context 'with empty photos array' do
-      it 'raises ArgumentError' do
-        expect {
-          threads.post(photos: [], caption: caption)
-        }.to raise_error(ArgumentError, /Photos array cannot be empty/)
-      end
-    end
-
-    context 'with more than 20 photos' do
-      let(:photos) { 21.times.map { |i| { url: "https://example.com/photo#{i}.jpg", alt_text: "Photo #{i}" } } }
-
-      it 'raises ArgumentError' do
-        expect {
-          threads.post(photos: photos, caption: caption)
-        }.to raise_error(ArgumentError, /Photos array cannot exceed 20 photos/)
-      end
-    end
-  end
-
-  describe 'container status handling' do
-    let(:photo) { { url: 'https://example.com/photo.jpg', alt_text: 'A test photo' } }
-    let(:container_id) { 'container_123' }
-    let(:threads_endpoint) { "#{described_class::THREADS_API_BASE}/#{threads_user_id}/threads" }
-    let(:publish_endpoint) { "#{described_class::THREADS_API_BASE}/#{threads_user_id}/threads_publish" }
-    let(:threads) { described_class.new(app_id: app_id, app_secret: app_secret, social_account: social_account) }
-
-    before do
-      stub_request(:post, threads_endpoint)
-        .with(query: hash_including(access_token: access_token))
-        .to_return(status: 200, body: { id: container_id }.to_json)
-
-      stub_request(:post, publish_endpoint)
-        .with(query: hash_including(access_token: access_token))
-        .to_return(status: 200, body: { id: 'post_123' }.to_json)
-    end
-
-    context 'when container status is ERROR' do
       before do
-        stub_request(:get, "#{described_class::THREADS_API_BASE}/#{container_id}")
+        stub_request(:post, threads_endpoint)
           .with(query: hash_including(access_token: access_token))
-          .to_return(status: 200, body: { status: 'ERROR' }.to_json)
+          .to_return({ status: 200, body: { id: 'item_1' }.to_json }, { status: 200, body: { id: 'item_2' }.to_json })
       end
 
-      it 'raises an error' do
-        expect {
-          threads.post(photos: [photo], caption: 'Test')
-        }.to raise_error(RuntimeError, /failed with ERROR status/)
+      # The carousel's own container can only be made once Meta has processed these.
+      it 'creates a carousel item per photo, without waiting for them' do
+        expect(threads.create_carousel_items(photos)).to eq(%w[item_1 item_2])
+        expect(WebMock).to have_requested(:post, /#{threads_endpoint}/).with { |req| req.body.include?('is_carousel_item=true') }.twice
+        expect(WebMock).not_to have_requested(:get, /graph\.threads\.net/)
+      end
+
+      it 'needs between 2 and 20 photos' do
+        expect { threads.create_carousel_items(photos.take(1)) }.to raise_error(ArgumentError)
+        expect { threads.create_carousel_items(photos * 11) }.to raise_error(ArgumentError)
       end
     end
 
-    context 'when container status is EXPIRED' do
-      before do
-        stub_request(:get, "#{described_class::THREADS_API_BASE}/#{container_id}")
+    describe '#create_carousel_container' do
+      it 'creates a carousel holding the given containers' do
+        stub_request(:post, threads_endpoint)
           .with(query: hash_including(access_token: access_token))
-          .to_return(status: 200, body: { status: 'EXPIRED' }.to_json)
-      end
+          .to_return(status: 200, body: { id: 'carousel_123' }.to_json)
 
-      it 'raises an error' do
-        expect {
-          threads.post(photos: [photo], caption: 'Test')
-        }.to raise_error(RuntimeError, /expired before it could be published/)
+        expect(threads.create_carousel_container(children: %w[item_1 item_2], caption: 'Test caption')).to eq('carousel_123')
+        expect(WebMock).to(have_requested(:post, /#{threads_endpoint}/).with do |req|
+          req.body.include?('media_type=CAROUSEL') && req.body.include?('children=item_1%2Citem_2')
+        end)
       end
     end
 
-    context 'when container status is PUBLISHED' do
-      before do
-        stub_request(:get, "#{described_class::THREADS_API_BASE}/#{container_id}")
-          .with(query: hash_including(access_token: access_token))
-          .to_return(status: 200, body: { status: 'PUBLISHED' }.to_json)
-      end
+    describe '#container_status' do
+      it "returns the container's status and Meta's explanation" do
+        stub_request(:get, "#{described_class::THREADS_API_BASE}/container_123")
+          .with(query: hash_including(fields: 'status,error_message', access_token: access_token))
+          .to_return(status: 200, body: { status: 'ERROR', error_message: 'FAILED_DOWNLOADING_VIDEO' }.to_json)
 
-      it 'returns successfully' do
-        response = threads.post(photos: [photo], caption: 'Test')
-        expect(response['id']).to eq('post_123')
+        expect(threads.container_status('container_123')).to eq('code' => 'ERROR', 'error' => 'FAILED_DOWNLOADING_VIDEO')
+      end
+    end
+
+    describe '#publish_container' do
+      it 'publishes the container and returns the media ID' do
+        stub_request(:post, publish_endpoint)
+          .with(query: hash_including(access_token: access_token))
+          .to_return(status: 200, body: { id: 'post_123' }.to_json)
+
+        expect(threads.publish_container('container_123')['id']).to eq('post_123')
       end
     end
   end
@@ -244,7 +159,7 @@ RSpec.describe Threads do
 
       it 'raises MetaTransientError' do
         expect {
-          threads.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'Test')
+          threads.create_media_container(image_url: 'https://example.com/photo.jpg', alt_text: 'Test', caption: 'Test')
         }.to raise_error(MetaTransientError, /Failed to create media container/)
       end
     end
@@ -261,7 +176,7 @@ RSpec.describe Threads do
 
       it 'raises MetaMediaDownloadError' do
         expect {
-          threads.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'Test')
+          threads.create_media_container(image_url: 'https://example.com/photo.jpg', alt_text: 'Test', caption: 'Test')
         }.to raise_error(MetaMediaDownloadError, /Failed to create media container/)
       end
     end
@@ -278,12 +193,13 @@ RSpec.describe Threads do
 
       it 'raises MetaCaptionTooLongError' do
         expect {
-          threads.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'x' * 501)
+          threads.create_media_container(image_url: 'https://example.com/photo.jpg', alt_text: 'Test', caption: 'x' * 501)
         }.to raise_error(MetaCaptionTooLongError, /Failed to create media container/)
       end
     end
 
-    context 'when create_media_container returns a non-transient error' do
+    # Until the account is reconnected, every attempt gets the same answer.
+    context 'when Meta refuses the access token' do
       before do
         stub_request(:post, threads_endpoint)
           .with(query: hash_including(access_token: access_token))
@@ -293,9 +209,26 @@ RSpec.describe Threads do
           )
       end
 
+      it 'raises MetaAuthError' do
+        expect {
+          threads.create_media_container(image_url: 'https://example.com/photo.jpg', alt_text: 'Test', caption: 'Test')
+        }.to raise_error(MetaAuthError, /Failed to create media container/)
+      end
+    end
+
+    context 'when create_media_container returns a non-transient error' do
+      before do
+        stub_request(:post, threads_endpoint)
+          .with(query: hash_including(access_token: access_token))
+          .to_return(
+            status: 400,
+            body: { error: { message: 'Invalid parameter', type: 'OAuthException', is_transient: false, code: 100 } }.to_json
+          )
+      end
+
       it 'raises RuntimeError' do
         expect {
-          threads.post(photos: [{ url: 'https://example.com/photo.jpg', alt_text: 'Test' }], caption: 'Test')
+          threads.create_media_container(image_url: 'https://example.com/photo.jpg', alt_text: 'Test', caption: 'Test')
         }.to raise_error(RuntimeError, /Failed to create media container/)
       end
     end

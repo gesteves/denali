@@ -3,6 +3,17 @@ class MastodonJob < ShareJob
     user&.mastodon_account.present?
   end
 
+  def self.retry_delay(count, exception)
+    case exception
+    when Mastodon::AuthenticationError, Mastodon::PermanentError
+      # A token the server refuses, or a status it won't accept. Retrying would upload every photo
+      # again each time for six hours, to the same answer. JobDeathReporter reports it once.
+      :discard
+    else
+      super
+    end
+  end
+
   # @param text [String, nil] the caption. Without one, the job builds the entry's
   #   caption when it runs rather than when it was enqueued, so an entry
   #   published straight from the form gets the tags and EXIF details that are

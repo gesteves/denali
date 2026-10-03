@@ -1,36 +1,44 @@
-class InstagramJob < ShareJob
+# Posts an entry to the Instagram feed. See MetaShareJob for how the post is made.
+class InstagramJob < MetaShareJob
+  MAX_PHOTOS = Instagram::MAX_CAROUSEL_PHOTOS
+
   def self.available_for?(user)
     ENV['INSTAGRAM_APP_ID'].present? && ENV['INSTAGRAM_APP_SECRET'].present? && user&.instagram_account.present?
   end
 
-  # @param text [String, nil] the caption. Without one, the job builds the entry's
-  #   caption when it runs rather than when it was enqueued, so an entry
-  #   published straight from the form gets the tags and EXIF details that are
-  #   only filled in after it's saved.
-  def perform(entry_id, text = nil)
-    entry = shareable_entry(entry_id)
-    return if entry.nil? || !self.class.available_for?(entry.user)
+  private
 
-    text ||= entry.instagram_caption
-    instagram = Instagram.new(
+  def network
+    'Instagram'
+  end
+
+  def build_client(user)
+    Instagram.new(
       app_id: ENV['INSTAGRAM_APP_ID'],
       app_secret: ENV['INSTAGRAM_APP_SECRET'],
-      social_account: entry.user.instagram_account
+      social_account: user.instagram_account
     )
+  end
 
-    photos = entry.photos.limit(10).map { |p| { url: p.instagram_url, alt_text: p.alt_text } }
-    location_id = entry.photos.first.instagram_location_id
+  def photo_url(photo)
+    photo.instagram_url
+  end
 
-    entry.photos.limit(10).each { |p| p.warm_cache(p.instagram_url) }
+  def create_single_container(client, entry, photo, text)
+    client.create_media_container(image_url: photo_url(photo), caption: text, alt_text: photo.alt_text,
+                                  location_id: photo.instagram_location_id)
+  end
 
-    response = instagram.post(
-      photos: photos,
-      caption: text,
-      location_id: location_id
-    )
-    record_share(entry, 'instagram')
+  def create_carousel_container(client, entry, children, text)
+    client.create_carousel_container(children: children, caption: text, location_id: entry.photos.first.instagram_location_id)
+  end
 
-    instagram_post_id = response['id']
-    InstagramCommentJob.perform_async(entry_id, instagram_post_id) if instagram_post_id.present? && entry.instagram_hashtags.present?
+  # Hashtags go in the first comment rather than the caption. Without the post's media ID (the
+  # response that held it never arrived) there's nothing to comment on.
+  def after_publish(entry, media_id)
+    return if media_id.blank? || @state['commented']
+
+    InstagramCommentJob.perform_async(entry.id, media_id) if entry.instagram_hashtags.present?
+    save_state('commented' => true)
   end
 end

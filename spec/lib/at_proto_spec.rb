@@ -59,6 +59,12 @@ RSpec.describe AtProto do
       expect { client.access_token }.to raise_error(AtProto::ConnectionError)
     end
 
+    # So the jobs wait the limit out, as they do for any other write, instead of retrying into it.
+    it 'treats a rate-limited session as rate limited' do
+      stub_request(:post, session_url).to_return(status: 429, headers: { 'ratelimit-reset' => (Time.now + 300).to_i.to_s })
+      expect { client.access_token }.to raise_error(AtProto::RateLimitedError) { |error| expect(error.retry_after).to be_within(5).of(300) }
+    end
+
     it 'treats a network failure as a connection error' do
       stub_request(:post, session_url).to_raise(Errno::ECONNREFUSED)
       expect { client.access_token }.to raise_error(AtProto::ConnectionError, /pds\.example/)
