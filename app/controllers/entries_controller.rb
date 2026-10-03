@@ -26,7 +26,9 @@ class EntriesController < ApplicationController
         @og_description = I18n.t('blog.tag_line')
         @og_title = @photoblog.name
         @feed_url = feed_url(format: 'atom')
-        @base_url = entries_url(page: nil).sub(/\/$/, '')
+        # Paths, not URLs: infinite scroll fetches the next page from wherever
+        # this page was served, which needn't be the canonical host.
+        @base_url = entries_path(page: nil).sub(/\/$/, '')
         @heading_title = "Latest photos"
         @hide_title = true
         if @page.nil? || @page == 1
@@ -66,7 +68,7 @@ class EntriesController < ApplicationController
         @og_description = @page_description
         @og_title = "#{@tags.first.name} on #{@photoblog.name}"
         @feed_url = tag_feed_url(format: 'atom', tag: @tag_slug)
-        @base_url = tag_url(tag: @tag_slug, page: nil)
+        @base_url = tag_path(tag: @tag_slug, page: nil)
         @heading_title = "Photos tagged “#{@tags.first.name}”"
         @page_title = "#{@tags.first.name} – #{@photoblog.name}"
         @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
@@ -122,7 +124,7 @@ class EntriesController < ApplicationController
       @page_title = "Search results for “#{@query}” – #{@photoblog.name}"
       @page_title += " – Page #{@page}" unless @page.nil? || @page == 1
       @page_url = @page == 1 ? search_url(q: @query) : search_url(q: @query, page: @page)
-      @base_url = search_url(q: @query)
+      @base_url = search_path(q: @query)
       @heading_title = "Search Results"
       respond_to do |format|
         format.html

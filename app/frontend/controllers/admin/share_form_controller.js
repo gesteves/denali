@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { renderStreamMessage } from '@hotwired/turbo';
 
 /**
  * Handles XHR form submission for each platform sharing section.
@@ -39,12 +40,12 @@ export default class extends Controller {
 
       if (contentType.includes('text/vnd.turbo-stream.html')) {
         const html = await response.text();
-        Turbo.renderStreamMessage(html);
+        renderStreamMessage(html);
       } else {
         const data = await response.json();
         this.notify(data.status, data.message);
       }
-    } catch (error) {
+    } catch {
       this.notify('danger', `Failed to share on ${this.platformValue}. Please try again.`);
     } finally {
       this.submitTarget.disabled = false;

@@ -21,8 +21,7 @@ RSpec.describe Photo, type: :model do
       photo = create(:photo, entry: entry)
       original_updated_at = entry.updated_at
 
-      sleep(0.01) # Ensure time passes
-      photo.update!(alt_text: 'Foo')
+      travel(1.second) { photo.update!(alt_text: 'Foo') }
       entry.reload
 
       expect(entry.updated_at).not_to eq(original_updated_at)

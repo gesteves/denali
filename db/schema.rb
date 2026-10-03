@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_03_161719) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_03_162421) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -50,7 +50,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_03_161719) do
     t.string "bluesky"
     t.datetime "created_at", precision: nil, null: false
     t.string "email"
-    t.string "facebook"
     t.string "flickr"
     t.text "header_logo_svg"
     t.boolean "hide_from_search_engines", default: false
@@ -214,13 +213,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_03_161719) do
     t.text "alt_text"
     t.boolean "alt_text_needs_review", default: false
     t.text "auto_generated_alt_text"
-    t.boolean "black_and_white"
     t.string "blurhash"
     t.bigint "camera_id"
     t.boolean "color"
     t.string "country"
     t.datetime "created_at", precision: nil, null: false
-    t.string "dominant_color"
     t.integer "entry_id"
     t.string "exposure"
     t.float "f_number"
@@ -238,7 +235,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_03_161719) do
     t.bigint "park_id"
     t.integer "position"
     t.string "postal_code"
-    t.string "source_url"
     t.string "sublocality"
     t.datetime "taken_at", precision: nil
     t.datetime "updated_at", precision: nil, null: false
@@ -342,8 +338,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_03_161719) do
     t.string "first_name"
     t.string "last_name"
     t.string "name"
-    t.datetime "oauth_expires_at", precision: nil
-    t.string "oauth_token"
     t.string "provider"
     t.string "uid"
     t.datetime "updated_at", precision: nil, null: false

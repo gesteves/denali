@@ -27,7 +27,7 @@ namespace :entries do
 
     if total == 0
       puts "No entries need updating."
-      return
+      next # not return: that raises LocalJumpError in a rake task
     end
 
     hidden_count = 0
@@ -73,7 +73,7 @@ namespace :entries do
 
     if count == 0
       puts "No entries found tagged with '#{tag}' that have at least one sharing setting enabled"
-      return
+      next # not return: that raises LocalJumpError in a rake task
     end
 
     puts "DRY RUN!\n\n" if dry_run

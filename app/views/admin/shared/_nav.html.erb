@@ -54,7 +54,7 @@
         <div class="navbar-item">
           <%= form_with(url: admin_search_path, method: :get, role: 'search') do %>
             <div class="control has-icons-left">
-              <%= text_field_tag :q, @query || '', placeholder: 'Search', class: 'input', 'aria-label': 'Search' %>
+              <%= text_field_tag :q, @query || '', placeholder: 'Search', class: 'input', autocomplete: 'off', 'aria-label': 'Search' %>
               <span class="icon is-small is-left">
                 <i class="fas fa-search"></i>
               </span>

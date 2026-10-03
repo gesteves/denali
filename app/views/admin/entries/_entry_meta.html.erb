@@ -8,7 +8,7 @@
       <% elsif entry.is_queued? %>
         <span class="tag is-info">Queued</span>
         <% if (publish_date = entry.publish_date_for_queued).present? %>
-          <span class="tag"><%= publish_date.strftime('%A, %B %-d, %Y')%></span>
+          <span class="tag"><%= publish_date.strftime('%A, %B %-d, %Y') %></span>
         <% else %>
           <span class="tag">TBD</span>
         <% end %>

@@ -8,7 +8,10 @@
     "build:watch": "esbuild app/frontend/packs/application.js --bundle --sourcemap --format=esm --outdir=app/assets/builds --public-path=/assets --watch=forever & esbuild app/frontend/packs/admin.js --bundle --sourcemap --format=esm --splitting --chunk-names=[name]-[hash].digested --outdir=app/assets/builds --public-path=/assets --watch=forever",
     "test": "vitest",
     "test:run": "vitest run",
-    "test:coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage",
+    "lint": "npm run lint:js && npm run lint:css",
+    "lint:js": "eslint .",
+    "lint:css": "stylelint \"app/assets/stylesheets/**/*.scss\""
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
@@ -22,8 +25,13 @@
     "masonry-layout": "^4.2.2"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@vitest/coverage-v8": "^5.0.2",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
     "jsdom": "^30.1.1",
+    "stylelint": "^17.16.0",
+    "stylelint-config-recommended-scss": "^17.0.1",
     "vitest": "^5.0.1"
   },
   "repository": {

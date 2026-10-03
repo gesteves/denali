@@ -70,6 +70,7 @@ end
 group :development, :test do
   gem 'debug', require: nil
   gem 'brakeman', require: nil
+  gem 'erb_lint', require: false
   gem 'bullet'
 end
 
@@ -84,4 +85,6 @@ group :test do
   gem 'simplecov', require: false
   gem 'mock_redis'
   gem 'rails-controller-testing'
+  gem 'capybara'
+  gem 'cuprite'
 end

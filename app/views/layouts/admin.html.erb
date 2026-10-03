@@ -16,7 +16,7 @@
   <%= javascript_include_tag 'admin', type: 'module', 'data-turbo-track': 'reload' %>
   <script src="https://kit.fontawesome.com/2935e37c07.js" crossorigin="anonymous"></script>
 </head>
-<body data-controller="notifications" data-action="notify->notifications#add" <% if content_for?(:body_class) %>class="<%= yield :body_class %>"<% end %>>
+<body data-controller="notifications" data-action="notify->notifications#add" <% if content_for?(:body_class) %> class="<%= yield :body_class %>"<% end %>>
   <%= render partial: 'admin/shared/nav' %>
 
   <% if @no_container %>

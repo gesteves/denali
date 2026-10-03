@@ -4,11 +4,10 @@
     total_pages:   total number of pages
     per_page:      number of items to fetch per page
     remote:        data-remote
-    paginator:     the paginator that renders the pagination tags inside
--%>
+    paginator:     the paginator that renders the pagination tags inside -%>
 
 <%= paginator.render do -%>
-  <nav class="pagination" <% if defined? target %>data-<%= target.split('.').first %>-target="<%= target.split('.').last %>"<% end %> aria-labelledby="pagination">
+  <nav class="pagination" <% if defined? target %> data-<%= target.split('.').first %>-target="<%= target.split('.').last %>"<% end %> aria-labelledby="pagination">
     <h2 id="pagination" class="sr-only">Pagination</h2>
     <%= prev_page_tag %>
     <%= next_page_tag %>

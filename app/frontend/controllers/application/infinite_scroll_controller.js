@@ -84,6 +84,11 @@ export default class extends Controller {
       this.stopSpinner();
       this.currentPageValue = nextPage;
       this.appendPage(text);
+      // The observer only fires when the spinner crosses into view. If the new
+      // page was too short to push it back out, nothing would ever load the
+      // next one; observing it afresh reports where it is now.
+      this.observer.unobserve(this.spinnerTarget);
+      this.observer.observe(this.spinnerTarget);
     } catch {
       this.endInfiniteScroll();
     } finally {

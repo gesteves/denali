@@ -10,7 +10,6 @@ vi.mock('../../lib/analytics', () => ({
 
 describe('PageController', () => {
   let application;
-  let element;
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -21,7 +20,6 @@ describe('PageController', () => {
       </div>
     `;
 
-    element = document.querySelector('[data-controller="page"]');
     application = Application.start();
     application.register('page', PageController);
   });

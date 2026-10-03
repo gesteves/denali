@@ -88,13 +88,6 @@ describe('QueueController', () => {
     });
   }
 
-  function mockFetchError() {
-    global.fetch.mockResolvedValueOnce({
-      ok: false,
-      status: 500
-    });
-  }
-
   describe('connect', () => {
     it('retrieves CSRF token from meta tag', () => {
       const controller = getController();

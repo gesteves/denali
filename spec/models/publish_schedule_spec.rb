@@ -26,8 +26,7 @@ RSpec.describe PublishSchedule, type: :model do
       entry = create(:entry, :queued, blog: blog, user: user)
       original_updated_at = entry.updated_at
 
-      sleep(0.01)
-      create(:publish_schedule, blog: blog)
+      travel(1.second) { create(:publish_schedule, blog: blog) }
 
       entry.reload
       expect(entry.updated_at).not_to eq(original_updated_at)
@@ -38,8 +37,7 @@ RSpec.describe PublishSchedule, type: :model do
       entry = create(:entry, :queued, blog: blog, user: user)
       original_updated_at = entry.updated_at
 
-      sleep(0.01)
-      schedule.update!(hour: 15)
+      travel(1.second) { schedule.update!(hour: 15) }
 
       entry.reload
       expect(entry.updated_at).not_to eq(original_updated_at)
@@ -50,8 +48,7 @@ RSpec.describe PublishSchedule, type: :model do
       entry = create(:entry, :queued, blog: blog, user: user)
       original_updated_at = entry.updated_at
 
-      sleep(0.01)
-      schedule.destroy
+      travel(1.second) { schedule.destroy }
 
       entry.reload
       expect(entry.updated_at).not_to eq(original_updated_at)
@@ -61,8 +58,7 @@ RSpec.describe PublishSchedule, type: :model do
       entry = create(:entry, :published, blog: blog, user: user)
       original_updated_at = entry.updated_at
 
-      sleep(0.01)
-      create(:publish_schedule, blog: blog)
+      travel(1.second) { create(:publish_schedule, blog: blog) }
 
       entry.reload
       # Use be_within to handle database timestamp precision differences

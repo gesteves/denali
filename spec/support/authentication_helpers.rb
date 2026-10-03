@@ -12,4 +12,5 @@ end
 RSpec.configure do |config|
   config.include AuthenticationHelpers, type: :request
   config.include AuthenticationHelpers, type: :controller
+  config.include AuthenticationHelpers, type: :system
 end

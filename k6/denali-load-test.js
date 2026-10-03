@@ -1,7 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { parseHTML } from 'k6/html';
-import { SharedArray } from 'k6/data';
 import { Counter, Rate, Trend } from 'k6/metrics';
 
 // Custom metrics
@@ -179,7 +178,7 @@ export function handleSummary(data) {
 }
 
 // Simple text summary function
-function textSummary(data, options) {
+function textSummary(data) {
   const { metrics } = data;
   let output = '\n';
   output += '='.repeat(60) + '\n';

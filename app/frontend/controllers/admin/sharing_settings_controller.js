@@ -12,9 +12,8 @@ export default class extends Controller {
 
   /**
    * Saves the sharing settings via XHR when a toggle changes.
-   * @param {Event} event Change event from the toggle.
    */
-  async save (event) {
+  async save () {
     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
     const formData = {
@@ -40,7 +39,7 @@ export default class extends Controller {
       const data = await response.json();
 
       this.notify(data.status, data.message);
-    } catch (error) {
+    } catch {
       this.notify('danger', 'Failed to save sharing settings. Please try again.');
     }
   }

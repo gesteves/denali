@@ -30,7 +30,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control is-expanded">
-            <input type="text" class="input" placeholder="URL of post to reply to..." data-share-form-target="inReplyTo">
+            <input type="text" class="input" placeholder="URL of post to reply to..." autocomplete="off" data-share-form-target="inReplyTo">
           </div>
           <p class="help">Leave blank to post as a new thread.</p>
         </div>
@@ -43,7 +43,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control is-expanded">
-            <input type="text" class="input" placeholder="URL of post to quote..." data-share-form-target="quote">
+            <input type="text" class="input" placeholder="URL of post to quote..." autocomplete="off" data-share-form-target="quote">
           </div>
           <p class="help">Leave blank to not quote any post.</p>
         </div>
@@ -56,7 +56,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input type="datetime-local" class="input" min="<%= min_datetime %>" data-share-form-target="scheduledAt">
+            <input type="datetime-local" class="input" min="<%= min_datetime %>" autocomplete="off" data-share-form-target="scheduledAt">
           </div>
           <p class="help">Leave blank to share immediately.</p>
         </div>
@@ -107,7 +107,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input type="datetime-local" class="input" min="<%= min_datetime %>" data-share-form-target="scheduledAt">
+            <input type="datetime-local" class="input" min="<%= min_datetime %>" autocomplete="off" data-share-form-target="scheduledAt">
           </div>
           <p class="help">Leave blank to share immediately.</p>
         </div>
@@ -147,7 +147,7 @@
       <div class="field">
         <div class="instagram-story-preview__container">
           <figure class="image instagram-story-preview__image">
-            <img data-instagram-story-preview-target="thumbnail" src="<%= uncropped_url %>" alt="<%= photo.alt_text %>" class="instagram-story-preview__thumbnail" />
+            <img data-instagram-story-preview-target="thumbnail" src="<%= uncropped_url %>" alt="<%= photo.alt_text %>" class="instagram-story-preview__thumbnail">
           </figure>
         </div>
       </div>
@@ -182,7 +182,7 @@
     <div class="field-body">
       <div class="field">
         <div class="control">
-          <input type="datetime-local" class="input" min="<%= min_datetime %>" data-share-form-target="scheduledAt">
+          <input type="datetime-local" class="input" min="<%= min_datetime %>" autocomplete="off" data-share-form-target="scheduledAt">
         </div>
         <p class="help">Leave blank to share immediately.</p>
       </div>
@@ -226,7 +226,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input type="datetime-local" class="input" min="<%= min_datetime %>" data-share-form-target="scheduledAt">
+            <input type="datetime-local" class="input" min="<%= min_datetime %>" autocomplete="off" data-share-form-target="scheduledAt">
           </div>
           <p class="help">Leave blank to share immediately.</p>
         </div>
@@ -277,7 +277,7 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input type="datetime-local" class="input" min="<%= min_datetime %>" data-share-form-target="scheduledAt">
+            <input type="datetime-local" class="input" min="<%= min_datetime %>" autocomplete="off" data-share-form-target="scheduledAt">
           </div>
           <p class="help">Leave blank to share immediately.</p>
         </div>

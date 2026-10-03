@@ -36,6 +36,29 @@ describe('NotificationsController', () => {
     return element.querySelectorAll('[data-notifications-target="notification"]');
   }
 
+  describe('notifications rendered with the page', () => {
+    it('connects without errors when the page already has a notification', () => {
+      application.stop();
+      document.body.innerHTML = `
+        <div data-controller="notifications">
+          <div data-notifications-target="container">
+            <div class="notification is-success is-transparent" data-notifications-target="notification">Saved!</div>
+          </div>
+        </div>
+      `;
+      element = document.querySelector('[data-controller="notifications"]');
+      const errors = [];
+      application = Application.start();
+      application.handleError = (error) => errors.push(error);
+      application.register('notifications', NotificationsController);
+
+      return new Promise(resolve => setTimeout(resolve, 20)).then(() => {
+        expect(errors).toEqual([]);
+        expect(notificationTargets()[0].classList.contains('is-transparent')).toBe(false);
+      });
+    });
+  });
+
   describe('add', () => {
     it('adds notification HTML to container', () => {
       const controller = getController();

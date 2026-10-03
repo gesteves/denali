@@ -270,8 +270,7 @@ RSpec.describe "Admin::Entries", type: :request do
 
     it "updates modified_at" do
       original_modified_at = entry.modified_at
-      sleep(0.01)
-      patch admin_entry_path(entry), params: { entry: { title: 'Updated' } }
+      travel(1.second) { patch admin_entry_path(entry), params: { entry: { title: 'Updated' } } }
       entry.reload
       expect(entry.modified_at).not_to eq(original_modified_at)
     end

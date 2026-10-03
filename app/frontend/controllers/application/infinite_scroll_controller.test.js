@@ -182,6 +182,22 @@ describe('InfiniteScrollController', () => {
       });
     });
 
+    // A page too short to push the spinner out of view never makes it cross
+    // into view again, so the observer is reset to report it as it stands.
+    it('observes the spinner afresh after appending a page', async () => {
+      mockFetchSuccess('<article>Entry 2</article>');
+      const controller = application.getControllerForElementAndIdentifier(element, 'infinite-scroll');
+      const unobserve = vi.spyOn(controller.observer, 'unobserve');
+      const observe = vi.spyOn(controller.observer, 'observe');
+
+      observerCallback([createIntersectionEntry(spinner(), true, 1)]);
+
+      await vi.waitFor(() => {
+        expect(unobserve).toHaveBeenCalledWith(spinner());
+        expect(observe).toHaveBeenCalledWith(spinner());
+      });
+    });
+
     it('does not fetch when spinner is not intersecting', () => {
       const entry = createIntersectionEntry(spinner(), false, 0);
       observerCallback([entry]);

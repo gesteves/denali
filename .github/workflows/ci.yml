@@ -76,13 +76,16 @@ jobs:
           cache: 'npm'
 
       - name: Install npm dependencies
-        run: npm install
+        run: npm ci
 
       - name: Set up database
         run: bin/rails db:schema:load
 
       - name: Compile assets
         run: bin/rails assets:precompile
+
+      - name: Lint ERB templates
+        run: bundle exec erb_lint --lint-all
 
       - name: Run tests
         run: bundle exec rspec
@@ -101,10 +104,13 @@ jobs:
           cache: 'npm'
 
       - name: Install npm dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Lint JavaScript and SCSS
+        run: npm run lint
 
       - name: Run JavaScript tests
-        run: npm run test:run
+        run: npm run test:coverage
 
   notify-test:
     name: Notify test result

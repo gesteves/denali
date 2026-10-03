@@ -2,10 +2,6 @@ require 'mini_magick'
 class Photo < ApplicationRecord
   include Transformable
 
-  # Unused columns, dropped in a later migration. Ignored first so no process
-  # still running this code writes to them after they're gone.
-  self.ignored_columns += %w[source_url dominant_color black_and_white]
-
   belongs_to :entry, touch: true, counter_cache: true, optional: true
   belongs_to :camera, optional: true
   belongs_to :lens, optional: true

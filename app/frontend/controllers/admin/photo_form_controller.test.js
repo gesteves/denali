@@ -224,7 +224,7 @@ describe('PhotoFormController', () => {
             loadCallback = callback;
           }
         }
-        readAsDataURL(file) {
+        readAsDataURL() {
           // Simulate async file read
           setTimeout(() => loadCallback({ target: { result: 'data:image/jpeg;base64,abc123' } }), 0);
         }
@@ -256,7 +256,7 @@ describe('PhotoFormController', () => {
             loadCallback = callback;
           }
         }
-        readAsDataURL(file) {
+        readAsDataURL() {
           setTimeout(() => loadCallback({ target: { result: 'data:image/jpg;base64,abc' } }), 0);
         }
       }

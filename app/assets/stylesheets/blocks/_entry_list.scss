@@ -5,7 +5,7 @@
   display: block;
   margin: var(--gutter-horizontal) auto;
   max-width: var(--max-width);
-  padding: 0 calc(var(--entry-list-gutters)/2);
+  padding: 0 calc(var(--entry-list-gutters) / 2);
   position: relative;
 
   @supports (display: grid-lanes) {
@@ -20,10 +20,10 @@
   border-radius: var(--photo-border-radius);
   display: block;
   float: left;
-  margin: 0 calc(var(--entry-list-gutters)/2) var(--entry-list-gutters);
+  margin: 0 calc(var(--entry-list-gutters) / 2) var(--entry-list-gutters);
   overflow: hidden;
   position: relative;
-  width: calc(((100% - var(--entry-list-gutters))/var(--entry-list-columns)) - var(--entry-list-gutters));
+  width: calc(((100% - var(--entry-list-gutters)) / var(--entry-list-columns)) - var(--entry-list-gutters));
 
   @supports (display: grid-lanes) {
     float: none;

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { Application } from '@hotwired/stimulus';
 import InlineFormController from './inline_form_controller';
 

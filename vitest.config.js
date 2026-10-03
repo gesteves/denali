@@ -27,8 +27,16 @@ export default defineConfig({
     ],
     coverage: {
       provider: 'v8',
-      include: ['app/frontend/controllers/**/*.js', 'app/frontend/lib/**/*.js'],
-      exclude: ['app/frontend/packs/**/*.js']
+      include: ['app/frontend/controllers/**/*.js', 'app/frontend/lib/**/*.js', 'app/frontend/observers/**/*.js'],
+      exclude: ['app/frontend/packs/**/*.js', '**/*.test.js'],
+      // A little under where coverage stands, so `npm run test:coverage` fails
+      // when new code arrives untested rather than letting it drift.
+      thresholds: {
+        statements: 95,
+        branches: 85,
+        functions: 90,
+        lines: 95
+      }
     }
   }
 });

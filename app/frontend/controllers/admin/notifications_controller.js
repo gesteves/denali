@@ -7,8 +7,13 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
   static targets = ['container', 'notification'];
 
-  connect () {
+  // Stimulus reports targets already on the page (a flash rendered with it)
+  // before it calls connect, so the list has to exist before that.
+  initialize () {
     this.timeouts = [];
+  }
+
+  connect () {
     this.toggle();
   }
 

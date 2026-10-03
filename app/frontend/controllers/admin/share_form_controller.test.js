@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { Application } from '@hotwired/stimulus';
+import { renderStreamMessage } from '@hotwired/turbo';
 import ShareFormController from './share_form_controller';
+
+vi.mock('@hotwired/turbo', () => ({ renderStreamMessage: vi.fn() }));
 
 describe('ShareFormController', () => {
   let application;
@@ -8,7 +11,6 @@ describe('ShareFormController', () => {
 
   beforeEach(() => {
     global.fetch = vi.fn();
-    global.Turbo = { renderStreamMessage: vi.fn() };
 
     document.body.innerHTML = `
       <form data-controller="share-form"
@@ -35,7 +37,6 @@ describe('ShareFormController', () => {
     application.stop();
     document.body.innerHTML = '';
     vi.clearAllMocks();
-    delete global.Turbo;
   });
 
   function getController() {
@@ -139,7 +140,7 @@ describe('ShareFormController', () => {
       controller.submit(event);
 
       await vi.waitFor(() => {
-        expect(global.Turbo.renderStreamMessage).toHaveBeenCalledWith(turboHtml);
+        expect(renderStreamMessage).toHaveBeenCalledWith(turboHtml);
       });
     });
 
@@ -171,7 +172,7 @@ describe('ShareFormController', () => {
       controller.submit(event);
 
       await vi.waitFor(() => {
-        expect(global.Turbo.renderStreamMessage).toHaveBeenCalled();
+        expect(renderStreamMessage).toHaveBeenCalled();
       });
 
       const notifyEvent = dispatchSpy.mock.calls.find(call => call[0].type === 'notify');

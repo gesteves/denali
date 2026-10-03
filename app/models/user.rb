@@ -1,9 +1,4 @@
 class User < ApplicationRecord
-  # The Google OAuth token from sign-in was stored in plain text and never read.
-  # Unused columns, dropped in a later migration. Ignored first so no process
-  # still running this code writes to them after they're gone.
-  self.ignored_columns += %w[oauth_token oauth_expires_at]
-
   has_many :entries
   has_many :social_accounts, dependent: :destroy
 

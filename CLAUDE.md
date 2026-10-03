@@ -75,6 +75,17 @@ docker compose run --rm app npm run test:coverage                               
 docker compose run --rm app npx vitest run app/frontend/lib/utils.test.js       # specific file
 ```
 
+System specs (`spec/system`) drive headless Chromium through Capybara and Cuprite; Chromium is in the dev image. See `spec/support/system.rb`.
+
+### Linting
+
+```bash
+docker compose run --rm app npm run lint                       # ESLint + stylelint
+docker compose run --rm app bundle exec erb_lint --lint-all    # ERB templates
+```
+
+CI runs both, plus `npm run test:coverage`, which fails below the thresholds in `vitest.config.js`.
+
 Test infrastructure:
 - `vitest.config.js` - Vitest configuration
 - `app/frontend/test/setup.js` - Global mocks (IntersectionObserver, fetch, etc.)

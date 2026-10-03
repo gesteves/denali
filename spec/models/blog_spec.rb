@@ -20,8 +20,7 @@ RSpec.describe Blog, type: :model do
   describe 'touching' do
     it 'creating an entry touches the blog' do
       initial_date = blog.updated_at
-      sleep(0.01) # Ensure some time passes
-      create(:entry, :published, blog: blog, user: user)
+      travel(1.second) { create(:entry, :published, blog: blog, user: user) }
       blog.reload
       expect(blog.updated_at).not_to eq(initial_date)
     end
