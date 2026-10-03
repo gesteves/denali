@@ -64,9 +64,11 @@ class RandomShareJob < ApplicationJob
       not_shared_in: not_shared_in
     )
 
-    return nil if eligible_entries.blank? || eligible_entries.empty?
+    # Picked by the database: sample would load every eligible entry to keep one.
+    entry = eligible_entries.reorder(Arel.sql('RANDOM()')).first
+    return if entry.nil?
 
     logger.info "[Social] There are #{eligible_entries.count} entries#{tags.any? ? " tagged with #{tags.join(', ')}" : ""}#{excluded_tags.any? ? " excluding #{excluded_tags.join(', ')}" : ""} eligible to be shared on #{platform}."
-    eligible_entries.sample
+    entry
   end
 end

@@ -11,7 +11,10 @@ class Entry < ApplicationRecord
   belongs_to :blog, touch: true
   belongs_to :user
 
+  STATUSES = %w[draft queued published].freeze
+
   validates :title, presence: true
+  validates :status, inclusion: { in: STATUSES }
 
   before_save :set_published_date, if: :is_published?
   before_save :set_entry_slug
@@ -115,7 +118,7 @@ class Entry < ApplicationRecord
   end
 
   scope :with_graphql_includes, -> {
-    includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :territories], taggings: :tag)
+    includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :park, :crops, :territories], taggings: :tag)
   }
 
   def self.published(order = 'entries.published_at DESC')
@@ -576,13 +579,12 @@ class Entry < ApplicationRecord
     end
   end
 
-  # Filter tag_customizations in memory when preloaded, otherwise query
+  # The blog's tag customizations with something in the given field. They're all
+  # loaded once per entry, tags included: building the captions asks for them
+  # several times, and matches_tags? reads every one's tags.
   def tag_customizations_with_field(field)
-    if blog.association(:tag_customizations).loaded?
-      blog.tag_customizations.select { |tc| tc.send(field).present? }
-    else
-      blog.tag_customizations.where.not(field => [nil, ''])
-    end
+    @tag_customizations ||= blog.tag_customizations.includes(:tags).to_a
+    @tag_customizations.select { |tc| tc.public_send(field).present? }
   end
 
   def combined_tag_list
@@ -880,7 +882,7 @@ class Entry < ApplicationRecord
     entry_tags = self.combined_tags
     entry_groups = []
     return entry_groups unless self.post_to_flickr_groups
-    self.blog.tag_customizations.where.not(flickr_groups: [nil, '']).each do |tag_customization|
+    tag_customizations_with_field(:flickr_groups).each do |tag_customization|
       flickr_groups = tag_customization.flickr_groups_to_a
       if tag_customization.matches_tags? entry_tags
         entry_groups << flickr_groups
@@ -892,7 +894,7 @@ class Entry < ApplicationRecord
   def flickr_albums
     entry_tags = self.combined_tags
     entry_albums = []
-    self.blog.tag_customizations.where.not(flickr_albums: [nil, '']).each do |tag_customization|
+    tag_customizations_with_field(:flickr_albums).each do |tag_customization|
       flickr_albums = tag_customization.flickr_albums_to_a
       if tag_customization.matches_tags? entry_tags
         entry_albums << flickr_albums
@@ -906,14 +908,34 @@ class Entry < ApplicationRecord
   # tags live in taggings — so a tag change touches nothing it watches. The entry form looks like it
   # works only because it sets modified_at, and even there the callback fires on the update that
   # precedes this call, so the record would carry the tags as they were before it.
+  # All three kinds at once, in one save: one transaction and one round of
+  # commit callbacks (search index, cache purge) rather than three.
   def update_tags
-    self.update_equipment_tags
-    self.update_location_tags
-    self.update_style_tags
+    transaction do
+      assign_equipment_tags
+      assign_location_tags
+      assign_style_tags
+      save!
+    end
     self.sync_standard_site_later
   end
 
   def update_equipment_tags
+    assign_equipment_tags
+    save!
+  end
+
+  def update_location_tags
+    assign_location_tags
+    save!
+  end
+
+  def update_style_tags
+    assign_style_tags
+    save!
+  end
+
+  def assign_equipment_tags
     equipment_tags = []
     self.photos.each do |p|
       equipment_tags << [p.camera&.make, p.camera&.display_name, p.film&.display_name]
@@ -922,10 +944,9 @@ class Entry < ApplicationRecord
     equipment_tags = equipment_tags.flatten.uniq.reject(&:blank?)
     self.equipment_list = equipment_tags
     self.tag_list.remove(equipment_tags)
-    self.save!
   end
 
-  def update_location_tags
+  def assign_location_tags
     location_tags = []
     tags = []
     self.tag_list.remove(Park.designations.map(&:pluralize) + Park.names + self.location_list)
@@ -942,10 +963,9 @@ class Entry < ApplicationRecord
     location_tags = location_tags.uniq.reject(&:blank?)
     self.location_list = location_tags
     self.tag_list.add(tags.uniq)
-    self.save!
   end
 
-  def update_style_tags
+  def assign_style_tags
     style_tags = []
     self.photos.each do |p|
       style_tags << (p.color? ? 'Color' : 'Black and White') unless p.color?.nil?
@@ -955,7 +975,6 @@ class Entry < ApplicationRecord
     style_tags = style_tags.flatten.uniq.reject(&:blank?)
     self.style_list = style_tags
     self.tag_list.remove(['Color', 'Black and White', 'Film', 'Mobile'])
-    self.save!
   end
 
   def add_tags(new_tags)

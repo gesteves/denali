@@ -2,7 +2,6 @@ class EntriesController < ApplicationController
   include ActionView::Helpers::NumberHelper
   include TagList
 
-  skip_before_action :verify_authenticity_token
   before_action :load_tags, only: [:tagged, :tag_feed]
   before_action :set_max_age, except: [:short, :random]
   before_action :set_entry, only: [:show]
@@ -34,7 +33,8 @@ class EntriesController < ApplicationController
           @page_title = "#{@photoblog.name} – #{I18n.t('blog.tag_line')} – Page #{@page}"
         end
       }
-      format.js { render status: @entries.empty? ? 404 : 200 }
+      format.fragment
+      format.js { stale_infinite_scroll }
       format.atom { redirect_to feed_url(format: 'atom'), status: 301 }
       format.all {
         if @page == 1
@@ -71,7 +71,8 @@ class EntriesController < ApplicationController
         @suggested_tags_title = "You may also like these tags."
         render :index
       }
-      format.js { render :index, status: @entries.empty? ? 404 : 200 }
+      format.fragment { render :index }
+      format.js { stale_infinite_scroll }
       format.atom { redirect_to tag_feed_url(tag: @tag_slug, format: 'atom'), status: 301 }
       format.all {
         if @page == 1
@@ -122,7 +123,8 @@ class EntriesController < ApplicationController
       @heading_title = "Search Results"
       respond_to do |format|
         format.html
-        format.js { render status: @entries.empty? ? 404 : 200 }
+        format.fragment
+        format.js { stale_infinite_scroll }
         format.all { redirect_to search_path, status: 301 }
       end
     else
@@ -210,7 +212,7 @@ class EntriesController < ApplicationController
 
   def feed
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :territories]).published.photo_entries.page(1).per(@count)
+    @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :park, :territories]).published.photo_entries.page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @entries.empty?
     set_cache_tags(CacheTags::ENTRIES)
     respond_to do |format|
@@ -221,7 +223,7 @@ class EntriesController < ApplicationController
 
   def tag_feed
     @count = @photoblog.posts_per_page
-    @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :territories]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
+    @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :park, :territories]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
     set_cache_tags(CacheTags::ENTRIES, CacheTags.tag(@tag_slug))
     respond_to do |format|
@@ -240,11 +242,25 @@ class EntriesController < ApplicationController
   # the last time the blog's settings changed, whichever moved most recently.
   # Both have to be in the Last-Modified as well as the ETag — Cloudflare strips
   # the ETag, so Last-Modified is the only validator a browser gets to use.
+  # Besides the entry and the site settings, the page shows its neighbours (the
+  # older/newer links) and loads the current deploy's fingerprinted assets, so
+  # the validators also move when an entry is published or removed, and on each
+  # deploy. Otherwise a browser revalidating gets a 304 for a page with a stale
+  # "next" link, or asset URLs that no longer exist.
+  # Infinite scroll used to fetch pages as .js. A tab still running that script
+  # gets a 404, which ends its scrolling, instead of the redirect to the full page
+  # that format.all would send (and it would append). Plain text, because a
+  # JavaScript response to a GET is what forgery protection refuses.
+  def stale_infinite_scroll
+    render plain: '', status: :not_found, content_type: 'text/plain'
+  end
+
   def entry_validators
     settings_updated_at = @photoblog.settings_updated_at
+    latest_published_at, published_count = @photoblog.entries.where(status: 'published').pick(Arel.sql('MAX(published_at), COUNT(*)'))
     {
-      etag: [@entry, settings_updated_at],
-      last_modified: [@entry.updated_at, settings_updated_at].compact.max
+      etag: [@entry, settings_updated_at, latest_published_at, published_count, ENV['FLY_IMAGE_REF']],
+      last_modified: [@entry.updated_at, settings_updated_at, latest_published_at].compact.max
     }
   end
 end

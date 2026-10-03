@@ -13,12 +13,12 @@ class PhotoExifJob < ApplicationJob
         camera_make = exif.make&.encode('UTF-8')&.strip
         camera_model = exif.model&.encode('UTF-8')&.strip
         camera_name = "#{camera_make} #{camera_model}".strip
-        photo.camera = Camera.create_with(display_name: camera_name, make: camera_make, model: camera_model, is_phone: camera_model.match?(/iphone/i)).find_or_create_by(slug: camera_name.parameterize) if camera_make.present? && camera_model.present?
+        photo.camera = find_or_create(Camera, camera_name.parameterize, display_name: camera_name, make: camera_make, model: camera_model, is_phone: camera_model.match?(/iphone/i)) if camera_make.present? && camera_model.present?
 
         lens_make = exif.lens_make&.encode('UTF-8')&.strip || camera_make
         lens_model = exif.lens_model&.encode('UTF-8')&.strip
         lens_name = "#{lens_make} #{lens_model}".strip
-        photo.lens = Lens.create_with(display_name: lens_name, make: lens_make, model: lens_model).find_or_create_by(slug: lens_name.parameterize) if lens_make.present? && lens_model.present?
+        photo.lens = find_or_create(Lens, lens_name.parameterize, display_name: lens_name, make: lens_make, model: lens_model) if lens_make.present? && lens_model.present?
 
         photo.iso = exif.iso_speed_ratings
         photo.taken_at = exif.date_time
@@ -35,7 +35,7 @@ class PhotoExifJob < ApplicationJob
           film_type = comment_array.find { |c| c =~ /^film type:/i }&.gsub(/^film type:/i, '')&.strip
           film_type = "#{film_type&.gsub(%r{#{exif.iso_speed_ratings}}i, '')&.strip} #{exif.iso_speed_ratings}" if exif.iso_speed_ratings.present?
           film_name = "#{film_make} #{film_type}"
-          photo.film = Film.create_with(display_name: film_name, make: film_make, model: film_type).find_or_create_by(slug: film_name.parameterize) if film_make.present? && film_type.present?
+          photo.film = find_or_create(Film, film_name.parameterize, display_name: film_name, make: film_make, model: film_type) if film_make.present? && film_type.present?
 
           location = comment_array.find { |c| c =~ /^location:/i }&.gsub(/^location:/i, '')&.strip
           photo.location = location if photo.location.blank? && location.present?
@@ -60,5 +60,17 @@ class PhotoExifJob < ApplicationJob
       end
     end
     photo.save!
+  end
+
+  private
+
+  # The EXIF jobs for a multi-photo upload run at the same time, so two can both
+  # miss a new camera and try to create it. The loser gets the unique index's
+  # error (or the uniqueness validation's, if the winner committed in between)
+  # and picks up the winner's row.
+  def find_or_create(model, slug, attributes)
+    model.create_with(attributes).find_or_create_by!(slug: slug)
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    model.find_by!(slug: slug)
   end
 end

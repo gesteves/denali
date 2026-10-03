@@ -1,5 +1,4 @@
-import mapboxgl from 'mapbox-gl';
-import { Controller }             from '@hotwired/stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 /**
  * Controls the Map view, setting up the map, the markers, and the popups.
@@ -14,9 +13,16 @@ export default class extends Controller {
     photoUrl: String
   }
 
-  connect () {
+  async connect () {
     this.showLoadingSpinner();
 
+    // Mapbox is most of the admin's JavaScript and only this page uses it, so the
+    // build splits it into its own chunk, fetched when a map connects.
+    const { default: mapboxgl } = await import('mapbox-gl');
+    // The page may have moved on while the chunk loaded.
+    if (!this.element.isConnected) return;
+
+    this.mapboxgl = mapboxgl;
     mapboxgl.accessToken = this.apiTokenValue;
     this.map = new mapboxgl.Map({
       container: this.containerTarget,
@@ -118,7 +124,7 @@ export default class extends Controller {
     const photoId = e.features[0].properties.id;
     const url = this.photoUrlValue.replace(':id', photoId);
 
-    const popup = new mapboxgl.Popup({ closeButton: true, minWidth: 300 })
+    const popup = new this.mapboxgl.Popup({ closeButton: true, minWidth: 300 })
       .setLngLat(coordinates)
       .setHTML('Loading…')
       .addTo(this.map);

@@ -102,6 +102,20 @@ RSpec.describe PhotoExifJob, type: :worker do
       expect(NationalParkJob.jobs.size).to eq(1)
     end
 
+    # Another photo's job created the camera between this one's lookup and insert.
+    it 'uses the camera another job just created instead of failing' do
+      winner = create(:camera, slug: 'canon-eos-r5', make: 'Canon', model: 'EOS R5', display_name: 'Canon EOS R5')
+      allow(Camera).to receive(:create_with).and_wrap_original do |original, *args|
+        original.call(*args).tap { |relation| allow(relation).to receive(:find_or_create_by!).and_raise(ActiveRecord::RecordNotUnique) }
+      end
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
+      allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
+
+      described_class.new.perform(photo.id)
+
+      expect(photo.reload.camera).to eq(winner)
+    end
+
     it 'sets the park from the park code' do
       park = create(:park, code: 'yose')
       allow(exif_data).to receive(:user_comment).and_return("Park: yose")

@@ -178,7 +178,7 @@ describe('InfiniteScrollController', () => {
       observerCallback([entry]);
 
       await vi.waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith('/entries/page/2.js');
+        expect(global.fetch).toHaveBeenCalledWith('/entries/page/2.fragment');
       });
     });
 
@@ -256,7 +256,7 @@ describe('InfiniteScrollController', () => {
       newObserverCallback([entry]);
 
       await vi.waitFor(() => {
-        expect(global.fetch).toHaveBeenCalledWith('/search.js?q=test&page=2');
+        expect(global.fetch).toHaveBeenCalledWith('/search.fragment?q=test&page=2');
       });
     });
   });

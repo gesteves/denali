@@ -74,6 +74,9 @@ describe('MapController', () => {
     element = document.querySelector('[data-controller="map"]');
     application = Application.start();
     application.register('map', MapController);
+
+    // connect imports Mapbox before it builds the map.
+    await vi.waitFor(() => expect(getController()?.map).toBeTruthy());
   });
 
   afterEach(() => {
@@ -96,6 +99,17 @@ describe('MapController', () => {
   }
 
   describe('connect', () => {
+    it('does not build a map if the controller went away while Mapbox loaded', async () => {
+      const mapboxgl = (await import('mapbox-gl')).default;
+      mapboxgl.Map.mockClear();
+
+      const controller = getController();
+      element.remove();
+      await controller.connect();
+
+      expect(mapboxgl.Map).not.toHaveBeenCalled();
+    });
+
     it('sets mapbox access token', async () => {
       const mapboxgl = (await import('mapbox-gl')).default;
       expect(mapboxgl.accessToken).toBe('test-api-token');

@@ -19,7 +19,6 @@ class Photo < ApplicationRecord
 
   after_create_commit :extract_metadata, :detect_colors, :encode_blurhash
 
-  after_commit :touch_entry
   after_commit :geocode, if: :changed_coordinates?
   after_commit :update_native_lands, if: :changed_coordinates?
   after_commit :update_entry_equipment_tags, if: :changed_equipment?
@@ -37,10 +36,6 @@ class Photo < ApplicationRecord
       alt_text: text,
       alt_text_needs_review: false
     )
-  end
-
-  def touch_entry
-    self.entry.touch if has_live_entry?
   end
 
   def update_entry_equipment_tags

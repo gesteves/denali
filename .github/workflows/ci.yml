@@ -194,6 +194,15 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
+      # Cached pages name the previous deploy's fingerprinted assets, which the
+      # new image doesn't have. A failure here shouldn't fail the deploy; the
+      # pages still expire on their own after CACHE_TTL.
+      - name: Purge cached pages
+        continue-on-error: true
+        run: flyctl ssh console --process-group web -C "bin/rails cache:purge_pages"
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
       - name: Notify Slack (deploy successful)
         if: success()
         continue-on-error: true

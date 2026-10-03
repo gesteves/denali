@@ -27,6 +27,37 @@ RSpec.describe "Entries", type: :request do
     end
   end
 
+  describe "infinite scroll fragments" do
+    before do
+      allow_any_instance_of(Blog).to receive(:posts_per_page).and_return(1)
+      2.times { create(:entry, :published, :with_photo, blog: blog, user: user).photos.each { |p| attach_image_to_photo(p) } }
+    end
+
+    it "serves the next page's entries as HTML without the layout" do
+      get '/page/2.fragment'
+
+      expect(response).to have_http_status(:success)
+      expect(response.media_type).to eq('text/html')
+      expect(response.body).not_to include('<html')
+      expect(response.body).to include('<li')
+    end
+
+    it "serves tag pages the same way" do
+      Entry.find_each { |e| e.update!(tag_list: 'mountains') }
+      get '/tagged/mountains/page/2.fragment'
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).not_to include('<html')
+    end
+
+    # A tab still running the old script asks for .js; a 404 ends its scrolling
+    # instead of a redirect whose full page it would append.
+    it "answers the old .js URLs with a 404" do
+      get '/page/2.js'
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
   describe "pagination bounds" do
     before do
       create(:entry, :published, :with_photo, blog: blog, user: user).photos.each { |p| attach_image_to_photo(p) }

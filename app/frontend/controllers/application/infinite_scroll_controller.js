@@ -68,15 +68,14 @@ export default class extends Controller {
     this.loading = true;
     const nextPage = this.currentPageValue + 1;
     this.animateSpinner();
-    // Handle query-parameter-based URLs (e.g., /search?q=term) vs path-based URLs (e.g., /entries)
+    // The .fragment format is the page's entries without the layout. Search pages
+    // take the page as a query parameter (/search?q=term); the others in the path.
     let url;
     if (this.baseUrlValue.includes('?')) {
-      // For query-parameter URLs, insert .js before the query string
       const [basePath, queryString] = this.baseUrlValue.split('?');
-      url = `${basePath}.js?${queryString}&page=${nextPage}`;
+      url = `${basePath}.fragment?${queryString}&page=${nextPage}`;
     } else {
-      // For path-based URLs, use the existing format
-      url = `${this.baseUrlValue}/page/${nextPage}.js`;
+      url = `${this.baseUrlValue}/page/${nextPage}.fragment`;
     }
     try {
       const response = await fetch(url);

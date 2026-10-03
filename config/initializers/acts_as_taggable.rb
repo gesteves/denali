@@ -16,27 +16,15 @@ ActsAsTaggableOn::Tag.class_eval do
   # @param contexts [Array<String>, nil] Only include tags used in these contexts (nil = all)
   # @param exclude_contexts [Array<String>, nil] Exclude tags used in these contexts (nil = none)
   scope :for_contexts, ->(contexts: nil, exclude_contexts: nil) {
-    return all if contexts.nil? && exclude_contexts.nil?
+    # Subqueries, so the database does the filtering instead of every tag ID
+    # coming back to Ruby and going out again in an IN list. The NOT NULL keeps a
+    # stray tagging from turning NOT IN into "matches nothing".
+    tag_ids_in = ->(context) { ActsAsTaggableOn::Tagging.where(context: context).where.not(tag_id: nil).select(:tag_id) }
 
-    valid_tag_ids = if contexts.present?
-      ActsAsTaggableOn::Tagging
-        .where(context: contexts)
-        .distinct
-        .pluck(:tag_id)
-    else
-      pluck(:id)
-    end
-
-    excluded_tag_ids = if exclude_contexts.present?
-      ActsAsTaggableOn::Tagging
-        .where(context: exclude_contexts)
-        .distinct
-        .pluck(:tag_id)
-    else
-      []
-    end
-
-    where(id: valid_tag_ids - excluded_tag_ids)
+    scope = all
+    scope = scope.where(id: tag_ids_in.call(contexts)) if contexts.present?
+    scope = scope.where.not(id: tag_ids_in.call(exclude_contexts)) if exclude_contexts.present?
+    scope
   }
 
   # Convenience scope using the default contexts (excludes equipment/styles)

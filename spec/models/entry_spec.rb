@@ -12,6 +12,7 @@ RSpec.describe Entry, type: :model do
 
   describe 'validations' do
     it { should validate_presence_of(:title) }
+    it { should validate_inclusion_of(:status).in_array(Entry::STATUSES) }
 
     it 'should not save entry without title' do
       entry = Entry.new(body: 'Test', blog: blog, user: user)
@@ -19,16 +20,42 @@ RSpec.describe Entry, type: :model do
     end
   end
 
+  describe '#update_tags' do
+    # Three saves meant three rounds of search indexing and cache purges.
+    it 'retags the entry in a single save' do
+      entry = create(:entry, :published, :with_photo, blog: blog, user: user)
+      entry.photos.first.update!(camera: create(:camera, make: 'Leica', display_name: 'Leica Q3'))
+      entry = Entry.find(entry.id)
+
+      expect(entry).to receive(:save!).once.and_call_original
+      entry.update_tags
+
+      expect(entry.reload.equipment_list).to include('Leica', 'Leica Q3')
+    end
+  end
+
+  describe 'queue positions' do
+    # The status has to change from nil on create for handle_status_change to run;
+    # a column default would make it a no-op and leave drafts in the queue list.
+    it 'gives a new draft no queue position' do
+      expect(create(:entry, :draft, blog: blog, user: user).reload.position).to be_nil
+    end
+
+    it 'gives a new queued entry one' do
+      expect(create(:entry, :queued, blog: blog, user: user).reload.position).to be_present
+    end
+  end
+
   describe 'before_save callbacks' do
     it 'should set slug before saving' do
       title = 'This should be in my title'
-      entry = Entry.new(title: title, body: 'Whatever.', blog: blog, user: user)
+      entry = Entry.new(title: title, body: 'Whatever.', status: 'draft', blog: blog, user: user)
       entry.save
       expect(entry.slug).to eq('this-should-be-in-my-title')
     end
 
     it 'should set preview hash before saving' do
-      entry = Entry.new(title: 'This is my title', body: 'Whatever.', blog: blog, user: user)
+      entry = Entry.new(title: 'This is my title', body: 'Whatever.', status: 'draft', blog: blog, user: user)
       entry.save
       expect(entry.preview_hash).not_to be_nil
     end

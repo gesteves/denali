@@ -57,3 +57,8 @@ public/assets
 
 # Local database dumps
 *.dump
+
+# Built by the image itself (npm run build during assets:precompile); a local
+# build would only add stale chunks.
+app/assets/builds/*
+!app/assets/builds/.keep

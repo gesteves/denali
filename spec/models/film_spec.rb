@@ -34,14 +34,15 @@ RSpec.describe Film, type: :model do
         entry.photos.first.update!(film: film)
       end
 
-      it 'triggers callback when display_name changes' do
-        expect(film).to receive(:update_entry_tags).and_call_original
+      # Retagging saves every entry, so it runs in a job after the rename commits.
+      it 'retags its entries in a job when display_name changes' do
         film.update!(display_name: 'New Film Name')
+        expect(RetagEntriesJob.jobs.map { |job| job['args'] }).to eq([['Film', film.id]])
       end
 
-      it 'does not trigger callback when other attributes change' do
-        expect(film).not_to receive(:update_entry_tags)
+      it 'does not retag when other attributes change' do
         film.update!(make: 'Updated Make')
+        expect(RetagEntriesJob.jobs).to be_empty
       end
     end
   end

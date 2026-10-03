@@ -1,0 +1,2 @@
+<%# The page's entries without the layout, for infinite scroll (see the :fragment MIME alias). %>
+<%= render partial: 'entries/list/page', formats: [:html], object: @entries.to_a, as: :entries, locals: { page_url: @page_url } %>

@@ -4,7 +4,9 @@ default: &default
   host: postgres
   username: postgres
   password:
-  pool: 5
+  # Enough for whichever process uses more threads: Puma's or Sidekiq's. The
+  # pool opens connections lazily, so the bigger number costs the other nothing.
+  pool: <%= [ENV.fetch("RAILS_MAX_THREADS", 5).to_i, ENV.fetch("SIDEKIQ_CONCURRENCY", 10).to_i].max %>
 
 development:
   <<: *default
@@ -20,6 +22,5 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  # For details on connection pooling, see rails configuration guide
-  # http://guides.rubyonrails.org/configuring.html#database-pooling
-  pool: 5
+  # See the note on the default pool above.
+  pool: <%= [ENV.fetch("RAILS_MAX_THREADS", 5).to_i, ENV.fetch("SIDEKIQ_CONCURRENCY", 10).to_i].max %>

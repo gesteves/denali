@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_12_164040) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_03_154011) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -80,6 +80,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_12_164040) do
     t.string "model"
     t.string "slug"
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["slug"], name: "index_cameras_on_slug", unique: true
   end
 
   create_table "crops", force: :cascade do |t|
@@ -92,7 +93,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_12_164040) do
     t.float "x"
     t.float "y"
     t.index ["aspect_ratio"], name: "index_crops_on_aspect_ratio"
-    t.index ["photo_id"], name: "index_crops_on_photo_id"
+    t.index ["photo_id", "aspect_ratio"], name: "index_crops_on_photo_id_and_aspect_ratio", unique: true
   end
 
   create_table "entries", id: :serial, force: :cascade do |t|
@@ -126,7 +127,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_12_164040) do
     t.boolean "show_location", default: true
     t.string "slug"
     t.string "standard_site_fingerprint"
-    t.string "status"
+    t.string "status", null: false
     t.integer "threads_shares_count", default: 0, null: false
     t.text "threads_text"
     t.string "title"
@@ -160,6 +161,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_12_164040) do
     t.string "model"
     t.string "slug"
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["slug"], name: "index_films_on_slug", unique: true
   end
 
   create_table "lenses", force: :cascade do |t|
@@ -169,6 +171,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_12_164040) do
     t.string "model"
     t.string "slug"
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["slug"], name: "index_lenses_on_slug", unique: true
   end
 
   create_table "mastodon_apps", force: :cascade do |t|
@@ -192,8 +195,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_12_164040) do
     t.string "threads_location_id"
     t.datetime "updated_at", null: false
     t.string "url"
-    t.index ["code"], name: "index_parks_on_code"
-    t.index ["slug"], name: "index_parks_on_slug"
+    t.index ["code"], name: "index_parks_on_code", unique: true
+    t.index ["slug"], name: "index_parks_on_slug", unique: true
   end
 
   create_table "photo_territories", force: :cascade do |t|
@@ -264,6 +267,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_12_164040) do
     t.string "p256dh"
     t.datetime "updated_at", null: false
     t.index ["blog_id"], name: "index_push_subscriptions_on_blog_id"
+    t.index ["endpoint"], name: "index_push_subscriptions_on_endpoint", unique: true
   end
 
   create_table "social_accounts", force: :cascade do |t|

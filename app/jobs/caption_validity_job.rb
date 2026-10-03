@@ -8,9 +8,6 @@ class CaptionValidityJob < ApplicationJob
       { photos: [:camera, :lens, :film, :park] }
     ).find(entry_id)
 
-    # Preload all tag_customizations to avoid 4 separate queries
-    entry.blog.tag_customizations.load
-
     entry.update_columns(
       valid_bluesky_caption: Bluesky.valid_post_length?(entry.bluesky_caption),
       valid_mastodon_caption: entry.mastodon_caption.length <= 500,

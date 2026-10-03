@@ -16,7 +16,7 @@ class SitemapsController < ApplicationController
     @page = params[:page]
     @entries = @photoblog.entries
                          .indexable_in_search_engines
-                         .includes(photos: :image_attachment)
+                         .includes(photos: { image_attachment: :blob })
                          .page(@page)
                          .per(@items_per_sitemap)
     raise ActiveRecord::RecordNotFound if @entries.empty?

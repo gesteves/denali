@@ -12,7 +12,8 @@
   <%= stylesheet_link_tag 'admin', media: 'all', 'data-turbo-track': 'reload' %>
   <%= csrf_meta_tags %>
   <%= yield :javascript %>
-  <%= javascript_include_tag 'admin', defer: true, 'data-turbo-track': 'reload' %>
+  <%# A module (deferred like before), since the build splits Mapbox into a chunk it imports. %>
+  <%= javascript_include_tag 'admin', type: 'module', 'data-turbo-track': 'reload' %>
   <script src="https://kit.fontawesome.com/2935e37c07.js" crossorigin="anonymous"></script>
 </head>
 <body data-controller="notifications" data-action="notify->notifications#add" <% if content_for?(:body_class) %>class="<%= yield :body_class %>"<% end %>>

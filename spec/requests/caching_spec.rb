@@ -157,6 +157,32 @@ RSpec.describe "Caching", type: :request do
       expect(response).to have_http_status(:success)
     end
 
+    # The older/newer links change when another entry is published.
+    it "serves a fresh copy once a newer entry is published" do
+      entry = published_entry
+      get entry.permalink_path
+      etag = response.headers['ETag']
+
+      create(:entry, :published, blog: blog, user: entry.user, published_at: 1.minute.from_now)
+      get entry.permalink_path, headers: { 'HTTP_IF_NONE_MATCH' => etag }
+
+      expect(response).to have_http_status(:success)
+    end
+
+    # A cached copy names the previous deploy's fingerprinted assets.
+    it "serves a fresh copy after a deploy" do
+      entry = published_entry
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with('FLY_IMAGE_REF').and_return('registry.fly.io/denali:deployment-1')
+      get entry.permalink_path
+      etag = response.headers['ETag']
+
+      allow(ENV).to receive(:[]).with('FLY_IMAGE_REF').and_return('registry.fly.io/denali:deployment-2')
+      get entry.permalink_path, headers: { 'HTTP_IF_NONE_MATCH' => etag }
+
+      expect(response).to have_http_status(:success)
+    end
+
     it "serves a fresh copy once the blog's settings change, which render here too" do
       entry = published_entry
       get entry.permalink_path
