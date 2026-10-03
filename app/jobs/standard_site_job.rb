@@ -6,10 +6,7 @@ class StandardSiteJob < ApplicationJob
   # Reconciliation, not a share someone is waiting on.
   sidekiq_options queue: 'low'
 
-  # ⚠️ sidekiq_retry_in lives in sidekiq_options, so this block REPLACES ApplicationJob's rather
-  # than adding to it. Both branches have to be here, or the UnprocessedPhotoError backoff is
-  # silently lost.
-  sidekiq_retry_in do |count, exception|
+  def self.retry_delay(count, exception)
     case exception
     when Bluesky::AuthenticationError
       # Credentials the PDS refuses don't get better by trying again for a day.
@@ -18,8 +15,8 @@ class StandardSiteJob < ApplicationJob
       # The PDS told us when it will accept writes again, so wait that long rather than burning
       # retries against a limit that hasn't lifted.
       exception.retry_after
-    when UnprocessedPhotoError
-      count + 1
+    else
+      super
     end
   end
 

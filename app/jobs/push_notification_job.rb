@@ -1,4 +1,6 @@
 class PushNotificationJob < ApplicationJob
+  # A "new photo" notification a day late is worse than none.
+  sidekiq_options retry_for: 6.hours.to_i
   def perform(push_subscription_id, entry_id)
     # The subscription may have been removed, or the entry unpublished, since
     # this was enqueued.

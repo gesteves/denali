@@ -28,7 +28,11 @@ class CachePurgeJob < ApplicationJob
     return if tags.empty?
 
     key = "cache-purge/#{Digest::MD5.hexdigest(tags.sort.join(','))}"
-    return unless Rails.cache.write(key, true, unless_exist: true, expires_in: DEBOUNCE)
+    # The write fails both when the key is already there (a purge is pending) and
+    # when the cache store is down, whose errors the store swallows. Only the
+    # first means skip: skipping during an outage would leave pages stale for the
+    # whole TTL.
+    return if !Rails.cache.write(key, true, unless_exist: true, expires_in: DEBOUNCE) && Rails.cache.exist?(key)
 
     perform_in(DEBOUNCE, *tags)
   end

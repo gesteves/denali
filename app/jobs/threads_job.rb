@@ -1,14 +1,10 @@
-class ThreadsJob < ApplicationJob
-  sidekiq_options queue: 'high'
-
-  # ⚠️ This block replaces ApplicationJob's rather than adding to it, so it has to restate the
-  # UnprocessedPhotoError branch as well.
-  sidekiq_retry_in do |count, exception|
+class ThreadsJob < ShareJob
+  def self.retry_delay(count, exception)
     case exception
     when MetaCaptionTooLongError
       :discard
-    when UnprocessedPhotoError
-      count + 1
+    else
+      super
     end
   end
 
@@ -17,12 +13,10 @@ class ThreadsJob < ApplicationJob
   #   published straight from the form gets the tags and EXIF details that are
   #   only filled in after it's saved.
   def perform(entry_id, text = nil)
-    return if !Rails.env.production?
     return if ENV['THREADS_APP_ID'].blank? || ENV['THREADS_APP_SECRET'].blank?
 
-    entry = Entry.published.find(entry_id)
-    return if !entry.is_photo?
-    raise UnprocessedPhotoError unless entry.photos_have_dimensions?
+    entry = shareable_entry(entry_id)
+    return if entry.nil?
 
     threads_account = entry.user.threads_account
     return if threads_account.blank?
@@ -50,10 +44,7 @@ class ThreadsJob < ApplicationJob
       location_id: entry.photos.first.threads_location_id
     )
 
-    entry.update_columns(
-      last_shared_on_threads_at: Time.current,
-      threads_shares_count: entry.threads_shares_count + 1
-    )
+    record_share(entry, 'threads')
   end
 end
 

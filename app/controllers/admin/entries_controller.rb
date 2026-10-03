@@ -342,9 +342,11 @@ class Admin::EntriesController < AdminController
       InstagramJob.perform_at(scheduled_at, @entry.id, params[:text])
       @message = "Your entry will be shared on Instagram at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
     else
-      InstagramJob.perform_inline(@entry.id, params[:text])
-      @entry.reload
-      @message = 'Your entry was shared on Instagram.'
+      # Instagram makes us wait while it processes every photo, which can take
+      # minutes, so the post goes out in the background rather than holding one
+      # of Puma's threads for this request.
+      InstagramJob.perform_async(@entry.id, params[:text])
+      @message = 'Your entry is being shared on Instagram. It may take a few minutes to show up.'
     end
 
     respond_to do |format|
@@ -353,9 +355,7 @@ class Admin::EntriesController < AdminController
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
       format.turbo_stream {
-        streams = [turbo_stream.prepend("notifications", partial: "admin/shared/notification", locals: { status: "success", message: @message })]
-        streams.unshift(turbo_stream.replace("instagram-stats", partial: "admin/entries/share_stats", locals: { entry: @entry, platform: "instagram" })) unless scheduled
-        render turbo_stream: streams
+        render turbo_stream: turbo_stream.prepend("notifications", partial: "admin/shared/notification", locals: { status: "success", message: @message })
       }
       format.js { render 'admin/shared/notify' }
       format.json {
@@ -413,9 +413,9 @@ class Admin::EntriesController < AdminController
       ThreadsJob.perform_at(scheduled_at, @entry.id, params[:text])
       @message = "Your entry will be shared on Threads at #{scheduled_at.strftime('%B %-d, %Y at %-l:%M %p')}."
     else
-      ThreadsJob.perform_inline(@entry.id, params[:text])
-      @entry.reload
-      @message = 'Your entry was shared on Threads.'
+      # Same as Instagram: Threads processes each photo before it can be posted.
+      ThreadsJob.perform_async(@entry.id, params[:text])
+      @message = 'Your entry is being shared on Threads. It may take a few minutes to show up.'
     end
 
     respond_to do |format|
@@ -424,9 +424,7 @@ class Admin::EntriesController < AdminController
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
       format.turbo_stream {
-        streams = [turbo_stream.prepend("notifications", partial: "admin/shared/notification", locals: { status: "success", message: @message })]
-        streams.unshift(turbo_stream.replace("threads-stats", partial: "admin/entries/share_stats", locals: { entry: @entry, platform: "threads" })) unless scheduled
-        render turbo_stream: streams
+        render turbo_stream: turbo_stream.prepend("notifications", partial: "admin/shared/notification", locals: { status: "success", message: @message })
       }
       format.js { render 'admin/shared/notify' }
       format.json {

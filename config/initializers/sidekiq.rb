@@ -5,6 +5,8 @@ Sidekiq.configure_server do |config|
     timeout: 20,
     reconnect_attempts: 3
   }
+  # A lambda so the reporter is looked up when a job dies, not autoloaded during boot.
+  config.death_handlers << ->(job, exception) { JobDeathReporter.call(job, exception) }
 end
 
 Sidekiq.configure_client do |config|

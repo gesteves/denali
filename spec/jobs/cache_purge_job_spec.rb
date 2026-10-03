@@ -119,6 +119,16 @@ RSpec.describe CachePurgeJob, type: :worker do
       described_class.enqueue('entry-2')
     end
 
+    # A Redis store swallows its errors, so a failed write looks like "already
+    # pending"; skipping then would leave pages stale for the whole TTL.
+    it 'still purges when the cache store is failing' do
+      allow(Rails.cache).to receive(:write).and_return(false)
+      allow(Rails.cache).to receive(:exist?).and_return(false)
+
+      expect(described_class).to receive(:perform_in).twice
+      2.times { described_class.enqueue('entries') }
+    end
+
     it 'purges again once the window has passed' do
       expect(described_class).to receive(:perform_in).twice
 

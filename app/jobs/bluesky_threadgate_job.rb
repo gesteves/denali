@@ -1,9 +1,7 @@
 class BlueskyThreadgateJob < ApplicationJob
   sidekiq_options queue: 'high'
 
-  # Refer to the note in BlueskyJob: this block replaces ApplicationJob's, so it restates both
-  # branches.
-  sidekiq_retry_in do |count, exception|
+  def self.retry_delay(count, exception)
     case exception
     when BlueskyPermanentError, Bluesky::AuthenticationError
       :discard
@@ -11,8 +9,8 @@ class BlueskyThreadgateJob < ApplicationJob
       # The PDS told us when it will accept writes again, so wait that long rather than burning
       # retries against a limit that hasn't lifted.
       exception.retry_after
-    when UnprocessedPhotoError
-      count + 1
+    else
+      super
     end
   end
 

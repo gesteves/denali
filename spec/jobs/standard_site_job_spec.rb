@@ -68,8 +68,7 @@ RSpec.describe StandardSiteJob, type: :worker do
       described_class.sidekiq_retry_in_block.call(1, exception, {})
     end
 
-    # ⚠️ sidekiq_retry_in in a subclass REPLACES ApplicationJob's block, so both branches have to
-    # be restated here. ThreadsJob lost the UnprocessedPhotoError backoff exactly this way.
+    # Its own rules sit on top of ApplicationJob's, which still back off an unprocessed photo.
     it 'discards credentials the PDS refuses and still backs off an unprocessed photo' do
       expect(retry_in(Bluesky::AuthenticationError.new)).to eq(:discard)
       expect(retry_in(UnprocessedPhotoError.new)).to eq(2)

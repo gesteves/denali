@@ -82,7 +82,7 @@ RSpec.describe BlueskyThreadgateJob, type: :worker do
     end
 
     it 'still backs off for an unprocessed photo' do
-      expect(described_class.sidekiq_retry_in_block.call(3, UnprocessedPhotoError.new)).to eq(4)
+      expect(described_class.sidekiq_retry_in_block.call(3, UnprocessedPhotoError.new)).to eq(8)
     end
   end
 

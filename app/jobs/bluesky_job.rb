@@ -1,10 +1,5 @@
-class BlueskyJob < ApplicationJob
-  sidekiq_options queue: 'high'
-
-  # ⚠️ sidekiq_retry_in lives in sidekiq_options, so this block REPLACES ApplicationJob's rather
-  # than adding to it. Both branches have to be here, or the UnprocessedPhotoError backoff is
-  # silently lost.
-  sidekiq_retry_in do |count, exception|
+class BlueskyJob < ShareJob
+  def self.retry_delay(count, exception)
     case exception
     when BlueskyPermanentError, Bluesky::AuthenticationError
       # An empty or over-long post, a reply target we can't read, or credentials Bluesky refuses.
@@ -14,8 +9,8 @@ class BlueskyJob < ApplicationJob
       # The PDS told us when it will accept writes again, so wait that long rather than burning
       # retries against a limit that hasn't lifted.
       exception.retry_after
-    when UnprocessedPhotoError
-      count + 1
+    else
+      super
     end
   end
 
@@ -28,11 +23,8 @@ class BlueskyJob < ApplicationJob
   #   rather than add another one. A job enqueued before this argument existed arrives without it
   #   and mints its own, which is the behaviour it already had.
   def perform(entry_id, text, in_reply_to = nil, quote = nil, rkey = nil)
-    return unless Rails.env.production?
-
-    entry = Entry.published.find(entry_id)
-    return unless entry.is_photo?
-    raise UnprocessedPhotoError unless entry.photos_have_dimensions?
+    entry = shareable_entry(entry_id)
+    return if entry.nil?
 
     account = entry.user&.bluesky_account
     return if account.nil?
@@ -50,11 +42,6 @@ class BlueskyJob < ApplicationJob
     # Threadgates only apply to root posts; replies inherit the root post's gate.
     BlueskyThreadgateJob.perform_async(entry_id, response["uri"]) if in_reply_to.blank? && response["uri"].present?
 
-    unless in_reply_to.present? || quote.present?
-      entry.update_columns(
-        last_shared_on_bluesky_at: Time.current,
-        bluesky_shares_count: entry.bluesky_shares_count + 1
-      )
-    end
+    record_share(entry, 'bluesky') unless in_reply_to.present? || quote.present?
   end
 end

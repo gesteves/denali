@@ -159,9 +159,11 @@ RSpec.describe BlueskyJob, type: :worker do
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
       end
 
-      it 'raises ActiveRecord::RecordNotFound' do
+      # Deleted or unpublished since it was queued: there's nothing to share, and
+      # retrying for hours won't bring it back.
+      it 'does nothing' do
         expect(Bluesky).not_to receive(:from_social_account)
-        expect { described_class.new.perform(999999, text) }.to raise_error(ActiveRecord::RecordNotFound)
+        expect { described_class.new.perform(999999, text) }.not_to raise_error
       end
     end
 
@@ -201,8 +203,7 @@ RSpec.describe BlueskyJob, type: :worker do
   end
 
   describe 'retry policy' do
-    # sidekiq_retry_in lives in sidekiq_options, so a subclass block replaces the parent's rather
-    # than adding to it. Both branches have to survive.
+    # Its own rules sit on top of ApplicationJob's, which still back off an unprocessed photo.
     def retry_in(exception, count = 0)
       described_class.sidekiq_retry_in_block.call(count, exception)
     end
@@ -216,7 +217,7 @@ RSpec.describe BlueskyJob, type: :worker do
     end
 
     it 'still backs off for an unprocessed photo' do
-      expect(retry_in(UnprocessedPhotoError.new, 3)).to eq(4)
+      expect(retry_in(UnprocessedPhotoError.new, 3)).to eq(8)
     end
 
     it 'leaves everything else to Sidekiq' do

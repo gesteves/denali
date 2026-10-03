@@ -93,6 +93,26 @@ RSpec.describe "Admin::Entries", type: :request do
     end
   end
 
+  # Meta makes us wait while it processes each photo, so these can't run inside the request.
+  describe "sharing on Instagram and Threads" do
+    it "queues the Instagram post instead of running it in the request" do
+      expect(InstagramJob).not_to receive(:perform_inline)
+      post instagram_admin_entry_path(entry), params: { text: 'Caption' }, as: :turbo_stream
+
+      expect(response).to have_http_status(:success)
+      expect(InstagramJob.jobs.map { |j| j['args'] }).to include([entry.id, 'Caption'])
+      expect(response.body).to include('being shared on Instagram')
+    end
+
+    it "queues the Threads post instead of running it in the request" do
+      expect(ThreadsJob).not_to receive(:perform_inline)
+      post threads_admin_entry_path(entry), params: { text: 'Caption' }, as: :turbo_stream
+
+      expect(response).to have_http_status(:success)
+      expect(ThreadsJob.jobs.map { |j| j['args'] }).to include([entry.id, 'Caption'])
+    end
+  end
+
   describe "PATCH /admin/entries/:id/queue" do
     let(:draft_entry) { create(:entry, :draft, blog: blog, user: user) }
 
@@ -281,6 +301,25 @@ RSpec.describe "Admin::Entries", type: :request do
       post '/admin/entries/queued/update', params: {}, as: :json
       expect(response).to have_http_status(:success)
     end
+
+    it "properly sorts queue" do
+      entry1 = create(:entry, :queued, blog: blog, user: user, position: 1)
+      entry2 = create(:entry, :queued, blog: blog, user: user, position: 2)
+      entry3 = create(:entry, :queued, blog: blog, user: user, position: 3)
+      entry4 = create(:entry, :queued, blog: blog, user: user, position: 4)
+
+      ids = [entry4.id, entry3.id, entry2.id, entry1.id]
+      post admin_entries_queued_update_path, params: { entry_ids: ids }, as: :json
+
+      expect(response).to have_http_status(:success)
+
+      [entry1, entry2, entry3, entry4].each(&:reload)
+
+      expect(entry4.position).to eq(1)
+      expect(entry3.position).to eq(2)
+      expect(entry2.position).to eq(3)
+      expect(entry1.position).to eq(4)
+    end
   end
 
   describe "GET /admin/entries/queued/organize" do
@@ -309,27 +348,6 @@ RSpec.describe "Admin::Entries", type: :request do
     it "returns 404 for an invalid platform" do
       get admin_randomly_shareable_path(platform: 'twitter', schedule_name: 'random_landscape')
       expect(response).to have_http_status(:not_found)
-    end
-  end
-
-  describe "POST /admin/entries/queued/update" do
-    it "properly sorts queue" do
-      entry1 = create(:entry, :queued, blog: blog, user: user, position: 1)
-      entry2 = create(:entry, :queued, blog: blog, user: user, position: 2)
-      entry3 = create(:entry, :queued, blog: blog, user: user, position: 3)
-      entry4 = create(:entry, :queued, blog: blog, user: user, position: 4)
-
-      ids = [entry4.id, entry3.id, entry2.id, entry1.id]
-      post admin_entries_queued_update_path, params: { entry_ids: ids }, as: :json
-
-      expect(response).to have_http_status(:success)
-
-      [entry1, entry2, entry3, entry4].each(&:reload)
-
-      expect(entry4.position).to eq(1)
-      expect(entry3.position).to eq(2)
-      expect(entry2.position).to eq(3)
-      expect(entry1.position).to eq(4)
     end
   end
 end
