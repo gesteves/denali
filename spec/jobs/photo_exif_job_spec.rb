@@ -79,6 +79,29 @@ RSpec.describe PhotoExifJob, type: :worker do
       expect(AltTextJob.jobs.size).to eq(1)
     end
 
+    # Exported or scanned files often carry no EXIF at all, and they need a description as much as
+    # any other photo.
+    it 'enqueues AltTextJob for a file with no EXIF' do
+      allow(exif_data).to receive(:exif?).and_return(false)
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
+      allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
+      photo.update!(alt_text: nil)
+
+      described_class.new.perform(photo.id)
+
+      expect(AltTextJob.jobs.size).to eq(1)
+    end
+
+    it "doesn't enqueue AltTextJob when the photo already has alt text" do
+      allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))
+      allow(EXIFR::JPEG).to receive(:new).and_return(exif_data)
+      photo.update!(alt_text: 'Written by hand')
+
+      described_class.new.perform(photo.id)
+
+      expect(AltTextJob.jobs.size).to eq(0)
+    end
+
     it 'uses image_description for alt_text when present' do
       allow(exif_data).to receive(:image_description).and_return('A beautiful sunset')
       allow(URI).to receive(:open).and_yield(double(path: '/tmp/photo.jpg'))

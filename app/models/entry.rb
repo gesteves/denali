@@ -20,7 +20,6 @@ class Entry < ApplicationRecord
   before_save :set_sensitive
 
   after_commit :enqueue_caption_validity_job, if: :changed_caption_fields?
-  after_commit :handle_status_change, if: :saved_change_to_status?
   after_commit :purge_cache_later, on: [:update, :destroy]
 
   # standard.site mirrors this entry as a site.standard.document. The sync decides publish against
@@ -30,7 +29,7 @@ class Entry < ApplicationRecord
   # ⚠️ Guarded on the fields the record actually holds. The photo jobs touch an entry row for
   # reasons a reader would never call an edit, and a callback with no guard would queue a job for
   # every one of them.
-  after_commit :sync_standard_site_later, on: [:create, :update], if: :standard_site_fields_changed?
+  after_commit :sync_standard_site_later, on: [:create, :update], if: -> { standard_site_fields_changed? && standard_site_record_affected? }
   after_commit :delete_standard_site_document, on: :destroy
 
   acts_as_taggable_on :tags, :equipment, :locations, :styles
@@ -95,6 +94,14 @@ class Entry < ApplicationRecord
   after_commit on: [:destroy] do
     ElasticsearchJob.perform_async(self.id, 'delete')
   end
+
+  # ⚠️ Keep this the last after_commit in the class. Moving an entry in or out of the queue list
+  # saves it again, and a save of this same object from inside its own after_commit marks the
+  # commit as handled: every update or create callback after this one in the chain is skipped.
+  # Before it was moved here, publishing a queued entry never queued its standard.site sync.
+  # (That save also leaves saved_changes holding only the list position, so a later touch of this
+  # object can't fire the status change a second time.)
+  after_commit :handle_status_change, if: :saved_change_to_status?
 
   def as_indexed_json(opts = nil)
     self.as_json(only: [:photos_count,
@@ -868,8 +875,13 @@ class Entry < ApplicationRecord
   # precedes this call, so the record would carry the tags as they were before it.
   # All three kinds at once, in one save: one transaction and one round of
   # commit callbacks (search index, cache purge) rather than three.
+  #
+  # ⚠️ Every rebuild here and in add_tags runs under a row lock, from the row as it is once the lock
+  # is held. The photo jobs save photos at the same time and each rebuilds from its own copy of the
+  # entry; every rebuild also edits the plain tags, and acts-as-taggable-on writes whole lists, so a
+  # copy that read the tags before another job changed them would undo that change.
   def update_tags
-    transaction do
+    with_lock do
       assign_equipment_tags
       assign_location_tags
       assign_style_tags
@@ -879,18 +891,24 @@ class Entry < ApplicationRecord
   end
 
   def update_equipment_tags
-    assign_equipment_tags
-    save!
+    with_lock do
+      assign_equipment_tags
+      save!
+    end
   end
 
   def update_location_tags
-    assign_location_tags
-    save!
+    with_lock do
+      assign_location_tags
+      save!
+    end
   end
 
   def update_style_tags
-    assign_style_tags
-    save!
+    with_lock do
+      assign_style_tags
+      save!
+    end
   end
 
   def assign_equipment_tags
@@ -936,9 +954,11 @@ class Entry < ApplicationRecord
   end
 
   def add_tags(new_tags)
-    self.tag_list.add(new_tags, parse: true)
-    self.tag_list.remove(self.equipment_list + self.location_list + ['Color', 'Black and White', 'Film', 'Mobile'])
-    self.save!
+    with_lock do
+      self.tag_list.add(new_tags, parse: true)
+      self.tag_list.remove(self.equipment_list + self.location_list + ['Color', 'Black and White', 'Film', 'Mobile'])
+      self.save!
+    end
     self.sync_standard_site_later
   end
 
@@ -978,6 +998,13 @@ class Entry < ApplicationRecord
   # @return [Boolean] whether this save touched anything standard.site publishes.
   def standard_site_fields_changed?
     saved_changes.keys.intersect?(STANDARD_SITE_FIELDS)
+  end
+
+  # @return [Boolean] whether this save could change a record on the PDS: the entry is published,
+  # or just stopped being. A draft or queued entry never had one, and a sync for it would be a job
+  # with nothing to do — one for every new entry and every edit to a draft.
+  def standard_site_record_affected?
+    self.is_published? || attribute_before_last_save('status') == 'published'
   end
 
   # @return [void]

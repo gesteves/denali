@@ -32,6 +32,33 @@ RSpec.describe Entry, type: :model do
 
       expect(entry.reload.equipment_list).to include('Leica', 'Leica Q3')
     end
+
+    # The photo jobs each rebuild tags from their own copy of the entry, and acts-as-taggable-on
+    # writes the whole list a copy holds, so a copy that read the tags before another job added one
+    # would delete it again.
+    %i[update_tags update_equipment_tags update_location_tags update_style_tags].each do |rebuild|
+      it "keeps a tag added since the copy was loaded (##{rebuild})" do
+        entry = create(:entry, :published, :with_photo, blog: blog, user: user)
+        stale = Entry.find(entry.id)
+        stale.tag_list
+
+        Entry.find(entry.id).add_tags('Landscapes')
+        stale.public_send(rebuild)
+
+        expect(entry.reload.tag_list).to include('Landscapes')
+      end
+    end
+
+    it 'keeps a tag a stale copy added alongside a rebuild' do
+      entry = create(:entry, :published, :with_photo, blog: blog, user: user)
+      stale = Entry.find(entry.id)
+      stale.tag_list
+
+      Entry.find(entry.id).add_tags('Landscapes')
+      stale.add_tags('Mountains')
+
+      expect(entry.reload.tag_list).to include('Landscapes', 'Mountains')
+    end
   end
 
   describe 'queue positions' do
@@ -650,6 +677,18 @@ RSpec.describe Entry, type: :model do
       expect(standard_site_args).to include(['sync_document', entry.id])
     end
 
+    # ⚠️ The hourly publish takes entries from the queue, and a queued entry has a list position.
+    # Taking it out of the list is a save of its own inside the status change's after_commit, and
+    # that nested commit leaves the publish's later update callbacks skipped.
+    it 'queues a sync when a queued entry is published' do
+      entry = create(:entry, :queued, blog: blog, user: user)
+      StandardSiteJob.jobs.clear
+
+      entry.publish
+
+      expect(standard_site_args).to include(['sync_document', entry.id])
+    end
+
     # ⚠️ The point of the whole feature: flipping the setting has to publish or unpublish the
     # record right away, not wait for a backfill. sync_document decides which from the reloaded
     # row, so one operation covers both directions.
@@ -692,6 +731,35 @@ RSpec.describe Entry, type: :model do
       create(:entry, :published, blog: plain, user: user)
 
       expect(StandardSiteJob.jobs).to be_empty
+    end
+
+    # A draft or queued entry never had a record, so there's nothing for a sync to do.
+    it 'queues nothing for a new entry that isn’t published' do
+      StandardSiteJob.jobs.clear
+
+      create(:entry, :draft, blog: blog, user: user)
+      create(:entry, :queued, blog: blog, user: user)
+
+      expect(StandardSiteJob.jobs).to be_empty
+    end
+
+    it 'queues nothing for an edit to a draft' do
+      entry = create(:entry, :draft, blog: blog, user: user)
+      StandardSiteJob.jobs.clear
+
+      entry.update!(title: 'A different title')
+
+      expect(StandardSiteJob.jobs).to be_empty
+    end
+
+    # The record has to go when the entry stops being published, however that happens.
+    it 'queues a sync when a published entry stops being published' do
+      entry = create(:entry, :published, blog: blog, user: user)
+      StandardSiteJob.jobs.clear
+
+      entry.update!(status: 'draft')
+
+      expect(standard_site_args).to include(['sync_document', entry.id])
     end
 
     # ⚠️ STANDARD_SITE_FIELDS are columns on entries and tags live in taggings, so the after_commit

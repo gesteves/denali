@@ -54,12 +54,13 @@ class PhotoExifJob < ApplicationJob
         end
         if exif.image_description.present? && photo.alt_text.blank?
           photo.alt_text = exif.image_description.force_encoding('UTF-8').encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
-        elsif photo.alt_text.blank?
-          AltTextJob.perform_async(photo_id)
         end
       end
     end
     photo.save!
+    # Outside the EXIF branch, since a file with no EXIF needs a description as much as any other,
+    # and after the save, so a failed save's retry doesn't ask Claude twice.
+    AltTextJob.perform_async(photo_id) if photo.alt_text.blank?
   end
 
   private
