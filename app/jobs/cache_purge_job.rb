@@ -1,4 +1,3 @@
-require 'digest'
 
 # Invalidates cached HTML at Cloudflare's edge by purging cache tags.
 #
@@ -27,14 +26,8 @@ class CachePurgeJob < ApplicationJob
     tags = tags.flatten.compact.uniq
     return if tags.empty?
 
-    key = "cache-purge/#{Digest::MD5.hexdigest(tags.sort.join(','))}"
-    # The write fails both when the key is already there (a purge is pending) and
-    # when the cache store is down, whose errors the store swallows. Only the
-    # first means skip: skipping during an outage would leave pages stale for the
-    # whole TTL.
-    return if !Rails.cache.write(key, true, unless_exist: true, expires_in: DEBOUNCE) && Rails.cache.exist?(key)
-
-    perform_in(DEBOUNCE, *tags)
+    # Sorted, so the same tags share a window whatever order they arrive in.
+    enqueue_debounced(*tags.sort, window: DEBOUNCE)
   end
 
   def perform(*tags)

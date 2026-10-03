@@ -12,7 +12,7 @@ class InstagramCommentJob < ApplicationJob
     return if !Rails.env.production?
     return if ENV['INSTAGRAM_APP_ID'].blank? || ENV['INSTAGRAM_APP_SECRET'].blank?
 
-    entry = Entry.find_by(id: entry_id)
+    entry = Entry.with_share_includes.find_by(id: entry_id)
     return if entry.nil?
 
     comment = entry.instagram_hashtags

@@ -38,7 +38,7 @@ class RandomNetworkShareJob < ApplicationJob
       not_shared_in: not_shared_in_months.months
     )
     # Picked by the database: sample would load every eligible entry to keep a few.
-    candidates = pool.reorder(Arel.sql('RANDOM()')).limit(CANDIDATES).includes(:user).to_a
+    candidates = pool.reorder(Arel.sql('RANDOM()')).limit(CANDIDATES).with_share_includes.to_a
     entry = candidates.find { |candidate| shareable?(candidate, network, share_job) }
 
     if entry.nil?

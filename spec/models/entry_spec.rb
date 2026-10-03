@@ -564,8 +564,55 @@ RSpec.describe Entry, type: :model do
     end
   end
 
+  # Processing a new photo saves it, and so touches its entry, several times in a minute or two.
+  describe 'background work after a burst of saves' do
+    around do |example|
+      original = Rails.cache
+      Rails.cache = ActiveSupport::Cache::MemoryStore.new
+      example.run
+    ensure
+      Rails.cache = original
+    end
+
+    it 'reindexes the entry and checks its captions once' do
+      entry = create(:entry, :published, :with_photo, blog: blog, user: user)
+      photo = entry.photos.first
+      # Setting them up opened windows of their own.
+      Sidekiq::Job.clear_all
+      Rails.cache.clear
+
+      3.times { |i| photo.update!(location: "Place #{i}") }
+
+      expect(ElasticsearchJob.jobs.map { |job| job['args'] }).to eq([[entry.id, 'update']])
+      expect(CaptionValidityJob.jobs.map { |job| job['args'] }).to eq([[entry.id]])
+    end
+  end
+
   describe 'captions' do
     let(:entry) { create(:entry, :published, :with_photo, blog: blog, user: user) }
+
+    # Each hashtag and topic lookup matches the entry's tags against every tag customization. With
+    # the tags loaded up front that happens in memory, so the queries don't grow with them.
+    it "builds every network's caption without a query per tag customization" do
+      entry.update!(tag_list: 'Landscapes, Wildlife')
+      count_queries = lambda do
+        loaded = Entry.with_share_includes.find(entry.id)
+        queries = 0
+        counter = ->(*, payload) { queries += 1 unless payload[:name] == 'SCHEMA' || payload[:cached] }
+        ActiveSupport::Notifications.subscribed(counter, 'sql.active_record') do
+          Entry::SHARE_NETWORKS.each { |network| loaded.caption_for(network) }
+          loaded.instagram_hashtags
+          loaded.threads_topic
+        end
+        queries
+      end
+
+      2.times { |i| create(:tag_customization, blog: blog, tag_list: "Tag #{i}", bluesky_hashtags: '#a', threads_topics: 'Topic') }
+      with_two = count_queries.call
+      6.times { |i| create(:tag_customization, blog: blog, tag_list: "More #{i}", bluesky_hashtags: '#b', threads_topics: 'Topic') }
+
+      expect(count_queries.call).to eq(with_two)
+    end
 
     # Tracking parameters made every network's link different and longer, and the stored validity
     # flags were measured without them.

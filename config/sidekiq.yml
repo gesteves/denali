@@ -1,8 +1,11 @@
 :concurrency: <%= ENV.fetch("SIDEKIQ_CONCURRENCY") { 10 }.to_i %>
 :queues:
-  - high
-  - default
-  - low
+  # Weighted rather than strict: with strict priority, low (standard.site syncs,
+  # caption checks, Flickr groups) waits until high and default are both empty,
+  # which a burst of photo processing can keep them from being for a while.
+  - [high, 6]
+  - [default, 3]
+  - [low, 1]
 :scheduler:
   # Each cron names its zone. Without one, Fugit falls back to Rails' Time.zone,
   # which happens to be Eastern in production but is easy to change by accident.

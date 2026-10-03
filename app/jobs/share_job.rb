@@ -23,7 +23,7 @@ class ShareJob < ApplicationJob
   def shareable_entry(entry_id)
     return unless Rails.env.production?
 
-    entry = Entry.published.find_by(id: entry_id)
+    entry = Entry.published.with_share_includes.find_by(id: entry_id)
     return unless entry&.is_photo?
 
     # The photo jobs normally analyze the images first, but a share can get

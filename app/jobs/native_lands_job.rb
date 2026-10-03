@@ -21,7 +21,7 @@ class NativeLandsJob < ApplicationJob
     # Replacing the join rows saves nothing on the photo itself, so without this
     # its entry's search document and cached pages would keep the old territories.
     photo.touch
-    CaptionValidityJob.perform_async(photo.entry_id) if photo.entry_id.present?
+    CaptionValidityJob.enqueue(photo.entry_id) if photo.entry_id.present?
   end
 
   private

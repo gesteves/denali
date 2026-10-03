@@ -1,3 +1,4 @@
+require 'digest'
 require 'open-uri'
 class ApplicationJob
   include Sidekiq::Job
@@ -13,6 +14,23 @@ class ApplicationJob
   def self.inherited(subclass)
     super
     subclass.sidekiq_retry_in { |count, exception| subclass.retry_delay(count, exception) }
+  end
+
+  # Enqueues the job once per window for the same arguments, on the trailing edge, so a burst of
+  # calls runs it once, after the burst has settled. Processing a new photo saves it, and so
+  # touches its entry, half a dozen times in a minute or two.
+  #
+  # @param args [Array] the job's arguments. Calls with the same ones share a window.
+  # @param window [ActiveSupport::Duration]
+  # @return [void]
+  def self.enqueue_debounced(*args, window:)
+    key = "debounce/#{name.underscore}/#{Digest::MD5.hexdigest(args.to_json)}"
+    # The write fails both when the key is already there (a run is pending) and when the cache
+    # store is down, whose errors the store swallows. Only the first means skip: skipping during an
+    # outage would mean the job never ran at all.
+    return if !Rails.cache.write(key, true, unless_exist: true, expires_in: window) && Rails.cache.exist?(key)
+
+    perform_in(window, *args)
   end
 
   # @param count [Integer] how many times the job has been retried so far.

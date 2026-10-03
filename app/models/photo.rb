@@ -51,7 +51,7 @@ class Photo < ApplicationRecord
   end
 
   def update_entry_caption_validity
-    CaptionValidityJob.perform_async(self.entry.id) if has_live_entry?
+    CaptionValidityJob.enqueue(self.entry.id) if has_live_entry?
   end
 
   # The entry is optional, and when it's destroyed its photos' callbacks run

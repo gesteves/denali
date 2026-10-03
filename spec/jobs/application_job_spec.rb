@@ -40,4 +40,54 @@ RSpec.describe ApplicationJob do
       expect(grandchild.sidekiq_retry_in_block.call(0, ArgumentError.new)).to eq(:discard)
     end
   end
+
+  describe '.enqueue_debounced' do
+    # The test environment's null store never reports a key, so the window needs a real store.
+    around do |example|
+      original = Rails.cache
+      Rails.cache = ActiveSupport::Cache::MemoryStore.new
+      example.run
+    ensure
+      Rails.cache = original
+    end
+
+    let(:job_class) do
+      stub_const('DebouncedJob', Class.new(ApplicationJob) { def perform(*); end })
+    end
+
+    it 'runs once per window for the same arguments, after the burst' do
+      freeze_time do
+        3.times { job_class.enqueue_debounced(1, 'update', window: 30.seconds) }
+
+        expect(job_class.jobs.size).to eq(1)
+        expect(job_class.jobs.first['args']).to eq([1, 'update'])
+        expect(job_class.jobs.first['at']).to eq(30.seconds.from_now.to_f)
+      end
+    end
+
+    it 'keeps different arguments apart' do
+      job_class.enqueue_debounced(1, window: 30.seconds)
+      job_class.enqueue_debounced(2, window: 30.seconds)
+
+      expect(job_class.jobs.map { |job| job['args'] }).to eq([[1], [2]])
+    end
+
+    it 'runs again once the window has passed' do
+      job_class.enqueue_debounced(1, window: 30.seconds)
+      travel(31.seconds) { job_class.enqueue_debounced(1, window: 30.seconds) }
+
+      expect(job_class.jobs.size).to eq(2)
+    end
+
+    # A Redis store swallows its errors, so a failed write looks like "already pending"; skipping
+    # then would mean the job never ran.
+    it 'still runs when the cache store is failing' do
+      allow(Rails.cache).to receive(:write).and_return(false)
+      allow(Rails.cache).to receive(:exist?).and_return(false)
+
+      2.times { job_class.enqueue_debounced(1, window: 30.seconds) }
+
+      expect(job_class.jobs.size).to eq(2)
+    end
+  end
 end

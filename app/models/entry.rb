@@ -96,7 +96,7 @@ class Entry < ApplicationRecord
   end
 
   after_commit on: [:update] do
-    ElasticsearchJob.perform_async(self.id, 'update')
+    ElasticsearchJob.enqueue_update(self.id)
   end
 
   after_commit on: [:destroy] do
@@ -132,6 +132,13 @@ class Entry < ApplicationRecord
 
   scope :with_graphql_includes, -> {
     includes(:user, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :park, :crops, :territories], taggings: :tag)
+  }
+
+  # What building an entry's share captions reads: its tags, which the hashtags and topics match
+  # against the blog's tag customizations, and its photos' gear and places. Loaded up front, the
+  # captions are built from memory; otherwise every tag check is a query of its own.
+  scope :with_share_includes, -> {
+    includes(:blog, :user, taggings: :tag, photos: [:camera, :lens, :film, :park, :territories])
   }
 
   def self.published(order = 'entries.published_at DESC')
@@ -1035,7 +1042,7 @@ class Entry < ApplicationRecord
   end
 
   def enqueue_caption_validity_job
-    CaptionValidityJob.perform_async(self.id)
+    CaptionValidityJob.enqueue(self.id)
   end
 
   # @param network [String] one of SHARE_NETWORKS.
