@@ -78,13 +78,13 @@ RSpec.describe "Caching", type: :request do
       expect(cache_tags).to contain_exactly(CacheTags.entry(entry.id), CacheTags::ENTRIES)
     end
 
-    it "tags a tag archive with the tag's own tag" do
+    it "tags a tag archive with the shared entries tag" do
       entry = published_entry
       entry.update(tag_list: 'Cascades')
 
       get tag_path(tag: 'cascades')
 
-      expect(cache_tags).to contain_exactly(CacheTags::ENTRIES, CacheTags.tag('cascades'))
+      expect(cache_tags).to contain_exactly(CacheTags::ENTRIES)
     end
 
     it "tags the feed" do

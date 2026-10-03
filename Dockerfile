@@ -5,25 +5,16 @@ FROM ruby:4.0.7-slim AS base
 
 WORKDIR /app
 
-# Install base packages needed for runtime
+# Install base packages needed for runtime. ImageMagick is for mini_magick
+# (blob analysis, color detection); nothing uses libvips.
 RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
     curl \
-    gnupg \
     imagemagick \
     libjemalloc2 \
     libpq5 \
-    libvips42 \
     libyaml-0-2 \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
-
-# Install Node.js
-RUN mkdir -p /etc/apt/keyrings && \
-    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
-    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" > /etc/apt/sources.list.d/nodesource.list && \
-    apt-get update -qq && \
-    apt-get install -y --no-install-recommends nodejs && \
-    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 ENV RAILS_ENV="production" \
     NODE_ENV="production" \
@@ -39,17 +30,27 @@ RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends \
     build-essential \
     git \
+    gnupg \
     libpq-dev \
     libyaml-dev \
     pkg-config \
     && rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
+
+# Node.js only builds the assets, so it lives in this stage and stays out of the
+# runtime image. The current LTS, matching CI and the dev image.
+RUN mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_24.x nodistro main" > /etc/apt/sources.list.d/nodesource.list && \
+    apt-get update -qq && \
+    apt-get install -y --no-install-recommends nodejs && \
+    rm -rf /var/lib/apt/lists/* /var/cache/apt/archives/*
 
 COPY Gemfile Gemfile.lock ./
 RUN bundle install && \
     rm -rf ~/.bundle/ "${BUNDLE_PATH}"/ruby/*/cache "${BUNDLE_PATH}"/ruby/*/bundler/gems/*/.git
 
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci
 
 COPY . .
 
@@ -59,6 +60,10 @@ RUN bundle exec bootsnap precompile app/ lib/
 RUN SECRET_KEY_BASE=dummy_key_for_asset_compilation \
     RAILS_SERVE_STATIC_FILES=true \
     bundle exec rails assets:precompile
+
+# The compiled assets are in public/assets; the packages they came from aren't
+# needed to serve them.
+RUN rm -rf node_modules tmp/cache
 
 
 # Production stage

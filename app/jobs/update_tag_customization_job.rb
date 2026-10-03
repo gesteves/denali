@@ -19,9 +19,9 @@ class UpdateTagCustomizationJob < ApplicationJob
     old_slug = group_url.split('/').last
     new_slug = begin
       if /\d+@N\d+/.match? old_slug
+        # groups.getInfo is public, so the app's key is enough; no user's
+        # account (or the global tokens this once used) is needed.
         flickr = FlickRaw::Flickr.new ENV['FLICKR_CONSUMER_KEY'], ENV['FLICKR_CONSUMER_SECRET']
-        flickr.access_token = ENV['FLICKR_ACCESS_TOKEN']
-        flickr.access_secret = ENV['FLICKR_ACCESS_TOKEN_SECRET']
         group_info = flickr.groups.getInfo(group_id: old_slug)
         group_info['path_alias'].blank? ? group_info['nsid'] : group_info['path_alias']
       else

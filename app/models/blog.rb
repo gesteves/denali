@@ -3,6 +3,10 @@ class Blog < ApplicationRecord
   include Formattable
   include Transformable
 
+  # Unused columns, dropped in a later migration. Ignored first so no process
+  # still running this code writes to them after they're gone.
+  self.ignored_columns += %w[facebook]
+
   has_many :entries, dependent: :destroy
   has_many :webhooks, dependent: :destroy
   has_many :push_subscriptions, dependent: :destroy

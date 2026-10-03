@@ -151,8 +151,6 @@ GEM
       irb (~> 1.10)
       reline (>= 0.3.8)
     diff-lcs (1.6.2)
-    dockerfile-rails (1.7.10)
-      rails (>= 3.0.0)
     drb (2.2.3)
     elastic-transport (8.4.1)
       faraday (< 3)
@@ -490,10 +488,8 @@ DEPENDENCIES
   brakeman
   bugsnag
   bullet
-  connection_pool (~> 3.0)
   dartsass-rails
   debug
-  dockerfile-rails (>= 1.7)
   elasticsearch-model (~> 8.0)
   elasticsearch-rails (~> 8.0)
   exifr

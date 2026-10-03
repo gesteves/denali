@@ -7,8 +7,9 @@
 # Cloudflare consumes the Cache-Tag header and strips it before the response
 # reaches the client. Tags must be printable ASCII with no spaces.
 module CacheTags
-  # Anything that renders a list, feed or sitemap of entries, and so changes
-  # whenever any entry is published, edited or deleted.
+  # Anything that renders a list, feed or sitemap of entries (tag pages and tag
+  # feeds included), and so changes whenever any entry is published, edited or
+  # deleted. Renaming a tag touches its entries, which purges this too.
   ENTRIES = 'entries'
 
   # Site chrome driven by Blog settings: the about page, manifest, robots.txt
@@ -18,10 +19,5 @@ module CacheTags
   # A single entry's permalink and its oembed representation.
   def self.entry(entry_id)
     "entry-#{entry_id}"
-  end
-
-  # A tag's archive page and feed.
-  def self.tag(slug)
-    "tag-#{slug.to_s.parameterize}"
   end
 end

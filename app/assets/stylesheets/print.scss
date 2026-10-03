@@ -1,19 +1,10 @@
 .elsewhere,
-.entry__related,
-.entry__related-entries,
 .follow,
-.footer__links,
 .pagination,
+.section--push-notifications,
+.section--related,
 .tags {
   display: none;
-}
-
-.footer {
-  display: block;
-}
-
-.entry__permalink::after {
-  content: ' at ' attr(data-short-url);
 }
 
 .header {

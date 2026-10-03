@@ -47,12 +47,10 @@ FactoryBot.define do
 
     trait :color do
       color { true }
-      black_and_white { false }
     end
 
     trait :black_and_white do
       color { false }
-      black_and_white { true }
     end
 
     trait :with_alt_text do

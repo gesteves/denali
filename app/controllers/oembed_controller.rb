@@ -1,7 +1,6 @@
 class OembedController < ApplicationController
   before_action :load_entry, :set_request_format
   before_action :set_max_age
-  skip_before_action :verify_authenticity_token
   after_action :set_cors_headers
 
   def show

@@ -16,15 +16,6 @@
   }
 }
 
-.entry_list__heading {
-  font-size: var(--font-size-heading);
-  line-height: var(--line-height-heading);
-  margin: 0 auto;
-  max-width: var(--max-width);
-  padding: 0 var(--gutter-vertical) var(--gutter-horizontal);
-  text-align: center;
-}
-
 .entry-list__item {
   border-radius: var(--photo-border-radius);
   display: block;

@@ -8,7 +8,6 @@ class ColorDetectionJob < ApplicationJob
     # Raises if the comparison can't run (a fetch or ImageMagick failure), so
     # Sidekiq retries it rather than the photo being recorded as color.
     is_bw = is_black_and_white?(photo)
-    photo.black_and_white = is_bw
     photo.color = !is_bw
     photo.save
   end

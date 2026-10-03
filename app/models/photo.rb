@@ -2,6 +2,10 @@ require 'mini_magick'
 class Photo < ApplicationRecord
   include Transformable
 
+  # Unused columns, dropped in a later migration. Ignored first so no process
+  # still running this code writes to them after they're gone.
+  self.ignored_columns += %w[source_url dominant_color black_and_white]
+
   belongs_to :entry, touch: true, counter_cache: true, optional: true
   belongs_to :camera, optional: true
   belongs_to :lens, optional: true
@@ -58,10 +62,6 @@ class Photo < ApplicationRecord
   # after it's gone, so the callbacks that reach into it check first.
   def has_live_entry?
     self.entry.present? && !self.entry.destroyed?
-  end
-
-  def self.oldest
-    order('taken_at ASC').limit(1)&.first
   end
 
   def url(opts = {})
@@ -240,6 +240,13 @@ class Photo < ApplicationRecord
     focal_y_transformed = (1 - (focal_y * 2)).round(3)
 
     [focal_x_transformed, focal_y_transformed]
+  end
+
+  # Black and white once ColorDetectionJob has decided it isn't color; false
+  # while that's still unknown. Derived from color, which said the same thing
+  # as the old black_and_white column.
+  def black_and_white?
+    color == false
   end
 
   def has_dimensions?
@@ -486,10 +493,6 @@ class Photo < ApplicationRecord
     PhotoExifJob.perform_async(self.id)
   end
 
-  def generate_alt_text
-    AltTextJob.perform_async(self.id)
-  end
-
   def geocode
     PhotoGeocodeJob.perform_async(self.id)
   end
@@ -539,10 +542,6 @@ class Photo < ApplicationRecord
     end
   end
 
-  def changed_dimensions?
-    saved_change_to_width? || saved_change_to_height?
-  end
-
   def changed_coordinates?
     saved_change_to_latitude? || saved_change_to_longitude?
   end
@@ -563,7 +562,7 @@ class Photo < ApplicationRecord
   end
 
   def changed_style?
-    saved_change_to_color? || saved_change_to_black_and_white? || saved_change_to_camera_id? || saved_change_to_film_id?
+    saved_change_to_color? || saved_change_to_camera_id? || saved_change_to_film_id?
   end
 
   def changed_caption_attributes?

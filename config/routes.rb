@@ -7,19 +7,12 @@ Rails.application.routes.draw do
   match '/422', to: 'errors#unprocessable', via: :all
   match '/500', to: 'errors#internal_server_error', via: :all
 
-  concern :paginatable do
-    get '(page/:page)', action: :index, on: :collection
-    get 'queued(/page/:page)', action: :queued, on: :collection
-    get 'drafts(/page/:page)', action: :drafts, on: :collection
-  end
-
   namespace :admin do
     get '/entries/tagged/:tag(/page/:page)'     => 'entries#tagged', constraints: { page: /\d+/ }, as: 'tagged_entries'
     get '/entries/review/alt-text(/page/:page)' => 'entries#alt_text_review_queue', constraints: { page: /\d+/ }, as: 'alt_text_review_queue'
     get '/entries/random/:platform/:schedule_name(/page/:page)' => 'entries#randomly_shareable', constraints: { page: /\d+/ }, as: 'randomly_shareable'
     get '/entries/unshareable(/page/:page)'        => 'entries#unshareable', constraints: { page: /\d+/ }, as: 'unshareable'
     get '/entries/search'             => 'entries#search', as: :search
-    get '/entries/edit'               => 'entries#edit'
     get '/entries/queued/organize'    => 'entries#organize_queue'
     post '/entries/queued/update'     => 'entries#update_queue'
     get '/entries/queued/schedule'    => 'publish_schedules#index'
@@ -30,7 +23,7 @@ Rails.application.routes.draw do
     get '/map/photos.:format'         => 'maps#photos', as: :map_markers
     get '/map/photo/:id.:format'      => 'maps#photo', as: :map_photo
 
-    resources :entries, concerns: :paginatable do
+    resources :entries do
       member do
         get 'share'
         get 'crops'
@@ -47,8 +40,9 @@ Rails.application.routes.draw do
         get 'review_alt_text'
       end
       collection do
-        get 'queued'
-        get 'drafts'
+        get '(page/:page)', action: :index
+        get 'queued(/page/:page)', action: :queued, as: :queued
+        get 'drafts(/page/:page)', action: :drafts, as: :drafts
         get 'photo'
       end
       resources :photos, only: [] do
@@ -72,7 +66,8 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :tags, only: [:index, :destroy, :show, :update], concerns: :paginatable do
+    resources :tags, only: [:index, :destroy, :show, :update] do
+      get '(page/:page)', action: :index, on: :collection
       member do
         post 'add'
       end

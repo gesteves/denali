@@ -334,6 +334,14 @@ RSpec.describe Photo, type: :model do
     end
   end
 
+  describe '#black_and_white?' do
+    it 'follows color, and is false until color is known' do
+      expect(build(:photo, color: false)).to be_black_and_white
+      expect(build(:photo, color: true)).not_to be_black_and_white
+      expect(build(:photo, color: nil)).not_to be_black_and_white
+    end
+  end
+
   describe 'location helpers' do
     describe '#has_location?' do
       it 'returns false when coordinates are missing' do

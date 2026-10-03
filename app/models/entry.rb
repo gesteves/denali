@@ -3,8 +3,6 @@ require 'elasticsearch/model'
 class Entry < ApplicationRecord
   include Elasticsearch::Model
   include Rails.application.routes.url_helpers
-  include ActionView::Helpers::UrlHelper
-  include ActionView::Helpers::TextHelper
   include Formattable
 
   has_many :photos, -> { order 'position ASC' }, dependent: :destroy
@@ -135,14 +133,6 @@ class Entry < ApplicationRecord
 
   def self.mapped
     joins(:photos).where(entries: { show_location: true }).where.not(photos: { latitude: nil }).where.not(photos: { longitude: nil })
-  end
-
-  def self.by_user(user)
-    where(user_id: user.id)
-  end
-
-  def self.text_entries
-    where('photos_count = 0')
   end
 
   def self.photo_entries
@@ -358,41 +348,9 @@ class Entry < ApplicationRecord
     { entries: es_results, suggested_tags: suggested_tags }
   end
 
-  def self.popular_tags(limit = 10)
-    excluded_tag_ids = ActsAsTaggableOn::Tagging
-      .where(context: ['equipment', 'styles'])
-      .distinct.select(:tag_id)
-
-    ActsAsTaggableOn::Tag
-      .joins(:taggings)
-      .where(taggings: { context: ['tags', 'locations'] })
-      .where.not(id: excluded_tag_ids)
-      .distinct
-      .order(taggings_count: :desc)
-      .limit(limit)
-  end
-
-  def self.most_recently_used_tags(limit = 10)
-    excluded_tag_ids = ActsAsTaggableOn::Tagging
-      .where(context: ['equipment', 'styles'])
-      .distinct.select(:tag_id)
-
-    ActsAsTaggableOn::Tag
-      .joins(:taggings)
-      .where(taggings: { context: ['tags', 'locations'] })
-      .where.not(id: excluded_tag_ids)
-      .group('tags.id')
-      .order('MAX(taggings.created_at) DESC')
-      .limit(limit)
-  end
-
-  def self.published_today
-    where('published_at >= ? and published_at <= ?', Time.current.beginning_of_day, Time.current.end_of_day)
-  end
-
   def self.find_by_url(url:)
     valid_controllers = ['entries']
-    valid_actions = ['show', 'amp']
+    valid_actions = ['show']
     url = Rails.application.routes.recognize_path(url)
     raise ActiveRecord::RecordNotFound unless valid_controllers.include?(url[:controller]) && valid_actions.include?(url[:action])
 

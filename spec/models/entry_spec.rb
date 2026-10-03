@@ -386,16 +386,6 @@ RSpec.describe Entry, type: :model do
     end
   end
 
-  describe '.published_today' do
-    it 'returns entries published today' do
-      expect(Entry.published_today.count).to eq(0)
-      create_list(:webhook, 2, blog: blog)
-      entry = create(:entry, :queued, blog: blog, user: user)
-      entry.publish
-      expect(Entry.published_today.count).to eq(1)
-    end
-  end
-
   describe '.find_by_url' do
     before do
       create_list(:webhook, 2, blog: blog)

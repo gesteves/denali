@@ -357,7 +357,6 @@ class Admin::EntriesController < AdminController
       format.turbo_stream {
         render turbo_stream: turbo_stream.prepend("notifications", partial: "admin/shared/notification", locals: { status: "success", message: @message })
       }
-      format.js { render 'admin/shared/notify' }
       format.json {
         render json: {
           status: 'success',
@@ -391,7 +390,6 @@ class Admin::EntriesController < AdminController
         flash[:success] = @message
         redirect_to session[:redirect_url] || admin_entry_path(@entry)
       }
-      format.js { render 'admin/shared/notify' }
       format.json {
         render json: {
           status: 'success',
@@ -426,7 +424,6 @@ class Admin::EntriesController < AdminController
       format.turbo_stream {
         render turbo_stream: turbo_stream.prepend("notifications", partial: "admin/shared/notification", locals: { status: "success", message: @message })
       }
-      format.js { render 'admin/shared/notify' }
       format.json {
         render json: {
           status: 'success',
@@ -465,7 +462,6 @@ class Admin::EntriesController < AdminController
         streams.unshift(turbo_stream.replace("mastodon-stats", partial: "admin/entries/share_stats", locals: { entry: @entry, platform: "mastodon" })) unless scheduled
         render turbo_stream: streams
       }
-      format.js { render 'admin/shared/notify' }
       format.json {
         render json: {
           status: 'success',
@@ -510,7 +506,6 @@ class Admin::EntriesController < AdminController
         streams.unshift(turbo_stream.replace("bluesky-stats", partial: "admin/entries/share_stats", locals: { entry: @entry, platform: "bluesky" })) unless scheduled
         render turbo_stream: streams
       }
-      format.js { render 'admin/shared/notify' }
       format.json {
         render json: {
           status: 'success',
@@ -533,7 +528,6 @@ class Admin::EntriesController < AdminController
           flash[:success] = @message
           redirect_to session[:redirect_url] || admin_entry_path(@entry)
         }
-        format.js { render 'admin/shared/notify' }
         format.json {
           render json: {
             status: 'success',
@@ -554,7 +548,6 @@ class Admin::EntriesController < AdminController
           flash[:warning] = @message
           redirect_to session[:redirect_url] || admin_entry_path(@entry)
         }
-        format.js { render 'admin/shared/notify' }
         format.json {
           render json: {
             status: 'danger',
@@ -591,10 +584,6 @@ class Admin::EntriesController < AdminController
           partial: "admin/shared/notification",
           locals: { status: "danger", message: message }
         ), status: :unprocessable_entity
-      }
-      format.js {
-        @message = message
-        render 'admin/shared/notify', status: :unprocessable_entity
       }
       format.json { render json: { status: 'error', message: message }, status: :unprocessable_entity }
     end

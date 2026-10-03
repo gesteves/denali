@@ -1,4 +1,4 @@
-// Custom variables only (Bulma overrides moved to admin.scss)
+// Custom variables only (Bulma overrides moved to admin.scss). The grays are
+// the public site's, not copies of them.
+@forward '../../base/variables' show $color-gray-light, $color-gray-very-light;
 $backdrop-blur: 20px;
-$color-gray-light: #AAA;
-$color-gray-very-light: #EEE;

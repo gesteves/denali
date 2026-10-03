@@ -8,8 +8,6 @@ RSpec.describe UpdateTagCustomizationJob, type: :worker do
     allow(ENV).to receive(:[]).and_call_original
     allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_KEY').and_return('consumer_key')
     allow(ENV).to receive(:[]).with('FLICKR_CONSUMER_SECRET').and_return('consumer_secret')
-    allow(ENV).to receive(:[]).with('FLICKR_ACCESS_TOKEN').and_return('access_token')
-    allow(ENV).to receive(:[]).with('FLICKR_ACCESS_TOKEN_SECRET').and_return('access_secret')
   end
 
   describe '#perform' do
@@ -18,8 +16,6 @@ RSpec.describe UpdateTagCustomizationJob, type: :worker do
       flickr = double('FlickRaw::Flickr')
       groups = double('groups')
       allow(FlickRaw::Flickr).to receive(:new).and_return(flickr)
-      allow(flickr).to receive(:access_token=)
-      allow(flickr).to receive(:access_secret=)
       allow(flickr).to receive(:groups).and_return(groups)
 
       # Return path aliases for lookups
@@ -39,8 +35,6 @@ RSpec.describe UpdateTagCustomizationJob, type: :worker do
       flickr = double('FlickRaw::Flickr')
       groups = double('groups')
       allow(FlickRaw::Flickr).to receive(:new).and_return(flickr)
-      allow(flickr).to receive(:access_token=)
-      allow(flickr).to receive(:access_secret=)
       allow(flickr).to receive(:groups).and_return(groups)
       allow(groups).to receive(:getInfo).with(group_id: '123456@N00').and_return({ 'path_alias' => 'test-group', 'nsid' => '123456@N00' })
 
@@ -56,8 +50,6 @@ RSpec.describe UpdateTagCustomizationJob, type: :worker do
       flickr = double('FlickRaw::Flickr')
       groups = double('groups')
       allow(FlickRaw::Flickr).to receive(:new).and_return(flickr)
-      allow(flickr).to receive(:access_token=)
-      allow(flickr).to receive(:access_secret=)
       allow(flickr).to receive(:groups).and_return(groups)
       # FlickRaw::FailedResponse takes 3 args: code, msg, and method
       allow(groups).to receive(:getInfo).and_raise(FlickRaw::FailedResponse.new(1, 'Not found', 'groups.getInfo'))

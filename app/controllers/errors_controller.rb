@@ -1,4 +1,6 @@
 class ErrorsController < ApplicationController
+  # Error pages render for whatever request failed, POSTs included (scanners
+  # POSTing to /wp-login.php), which would otherwise fail the token check too.
   skip_before_action :verify_authenticity_token
 
   def file_not_found

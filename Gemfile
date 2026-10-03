@@ -46,7 +46,6 @@ gem 'bugsnag'
 gem 'redis'
 
 # Background Jobs
-gem 'connection_pool', '~> 3.0'  # Pin to 2.x until Sidekiq/redis-client support 3.0
 gem 'sidekiq'
 gem 'sidekiq-scheduler'
 
@@ -86,5 +85,3 @@ group :test do
   gem 'mock_redis'
   gem 'rails-controller-testing'
 end
-
-gem "dockerfile-rails", ">= 1.7", :group => :development

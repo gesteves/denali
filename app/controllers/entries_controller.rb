@@ -16,7 +16,10 @@ class EntriesController < ApplicationController
     @srcset = PHOTOS[:entry_list][:srcset]
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
     @page_url = @page == 1 ? entries_url(page: nil) : entries_url(page: @page)
-    @canonical_url = entries_url(page: nil)
+    # Each page is its own canonical: pointing them all at page 1 told search
+    # engines pages 2 and up were duplicates, so the entries only they list
+    # dropped out of the index.
+    @canonical_url = @page_url
     respond_to do |format|
       format.html {
         @page_description = @photoblog.meta_description
@@ -52,11 +55,11 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(photos: [:image_attachment, :image_blob, :crops, :territories]).published.photo_entries.tagged_with(@tag_list, any: true).page(@page).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
-    set_cache_tags(CacheTags::ENTRIES, CacheTags.tag(@tag_slug))
+    set_cache_tags(CacheTags::ENTRIES)
     @srcset = PHOTOS[:entry_list][:srcset]
     @sizes = PHOTOS[:entry_list][:sizes].join(', ')
     @page_url = @page == 1 ? tag_url(tag: @tag_slug, page: nil) : tag_url(@tag_slug, @page)
-    @canonical_url = tag_url(tag: @tag_slug, page: nil)
+    @canonical_url = @page_url
     respond_to do |format|
       format.html {
         @page_description = "Browse all #{number_with_delimiter @tags.first.taggings_count} photos tagged “#{@tags.first.name}” on #{@photoblog.name}."
@@ -225,7 +228,7 @@ class EntriesController < ApplicationController
     @count = @photoblog.posts_per_page
     @entries = @photoblog.entries.includes(:user, taggings: :tag, photos: [:image_attachment, :image_blob, :camera, :lens, :film, :park, :territories]).published.photo_entries.tagged_with(@tag_list, any: true).page(1).per(@count)
     raise ActiveRecord::RecordNotFound if @tags.empty? || @entries.empty?
-    set_cache_tags(CacheTags::ENTRIES, CacheTags.tag(@tag_slug))
+    set_cache_tags(CacheTags::ENTRIES)
     respond_to do |format|
       format.atom
       format.all { redirect_to tag_feed_url(format: 'atom', tag: @tag_slug), status: 301 }

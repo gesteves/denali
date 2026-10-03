@@ -1,7 +1,6 @@
 require 'open-uri'
 class ApplicationJob
   include Sidekiq::Job
-  include ActionView::Helpers::TextHelper
   sidekiq_options queue: 'default'
 
   # The longest wait between attempts for a photo that hasn't been analyzed yet.

@@ -1,46 +1,6 @@
 {
   "ignored_warnings": [
     {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "605ddb785e21c9dac0eba35f0b914b3373d41913e3373c3a670a87452a24391d",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 128,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "amp"
-      },
-      "user_input": "Entry.find_by_url(:url => request.path).permalink_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "758147179fb29f77af22bc0896c41807da1da5489260ef847828bb664a201814",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 199,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Blog.first.entries.published.where(:tumblr_id => params[:tumblr_id]).order(\"published_at ASC\").limit(1).first.permalink_url, :status => 301)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "tumblr"
-      },
-      "user_input": "Blog.first.entries.published.where(:tumblr_id => params[:tumblr_id]).order(\"published_at ASC\").limit(1).first.permalink_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
       "warning_type": "Cross-Site Scripting",
       "warning_code": 2,
       "fingerprint": "8256767b6116f7c53b02bbcbf8ab0588ed75b9ff68fa39c2dfadfaac124fef56",
@@ -252,66 +212,6 @@
         "template": "admin/shared/_nav"
       },
       "user_input": null,
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "cb4fa5a9c2f7dac630d20485578a8617209de4d65887b070f95de182cff1f84c",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 118,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "show"
-      },
-      "user_input": "Entry.find_by_url(:url => request.path).permalink_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "cb4fa5a9c2f7dac630d20485578a8617209de4d65887b070f95de182cff1f84c",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/entries_controller.rb",
-      "line": 121,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Entry.find_by_url(:url => request.path).permalink_url, :status => 301)",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "EntriesController",
-        "method": "show"
-      },
-      "user_input": "Entry.find_by_url(:url => request.path).permalink_url",
-      "confidence": "High",
-      "note": ""
-    },
-    {
-      "warning_type": "Redirect",
-      "warning_code": 18,
-      "fingerprint": "f16f6242beb0501168c3596e32e47376f520fc5017734131f90e195266a28153",
-      "check_name": "Redirect",
-      "message": "Possible unprotected redirect",
-      "file": "app/controllers/admin/photos_controller.rb",
-      "line": 6,
-      "link": "https://brakemanscanner.org/docs/warning_types/redirect/",
-      "code": "redirect_to(Entry.find(params[:entry_id]).photos.find(params[:id]).image.url(:disposition => :attachment))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "Admin::PhotosController",
-        "method": "download"
-      },
-      "user_input": "Entry.find(params[:entry_id]).photos.find(params[:id]).image.url(:disposition => :attachment)",
       "confidence": "High",
       "note": ""
     }

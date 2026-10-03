@@ -1,6 +1,4 @@
 class Webhook < ApplicationRecord
-  include ActionView::Helpers::TextHelper
-
   belongs_to :blog
 
   validates :url, presence: true
@@ -50,8 +48,6 @@ class Webhook < ApplicationRecord
   def to_discord(entry)
     { content: "#{title(entry)}: #{entry.permalink_url}" }.to_json
   end
-
-  private
 
   def title(entry)
     if entry.is_photoset?

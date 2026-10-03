@@ -20,9 +20,7 @@ class SessionsController < ApplicationController
           name: auth_hash['info']['name'],
           first_name: auth_hash['info']['first_name'],
           last_name: auth_hash['info']['last_name'],
-          avatar_url: auth_hash['info']['image'],
-          oauth_token: auth_hash['credentials']['token'],
-          oauth_expires_at: Time.at(auth_hash['credentials']['expires_at'])
+          avatar_url: auth_hash['info']['image']
         )
         url = session[:original_url] || admin_entries_path
         # A fresh session ID on sign-in, so one planted before it (session

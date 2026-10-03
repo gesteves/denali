@@ -1,2 +1,0 @@
-module Admin::LensesHelper
-end

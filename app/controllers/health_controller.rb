@@ -1,6 +1,5 @@
 class HealthController < ApplicationController
   before_action :no_cache
-  skip_before_action :verify_authenticity_token
   skip_before_action :domain_redirect
   # The check runs its own query below; the blog lookup would hit the database
   # outside the rescue and turn a database failure into an error page.

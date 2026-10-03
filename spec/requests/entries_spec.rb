@@ -63,6 +63,15 @@ RSpec.describe "Entries", type: :request do
       create(:entry, :published, :with_photo, blog: blog, user: user).photos.each { |p| attach_image_to_photo(p) }
     end
 
+    it "makes each page its own canonical URL" do
+      allow_any_instance_of(Blog).to receive(:posts_per_page).and_return(1)
+      create(:entry, :published, :with_photo, blog: blog, user: user).photos.each { |p| attach_image_to_photo(p) }
+
+      get '/page/2'
+
+      expect(response.body).to match(%r{<link rel="canonical" href="[^"]+/page/2">})
+    end
+
     # Kaminari treats page 0 as page 1, which put a duplicate of the home page at /page/0.
     it "returns 404 for page 0" do
       get '/page/0'
