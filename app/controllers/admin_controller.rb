@@ -8,6 +8,11 @@ class AdminController < ApplicationController
   before_action :set_referrer_policy
   helper_method :is_admin?
 
+  # The admin's assets come from its own host, not the public ASSET_HOST. Its
+  # JavaScript is a module, and browsers fetch modules with CORS, which the
+  # public host doesn't send; loaded from there, none of it runs.
+  self.asset_host = nil
+
   # Report-only for now: violations show up in the browser console without
   # blocking anything. Once the admin runs clean, drop the report_only line.
   # form-action is left out on purpose: Chrome applies it to the redirects after
@@ -20,11 +25,13 @@ class AdminController < ApplicationController
     policy.script_src  :self, 'https://kit.fontawesome.com'
     # Mapbox, Font Awesome and Turbo's progress bar all inject inline styles.
     policy.style_src   :self, :unsafe_inline
-    policy.font_src    :self, :data, 'https://ka-f.fontawesome.com'
+    # The kit is a Pro one, so it fetches its CSS and fonts from ka-p (ka-f is
+    # the Free CDN's).
+    policy.font_src    :self, :data, 'https://ka-p.fontawesome.com'
     # Photos are served from the public domain's image transformations, and the
     # map's tiles from Mapbox.
     policy.img_src     :self, :data, :blob, :https
-    policy.connect_src :self, 'https://*.mapbox.com', 'https://ka-f.fontawesome.com'
+    policy.connect_src :self, 'https://*.mapbox.com', 'https://ka-p.fontawesome.com'
     policy.worker_src  :self, :blob
   end
   content_security_policy_report_only

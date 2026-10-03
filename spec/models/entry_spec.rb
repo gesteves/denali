@@ -402,6 +402,43 @@ RSpec.describe Entry, type: :model do
     end
   end
 
+  # Stubbed at the HTTP level, so the response goes through the real client and
+  # its JSON parsing. An upgrade to the json gem once broke that parsing, and
+  # since #related rescues everything, every entry page quietly lost the section.
+  describe '#related' do
+    let(:entry) { create(:entry, :published, blog: blog, user: user) }
+    let(:first_match) { create(:entry, :published, blog: blog, user: user) }
+    let(:second_match) { create(:entry, :published, blog: blog, user: user) }
+
+    def stub_search(body, status: 200)
+      stub_request(:post, %r{/#{Entry.index_name}/_search}).to_return(
+        status: status,
+        body: body.to_json,
+        headers: { 'Content-Type' => 'application/json', 'X-Elastic-Product' => 'Elasticsearch' }
+      )
+    end
+
+    it 'returns the matching entries in the order Elasticsearch ranked them' do
+      stub_search({
+        hits: {
+          total: { value: 2, relation: 'eq' },
+          hits: [
+            { _index: Entry.index_name, _id: second_match.id.to_s, _score: 2.0 },
+            { _index: Entry.index_name, _id: first_match.id.to_s, _score: 1.0 }
+          ]
+        }
+      })
+
+      expect(entry.related).to eq([second_match, first_match])
+    end
+
+    it 'returns nil when the search fails' do
+      stub_search({ error: { type: 'search_phase_execution_exception' } }, status: 500)
+
+      expect(entry.related).to be_nil
+    end
+  end
+
   describe '.eligible_for_random_share' do
     let!(:shareable_entry) do
       create(:entry, :published, blog: blog, user: user,
