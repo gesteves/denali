@@ -18,7 +18,7 @@ describe('DropdownController', () => {
 
     document.body.innerHTML = `
       <div data-controller="dropdown" class="dropdown">
-        <button data-action="click->dropdown#toggle">Toggle</button>
+        <button data-dropdown-target="trigger" aria-expanded="false" data-action="click->dropdown#toggle">Toggle</button>
         <div class="dropdown-menu">
           <a href="/item1">Item 1</a>
           <a href="/item2">Item 2</a>
@@ -79,6 +79,18 @@ describe('DropdownController', () => {
         controller.toggle(event);
 
         expect(event.preventDefault).toHaveBeenCalled();
+      });
+
+      it('reflects the menu state on the trigger', () => {
+        const controller = getController();
+        const event = { preventDefault: vi.fn(), stopPropagation: vi.fn() };
+        const trigger = element.querySelector('[data-dropdown-target="trigger"]');
+
+        controller.toggle(event);
+        expect(trigger.getAttribute('aria-expanded')).toBe('true');
+
+        controller.close();
+        expect(trigger.getAttribute('aria-expanded')).toBe('false');
       });
 
       it('stops event propagation', () => {

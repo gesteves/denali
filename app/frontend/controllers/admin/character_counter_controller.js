@@ -2,6 +2,9 @@ import { Controller } from '@hotwired/stimulus';
 import { render } from '../../lib/markdown_links';
 import { apply } from '../../lib/typography';
 
+// Built once: it's needed on every keystroke.
+const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
+
 /**
  * Updates character counts for text fields, accounting for Markdown syntax and Unicode graphemes.
  *
@@ -28,10 +31,9 @@ export default class extends Controller {
    */
   updateCharacterCount () {
     const plainText = this.stripMarkdown(this.inputTarget.value);
-    const segmenter = new Intl.Segmenter('en', { granularity: 'grapheme' });
     const count = [...segmenter.segment(plainText)].length;
 
-    this.characterCountTarget.innerHTML = count;
+    this.characterCountTarget.textContent = count;
     if (count > (this.maxCharacters - 10)) {
       this.characterCountTarget.classList.add('has-text-danger');
     } else {

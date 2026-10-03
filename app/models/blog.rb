@@ -120,6 +120,11 @@ class Blog < ApplicationRecord
     self.publish_schedules.where('hour <= ?', current_time.hour)
   end
 
+  # Memoized: a queued entry's publish date needs it, and a page lists many.
+  def past_publish_schedules_today_count
+    @past_publish_schedules_today_count ||= past_publish_schedules_today.count
+  end
+
   def pending_publish_schedules_today
     current_time = Time.current.in_time_zone(self.time_zone)
     self.publish_schedules.where('hour > ?', current_time.hour)
@@ -129,7 +134,7 @@ class Blog < ApplicationRecord
     if self.publish_schedules_count == 0
       nil
     else
-      days = (((self.entries.queued&.last&.position || 0) + self.past_publish_schedules_today.count)/(self.publish_schedules_count || 1)).floor
+      days = (((self.entries.queued&.last&.position || 0) + self.past_publish_schedules_today_count)/(self.publish_schedules_count || 1)).floor
       Time.current + days.days
     end
   end

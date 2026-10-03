@@ -189,6 +189,14 @@ describe('PhotoFormController', () => {
   });
 
   describe('addFromFile', () => {
+    it('does nothing when the picker is cancelled', () => {
+      const controller = getController();
+      const setThumbnailSpy = vi.spyOn(controller, 'setThumbnail');
+
+      expect(() => controller.addFromFile({ target: { files: [] } })).not.toThrow();
+      expect(setThumbnailSpy).not.toHaveBeenCalled();
+    });
+
     it('does nothing for non-JPEG files', () => {
       const controller = getController();
       const setThumbnailSpy = vi.spyOn(controller, 'setThumbnail');

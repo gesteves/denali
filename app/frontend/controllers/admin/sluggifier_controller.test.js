@@ -120,6 +120,11 @@ describe('SluggifierController', () => {
   });
 
   describe('parameterize', () => {
+    it('strips accents the way Rails does', () => {
+      const controller = getController();
+      expect(controller.parameterize('Montréal à São Paulo, Ñuñoa')).toBe('montreal-a-sao-paulo-nunoa');
+    });
+
     it('converts string to lowercase', () => {
       const controller = getController();
       expect(controller.parameterize('HELLO')).toBe('hello');
@@ -180,9 +185,9 @@ describe('SluggifierController', () => {
       expect(controller.parameterize('hello world')).toBe('hello-world');
     });
 
-    it('handles accented characters by removing them', () => {
+    it('keeps the letters of accented characters', () => {
       const controller = getController();
-      expect(controller.parameterize('café résumé')).toBe('caf-r-sum');
+      expect(controller.parameterize('café résumé')).toBe('cafe-resume');
     });
   });
 

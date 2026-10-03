@@ -29,6 +29,10 @@ export default class extends Controller {
     this.sortablePhotos.on('drag:start', event => this.startSort(event));
   }
 
+  disconnect () {
+    this.sortablePhotos.destroy();
+  }
+
   /**
    * Fetches a new set of fields to add another photo to the entry,
    * add appends it to the form.
@@ -60,15 +64,14 @@ export default class extends Controller {
   }
 
   /**
-   * Updates all the position fields on the photos before submitting the form,
+   * Updates all the position fields on the photos before the form is submitted,
    * setting them to their order in the DOM (which may change due to drag and drop).
-   * @param {Event} event A submit event from the form.
+   * The event carries on afterwards, so Turbo submits the form (with its
+   * double-submit protection) rather than a native submit that bypasses it.
    */
-  submit (event) {
-    event.preventDefault();
+  submit () {
     this.element.querySelectorAll('[data-position]').forEach((element, index) => {
       element.value = index + 1;
     });
-    event.target.submit();
   }
 }

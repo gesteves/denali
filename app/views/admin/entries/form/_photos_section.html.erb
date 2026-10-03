@@ -1,11 +1,11 @@
 <div class="field is-horizontal">
   <div class="field-label">
     <%= f.label :photos, 'Photos', class: 'label' %>
-    <a href="#" class="button" data-action="click->entry-form#addPhoto">
+    <button type="button" class="button" aria-label="Add photo" data-action="click->entry-form#addPhoto">
       <span class="icon">
-        <i class="fas fa-plus-circle"></i>
+        <i class="fas fa-plus-circle" aria-hidden="true"></i>
       </span>
-    </a>
+    </button>
   </div>
   <div class="field-body">
     <div class="field is-extended">

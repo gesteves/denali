@@ -53,67 +53,67 @@ describe('CharacterCounterController', () => {
     });
 
     it('updates character count on connect', () => {
-      expect(characterCount().innerHTML).toBe('0');
+      expect(characterCount().textContent).toBe('0');
     });
   });
 
   describe('updateCharacterCount', () => {
     it('counts basic ASCII characters', () => {
       setInput('hello');
-      expect(characterCount().innerHTML).toBe('5');
+      expect(characterCount().textContent).toBe('5');
     });
 
     it('counts spaces', () => {
       setInput('hello world');
-      expect(characterCount().innerHTML).toBe('11');
+      expect(characterCount().textContent).toBe('11');
     });
 
     it('counts emoji as single graphemes', () => {
       setInput('hello \u{1F44D}'); // thumbs up emoji
-      expect(characterCount().innerHTML).toBe('7'); // "hello " + 1 emoji
+      expect(characterCount().textContent).toBe('7'); // "hello " + 1 emoji
     });
 
     it('counts complex emoji as single graphemes', () => {
       setInput('\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467}'); // family emoji
-      expect(characterCount().innerHTML).toBe('1');
+      expect(characterCount().textContent).toBe('1');
     });
 
     it('counts flag emoji correctly', () => {
       setInput('\u{1F1FA}\u{1F1F8}'); // US flag
-      expect(characterCount().innerHTML).toBe('1');
+      expect(characterCount().textContent).toBe('1');
     });
 
     it('handles empty input', () => {
       setInput('');
-      expect(characterCount().innerHTML).toBe('0');
+      expect(characterCount().textContent).toBe('0');
     });
   });
 
   describe('stripMarkdown', () => {
     it('strips markdown links and counts only the label', () => {
       setInput('[Example](https://www.example.com)');
-      expect(characterCount().innerHTML).toBe('7'); // "Example"
+      expect(characterCount().textContent).toBe('7'); // "Example"
     });
 
     it('handles multiple markdown links', () => {
       setInput('[One](https://one.com) and [Two](https://two.com)');
-      expect(characterCount().innerHTML).toBe('11'); // "One and Two"
+      expect(characterCount().textContent).toBe('11'); // "One and Two"
     });
 
     it('handles text mixed with links', () => {
       setInput('Check out [my site](https://example.com) for more info');
       // "Check out my site for more info" = 31 characters
-      expect(characterCount().innerHTML).toBe('31');
+      expect(characterCount().textContent).toBe('31');
     });
 
     it('handles links with special characters in URL', () => {
       setInput('[Link](https://example.com/path?query=value&other=123)');
-      expect(characterCount().innerHTML).toBe('4'); // "Link"
+      expect(characterCount().textContent).toBe('4'); // "Link"
     });
 
     it('preserves non-link text', () => {
       setInput('Just plain text');
-      expect(characterCount().innerHTML).toBe('15');
+      expect(characterCount().textContent).toBe('15');
     });
 
     it('handles nested brackets correctly', () => {
@@ -121,7 +121,7 @@ describe('CharacterCounterController', () => {
       // The regex [([^\]]+)] matches [Link , so "Link " is kept
       // The rest "(https://example.com)" with the nested bracket remains
       // Test the actual behavior of the regex
-      const count = parseInt(characterCount().innerHTML);
+      const count = parseInt(characterCount().textContent);
       expect(count).toBeGreaterThan(0);
     });
   });
@@ -223,7 +223,7 @@ describe('CharacterCounterController', () => {
 
     it('works without a submit target', () => {
       setInput('hello world');
-      expect(characterCount().innerHTML).toBe('11');
+      expect(characterCount().textContent).toBe('11');
     });
 
     it('adds danger class when approaching limit without submit target', () => {
@@ -233,7 +233,7 @@ describe('CharacterCounterController', () => {
 
     it('does not throw error when exceeding limit without submit target', () => {
       expect(() => setInput('a'.repeat(150))).not.toThrow();
-      expect(characterCount().innerHTML).toBe('150');
+      expect(characterCount().textContent).toBe('150');
     });
   });
 
@@ -242,7 +242,7 @@ describe('CharacterCounterController', () => {
       setInput(' Check out [my blog](https://example.com) for updates!');
       // " Check out my blog for updates!" - emoji is 1 grapheme, "my blog" is 7
       // Total: 1 + 1 + 10 + 7 + 13 = 32 or similar
-      const count = parseInt(characterCount().innerHTML);
+      const count = parseInt(characterCount().textContent);
       // The count should account for emoji as 1 grapheme and strip the link URL
       expect(count).toBeLessThan(55); // Less than full string with URL
       expect(count).toBeGreaterThan(25); // More than just a few chars
@@ -252,7 +252,7 @@ describe('CharacterCounterController', () => {
       const content = 'Just published: [A Complete Guide](https://blog.example.com/guide) to JavaScript testing  #webdev #testing';
       setInput(content);
       // "Just published: A Complete Guide to JavaScript testing  #webdev #testing"
-      expect(parseInt(characterCount().innerHTML)).toBeGreaterThan(50);
+      expect(parseInt(characterCount().textContent)).toBeGreaterThan(50);
       expect(submitButton().disabled).toBe(false);
     });
   });

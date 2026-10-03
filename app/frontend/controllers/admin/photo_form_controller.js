@@ -43,16 +43,16 @@ export default class extends Controller {
    * @param {Event} event A change event from the file picker.
    */
   addFromFile (event) {
-    const input = event.target;
-    const files = input.files;
+    // Empty when the picker was cancelled.
+    const file = event.target.files[0];
 
-    if (!files[0].type.match(/jpe?g$/)) {
+    if (!file?.type.match(/jpe?g$/)) {
       return;
     }
 
     const reader = new FileReader();
     reader.addEventListener('load', e => this.setThumbnail(e.target.result));
-    reader.readAsDataURL(files[0]);
+    reader.readAsDataURL(file);
   }
 
   /**

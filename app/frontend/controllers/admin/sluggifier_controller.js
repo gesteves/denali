@@ -42,6 +42,13 @@ export default class extends Controller {
     const separator = '-';
     const duplicateSeparatorRegex = /-{2,}/g;
     const leadingTrailingSeparatorRegex = /^-|-$/g;
-    return string.toLowerCase().replace(/[^a-z0-9\-_]+/gi, separator).replace(duplicateSeparatorRegex, separator).replace(leadingTrailingSeparatorRegex, '');
+    // Accents come off first, as Rails' transliteration does, so "Montréal" is
+    // "montreal" rather than "montr-al".
+    return string
+      .normalize('NFD').replace(/\p{Diacritic}/gu, '')
+      .toLowerCase()
+      .replace(/[^a-z0-9\-_]+/gi, separator)
+      .replace(duplicateSeparatorRegex, separator)
+      .replace(leadingTrailingSeparatorRegex, '');
   }
 }

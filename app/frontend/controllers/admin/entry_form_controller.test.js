@@ -177,18 +177,27 @@ describe('EntryFormController', () => {
     });
   });
 
-  describe('submit', () => {
-    it('prevents default form submission', () => {
+  describe('disconnect', () => {
+    it('destroys the Sortable instance', () => {
       const controller = getController();
-      const mockSubmit = vi.fn();
-      const event = {
-        preventDefault: vi.fn(),
-        target: { submit: mockSubmit }
-      };
+      const destroySpy = vi.spyOn(controller.sortablePhotos, 'destroy');
+
+      controller.disconnect();
+
+      expect(destroySpy).toHaveBeenCalled();
+    });
+  });
+
+  describe('submit', () => {
+    // Turbo has to see the submit event to handle the form; a native submit()
+    // would bypass it (and its double-submit protection).
+    it('lets the submit event carry on to Turbo', () => {
+      const controller = getController();
+      const event = new Event('submit', { cancelable: true });
 
       controller.submit(event);
 
-      expect(event.preventDefault).toHaveBeenCalled();
+      expect(event.defaultPrevented).toBe(false);
     });
 
     it('updates position fields based on DOM order', () => {
@@ -212,19 +221,6 @@ describe('EntryFormController', () => {
       // After reordering, positions should be 1 and 2 in DOM order
       expect(inputs[0].value).toBe('1');
       expect(inputs[1].value).toBe('2');
-    });
-
-    it('calls form submit after updating positions', () => {
-      const controller = getController();
-      const mockSubmit = vi.fn();
-      const event = {
-        preventDefault: vi.fn(),
-        target: { submit: mockSubmit }
-      };
-
-      controller.submit(event);
-
-      expect(mockSubmit).toHaveBeenCalled();
     });
 
     it('assigns sequential positions starting from 1', () => {

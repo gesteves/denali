@@ -1,12 +1,32 @@
 (function() {
   'use strict';
 
-  self.addEventListener('install', event => {
+  self.addEventListener('install', () => {
     self.skipWaiting();
   });
 
-  self.addEventListener('push', function (event) {
-    const data = event.data.json();
+  // Takes over open pages straight away, and clears out whatever caches an
+  // older version of this worker left behind (the 2018 one cached pages; this
+  // one caches nothing, so every cache on the origin is stale).
+  self.addEventListener('activate', event => {
+    event.waitUntil((async () => {
+      const keys = await caches.keys();
+      await Promise.all(keys.map(key => caches.delete(key)));
+      await self.clients.claim();
+    })());
+  });
+
+  self.addEventListener('push', event => {
+    // Push services can send a push with no payload (to test a subscription,
+    // say), and there's nothing to show for one.
+    if (!event.data) return;
+
+    let data;
+    try {
+      data = event.data.json();
+    } catch {
+      return;
+    }
 
     const options = {
       body: data.body,
@@ -22,11 +42,18 @@
     event.waitUntil(self.registration.showNotification(data.title, options));
   });
 
-  self.addEventListener('notificationclick', function (event) {
-    const clickedNotification = event.notification;
-    clickedNotification.close();
-    event.waitUntil(clients.openWindow(clickedNotification.data.url));
+  // Focuses a tab that's already showing the entry, rather than opening
+  // another; the notification's URL carries UTM parameters the tab may not.
+  self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    const url = event.notification.data?.url;
+    if (!url) return;
+
+    event.waitUntil((async () => {
+      const path = new URL(url).pathname;
+      const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+      const existing = windows.find(client => new URL(client.url).pathname === path);
+      return existing ? existing.focus() : self.clients.openWindow(url);
+    })());
   });
-
-
 })();

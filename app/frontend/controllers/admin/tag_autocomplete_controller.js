@@ -12,7 +12,7 @@ export default class extends Controller {
    * Sets up the tag autocomplete.
    */
   connect () {
-    new Awesomplete(this.tagsTarget, {
+    this.awesomplete = new Awesomplete(this.tagsTarget, {
       list: this.datalistTarget,
       filter: function (text, input) {
         return Awesomplete.FILTER_CONTAINS(text, input.match(/[^,]*$/)[0]);
@@ -22,5 +22,10 @@ export default class extends Controller {
         this.input.value = `${before}${text}, `;
       }
     });
+  }
+
+  disconnect () {
+    this.awesomplete?.destroy();
+    this.awesomplete = null;
   }
 }

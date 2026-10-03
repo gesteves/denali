@@ -5,17 +5,17 @@
         <a href="<%= root_path %>" class="navbar-item logo" data-turbo="false">
           <%= @photoblog.header_logo_svg.html_safe %>
         </a>
-        <a role="button" class="navbar-burger" data-action="click->nav#toggle" data-nav-target="burger">
+        <button type="button" class="navbar-burger" aria-label="Menu" aria-expanded="false" data-action="click->nav#toggle" data-nav-target="burger">
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
           <span aria-hidden="true"></span>
-        </a>
+        </button>
       </div>
     <% end %>
     <div class="navbar-menu" data-nav-target="menu">
       <div class="navbar-start">
         <div class="navbar-item has-dropdown" data-controller="dropdown">
-          <a class="navbar-link" data-action="click->dropdown#toggle">
+          <a href="#" class="navbar-link" role="button" aria-haspopup="true" aria-expanded="false" data-dropdown-target="trigger" data-action="click->dropdown#toggle">
             Entries
           </a>
           <div class="navbar-dropdown">
@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="navbar-item has-dropdown" data-controller="dropdown">
-          <a class="navbar-link" data-action="click->dropdown#toggle">
+          <a href="#" class="navbar-link" role="button" aria-haspopup="true" aria-expanded="false" data-dropdown-target="trigger" data-action="click->dropdown#toggle">
             Tags
           </a>
           <div class="navbar-dropdown">
@@ -52,9 +52,9 @@
         <% end %>
         <% if @photoblog.has_search? %>
         <div class="navbar-item">
-          <%= form_with(url: admin_search_path, method: :get) do %>
+          <%= form_with(url: admin_search_path, method: :get, role: 'search') do %>
             <div class="control has-icons-left">
-              <%= text_field_tag :q, @query || '', placeholder: 'Search', class: 'input' %>
+              <%= text_field_tag :q, @query || '', placeholder: 'Search', class: 'input', 'aria-label': 'Search' %>
               <span class="icon is-small is-left">
                 <i class="fas fa-search"></i>
               </span>
@@ -65,7 +65,7 @@
       </div>
       <div class="navbar-end">
         <div class="navbar-item has-dropdown" data-controller="dropdown">
-          <a class="navbar-link" data-action="click->dropdown#toggle">
+          <a href="#" class="navbar-link" role="button" aria-haspopup="true" aria-expanded="false" data-dropdown-target="trigger" data-action="click->dropdown#toggle">
             Settings
           </a>
           <div class="navbar-dropdown">

@@ -12,6 +12,7 @@ vi.mock('awesomplete', () => {
       awesompleteInput = input;
       awesompleteOptions = options;
     }
+    destroy() {}
   }
   MockAwesomplete.FILTER_CONTAINS = (text, input) => {
     return text.toLowerCase().indexOf(input.toLowerCase()) !== -1;
@@ -64,6 +65,18 @@ describe('TagAutocompleteController', () => {
   function datalistTarget() {
     return element.querySelector('[data-tag-autocomplete-target="datalist"]');
   }
+
+  describe('disconnect', () => {
+    it('destroys the Awesomplete instance', () => {
+      const controller = getController();
+      const destroySpy = vi.spyOn(controller.awesomplete, 'destroy');
+
+      controller.disconnect();
+
+      expect(destroySpy).toHaveBeenCalled();
+      expect(controller.awesomplete).toBeNull();
+    });
+  });
 
   describe('connect', () => {
     it('initializes Awesomplete with tags input', () => {

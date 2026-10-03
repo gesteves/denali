@@ -29,6 +29,11 @@ export default class extends Controller {
     }
   }
 
+  disconnect () {
+    this.cropper?.destroy();
+    this.cropper = null;
+  }
+
   /**
    * Initializes the Croppr library when the image loads.
    */

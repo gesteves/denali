@@ -67,6 +67,17 @@ describe('NavController', () => {
       expect(menuTarget().classList.contains('is-active')).toBe(true);
     });
 
+    it('reflects the menu state in aria-expanded', () => {
+      const controller = getController();
+      const event = { preventDefault: vi.fn() };
+
+      controller.toggle(event);
+      expect(burgerTarget().getAttribute('aria-expanded')).toBe('true');
+
+      controller.toggle(event);
+      expect(burgerTarget().getAttribute('aria-expanded')).toBe('false');
+    });
+
     it('removes is-active class when toggled again', () => {
       const controller = getController();
       const event = { preventDefault: vi.fn() };

@@ -214,15 +214,16 @@ describe('QueueController', () => {
     });
 
     it('shows TBD when publish schedules count is 0', () => {
+      element.setAttribute('data-queue-publish-schedules-count-value', '0');
       const controller = getController();
 
-      // The actual code checks `this.publishSchedulesCount` not `this.publishSchedulesCountValue`
-      // So we need to set the non-value property directly
-      controller.publishSchedulesCount = 0;
-      controller.updateCards();
+      // Without the check this divides by zero and Intl.DateTimeFormat throws on
+      // the invalid date.
+      expect(() => controller.updateCards()).not.toThrow();
 
-      const timestamp = element.querySelector('[data-timestamp]');
-      expect(timestamp.innerHTML).toBe('TBD');
+      element.querySelectorAll('[data-timestamp]').forEach(timestamp => {
+        expect(timestamp.textContent).toBe('TBD');
+      });
     });
 
     it('ignores draggable mirror elements', () => {
@@ -451,6 +452,45 @@ describe('QueueController', () => {
           expect(card.classList.contains('draggable-handle')).toBe(true);
         });
       });
+    });
+  });
+
+  describe('save failures', () => {
+    function reorderAndSave () {
+      const controller = getController();
+      container().appendChild(Array.from(cards())[0]);
+      controller.updateCards();
+      controller.save({ preventDefault: vi.fn() });
+      return controller;
+    }
+
+    async function expectRecoverable (dispatchSpy) {
+      await vi.waitFor(() => {
+        const notifyEvent = dispatchSpy.mock.calls.find(call => call[0].type === 'notify' && call[0].detail.status === 'danger');
+        expect(notifyEvent).toBeDefined();
+      });
+      expect(buttons().classList.contains('is-hidden')).toBe(false);
+      cards().forEach(card => expect(card.classList.contains('draggable-handle')).toBe(true));
+      // The original order is still the one on the server.
+      expect(cards()[0].getAttribute('data-entry-position-original')).toBe('2');
+    }
+
+    it('re-enables the queue and reports the error when the server refuses the save', async () => {
+      global.fetch.mockResolvedValueOnce({ ok: false, status: 500, json: () => Promise.reject(new Error('not json')) });
+      const dispatchSpy = vi.spyOn(document.body, 'dispatchEvent');
+
+      reorderAndSave();
+
+      await expectRecoverable(dispatchSpy);
+    });
+
+    it('re-enables the queue and reports the error when the request fails', async () => {
+      global.fetch.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+      const dispatchSpy = vi.spyOn(document.body, 'dispatchEvent');
+
+      reorderAndSave();
+
+      await expectRecoverable(dispatchSpy);
     });
   });
 

@@ -203,6 +203,22 @@ RSpec.describe "Admin::Entries", type: :request do
     end
   end
 
+  # The form is submitted by Turbo, which only renders a response to a form
+  # submission if it's a redirect or a 4xx/5xx.
+  describe "invalid submissions" do
+    it "re-renders the new form with 422" do
+      post admin_entries_path, params: { entry: { title: '', status: 'draft' } }
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to include('couldn’t be saved')
+    end
+
+    it "re-renders the edit form with 422" do
+      patch admin_entry_path(entry), params: { entry: { title: '' } }
+      expect(response).to have_http_status(:unprocessable_content)
+      expect(response.body).to include('couldn’t be updated')
+    end
+  end
+
   describe "PATCH /admin/entries/:id (update)" do
     it "updates the entry" do
       patch admin_entry_path(entry), params: { entry: { title: 'Updated Title' } }

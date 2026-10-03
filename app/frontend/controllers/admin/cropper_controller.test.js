@@ -6,7 +6,8 @@ import CropperController from './cropper_controller';
 const mockCropprInstance = {
   getValue: vi.fn(() => ({ x: 0.1, y: 0.1, width: 0.5, height: 0.5 })),
   resizeTo: vi.fn(),
-  moveTo: vi.fn()
+  moveTo: vi.fn(),
+  destroy: vi.fn()
 };
 
 vi.mock('croppr', () => ({
@@ -256,6 +257,23 @@ describe('CropperController', () => {
         const notifyEvent = dispatchSpy.mock.calls.find(call => call[0].type === 'notify');
         expect(notifyEvent[0].detail.message).toBe('The crop couldn’t be updated.');
       });
+    });
+  });
+
+  describe('disconnect', () => {
+    it('destroys the cropper', () => {
+      const controller = getController();
+      controller.initializeCropper();
+
+      controller.disconnect();
+
+      expect(mockCropprInstance.destroy).toHaveBeenCalled();
+      expect(controller.cropper).toBeNull();
+    });
+
+    it('does nothing when the cropper was never initialized', () => {
+      const controller = getController();
+      expect(() => controller.disconnect()).not.toThrow();
     });
   });
 

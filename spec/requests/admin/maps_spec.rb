@@ -39,6 +39,19 @@ RSpec.describe "Admin::Maps", type: :request do
       expect(response.content_type).to include('application/json')
     end
 
+    # Markers are per photo, so the popup for the second photo of an entry has
+    # to show that photo, not the entry's first.
+    it "renders the requested photo, not the entry's first" do
+      second = create(:photo, entry: entry, position: 2, latitude: 40.7, longitude: -74.0)
+      attach_image_to_photo(second)
+
+      get admin_map_photo_path(second, format: :json)
+
+      html = JSON.parse(response.body)['html']
+      expect(html).to include(second.image.key)
+      expect(html).not_to include(photo.image.key)
+    end
+
     it "returns 404 for non-existent photo" do
       get admin_map_photo_path(id: 999999, format: :json)
       expect(response).to have_http_status(:not_found)

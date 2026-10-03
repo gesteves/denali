@@ -83,7 +83,7 @@ export default class extends Controller {
       const originalPosition = parseInt(card.getAttribute('data-entry-position-original'), 10);
       const position = i + 1;
       let publish_date;
-      if (this.publishSchedulesCount === 0) {
+      if (this.publishSchedulesCountValue === 0) {
         publish_date = 'TBD';
       } else {
         const days = Math.floor((position - 1 + this.pastPublishSchedulesTodayValue)/this.publishSchedulesCountValue);
@@ -98,7 +98,7 @@ export default class extends Controller {
         }).format(date);
       }
       card.setAttribute('data-entry-position', position);
-      card.querySelector('[data-timestamp]').innerHTML = publish_date;
+      card.querySelector('[data-timestamp]').textContent = publish_date;
       if (position !== originalPosition) {
         this.showButtons();
       }
@@ -156,21 +156,37 @@ export default class extends Controller {
     const firstWarning = setTimeout(() => sendNotification('Your changes are being saved, this will take a few seconds.', 'warning'), 1000);
     const secondWarning = setTimeout(() => sendNotification('Hang tight, your changes are still being saved.', 'warning'), 5000);
 
-    const response = await fetch(`${this.endpointValue}.json`, {
-      method: 'POST',
-      body: JSON.stringify({ entry_ids }),
-      headers: new Headers({
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': this.csrfToken
-      }),
-      credentials: 'include'
-    });
-    if (!response.ok) return;
-    const json = await response.json();
-    clearTimeout(firstWarning);
-    clearTimeout(secondWarning);
-    sendNotification(json.message, json.status);
-    this.updateCardPositions();
+    let saved = false;
+    let message = 'The changes you’ve made to the queue couldn’t be saved.';
+    let status = 'danger';
+    try {
+      const response = await fetch(`${this.endpointValue}.json`, {
+        method: 'POST',
+        body: JSON.stringify({ entry_ids }),
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': this.csrfToken
+        }),
+        credentials: 'include'
+      });
+      if (response.ok) {
+        ({ message, status } = await response.json());
+        saved = true;
+      }
+    } catch {
+      // A network failure gets the generic error below.
+    } finally {
+      clearTimeout(firstWarning);
+      clearTimeout(secondWarning);
+    }
+
+    sendNotification(message, status);
+    if (saved) {
+      this.updateCardPositions();
+    } else {
+      // Leave the new order on screen so it can be saved again or discarded.
+      this.showButtons();
+    }
     this.enableDrag();
   }
 }

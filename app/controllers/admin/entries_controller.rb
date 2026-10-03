@@ -170,9 +170,7 @@ class Admin::EntriesController < AdminController
 
   # GET /admin/entries/1/edit
   def edit
-    @page_title = "Editing “#{@entry.title}”"
-    @srcset = PHOTOS[:admin_edit][:srcset]
-    @sizes = PHOTOS[:admin_edit][:sizes].join(', ')
+    set_edit_form
   end
 
   # PATCH /admin/entries/1/publish
@@ -216,8 +214,9 @@ class Admin::EntriesController < AdminController
         flash[:success] = "Your entry was saved!"
         format.html { redirect_to new_admin_entry_path(continue: true) }
       else
-        flash[:warning] = 'Your entry couldn’t be saved…'
-        format.html { render :new }
+        # 422 so Turbo renders the form again; it ignores a 200 to a form submission.
+        flash.now[:warning] = 'Your entry couldn’t be saved…'
+        format.html { render :new, status: :unprocessable_content }
       end
     end
   end
@@ -241,8 +240,9 @@ class Admin::EntriesController < AdminController
         flash[:success] = 'Your entry has been updated!'
         format.html { redirect_to admin_entry_path(@entry) }
       else
-        flash[:warning] = 'Your entry couldn’t be updated…'
-        format.html { render :edit }
+        flash.now[:warning] = 'Your entry couldn’t be updated…'
+        set_edit_form
+        format.html { render :edit, status: :unprocessable_content }
       end
     end
   end
@@ -622,6 +622,14 @@ class Admin::EntriesController < AdminController
     # turn the post-action redirect into an open redirect.
     def set_redirect_url
       session[:redirect_url] = url_from(request.referer)
+    end
+
+    # Shared with a failed update, which renders the same form and used to crash
+    # without the image sizes.
+    def set_edit_form
+      @page_title = "Editing “#{@entry.title_was.presence || @entry.title}”"
+      @srcset = PHOTOS[:admin_edit][:srcset]
+      @sizes = PHOTOS[:admin_edit][:sizes].join(', ')
     end
 
     def set_srcset

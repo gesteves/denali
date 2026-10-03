@@ -6,6 +6,7 @@ import { supportsHover } from '../../lib/utils';
  * @extends Controller
  */
 export default class extends Controller {
+  static targets = ['trigger'];
 
   connect () {
     this.isHoverable = supportsHover();
@@ -26,6 +27,7 @@ export default class extends Controller {
         document.dispatchEvent(new CustomEvent('closeDropdowns'));
       }
       this.element.classList.toggle('is-active');
+      this.updateExpanded();
     }
   }
 
@@ -36,6 +38,16 @@ export default class extends Controller {
   close () {
     if (!this.isHoverable) {
       this.element.classList.remove('is-active');
+      this.updateExpanded();
+    }
+  }
+
+  /**
+   * Mirrors the menu's state on its trigger, for screen readers.
+   */
+  updateExpanded () {
+    if (this.hasTriggerTarget) {
+      this.triggerTarget.setAttribute('aria-expanded', String(this.element.classList.contains('is-active')));
     }
   }
 }

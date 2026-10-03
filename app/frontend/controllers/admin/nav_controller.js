@@ -13,7 +13,8 @@ export default class extends Controller {
    */
   toggle (event) {
     event.preventDefault();
-    this.burgerTarget.classList.toggle('is-active');
-    this.menuTarget.classList.toggle('is-active');
+    const isActive = this.burgerTarget.classList.toggle('is-active');
+    this.menuTarget.classList.toggle('is-active', isActive);
+    this.burgerTarget.setAttribute('aria-expanded', String(isActive));
   }
 }

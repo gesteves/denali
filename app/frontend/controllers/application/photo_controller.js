@@ -47,7 +47,9 @@ export default class extends Controller {
       photo.setAttribute('data-photo-zoomable', 1);
       photo.setAttribute('tabindex', 0);
       photo.setAttribute('role', 'button');
-      photo.setAttribute('aria-label', 'Zoom photo');
+      // A description, not a label: aria-label would replace the alt text, the
+      // only thing that tells a screen reader user what the photo shows.
+      photo.setAttribute('aria-description', 'Zoom photo');
       photo.setAttribute('aria-expanded', 'false');
     }
   }

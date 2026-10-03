@@ -1,4 +1,20 @@
 module Admin::EntriesHelper
+  # A queued entry's publish date is worked out from today's date and the
+  # schedule, which no record's updated_at reflects, so any cached fragment
+  # that shows one is keyed on them as well.
+  def queue_clock
+    @queue_clock ||= [
+      Time.current.in_time_zone(@photoblog.time_zone).to_date,
+      @photoblog.past_publish_schedules_today_count,
+      @photoblog.publish_schedules_count
+    ]
+  end
+
+  # The cache key of an entry card. Also given to the collection renders as
+  # `cached:`, so it has to match the partial's own cache call.
+  def admin_entry_cache_key(entry)
+    entry.is_queued? ? [entry, queue_clock] : entry
+  end
 
   def share_markdown(entry)
     text = []

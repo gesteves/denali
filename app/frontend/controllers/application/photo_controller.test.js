@@ -96,10 +96,12 @@ describe('PhotoController', () => {
       expect(photos[1].getAttribute('role')).toBeNull();
     });
 
-    it('sets aria-label on zoomable photos', () => {
+    // aria-label would replace the alt text as the photo's accessible name.
+    it('describes the zoom without overriding the alt text', () => {
       const photos = photoTargets();
-      expect(photos[0].getAttribute('aria-label')).toBe('Zoom photo');
-      expect(photos[1].getAttribute('aria-label')).toBeNull();
+      expect(photos[0].getAttribute('aria-label')).toBeNull();
+      expect(photos[0].getAttribute('aria-description')).toBe('Zoom photo');
+      expect(photos[1].getAttribute('aria-description')).toBeNull();
     });
 
     it('sets aria-expanded="false" on zoomable photos', () => {

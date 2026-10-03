@@ -1,8 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
   <meta name="viewport" content="width=device-width">
   <meta name="turbo-cache-control" content="no-cache">
   <meta name="robots" content="noindex">
@@ -29,7 +28,8 @@
     </section>
   <% end %>
 
-  <div id="notifications" class="notifications" data-notifications-target="container" data-action="transitionend->notifications#toggle" data-turbo-permanent>
+  <%# Not data-turbo-permanent: Turbo would keep the previous page's copy and drop this one, flash and all. %>
+  <div id="notifications" class="notifications" data-notifications-target="container" data-action="transitionend->notifications#toggle">
     <% flash.each do |name, message| -%>
       <div class="notification is-<%= name %> is-transparent" data-notifications-target="notification" data-action="click->notifications#close">
         <%= message %>

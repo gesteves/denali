@@ -8,7 +8,7 @@
     </div>
   </article>
 <% else %>
-  <%= render partial: 'entry', collection: @entries, cached: true %>
+  <%= render partial: 'entry', collection: @entries, cached: ->(entry) { admin_entry_cache_key(entry) } %>
   <%= paginate @entries, views_prefix: 'admin', outer_window: 1, window: 1 %>
 <% end %>
 
