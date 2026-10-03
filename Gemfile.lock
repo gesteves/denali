@@ -203,7 +203,7 @@ GEM
     hashie (5.1.0)
       logger
     htmlentities (4.4.2)
-    httparty (0.24.2)
+    httparty (0.24.3)
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
