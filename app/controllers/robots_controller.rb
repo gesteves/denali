@@ -3,7 +3,7 @@ class RobotsController < ApplicationController
   before_action -> { set_cache_tags(CacheTags::BLOG) }
 
   def show
-    @ai_agents = Rails.cache.fetch("known-agents:v1", expires_in: 1.day) do
+    @ai_agents = Rails.cache.fetch("known-agents:1", expires_in: 1.day) do
       known_agents = KnownAgents.new(access_token: ENV['KNOWN_AGENTS_ACCESS_TOKEN'])
       known_agents.robots_txt.presence
     end

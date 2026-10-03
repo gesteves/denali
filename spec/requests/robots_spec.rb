@@ -6,7 +6,7 @@ RSpec.describe "Robots", type: :request do
   describe "GET /robots.txt" do
     before do
       allow(Rails.cache).to receive(:fetch).and_call_original
-      allow(Rails.cache).to receive(:fetch).with("known-agents", anything).and_return("User-agent: GPTBot\nDisallow: /")
+      allow(Rails.cache).to receive(:fetch).with("known-agents:1", anything).and_return("User-agent: GPTBot\nDisallow: /")
     end
 
     it "renders successfully" do
