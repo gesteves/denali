@@ -5,13 +5,13 @@
 //   /images/<key>             the original, untransformed
 //   /ig/<innerWxH>/<outerWxH>/<key>   the Instagram feed variant
 //
-// Regular transforms run through `cf.image` on the fetch to R2, which is the
-// same engine behind /cdn-cgi/image/ URLs. The Instagram variant pads twice —
-// onto an inset inner frame, then onto the outer frame — so the photo is matted
-// with white on all four sides, the way it looked under Thumbor. That needs the
-// Images binding, because `cf.image` applies one transform per fetch and
-// transform URLs can't be chained: a /cdn-cgi/image/ URL isn't fetchable as
-// another transform's source, and fails with "ERROR 9404".
+// Every route runs through `cf.image` on the fetch to R2, which is the same
+// engine behind /cdn-cgi/image/ URLs. The Instagram variant pads the photo onto
+// an inset inner frame, then adds a white border out to the outer frame, so the
+// photo is matted with white on all four sides, the way it looked under Thumbor.
+// `border` is Workers-only, which is why that can't be a /cdn-cgi/image/ URL.
+// It used to chain two pads through the Images binding instead, but the binding
+// only takes 20 MB of input, and full-size originals routinely exceed that.
 //
 // Rails builds these URLs; see app/models/concerns/thumborizable.rb.
 //
@@ -35,9 +35,6 @@ const MAX_OUTPUT_DIMENSION = 4096;
 // Trim offsets are measured in *source* pixels, so they have to allow for an original
 // larger than any output — bounded by the largest input Cloudflare will transform.
 const MAX_SOURCE_DIMENSION = 12000;
-// `env.IMAGES.input()` caps at 20 MB, well under the 100 MB `cf.image` accepts, so
-// the /ig/ route can fail on an original the /images/ route handles fine.
-const MAX_INPUT_BYTES = 20 * 1024 * 1024;
 const INSTAGRAM_BACKGROUND = '#ffffff';
 const INSTAGRAM_QUALITY = 100;
 const MAX_AGE = 31536000; // 1 year; a photo's key changes when the photo does
@@ -98,28 +95,37 @@ async function serveInstagram([, innerWidth, innerHeight, outerWidth, outerHeigh
     return error('Unsupported dimensions', 400);
   }
 
-  const original = await fetch(sourceUrl(env, key));
-  if (!original.ok) return upstreamError(original, key, { inner, outer });
-
-  // Checked up front so an oversized original is a 413 that says why, rather than
-  // the binding throwing and surfacing as an indistinguishable 502.
-  const bytes = Number(original.headers.get('content-length'));
-  if (bytes > MAX_INPUT_BYTES) {
-    console.log(JSON.stringify({
-      message: 'Original too large for the Images binding',
-      key,
-      bytes,
-      limit: MAX_INPUT_BYTES
-    }));
-    return error('Image too large to render', 413);
+  // The border makes up the difference between the frames, so it can't be negative.
+  if (outer.width < inner.width || outer.height < inner.height) {
+    return error('Unsupported dimensions', 400);
   }
 
-  const result = await env.IMAGES.input(original.body)
-    .transform({ ...inner, fit: 'pad', background: INSTAGRAM_BACKGROUND })
-    .transform({ ...outer, fit: 'pad', background: INSTAGRAM_BACKGROUND })
-    .output({ format: 'image/jpeg', quality: INSTAGRAM_QUALITY });
+  // The border is applied after the resize, so it adds to the inner frame rather
+  // than eating into it.
+  const options = {
+    ...inner,
+    fit: 'pad',
+    background: INSTAGRAM_BACKGROUND,
+    border: { color: INSTAGRAM_BACKGROUND, ...matte(inner, outer) },
+    format: 'jpeg',
+    quality: INSTAGRAM_QUALITY
+  };
 
-  return cacheable(result.response(), key);
+  const response = await fetch(sourceUrl(env, key), { cf: { image: options } });
+  if (!response.ok) return upstreamError(response, key, options);
+
+  return cacheable(response, key);
+}
+
+// Splits the gap between the frames across opposite sides, so the photo sits
+// centred in the outer frame, the same as padding onto it would have left it.
+export function matte(inner, outer) {
+  const horizontal = outer.width - inner.width;
+  const vertical = outer.height - inner.height;
+  const left = Math.floor(horizontal / 2);
+  const top = Math.floor(vertical / 2);
+
+  return { top, right: horizontal - left, bottom: vertical - top, left };
 }
 
 function sourceUrl(env, key) {

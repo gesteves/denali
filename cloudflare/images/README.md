@@ -35,21 +35,23 @@ analytics, the fix is a request-phase Transform Rule on `/images/*` that
 canonicalizes `Accept` before the Worker runs. Write it down here if it comes to
 that.
 
-The Instagram variant is the exception, and the reason this Worker exists at
-all. It pads the photo onto an inset inner frame, then pads that result onto
-the outer frame, leaving white on all four sides — the way these images looked
-under Thumbor. That can't be expressed as a single transform:
+The Instagram variant is the reason this Worker exists at all. It pads the
+photo onto an inset inner frame, then adds a white `border` out to the outer
+frame, leaving white on all four sides — the way these images looked under
+Thumbor. That can't be a `/cdn-cgi/image/` URL:
 
+- **`fit=pad` alone can't inset.** It scales the photo until it meets the frame
+  on one axis, so it can't leave a margin on all four sides.
 - **Transforms can't be chained.** A transform URL isn't fetchable as another
   transform's source; Cloudflare's internal subrequest 404s, surfacing as
   `ERROR 9404: Could not fetch the image`.
-- **`fit=pad` alone can't inset.** It scales the photo until it meets the frame
-  on one axis, so it can't leave a margin on all four sides.
 - **The `border` option is Workers-only**, not available on URL transforms.
 
-So that route uses the [Images
+It used to pad twice through the [Images
 binding](https://developers.cloudflare.com/images/optimization/binding/), which
-does support chaining `.transform()` calls.
+can chain `.transform()` calls. Don't go back to that: `.input()` takes at most
+20 MB, and full-size originals regularly exceed that. `cf.image` accepts up to
+100 MB.
 
 ## Caching
 
@@ -70,7 +72,7 @@ cd cloudflare/images
 npx wrangler deploy
 ```
 
-Requires an Images Paid plan for the binding. Responses are cached at the edge
+Requires an Images Paid plan. Responses are cached at the edge
 for a year, which is safe because ActiveStorage keys change when a photo is
 replaced, so the URL changes with it.
 
@@ -80,7 +82,8 @@ replaced, so the URL changes with it.
 npx wrangler dev
 ```
 
-Images binding calls don't incur usage charges in local development.
+`cf.image` is only a low-fidelity mock under `wrangler dev`, and it ignores
+`border`, so check the Instagram variant against the deployed Worker.
 
 ## Logs
 

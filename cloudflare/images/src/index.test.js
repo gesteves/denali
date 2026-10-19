@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import worker, { TRANSFORM_PATH, INSTAGRAM_PATH, parseOptions, negotiateFormat } from './index.js';
+import worker, { TRANSFORM_PATH, INSTAGRAM_PATH, parseOptions, negotiateFormat, matte } from './index.js';
 
 const match = (pattern, path) => {
   const result = pattern.exec(path);
@@ -187,34 +187,33 @@ describe('negotiateFormat', () => {
   });
 });
 
+describe('matte', () => {
+  it('splits the gap between the frames evenly', () => {
+    expect(matte({ width: 1340, height: 1440 }, { width: 1440, height: 1440 })).toEqual({
+      top: 0,
+      right: 50,
+      bottom: 0,
+      left: 50
+    });
+  });
+
+  it('gives the odd pixel to the far side', () => {
+    expect(matte({ width: 1440, height: 1699 }, { width: 1440, height: 1800 })).toEqual({
+      top: 50,
+      right: 0,
+      bottom: 51,
+      left: 0
+    });
+  });
+});
+
 // The Worker no longer touches the Cache API — Workers Caching reads through
 // before it runs (see the `cache` block in wrangler.jsonc) — so what it says
 // about caching is entirely in the headers it returns, and testable here.
 describe('fetch', () => {
   let calls;
-  let transforms;
 
-  // Stands in for env.IMAGES, recording the chain the /ig/ route builds.
-  const imagesBinding = {
-    input() {
-      const chain = {
-        transform(options) {
-          transforms.push(options);
-          return chain;
-        },
-        output(options) {
-          transforms.push(options);
-          return {
-            response: () =>
-              new Response('matted jpeg bytes', { headers: { 'content-type': 'image/jpeg' } })
-          };
-        }
-      };
-      return chain;
-    }
-  };
-
-  const env = { IMAGES_ORIGIN_HOST: 'photos.example.com', IMAGES: imagesBinding };
+  const env = { IMAGES_ORIGIN_HOST: 'photos.example.com' };
 
   const upstream = (body, init) => {
     global.fetch = vi.fn(async (url, options) => {
@@ -225,7 +224,6 @@ describe('fetch', () => {
 
   beforeEach(() => {
     calls = [];
-    transforms = [];
   });
 
   afterEach(() => {
@@ -399,40 +397,60 @@ describe('fetch', () => {
   });
 
   describe('the instagram route', () => {
-    it('mattes the photo onto the inner frame, then the outer one', async () => {
-      upstream('original bytes', { status: 200 });
+    it('pads the photo onto the inner frame and borders it out to the outer one', async () => {
+      upstream('matted jpeg bytes', { status: 200 });
       const response = await get('/ig/1440x1700/1440x1800/6d1r4ctntxsl');
 
       expect(calls[0].url).toBe('https://photos.example.com/6d1r4ctntxsl');
-      // Fetched untransformed: cf.image applies one transform per fetch, which is the
-      // whole reason this route exists.
-      expect(calls[0].options).toBeUndefined();
-      expect(transforms).toEqual([
-        { width: 1440, height: 1700, fit: 'pad', background: '#ffffff' },
-        { width: 1440, height: 1800, fit: 'pad', background: '#ffffff' },
-        { format: 'image/jpeg', quality: 100 }
-      ]);
+      expect(calls[0].options.cf.image).toEqual({
+        width: 1440,
+        height: 1700,
+        fit: 'pad',
+        background: '#ffffff',
+        border: { color: '#ffffff', top: 50, right: 0, bottom: 50, left: 0 },
+        format: 'jpeg',
+        quality: 100
+      });
       expect(response.status).toBe(200);
       expect(response.headers.get('cache-control')).toBe('public, max-age=31536000, immutable');
       expect(response.headers.get('cache-tag')).toBe('images,images-6d1r4ctntxsl');
       expect(response.headers.get('vary')).toBeNull();
     });
 
-    // The binding caps at 20 MB, well under the 100 MB cf.image accepts, so this route
-    // can fail on an original /images/ handles fine. Better a 413 that says so than the
-    // binding throwing into an indistinguishable 502.
-    it('turns away an original too large for the binding', async () => {
-      vi.spyOn(console, 'log').mockImplementation(() => {});
-      upstream('pretend this is huge', {
+    it('borders a horizontal photo on the sides', async () => {
+      upstream('matted jpeg bytes', { status: 200 });
+      await get('/ig/1340x1440/1440x1440/6d1r4ctntxsl');
+
+      expect(calls[0].options.cf.image.border).toEqual({
+        color: '#ffffff',
+        top: 0,
+        right: 50,
+        bottom: 0,
+        left: 50
+      });
+    });
+
+    // The Images binding this route used to go through caps its input at 20 MB, so
+    // a 24 MB original failed here while /images/ served it fine. cf.image takes up
+    // to 100 MB, and the original never passes through the Worker.
+    it('does not care how large the original is', async () => {
+      upstream('matted jpeg bytes', {
         status: 200,
-        headers: { 'content-length': String(21 * 1024 * 1024) }
+        headers: { 'content-length': String(25 * 1024 * 1024) }
       });
 
-      const response = await get('/ig/1440x1700/1440x1800/6d1r4ctntxsl');
+      const response = await get('/ig/1340x1440/1440x1440/6d1r4ctntxsl');
 
-      expect(response.status).toBe(413);
+      expect(response.status).toBe(200);
+    });
+
+    it('refuses an outer frame smaller than the inner one', async () => {
+      upstream('unused', { status: 200 });
+      const response = await get('/ig/1440x1800/1440x1700/6d1r4ctntxsl');
+
+      expect(response.status).toBe(400);
       expect(response.headers.get('cache-control')).toBe('no-store');
-      expect(transforms).toHaveLength(0);
+      expect(calls).toHaveLength(0);
     });
 
     it('reports an upstream failure as a failure here too', async () => {
@@ -442,7 +460,7 @@ describe('fetch', () => {
       const response = await get('/ig/1440x1700/1440x1800/6d1r4ctntxsl');
 
       expect(response.status).toBe(502);
-      expect(transforms).toHaveLength(0);
+      expect(response.headers.get('cache-control')).toBe('no-store');
     });
   });
 });

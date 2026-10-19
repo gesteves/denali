@@ -21,10 +21,6 @@
       "zone_name": "allencompassingtrip.com"
     }
   ],
-  // The Instagram variant chains two transforms, which only the binding can do.
-  "images": {
-    "binding": "IMAGES"
-  },
   // The R2 bucket's public custom domain. It lives here rather than in the app
   // so it never appears in a public image URL.
   "vars": {
