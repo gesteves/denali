@@ -25,7 +25,8 @@ RSpec.describe "Caching", type: :request do
   def published_entry
     entry = create(:entry, :published, :with_photo, blog: blog, user: user)
     entry.photos.each { |p| attach_image_to_photo(p) }
-    entry
+    # Attaching an image touches the entry, so reload for the updated_at the app reads.
+    entry.reload
   end
 
   describe "public pages" do
