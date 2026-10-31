@@ -1,6 +1,6 @@
 # Development Dockerfile for docker-compose
 
-FROM ruby:4.0.7
+FROM ruby:4.0.8
 
 # Install Node.js: the current LTS, which is what CI uses (.nvmrc says lts/*).
 # Chromium runs the system specs (Capybara with Cuprite).
