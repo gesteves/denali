@@ -32,7 +32,7 @@ RSpec.describe BlueskyJob, type: :worker do
         allow(bluesky_instance).to receive(:skeet).and_return({ 'uri' => post_uri })
       end
 
-      it 'enqueues a threadgate job to restrict replies on the new post' do
+      it 'enqueues a threadgate job for the new post' do
         expect(BlueskyThreadgateJob).to receive(:perform_async).with(entry.id, post_uri)
         described_class.new.perform(entry.id, text)
       end
@@ -51,6 +51,29 @@ RSpec.describe BlueskyJob, type: :worker do
         allow(bluesky_instance).to receive(:skeet).and_return({})
 
         expect(BlueskyThreadgateJob).not_to receive(:perform_async)
+        described_class.new.perform(entry.id, text)
+      end
+
+      it 'enqueues a postgate job for the new post' do
+        expect(BlueskyPostgateJob).to receive(:perform_async).with(entry.id, post_uri)
+        described_class.new.perform(entry.id, text)
+      end
+
+      it 'enqueues a postgate job for quote posts' do
+        expect(BlueskyPostgateJob).to receive(:perform_async).with(entry.id, post_uri)
+        described_class.new.perform(entry.id, text, nil, 'quote_uri')
+      end
+
+      # Unlike a threadgate, a postgate covers only its own post, so a reply inherits nothing.
+      it 'enqueues a postgate job for replies' do
+        expect(BlueskyPostgateJob).to receive(:perform_async).with(entry.id, post_uri)
+        described_class.new.perform(entry.id, text, 'reply_uri')
+      end
+
+      it 'does not enqueue a postgate job when the post uri is missing' do
+        allow(bluesky_instance).to receive(:skeet).and_return({})
+
+        expect(BlueskyPostgateJob).not_to receive(:perform_async)
         described_class.new.perform(entry.id, text)
       end
 

@@ -29,8 +29,15 @@ RSpec.describe BlueskyThreadgateJob, type: :worker do
         allow(bluesky_instance).to receive(:create_threadgate)
       end
 
-      it 'creates a threadgate for the post' do
-        expect(bluesky_instance).to receive(:create_threadgate).with(post_uri)
+      it 'gates the post for the audience the blog has chosen' do
+        blog.update!(bluesky_reply_audience: 'followers')
+
+        expect(bluesky_instance).to receive(:create_threadgate).with(post_uri, audience: 'followers')
+        described_class.new.perform(entry.id, post_uri)
+      end
+
+      it 'leaves the choice of no gate to Bluesky#create_threadgate' do
+        expect(bluesky_instance).to receive(:create_threadgate).with(post_uri, audience: 'everyone')
         described_class.new.perform(entry.id, post_uri)
       end
 

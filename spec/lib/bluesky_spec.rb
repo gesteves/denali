@@ -492,41 +492,118 @@ RSpec.describe Bluesky do
           .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.threadgate/123', cid: 'gatecid' }.to_json)
       end
 
-      it 'allows replies only from followers and people the account follows' do
-        bluesky.create_threadgate(post_uri)
+      {
+        'followers' => %w[followerRule],
+        'following' => %w[followingRule],
+        'followers_and_following' => %w[followerRule followingRule],
+        'mentioned' => %w[mentionRule]
+      }.each do |audience, rules|
+        it "allows replies from the #{audience} audience" do
+          bluesky.create_threadgate(post_uri, audience: audience)
+
+          expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+            .with { |req|
+              body = JSON.parse(req.body)
+              body['collection'] == 'app.bsky.feed.threadgate' &&
+                body['record']['post'] == post_uri &&
+                body['record']['allow'] == rules.map { |rule| { '$type' => "app.bsky.feed.threadgate##{rule}" } }
+            }
+        end
+      end
+
+      # A gate with an empty `allow` means nobody, so "everyone" can't be one.
+      it 'writes no gate at all for everyone' do
+        expect(bluesky.create_threadgate(post_uri, audience: 'everyone')).to be_nil
+
+        expect(WebMock).not_to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+        expect(WebMock).not_to have_requested(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
+      end
+
+      # A missing `allow` means everyone, so the empty array has to reach the PDS.
+      it 'sends an empty allow list for nobody' do
+        bluesky.create_threadgate(post_uri, audience: 'nobody')
 
         expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
-          .with { |req|
-            body = JSON.parse(req.body)
-            body['collection'] == 'app.bsky.feed.threadgate' &&
-              body['record']['post'] == post_uri &&
-              body['record']['allow'] == [
-                { '$type' => 'app.bsky.feed.threadgate#followerRule' },
-                { '$type' => 'app.bsky.feed.threadgate#followingRule' }
-              ]
-          }
+          .with { |req| JSON.parse(req.body)['record']['allow'] == [] }
+      end
+
+      it 'raises a permanent error for an unknown audience' do
+        expect { bluesky.create_threadgate(post_uri, audience: 'bots') }.to raise_error(BlueskyPermanentError)
       end
 
       it 'reuses the post rkey so the gate attaches to the post' do
-        bluesky.create_threadgate(post_uri)
+        bluesky.create_threadgate(post_uri, audience: 'followers')
 
         expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
           .with { |req| JSON.parse(req.body)['rkey'] == '123' }
       end
 
       it 'raises a permanent error for a blank at-uri' do
-        expect { bluesky.create_threadgate(nil) }.to raise_error(BlueskyPermanentError)
+        expect { bluesky.create_threadgate(nil, audience: 'followers') }.to raise_error(BlueskyPermanentError)
       end
 
       it 'raises a permanent error for a malformed at-uri' do
-        expect { bluesky.create_threadgate('https://bsky.app/profile/test/post/123') }.to raise_error(BlueskyPermanentError)
+        expect { bluesky.create_threadgate('https://bsky.app/profile/test/post/123', audience: 'followers') }
+          .to raise_error(BlueskyPermanentError)
       end
 
       it 'raises when the API request fails, so the job can retry' do
         stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
           .to_return(status: 500, body: { error: 'InternalServerError' }.to_json)
 
-        expect { bluesky.create_threadgate(post_uri) }.to raise_error(/Failed to write/)
+        expect { bluesky.create_threadgate(post_uri, audience: 'followers') }.to raise_error(/Failed to write/)
+      end
+    end
+
+    describe '#create_postgate' do
+      let(:post_uri) { 'at://did:plc:abcd1234/app.bsky.feed.post/123' }
+
+      before do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.server.createSession")
+          .to_return(status: 200, body: { 'did' => 'did:plc:abcd1234', 'accessJwt' => 'test_token' }.to_json)
+
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .to_return(status: 200, body: { uri: 'at://did:plc:abcd1234/app.bsky.feed.postgate/123', cid: 'gatecid' }.to_json)
+      end
+
+      it 'disables quoting the post' do
+        bluesky.create_postgate(post_uri)
+
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .with { |req|
+            body = JSON.parse(req.body)
+            body['collection'] == 'app.bsky.feed.postgate' &&
+              body['record']['post'] == post_uri &&
+              body['record']['embeddingRules'] == [{ '$type' => 'app.bsky.feed.postgate#disableRule' }]
+          }
+      end
+
+      it 'reuses the post rkey so the gate attaches to the post' do
+        bluesky.create_postgate(post_uri)
+
+        expect(WebMock).to have_requested(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .with { |req| JSON.parse(req.body)['rkey'] == '123' }
+      end
+
+      it 'raises a permanent error for a blank at-uri' do
+        expect { bluesky.create_postgate(nil) }.to raise_error(BlueskyPermanentError)
+      end
+
+      it 'raises a permanent error for a malformed at-uri' do
+        expect { bluesky.create_postgate('https://bsky.app/profile/test/post/123') }.to raise_error(BlueskyPermanentError)
+      end
+
+      it 'raises when the API request fails, so the job can retry' do
+        stub_request(:post, "#{base_url}/xrpc/com.atproto.repo.putRecord")
+          .to_return(status: 500, body: { error: 'InternalServerError' }.to_json)
+
+        expect { bluesky.create_postgate(post_uri) }.to raise_error(/Failed to write/)
+      end
+    end
+
+    describe '.reply_audience_options' do
+      it 'pairs each label with its value, as a select wants them' do
+        expect(described_class.reply_audience_options).to include(['Everyone', 'everyone'], ['Nobody', 'nobody'])
       end
     end
 

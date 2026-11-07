@@ -42,12 +42,19 @@ class Bluesky
   # The steps of that recompression are AtProto::BLOB_COMPRESSION_STEPS, because StandardSite has
   # to bring a cover image under its own, smaller, limit the same way.
 
-  # Who's allowed to reply to a post. Only followers and people the account follows,
-  # to keep drive-by replies from the popular feeds out of the thread.
-  THREADGATE_ALLOW_RULES = [
-    { "$type" => "app.bsky.feed.threadgate#followerRule" },
-    { "$type" => "app.bsky.feed.threadgate#followingRule" }
-  ].freeze
+  # Who can reply to a post, as the blog settings offer it: the label the form shows and the
+  # app.bsky.feed.threadgate rules behind it. Blog#bluesky_reply_audience holds one of these keys.
+  #
+  # ⚠️ nil and [] are opposites. A post with no gate lets everyone reply, and a gate with an empty
+  # `allow` lets nobody reply, so "Everyone" has to mean writing no gate at all.
+  REPLY_AUDIENCES = {
+    'everyone' => { label: 'Everyone', rules: nil },
+    'followers' => { label: 'Followers', rules: %w[followerRule] },
+    'following' => { label: 'People you follow', rules: %w[followingRule] },
+    'followers_and_following' => { label: 'Followers and people you follow', rules: %w[followerRule followingRule] },
+    'mentioned' => { label: 'People mentioned in the post', rules: %w[mentionRule] },
+    'nobody' => { label: 'Nobody', rules: [] }
+  }.freeze
 
   # A bare URL.
   #
@@ -104,6 +111,11 @@ class Bluesky
       email: social_account.handle,
       password: social_account.access_token
     )
+  end
+
+  # @return [Array<Array(String, String)>] the reply audiences as a form's select wants them.
+  def self.reply_audience_options
+    REPLY_AUDIENCES.map { |value, audience| [audience[:label], value] }
   end
 
   # Renders a post the way the record will hold it: typography applied, Markdown links reduced to
@@ -293,20 +305,21 @@ class Bluesky
     create_session["did"]
   end
 
-  # Creates a threadgate for a post, limiting who can reply to it to followers and
-  # people the account follows. Only applies to root posts; replies inherit the gate
-  # of the thread's root post.
+  # Creates a threadgate for a post, limiting who can reply to it. Only applies to root posts;
+  # replies inherit the gate of the thread's root post.
   #
   # @param post_uri [String] the at-uri of the post to gate.
-  # @return [Hash] the parsed response body if successful.
-  # @raise [ArgumentError] if the at-uri is blank or malformed.
+  # @param audience [String] a key of REPLY_AUDIENCES.
+  # @return [Hash, nil] the parsed response body, or nil when the audience needs no gate.
+  # @raise [BlueskyPermanentError] if the audience is unknown, or the at-uri is blank or malformed.
   # @raise [RuntimeError] if the post request fails.
-  def create_threadgate(post_uri)
-    # The threadgate's rkey must match the post's rkey.
-    rkey = post_uri.to_s.split('/').last
-    if rkey.blank? || !post_uri.to_s.start_with?('at://')
-      raise BlueskyPermanentError, "Invalid post at-uri: #{post_uri.inspect}"
-    end
+  def create_threadgate(post_uri, audience:)
+    rules = REPLY_AUDIENCES.fetch(audience) do
+      raise BlueskyPermanentError, "Unknown reply audience: #{audience.inspect}"
+    end[:rules]
+    return if rules.nil?
+
+    rkey = gate_rkey(post_uri)
 
     put_record(
       collection: "app.bsky.feed.threadgate",
@@ -314,7 +327,31 @@ class Bluesky
       record: {
         "$type" => "app.bsky.feed.threadgate",
         post: post_uri,
-        allow: THREADGATE_ALLOW_RULES,
+        allow: rules.map { |rule| { "$type" => "app.bsky.feed.threadgate##{rule}" } },
+        # The gate's key is the post's key, so this is the post's own timestamp. Every attempt then
+        # writes the same bytes.
+        createdAt: self.class.record_timestamp(rkey)
+      }
+    )
+  end
+
+  # Creates a postgate for a post, so nobody else can quote it. Unlike a threadgate this covers
+  # only the post it names: a reply needs a postgate of its own.
+  #
+  # @param post_uri [String] the at-uri of the post to gate.
+  # @return [Hash] the parsed response body if successful.
+  # @raise [BlueskyPermanentError] if the at-uri is blank or malformed.
+  # @raise [RuntimeError] if the post request fails.
+  def create_postgate(post_uri)
+    rkey = gate_rkey(post_uri)
+
+    put_record(
+      collection: "app.bsky.feed.postgate",
+      rkey: rkey,
+      record: {
+        "$type" => "app.bsky.feed.postgate",
+        post: post_uri,
+        embeddingRules: [{ "$type" => "app.bsky.feed.postgate#disableRule" }],
         # The gate's key is the post's key, so this is the post's own timestamp. Every attempt then
         # writes the same bytes.
         createdAt: self.class.record_timestamp(rkey)
@@ -323,6 +360,20 @@ class Bluesky
   end
 
   private
+
+  # A gate's rkey must match the rkey of the post it gates.
+  #
+  # @param post_uri [String] the at-uri of the post.
+  # @return [String] the post's rkey.
+  # @raise [BlueskyPermanentError] if the at-uri is blank or malformed.
+  def gate_rkey(post_uri)
+    rkey = post_uri.to_s.split('/').last
+    if rkey.blank? || !post_uri.to_s.start_with?('at://')
+      raise BlueskyPermanentError, "Invalid post at-uri: #{post_uri.inspect}"
+    end
+
+    rkey
+  end
 
   # Builds the rich-text facets for a post: every link, every @mention and every #hashtag.
   #

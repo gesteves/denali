@@ -72,6 +72,50 @@
 
   <div class="field is-horizontal">
     <div class="field-label is-normal">
+      <%= f.label :bluesky_reply_audience, 'Bluesky replies', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="select">
+            <%= f.select :bluesky_reply_audience, Bluesky.reply_audience_options %>
+          </div>
+        </div>
+        <p class="help">Who can reply to entries shared to Bluesky. This applies to new posts only.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label">
+      <%= f.label :bluesky_allow_quotes, 'Allow Bluesky quote posts', class: 'label' %>
+    </div>
+    <div class="field-body">
+      <div class="field">
+        <div class="control">
+          <div class="tabs is-toggle is-small" data-controller="radio-tab">
+            <ul>
+              <li data-radio-tab-target="tab" data-radio-tab-value="true" data-action="click->radio-tab#toggle">
+                <a>
+                  Yes
+                </a>
+              </li>
+              <li data-radio-tab-target="tab" data-radio-tab-value="false" data-action="click->radio-tab#toggle">
+                <a>
+                  No
+                </a>
+              </li>
+            </ul>
+            <%= f.hidden_field :bluesky_allow_quotes, 'data-radio-tab-target': 'field' %>
+          </div>
+        </div>
+        <p class="help">Whether others can quote entries shared to Bluesky. This applies to new posts only.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="field is-horizontal">
+    <div class="field-label is-normal">
       <%= f.label :flickr, 'Flickr', class: 'label' %>
     </div>
     <div class="field-body">

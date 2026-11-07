@@ -17,6 +17,7 @@ class Blog < ApplicationRecord
   belongs_to :standard_site_social_account, class_name: 'SocialAccount', optional: true
 
   validates :name, :about, presence: true
+  validates :bluesky_reply_audience, inclusion: { in: Bluesky::REPLY_AUDIENCES.keys }
 
   # Pointing the blog at a different Bluesky account makes what we know about the old repo wrong.
   #

@@ -43,8 +43,12 @@ class BlueskyJob < ShareJob
     response = bluesky.skeet(rkey: rkey.presence || Bluesky.new_tid, text: text, photos: photos,
                              in_reply_to: in_reply_to, quote: quote, labels: labels)
 
-    # Threadgates only apply to root posts; replies inherit the root post's gate.
-    BlueskyThreadgateJob.perform_async(entry_id, response["uri"]) if in_reply_to.blank? && response["uri"].present?
+    if response["uri"].present?
+      # Threadgates only apply to root posts; replies inherit the root post's gate. A postgate
+      # covers only the post it names, so every post needs its own.
+      BlueskyThreadgateJob.perform_async(entry_id, response["uri"]) if in_reply_to.blank?
+      BlueskyPostgateJob.perform_async(entry_id, response["uri"])
+    end
 
     record_share(entry, 'bluesky') unless in_reply_to.present? || quote.present?
   end

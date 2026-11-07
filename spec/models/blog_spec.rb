@@ -15,6 +15,17 @@ RSpec.describe Blog, type: :model do
   describe 'validations' do
     it { should validate_presence_of(:name) }
     it { should validate_presence_of(:about) }
+    it { should validate_inclusion_of(:bluesky_reply_audience).in_array(Bluesky::REPLY_AUDIENCES.keys) }
+  end
+
+  describe 'Bluesky interaction settings' do
+    it 'lets everyone reply by default' do
+      expect(described_class.new.bluesky_reply_audience).to eq('everyone')
+    end
+
+    it 'allows quote posts by default' do
+      expect(described_class.new.bluesky_allow_quotes).to be true
+    end
   end
 
   describe 'touching' do

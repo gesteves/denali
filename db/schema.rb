@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_03_162421) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_07_175337) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -68,6 +68,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_03_162421) do
     t.integer "standard_site_social_account_id"
     t.string "standard_site_did"
     t.string "standard_site_fingerprint"
+    t.string "bluesky_reply_audience", default: "everyone", null: false
+    t.boolean "bluesky_allow_quotes", default: true, null: false
     t.index ["standard_site_social_account_id"], name: "index_blogs_on_standard_site_social_account_id"
   end
 
