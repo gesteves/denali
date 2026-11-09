@@ -42,6 +42,16 @@ Do not attempt to run these commands directly on the host machine:
 
 The host machine may not have the correct Ruby version, gems, or database connectivity.
 
+### Claude Code cloud sessions
+
+The Docker rules above are for local development. In a Claude Code cloud session (`CLAUDE_CODE_REMOTE=true`), the environment's setup script has already installed the right Ruby, gems and npm packages on the VM, so run commands directly, without `docker compose run --rm app`. Before running tests or Rails commands, start Postgres and Redis and prepare the databases with:
+
+```bash
+script/claude-cloud/start-services.sh
+```
+
+Add `--elasticsearch` only to run the dev server with search. Build assets with `RAILS_ENV=test bin/rails assets:precompile` before running system specs. See `docs/claude-code-cloud-environment.md`.
+
 ## SVG Icons
 
 SVG icons are processed via a Rake task. To add or update icons:
